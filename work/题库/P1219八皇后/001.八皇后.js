@@ -2,7 +2,7 @@ import * as sd from "#lib/slide";
 
 let svg = sd.svg();
 let C = sd.color();
-let n = 5;
+let n = 4;
 let p = sd.make1d(10, 0);
 let col = {};
 let dia = {};

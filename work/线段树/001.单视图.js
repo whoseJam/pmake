@@ -10,8 +10,8 @@ function index_array(array) {
         let txt = sd.Text(array, id).font_size(10);
         let element = array.element(id);
         let update = () => {txt.cx(element.cx()).y(element.y() - 10); };
-        array.listen("on_x", update);
-        array.listen("on_y", update);
+        array.listen("onX", update);
+        array.listen("onY", update);
         array.listen("on_remove", () => { txt.remove(); });
         update();
     }

@@ -60,10 +60,10 @@ function ApowB(a, b) {
         B.font_size(A.font_size() * 0.5);
         B.x(A.mx()).y(A.y() - B.font_size() * 0.5);
     };
-    A.listen("on_x", update);
-    A.listen("on_y", update);
-    A.listen("on_width", update);
-    A.listen("on_height", update);
+    A.listen("onX", update);
+    A.listen("onY", update);
+    A.listen("onWidth", update);
+    A.listen("onHeight", update);
     update();
     return ans;
 }

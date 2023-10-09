@@ -11,8 +11,8 @@ function index_array(array) {
         let txt = sd.Text(array, id).font_size(10);
         let element = array.element(id);
         let update = () => {txt.cx(element.cx()).y(element.y() - 10); };
-        array.listen("on_x", update);
-        array.listen("on_y", update);
+        array.listen("onX", update);
+        array.listen("onY", update);
         array.listen("on_remove", () => { txt.remove(); });
         update();
     }
@@ -21,10 +21,10 @@ function index_array(array) {
 function label(ele, str, offset) {
     let txt = sd.Text(svg, str);
     let update = () => { txt.cx(ele.cx()).y(ele.my() + offset); };
-    ele.listen("on_x", update);
-    ele.listen("on_y", update);
-    ele.listen("on_width", update);
-    ele.listen("on_height", update);
+    ele.listen("onX", update);
+    ele.listen("onY", update);
+    ele.listen("onWidth", update);
+    ele.listen("onHeight", update);
     ele.listen("on_remove", () => { txt.remove(); });
     update();
 }

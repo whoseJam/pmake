@@ -46,13 +46,13 @@ function link(site1, site2) {
         lnk.target(site2.cx(), site2.cy());
         trim(lnk, site1, site2);
     }
-    site1.listen("on_x", update);
-    site1.listen("on_y", update);
-    site1.listen("on_width", update);
-    site1.listen("on_height", update);
-    site2.listen("on_x", update);
-    site2.listen("on_y", update);
-    site2.listen("on_width", update);
-    site2.listen("on_height", update);
+    site1.listen("onX", update);
+    site1.listen("onY", update);
+    site1.listen("onWidth", update);
+    site1.listen("onHeight", update);
+    site2.listen("onX", update);
+    site2.listen("onY", update);
+    site2.listen("onWidth", update);
+    site2.listen("onHeight", update);
     update();
 }

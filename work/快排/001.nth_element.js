@@ -244,8 +244,8 @@ function swap(l, r) {
 }
 
 function listen_to(other, func) {
-    other.listen("on_x", func);
-    other.listen("on_y", func);
-    other.listen("on_width", func);
-    other.listen("on_height", func);
+    other.listen("onX", func);
+    other.listen("onY", func);
+    other.listen("onWidth", func);
+    other.listen("onHeight", func);
 }

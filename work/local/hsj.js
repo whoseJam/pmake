@@ -3,10 +3,10 @@ export * from "./array_like";
 export * from "./code";
 
 export function listen_to(leader, follower, update) {
-    leader.listen("on_x", update, follower);
-    leader.listen("on_y", update, follower);
-    leader.listen("on_width", update, follower);
-    leader.listen("on_height", update, follower);
+    leader.listen("onX", update, follower);
+    leader.listen("onY", update, follower);
+    leader.listen("onWidth", update, follower);
+    leader.listen("onHeight", update, follower);
 }
 
 export function text_switch(txt, str) {

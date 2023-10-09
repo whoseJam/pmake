@@ -64,8 +64,8 @@ function make_text_seq() {
         for (let i = 1; i < ans.length; i++)
             ans[i].x(ans[i-1].mx() + fs/3).y(ans[i-1].y());
     }
-    ans[0].listen("on_x", update);
-    ans[0].listen("on_y", update);
+    ans[0].listen("onX", update);
+    ans[0].listen("onY", update);
     ans.opacity = (op) => {
         ans.forEach((e) => { e.opacity(op); }); return ans; };
     ans.start_animate = (dur) => {
