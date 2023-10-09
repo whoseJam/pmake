@@ -1,0 +1,45 @@
+{
+  "name": "slides",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --config webpack.config.js",
+    "dev": "webpack"
+  },
+  "repository": {
+    "type": "",
+    "url": ""
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.22.1",
+    "@babel/preset-env": "^7.22.2",
+    "@svgdotjs/svg.js": "^3.1.2",
+    "babel-loader": "^9.1.2",
+    "css-loader": "^6.8.1",
+    "js-yaml": "^4.1.0",
+    "mathjax": "^3.2.2",
+    "mathjax-full": "^3.2.2",
+    "node-polyfill-webpack-plugin": "^2.0.1",
+    "path-browserify": "^1.0.1",
+    "stream-browserify": "^3.0.0",
+    "style-loader": "^3.3.3",
+    "tex2svg": "^1.0.2",
+    "text-to-svg": "^3.1.5",
+    "webpack": "^5.84.1",
+    "webpack-cli": "^5.1.1"
+  },
+  "dependencies": {
+    "d3": "^7.8.5"
+  },
+  "imports": {
+    "#lib/*": "./lib/*"
+  },
+  "browser": {
+    "fs": false,
+    "path": false,
+    "os": false
+  }
+}
