@@ -1,73 +1,73 @@
 import * as sd from "#lib/slide";
 
 let mathCode1 = `
-\\begin{Bmatrix}
+\\begin{bmatrix}
 ? & ? & ? \\\\
 ? & ? & ? \\\\
 ? & ? & ?
-\\end{Bmatrix}
-\\begin{Bmatrix}
+\\end{bmatrix}
+\\begin{bmatrix}
 f(i-1,0) \\\\
 f(i-1,1) \\\\
 f(i-1,2)
-\\end{Bmatrix}
+\\end{bmatrix}
 =
-\\begin{Bmatrix}
+\\begin{bmatrix}
 f(i,0) \\\\
 f(i,1) \\\\
 f(i,2)
-\\end{Bmatrix}`
+\\end{bmatrix}`
 let mathCode2 = `
-\\begin{Bmatrix}
+\\begin{bmatrix}
 ? & ? & ? \\\\
 ? & ? & ? \\\\
 \\infty & 0 & \\infty
-\\end{Bmatrix}
-\\begin{Bmatrix}
+\\end{bmatrix}
+\\begin{bmatrix}
 f(i-1,0) \\\\
 f(i-1,1) \\\\
 f(i-1,2)
-\\end{Bmatrix}
+\\end{bmatrix}
 =
-\\begin{Bmatrix}
+\\begin{bmatrix}
 f(i,0) \\\\
 f(i,1) \\\\
 f(i,2)
-\\end{Bmatrix}`
+\\end{bmatrix}`
 let mathCode3 = `
-\\begin{Bmatrix}
+\\begin{bmatrix}
 ? & ? & ? \\\\
 0 & \\infty & \\infty \\\\
 \\infty & 0 & \\infty
-\\end{Bmatrix}
-\\begin{Bmatrix}
+\\end{bmatrix}
+\\begin{bmatrix}
 f(i-1,0) \\\\
 f(i-1,1) \\\\
 f(i-1,2)
-\\end{Bmatrix}
+\\end{bmatrix}
 =
-\\begin{Bmatrix}
+\\begin{bmatrix}
 f(i,0) \\\\
 f(i,1) \\\\
 f(i,2)
-\\end{Bmatrix}`
+\\end{bmatrix}`
 let mathCode4 = `
-\\begin{Bmatrix}
+\\begin{bmatrix}
 v_i & v_i & v_i \\\\
 0 & \\infty & \\infty \\\\
 \\infty & 0 & \\infty
-\\end{Bmatrix}
-\\begin{Bmatrix}
+\\end{bmatrix}
+\\begin{bmatrix}
 f(i-1,0) \\\\
 f(i-1,1) \\\\
 f(i-1,2)
-\\end{Bmatrix}
+\\end{bmatrix}
 =
-\\begin{Bmatrix}
+\\begin{bmatrix}
 f(i,0) \\\\
 f(i,1) \\\\
 f(i,2)
-\\end{Bmatrix}`
+\\end{bmatrix}`
 
 let svg = sd.svg();
 let math = sd.Mathjax(svg).height(100).drag(true);
