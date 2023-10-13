@@ -2,8 +2,9 @@ import * as sd from "#lib/slide";
 
 let svg = sd.svg();
 let math = sd.Mathjax(svg);
-math.math("i\\cdot k+r=P\\ (mod\\ P)");//.drag(true).resizeable(true);
-// math.math("\\frac a b = S(x)");
+math.x(100).y(100);
+math.math("\\sum_{i=1}^na_i").drag(true).resizeable(true);
+// math.math("i\\cdot k+r=P\\ (mod\\ P)").drag(true).resizeable(true);
 
 main();
 
