@@ -50,7 +50,7 @@ def template_html(module: str, path_to_output: str):
     <link href="./user/toolbox.css" rel="stylesheet" type="text/css" />
     <script src="https://cdn.jsdelivr.net/npm/opentype.js@latest/dist/opentype.min.js"></script>
     <script type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
-    <script src="snap.svg.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/snap.svg/0.5.1/snap.svg.js"></script>
 </head>
 <body>
     <script src="{}.js"></script>
