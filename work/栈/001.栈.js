@@ -12,6 +12,7 @@ function make_pointer(prt, name) {
     let label = sd.Text(line, name)
         .fontSize(20);
     line.children.push(label, () => {
+        console.log("parentCX=", line.cx());
         label.cx(line.cx()).y(line.my());
     });
     return line.drag(true);
@@ -22,7 +23,9 @@ function make_pointered_array() {
     let pointer_top = make_pointer(array, "top");
     let rule = () => {
         let posH = array.get("top");
-        pointer_top.cx(array.element(posH).cx()).y(array.element(posH).my() + 10);
+        pointer_top.y(array.element(posH).my() + 10);
+        pointer_top.x1(array.element(posH).cx());
+        pointer_top.x2(array.element(posH).cx());
     }
     array.top = (x) => {
         array.set("top", x);
