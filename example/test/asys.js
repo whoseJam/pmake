@@ -3,12 +3,13 @@ import * as sd from "#lib/slide";
 let svg = sd.svg();
 let C = sd.color();
 let rct = sd.Rect(svg);
-let lne = sd.Line(svg).source(100, 100).target(200, 100);
+let lne = sd.Line(svg).source(100, 100).target(200, 100).strokeWidth(10);
 
 main();
 
 async function main() {
     await sd.pause();
+    lne.startAnimate().strokeWidth(1).endAnimate();
     rct.startAnimate(1000).dx(100).dy(100).endAnimate();
     rct.dx(100);
     while (true) {
