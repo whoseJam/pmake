@@ -37,11 +37,16 @@ def skip(path: str, count: int):
                 ans = ans + "/"
     return ans
 
+def is_js_file(path: str):
+    return path.split(".")[-1] == "js"
+
 def build(args):
     input_folder = args["input_path"]
     all_files = []
     get_files(input_folder, all_files)
     for file in all_files:
+        if not is_js_file(file):
+            continue
         output_folder = cat(args["output_path"], skip(father(file), args["start"]))
         check_path(output_folder)
 
