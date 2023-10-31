@@ -75,17 +75,18 @@ math.math(mathCode1);
 
 main();
 
+let T = 300;
 async function main() {
     await sd.pause();
-    math.startAnimate();
+    math.startAnimate(T);
     math.math(mathCode2);
     math.endAnimate();
     await sd.pause();
-    math.startAnimate();
+    math.startAnimate(T);
     math.math(mathCode3);
     math.endAnimate();
     await sd.pause();
-    math.startAnimate();
+    math.startAnimate(T);
     math.math(mathCode4);
     math.endAnimate();
     await sd.pause();
