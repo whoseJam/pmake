@@ -4,7 +4,6 @@ let svg = sd.svg();
 let math = sd.Mathjax(svg);
 math.math("").height(50).drag(true);
 
-
 main();
 
 async function main() {
