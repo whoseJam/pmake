@@ -2,8 +2,8 @@ import * as sd from "#lib/slide";
 
 let svg = sd.svg();
 let C = sd.color();
-let tri = make_tri(svg, 5);
-let dp = make_tri(svg, 5);
+let tri = makeTri(svg, 5);
+let dp = makeTri(svg, 5);
 let n = 5;
 
 let data = [
@@ -96,7 +96,7 @@ async function main() {
     }
 }
 
-function make_tri(svg, n) {
+function makeTri(svg, n) {
     let tri = sd.SquidGrid(svg).startN(1).startM(1);
     for (let i = 1; i <= n; i++)
         tri.pushRow(i);
