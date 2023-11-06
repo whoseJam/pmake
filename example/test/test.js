@@ -9,14 +9,14 @@ let LY, RY, Y;
 main();
 
 async function main() {
+    await testArray();
+    await testMoreArray();
+    await testMathjax();
+    await testCode();
+    await testTree();
+    await testGrid();
+    await testVarTable();
     await testCallStack();
-    // await testVarTable();
-    // await testGrid();
-    // await testTree();
-    // await testCode();
-    // await testMathjax();
-    // await testArray();
-    // await testMoreArray();
 }
 
 async function testCallStack() {
@@ -272,8 +272,8 @@ async function testGrid() {
                 else pos = pos + 1;
             }
         }
-
-        let deletes = [dp, tri];
+        await sd.pause();
+        let deletes = [dp, tri, para1];
         for (let i = 0; i < deletes.length; i++)
             deletes[i].startAnimate().opacity(0).endAnimate().remove();
     }
@@ -532,9 +532,11 @@ for(int i=2;i<=n;i++){
     code2.startAnimate().highlight(9).endAnimate();
     await sd.pause();
     code2.startAnimate().dehighlight().endAnimate();
+    await sd.pause();
     let deletes = [
         code1, para1, table1,
         code2,
+        title
     ];
     for (let i = 0; i < deletes.length; i++)
         deletes[i].startAnimate().opacity(0).endAnimate().remove();
