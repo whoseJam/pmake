@@ -9,14 +9,95 @@ let LY, RY, Y;
 main();
 
 async function main() {
-    await testArray();
-    await testMoreArray();
-    await testMathjax();
-    await testCode();
-    await testTree();
-    await testGrid();
-    await testVarTable();
-    await testCallStack();
+    // await testArray();
+    // await testMoreArray();
+    // await testMathjax();
+    // await testCode();
+    // await testTree();
+    // await testGrid();
+    // await testVarTable();
+    // await testCallStack();
+    // await testCurve();
+    await testGraph();
+}
+
+async function testGraph() {
+
+}
+
+async function testCurve() {
+    await sd.pause();
+    let title = L.Title("Curve组件展示");
+    let GAP = 30;
+    let Y = title.my() + GAP;
+    
+    await sd.pause();
+    let para1 = sd.Code(svg).x(700).y(Y);
+    para1.startAnimate().push("Curve系组件用来绘制曲线，底层元素是Path").endAnimate();
+
+    await sd.pause();
+    let c1 = sd.Curve(svg).source(100, Y).target(400, Y);
+    c1.opacity(0).startAnimate().opacity(1).endAnimate();
+    await sd.pause();
+    let c2 = sd.VHCurve(svg).source(100, Y + 100).target(600, Y + 150);
+    c2.opacity(0).startAnimate().opacity(1).endAnimate();
+    await sd.pause();
+    let c3 = sd.BezierCurve(svg).source(100, Y + 200).target(600, Y + 250);
+    c3.opacity(0).startAnimate().opacity(1).endAnimate();
+    await sd.pause();
+    let c4 = sd.VHBezierCurve(svg).source(100, Y + 300).target(600, Y + 350);
+    c4.opacity(0).startAnimate().opacity(1).endAnimate();
+    await sd.pause();
+    para1.startAnimate().push("一个简单的线条缓出效果").endAnimate();
+    c1.strokeDashOffset(0).strokeDashArray(c1.totalLength());
+    c2.strokeDashOffset(0).strokeDashArray(c2.totalLength());
+    c3.strokeDashOffset(0).strokeDashArray(c3.totalLength());
+    c4.strokeDashOffset(0).strokeDashArray(c4.totalLength());
+    await sd.pause();
+    c1.startAnimate().strokeDashOffset(c1.totalLength()).endAnimate();
+    await sd.pause();
+    para1.startAnimate().push("可以用它来做丰富的路径动画").endAnimate();
+    await sd.pause();
+    let cc = sd.Circle(svg);
+    Snap.animate(0, c1.totalLength(), function(value) {
+        let movePoint = c1.getPointAtLength( value );
+        cc.cx(movePoint[0])
+        cc.cy(movePoint[1]);
+    }, 1000, mina.easeinout);
+    await sd.pause();
+    cc.startAnimate().cx(600).cy(Y + 150).endAnimate();
+    await sd.pause();
+    c2.startAnimate().strokeDashOffset(c2.totalLength()).endAnimate();
+    await sd.pause();
+    Snap.animate(0, c2.totalLength(), function(value) {
+        let movePoint = c2.getPointAtLength(c2.totalLength() - value);
+        cc.cx(movePoint[0])
+        cc.cy(movePoint[1]);
+    }, 1000, mina.easeinout);
+    await sd.pause();
+    cc.startAnimate().cx(100).cy(Y + 200).endAnimate();
+    await sd.pause();
+    c3.startAnimate().strokeDashOffset(-c3.totalLength()).endAnimate();
+    await sd.pause();
+    Snap.animate(0, c3.totalLength(), function(value) {
+        let movePoint = c3.getPointAtLength( value );
+        cc.cx(movePoint[0])
+        cc.cy(movePoint[1]);
+    }, 1000, mina.easeinout);
+    await sd.pause();
+    cc.startAnimate().cx(600).cy(Y + 350).endAnimate();
+    await sd.pause();
+    c4.startAnimate().strokeDashOffset(c4.totalLength()).endAnimate();
+    await sd.pause();
+    Snap.animate(0, c4.totalLength(), function(value) {
+        let movePoint = c4.getPointAtLength(c4.totalLength() - value);
+        cc.cx(movePoint[0])
+        cc.cy(movePoint[1]);
+    }, 1000, mina.easeinout);
+
+    let deletes = [c1, c2, c3, c4, cc, para1, title];
+    for (let i = 0; i < deletes.length; i++)
+        deletes[i].startAnimate().opacity(0).endAnimate().remove();
 }
 
 async function testCallStack() {
@@ -86,6 +167,10 @@ int searchMax(State s){
     stack1.startAnimate().exit().endAnimate();
     await sd.pause();
     stack1.startAnimate().exit().endAnimate();
+
+    let deletes = [stack1, title];
+    for (let i = 0; i < deletes.length; i++)
+        deletes[i].startAnimate().opacity(0).endAnimate().remove();
 }
 
 async function testVarTable() {

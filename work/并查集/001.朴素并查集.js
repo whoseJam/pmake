@@ -3,7 +3,7 @@ import * as sd from "#lib/slide";
 let svg = sd.svg();
 let C = sd.color();
 
-let g = sd.Graph(svg).drag(true).resizeable(true);
+let g = sd.UnionGraph(svg).drag(true).resizeable(true);
 let fa = sd.make1d(100, 0);
 let n = 6;
 let board = sd.Text(svg);
