@@ -51,6 +51,83 @@ def template_html(module: str, path_to_output: str):
     <script src="https://cdn.jsdelivr.net/npm/opentype.js@latest/dist/opentype.min.js"></script>
     <script type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
     <script src="snap.svg.js"></script>
+    <style>
+        .tool-box {{
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: start;
+            align-items: flex-start;
+            align-content: flex-start;
+
+            background-color: #f5f5f5;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }}
+
+        .tool-item {{
+            align-items: flex-start;
+            margin: 2px;
+        }}
+
+        .tool-item-color-picker {{
+            appearance: none;
+            border: none;
+            cursor: pointer;
+        }}
+
+        .icon-radio-group {{
+            display: flex;
+        }}
+        
+        .icon-radio-option {{
+            display: flex;
+            align-items: center;
+            margin-right: 10px;
+            cursor: pointer;
+        }}
+        
+        .icon-radio-input {{
+            display: none;
+        }}
+        
+        .icon-radio-icon {{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            margin-right: 5px;
+            border-radius: 50%;
+            background-color: #f5f5f5;
+        }}
+        
+        .icon-radio-icon i {{
+            font-size: 16px;
+            color: #333;
+        }}
+        
+        .icon-radio-option:hover .icon-radio-icon {{
+            background-color: #007bff;
+        }}
+        
+        .icon-radio-option:hover .icon-radio-icon i {{
+            color: #fff;
+        }}
+        
+        .icon-radio-option input:checked + .icon-radio-icon {{
+            background-color: #007bff;
+        }}
+        
+        .icon-radio-option input:checked + .icon-radio-icon i {{
+            color: #fff;
+        }}
+        
+        .icon-radio-label {{
+            font-size: 14px;
+            color: #333;
+        }}
+    </style>
 </head>
 <body>
     <script src="{}.js"></script>
