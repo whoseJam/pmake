@@ -61,8 +61,8 @@ async function merge(x, y) {
         await sd.pause();
         g.startAnimate();
         g.newLink(fx, fy);
-        g.element(fx, fy).strokeWidth(3);
-        g.element(fx, fy).background().markerEnd("arrow");
+        g.element(fx, fy).strokeWidth(1);
+        g.element(fx, fy).arrow();
         await sd.pause();
         g.startAnimate();
         g.element(x).color(C.DEFAULT);
