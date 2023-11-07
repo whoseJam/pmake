@@ -9,7 +9,7 @@ let LY, RY, Y;
 main();
 
 async function main() {
-    // await testArray();
+    await testArray();
     // await testMoreArray();
     // await testMathjax();
     // await testCode();
@@ -18,7 +18,7 @@ async function main() {
     // await testVarTable();
     // await testCallStack();
     // await testCurve();
-    await testGraph();
+    // await testGraph();
 }
 
 async function testGraph() {
