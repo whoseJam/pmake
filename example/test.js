@@ -1,12 +1,19 @@
 import * as sd from "#lib/slide";
 
 let svg = sd.svg();
-sd.Circle(svg).cx(100).cy(100);
-let math = sd.Mathjax(svg).height(100).math("\\infty").drag(true);//.height(100)
+let arr = sd.Array(svg).resize(10).indexed(true).drag(true).resizeable(true);
 
 main();
 
 async function main() {
     await sd.pause();
-    math.startAnimate().math("1").endAnimate();
+    arr.startAnimate().indexAlign("bottom").endAnimate();
+    await sd.pause();
+    arr.startAnimate().indexAlign("left").endAnimate();
+    await sd.pause();
+    arr.startAnimate().indexAlign("top").endAnimate();
+    await sd.pause();
+    arr.startAnimate().push(1).push(2).endAnimate();
+    await sd.pause();
+    arr.startAnimate().erase(1).erase(2).endAnimate();
 }
