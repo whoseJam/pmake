@@ -15,5 +15,11 @@ async function main() {
     await sd.pause();
     arr.startAnimate().push(1).push(2).endAnimate();
     await sd.pause();
-    arr.startAnimate().erase(1).erase(2).endAnimate();
+    arr.startAnimate().erase(1).endAnimate();
+    await sd.pause();
+    arr.startAnimate().start(5).endAnimate();
+    await sd.pause();
+    arr.startAnimate().start(11).endAnimate();
+    await sd.pause();
+    arr.startAnimate().start(8).endAnimate();
 }
