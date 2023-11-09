@@ -9,15 +9,15 @@ let LY, RY, Y;
 main();
 
 async function main() {
-    // await testArray();
-    // await testMoreArray();
-    // await testMathjax();
-    // await testCode();
-    // await testTree();
-    // await testGrid();
-    // await testVarTable();
-    // await testCallStack();
-    // await testCurve();
+    await testArray();
+    await testMoreArray();
+    await testMathjax();
+    await testCode();
+    await testTree();
+    await testGrid();
+    await testVarTable();
+    await testCallStack();
+    await testCurve();
     await testGraph();
 }
 
@@ -290,10 +290,11 @@ int searchMax(State s){
     stack1.startAnimate().exit().endAnimate();
     await sd.pause();
     stack1.startAnimate().exit().endAnimate();
-
+    await sd.pause();
     let deletes = [stack1, title];
-    for (let i = 0; i < deletes.length; i++)
+    for (let i = 0; i < deletes.length; i++) {
         deletes[i].startAnimate().opacity(0).endAnimate().remove();
+    }
 }
 
 async function testVarTable() {
