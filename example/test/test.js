@@ -17,7 +17,7 @@ async function main() {
     // await testGrid();
     // await testVarTable();
     // await testCallStack();
-    await testCurve();
+    // await testCurve();
     await testGraph();
 }
 
