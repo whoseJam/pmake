@@ -4,21 +4,21 @@ let svg = sd.svg();
 let C = sd.color();
 let L = sd.layout();
 let R = sd.reader();
-let LY, RY, Y;
+let Y;
 
 main();
 
 async function main() {
-    await testArray();
-    await testMoreArray();
-    await testMathjax();
-    await testCode();
+    // await testArray();
+    // await testMoreArray();
+    // await testMathjax();
+    // await testCode();
     await testTree();
-    await testGrid();
-    await testVarTable();
-    await testCallStack();
-    await testCurve();
-    await testGraph();
+    // await testGrid();
+    // await testVarTable();
+    // await testCallStack();
+    // await testCurve();
+    // await testGraph();
 }
 
 async function testGraph() {
@@ -497,92 +497,93 @@ async function testTree() {
     let GAP = 50;
     let Y = title.my() + GAP;
     
-    {   let para1 = sd.Code(svg).x(100).y(Y);
-        let tree1 = sd.Tree(svg).x(600).y(Y).layerHeight(60).width(600);
-        let arr1 = sd.Array(svg).x(100).y(500);
-        let h = sd.make1d(100);
-        let l = sd.make1d(100);
-        let sz = sd.make1d(100);
-        let sn = sd.make1d(100);
-        let cnt = 0;
-        async function dfs1(now, prt) {
-            sz[now] = 1;
-            for (let i = h[now]; i; i = l[i].nxt) {
-                let v = l[i].to;
-                if (v !== prt) {
-                    await dfs1(v, now);
-                    if (sz[sn[now]] < sz[v])
-                        sn[now] = v;
-                    sz[now] += sz[v];
-                }
-            }
-            if (sn[now]) {
-                tree1.element(now, sn[now]).strokeWidth(5);
-                tree1.element(now, sn[now]).stroke(C.red);
-            }
-        }
-        async function dfs2(now, prt) {
-            await sd.pause();
-            tree1.startAnimate();
-            if (prt) tree1.color(prt, C.DEFAULT);
-            tree1.color(now, C.GREEN);
-            tree1.endAnimate();
-            await sd.pause();
-            arr1.startAnimate().push(`v${now}`).endAnimate();
-            if (sn[now]) await dfs2(sn[now], now);
-            for (let i = h[now]; i; i = l[i].nxt) {
-                let v = l[i].to;
-                if (v !== prt && v !== sn[now]) {
-                    await dfs2(v, now);
-                }
-            }
-            await sd.pause();
-            tree1.startAnimate();
-            if (prt) tree1.color(prt, C.GREEN);
-            tree1.color(now, C.DEFAULT);
-            tree1.endAnimate();
-        }
-        function link(x, y) {
-            tree1.link(x, y);
-            l[++cnt] = { nxt: h[x], to: y }; h[x] = cnt;
-            l[++cnt] = { nxt: h[y], to: x }; h[y] = cnt;
-        }
-        tree1.root(1);
-        link(1, 2);
-        link(1, 3);
-        link(1, 4);
-        link(2, 5);
-        link(3, 6);
-        link(3, 7);
-        link(4, 8);
-        link(5, 9);
-        link(5, 10);
-        link(6, 11);
-        link(7, 12);
-        link(8, 13);
-        link(8, 14);
-        link(10, 15);
-        link(11, 16);
-        link(16, 17);
-        link(16, 18);
-        tree1.opacity(0);
-        await sd.pause();
-        para1.startAnimate().push("可以利用Tree组件，先随便画一棵树").endAnimate();
-        await sd.pause();
-        tree1.startAnimate().opacity(1).endAnimate();
-        await sd.pause();
-        para1.startAnimate().push("我记得有个算法叫做树链剖分...").endAnimate();
-        await sd.pause();
-        tree1.startAnimate();
-        await dfs1(1);
-        tree1.endAnimate();
-        await sd.pause();
-        para1.startAnimate().push("把树转化成序列...").endAnimate();
-        await dfs2(1);
-        let deletes = [tree1, para1, arr1];
-        for (let i = 0; i < deletes.length; i++)
-            deletes[i].startAnimate().opacity(0).endAnimate().remove();
-    }
+    // {   let para1 = sd.Code(svg).x(100).y(Y);
+    //     let tree1 = sd.Tree(svg).x(600).y(Y).layerHeight(60).width(600);
+    //     let arr1 = sd.Array(svg).x(100).y(500);
+    //     let h = sd.make1d(100);
+    //     let l = sd.make1d(100);
+    //     let sz = sd.make1d(100);
+    //     let sn = sd.make1d(100);
+    //     let cnt = 0;
+    //     async function dfs1(now, prt) {
+    //         sz[now] = 1;
+    //         for (let i = h[now]; i; i = l[i].nxt) {
+    //             let v = l[i].to;
+    //             if (v !== prt) {
+    //                 await dfs1(v, now);
+    //                 if (sz[sn[now]] < sz[v])
+    //                     sn[now] = v;
+    //                 sz[now] += sz[v];
+    //             }
+    //         }
+    //         if (sn[now]) {
+    //             tree1.element(now, sn[now]).strokeWidth(5);
+    //             tree1.element(now, sn[now]).stroke(C.red);
+    //         }
+    //     }
+    //     async function dfs2(now, prt) {
+    //         await sd.pause();
+    //         tree1.startAnimate();
+    //         if (prt) tree1.color(prt, C.DEFAULT);
+    //         tree1.color(now, C.GREEN);
+    //         tree1.endAnimate();
+    //         await sd.pause();
+    //         arr1.startAnimate().push(`v${now}`).endAnimate();
+    //         if (sn[now]) await dfs2(sn[now], now);
+    //         for (let i = h[now]; i; i = l[i].nxt) {
+    //             let v = l[i].to;
+    //             if (v !== prt && v !== sn[now]) {
+    //                 await dfs2(v, now);
+    //             }
+    //         }
+    //         await sd.pause();
+    //         tree1.startAnimate();
+    //         if (prt) tree1.color(prt, C.GREEN);
+    //         tree1.color(now, C.DEFAULT);
+    //         tree1.endAnimate();
+    //     }
+    //     function link(x, y) {
+    //         tree1.newNode(y);
+    //         tree1.newLink(x, y);
+    //         l[++cnt] = { nxt: h[x], to: y }; h[x] = cnt;
+    //         l[++cnt] = { nxt: h[y], to: x }; h[y] = cnt;
+    //     }
+    //     tree1.newNode(1);
+    //     link(1, 2);
+    //     link(1, 3);
+    //     link(1, 4);
+    //     link(2, 5);
+    //     link(3, 6);
+    //     link(3, 7);
+    //     link(4, 8);
+    //     link(5, 9);
+    //     link(5, 10);
+    //     link(6, 11);
+    //     link(7, 12);
+    //     link(8, 13);
+    //     link(8, 14);
+    //     link(10, 15);
+    //     link(11, 16);
+    //     link(16, 17);
+    //     link(16, 18);
+    //     tree1.opacity(0);
+    //     await sd.pause();
+    //     para1.startAnimate().push("可以利用Tree组件，先随便画一棵树").endAnimate();
+    //     await sd.pause();
+    //     tree1.startAnimate().opacity(1).endAnimate();
+    //     await sd.pause();
+    //     para1.startAnimate().push("我记得有个算法叫做树链剖分...").endAnimate();
+    //     await sd.pause();
+    //     tree1.startAnimate();
+    //     await dfs1(1);
+    //     tree1.endAnimate();
+    //     await sd.pause();
+    //     para1.startAnimate().push("把树转化成序列...").endAnimate();
+    //     await dfs2(1);
+    //     let deletes = [tree1, para1, arr1];
+    //     for (let i = 0; i < deletes.length; i++)
+    //         deletes[i].startAnimate().opacity(0).endAnimate().remove();
+    // }
 
     {   await sd.pause();
         let para1 = sd.Code(svg).x(100).y(Y);

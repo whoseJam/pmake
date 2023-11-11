@@ -3,6 +3,7 @@ import * as sd from "#lib/slide";
 let svg = sd.svg();
 let g = sd.Graph(svg);
 g.x(100).y(100);
+g.nodeType(sd.TriangleVertex);
 g.newNode("A", sd.Text(svg, "A"));
 g.newNode("B", sd.Text(svg, "B"));
 g.newNode("C", sd.Text(svg, "C"));
