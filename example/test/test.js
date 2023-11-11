@@ -9,11 +9,11 @@ let Y;
 main();
 
 async function main() {
-    // await testArray();
-    // await testMoreArray();
+    await testArray();
+    await testMoreArray();
     // await testMathjax();
     // await testCode();
-    await testTree();
+    // await testTree();
     // await testGrid();
     // await testVarTable();
     // await testCallStack();
