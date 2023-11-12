@@ -3,18 +3,34 @@ import * as sd from "#lib/slide";
 let svg = sd.svg();
 let C = sd.color();
 let R = sd.reader();
-let n = 4, m = 10;
-let mp = sd.Grid(svg).x(300).y(180).startM(1).startN(1).n(n).m(m).drag(true).resizeable(true);
+let n = 20, m = 20;
+let mp = sd.Grid(svg).x(600).y(100).elementWidth(20).elementHeight(20).startM(1).startN(1).n(n).m(m).drag(true).resizeable(true);
 let dx = [0, 1, 0, -1];
 let dy = [1, 0, -1, 0];
 let ans = sd.Text(svg, `Ans=${0}`).x(300).y(390).fontSize(55).drag(true).resizeable(true);
 ans.ans = 0;
 sd.EnableFocusRect(mp);
 let data = R.readCharMatrix(`
-0234500067
-1034560500
-2045600671
-0000000089`, n, m);
+15801692104449215038
+39779110319183684006
+12863368224845499208
+55541817709408462611
+62907867524746746653
+69398258603730094802
+71478682354751355646
+54337064554356274548
+69522421508960828772
+08304955870537371157
+04665012880111569008
+84481867801206248731
+63539274684389134846
+96058553355944330522
+23488158132297516649
+64271938993299404770
+07482980228519790476
+79799399894223954988
+07860411760485100890
+11358661151345314263`, n, m);
 let col;
 
 for (let i = 1; i <= n; i++)
