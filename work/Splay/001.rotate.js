@@ -49,7 +49,6 @@ async function main() {
         g.startAnimate().color(seq[i], C.green).endAnimate();
         await sd.pause();
         arr.startAnimate();
-        console.log("length=", seq[i].length);
         if (seq[i].length === 2) {
             arr.push(seq[i]);
             arr.push("...");
