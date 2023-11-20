@@ -1,0 +1,128 @@
+import * as sd from "#lib/slide";
+
+let svg = sd.svg();
+let C = sd.color();
+let n = 10;
+let m = Math.floor(Math.log2(n)) + 1;
+let data = [0, 2, 4, 3, 7, 4, 6, 8, 3, 1, 5];
+let arr = sd.Array(svg).start(1).x(100).y(100).indexed(true);
+for (let i = 1; i <= n; i++) arr.push(data[i]);
+let st = sd.Grid(svg).n(m).m(n).startM(1).x(100).y(300);
+for (let i = 1; i <= n; i++) {
+    st.children.push(sd.Text(st, i).fontSize(20), function(parent, child) {
+        let elem = st.element(m - 1, i);
+        child.cx(elem.cx());
+        child.y(elem.my() + 3);
+    })
+}
+for (let i = 0; i < m; i++) {
+    st.children.push(sd.Mathjax(st).math(`2^${i}`).height(20), function(parent, child) {
+        let elem = st.element(m - 1 - i, 1);
+        child.mx(elem.x() - 5);
+        child.cy(elem.cy());
+    })
+}
+
+main();
+
+async function main() {
+    st.opacity(0);
+    await sd.pause();
+    st.startAnimate().opacity(1).endAnimate();
+    // for (let i = 1; i <= n; i++)
+    //     await show(i);
+
+    await query(2, 7);
+    await query(3, 10);
+
+}
+
+async function query(l, r) {
+    await sd.pause();
+    arr.startAnimate();
+    for (let i = l; i <= r; i++)
+        arr.color(i, C.green);
+    arr.endAnimate();
+    let k = Math.floor(Math.log2(r-l+1)), a1, a2;
+    {   await sd.pause();
+        let L = l, R = l + (1<<k) - 1;
+        a1 = sd.Array(svg);
+        let rct = sd.Rect(svg).strokeWidth(3).stroke(C.red);
+        rct.fillOpacity(0).x(arr.element(L).x()).y(arr.element(L).y());
+        rct.width(arr.elementWidth() * (R - L + 1));
+        rct.height(arr.elementHeight());
+        rct.opacity(0).startAnimate().opacity(1).endAnimate();
+        for (let i = L; i <= R; i++)
+            a1.push(data[i]);
+        a1.color(C.green).x(rct.x()).y(rct.y());
+        a1.after(rct).startAnimate().dy(50).endAnimate();
+        rct.startAnimate().opacity(0).remove();
+    }
+    {   await sd.pause();
+        let L = r - (1<<k) + 1, R = r;
+        a2 = sd.Array(svg);
+        let rct = sd.Rect(svg).strokeWidth(3).stroke(C.red);
+        rct.fillOpacity(0).x(arr.element(L).x()).y(arr.element(L).y());
+        rct.width(arr.elementWidth() * (R - L + 1));
+        rct.height(arr.elementHeight());
+        rct.opacity(0).startAnimate().opacity(1).endAnimate();
+        for (let i = L; i <= R; i++)
+            a2.push(data[i]);
+        a2.color(C.green).x(rct.x()).y(rct.y());
+        a2.after(rct).startAnimate().dy(100).endAnimate();
+        rct.startAnimate().opacity(0).remove();
+    }
+    await sd.pause();
+    a1.startAnimate().color(C.orange).endAnimate();
+    st.startAnimate().color(m - 1 - k, l, C.orange).endAnimate();
+    await sd.pause();
+    a2.startAnimate().color(C.blue).endAnimate();
+    st.startAnimate().color(m - 1 - k, r - (1<<k) + 1, C.blue).endAnimate();
+    await sd.pause();
+    a1.startAnimate().opacity(0).remove();
+    a2.startAnimate().opacity(0).remove();
+    arr.startAnimate().color(C.white).endAnimate();
+    st.startAnimate().color(C.white).endAnimate();
+}
+
+async function show(pos) {
+    for (let i = 0; (1<<i) + pos - 1 <= n; i++) {
+        await sd.pause();
+        let l = pos, r = (1<<i) + pos - 1;
+        arr.startAnimate();
+        for (let j = l; j <= r; j++)
+            arr.color(j, C.orange);
+        arr.endAnimate();
+        let rct = sd.Rect(svg).strokeWidth(3).stroke(C.red);
+        rct.x(arr.element(l).x()).y(arr.element(l).y());
+        rct.width(arr.elementWidth() * (r-l+1));
+        rct.height(arr.elementHeight());
+        rct.opacity(0).fillOpacity(0);
+        rct.startAnimate().opacity(1).endAnimate();
+        rct.startAnimate();
+        {   let elem = st.element(m - i - 1, pos);
+            rct.x(elem.x()).y(elem.y());
+            rct.width(elem.width());
+            rct.height(elem.height());
+        }
+        rct.endAnimate();
+        st.after(rct);
+        st.startAnimate();
+        st.color(m - i - 1, pos, C.orange);
+        st.endAnimate();
+        await sd.pause();
+        let mn = Infinity;
+        for (let j = l; j <= r; j++)
+            mn = Math.min(mn, data[j]);
+        st.startAnimate().value(m - i - 1, pos, mn).endAnimate();
+        await sd.pause();
+        arr.startAnimate();
+        for (let j = l; j <= r; j++)
+            arr.color(j, C.white);
+        arr.endAnimate();
+        st.startAnimate();
+        st.color(m - i - 1, pos, C.white);
+        st.endAnimate();
+        rct.startAnimate().opacity(0).remove();
+    }
+}

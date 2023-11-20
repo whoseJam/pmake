@@ -5,6 +5,7 @@ let rule = sd.rule();
 let H = sd.helper();
 let C = sd.color();
 let g = sd.Graph(svg);
+let prt = {};
 let n = 7;
 let m = 11;
 let edges = H.ForwardStar();
@@ -28,7 +29,7 @@ for (let i = 0; i < m; i++) {
     edges.link(e[i][0], e[i][1], e[i][2]);
     edges.link(e[i][1], e[i][0], e[i][2]);
 }
-g.width(500).height(500).cx(300).cy(300).drag(true);
+g.width(500).height(500).cx(300).cy(300);
 
 main();
 
@@ -103,9 +104,32 @@ async function Dijkstra(S) {
             l.strokeWidth(3)
             l.stroke(C.red);
             g.endAnimate();
-            await sd.pause();
             let newDis = Math.min(getDis(cur) + w, getDis(v));
-            setDis(v, newDis);
+            if (getDis(v) > newDis) {
+                await sd.pause();
+                if (prt[v]) {
+                    let p = prt[v];
+                    p.markerEnd(null);
+                    p.startAnimate();
+                    p.strokeDashOffset(p.totalLength());
+                    p.endAnimate();
+                    p.remove();
+                }
+                let link = sd.Link(l);
+                let src = l.source();
+                let tgt = l.target();
+                link.source(src[0], src[1]);
+                link.target(tgt[0], tgt[1]);
+                link.strokeWidth(3);
+                link.strokeDashArray(link.totalLength());
+                link.strokeDashOffset(link.totalLength());
+                link.startAnimate();
+                link.strokeDashOffset(0)
+                link.endAnimate();
+                link.arrow();
+                prt[v] = link;
+                setDis(v, newDis);
+            }
             await sd.pause();
             g.startAnimate()
             g.color(v, C.white);
