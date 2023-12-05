@@ -39,7 +39,7 @@ function animateGroup() {
 async function main() {
 
     id = 0;
-    await build(1, 8, 0, 0);
+    await build(1, n, 0, 0);
     for (let i = 0; i < buildSeq.length; i++)
         await buildSeq[i].start();
     for (let i = 3; i >= 0; i--)
@@ -171,16 +171,3 @@ async function build(l, r, prt, depth) {
     await build(l, mid, myid, depth+1);
     await build(mid + 1, r, myid, depth+1);
 }
-
-// function query(l, r, ql, qr) {
-//     if (ql <= l && r <= qr) {
-//         let e1 = tr.element(idDict[encode(l, r)]);
-//         let e2 = tr2.element(idDict[encode(l, r)]);
-//         focus1.push(e1);
-//         focus2.push(e2);
-//         return;
-//     }
-//     let mid = Math.floor((l + r) / 2);
-//     if (ql <= mid) query(l, mid, ql, qr);
-//     if (qr > mid) query(mid + 1, r, ql, qr);
-// }

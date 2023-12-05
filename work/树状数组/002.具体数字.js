@@ -29,13 +29,9 @@ let originArr;
 main();
 
 async function main() {
-    originArr = sd.Array(svg).start(1);
-    for (let i = 1; i <= 8; i++) {
-        originArr.push(null);
-        originArr.element(i)._.valueRule = R.CenterOnly();
-        originArr.value(i, mathjax(`A_${i}`));
-    }
-    originArr.cx(600).cy(350)
+    originArr = sd.Array(svg);
+    hsjPushArray(originArr, arr, 1, 8);
+    originArr.cx(600).cy(350).start(1)
 
     for (let i = 1; i <= 8; i++)
         build(i);

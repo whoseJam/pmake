@@ -2,11 +2,12 @@ import * as sd from "#lib/slide";
 
 let svg = sd.svg();
 let C = sd.color();
+let R = sd.rule();
 let h = sd.make1d(100);
 let l = sd.make1d(100);
 let cnt = 0;
 let tr = sd.Tree(svg).x(100).y(50).layerHeight(60).width(600);
-let arr = sd.Array(svg).x(100).y(350);
+let arr = sd.Array(svg).x(100).y(350).elementWidth(50).elementHeight(50);
 
 tr.root(1);
 link(1, 2);
@@ -34,7 +35,10 @@ async function dfs(now, prt) {
     tr.color(now, C.GREEN);
     tr.endAnimate();
     await sd.pause();
-    arr.startAnimate().push(`v${now}`).endAnimate();
+    arr.startAnimate().push()
+    arr.element(arr.end())._.valueRule = R.CenterOnly();
+    arr.value(arr.end(), sd.Text(svg, `v${now}`).fontSize(20));
+    arr.endAnimate();
 
     for (let i = h[now]; i; i = l[i].nxt) {
         let v = l[i].to;

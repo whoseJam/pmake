@@ -1,18 +1,17 @@
 import * as sd from "#lib/slide";
 
 let svg = sd.svg();
-let R = sd.rule();
+let xdata = [1, 5, 3, 5];
+let ydata = [4, 6, 4, 7];
 let a = sd.Array(svg).x(200).y(100).start(1);
 let b = sd.Array(svg).x(200).y(200).start(1);
 let x = sd.Array(svg).x(200).y(350).start(1);
 let y = sd.Array(svg).x(200).y(450).start(1);
+for (let i = 0; i < xdata.length; i++)
+    a.push(xdata[i]);
+for (let i = 0; i < ydata.length; i++)
+    b.push(ydata[i]);
 let pa = 1, pb = 1;
-for (let i = 1; i <= 10; i++) {
-    a.push(sd.Mathjax(svg).math(`x_{${i}}`))
-    b.push(sd.Mathjax(svg).math(`y_{${i}}`))
-    a.value(i).height(15).cx(a.element(i).cx()).cy(a.element(i).cy());
-    b.value(i).height(15).cx(b.element(i).cx()).cy(b.element(i).cy());
-}
 let l = sd.Line(svg).strokeWidth(2);
 let next = "a";
 track(l, 1, 1, false);
@@ -29,42 +28,33 @@ document.addEventListener('keydown', (e) => {{
 
 main();
 
-function pushMath(arr, math) {
-    arr.startAnimate();
-    arr.push();
-    let e = arr.element(arr.end());
-    e._.valueRule = R.CenterOnly();
-    e.value(sd.Mathjax(svg).math(math).height(15))
-    arr.endAnimate();
-}
-
 async function main() {
     await sd.pause();
-    pushMath(x, "x_1");
-    pushMath(y, "y_1");
+    x.startAnimate().push(xdata[0]).endAnimate();
+    y.startAnimate().push(ydata[0]).endAnimate();
 
-    while(pa < 10 || pb < 10) {
+    while(pa < xdata.length || pb < ydata.length) {
         await sd.pause();
         if (next === "a") { 
-            if (pa < 10) {
+            if (pa < xdata.length) {
                 track(l, ++pa, pb);
                 await sd.pause();
-                pushMath(x, `x_{${pa}}`);
-                pushMath(y, `y_{${pb}}`);
+                x.startAnimate().push(xdata[pa-1]).endAnimate();
+                y.startAnimate().push(ydata[pb-1]).endAnimate();
             }
         } else if (next === "b") {
-            if (pb < 10) {
+            if (pb < ydata.length) {
                 track(l, pa, ++pb);
                 await sd.pause();
-                pushMath(x, `x_{${pa}}`);
-                pushMath(y, `y_{${pb}}`);
+                x.startAnimate().push(xdata[pa-1]).endAnimate();
+                y.startAnimate().push(ydata[pb-1]).endAnimate();
             }
         } else if (next === "t") {
-            if (pa < 10 && pb < 10) {
+            if (pa < xdata.length && pb < ydata.length) {
                 track(l, ++pa, ++pb);
                 await sd.pause();
-                pushMath(x, `x_{${pa}}`);
-                pushMath(y, `y_{${pb}}`);
+                x.startAnimate().push(xdata[pa-1]).endAnimate();
+                y.startAnimate().push(ydata[pb-1]).endAnimate();
             }
         }
     }
