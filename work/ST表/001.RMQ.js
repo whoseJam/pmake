@@ -29,8 +29,9 @@ async function main() {
     st.opacity(0);
     await sd.pause();
     st.startAnimate().opacity(1).endAnimate();
-    // for (let i = 1; i <= n; i++)
-    //     await show(i);
+    for (let j = 0; j <= 3; j++) 
+        for (let i = 1; i <= n; i++)
+            await show(i, j);
 
     await query(2, 7);
     await query(3, 10);
@@ -82,11 +83,14 @@ async function query(l, r) {
     a1.startAnimate().opacity(0).remove();
     a2.startAnimate().opacity(0).remove();
     arr.startAnimate().color(C.white).endAnimate();
-    st.startAnimate().color(C.white).endAnimate();
+    st.startAnimate();
+    st.color(m - 1 - k, l, C.white);
+    st.color(m - 1 - k, r - (1<<k) + 1, C.white).endAnimate();
+    st.endAnimate();
 }
 
-async function show(pos) {
-    for (let i = 0; (1<<i) + pos - 1 <= n; i++) {
+async function show(pos, i) {
+    if (pos + (1<<i) - 1 <= n) {
         await sd.pause();
         let l = pos, r = (1<<i) + pos - 1;
         arr.startAnimate();
@@ -111,10 +115,10 @@ async function show(pos) {
         st.color(m - i - 1, pos, C.orange);
         st.endAnimate();
         await sd.pause();
-        let mn = Infinity;
+        let mx = -Infinity;
         for (let j = l; j <= r; j++)
-            mn = Math.min(mn, data[j]);
-        st.startAnimate().value(m - i - 1, pos, mn).endAnimate();
+            mx = Math.max(mx, data[j]);
+        st.startAnimate().value(m - i - 1, pos, mx).endAnimate();
         await sd.pause();
         arr.startAnimate();
         for (let j = l; j <= r; j++)
