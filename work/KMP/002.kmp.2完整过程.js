@@ -2,11 +2,11 @@ import * as sd from "#lib/slide";
 
 let svg = sd.svg();
 let C = sd.color();
-let arr = sd.Array(svg).start(1).x(100).y(100);
+let arr = sd.Array(svg).start(1).x(400).y(100);
 let str = " babaababab";
 let n = str.length - 1;
-let len = sd.Array(svg).start(1).x(100).y(200).resize(10);
-sd.EnableArrayName("len数组");
+let len = sd.Array(svg).start(1).x(400).y(200).resize(10);
+sd.EnableArrayName(len, "len数组");
 
 for (let i = 1; i <= n; i++) arr.push(str[i]);
 
