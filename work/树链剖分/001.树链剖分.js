@@ -52,8 +52,8 @@ async function dfs1(now, prt) {
         }
     }
     if (sn[now]) {
-        tr.element(now, sn[now]).background().strokeWidth(5);
-        tr.element(now, sn[now]).background().stroke(C.red);
+        tr.element(now, sn[now]).strokeWidth(5);
+        tr.element(now, sn[now]).stroke(C.red);
     }
 }
 

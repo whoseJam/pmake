@@ -2,8 +2,9 @@ import * as sd from "#lib/slide";
 
 let svg = sd.svg();
 let C = sd.color();
-let h = sd.Array(svg).start(1).indexed(true).x(100).y(100);
-let l = sd.Array(svg).start(1).indexed(true).x(100).y(200);
+const W = 50
+let h = sd.Array(svg).start(1).indexed(true).x(100).y(100).width(W);
+let l = sd.Array(svg).start(1).indexed(true).x(100).y(200).width(W);
 let board = sd.Text(svg).x(800).y(100).fontSize(40);
 sd.EnableArrayName(l, "l数组");
 sd.EnableArrayName(h, "h数组");
@@ -46,7 +47,10 @@ async function link(x, y) {
     let e = makeElemWithIndex(cnt);
     e.cx(l.element(cnt).cx()).cy(l.element(cnt).cy()).opacity(0);
     e.after(l).opacity(1).startAnimate().x(600).y(400).endAnimate();
-
+    
+    await sd.pause();
+    e.value().row(1).text(`to=${y}`);
+    l.value(cnt).row(1).text(`to=${y}`);
 
     if (hnodes[x].nxt) {
         await sd.pause();
@@ -62,6 +66,7 @@ async function link(x, y) {
         await sd.pause();
         stopLink(hnodes[x].lnk);
     }
+
     await sd.pause();
     let link = sd.Link(svg).from(hnodes[x]).to(e);
     startLink(link);
@@ -80,7 +85,7 @@ async function link(x, y) {
 }
 
 function makeElemWithIndex(idx) {
-    let e = sd.Box(svg);
+    let e = sd.Box(svg).width(W);
     let txt = sd.Code(svg);
     txt.push("to");
     txt.push("Nxt");

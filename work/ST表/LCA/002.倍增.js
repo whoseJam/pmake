@@ -6,8 +6,24 @@ let h = sd.make1d(100);
 let l = sd.make1d(100);
 let fa = sd.make2d(100, 10);
 let dep = sd.make1d(100);
-let cnt = 0;
-let tr = sd.Tree(svg).x(100).y(50).layerHeight(50).width(600);
+let cnt = 0, n = 16, m = 4;
+let tr = sd.Tree(svg).x(10).y(50).layerHeight(50).width(600);
+let st = sd.Grid(svg).n(m).m(n).startM(1).x(100).y(300);
+for (let i = 1; i <= n; i++) {
+    st.children.push(sd.Text(st, i).fontSize(20), function(parent, child) {
+        let elem = st.element(m - 1, i);
+        child.cx(elem.cx());
+        child.y(elem.my() + 3);
+    })
+}
+for (let i = 0; i < m; i++) {
+    st.children.push(sd.Mathjax(st).math(`2^${i}`).height(20), function(parent, child) {
+        let elem = st.element(m - 1 - i, 1);
+        child.mx(elem.x() - 5);
+        child.cy(elem.cy());
+    })
+}
+st.x(500).cy(300);
 
 let edges = [
     [1, 2],
@@ -44,6 +60,13 @@ async function main() {
         removeLinks(lnks);
     }
     await LCA(2, 16);
+    await LCA(6, 16);
+    while (true) {
+        let u = sd.rand(1, n);
+        let v = sd.rand(1, n);
+        if (u === v) continue;
+        await LCA(u, v);
+    }
 }
 
 function makeArrow(name, flg) {
@@ -80,6 +103,7 @@ function makeLinks(y) {
         lnk.strokeDashArray(lnk.totalLength());
         lnk.startAnimate().strokeDashOffset(0).endAnimate().arrow();
         lnks.push(lnk);
+        st.startAnimate().value(m - i - 1, y, ty).endAnimate();
     }
     return lnks;
 }
@@ -92,7 +116,15 @@ function removeLinks(lnks) {
     }
 }
 
+function highlightST(row, col) {
+    st.startAnimate();
+    for (let u = 1; u <= n; u++)
+        st.color(m - row - 1, u, col);
+    st.endAnimate();
+}
+
 async function LCA(x, y) {
+    if (dep[x] > dep[y]) { let tmp = x; x = y; y = tmp; }
     await sd.pause();
     let ox = x, oy = y;
     tr.startAnimate();
@@ -104,7 +136,9 @@ async function LCA(x, y) {
     px.opacity(0).startAnimate().opacity(1).endAnimate();
     py.opacity(0).startAnimate().opacity(1).endAnimate();
 
-    for (let i = 5; i >= 0; i--) {
+    for (let i = m-1; i >= 0; i--) {
+        if (i==m-1) await sd.pause();
+        highlightST(i, C.blue);
         if (dep[fa[y][i]] >= dep[x]) {
             await sd.pause();
             let lnks = makeLinks(y);
@@ -116,14 +150,51 @@ async function LCA(x, y) {
             await sd.pause();
             removeLinks(lnks);
         }
+        await sd.pause();
+        highlightST(i, C.white);
+    }
+    if (x === y) {
+        await sd.pause();
+        tr.startAnimate().color(x, C.orange).endAnimate();
+        await sd.pause();
+        tr.startAnimate();
+        tr.element(ox).strokeWidth(1).stroke(C.black).endAnimate();
+        tr.element(oy).strokeWidth(1).stroke(C.black).endAnimate();
+        tr.color(x, C.white);
+        tr.endAnimate();
+        px.startAnimate().opacity(0).remove();
+        py.startAnimate().opacity(0).remove();
+        return;
+    }
+    for (let i = m-1; i >= 0; i--) {
+        if (i==m-1) await sd.pause();
+        highlightST(i, C.blue);
+        if (fa[x][i] != fa[y][i]) {
+            await sd.pause();
+            let xlnks = makeLinks(x);
+            let ylnks = makeLinks(y);
+            await sd.pause();
+            xlnks[i].startAnimate().strokeWidth(2).stroke(C.green).endAnimate();
+            ylnks[i].startAnimate().strokeWidth(2).stroke(C.green).endAnimate();
+            await sd.pause();
+            x = fa[x][i];
+            y = fa[y][i];
+            px.startAnimate(); moveArrow(px, x); px.endAnimate();
+            py.startAnimate(); moveArrow(py, y); py.endAnimate();
+            await sd.pause();
+            removeLinks(xlnks);
+            removeLinks(ylnks);
+        }
+        await sd.pause();
+        highlightST(i, C.white);
     }
     await sd.pause();
-    tr.startAnimate().color(x, C.orange).endAnimate();
+    tr.startAnimate().color(fa[x][0], C.orange).endAnimate();
     await sd.pause();
     tr.startAnimate();
     tr.element(ox).strokeWidth(1).stroke(C.black).endAnimate();
     tr.element(oy).strokeWidth(1).stroke(C.black).endAnimate();
-    tr.color(x, C.white);
+    tr.color(fa[x][0], C.white);
     tr.endAnimate();
     px.startAnimate().opacity(0).remove();
     py.startAnimate().opacity(0).remove();
