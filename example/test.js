@@ -1,5 +1,5 @@
 import * as sd from "#lib/slide";
-import { Node } from "../lib/Node/Node";
+import { Node } from "../lib/Node/Node_";
 import { MathjaxHelper } from "../lib/Utility/MathjaxHelper";
 
 let svg = sd.svg();

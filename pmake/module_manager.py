@@ -135,6 +135,8 @@ def template_html(module: str, path_to_output: str):
         document.addEventListener('keydown', (e) => {{
             if (e.key === 'n' || e.key === 'N')
                 window.next();
+            if (e.key === 'p' || e.key === 'P')
+                window.prev();
         }})
     </script>
 </body>
