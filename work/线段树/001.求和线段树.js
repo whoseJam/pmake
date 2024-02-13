@@ -1,16 +1,13 @@
-import * as sd from "#lib/slide";
+import * as sd from "../../lib/slide";
 
 let svg = sd.svg();
 let C = sd.color();
 
-let tr = sd.ValueTree(svg).x(50).y(200)
-tr.width(1100).layerHeight(100)
-tr.drag(true).resizeable(true);
-let originArr = sd.Array(svg).x(440).y(50).start(1);
+let tr = new sd.ValueTree(svg).x(50).y(200).width(1100).layerHeight(100);
+let originArr = new sd.Array(svg).x(440).y(50).start(1);
 let id = 0, n = 8;
 let data = [0, 1, 4, 2, 7, 5, 6, 3, 8];
 let buildSeq = [], nodes = {};
-let focus1 = [], focus2 = [];
 let idDict = {};
 
 pushArray(originArr, data, 1, n);
@@ -113,7 +110,7 @@ async function merge(depth) {
         if (nodes[id].depth !== depth) continue;
         let arr = nodes[id].arr;
         arr.startAnimate().color(C.BLUE).endAnimate();
-        let table = sd.Text(arr);
+        let table = new sd.Text(arr);
         arr.children.push("table", table, function(parent, child) {
             if (nodes[id].l === nodes[id].r) {
                 child.cx(parent.cx());
@@ -139,7 +136,7 @@ async function merge(depth) {
 async function build(l, r, prt, depth) {
     if (buildSeq.length === depth)
         buildSeq.push(animateGroup());
-    let a = sd.Array(tr).start(l);
+    let a = new sd.Array(tr).start(l);
     pushArray(a, data, l, r);
     let myid = String(++id);
     nodes[myid] = { arr: a, l: l, r: r, depth: depth };
