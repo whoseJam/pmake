@@ -1,11 +1,10 @@
-import * as sd from "#lib/slide";
+import * as sd from "../../lib/slide";
 
 let svg = sd.svg();
 let C = sd.color();
-let arr = sd.Array(svg).x(100).y(100);
-sd.EnableArrayName(arr, "x", 15);
-arr.indexed(true).opacity(0);
-let code = sd.Code(svg).code(`
+let arr = new sd.Array(svg).x(100).y(100).opacity(0);
+sd.Label(arr, "x", "lc", 20);
+let code = new sd.Code(svg).code(`
 vector<int>x;
 x.push_back(1);
 x.push_back(5);
@@ -22,49 +21,49 @@ main();
 
 async function main() {
     await sd.pause();
-    code.startAnimate().highlight(1).endAnimate();
+    code.startAnimate().focus(1).endAnimate();
     await sd.pause();
     arr.startAnimate().opacity(1).endAnimate();
 
     await sd.pause();
-    code.startAnimate().highlight(2).endAnimate();
+    code.startAnimate().focus(2).endAnimate();
     await sd.pause();
     arr.startAnimate().push(1).endAnimate();
 
     await sd.pause();
-    code.startAnimate().highlight(3).endAnimate();
+    code.startAnimate().focus(3).endAnimate();
     await sd.pause();
     arr.startAnimate().push(5).endAnimate();
 
     await sd.pause();
-    code.startAnimate().highlight(4).endAnimate();
+    code.startAnimate().focus(4).endAnimate();
     await sd.pause();
     arr.startAnimate().color(0, C.green).endAnimate();
     await sd.pause();
     arr.startAnimate().color(0, C.white).endAnimate();
     await sd.pause();
-    code.startAnimate().highlight(5).endAnimate();
+    code.startAnimate().focus(5).endAnimate();
     await sd.pause();
     arr.startAnimate().color(1, C.green).endAnimate();
     await sd.pause();
     arr.startAnimate().color(1, C.white).endAnimate();
     await sd.pause();
-    code.startAnimate().highlight(6).endAnimate();
+    code.startAnimate().focus(6).endAnimate();
     await sd.pause();
-    code.startAnimate().highlight(7).endAnimate();
+    code.startAnimate().focus(7).endAnimate();
 
     await sd.pause();
-    code.startAnimate().highlight(8).endAnimate();
+    code.startAnimate().focus(8).endAnimate();
     await sd.pause();
     arr.startAnimate().push(6).endAnimate();
 
     await sd.pause();
-    code.startAnimate().highlight(9).endAnimate();
+    code.startAnimate().focus(9).endAnimate();
     await sd.pause();
     arr.startAnimate().pop().endAnimate();
 
     await sd.pause();
-    code.startAnimate().highlight(10).endAnimate();
+    code.startAnimate().focus(10).endAnimate();
     await sd.pause();
     arr.startAnimate().pop().endAnimate();
 }

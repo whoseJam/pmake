@@ -9,7 +9,8 @@ main();
 async function main() {
     let t = await makeSegmentTree(arr);
     await sd.pause();
-    await t.update1(1, 5, 100);
+    await t.query1(1, 2, 6);
+    // await t.update1(1, 5, 100);
 }
 
 async function makeSegmentTree(array) {
@@ -103,7 +104,31 @@ async function makeSegmentTree(array) {
         segment.startAnimate().color(x, C.white).endAnimate();
     }
 
+    let sum = sd.IntBoard("sum", 0).opacity(0).x(500).y(500);
+
+    async function query1(x, ql, qr) {
+        if (x === 1) sum.value(0).opacity(1);
+        let cur = segment.element(x);
+        segment.startAnimate().color(x, C.green).endAnimate();
+        console.log(cur.getLeft(), cur.getRight(), "~~~x=", x);
+        if (ql <= cur.getLeft() && cur.getRight() <= qr) {
+            cur.getSum();
+            await sd.pause();
+            segment.startAnimate().color(x, C.orange).endAnimate();
+            await sd.pause();
+            sum.valueWithAnimate(sum.value() + segment.element(x).getSum());
+            await sd.pause();
+            segment.startAnimate().color(x, C.white).endAnimate();
+            return;
+        }
+        let mid = Math.floor((cur.getLeft() + cur.getRight()) / 2);
+        if (ql <= mid) await query1(lc(x), ql, qr);
+        if (qr > mid) await query1(rc(x), ql, qr);
+        segment.startAnimate().color(x, C.white).endAnimate();
+    }
+
     segment.update1 = update1;
+    segment.query1 = query1;
 
     return segment
 }
