@@ -1,0 +1,178 @@
+import * as sd from "../../lib/slide";
+
+let svg = sd.svg();
+let C = sd.color();
+let arr = [0, 1, 4, 2, 5, 3, 6, 9, 2];
+
+main();
+
+
+async function main() {
+    let t = await makeSegmentTree(arr);
+    global.segment = function() {
+        return t;
+    }
+    await sd.pause();
+}
+
+async function makeSegmentTree(array) {
+    let n = array.length - 1;
+    let segment = new sd.ValueTree(svg).width(1100).cx(600).y(100).layerHeight(100);
+
+    function makeSegmentInfo() {
+        let box = new sd.Box(svg);
+        box.add = 0;
+        box.sum = 0;
+        box.fresh = function() { this.value(`add=${this.add} min=${this.sum}`); }
+        box.fresh();
+        box.strokeOpacity(0).fillOpacity(0);
+        return box;
+    }
+
+    function makeSegmentNode(l, r) {
+        let node = new sd.Array(svg).start(l);
+        for (let i = l; i <= r; i++)
+            node.push(array[i]);
+        let type = (l === r && l % 2 === 1) ? "t" : "b";
+        sd.Index(node, type);
+        
+        node.childAs("box", makeSegmentInfo(), function(parent, child) {
+            child.width(40 * 4).height(30);
+            child.cx(parent.cx());
+            if (l === r && l % 2 === 1) child.y(parent.my());
+            else child.my(parent.y());
+        })
+        node.setLeft = function(l) { let box = node.child("box"); box.l = l; box.fresh(); }
+        node.setRight = function(r) { let box = node.child("box"); box.r = r; box.fresh(); }
+        node.setSum = function(sum) { let box = node.child("box"); box.sum = sum; box.fresh(); }
+        node.setAdd = function(add) { let box = node.child("box"); box.add = add; box.fresh(); }
+        node.getLeft = function() { let box = node.child("box"); return box.l; }
+        node.getRight = function() { let box = node.child("box"); return box.r; }
+        node.getSum = function() { let box = node.child("box"); return box.sum; }
+        node.getAdd = function() { let box = node.child("box"); return box.add; }
+        node.setLeft(l);
+        node.setRight(r);
+        node.isLeave = function() { return this.getLeft() === this.getRight(); }
+        return node;
+    }
+
+    function lc(x) { return x * 2; }
+    function rc(x) { return x * 2 + 1; }
+
+    function pushUp(x) {
+        let node = segment.element(x);
+        node.setSum(
+            Math.min(
+                segment.element(lc(x)).getSum(),
+                segment.element(rc(x)).getSum()));
+    }
+
+    async function pushAdd(x, add) {
+        let node = segment.element(x);
+        await sd.pause();
+        node.startAnimate().color(C.blue).endAnimate();
+        await sd.pause();
+        addValues(node, 0, Infinity, add);
+        await sd.pause();
+        node.setSum(node.getSum() + add);
+        await sd.pause();
+        node.setAdd(node.getAdd() + add);
+        await sd.pause();
+        node.startAnimate().color(C.white).endAnimate();
+    }
+
+    async function pushDown(x) {
+        let node = segment.element(x);
+        await pushAdd(lc(x), node.getAdd());
+        await pushAdd(rc(x), node.getAdd());
+        await sd.pause();
+        node.startAnimate().setAdd(0).endAnimate();
+        await sd.pause();
+    }
+
+    function build(x, l, r) {
+        let node = makeSegmentNode(l, r);
+        segment.newNode(x, node);
+        if (l === r) {
+            node.setSum(array[l]);
+            return;
+        }
+        let mid = Math.floor((l + r) / 2);
+        build(lc(x), l, mid);
+        segment.newLink(x, lc(x));
+        build(rc(x), mid+1, r);
+        segment.newLink(x, rc(x));
+        pushUp(x);
+    }
+
+    build(1, 1, n);
+
+    function addValues(node, ql, qr, delta) {
+        for (let i = Math.max(node.getLeft(), ql); i <= Math.min(node.getRight(), qr); i++)
+            node.value(i, (+node.value(i).text()) + delta);
+    }
+
+    async function update(x, ql, qr, delta) {
+        segment.startAnimate().color(x, C.green).endAnimate();
+        let cur = segment.element(x);
+        if (ql <= cur.getLeft() && cur.getRight() <= qr) {
+            await pushAdd(x, delta);
+            segment.startAnimate().color(x, C.white).endAnimate();
+            return;
+        }
+        if (cur.getAdd() > 0) await pushDown(x);
+        let mid = Math.floor((cur.getLeft() + cur.getRight()) / 2);
+        if (ql <= mid) await update(lc(x), ql, qr, delta);
+        if (qr > mid) await update(rc(x), ql, qr, delta);
+
+        await sd.pause();
+        addValues(cur, ql, qr, delta);
+        await sd.pause();
+        pushUp(x);
+        await sd.pause();
+        segment.startAnimate().color(x, C.white).endAnimate();
+    }
+
+    let sum = sd.ValueBoard("min", Infinity).opacity(0).x(500).y(500).fontSize(40);
+
+    async function query(x, ql, qr) {
+        if (x === 1) sum.value(Infinity).opacity(1);
+        let cur = segment.element(x);
+        segment.startAnimate().color(x, C.green).endAnimate();
+        if (ql <= cur.getLeft() && cur.getRight() <= qr) {
+            cur.getSum();
+            await sd.pause();
+            segment.startAnimate().color(x, C.orange).endAnimate();
+            await sd.pause();
+            sum.startAnimate().value(
+                Math.min(sum.value(), segment.element(x).getSum())).endAnimate();
+            await sd.pause();
+            segment.startAnimate().color(x, C.white).endAnimate();
+            return;
+        }
+        if (cur.getAdd() > 0) await pushDown(x);
+        let mid = Math.floor((cur.getLeft() + cur.getRight()) / 2);
+        if (ql <= mid) await query(lc(x), ql, qr);
+        if (qr > mid) await query(rc(x), ql, qr);
+        segment.startAnimate().color(x, C.white).endAnimate();
+        if (x === 1) {
+            await sd.pause();
+            segment.element(1).startAnimate().color(ql, qr, C.orange).endAnimate();
+            await sd.pause();
+            sum.startAnimate().opacity(0).endAnimate();
+            await sd.pause();
+            segment.element(1).startAnimate().color(ql, qr, C.white).endAnimate();
+        }
+    }
+
+    segment.update = async function(ql, qr, d) {
+        await sd.pause();
+        await update(1, ql, qr, d);
+    };
+    segment.query = async function(ql, qr) {
+        await sd.pause();
+        await query(1, ql, qr);
+    };
+
+    return segment;
+}
