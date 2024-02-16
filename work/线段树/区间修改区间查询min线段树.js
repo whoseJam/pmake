@@ -42,10 +42,10 @@ async function makeSegmentTree(array) {
             if (l === r && l % 2 === 1) child.y(parent.my());
             else child.my(parent.y());
         })
-        node.setLeft = function(l) { let box = node.child("box"); box.l = l; box.fresh(); }
-        node.setRight = function(r) { let box = node.child("box"); box.r = r; box.fresh(); }
-        node.setSum = function(sum) { let box = node.child("box"); box.sum = sum; box.fresh(); }
-        node.setAdd = function(add) { let box = node.child("box"); box.add = add; box.fresh(); }
+        node.setLeft = function(l) { let box = node.child("box"); box.l = l; box.fresh(); return this; }
+        node.setRight = function(r) { let box = node.child("box"); box.r = r; box.fresh(); return this; }
+        node.setSum = function(sum) { let box = node.child("box"); box.sum = sum; box.fresh(); return this; }
+        node.setAdd = function(add) { let box = node.child("box"); box.add = add; box.fresh(); return this; }
         node.getLeft = function() { let box = node.child("box"); return box.l; }
         node.getRight = function() { let box = node.child("box"); return box.r; }
         node.getSum = function() { let box = node.child("box"); return box.sum; }

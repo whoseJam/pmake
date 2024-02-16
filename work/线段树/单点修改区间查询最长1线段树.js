@@ -2,7 +2,7 @@ import * as sd from "../../lib/slide";
 
 let svg = sd.svg();
 let C = sd.color();
-let arr = [0, 1, 4, 2, 5, 3, 6, 9, 2];
+let arr = [0, 1, 0, 1, 1, 1, 1, 1, 0];
 
 main();
 
@@ -21,9 +21,10 @@ async function makeSegmentTree(array) {
 
     function makeSegmentInfo() {
         let box = new sd.Box(svg);
-        box.add = 0;
-        box.sum = 0;
-        box.fresh = function() { this.value(`add=${this.add} sum=${this.sum}`); }
+        box.len = 0;
+        box.llen = 0;
+        box.rlen = 0;
+        box.fresh = function() { this.value(`len=${this.len}`); }
         box.fresh();
         box.strokeOpacity(0).fillOpacity(0);
         return box;
@@ -33,26 +34,21 @@ async function makeSegmentTree(array) {
         let node = new sd.Array(svg).start(l);
         for (let i = l; i <= r; i++)
             node.push(array[i]);
-        let type = (l === r && l % 2 === 1) ? "t" : "b";
-        sd.Index(node, type);
+
         
         node.childAs("box", makeSegmentInfo(), function(parent, child) {
             child.width(40 * 4).height(30);
             child.cx(parent.cx());
-            if (l === r && l % 2 === 1) child.y(parent.my());
-            else child.my(parent.y());
+            child.my(parent.y());
         })
         node.setLeft = function(l) { let box = node.child("box"); box.l = l; box.fresh(); return this; }
         node.setRight = function(r) { let box = node.child("box"); box.r = r; box.fresh(); return this; }
-        node.setSum = function(sum) { let box = node.child("box"); box.sum = sum; box.fresh(); return this; }
-        node.setAdd = function(add) { let box = node.child("box"); box.add = add; box.fresh(); return this; }
         node.getLeft = function() { let box = node.child("box"); return box.l; }
         node.getRight = function() { let box = node.child("box"); return box.r; }
-        node.getSum = function() { let box = node.child("box"); return box.sum; }
-        node.getAdd = function() { let box = node.child("box"); return box.add; }
         node.setLeft(l);
         node.setRight(r);
         node.isLeave = function() { return this.getLeft() === this.getRight(); }
+        node.size = function() { return this.getRight() - this.getLeft() + 1; }
         return node;
     }
 
@@ -61,39 +57,22 @@ async function makeSegmentTree(array) {
 
     function pushUp(x) {
         let node = segment.element(x);
-        node.setSum(
-            segment.element(lc(x)).getSum() +
-            segment.element(rc(x)).getSum());
-    }
-
-    async function pushAdd(x, add) {
-        let node = segment.element(x);
-        await sd.pause();
-        node.startAnimate().color(C.blue).endAnimate();
-        await sd.pause();
-        addValues(node, 0, Infinity, add);
-        await sd.pause();
-        node.setSum(node.getSum() + add * (node.getRight() - node.getLeft() + 1));
-        await sd.pause();
-        node.setAdd(node.getAdd() + add);
-        await sd.pause();
-        node.startAnimate().color(C.white).endAnimate();
-    }
-
-    async function pushDown(x) {
-        let node = segment.element(x);
-        await pushAdd(lc(x), node.getAdd());
-        await pushAdd(rc(x), node.getAdd());
-        await sd.pause();
-        node.startAnimate().setAdd(0).endAnimate();
-        await sd.pause();
+        let l = segment.element(lc(x)).child("box");
+        let r = segment.element(rc(x)).child("box");
+        let c = node.child("box");
+        c.llen = (l.llen === segment.element(lc(x)).size()) ? l.llen + r.llen : l.llen;
+        c.rlen = (r.rlen === segment.element(rc(x)).size()) ? r.rlen + l.rlen : r.rlen;
+        c.len = Math.max(l.len, r.len, l.rlen + r.llen);
+        c.fresh();
     }
 
     function build(x, l, r) {
         let node = makeSegmentNode(l, r);
         segment.newNode(x, node);
         if (l === r) {
-            node.setSum(array[l]);
+            let box = node.child("box");
+            box.len = box.llen = box.rlen = (array[l] == 1 ? 1 : 0);
+            box.fresh();
             return;
         }
         let mid = Math.floor((l + r) / 2);
@@ -106,26 +85,24 @@ async function makeSegmentTree(array) {
 
     build(1, 1, n);
 
-    function addValues(node, ql, qr, delta) {
-        for (let i = Math.max(node.getLeft(), ql); i <= Math.min(node.getRight(), qr); i++)
-            node.value(i, (+node.value(i).text()) + delta);
-    }
-
-    async function update(x, ql, qr, delta) {
+    async function update(x, pos, delta) {
         segment.startAnimate().color(x, C.green).endAnimate();
         let cur = segment.element(x);
-        if (ql <= cur.getLeft() && cur.getRight() <= qr) {
-            await pushAdd(x, delta);
+        if (cur.isLeave()) {
+            await sd.pause();
+            cur.value(pos, delta);
+            await sd.pause();
+            cur.setSum(delta);
+            await sd.pause();
             segment.startAnimate().color(x, C.white).endAnimate();
             return;
         }
-        if (cur.getAdd() > 0) await pushDown(x);
         let mid = Math.floor((cur.getLeft() + cur.getRight()) / 2);
-        if (ql <= mid) await update(lc(x), ql, qr, delta);
-        if (qr > mid) await update(rc(x), ql, qr, delta);
+        if (pos <= mid) await update(lc(x), pos, delta);
+        else await update(rc(x), pos, delta);
 
         await sd.pause();
-        addValues(cur, ql, qr, delta);
+        cur.value(pos, delta);
         await sd.pause();
         pushUp(x);
         await sd.pause();
@@ -135,43 +112,34 @@ async function makeSegmentTree(array) {
     let sum = sd.ValueBoard("sum", 0).opacity(0).x(500).y(500).fontSize(40);
 
     async function query(x, ql, qr) {
-        if (x === 1) sum.value(Infinity).opacity(1);
+        if (x === 1) sum.value(0).opacity(1);
         let cur = segment.element(x);
         segment.startAnimate().color(x, C.green).endAnimate();
         if (ql <= cur.getLeft() && cur.getRight() <= qr) {
-            cur.getSum();
-            await sd.pause();
             segment.startAnimate().color(x, C.orange).endAnimate();
-            await sd.pause();
-            sum.startAnimate().value(
-                sum.value() + segment.element(x).getSum()).endAnimate();
-            await sd.pause();
-            segment.startAnimate().color(x, C.white).endAnimate();
             return;
         }
-        if (cur.getAdd() > 0) await pushDown(x);
         let mid = Math.floor((cur.getLeft() + cur.getRight()) / 2);
         if (ql <= mid) await query(lc(x), ql, qr);
         if (qr > mid) await query(rc(x), ql, qr);
-        segment.startAnimate().color(x, C.white).endAnimate();
         if (x === 1) {
             await sd.pause();
             segment.element(1).startAnimate().color(ql, qr, C.orange).endAnimate();
             await sd.pause();
             sum.startAnimate().opacity(0).endAnimate();
             await sd.pause();
-            segment.element(1).startAnimate().color(ql, qr, C.white).endAnimate();
+            segment.element(1).startAnimate().color(C.white).endAnimate();
         }
     }
 
-    segment.update = async function(ql, qr, d) {
+    segment.update = async function(pos, delta) {
         await sd.pause();
-        await update(1, ql, qr, d);
+        await update(1, pos, delta);
     };
     segment.query = async function(ql, qr) {
         await sd.pause();
         await query(1, ql, qr);
     };
 
-    return segment;
+    return segment
 }

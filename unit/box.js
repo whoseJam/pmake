@@ -25,4 +25,6 @@ async function main() {
     await sd.pause();
     test(`obj.startAnimate().value(value).endAnimate()`);
     await sd.pause();
+    test(`obj.startAnimate().rate(3).endAnimate()`);
+    await sd.pause();
 }
