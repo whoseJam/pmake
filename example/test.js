@@ -1,4 +1,18 @@
-import * as sd from "../lib/slide";
+/**
+ * 这是一个具有重载的函数。
+ * 
+ * @overload
+ * @param {number} a 第一个数字。
+ * @param {number} b 第二个数字。
+ * @returns {number} 返回两个数字的和。
+ * 
+ * @overload
+ * @param {string} a 第一个字符串。
+ * @param {string} b 第二个字符串。
+ * @returns {string} 返回两个字符串的连接结果。
+ */
+function functionName(a, b) {
+    // 函数实现
+  }
 
-let svg = sd.svg();
-let f = new sd.Fragment(svg, `<path d="M50 0 C10 0, 10 200, 50 200 M50 0 C90 0, 90 200, 50 200" fill="none" stroke="black" stroke-width="2"/>`)
+functionName(1, )

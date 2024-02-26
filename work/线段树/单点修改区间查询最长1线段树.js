@@ -135,10 +135,12 @@ async function makeSegmentTree(array) {
     segment.update = async function(pos, delta) {
         await sd.pause();
         await update(1, pos, delta);
+        await sd.pause();
     };
     segment.query = async function(ql, qr) {
         await sd.pause();
         await query(1, ql, qr);
+        await sd.pause();
     };
 
     return segment

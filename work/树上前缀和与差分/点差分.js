@@ -11,22 +11,19 @@ async function main() {
         return t;
     }
     await sd.pause();
-    t.addPath(12, 15);
+    t.addPath(2, 3);
+    t.addPath(3, 4);
+    t.addPath(6, 1);
+    // await sd.pause();
+    // t.addPath(12, 15);
     await sd.pause();
     t.countSum();
 }
 
 function makeTree() {
-    let t = new sd.Tree(svg).width(1100).cx(600).y(100);
-    let n = 20;
-    let edges = [
-        [1, 2], [1, 3], [1, 4],
-        [2, 5], [2, 6],
-        [4, 7], [4, 8],
-        [5, 9], [5, 10],
-        [6, 11], [7, 12], [8, 13], [8, 14], [8, 15],
-        [10, 16], [12, 17], [14, 18], [15, 19], [15, 20]
-    ];
+    let t = new sd.Tree(svg).width(600).cx(600).y(100);
+    let n = 6;
+    let edges = [[1, 2], [1, 3], [1, 4], [2, 5], [2, 6]];
     t.root(1);
     for (let i = 0; i < edges.length; i++)
         t.link(edges[i][0], edges[i][1]);
@@ -39,9 +36,11 @@ function makeTree() {
     function addPath(x, y) {
         let g = t.lca(x, y);
         t.startAnimate();
-        t.element(x).child("vars").inc("w").color("w", C.red);
-        t.element(y).child("vars").inc("w").color("w", C.red);
-        t.element(g).child("vars").dec("w").dec("w").color("w", C.red);
+        t.element(x).child("vars").inc("w");
+        t.element(y).child("vars").inc("w");
+        t.element(g).child("vars").dec("w");
+        let f = t.father(g);
+        if (f) t.element(f).child("vars").dec("w");
         t.endAnimate();
     }
 
@@ -51,8 +50,6 @@ function makeTree() {
         for (let i = 0; i < ch.length; i++) {
             countSum(ch[i]);
             t.element(x).child("vars").incBy("s", t.element(ch[i]).child("vars").get("s"));
-            if (t.element(x).child("vars").get("s") !== 0)
-                t.element(x).child("vars").color("s", "#24b7ff"); 
         }
     }
 
