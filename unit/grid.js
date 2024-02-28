@@ -1,7 +1,7 @@
 import * as sd from "../lib/slide";
 
 let svg = sd.svg();
-let g = new sd.Grid(svg).x(100).y(100);
+let g = new sd.Grid(svg).x(100).y(100).m(5).n(6);
 
 main();
 
@@ -14,4 +14,5 @@ async function main() {
     g.pushCol();
     await sd.pause();
     g.pushRow();
+    await sd.pause();
 }
