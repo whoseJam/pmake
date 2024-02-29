@@ -22,3 +22,5 @@ for (let i = 0; i < m; i++) {
     g.newLink(e[i][0], e[i][1]);
     g.element(e[i][0], e[i][1]).arrow().strokeWidth(1.2);
 }
+
+console.log("wh=", g.width(), g.height());
