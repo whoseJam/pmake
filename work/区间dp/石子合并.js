@@ -46,7 +46,7 @@ function makeDp() {
                 await sd.pause();
                 let j = i + len - 1;
                 let now = braceTop(i, j);
-                dp.startAnimate().color(i, j, C.orange);
+                dp.startAnimate().color(i, j, C.orange).endAnimate();
                 for (let k = i; k < j; k++) {
                     await sd.pause();
                     let b1 = braceBottom(i, k);
