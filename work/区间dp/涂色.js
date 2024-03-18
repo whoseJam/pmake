@@ -12,7 +12,7 @@ async function main() {
 
 function makeDp() {
     let self = {};
-    let data = [0, 3, 2, 5, 3, 2, 2];
+    let data = " RRGBGGR";
     // let data = [0, 2, 3, 4, 5];
     let n = data.length - 1;
     let math = sd.Stress(new sd.Mathjax(svg, "F_{l,r}=\\underset{1\\le k\\lt r}{min}\\{F_{l,k}+F_{k+1,r}+p[l]p[k+1]p[r+1]\\}").height(35).x(500).cy(400));
