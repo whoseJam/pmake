@@ -16,6 +16,7 @@ async function main() {
 }
 
 async function makeSegmentTree(array) {
+    let self = {};
     let n = array.length - 1;
     let segment = new sd.ValueTree(svg).width(1100).cx(600).y(100).layerHeight(100);
 
@@ -137,16 +138,16 @@ async function makeSegmentTree(array) {
         }
     }
 
-    segment.update = async function(pos, delta) {
+    self.update = async function(pos, delta) {
         await sd.pause();
         await update1(1, pos, delta);
         await sd.pause();
     };
-    segment.query = async function(ql, qr) {
+    self.query = async function(ql, qr) {
         await sd.pause();
         await query1(1, ql, qr);
         await sd.pause();
     };
 
-    return segment
+    return self;
 }
