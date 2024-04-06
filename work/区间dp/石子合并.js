@@ -36,7 +36,7 @@ function makeDp() {
             dp.startAnimate().color(i, i, C.orange).endAnimate();
             stone.startAnimate().color(i, C.blue).endAnimate();
             await sd.pause();
-            dp.startAnimate().value(i, i, data[i]).endAnimate();
+            dp.startAnimate().value(i, i, 0).endAnimate();
             await sd.pause();
             dp.startAnimate().color(C.white).endAnimate();
             stone.startAnimate().color(C.white).endAnimate();
