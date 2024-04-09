@@ -54,7 +54,7 @@ function makeDp() {
                     t.newNode(k, tmp=makeBackpack(j-k*v[i], C.blue));
                     sd.MathjaxLabel(tmp, `F_{${i-1}, ${j-k*v[i]}}=${dp.intValue(i-1, j-k*v[i])}`, "rc");
                     t.newLink(-1, k);
-                    t.element(-1, k).value(makeSpace(k * v[i], C.red, sd.Box).value(`+${k*w[i]}`, R.CenterOnly()));
+                    t.element(-1, k).value(makeSpace(k * v[i], C.red, sd.Box).value(`+${k*w[i]}`, R.CenterOnly())).revArrow();
                     ans = Math.max(ans, dp.intValue(i-1, j-k*v[i])+k*w[i]);
                     dp.color(i-1, j-k*v[i], C.blue);
                 }
