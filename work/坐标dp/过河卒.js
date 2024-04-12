@@ -28,8 +28,8 @@ function makeDp() {
     mp.cx(600).y(100);
     let owidth = latex.width();
     function highlight() {
-        latex.startAnimate().width(owidth * 1.2).cx(600).cy(400).endAnimate();
-        latex.startAnimate().width(owidth).cx(600).cy(400).endAnimate();
+        latex.startAnimate(150).width(owidth * 1.2).cx(600).cy(400).endAnimate();
+        latex.startAnimate(150).width(owidth).cx(600).cy(400).endAnimate();
     }
     self.dp = async function() {
         await sd.pause();
