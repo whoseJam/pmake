@@ -1,8 +1,8 @@
-import * as sd from "#lib/slide";
+import * as sd from "../../lib/slide";
 
 let svg = sd.svg();
 let C = sd.color();
-let board = sd.Text(svg).fontSize(30).x(700).y(100);
+let board = new sd.Text(svg).fontSize(30).x(700).y(100);
 let vs = [], edges = [
     [1, 2],
     [1, 3],
@@ -10,8 +10,8 @@ let vs = [], edges = [
     [2, 5]
 ];
 for (let i = 1; i <= 5; i++) {
-    let a = sd.Array(svg);
-    sd.EnableArrayName(a, `G[${i}]`);
+    let a = new sd.Array(svg);
+    sd.Label(a, `G[${i}]`);
     vs.push(a);
 }
 
