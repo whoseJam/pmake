@@ -6,6 +6,11 @@ let C = sd.color();
 let R = sd.rule();
 let fw = makeForwardStar();
 global.fw = fw;
+global.help = function() {
+    return `
+在此场景中有一个fw对象
+fw.link(x, y): 连接x与y`;
+}
 
 function makeForwardStar() {
     let self = {};
