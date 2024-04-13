@@ -59,7 +59,7 @@ function makeDp() {
                         circ.element(j),
                         sd.CircleCurve,
                         "cx", "y", "cx", "y"
-                    ).opacity(0).after(circ).opacity(1).startAnimate().pointTo().endAnimate().arrow();
+                    ).opacity(0).after(circ).opacity(1).startAnimate().pointStoT().endAnimate().arrow();
                     lines.push(l);
 
                     t.newNode(k, tmp=makeBackpack(j-k*v[i], C.blue));
@@ -78,10 +78,10 @@ function makeDp() {
                 circ.after(math).startAnimate().value(j, ans).endAnimate();
 
                 await sd.pause();
+                for (let l of lines) l.startAnimate().remove();
                 dp.startAnimate().color(C.white).endAnimate();
                 circ.startAnimate().color(C.white).endAnimate();
                 t.startAnimate().remove();
-                for (let l of lines) l.startAnimate().remove();
             }
             await sd.pause();
             warr.startAnimate().color(i, C.white).endAnimate();

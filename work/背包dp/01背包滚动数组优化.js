@@ -70,7 +70,7 @@ function makeDp() {
                 if (j - v[i] >= 0) {
                     dp.color(i-1, j-v[i], C.blue);
                     circ.color((i&1)^1, j-v[i], C.blue);
-                    if (j - v[i] > 0) ans = Math.max(ans, dp.intValue(i-1, j-v[i]) + w[i]);
+                    if (j - v[i] >= 0) ans = Math.max(ans, dp.intValue(i-1, j-v[i]) + w[i]);
                 }
                 dp.color(i-1, j, C.blue);
                 circ.color((i&1)^1, j, C.blue);

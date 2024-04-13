@@ -70,15 +70,15 @@ function makeDp() {
                         circ.element(j),
                         sd.CircleCurve,
                         "cx", "y", "cx", "y"
-                    ).opacity(0).after(circ).opacity(1).startAnimate().pointTo().endAnimate().arrow();
-                    if (j - v[i] > 0) ans = Math.max(ans, dp.intValue(i-1, j-v[i]) + w[i]);
+                    ).opacity(0).after(circ).opacity(1).startAnimate().pointStoT().endAnimate().arrow();
+                    if (j - v[i] >= 0) ans = Math.max(ans, dp.intValue(i-1, j-v[i]) + w[i]);
                 }
                 t2 = sd.Link(
                     circ.element(j),
                     circ.element(j),
                     sd.CircleCurve,
                     "cx", "y", "cx", "y"
-                ).opacity(0).after(circ).opacity(1).startAnimate().pointTo().endAnimate().arrow();
+                ).opacity(0).after(circ).opacity(1).startAnimate().pointStoT().endAnimate().arrow();
                 dp.color(i-1, j, C.blue);
                 ans = Math.max(ans, dp.intValue(i-1, j));
                 dp.endAnimate(); circ.endAnimate();
@@ -89,10 +89,10 @@ function makeDp() {
                 circ.after(math).startAnimate().value(j, ans).endAnimate();
 
                 await sd.pause();
-                dp.startAnimate().color(C.white).endAnimate();
-                circ.startAnimate().color(C.white).endAnimate();
                 if (t1) t1.startAnimate().remove();
                 if (t2) t2.startAnimate().remove();
+                dp.startAnimate().color(C.white).endAnimate();
+                circ.startAnimate().color(C.white).endAnimate();
             }
             await sd.pause();
             warr.startAnimate().color(i, C.white).endAnimate();

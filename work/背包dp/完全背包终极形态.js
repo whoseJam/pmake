@@ -61,7 +61,7 @@ function makeDp() {
                         circ.element(j),
                         sd.CircleCurve,
                         "cx", "y", "cx", "y"
-                    ).opacity(0).after(circ).opacity(1).startAnimate().pointTo().endAnimate().arrow();
+                    ).opacity(0).after(circ).opacity(1).startAnimate().pointStoT().endAnimate().arrow();
                     lines.push(l);
                     let cost = at[2];
                     let gain = at[3];
@@ -79,12 +79,13 @@ function makeDp() {
                 await sd.pause();
                 math.startAnimate().stress().endAnimate();
                 dp.after(math).startAnimate().value(i, j, ans).endAnimate();
+                circ.after(math).startAnimate().value(j, ans).endAnimate();
 
                 await sd.pause();
+                for (let l of lines) l.startAnimate().remove();
                 dp.startAnimate().color(C.white).endAnimate();
                 circ.startAnimate().color(C.white).endAnimate();
                 t.startAnimate().remove();
-                for (let l of lines) l.startAnimate().remove();
             }
             await sd.pause();
             warr.startAnimate().color(i, C.white).endAnimate();

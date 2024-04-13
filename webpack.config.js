@@ -2,8 +2,8 @@ const {resolve} = require('path')
 
 module.exports = {
   // 设置当前模式为开发
-  // mode: 'development',
-  mode: "production",
+  mode: 'development',
+  // mode: "production",
 
   // 入口文件
   // entry: './index.js',
