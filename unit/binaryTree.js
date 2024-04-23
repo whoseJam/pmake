@@ -2,13 +2,13 @@ import * as sd from "../lib/slide";
 
 let svg = sd.svg();
 let t = new sd.BinaryTree(svg);
-t.root(1).update();
+t.root(1);
 
 main();
 
 async function main() {
     await sd.pause();
-    t.leftChild(1, 2).rightChild(1, 3).update();
+    t.leftChild(1, 2).rightChild(1, 3);
     await sd.pause();
     t.startAnimate().leftChild(2, 4).endAnimate();
     await sd.pause();
