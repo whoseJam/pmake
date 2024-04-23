@@ -1,16 +1,5 @@
 import * as sd from "../../lib/slide";
 
-const rotateCodeStr = `
-void rotate(int x,int &f){
-    int y=fa[x],z=fa[y],L=(ch[y][0]==x?0:1),R=(L^1);
-    if(y==f)f=x;
-    else if(ch[z][0]==y)ch[z][0]=x;
-    else ch[z][1]=x;
-    fa[x]=z;fa[y]=x;fa[ch[x][R]]=y;
-    ch[y][L]=ch[x][R];ch[x][R]=y;
-    pushUp(y);pushUp(x);
-}`
-
 const splayCodeStr = `
 void splay(int x,int &f){
     while(x!=f){
