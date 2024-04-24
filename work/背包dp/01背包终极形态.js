@@ -99,5 +99,7 @@ function makeDp() {
             varr.startAnimate().color(i, C.white).endAnimate();
         }
     }
+
+    sd.globalUpdate();
     return self;
 }
