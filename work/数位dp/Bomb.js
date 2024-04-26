@@ -21,53 +21,51 @@ function makeDp() {
     let result = new sd.Array(svg).start(1);
     let resultList = sd.make1d(10);
     divide(n);
-    result.resize(length).cx(800).cy(300);
+    result.length(length).cx(800).cy(300);
     sd.Label(result, "result");
     result.opacity(0);
     ori.cx(400).y(50);
 
-    self.dfs = async function dfs(pos, flg, lim) {
+    self.dfs = async function dfs(pos, is4, lim) {
         if (pos === 0) {
             await sd.pause();
             showResult();
             await sd.pause();
             hideResult();
-            return (flg === 2) ? 1 : 0;
+            return 1;
         }
         await sd.pause();
-        showStatusOf(pos, flg, lim);
-        let arr = sta[pos][flg][lim].arr;
+        showStatusOf(pos, is4, lim);
+        let arr = sta[pos][is4][lim].arr;
 
-        if (vis[pos][flg][lim]) {
-            await returnF(pos, flg, lim);
+        if (vis[pos][is4][lim]) {
+            await returnF(pos, is4, lim);
             await sd.pause();
-            hideStatusOf(pos, flg, lim);
-            return f[pos][flg][lim];
+            hideStatusOf(pos, is4, lim);
+            return f[pos][is4][lim];
         }
         let up = (lim ? ori.intValue(offset(pos)) : 9);
         let ans = 0;
         for (let i = 0, nxt; i <= up; i++) {
-            if (flg === 2 || (flg === 1 && i === 9)) nxt = 2;
-            else if (i === 4) nxt = 1;
-            else nxt = 0;
+            if (is4 && i === 9) continue;
 
             await sd.pause();
             arr.startAnimate().value(offset(pos), i).endAnimate();
             resultList[pos] = i;
 
-            ans += await dfs(pos - 1, nxt, lim && i === up);
+            ans += await dfs(pos - 1, i === 4 ? 1 : 0, lim && i === up);
 
             await sd.pause();
-            changeF(pos, flg, lim, ans);
+            changeF(pos, is4, lim, ans);
         }
-        vis[pos][flg][lim] = 1;
-        f[pos][flg][lim] = ans;
+        vis[pos][is4][lim] = 1;
+        f[pos][is4][lim] = ans;
 
-        await returnF(pos, flg, lim);
+        await returnF(pos, is4, lim);
         await sd.pause();
-        hideStatusOf(pos, flg, lim);
+        hideStatusOf(pos, is4, lim);
 
-        return f[pos][flg][lim];
+        return f[pos][is4][lim];
     }
 
     function showResult() {
@@ -80,41 +78,41 @@ function makeDp() {
         result.startAnimate().opacity(0).endAnimate();
     }
 
-    function hideStatusOf(pos, flg, lim) {
-        let tmp = sta[pos][flg][lim];
+    function hideStatusOf(pos, is4, lim) {
+        let tmp = sta[pos][is4][lim];
         for (let i of ["arr", "pointer", "f"])
             tmp[i].startAnimate().opacity(0).endAnimate();
     }
 
-    function showStatusOf(pos, flg, lim) {
-        if (!vis[pos][flg][lim]) {
-            let arr = new sd.Array(svg).start(1).resize(length).mx(ori.mx()).y((length - pos + 1) * 120 + ori.y());
+    function showStatusOf(pos, is4, lim) {
+        if (!vis[pos][is4][lim]) {
+            let arr = new sd.Array(svg).start(1).length(length).mx(ori.mx()).y((length - pos + 1) * 120 + ori.y());
             let pointer = sd.Pointer(arr, "pos", "b", 5, 20).moveTo(offset(pos));
             let f = new sd.VarList(arr).put("f", 0).x(600).y(100);
-            sd.Label(arr, `pos=${pos} flg=${flg} lim=${lim}`, "lc");
+            sd.Label(arr, `pos=${pos} is4=${is4} lim=${lim}`, "lc");
             arr.childAs("f", f, function(parent, child) {
                 child.x(parent.mx() + 10).cy(parent.cy());
             });
-            sta[pos][flg][lim] = {
+            sta[pos][is4][lim] = {
                 arr: arr,
                 pointer: pointer,
                 f: f
             };
             arr.opacity(0);
         }
-        let tmp = sta[pos][flg][lim];
+        let tmp = sta[pos][is4][lim];
         tmp.arr.startAnimate().opacity(1).value(offset(pos), "?").endAnimate();
         tmp.pointer.after(0).startAnimate().opacity(1).endAnimate();
         tmp.f.after(0).startAnimate().opacity(1).endAnimate();
     }
 
-    function changeF(pos, flg, lim, newF) {
-        let tmp = sta[pos][flg][lim];
+    function changeF(pos, is4, lim, newF) {
+        let tmp = sta[pos][is4][lim];
         tmp.f.startAnimate().put("f", newF).endAnimate();
     }
 
-    async function returnF(pos, flg, lim) {
-        let tmp = sta[pos][flg][lim];
+    async function returnF(pos, is4, lim) {
+        let tmp = sta[pos][is4][lim];
         await sd.pause();
         tmp.f.startAnimate().color(C.red).endAnimate();
         await sd.pause();
@@ -127,7 +125,7 @@ function makeDp() {
     function divide(x) {
         let tmp = x, cnt = 0;
         while (tmp > 0) { tmp = Math.floor(tmp / 10); cnt++; }
-        ori.resize(length = cnt); tmp = x;
+        ori.length(length = cnt); tmp = x;
         while (tmp > 0) {
             ori.value(cnt, tmp % 10);
             tmp = Math.floor(tmp / 10);
