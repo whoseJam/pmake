@@ -1,26 +1,25 @@
 import * as sd from "../lib/slide";
 
 let svg = sd.svg();
-let r = new sd.Mathjax(svg, "A^2+B^2=C^2").width(100).cx(600).cy(300);
+let R = sd.rule();
+let r = new sd.Rect(svg).width(100).cx(600).cy(300);
+let ir = new sd.Rect(svg);
+r.childAs("newRect", ir, R.CenterOnly());
 
 main();
+console.log(r._.animateL, r._.animateR, "animate");
 
 async function main() {
     await sd.pause();
     console.log("--------------start----------------");
-    r.startAnimate(600)
-    r.endAnimate()
-    r.after(0)
-
+    console.log(r._.animateL, r._.animateR, "animate");
     r.startAnimate()
-    r.width(200).cx(600);
+    console.log(r._.animateL, r._.animateR, "animate");
+    r.width(200).cx(600).cy(400);
     r.endAnimate()
 
-    r.startAnimate()
-    r.width(100).cx(600);
-    r.endAnimate()
-
-    r.after(0)
-    r.startAnimate(600);
+    // r.startAnimate()
+    // r.width(100).cx(600).cy(400);
+    // r.endAnimate()
     await sd.pause();
 }
