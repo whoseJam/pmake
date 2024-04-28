@@ -1,7 +1,7 @@
 import * as sd from "../lib/slide";
 
 let svg = sd.svg();
-let arr = new sd.Array(svg).x(100).y(100);
+let arr = new sd.Stack(svg).x(100).y(100);
 
 main();
 
