@@ -15,4 +15,5 @@ async function main() {
         await sd.pause();
         code.startAnimate().focus(i).endAnimate();
     }
+    await sd.pause();
 }
