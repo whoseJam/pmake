@@ -1,7 +1,7 @@
 import * as sd from "../lib/slide";
 
 let svg = sd.svg();
-let t = new sd.BoxTree(svg);
+let t = new sd.HorizontalTree(svg);
 
 main();
 
@@ -15,6 +15,8 @@ async function main() {
     // t.startAnimate().link(2, 3).endAnimate();
     await sd.pause();
     t.startAnimate().link(3, 4).link(3, 5).endAnimate();
+    await sd.pause();
+    t.startAnimate().r(30).endAnimate();
     await sd.pause();
     t.startAnimate().height(50).endAnimate();
     await sd.pause();
