@@ -14,5 +14,10 @@ async function main() {
     t.endAnimate();
     // t.startAnimate().link(2, 3).endAnimate();
     await sd.pause();
-    // t.startAnimate().link(3, 4).link(3, 5).endAnimate();
+    t.startAnimate().link(3, 4).link(3, 5).endAnimate();
+    await sd.pause();
+    t.startAnimate().r(30).endAnimate();
+    await sd.pause();
+    t.startAnimate().width(50).endAnimate();
+    await sd.pause();
 }
