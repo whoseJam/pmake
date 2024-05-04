@@ -7,6 +7,7 @@ let g = new sd.Grid(svg).x(100).y(100).m(5).n(6);
 main();
 
 async function main() {
+    console.log(g.height(), "height of g");
     await sd.pause();
     g.insert(0, 0, 5);
     await sd.pause();
@@ -23,4 +24,5 @@ async function main() {
     sd.Index(g, "r");
     await sd.pause();
     sd.Index(g, "b");
+    await sd.pause();
 }

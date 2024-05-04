@@ -1,17 +1,25 @@
 import * as sd from "../lib/slide";
 
 let svg = sd.svg();
-let r = new sd.Rect(svg).x(100).y(100);
+let R = sd.rule();
+let r = new sd.Rect(svg).width(100).cx(600).cy(300);
+let ir = new sd.Rect(svg);
+r.childAs("newRect", ir, R.CenterOnly());
 
 main();
+console.log(r._.animateL, r._.animateR, "animate");
 
 async function main() {
-    global.move = async function() {
-        await sd.pause();
-        r.startAnimate().dx(50).endAnimate();
-        await sd.pause();
-        r.startAnimate().dx(50).endAnimate();
-        await sd.pause();
-        r.startAnimate().dx(50).endAnimate();
-    }
+    await sd.pause();
+    console.log("--------------start----------------");
+    console.log(r._.animateL, r._.animateR, "animate");
+    r.startAnimate()
+    console.log(r._.animateL, r._.animateR, "animate");
+    r.width(200).cx(600).cy(400);
+    r.endAnimate()
+
+    // r.startAnimate()
+    // r.width(100).cx(600).cy(400);
+    // r.endAnimate()
+    await sd.pause();
 }

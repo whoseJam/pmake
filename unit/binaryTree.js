@@ -1,7 +1,7 @@
 import * as sd from "../lib/slide";
 
 let svg = sd.svg();
-let t = new sd.BinaryTree(svg);
+let t = new sd.BinaryTree(svg).cx(600).y(100);
 t.root(1);
 
 main();

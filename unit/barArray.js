@@ -20,8 +20,8 @@ async function main() {
     await sd.pause();
     bar.startAnimate().push(2).push(1).endAnimate();
     await sd.pause();
-    bar.startAnimate().erase(1).endAnimate();
-    bar.startAnimate().erase(2).endAnimate();
+    bar.startAnimate(1000).erase(1).endAnimate();
+    bar.startAnimate(1000).erase(2).endAnimate();
     await sd.pause();
     bar.startAnimate().elementWidth(50).endAnimate();
     bar.startAnimate().elementHeight(20).endAnimate();

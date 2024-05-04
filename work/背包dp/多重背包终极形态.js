@@ -21,7 +21,7 @@ function makeDp() {
     let warr = new sd.Array(svg).x(100).y(350).start(1);
     let varr = new sd.Array(svg).x(100).y(410).start(1);
     let sarr = new sd.Array(svg).x(100).y(470).start(1);
-    let circ = new sd.Array(svg).x(700).y(100).resize(m+1);
+    let circ = new sd.Array(svg).x(700).y(100).length(m+1);
     let dp = new sd.Grid(svg).n(n+1).m(m+1).x(100).y(120);
     let math = new sd.Mathjax(svg, "F_{i,j}=max\\{F_{i-1,j},F_{i-1,j-v_i}+w_i\\}").height(25).cx(600).y(460);
     math = sd.Stress(math);
