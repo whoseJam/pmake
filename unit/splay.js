@@ -10,6 +10,7 @@ main();
 async function main() {
     await sd.pause();
     s.startAnimate().leftChild(1, 2).endAnimate();
+    // await sd.pause();
     s.startAnimate().rightChild(1, 3).endAnimate();
     await sd.pause();
     s.startAnimate().leftChild(2, 4).rightChild(2, 5).endAnimate();

@@ -121,8 +121,8 @@ function makeSplay() {
 
         if (ch[x][R]) {
             await sd.pause();
-            console.log("ch[x][R]=", ch[x][R]);
             remove(x, ch[x][R]);
+            dfs(ch[x][R], +1);
             t.startAnimate().link(y, ch[x][R], L).endAnimate();
             fa[ch[x][R]] = y;
         }
