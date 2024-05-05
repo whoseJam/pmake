@@ -22,3 +22,5 @@ function link(x, y) {
     g.newLink(x, y);
     g.element(x, y).arrow();
 }
+
+sd.globalUpdate();

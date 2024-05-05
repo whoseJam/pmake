@@ -17,10 +17,16 @@ let e = [
     ["V8", "V9"]
 ];
 
-for (let i = 1; i <= n; i++) g.newNode("V" + i);
-for (let i = 0; i < m; i++) {
-    g.newLink(e[i][0], e[i][1]);
-    g.element(e[i][0], e[i][1]).arrow().strokeWidth(1.2);
-}
+main();
 
-console.log("wh=", g.width(), g.height());
+async function main() {
+    for (let i = 1; i <= n; i++) g.newNode("V" + i);
+    for (let i = 0; i < m; i++) {
+        await sd.pause();
+        g.startAnimate();
+        g.newLink(e[i][0], e[i][1]);
+        g.element(e[i][0], e[i][1]).arrow().strokeWidth(1.2);
+        g.endAnimate();
+    }
+    await sd.pause();
+}
