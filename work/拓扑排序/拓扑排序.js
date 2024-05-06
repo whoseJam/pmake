@@ -10,23 +10,23 @@ sd.Label(arr, "辅助队列", "lc", 20);
 let ind = {};
 let n = 9, m = 10;
 let e = [
-    ["V1", "V3"],
-    ["V1", "V4"],
-    ["V2", "V5"],
-    ["V3", "V5"],
-    ["V4", "V6"],
-    ["V5", "V7"],
-    ["V5", "V8"],
-    ["V6", "V8"],
-    ["V7", "V9"],
-    ["V8", "V9"]
+    ["1", "3"],
+    ["1", "4"],
+    ["2", "5"],
+    ["3", "5"],
+    ["4", "6"],
+    ["5", "7"],
+    ["5", "8"],
+    ["6", "8"],
+    ["7", "9"],
+    ["8", "9"]
 ];
 let grad = C.gradient(C.white, "#1E90FF", 0, 2);
 
 for (let i = 1; i <= n; i++) {
-    g.newNode("V" + i, "V" + i);
-    g.element("V" + i).rate(1.8);
-    ind["V" + i] = 0;
+    g.newNode(String(i), i);
+    g.element(String(i)).rate(1.8);
+    ind[i] = 0;
 }
 for (let i = 0; i < m; i++) {
     g.newLink(e[i][0], e[i][1]);
@@ -38,15 +38,17 @@ main();
 
 async function main() {
     await sd.pause();
+    g.startAnimate();
     for (let i = 1; i <= n; i++) {
-        let idx = "V" + i;
-        g.startAnimate().color(idx, grad(ind[idx])).endAnimate();
+        let idx = i;
+        g.color(idx, grad(ind[idx]));
     }
+    g.endAnimate();
     for (let i = 1; i <= n; i++) {
-        let idx = "V" + i;
+        let idx = i;
         if (ind[idx] === 0) {
             await sd.pause();
-            g.element(idx).startAnimate().stroke(C.red).strokeWidth(2).endAnimate();
+            g.element(idx).startAnimate().stroke(C.red).strokeWidth(5).endAnimate();
             await sd.pause();
             arr.startAnimate()
             arr.push(idx);
@@ -61,9 +63,8 @@ async function main() {
         let u = arr.value(0).text();
         let value = arr.value(0);
         arr.startAnimate().erase(0).endAnimate();
-        seq.startAnimate();
-        seq.pushFromExistValue(value);
-        seq.endAnimate();
+        value.attachTo(svg);
+        seq.startAnimate().pushFromExistValue(value).endAnimate();
         await sd.pause();
         g.startAnimate().color(u, C.orange).endAnimate();
         let adj = g.outLinks(u);
@@ -74,9 +75,12 @@ async function main() {
             if (ind[v] === 0) {
                 await sd.pause();
                 g.startAnimate().color(v, C.green).endAnimate();
+                await sd.pause();
                 arr.startAnimate().push(v).endAnimate();
+                await sd.pause();
                 g.startAnimate().color(v, C.white).endAnimate();
             }
         }
     }
+    await sd.pause();
 }
