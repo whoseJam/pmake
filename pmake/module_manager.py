@@ -1,6 +1,8 @@
 import os
 import hashlib
 
+PATH_TO_SD_CSS = "C:\\Users\\27670\\Project\\pmake\\css\\slide.css"
+
 # file_name: 001.xxx.js, basic.js...
 def module_name(path: str):
     segments = path.split("/")[-1].split(".")
@@ -59,7 +61,7 @@ def build_modules(
         print("building module : {}".format(module))
         path_to_entry = "{}/{}.js".format(working_directory, module)
         output_path = path_to_output
-        output_file = "{}.js".format(module)
+        output_file = "{}.html".format(module)
 
         current_md5 = encode_by_md5(open(path_to_entry, encoding="utf-8").read())
         # if path_to_entry in record.keys():
@@ -69,7 +71,7 @@ def build_modules(
         #         continue
 
         npm_run(path_to_entry, output_path, output_file)
-        template_html(module, path_to_output)
+        # template_html(module, path_to_output)
         # record[path_to_entry] = current_md5
     
     # write_database(path_to_database, record)
@@ -81,7 +83,7 @@ def build_module(
     print("building module : {}".format(module))
     path_to_entry = path_to_js
     output_path = path_to_output
-    output_file = "{}.js".format(module)
+    output_file = "{}.html".format(module)
 
     # current_md5 = encode_by_md5(open(path_to_entry, encoding="utf-8").read())
     # if path_to_entry in record.keys():
@@ -91,7 +93,7 @@ def build_module(
     #         return
     
     npm_run(path_to_entry, output_path, output_file)
-    template_html(module, path_to_output)
+    # template_html(module, path_to_output)
     # record[path_to_entry] = current_md5
 
     # write_database(path_to_database, record)

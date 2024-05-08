@@ -3,6 +3,10 @@ import { draw } from "./维恩图";
 
 const svg = sd.svg();
 
+globalThis.testHsj = () => {
+    return "hello";
+}
+
 main();
 
 async function main() {

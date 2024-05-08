@@ -1,38 +1,34 @@
-const {resolve} = require('path')
+const {resolve} = require("path")
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const HtmlWebpackInlineSourcePlugin = require("html-webpack-inline-source-plugin");
 
 module.exports = {
-  // 设置当前模式为开发
-  mode: 'development',
-  // mode: "production",
+  // mode: "development",
+  mode: "production",
 
   // 入口文件
-  // entry: './index.js',
-  // output: {
-  //   // 定义输出路径
-  //   path:  resolve(__dirname, 'dist')
-  // },
-  
+  entry: "./unit/array.js",
+  output: {
+    path:  "C:/Users/27670/Desktop/output",
+    filename: "array.js"
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+        template: "./template.html",
+        inject: "body",
+        inlineSource: ".(js)$",
+        minify: false,
+        filename: "array.html"
+    }),
+    new HtmlWebpackInlineSourcePlugin()
+  ],
   module: {
     rules: [
       {
-        test: /\.$js/,
+        test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel-loader'
+        loader: "babel-loader"
       },
-      // {
-      //   test: /\.css$/,
-      //   use: [
-      //     // [style-loader](/loaders/style-loader)
-      //     { loader: 'style-loader' },
-      //     // [css-loader](/loaders/css-loader)
-      //     {
-      //       loader: 'css-loader',
-      //       options: {
-      //         modules: true // 开启css模块化
-      //       }
-      //     }
-      //   ]
-      // }
     ]
   },
   resolve: {
