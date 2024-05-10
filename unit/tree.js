@@ -1,7 +1,8 @@
 import * as sd from "../lib/slide";
 
-let svg = sd.svg();
-let t = new sd.Tree(svg);
+const svg = sd.svg();
+const C = sd.color();
+const t = new sd.Tree(svg);
 
 main();
 
@@ -17,7 +18,5 @@ async function main() {
     t.startAnimate().link(3, 4).link(3, 5).endAnimate();
     await sd.pause();
     t.startAnimate().r(30).endAnimate();
-    await sd.pause();
-    t.startAnimate().width(50).endAnimate();
-    await sd.pause();
+    await sd.pause(true);
 }

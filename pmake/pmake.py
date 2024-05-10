@@ -3,7 +3,7 @@ import standalone
 import unit
 import group
 
-DEFAULT_OUTPUT_PATH = "C:/Users/27670/Desktop/output"
+DEFAULT_OUTPUT_PATH = "C:\\Users\\27670\\Desktop\\output\\animation"
 DEFAULT_FORCE = True
 
 # 用法: python <path-to-pmake> -s <path-to-js> -o <path-to-output>
