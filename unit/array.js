@@ -7,7 +7,7 @@ let Arr = new sd.Array(svg).x(100).y(200);
 main();
 
 async function main() {
-    arr.push(1).push(2).push(3);
+    arr.push(1).push(2).push(3).push(4);
     // await sd.pause();
     // arr.startAnimate()
     // arr.insert(1, "+2");

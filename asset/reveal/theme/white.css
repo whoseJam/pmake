@@ -1,11 +1,27 @@
-/**
- * White theme for reveal.js. This is the opposite of the 'black' theme.
- *
- * By Hakim El Hattab, http://hakim.se
- */
-@import url(./fonts/source-sans-pro/source-sans-pro.css);
-section.has-dark-background, section.has-dark-background h1, section.has-dark-background h2, section.has-dark-background h3, section.has-dark-background h4, section.has-dark-background h5, section.has-dark-background h6 {
-  color: #fff;
+iframe {
+  top: 0px;
+  left: 0px;
+}
+iframe.large {
+  min-width: 1000px;
+  max-width: 1000px;
+  min-height: 500px;
+  max-height: 500px;
+}
+iframe.mid {
+  min-width: 600px;
+  max-width: 600px;
+  min-height: 300px;
+  max-height: 300px;
+}
+iframe.small {
+  min-width: 400px;
+  max-width: 400px;
+  min-height: 200px;
+  max-height: 200px;
+}
+section {
+  text-align: left;
 }
 
 /*********************************************
@@ -26,10 +42,10 @@ section.has-dark-background, section.has-dark-background h1, section.has-dark-ba
   --r-heading-text-shadow: none;
   --r-heading-font-weight: 600;
   --r-heading1-text-shadow: none;
-  --r-heading1-size: 2.5em;
-  --r-heading2-size: 1.6em;
-  --r-heading3-size: 1.3em;
-  --r-heading4-size: 1em;
+  --r-heading1-size: 2.2em;
+  --r-heading2-size: 1.4em;
+  --r-heading3-size: 1.1em;
+  --r-heading4-size: 0.9em;
   --r-code-font: monospace;
   --r-link-color: #2a76dd;
   --r-link-color-dark: #1a53a1;

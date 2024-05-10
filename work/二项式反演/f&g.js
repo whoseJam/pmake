@@ -16,13 +16,13 @@ async function main() {
     let m1, m2;
     await sd.pause();
     const l1 = sd.Link(boxG, boxF, sd.Curve).startAnimate().pointStoT().endAnimate().arrow();
-    l1.startAnimate().value(m1 = new sd.Mathjax(l1, "f(x)=\\sum_{i}A(x,i)g(i)")).endAnimate();
+    l1.startAnimate().value(m1 = new sd.Mathjax(l1, "H(x)=\\sum_{i}A(x,i)g(i)")).endAnimate();
     await sd.pause();
     const l2 = sd.Link(boxF, boxG, sd.Curve).startAnimate().pointStoT().endAnimate().arrow();
     l2.startAnimate().value(m2 = new sd.Mathjax(l2, "g(x)=\\sum_{i}B(x,i)f(i)")).endAnimate();
     await sd.pause();
-    const f1 = sd.Focus(m1).startAnimate().opacity(1).endAnimate();
-    const f2 = sd.Focus(m2).startAnimate().opacity(1).endAnimate();
+    const f1 = sd.Focus(m1).startAnimate().focus().endAnimate();
+    const f2 = sd.Focus(m2).startAnimate().focus().endAnimate();
     await sd.pause();
     sd.Link(f1, f2).opacity(0).startAnimate().opacity(1).endAnimate().doubleArrow();
     await sd.pause(true);
