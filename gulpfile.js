@@ -73,7 +73,7 @@ gulp.task("ppt", (done) => {
     imageList.forEach(image => {    // 迁移图片
         const sourceFilePath = `${IMGFileFolder}/${image}`;
         const targetFilePath = `${defaultPPTTargetFilePath}/image`;
-        gulp.src(sourceFilePath)
+        gulp.src(sourceFilePath, { encoding: false })
             .pipe(gulp.dest(targetFilePath));
     });
     mdList.forEach(md => {  // 迁移markdown
