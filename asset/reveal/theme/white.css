@@ -23,6 +23,13 @@ iframe.small {
 section {
   text-align: left;
 }
+.MathJax {
+  font-size: 0.9em;
+}
+#notescanvas, #chalkboard {
+  -webkit-backdrop-filter: blur(0px);
+  backdrop-filter: blur(0px);
+}
 
 /*********************************************
  * GLOBAL STYLES
@@ -30,7 +37,7 @@ section {
 :root {
   --r-background-color: #fff;
   --r-main-font: Source Sans Pro, Helvetica, sans-serif;
-  --r-main-font-size: 42px;
+  --r-main-font-size: 28px;
   --r-main-color: #222;
   --r-block-margin: 20px;
   --r-heading-margin: 0 0 20px 0;

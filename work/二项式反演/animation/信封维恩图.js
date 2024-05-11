@@ -1,14 +1,14 @@
-import * as sd from "../../lib/slide";
-import { draw } from "./维恩图";
+import * as sd from "../../../lib/slide";
+import { draw } from "../../common/维恩图";
 
 const svg = sd.svg();
 
 main();
 
 async function main() {
-    const m = draw(svg, ["B_1", "B_2", "B_3"], (items) => {
-        return new sd.Mathjax(svg, `${items}不放`);
-    }, "都放苹果");
+    const m = draw(svg, ["L_1", "L_2", "L_3"], (items) => {
+        return new sd.Mathjax(svg, `送对${items}`);
+    }, "一封也没有送对");
     m.childOne().forEach(child => child.height(18));
     m.childTwo().forEach(child => child.height(12));
     m.childThree().forEach(child => child.height(8));

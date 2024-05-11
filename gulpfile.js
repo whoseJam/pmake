@@ -45,44 +45,88 @@ gulp.task("animation-in-ppt", (done) => {
     done();
 })
 
+function ifNotExistThenCreateFolder(folderPath) {
+    if (fs.existsSync(folderPath)) return;
+    fs.mkdirSync(folderPath);
+}
+
 gulp.task("ppt", (done) => {
     const sourceFileFolder = process.argv[4];
     const pptFilePath = `${sourceFileFolder}/ppt.html`;
-    console.log(`ppt file locate at ${pptFilePath}`);
-    const animationList = fs.readdirSync(sourceFileFolder).filter(
-        animation => animation.endsWith(".js")
-    );
-    console.log(animationList);
-    animationList.forEach(animation => {
-        const sourceFilePath = `${sourceFileFolder}/${animation}`;
-        const targetFilePath = defaultAnimationTargetFilePath;
+    const JSFileFolder = `${sourceFileFolder}/animation`; ifNotExistThenCreateFolder(JSFileFolder);
+    const IMGFileFolder = `${sourceFileFolder}/image`;    ifNotExistThenCreateFolder(IMGFileFolder);
+    const MDFileFolder = `${sourceFileFolder}/markdown`;  ifNotExistThenCreateFolder(MDFileFolder);
+
+    const animationList = fs.readdirSync(JSFileFolder);
+    const imageList = fs.readdirSync(IMGFileFolder);
+    const mdList  = fs.readdirSync(MDFileFolder);
+
+    animationList.forEach(animation => {    // 迁移动画
+        const sourceFilePath = `${JSFileFolder}/${animation}`;
+        const targetFilePath = `${defaultPPTTargetFilePath}/animation`;
         const animationName = animation.split(".")[0];
         console.log(`animation file locate at ${sourceFilePath} and its name is ${animationName}`)
         gulp.task(animation, (done) => {
             return animationTask(sourceFilePath, targetFilePath, animationName);
         })
     });
-    gulp.task("ppt-html", (done) => {
+    imageList.forEach(image => {    // 迁移图片
+        const sourceFilePath = `${IMGFileFolder}/${image}`;
+        const targetFilePath = `${defaultPPTTargetFilePath}/image`;
+        gulp.src(sourceFilePath)
+            .pipe(gulp.dest(targetFilePath));
+    });
+    mdList.forEach(md => {  // 迁移markdown
+        const sourceFilePath = `${MDFileFolder}/${md}`;
+        const targetFilePath = `${defaultPPTTargetFilePath}/markdown`;
+        gulp.src(sourceFilePath)
+            .pipe(gulp.dest(targetFilePath));
+    })
+    gulp.task("ppt-html", (done) => {   // 迁移ppt
         return pptTask(pptFilePath, defaultPPTTargetFilePath);
     })
-    const tasks = gulp.parallel.apply(gulp, animationList);
-    const project = gulp.parallel(tasks, gulp.task("ppt-html"));
     
+    let project;
+    if (animationList.length > 0) {
+        const tasks = gulp.parallel.apply(gulp, animationList);
+        project = gulp.parallel(tasks, gulp.task("ppt-html"));
+    } else project = gulp.parallel(gulp.task("ppt-html"));
     project();
 
-    const watchPattern = `${sourceFileFolder}/*.js`;
-    const watcher = gulp.watch(watchPattern);
-    watcher.on("add", function(path, stats) {
-        if (!path.endsWith(".js")) return;
+    const JSwatchPattern = `${sourceFileFolder}/animation/*.js`;
+    const JSwatcher = gulp.watch(JSwatchPattern);
+    JSwatcher.on("add", function(path, stats) {
         console.log(`File ${path} is added`, stats);
         const animation = path.split("\\").slice(-1)[0];
-        const sourceFilePath = `${sourceFileFolder}/${animation}`;
-        const targetFilePath = defaultAnimationTargetFilePath;
+        const sourceFilePath = `${sourceFileFolder}/animation/${animation}`;
+        const targetFilePath = `${defaultPPTTargetFilePath}/animation`;
         const animationName = animation.split(".")[0];
         gulp.task(animation, (done) => {
             return animationTask(sourceFilePath, targetFilePath, animationName);
         });
+        gulp.task(animation)();
     });
+    
+    // 监控图片修改
+    const IMGwatchPattern = `${IMGFileFolder}/**`;
+    gulp.watch(IMGwatchPattern, function(path, stats) {
+        const image = path.split("\\").slice(-1)[0];
+        const sourceFilePath = `${IMGFileFolder}/${image}`;
+        const targetFilePath = `${defaultPPTTargetFilePath}/image`;
+        gulp.src(sourceFilePath)
+            .pipe(gulp.dest(targetFilePath));
+    });
+
+    // 监控markdown修改
+    const MDwatchPattern = `${MDFileFolder}/**`;
+    gulp.watch(MDwatchPattern, function(path, stats) {
+        console.log("path = ", path);
+        const md = path.split("\\").slice(-1)[0];
+        const sourceFilePath = `${MDFileFolder}/${md}`;
+        const targetFilePath = `${defaultPPTTargetFilePath}/markdown`;
+        gulp.src(sourceFilePath)
+            .pipe(gulp.dest(targetFilePath));
+    })
     done();
 })
 
@@ -145,6 +189,7 @@ function getWebpackPPTConfig(pptFilePath) {
     return {
         mode: "development",
         entry: "./asset/pptMain.js",
+        watch: true,
         plugins: [
             new HtmlWebpackPlugin({
                 template: "./asset/pptIndex.html",
