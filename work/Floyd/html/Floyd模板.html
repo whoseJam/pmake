@@ -1,0 +1,26 @@
+<section>
+    <section>
+        <h1>Floyd（模板）</h1>
+        <p>板子题，可能需要考虑一下重边</p>
+    </section>
+    <section data-background-iframe="http://43.143.204.105/problem/1036" data-background-interactive>
+    </section>
+    <section>
+        <h2>Floyd（模板）</h2>
+        <p>如题，读入时处理一下重边即可</p>
+        <pre><code data-trim data-line-numbers class="cpp"><script type="text/template">
+            n = read();
+            m = read();
+            for (int i = 1; i <= n; i++)
+                for (int j = 1; j <= n; j++)
+                    if (i != j) d[i][j] = inf;
+            for (int i = 1, x, y, l; i <= m; i++) {
+                x = read();
+                y = read();
+                l = read();
+                d[x][y] = min(d[x][y], l);
+                d[y][x] = min(d[y][x], l);
+            }
+        </script></code></pre>
+    </section>
+</section>

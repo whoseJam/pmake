@@ -1,0 +1,18 @@
+<section>
+    <section>
+        <h1>传递闭包</h1>
+        <p>Floyd的小应用，从代码实现上来看，是对Floyd的一次降级</p>
+    </section>
+    <section>
+        <h2>传递闭包</h2>
+        <p>对于图 $G$ 的任意一个节点 $u$，$u$ 可到达的节点集合 $S_u$ 称为 $u$ 的传递闭包</p>
+        <p class="fragment">设 $f_{i,j}$ 表示 $i$ 能否走到 $j$，如果 $i$ 能（通过 $0$ 个或多个中转点）抵达 $j$，则 $f_{i,j}=1$，否则 $f_{i,j}=0$</p>
+        <p class="fragment">在修改了用于动态规划的数组的定义后，我们可以再次施加Floyd</p>
+        <pre class="fragment"><code data-trim data-line-numbers class="cpp"><script type="text/template">
+            for (int k = 1; k <= n; k++)
+                for (int i = 1; i <= n; i++)
+                    for (int j = 1; j <= n; j++)
+                        f[i][j] = f[i][j] | (f[i][k] & f[k][j])
+        </script></code></pre>
+    </section>
+</section>
