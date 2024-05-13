@@ -1,0 +1,25 @@
+<section>
+    <section>
+        <h1>最长路</h1>
+        <p>有向无环图最长路</p>
+    </section>
+    <section data-background-iframe="http://43.143.204.105/problem/148" data-background-interactive>
+    </section>
+    <section>
+        <h2>最长路</h2>
+        <p>根据这么长时间训练动态规划的直觉，我们可以设 $dis(u)$ 表示，走到节点 $u$ 的最长路</p>
+        <p class="fragment">
+            $$
+            dis(v)=\mathop{max}_{(u,v)\in E}\{dis(u)+w(u,v)\}
+            $$
+        </p>
+        <p class="fragment">注意到这张图有特殊性，这张图是DAG</p>
+        <p class="fragment">如果我们按照拓扑序去做动态规划，假设当前点为 $x$，拓扑序能保证：<b>能抵达 $x$ 的点的 $dis$ 值肯定都已经被更新为距离最大值了</b>，所以用拓扑序来做动态规划是有正确性的</p>
+    </section>
+    <section>
+        <h2>最长路</h2>
+        <iframe
+            data-src="./animation/最长路.html"
+            style="min-width: 1000px; min-height: 500px;"></iframe>
+    </section>
+</section>

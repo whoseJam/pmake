@@ -1,0 +1,53 @@
+<section>
+    <section>
+        <h1>拓扑排序实现</h1>
+    </section>
+    <section>
+        <h2>节点的度</h2>
+        <p>首先回顾一下，什么是节点的度</p>
+        <p class="fragment">
+            在有向图中，节点 $u$ 的<b>入度</b>，就是指向 $u$ 的边的数量；节点 $u$ 的 <b>出度</b>，就是起点在 $u$ 点的边的数量
+        </p>
+        <p class="fragment">入度为 $0$ 的那些节点，就是没有先修关系约束的那些节点，它们可以直接加入拓扑序中</p>
+    </section>
+    <section>
+        <h2>拓扑排序</h2>
+        <p>拓扑排序流程如下：</p>
+        <ol>
+            <li class="fragment">选择一个入度为 $0$ 的点，并放入拓扑序中</li>
+            <li class="fragment">从有向图中删除此节点，以及该节点连出的边</li>
+            <li class="fragment">重复(1)(2)，直到不存在入度为 $0$ 的点为止</li>
+        </ol>
+        <p class="fragment">如果算法结束后，还有点没有被从图中删去，那么说明图中有环路，否则得到的拓扑序就是一种合法的拓扑序</p>
+    </section>
+    <section>
+        <h2>拓扑排序</h2>
+        <p>在代码中，我们用一个队列来存放所有入度为 $0$ 的节点</p>
+        <iframe
+            style="min-width: 1000px; min-height: 500px;"
+            data-src="./animation/拓扑排序演示.html"></iframe>
+    </section>
+    <section>
+        <h2>拓扑排序</h2>
+        <p>实现代码如下：</p>
+        <pre><code data-trim data-line-numbers class="cpp"><script type="text/template">
+            void Toposort() {
+                queue < int > q;
+                for (int i = 1; i < N; i++)
+                    if (!Ind[i]) q.push(i);
+                while (q.size()) {
+                    int u = q.front();
+                    q.pop();
+                    tot++;
+                    for (int i = h[u], v; i; i = l[i].Nxt) {
+                        v = l[i].to;
+                        Ind[v]--;
+                        if (!Ind[v]) q.push(v);
+                    }
+                }
+                if (tot == n) cout << "YES\n";
+                else cout << n - tot << '\n';
+            }
+        </script></code></pre>
+    </section>
+</section>

@@ -1,4 +1,4 @@
-import * as sd from "../../lib/slide";
+import * as sd from "../../../lib/slide";
 
 const svg = sd.svg();
 const courseMap = new sd.BoxDAG(svg);   // type: Node
@@ -31,7 +31,5 @@ function init() {
 }
 
 async function main() {
-    await sd.pause();
-    courseMap.startAnimate().rankDir("LR").endAnimate();
     await sd.pause();
 }

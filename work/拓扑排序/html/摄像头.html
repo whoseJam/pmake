@@ -1,0 +1,39 @@
+<section>
+    <section>
+        <h1>摄像头</h1>
+        <p>先考虑如何建图，把原问题转化成一个有先后关系的有向图</p>
+    </section>
+    <section data-background-iframe="http://43.143.204.105/problem/887" data-background-interactive>
+    </section>
+    <section>
+        <h2>摄像头</h2>
+        <iframe
+            data-src="./animation/摄像头.html"
+            style="min-width: 1000px; min-height: 400px;"></iframe>
+        <p>设摄像机 $i$ 在图中的点为 $C_i$，其所处坐标为 $w_i$；坐标为 $x$ 位置在图上对应的点为 $P_x$，摄像机 $i$ 可以监视到 $a,b,c$ 这三个位置</p>
+    </section>
+    <section>
+        <h2>摄像头</h2>
+        <p>所以按照如下方式建图就行了：</p>
+        <ul>
+            <li>$P_{w_i}\rightarrow C_i$</li>
+            <li>$C_i\rightarrow P_{x}$，如果 $x$ 在第 $i$ 个摄像机的监控范围内</li>
+        </ul>
+    </section>
+    <section>
+        <h2>摄像头</h2>
+        <p>建图代码如下：</p>
+        <pre><code data-trim data-line-numbers class="cpp"><script type="text/template">
+            n = read();
+            for (int i = 1, x, m; i <= n; i++) {
+                x = read();
+                m = read();
+                Link(idPosition(x), idCamera(i));
+                for (int j = 1, to; j <= m; j++) {
+                    to = read();
+                    Link(idCamera(i), idPosition(to));
+                }
+            }
+        </script></code></pre>
+    </section>
+</section>
