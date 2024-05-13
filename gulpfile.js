@@ -140,8 +140,8 @@ gulp.task("ppt", (done) => {
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 function getWebpackAnimationConfig(sourceFilePath, animationName) {
     return {
-        mode: "development",
-        // mode: "production",
+        // mode: "development",
+        mode: "production",
         output: {
             filename: `${animationName}.js`
         },
@@ -184,7 +184,8 @@ function getWebpackPPTConfig(pptFilePath) {
     // pptFilePath: ./work/xxx/ppt.html
     const pptFilePathAbsolute = __dirname.replaceAll("\\", "/") + pptFilePath.slice(1)
     return {
-        mode: "development",
+        // mode: "development",
+        mode: "production",
         entry: "./asset/pptMain.js",
         watch: true,
         plugins: [

@@ -3,6 +3,7 @@ import * as sd from "../lib/slide";
 let svg = sd.svg();
 let C = sd.color();
 let g = new sd.Grid(svg).x(100).y(100).m(5).n(6);
+console.log("start test grid");
 
 main();
 
@@ -16,13 +17,17 @@ async function main() {
     g.pushCol();
     await sd.pause();
     g.pushRow();
+    console.log("x=", g.x());
+    console.log("y=", g.y());
+    console.log("mx=", g.mx());
+    console.log("my=", g.my());
     await sd.pause();
-    sd.Index(g, "l");
-    await sd.pause();
-    sd.Index(g, "t");
-    await sd.pause();
-    sd.Index(g, "r");
-    await sd.pause();
+    // sd.Index(g, "l");
+    // await sd.pause();
+    // sd.Index(g, "t");
+    // await sd.pause();
+    // sd.Index(g, "r");
+    // await sd.pause();
     sd.Index(g, "b");
     await sd.pause();
 }

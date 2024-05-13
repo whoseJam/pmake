@@ -7,14 +7,14 @@
         <h2>Floyd</h2>
         <p>设 $d_{i,j,k}$ 表示路径中间只允许经过节点 $1...k$ 的情况下，$i\rightarrow j$ 的最短路长度</p>
         <ul>
-            <li class="fragment">如果当前的最短路经过点 $k$，那么 $d_{i,j,k}=d_{i,k,k-1}+d{k,j,k-1}$</li>
+            <li class="fragment">如果当前的最短路经过点 $k$，那么 $d_{i,j,k}=d_{i,k,k-1}+d_{k,j,k-1}$</li>
             <li class="fragment">如果当前的最短路不经过点 $k$，那么 $d_{i,j,k}=d_{i,j,k-1}$</li>
         </ul>
         <p class="fragment">
             综上，状态转移方程为：
             <p class="fragment">
                 $$
-                d_{i,j,k}=\mathop{min}\{d_{i,k,k-1}+d{k,j,k-1},d_{i,j,k-1}\}
+                d_{i,j,k}=\mathop{min}\{d_{i,k,k-1}+d_{k,j,k-1},d_{i,j,k-1}\}
                 $$
             </p>
         </p>
@@ -24,7 +24,7 @@
         <h2>Floyd</h2>
         <p>
             $$
-            d_{i,j,k}=\mathop{min}\{d_{i,k,k-1}+d{k,j,k-1},d_{i,j,k-1}\}
+            d_{i,j,k}=\mathop{min}\{d_{i,k,k-1}+d_{k,j,k-1},d_{i,j,k-1}\}
             $$
         </p>
         <p class="fragment">由于递推过程中，$k$ 是递增的，所以可以优化成二维数组</p>
