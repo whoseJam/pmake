@@ -17,6 +17,8 @@ const slideBody = document.getElementsByClassName("slides")[0];
 if (!slideBody) throw new Error("Slide Body Not Found");
 slideBody.innerHTML = mainCode;
 
+import { w3IncludeHTML } from "./reveal/w3data";
+
 import Reveal from "./reveal/reveal";
 import RevealMath from "./reveal/plugin/math";            revealPlugins.push(RevealMath);
 import RevealZoom from "./reveal/plugin/zoom";            revealPlugins.push(RevealZoom);
@@ -33,10 +35,13 @@ window.Reveal = Reveal;
 function maintain(iframe) {
     iframe.onload = () => {
         const rate = iframe.getAttribute("rate");
+        const bbox = iframe.getBoundingClientRect();
         iframe.contentWindow.postMessage({
             action: "flush",
             rate: rate ? rate : 1.5,
-            export: needToExportAsPdf
+            export: needToExportAsPdf,
+            width: bbox.width,
+            height: bbox.height,
         }, "*");
         iframe.onload = undefined;
     };
@@ -67,16 +72,6 @@ const chalkboardConfig = {
     ]
 }
 
-Reveal.initialize({
-    controls: true,
-    progress: true,
-    center: true,
-    hash: true,
-    customcontrols: customcontrolsConfig,
-    chalkboard: chalkboardConfig,
-    plugins: revealPlugins
-});
-
 Reveal.addEventListener("slidechanged", function(event) {
     const currentSlide = event.currentSlide;
     const iframes = currentSlide.getElementsByTagName("iframe");
@@ -84,4 +79,16 @@ Reveal.addEventListener("slidechanged", function(event) {
         const iframe = iframes[i];
         maintain(iframe)
     }
+});
+
+w3IncludeHTML(() => {
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        center: true,
+        hash: true,
+        customcontrols: customcontrolsConfig,
+        chalkboard: chalkboardConfig,
+        plugins: revealPlugins
+    });
 });

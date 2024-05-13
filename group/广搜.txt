@@ -1,2 +1,0 @@
-./work/题库/P1746离开中山路 -start 2
-./work/BFS -start 1

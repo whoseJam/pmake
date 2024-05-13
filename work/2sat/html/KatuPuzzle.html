@@ -1,0 +1,77 @@
+<section>
+    <section>
+        <h1>Katu Puzzle</h1>
+        <p>这个题还真是个体力活</p>
+    </section>
+    <section data-background-iframe="http://43.143.204.105/problem/64" data-background-interactive>
+    </section>
+    <section>
+        <h2>Katu Puzzle</h2>
+        <p>每个变量 $a_i$ 都有两种可能的取值：$T_i$ 和 $F_i$</p>
+        <p class="fragment">接下来就是又臭又长的分类讨论</p>
+    </section>
+    <section>
+        <h2>Katu Puzzle</h2>
+        <p>对 $AND$ 运算分类讨论：</p>
+        <ul>
+            <li class="fragment">
+                $a\ AND\ b=1$：
+                <ul class="fragment">
+                    <li>$F_a\rightarrow T_a$</li>
+                    <li>$F_b\rightarrow T_b$</li>
+                </ul>
+            </li>
+            <li class="fragment">
+                $a\ AND\ b=0$：
+                <ul class="fragment">
+                    <li>$T_a\rightarrow F_b$</li>
+                    <li>$T_b\rightarrow F_a$</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+    <section>
+        <h2>Katu Puzzle</h2>
+        <p>对 $OR$ 运算分类讨论：</p>
+        <ul>
+            <li class="fragment">
+                $a\ OR\ b=1$：
+                <ul class="fragment">
+                    <li>$F_a\rightarrow T_b$</li>
+                    <li>$F_b\rightarrow T_a$</li>
+                </ul>
+            </li>
+            <li class="fragment">
+                $a\ OR\ b=0$：
+                <ul class="fragment">
+                    <li>$T_a\rightarrow F_a$</li>
+                    <li>$T_b\rightarrow F_b$</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+    <section>
+        <h2>Katu Puzzle</h2>
+        <p>对 $XOR$ 运算分类讨论：</p>
+        <ul>
+            <li class="fragment">
+                $a\ XOR\ b=1$：
+                <ul class="fragment">
+                    <li>$T_a\rightarrow F_b$</li>
+                    <li>$F_a\rightarrow T_b$</li>
+                    <li>$T_b\rightarrow F_a$</li>
+                    <li>$F_b\rightarrow T_a$</li>
+                </ul>
+            </li>
+            <li class="fragment">
+                $a\ XOR\ b=0$：
+                <ul class="fragment">
+                    <li>$T_a\rightarrow T_a$</li>
+                    <li>$F_a\rightarrow F_b$</li>
+                    <li>$T_b\rightarrow T_a$</li>
+                    <li>$F_b\rightarrow F_a$</li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+</section>

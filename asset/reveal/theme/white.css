@@ -20,15 +20,29 @@ iframe.small {
   min-height: 200px;
   max-height: 200px;
 }
-section {
-  text-align: left;
+div.left {
+  width: 45%;
+  display: inline-block;
 }
-.MathJax {
-  font-size: 0.9em;
+div.right {
+  width: 45%;
+  float: right;
+}
+div.divide {
+  height: 3px;
+  background-color: gray;
+  margin-bottom: 20px;
+}
+section:not(:has(h1)) {
+  text-align: left;
 }
 #notescanvas, #chalkboard {
   -webkit-backdrop-filter: blur(0px);
   backdrop-filter: blur(0px);
+}
+.hljs {
+  font-size: 20px;
+  line-height: 1.05; 
 }
 
 /*********************************************
@@ -37,7 +51,7 @@ section {
 :root {
   --r-background-color: #fff;
   --r-main-font: Source Sans Pro, Helvetica, sans-serif;
-  --r-main-font-size: 28px;
+  --r-main-font-size: 24px;
   --r-main-color: #222;
   --r-block-margin: 20px;
   --r-heading-margin: 0 0 20px 0;
@@ -49,10 +63,10 @@ section {
   --r-heading-text-shadow: none;
   --r-heading-font-weight: 600;
   --r-heading1-text-shadow: none;
-  --r-heading1-size: 2.2em;
-  --r-heading2-size: 1.4em;
-  --r-heading3-size: 1.1em;
-  --r-heading4-size: 0.9em;
+  --r-heading1-size: 2.6em;
+  --r-heading2-size: 1.8em;
+  --r-heading3-size: 1.5em;
+  --r-heading4-size: 0.2em;
   --r-code-font: monospace;
   --r-link-color: #2a76dd;
   --r-link-color-dark: #1a53a1;

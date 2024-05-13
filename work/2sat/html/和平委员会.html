@@ -1,0 +1,30 @@
+<section>
+    <section>
+        <h1>和平委员会</h1>
+        <p>例题一道</p>
+    </section>
+    <section data-background-iframe="http://43.143.204.105/problem/1035" data-background-interactive>
+    </section>
+    <section>
+        <h2>和平委员会</h2>
+        <p>容易看出来，本题需要做决定的 $n$ 个变量，就是第 $i$ 个党派到底是派<b>哪个代表</b>参加委员会</p>
+        <p class="fragment">每个党派都有两个选择，不妨称第 $i$ 个党派的两个候选人分别为 $F_i$ 和 $S_i$</p>
+        <p class="fragment">题目给的两个候选人（假设两个候选人分别为 $a$ 和 $b$）彼此厌恶，则可以被抽象成这么一个子句：</p>
+        <p class="fragment">
+            $$
+            \lnot a \lor \lnot b
+            $$
+        </p>
+        <p class="fragment">即，要么 $a$ 不来参加委员会，要么 $b$ 不来参加委员会</p>
+    </section>
+    <section>
+        <h2>和平委员会</h2>
+        <p>设 $another(x)$ 表示和 $x$ 这个人所属同一个党派的另一个人的编号，假设 $a$ 和 $b$ 有敌意的话：</p>
+        <p class="fragment">$a\rightarrow another(b)$</p>
+        <p class="fragment">$b\rightarrow another(a)$</p>
+    </section>
+    <section>
+        <h2>和平委员会</h2>
+        <iframe data-src="./animation/和平委员会.html" style="min-width: 1000px; min-height: 400px; max-height: 400px;"></iframe>
+    </section>
+</section>

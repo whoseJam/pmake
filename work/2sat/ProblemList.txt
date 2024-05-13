@@ -1,0 +1,6 @@
+2-SAT：
+#1035.和平委员会：https://www.luogu.com.cn/problem/P5782
+#62.熊猫的戏法：http://poj.org/problem?id=3207
+#64.Katu Puzzle：http://poj.org/problem?id=3678
+#65.Priest John's Busiest Day：http://poj.org/problem?id=3683
+#63.婚礼：http://poj.org/problem?id=3648

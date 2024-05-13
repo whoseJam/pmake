@@ -148,26 +148,56 @@
     <section>
         <h2>按位异或卷积</h2>
         <p>所以，我们得到了：$c(i,j)c(i,k)=c(i,j\bigotimes k)$</p>
-        <p class="fragment">又由于位运算可以逐位考虑，我们只讨论：</p>
-        <ul>
-            <li class="fragment">$c(0/1,0)c(0/1,0)=c(0/1,0)$</li>
-            <li class="fragment">$c(0/1,0)c(0/1,1)=c(0/1,1)$</li>
-            <li class="fragment">$c(0/1,1)c(0/1,0)=c(0/1,1)$</li>
-            <li class="fragment">$c(0/1,1)c(0/1,1)=c(0/1,1)$</li>
-        </ul>
-        <p class="fragment">这八种情况即可</p>
+        <p class="fragment">又由于位运算可以逐位考虑，各位无关，假设一个十进制数字 $x$ 可以被写作如下的二进制表示：$x=|x_0x_1...x_k|_2$，所以我们可以把 $c(i,j)$ 重写为其二进制表示：</p>
+        <p class="fragment">
+            $$
+            c(i,j)=|c(i_0,j_0)c(i_1,j_1)...c(i_k,j_k)|_2
+            $$
+        </p>
+        <p style="font-size: 20px;" class="fragment">
+            $$
+            \begin{aligned}
+            FWT(A)_i&=\sum_{j=0}^{\frac 1 2 n - 1}c(i,j)A_i+\sum_{j=\frac 1 2 n}^{n-1}c(i,j)A_i \\
+            &=c(i_0,0)\sum_{j=0}^{\frac 1 2 n - 1}c(|i_1i_2...i_k|_2,|j_1j_2...j_k|_2)A_j+c(i_0,1)\sum_{j=\frac 1 2 n}^{n-1}c(|i_1i_2...i_k|_2,|j_1j_2...j_k|_2)A_j\\
+            &=c(i_0,0)FWT(A_0)_i+c(i_0,1)FWT(A_1)_i
+            \end{aligned}
+            $$
+        </p>
     </section>
     <section>
         <h2>按位异或卷积</h2>
-        <p>首先对于任何位置，都有$c(i,j)c(i,j)=c(i,0)$，所以 $c(i,0)=1$，不能为 $0$，否则没办法构造 $c$ 矩阵的逆矩阵</p>
-        <p class="fragment">由于 $c(i,0)c(i,1)=c(i,1)$，所以 $c(0,1)=\pm 1$，$c(1,1)=\pm 1$，它们两个不能相等，否则没有逆矩阵</p>
-        <p class="fragment">
-            综上，我们可以构造出一个这样的矩阵 $c$ 来：
+        <p>
+            稍微整理一下，即：
+            $$
+            FWT(A)_i=c(i_0,0)FWT(A_0)_i+c(i_0,1)FWT(A_1)_i \\
+            i_0\in \{0, 1\}
+            $$
+        </p>
+        <p class="fragment">所以我们只需要构造出一个 $
+            c=
+            \begin{bmatrix}
+            ?&?\\
+            ?&?\\
+            \end{bmatrix}
+            $ 这样的一个<b>位矩阵</b>，让它满足 $c(i,j)c(i,k)=c(i,j\bigotimes k)$，同时可逆，即可</p>
+    </section>
+    <section>
+        <h2>按位异或卷积</h2>
+        <p>经过精心的构造（此处省略），我们发现以下这个矩阵非常符合我们的要求：
             $$
             c=
             \begin{bmatrix}
             1&1\\
             1&-1\\
+            \end{bmatrix}
+            $$
+        </p>
+        <p class="fragment">其逆矩阵为
+            $$
+            inv(c)=
+            \begin{bmatrix}
+            0.5&0.5\\
+            0.5&-0.5\\
             \end{bmatrix}
             $$
         </p>

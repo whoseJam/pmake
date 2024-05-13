@@ -1,0 +1,35 @@
+<section>
+    <section>
+        <h1>开门</h1>
+        <p>能建模成2-SAT模型吗</p>
+    </section>
+    <section data-background-iframe="http://43.143.204.105/problem/66" data-background-interactive>
+    </section>
+    <section>
+        <h2>开门</h2>
+        <p>以下是看上去能和2-SAT产生关系的东西：</p>
+        <p class="fragment">一对钥匙到底选哪个来开锁，假设第 $i$ 对钥匙由 $A_i$ 和 $B_i$ 组成</p>
+        <p class="fragment">一扇门到底由哪把锁来开启，假设门 $j$ 可以被钥匙 $C_i$ 和 $D_i$ 打开</p>
+        <p class="fragment">钥匙 $k$ 有被使用 $T_k$ 和不被使用 $F_k$ 两种状态</p>
+        <p class="fragment">一对钥匙中，<b>只能选一把</b>来开锁</p>
+        <p class="fragment">一扇门，<b>至少需要被一把钥匙撬动</b>才能打开</p>
+    </section>
+    <section>
+        <h2>开门</h2>
+        <p>我们二分枚举答案，然后用2-SAT来检验</p>
+        <p class="fragment">
+            为了表征一对钥匙中只能选一把来开锁，假设这一对钥匙包含 $A$ 和 $B$两把钥匙，我们可以建立如下两条边：
+            <ul class="fragment">
+                <li>$T_A\rightarrow F_B$</li>
+                <li>$T_B\rightarrow F_A$</li>
+            </ul>
+        </p>
+        <p class="fragment">
+            为了表征一把锁至少需要一把钥匙来撬动，假设这把锁可以由 $C$ 或者 $D$ 来开启，我们可以建立如下两条边：
+            <ul class="fragment">
+                <li>$F_C\rightarrow T_D$</li>
+                <li>$F_D\rightarrow T_C$</li>
+            </ul>
+        </p>
+    </section>
+</section>
