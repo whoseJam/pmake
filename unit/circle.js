@@ -14,6 +14,8 @@ function test(code) {
 
 async function main() {
     await sd.pause();
+    obj.startAnimate().r(50).cx(600).cy(300).endAnimate();
+    await sd.pause();
     test(`obj.startAnimate().x(100).y(100).endAnimate();`);
     await sd.pause();
     test(`obj.startAnimate().r(40).x(100).y(100).endAnimate();`);

@@ -1,7 +1,6 @@
 const gulp = require("gulp");
 const webpack = require("webpack-stream");
 const fs = require("fs");
-const config = JSON.parse(fs.readFileSync("config.json"));
 
 const defaultAnimationTargetFilePath = "C:/Users/27670/Desktop/output/animation";
 const defaultPPTTargetFilePath = "C:/Users/27670/Desktop/output";
@@ -138,6 +137,7 @@ gulp.task("ppt", (done) => {
 })
 
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require("path");
 function getWebpackAnimationConfig(sourceFilePath, animationName) {
     return {
         mode: "development",
@@ -170,11 +170,8 @@ function getWebpackAnimationConfig(sourceFilePath, animationName) {
             hints: false
         },
         resolve: {
-            fallback: {
-                "crypto": require.resolve("crypto-browserify"),
-                "stream": require.resolve("stream-browserify"),
-                "path": require.resolve("path-browserify"),
-                "os": require.resolve("os-browserify/browser")
+            alias: {
+                "@": path.resolve(__dirname, "lib")
             }
         }
     };

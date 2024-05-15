@@ -9,6 +9,8 @@ main();
 async function main() {
     await sd.pause();
     l.opacity(1).source(100, 100).target(300, 200);
-    l.startAnimate().pointStoT().endAnimate().arrow();
+    l.startAnimate();
+    l.pointStoT();
+    l.endAnimate().arrow();
     await sd.pause();
 }

@@ -13,9 +13,9 @@ async function main() {
     arr.insert(1, "+2");
     arr.insert(4, "+1");
     arr.endAnimate();
-    arr.startAnimate();
-    arr.insert(3, "inf");
-    arr.endAnimate();
+    // arr.startAnimate();
+    // arr.insert(3, "inf");
+    // arr.endAnimate();
     await sd.pause();
     arr.startAnimate(500).erase(2).endAnimate();
     arr.startAnimate(500).erase(3).endAnimate();

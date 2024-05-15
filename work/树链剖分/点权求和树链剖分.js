@@ -1,4 +1,3 @@
-import { A } from "@svgdotjs/svg.js";
 import * as sd from "../../lib/slide";
 
 let svg = sd.svg();
