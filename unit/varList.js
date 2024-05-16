@@ -13,6 +13,6 @@ async function main() {
     await sd.pause();
     obj.startAnimate().put("a", 2).endAnimate();
     await sd.pause();
-    obj.startAnimate().color(C.red).endAnimate();
+    obj.startAnimate().color("b", C.red).endAnimate();
     await sd.pause();
 }
