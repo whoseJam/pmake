@@ -44,6 +44,11 @@ section:not(:has(h1)) {
   font-size: 20px;
   line-height: 1.05; 
 }
+.quote {
+  background-color: lightgray;
+  border: #222 1px solid;
+  padding: 8px;
+}
 
 /*********************************************
  * GLOBAL STYLES

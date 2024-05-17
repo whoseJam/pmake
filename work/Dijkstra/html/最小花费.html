@@ -1,0 +1,45 @@
+<section>
+    <section>
+        <h1>最小花费</h1>
+        <p>改造Dijkstra</p>
+    </section>
+    <section data-background-iframe="http://43.143.204.105/problem/1039" data-background-interactive>
+    </section>
+    <section>
+        <h2>最小花费</h2>
+        <p>假设转账总共经历了 $k$ 个人，第 $i$ 个人收的手续费为 $p_i$，最初的转账金额为 $inital$，最后收到的金额为 $final$</p>
+        <p class="fragment">
+            容易列出这么一个式子：
+            $$
+            final=inital\cdot (1-p_1)\cdot (1-p_2)...(1-p_k)
+            $$
+        </p>
+        <p class="fragment">
+            我们改造一下Dijkstra，改造成求最长路，且把边权相加改造成边权相乘即可
+        </p>
+    </section>
+    <section>
+        <h2>最小花费</h2>
+        <pre><code data-trim data-line-numbers class="cpp"><script type="text/template">
+            typedef pair < double, int > pa;
+            priority_queue < pa, vector < pa > , less < pa >> q;
+            void Dijkstra(int S) {
+                dis[S] = 1.0;
+                q.push(make_pair(1.0, S));
+                while (!q.empty()) {
+                    int u = q.top().second;
+                    q.pop();
+                    if (vis[u]) continue;
+                    vis[u] = 1;
+                    for (int i = h[u], v; i; i = l[i].nxt) {
+                        v = l[i].to;
+                        if (dis[v] < dis[u] * l[i].dis) {
+                            dis[v] = dis[u] * l[i].dis;
+                            if (!vis[v]) q.push(make_pair(dis[v], v));
+                        }
+                    }
+                }
+            }
+        </script></code></pre>
+    </section>
+</section>

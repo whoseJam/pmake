@@ -1,0 +1,108 @@
+<section>
+    <section>
+        <h1>Dijkstra引入</h1>
+        <p>怎么想的</p>
+    </section>
+    <section>
+        <h2>Dijkstra</h2>
+        <p>Dijkstra用于求<b>单源最短路</b>，什么优化都没有的情况下，时间复杂度为 $O(n^2)$，经过简单的堆优化后，时间复杂度变为 $O((n+m)logn)$</p>
+        <p class="fragment">Dijkstra适用于，<b>不存在负权边</b>的有向图或者无向图</p>
+    </section>
+    <section>
+        <h2>BFS</h2>
+        <p>我们先想一想BFS是如何求最短路的</p>
+        <p class="fragment">假设我们拿到了一张图，图上每条边的边权都是 $1$，要求起点 $1$ 到终点 $n$ 的最短路</p>
+        <p class="fragment">由于边权均为 $1$......</p>
+        <ul>
+            <li class="fragment">设 $dis_x$ 表示 $1\rightarrow x$ 的最短路，最开始除了 $dis_1$ 之外，其他所有点 $x$ 的 $dis_x$ 都被初始化为 $+\infty$；$dis_1$ 则被初始化成 $0$</li>
+            <li class="fragment">我们用一个普通队列 $Q$ 来存放：当前<b>最短路长度已知</b>的所有点 $x$，即 $dis_x$ 已经求出来了，并且未来都不会改变了</li>
+            <li class="fragment">每轮迭代，我们从队列 $Q$ 中任意取一个点 $u$</li>
+            <li class="fragment">此时 $u$ 到起点的最短路肯定是已经求出来了的</li>
+            <li class="fragment">我们尝试用 $u$ 去更新周围邻接点 $v$ 的最短路，即 $dis_v = dis_u + 1$</li>
+            <li class="fragment">如果更新成功，起点到 $v$ 的最短路一定就是此刻 $dis_v$ 的值（因为边权都是 $1$）。我们就可以将 $v$ 塞入 $Q$ 这个队列了</li>
+        </ul>
+    </section>
+    <section>
+        <h2>BFS</h2>
+        <iframe
+            style="min-width: 1000px; min-height: 500px;"
+            data-src="./animation/BFS.html"></iframe>
+    </section>
+    <section>
+        <h2>BFS</h2>
+        <p>上述做法的正确性在于，我们每轮迭代取出的点 $u$，它的最短路一定是<b>已经被确定的</b></p>
+        <ol class="fragment">
+            <li>未来不会有别的点来更新 $u$ 的 $dis_u$</li>
+            <li>未来不需要再拿 $u$ 去更新一遍周围的邻接点</li>
+        </ol>
+        <p class="fragment">那我们能不能稍微改造一下这个 BFS 算法，让它能适用于<b>边权各异</b>的图呢</p>
+    </section>
+    <section>
+        <h2>Dijkstra VS BFS</h2>
+        <p>为了方便叙述，我们把某个时刻上，所有已经求出最短路的点构成的集合叫做 $S$，还未求出最短路的点构成的集合叫做 $T$，容易知道 $S\cup T=U=\{1,2...n\}$</p>
+        <p class="fragment">在边权都是 $1$ 的图中，我们使用BFS时，BFS所使用的那个普通队列 $Q$ 里面装的任意点 $u$ 一定是属于 $S$ 集合的</p>
+        <p class="fragment">我们不断地取 $Q$ 中的点出来更新邻接点的 $dis$ 值，就会导致源源不断有点进入 $Q$，有点从 $T$ 集合转移到 $S$ 集合</p>
+        <p class="fragment">我们把 “从 $Q$ 中取点出来，更新其邻接点的 $dis$ 值” 这个过程，叫做<b>松弛</b></p>
+    </section>
+    <section>
+        <h2>Dijkstra VS BFS</h2>
+        <p>现在我们尝试把上述做法拓展到<b>边权各异</b>的、<b>无负权边</b>的图上</p>
+        <p class="fragment">我们还是希望，每一轮迭代中，我们能找出：</p>
+        <ul class="fragment">
+            <li>最短路已知的
+                <p class="fragment">$u\in S$</p>
+            </li>
+            <li>还没有经历过松弛过程的
+                <p class="fragment">$u\in Q$</p>
+            </li>
+            <p>某个节点 $u$</p>
+        </ul>
+        <p class="fragment">
+            注意，直接套用BFS算法时，在边权各异的情况下，我们是无法保证 $Q$ 中的任意节点都是属于 $S$ 集合的
+        </p>
+    </section>
+    <section>
+        <h2>Dijkstra VS BFS</h2>
+        <p>虽然我们不能保证 $Q$ 中的任意节点都是属于 $S$ 集合的</p>
+        <p class="fragment">但是，我们能保证 $Q$ 中目前 $dis_u$ 最小的节点 $u$ 一定是属于 $S$ 集合的</p>
+        <p class="quote fragment">
+            因为能更新 $u$ 节点的其他节点，要么来自 $Q$，要么来自未来进入 $Q$ 的点，而现在 $Q$ 中的所有点的 $dis$ 值都不小于 $dis_u$ 了，整张图的边权又都是非负的，所以未来不可能有任何一个点有更新 $dis_u$ 的机会，换言之—— $dis_u$ 已经到达了它的最小值，起点到 $u$ 的最短距离已经求出来了，$u\in S$
+        </p>
+        <p class="fragment">
+            所以我们的思路也就出来了，每轮迭代中，取 $Q$ 中 $dis$ 值最小的节点来松弛其邻接点，这一步可以用优先队列来完成，其他大体和BFS保持一样，不过还有一点小细节，还是看动画吧
+        </p>
+    </section>
+    <section>
+        <h2>Dijkstra</h2>
+        <iframe
+            style="min-width: 1000px; min-height: 500px;"
+            data-src="./animation/Dijkstra.html"></iframe>
+    </section>
+    <section>
+        <h2>Dijkstra</h2>
+        <p>以下是Dijkstra的代码实现：</p>
+        <pre><code style="min-height: 445px;" data-trim data-line-numbers class="cpp"><script type="text/template">
+            typedef pair < int, int > pa;
+            void Dijkstra(int S) {
+                for (int i = 1; i <= n; i++)
+                    dis[i] = inf;
+                dis[S] = 0;
+                priority_queue < pa, vector < pa > , greater < pa >> q;
+                q.push(make_pair(0, S));
+                while (q.size()) {
+                    int u = q.top().second;
+                    q.pop();
+                    if (vis[u]) continue;
+                    vis[u] = 1;
+                    for (int i = h[u], v; i; i = l[i].Nxt) {
+                        v = l[i].to;
+                        if (dis[v] > dis[u] + l[i].val) {
+                            dis[v] = dis[u] + l[i].val;
+                            q.push(make_pair(dis[v], v));
+                        }
+                    }
+                }
+            }
+        </script></code></pre>
+    </section>
+</section>
