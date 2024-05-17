@@ -5,9 +5,23 @@ const fs = require("fs");
 const defaultAnimationTargetFilePath = "C:/Users/27670/Desktop/output/animation";
 const defaultPPTTargetFilePath = "C:/Users/27670/Desktop/output";
 
+function parseInput() {
+    const length = process.argv.length;
+    for (let i = 3; i < length; i++) {
+        const arg = process.argv[i];
+        if (arg.startsWith("-")) {
+            const key = arg.slice(1);
+            if (i + 1 < length && !process.argv[i + 1].startsWith("-")) {
+                const value = process.argv[i + 1];
+                global[key] = value;
+                i++;
+            } else global[key] = true;
+        }
+    }
+}
+
 function prepareAnimationTask() {
-    if (global.prepareAnimationTaskExecuted) return;
-    const sourceFilePath = process.argv[4];
+    const sourceFilePath = global["i"];
     const targetFilePath = defaultAnimationTargetFilePath;
     const animationName = String(sourceFilePath).split("/").slice(-1)[0].split(".")[0]
     console.log(`the animation name is ${animationName}`);
@@ -32,6 +46,7 @@ function pptTask(pptFilePath, targetFilePath) {
 }
 
 gulp.task("animation", () => {
+    parseInput();
     prepareAnimationTask();
     const sourceFilePath = global.sourceFilePath;
     const targetFilePath = global.targetFilePath;
@@ -137,11 +152,13 @@ gulp.task("ppt", (done) => {
 })
 
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const path = require("path");
 function getWebpackAnimationConfig(sourceFilePath, animationName) {
+    const mode = global["d"] ? "development" : "production";
     return {
-        mode: "development",
-        // mode: "production",
+        mode: mode,
         output: {
             filename: `${animationName}.js`
         },
@@ -179,13 +196,14 @@ function getWebpackAnimationConfig(sourceFilePath, animationName) {
 
 function getWebpackPPTConfig(pptFilePath) {
     // pptFilePath: ./work/xxx/ppt.html
+    const mode = global["d"] ? "development" : "production";
     const pptFilePathAbsolute = __dirname.replaceAll("\\", "/") + pptFilePath.slice(1)
     return {
-        mode: "development",
-        // mode: "production",
+        mode: mode,
         entry: "./asset/pptMain.js",
         watch: true,
         plugins: [
+            new BundleAnalyzerPlugin(),
             new HtmlWebpackPlugin({
                 template: "./asset/pptIndex.html",
             }),

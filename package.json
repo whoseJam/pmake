@@ -33,14 +33,15 @@
     "path-browserify": "^1.0.1",
     "stream-browserify": "^3.0.0",
     "style-loader": "^4.0.0",
+    "terser-webpack-plugin": "^5.3.10",
     "tex2svg": "^1.0.2",
     "text-to-svg": "^3.1.5",
     "webpack": "^5.91.0",
+    "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^5.1.4",
     "webpack-stream": "^7.0.0"
   },
   "dependencies": {
-    "@antv/g6": "^4.8.24",
     "d3": "^7.9.0",
     "dagre": "^0.8.5",
     "file-loader": "^6.2.0",
