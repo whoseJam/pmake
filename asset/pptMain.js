@@ -5,10 +5,13 @@ import "./reveal/theme/white.css";
 import "./reveal/theme/chalkboard.css";
 import "./reveal/theme/customcontrols.css";
 
-// Config
-// 是否需要导出为 pdf
-// decktape reveal http://127.0.0.1:5500/index.html ./output.pdf -p 20000
-const needToExportAsPdf = false;
+// decktape reveal http://127.0.0.1:8080/index.html ./output.pdf -p 10000
+
+function inDecktapeEnvironment() {
+    const userAgent = navigator.userAgent.toLowerCase();
+    return userAgent.includes("headlesschrome");
+}
+const needToExportAsPdf = inDecktapeEnvironment();
 
 import mainCode from "PPT_SOURCE";
 

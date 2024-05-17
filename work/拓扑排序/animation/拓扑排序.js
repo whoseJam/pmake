@@ -20,7 +20,9 @@ export async function toposort(graph, Qgap, callback) {
     const grad = C.gradient(C.white, C.orange, 0, maxIndgree);
     nodes.forEach(node => { 
         node.color(grad(node.ind));
-        if (node.ind === 0) Q.push(node.nodeId);
+        if (node.ind === 0) {
+            Q.push(node.nodeId);
+        }
     })
 
     graph.childAs("Q", Q, R.Aside("bl", Qgap));

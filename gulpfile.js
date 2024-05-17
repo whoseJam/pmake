@@ -203,7 +203,6 @@ function getWebpackPPTConfig(pptFilePath) {
         entry: "./asset/pptMain.js",
         watch: true,
         plugins: [
-            new BundleAnalyzerPlugin(),
             new HtmlWebpackPlugin({
                 template: "./asset/pptIndex.html",
             }),

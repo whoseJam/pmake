@@ -1,0 +1,3 @@
+#86.工程规划：https://www.luogu.com.cn/problem/P1260
+#87.区间：https://www.acwing.com/problem/content/description/364/
+#1043.01串：https://www.luogu.com.cn/problem/P5751

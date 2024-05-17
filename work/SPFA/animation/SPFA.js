@@ -1,85 +1,85 @@
-// import * as sd from "#lib/slide";
+import * as sd from "@/slide";
 
-// let svg = sd.svg();
-// let C = sd.color();
-// let R = sd.rule();
-// let g = sd.Graph(svg).width(200).cx(300).cy(300);
-// let n = 4;
-// let to = {};
-// let q = sd.Array(svg);
-// let inq = sd.Array(svg).resize(4).start(1).indexed(true), Inq = sd.make1d(100, 0);
-// let dis = sd.Array(svg).resize(4).start(1).indexed(true), Dis = sd.make1d(100, 1e9);
-// inq.x(700).y(100); sd.EnableArrayName(inq, "inq");
-// dis.x(700).y(200); sd.EnableArrayName(dis, "dis");
-// q.x(700).y(300); sd.EnableArrayName(q, "队列");
+const svg = sd.svg();
+const C = sd.color();
+const R = sd.rule();
 
-// let edges = [
-//     [1, 2, 2],
-//     [1, 3, 3],
-//     [3, 2, -2],
-//     [2, 4, 1]
-// ];
-// for (let i = 1; i <= n; i++) {
-//     g.newNode(i);
-//     to[i] = [];
-// }
-// for (let i = 0; i < edges.length; i++) {
-//     g.newLink(edges[i][0], edges[i][1], sd.Text(svg, edges[i][2]).fontSize(20));
-//     let e = g.element(edges[i][0], edges[i][1]);
-//     e.arrow().valueRule(R.PointAtPathByRate(0.5, "x", "y"));
-//     to[edges[i][0]].push([edges[i][1], edges[i][2]]);
-// }
+const graph = new sd.GridGraph(svg).width(400).height(200).cx(600).cy(300);
+const data = [
+    [1, 2, 12], [1, 3, 14], [1, 4, 16],
+    [2, 4, 7], [2, 5, 10],
+    [3, 4, 9], [3, 6, 8],
+    [4, 5, 6], [4, 6, 2],
+    [5, 6, 5], [5, 7, 3],
+    [6, 7, 4]
+];
 
-// main();
+function init() {
+    function put(nodeId, locator) {
+        const varList = new sd.VarList(svg);
+        graph.element(nodeId).childAs("varList", varList, R.Aside(locator));
+        return varList;
+    }
+    graph.at(0.5, 0).newNode(1); put(1, "lc").put("dis", 0).put("inq", 1);
+    graph.at(0, 0.25).newNode(2); put(2, "tc").put("dis", Infinity).put("inq", 0);
+    graph.at(1, 0.25).newNode(3); put(3, "bc").put("dis", Infinity).put("inq", 0);
+    graph.at(0.5, 0.5).newNode(4); put(4, "rc").put("dis", Infinity).put("inq", 0);
+    graph.at(0, 0.75).newNode(5); put(5, "tc").put("dis", Infinity).put("inq", 0);
+    graph.at(1, 0.75).newNode(6); put(6, "bc").put("dis", Infinity).put("inq", 0);
+    graph.at(0.5, 1).newNode(7); put(7, "rc").put("dis", Infinity).put("inq", 0);
+    data.forEach(link => {
+        graph.newLink(link[0], link[1], link[2]);
+    });
+    graph.element(5, 6).rule(R.PointAtPathByRate(0.25));
+}
 
-// async function main() {
-//     await SPFA(1);
-// }
+init();
+main();
 
-// function toText(x) {
-//     if (x == 1e9) return "inf";
-//     return x;
-// }
+async function main() {
+    await SPFA(graph);
+}
 
-// async function SPFA(S) {
-//     Dis[S] = 0; Inq[S] = 1;
-//     for (let i = 1; i <= n; i++) {
-//         dis.value(i, toText(Dis[i]));
-//         inq.value(i, Inq[i]);
-//     }
-//     let Q = [S];
-//     q.push(sd.Vertex(svg).value(S));
-//     while (Q.length > 0) {
-//         let u = Q[0]; Q.splice(0, 1);
-//         await sd.pause();
-//         q.startAnimate().color(0, C.green).endAnimate()
-//         g.after(q).startAnimate().color(u, C.green).endAnimate();
-//         q.startAnimate().erase(0).endAnimate();
-//         inq.after(g).startAnimate().color(u, C.green).endAnimate();
-//         inq.startAnimate().value(u, Inq[u]=0).endAnimate();
-//         for (let i = 0; i < to[u].length; i++) {
-//             let v = to[u][i][0];
-//             let w = to[u][i][1];
-//             if (Dis[v] > Dis[u] + w) {
-//                 await sd.pause();
-//                 Dis[v] = Dis[u] + w;
-//                 g.startAnimate().color(v, C.blue).endAnimate();
-//                 dis.after(g).startAnimate().color(v, C.blue).endAnimate();
-//                 dis.startAnimate().value(v, Dis[v]).endAnimate();
-//                 inq.after(dis).startAnimate().color(v, C.blue).endAnimate();
-//                 if (!Inq[v]) {
-//                     inq.startAnimate().value(v, Inq[v]=1).endAnimate();
-//                     Q.push(v);
-//                     q.startAnimate().push(sd.Vertex(svg).value(v)).endAnimate();
-//                 }
-//                 await sd.pause();
-//                 g.startAnimate().color(v, C.white).endAnimate();
-//                 dis.startAnimate().color(v, C.white).endAnimate();
-//                 inq.startAnimate().color(v, C.white).endAnimate();
-//             }
-//         }
-//         await sd.pause();
-//         g.startAnimate().color(u, C.white).endAnimate();
-//         inq.startAnimate().color(u, C.white).endAnimate();
-//     }
-// }
+/**
+ * @param {sd.GraphBase} graph 
+ */
+async function SPFA(graph) {
+    const Q = new sd.Array(svg).x(graph.x()).y(graph.my() + 100).push(1);
+    const getDis = (x) => graph.element(x).child("varList").get("dis");
+    const putDis = (x, dis) => graph.element(x).child("varList").put("dis", dis);
+    const getInq = (x) => graph.element(x).child("varList").get("inq");
+    const putInq = (x, inq) => graph.element(x).child("varList").put("inq", inq);
+    const n = graph.nodes().length;
+    sd.Label(Q, "队列Q");
+    graph.update();
+    while (Q.length() > 0) {
+        await sd.pause();
+        let u = Q.firstElement().value().text();
+        Q.startAnimate().color(0, C.blue).endAnimate();
+        graph.startAnimate().color(u, C.blue).endAnimate();
+        const outLinks = graph.outLinks(u, "undirect");
+        for (let link of outLinks) {
+            const v = graph.toNodeId(u, link);
+            if (getDis(v) > getDis(u) + link.intValue()) {
+                await sd.pause();
+                graph.startAnimate().color(v, C.green).endAnimate();
+                await sd.pause();
+                graph.startAnimate();
+                putDis(v, getDis(u) + link.intValue());
+                graph.endAnimate();
+                if (!getInq(v)) {
+                    await sd.pause();
+                    graph.startAnimate();
+                    putInq(v, 1);
+                    graph.endAnimate();
+                    Q.after(graph).startAnimate().push(v).endAnimate();
+                }
+                await sd.pause();
+                graph.startAnimate().color(v, C.white).endAnimate();
+            }
+        }
+        await sd.pause();
+        Q.startAnimate().erase(0).endAnimate();
+        graph.startAnimate().color(u, C.white).endAnimate();
+    }
+}

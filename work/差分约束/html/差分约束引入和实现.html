@@ -1,6 +1,48 @@
 <section>
     <section>
         <h1>差分约束</h1>
-        <p>基于SPFA的一个应用<b>（Dijkstra惨败）</b></p>
+        <p>基于SPFA的一个应用 <del><b>Dijkstra惨败</b></del></p>
+    </section>
+    <section>
+        <h2>差分约束</h2>
+        <p>给你 $n$ 个变量 $X=\{x_1,x_2...x_n\}$，这 $n$ 个变量都是整数，并且给出 $m$ 个不等式，第 $j$ 个不等式形如：</p>
+        <p>
+            $$
+            x_{a_j}\le x_{b_j} + k_j
+            $$
+        </p>
+        <p class="fragment">请你判断是否存在一组解，或者让你构造出任意一组解</p>
+    </section>
+    <section>
+        <h2>差分约束</h2>
+        <p>说实话 $x_{a_j}\le x_{b_j}+k_j$ 长得就和最短路中，距离更新公式 $dis_v\le dis_u+w(u,v)$非常相似</p>
+        <p class="fragment">我们尝试把刚刚那个不等式问题，转化为图上的最短路问题</p>
+        <p class="fragment">我们把这 $n$ 个变量看作点，第 $i$ 个变量的取值 $x_i$ 就是第 $i$ 个点的最短路径长度 $dis_i$</p>
+        <p class="fragment">对于一个约束条件 $(a_j,b_j,k_j)$ 来说，它无非就是希望 $x_{a_j}\le x_{b_j}+k_j$ 一定成立，那么我连一条从 $b_j$ 指向 $a_j$ 的连边，边权为 $k_j$</p>
+        <p class="fragment">我们所有不等式转化后得到的图 $G$ 跑一个最短路，如果<b>最短路存在</b>，根据最短路的性质，一定有 $dis_{a_j}\le dis_{b_j} + k_j$，就得到原题的一组解了</p>
+    </section>
+    <section>
+        <h2>差分约束</h2>
+        <p>那如果<b>最短路不存在</b>呢？</p>
+        <p class="fragment">什么情况下最短路不存在？</p>
+        <p class="fragment">原图中存在负环</p>
+    </section>
+    <section>
+        <h2>差分约束</h2>
+        <p>假设构成负环的点为 $a_1\rightarrow a_2\rightarrow a_3...\rightarrow a_k\rightarrow a_1$</p>
+        <p class="fragment">
+            $$
+            a_1+c(1,2)\ge a_2 \\
+            a_2+c(2,3)\ge a_3 \\
+            a_3+c(3,4)\ge a_4 \\
+            ...... \\
+            a_k+c(k,1)\ge a_1
+            $$
+        </p>
+        <p class="fragment">将左右两边分别相加，可得：
+            $$a_1+a_2+...+a_k+c(1,2)+c(2,3)+...+c(k,1)\ge a_1+a+2+...+a_k$$
+        </p>
+        <p class="fragment">推导出 $c(1,2)+c(2,3)+...+c(k,1)\ge 0$</p>
+        <p class="fragment">但是 $a_1\rightarrow a_2\rightarrow a_3...\rightarrow a_k\rightarrow a_1$ 所构成的是一个<b>负环</b>啊，所以应该是 $c(1,2)+c(2,3)+...+c(k,1)\lt 0$，两个推论矛盾，所以我们证明了在图中存在负环的情况下，原问题<b>无解</b></p>
     </section>
 </section>

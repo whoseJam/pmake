@@ -31,7 +31,6 @@ init();
 main();
 
 async function main() {
-    await sd.pause();
     await Bfs(graph);
 }
 
