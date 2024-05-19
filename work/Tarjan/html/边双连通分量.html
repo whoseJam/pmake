@@ -1,0 +1,45 @@
+<section>
+    <section>
+        <h1>边双连通分量</h1>
+    </section>
+    <section>
+        <h2>边双连通分量</h2>
+        <p>没有割边的图叫做边双连通图，也叫做 $eBCC$，原图 $G$ 中的每一个 $eBCC$ 如果都被缩成一个点，那么就得到了一棵真正的树（没有返祖边），这棵新树上的每一条边都是割边</p>
+    </section>
+    <section>
+        <h2>边双连通分量</h2>
+        <iframe
+            style="min-width: 1000px; min-height: 500px;"
+            data-src="./animation/边双连通分量.html"></iframe>
+    </section>
+    <section>
+        <h2>边双连通分量</h2>
+        <pre><code data-trim data-line-numbers class="cpp" style="min-height: 525px;"><script type="text/template">
+            void Tarjan(int u) {
+                dfn[u] = low[u] = ++tot;
+                stk.push(u);
+                for (int i = h[u], v; i; i = l[i].Nxt) {
+                    v = l[i].to;
+                    if ((prt[u] ^ 1) != i) {
+                        if (!dfn[v]) {
+                            prt[v] = i;
+                            Tarjan(v);
+                            low[u] = min(low[u], low[v]);
+                        } else low[u] = min(low[u], dfn[v]);
+                    }
+                }
+                if (low[u] == dfn[u]) {
+                    ans.push_back({});
+                    while (true) {
+                        int cur = stk.top();
+                        ans[eBCC].push_back(cur);
+                        stk.pop();
+                        bel[cur] = eBCC;
+                        if (cur == u) break;
+                    }
+                    eBCC++;
+                }
+            }
+        </script></code></pre>
+    </section>
+</section>

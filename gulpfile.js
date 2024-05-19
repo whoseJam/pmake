@@ -60,17 +60,20 @@ function ifNotExistThenCreateFolder(folderPath) {
 }
 
 gulp.task("ppt", (done) => {
-    const sourceFileFolder = process.argv[4];
+    parseInput();
+    const sourceFileFolder = global["i"];
     const pptFilePath = `${sourceFileFolder}/ppt.html`;
     const JSFileFolder = `${sourceFileFolder}/animation`; ifNotExistThenCreateFolder(JSFileFolder);
     const IMGFileFolder = `${sourceFileFolder}/image`;    ifNotExistThenCreateFolder(IMGFileFolder);
     const MDFileFolder = `${sourceFileFolder}/markdown`;  ifNotExistThenCreateFolder(MDFileFolder);
     const HTMLFileFolder = `${sourceFileFolder}/html`;    ifNotExistThenCreateFolder(HTMLFileFolder);
+    const STDFileFolder = `${sourceFileFolder}/std`;      ifNotExistThenCreateFolder(STDFileFolder);
+    const pptTargetFilePath = global["o"] ? global["o"] : defaultPPTTargetFilePath;
 
     const animationList = fs.readdirSync(JSFileFolder);
     animationList.forEach(animation => {    // 迁移动画
         const sourceFilePath = `${JSFileFolder}/${animation}`;
-        const targetFilePath = `${defaultPPTTargetFilePath}/animation`;
+        const targetFilePath = `${pptTargetFilePath}/animation`;
         const animationName = animation.split(".")[0];
         gulp.task(animation, (done) => {
             return animationTask(sourceFilePath, targetFilePath, animationName);
@@ -78,14 +81,14 @@ gulp.task("ppt", (done) => {
     });
 
     gulp.task("transfer-ppt", (done) => {   // 迁移ppt
-        return pptTask(pptFilePath, defaultPPTTargetFilePath);
+        return pptTask(pptFilePath, pptTargetFilePath);
     });
 
     gulp.task("transfer-image", (done) => {
         const imageList = fs.readdirSync(IMGFileFolder);
         imageList.forEach(image => {    // 迁移图片
             const sourceFilePath = `${IMGFileFolder}/${image}`;
-            const targetFilePath = `${defaultPPTTargetFilePath}/image`;
+            const targetFilePath = `${pptTargetFilePath}/image`;
             gulp.src(sourceFilePath, { encoding: false })
                 .pipe(gulp.dest(targetFilePath));
         });
@@ -96,7 +99,7 @@ gulp.task("ppt", (done) => {
         const mdList  = fs.readdirSync(MDFileFolder);
         mdList.forEach(md => {  // 迁移markdown
             const sourceFilePath = `${MDFileFolder}/${md}`;
-            const targetFilePath = `${defaultPPTTargetFilePath}/markdown`;
+            const targetFilePath = `${pptTargetFilePath}/markdown`;
             gulp.src(sourceFilePath)
                 .pipe(gulp.dest(targetFilePath));
         });
@@ -106,10 +109,21 @@ gulp.task("ppt", (done) => {
         const htmlList = fs.readdirSync(HTMLFileFolder);
         htmlList.forEach(html => {  // 迁移html(ppt-section)
             const sourceFilePath = `${HTMLFileFolder}/${html}`;
-            const targetFilePath = `${defaultPPTTargetFilePath}/html`;
+            const targetFilePath = `${pptTargetFilePath}/html`;
             gulp.src(sourceFilePath)
                 .pipe(gulp.dest(targetFilePath));
         });
+        done();
+    })
+
+    gulp.task("transfer-std", (done) => {
+        const stdList = fs.readdirSync(STDFileFolder);
+        stdList.forEach(std => {
+            const sourceFilePath = `${STDFileFolder}/${std}`;
+            const targetFilePath = `${pptTargetFilePath}/std`;
+            gulp.src(sourceFilePath)
+                .pipe(gulp.dest(targetFilePath));
+        })
         done();
     })
     
@@ -117,7 +131,8 @@ gulp.task("ppt", (done) => {
         gulp.task("transfer-ppt"),
         gulp.task("transfer-image"),
         gulp.task("transfer-markdown"),
-        gulp.task("transfer-html"));
+        gulp.task("transfer-html"),
+        gulp.task("transfer-std"));
     if (animationList.length > 0) {
         const tasks = gulp.parallel.apply(gulp, animationList);
         project = gulp.parallel(project, tasks);
@@ -131,7 +146,7 @@ gulp.task("ppt", (done) => {
         console.log(`File ${path} is added`, stats);
         const animation = path.split("\\").slice(-1)[0];
         const sourceFilePath = `${sourceFileFolder}/animation/${animation}`;
-        const targetFilePath = `${defaultPPTTargetFilePath}/animation`;
+        const targetFilePath = `${pptTargetFilePath}/animation`;
         const animationName = animation.split(".")[0];
         gulp.task(animation, (done) => {
             return animationTask(sourceFilePath, targetFilePath, animationName);
@@ -144,11 +159,14 @@ gulp.task("ppt", (done) => {
     gulp.watch(IMGwatchPattern, gulp.task("transfer-image"));
 
     // 监控markdown修改
-    const MDwatchPattern = `${MDFileFolder}/**`;
+    const MDwatchPattern = `${MDFileFolder}/**.md`;
     gulp.watch(MDwatchPattern, gulp.task("transfer-markdown"))
 
     const HTMLwatchPattern = `${HTMLFileFolder}/**.html`;
     gulp.watch(HTMLwatchPattern, gulp.task("transfer-html"));
+
+    const STDwatchPattern = `${STDFileFolder}/**.std`;
+    gulp.watch(STDwatchPattern, gulp.task("transfer-std"));
 })
 
 const HtmlWebpackPlugin = require("html-webpack-plugin");

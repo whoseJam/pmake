@@ -12,11 +12,9 @@
     </section>
     <section>
         <h2>对于一条边来说</h2>
-        <p class="fragment">如果这条边连接了 $u$ 和 $v$ 这两个点，那么这两个点不能全都是关键点，也不能全不是关键点</p>
+        <p class="fragment">如果这条边连接了 $u$ 和 $v$ 这两个点，那么这两个点不能全不是关键点</p>
         <ul class="fragment">
-            <li>$T_u\rightarrow F_v$</li>
             <li>$F_u\rightarrow T_v$</li>
-            <li>$T_v\rightarrow F_u$</li>
             <li>$F_v\rightarrow T_u$</li>
         </ul>
     </section>
@@ -40,7 +38,7 @@
     <section>
         <h2>Riddle</h2>
         <p>我们必须考虑解决<b>边太多</b>这个问题</p>
-        <p>可以发现，对于某个点 $u\in S$ 来说，只要满足 $u\Rightarrow v$，$v\in S$，$v\ne u$就行（这里的箭头表示的是可达性，而不是直接连边）</p>
+        <p>可以发现，对于某个点 $u\in S$ 来说，只要满足 $Y_u\Rightarrow N_v$，$v\in S$，$v\ne u$就行（这里的箭头表示的是可达性，而不是直接连边）</p>
     </section>
     <section>
         <h2>Riddle</h2>

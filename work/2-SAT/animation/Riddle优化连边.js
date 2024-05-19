@@ -39,7 +39,7 @@ function init() {
         if (i - 1 >= 1) link(Pre(i), Pre(i-1));
         if (i + 1 <= n) link(Suf(i), Suf(i+1));
     }
-    graph._.makeLink = node => new sd.Curve(node);
+    graph._.linkType = sd.Curve;
     for (let i = 1; i <= n; i++) {
         link(Pre(i), N(i));
         link(Suf(i), N(i));

@@ -1,0 +1,23 @@
+<section>
+    <section>
+        <h1>点双连通分量</h1>
+        <p>与......圆方树</p>
+    </section>
+    <section>
+        <h2>点双连通分量</h2>
+        <p>没有割点的图叫做点双连通图，也叫做 $BCC$</p>
+        <p class="fragment">处理点双比边双麻烦的一点在于，对于 $eBCC$ 来说，原图 $G$ 中的一个节点一定属于某一个 $eBCC$，但原图 $G$ 中的一个节点可能属于多个 $BCC$</p>
+        <p class="fragment">如果我们只是单纯把点双找出来，不做进一步处理的话，这倒不是什么大麻烦</p>
+        <p class="fragment">但如果我们希望对点双连通分量做进一步操作的话，那我们可能就需要用到一个叫做<b>圆方树</b>的结构来辅助我们了</p>
+        <iframe
+            style="min-width: 1000px; min-height: 300px;" 
+            data-src="./animation/割点定义.html"></iframe>
+    </section>
+    <section>
+        <h2>圆方树</h2>
+        <p>圆方树，就是对原图中每一个 $BCC$，假设有 $BCC=\{u_1,u_2...u_k\}$，那么我把这 $k$ 个原图中的点当作<b>圆点</b>，我新建一个<b>方点</b>，将这 $k$ 个圆点和这一个方点相连，得到了一棵新树，这棵新树就叫圆方树</p>
+        <iframe
+            style="min-width: 1000px; min-height: 500px;"
+            data-src="./animation/圆方树.html"></iframe>
+    </section>
+</section>

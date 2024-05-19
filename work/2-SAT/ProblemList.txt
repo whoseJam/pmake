@@ -4,3 +4,5 @@
 #64.Katu Puzzle：http://poj.org/problem?id=3678
 #65.Priest John's Busiest Day：http://poj.org/problem?id=3683
 #63.婚礼：http://poj.org/problem?id=3648
+#66.开门：http://poj.org/problem?id=2723
+#764.Riddle：https://www.luogu.com.cn/problem/P6378
