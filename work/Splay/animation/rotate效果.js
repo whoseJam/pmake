@@ -1,23 +1,18 @@
-import * as sd from "../../lib/slide";
+import * as sd from "../../../lib/slide";
 
-const rotateCodeStr = `
-void rotate(int x,int &f){
-    int y=fa[x],z=fa[y],L=(ch[y][0]==x?0:1),R=(L^1);
-    if(y==f)f=x;else if(ch[z][0]==y)ch[z][0]=x;else ch[z][1]=x;fa[x]=z;
-    fa[y]=x;
-    fa[ch[x][R]]=y;ch[y][L]=ch[x][R];
-    ch[x][R]=y;
-    pushUp(y);pushUp(x);
-}`
-
-let svg = sd.svg();
-let C = sd.color();
-let s = makeSplay();
-global.help = function() {
-    return `
-此场景中存在一个s对象
-s.rotate(x): 对x点进行一次旋转`;
-}
+const svg = sd.svg();
+const C = sd.color();
+const tree = new sd.Splay(svg);
+const root = 4, n = 8;
+const links = [
+    [4, 3, 5],
+    [3, 1, 0],
+    [1, 0, 2],
+    [5, 0, 7],
+    [7, 6, 8]
+]
+const fa = sd.make1d(100);
+const ch = sd.make2d(100, 2);
 global.s = s;
 
 main();
@@ -27,19 +22,6 @@ async function main() {
 }
 
 function makeSplay() {
-    let self = {};
-    let t = new sd.Splay(svg);
-    let rotateCode = new sd.Code(svg).code(rotateCodeStr).opacity(0).cx(600).y(20);
-    let root = 4, n = 8;
-    let data = [
-        [4, 3, 5],
-        [3, 1, 0],
-        [1, 0, 2],
-        [5, 0, 7],
-        [7, 6, 8]
-    ];
-    let fa = sd.make1d(100);
-    let ch = sd.make2d(100, 2);
     t.width(1000).y(280).cx(600).root(root);
     for (let i = 0; i < data.length; i++) {
         let cur = data[i][0];
@@ -145,10 +127,6 @@ function makeSplay() {
         t.startAnimate().record(false).update().endAnimate();
         rotateCode.startAnimate().focus(null).opacity(0).endAnimate();
         await sd.pause();
-        for (let i = 1; i <= n; i++) {
-            console.log(fa[i], ch[i][0], ch[i][1]);
-        }
-        console.log("------------------");
     }
     
     return self;

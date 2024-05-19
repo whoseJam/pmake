@@ -1,0 +1,50 @@
+<section>
+    <section>
+        <h1>有向图中Tarjan算法的应用</h1>
+    </section>
+    <section>
+        <h2>Tarjan</h2>
+        <p>Tarjan算法尝试将有向图中的边分成三类：</p>
+        <ul class="fragment">
+            <li>父子边：判断方法和无向图一样</li>
+            <li>返祖边：判断方法和无向图一样</li>
+            <li>横叉边：如果 $(u,v)$ 这条有向边不是父子边，且指向的点 $v$，不再DFS树上 $u$ 到根的路径上（即不是返祖边），那么这条边就是横叉边</li>
+        </ul>
+        <p class="fragment">我们用一个栈来判断某条边是不是横叉边</p>
+        <iframe
+            style="min-width: 1000px; min-height: 500px; margin-top: -60px;"
+            data-src="./animation/有向图边分类.html">
+        </iframe>
+    </section>
+    <section>
+        <h2>Tarjan</h2>
+        <pre><code data-trim data-line-numbers class="cpp" style="min-height: 465px;"><script type="text/template">
+        void Tarjan(int u) {
+            dfn[u] = low[u] = ++tot;
+            s.push(u);
+            ins[u] = 1;
+            for (int i = h[u]; i; i = l[i].Nxt) {
+                int v = l[i].to;
+                if (dfn[v] == 0) {
+                    Tarjan(v);
+                    low[u] = min(low[u], low[v]);
+                } else if (ins[v]) low[u] = min(low[u], dfn[v]);
+            }
+            if (dfn[u] == low[u]) {
+                SCC++;
+                while (true) {
+                    int t = s.top();
+                    s.pop();
+                    bel[t] = SCC;
+                    ins[t] = 0;
+                    if (t == u) break;
+                }
+            }
+        }
+        </script></code></pre>
+    </section>
+    <section>
+        <h2>Tarjan</h2>
+        <p>由于经过Tarjan缩点的有向图一定是DAG，所以强连通分量经常和拓扑排序一起考，还可能捎上DAG上的动态规划</p>
+    </section>
+</section>

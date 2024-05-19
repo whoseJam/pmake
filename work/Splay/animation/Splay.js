@@ -1,4 +1,4 @@
-import * as sd from "../../lib/slide";
+import * as sd from "../../../lib/slide";
 
 const splayCodeStr = `
 void splay(int x,int &f){

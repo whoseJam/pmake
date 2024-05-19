@@ -1,0 +1,15 @@
+<section>
+    <section>
+        <h1>上白泽慧音</h1>
+    </section>
+    <section data-background-iframe="http://43.143.204.105/problem/56" data-background-interactive>
+    </section>
+    <section>
+        <h2>上白泽慧音</h2>
+        <p>我们把村庄看作节点，把村庄之间的道路看作有向边</p>
+        <p class="fragment">那么一个<b>绝对连通区域</b>，不就是一个强连通分量吗</p>
+        <p class="fragment">所以题目就是让我们求一个最大的强连通分量，如果有多个强连通分量都是最大的，选其中字典序最小的那一个</p>
+        <p class="fragment">强连通分量的字典序，在本题中被定义为：强连通分量中包含的编号最小的点的编号</p>
+        <p class="fragment">所以我们在Tarjan的过程中，顺便统计一下每个强连通分量的<b>大小</b>和<b>字典序</b>即可</p>
+    </section>
+</section>

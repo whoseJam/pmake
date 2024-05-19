@@ -20,4 +20,62 @@
             style="min-width: 1000px; min-height: 500px;"
             data-src="./animation/圆方树.html"></iframe>
     </section>
+    <section>
+        <h2>点双连通分量</h2>
+        <p>我们想要构建出圆方树，首先得把图中每一个点双连通分量都找到才行：</p>
+        <pre><code data-trim data-line-numbers class="cpp" style="min-height: 570px;"><script type="text/template">
+            void Tarjan(int u) {
+                int count = 0;
+                dfn[u] = low[u] = ++tot;
+                stk.push(u);
+                for (int i = h[u], v; i; i = l[i].Nxt) {
+                    v = l[i].to;
+                    if ((prt[u] ^ 1) != i) {
+                        if (!dfn[v]) {
+                            count++;
+                            prt[v] = i;
+                            Tarjan(v);
+                            low[u] = min(low[u], low[v]);
+                            if (low[v] >= dfn[u]) {
+                                BCC++;
+                                while (true) {
+                                    int t = stk.top();
+                                    blk[BCC].push_back(t);
+                                    stk.pop();
+                                    if (t == v) break; // 注意这里的判断条件
+                                }
+                                blk[BCC].push_back(u);
+                            }
+                        } else low[u] = min(low[u], dfn[v]);
+                    }
+                }
+                if (!prt[u] && !count) blk[++BCC].push_back(u); // 特判孤立点
+            }
+        </script></code></pre>
+    </section>
+    <section>
+        <h2>圆方树</h2>
+        <p>想要把圆方树建立出来，稍微修改一下上述代码即可</p>
+        <pre><code data-trim data-line-numbers class="cpp"><script type="text/template">
+            if (low[v] >= dfn[u]) {
+                BCC++;
+                while (true) {
+                    int t = stk.top();
+                    blk[BCC].push_back(t);
+                    Link(t, BCC);
+                    stk.pop();
+                    if (t == v) break;
+                }
+                blk[BCC].push_back(u);
+                Link(u, BCC);
+            }
+        </script></code></pre>
+        <p class="fragment">由于在本篇中讲完圆方树实属篇幅不够，有兴趣的同学可以下来自行了解圆方树的技巧</p>
+    </section>
+    <section data-background-iframe="http://43.143.204.105/problem/1045" data-background-interactive>
+    </section>
+    <section>
+        <h2>点双连通分量</h2>
+        <p>模板题</p>
+    </section>
 </section>

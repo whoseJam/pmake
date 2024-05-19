@@ -165,7 +165,7 @@ gulp.task("ppt", (done) => {
     const HTMLwatchPattern = `${HTMLFileFolder}/**.html`;
     gulp.watch(HTMLwatchPattern, gulp.task("transfer-html"));
 
-    const STDwatchPattern = `${STDFileFolder}/**.std`;
+    const STDwatchPattern = `${STDFileFolder}/**.cpp`;
     gulp.watch(STDwatchPattern, gulp.task("transfer-std"));
 })
 
