@@ -1,0 +1,58 @@
+<section>
+    <section>
+        <h1>Trie实现</h1>
+    </section>
+    <section>
+        <h2>Trie实现</h2>
+        <p>首先定义一下数据结构，我们先假设所有字符串都是由大写字母构成，那么字符集大小就是 $26$，我们所需要的就是一棵 $26$ 叉树，所以做如下定义：</p>
+        <pre class="fragment"><code data-trim data-line-numbers class="cpp"><script type="text/template">
+            int ch[N][26];
+        </script></code></pre>
+        <p class="fragment">我们把一个用户名对应的那个节点叫做<b>终止节点</b>，没有任何用户名与之对应的节点叫做<b>非终止节点</b></p>
+        <p class="fragment">为了对终止节点和非终止节点加以区分，我们再定义一个 <code>int flg[N]</code> 数组来做这个标记</p>
+        <pre class="fragment"><code data-trim data-line-numbers class="cpp"><script type="text/template">
+            int flg[N];
+        </script></code></pre>
+    </section>
+    <section>
+        <h2>Trie插入</h2>
+        <div class="left">
+            <p>Trie树插入比较简单，顺次遍历字符串中的每一个字符 $c$，并让一个指针 $u$ 在Trie树上行走</p>
+            <ul class="fragment">
+                <li>如果 $u$ 不存在，则新建一个节点，并设置为 $u$ 的 $c$ 号儿子</li>
+                <li>如果 $u$ 本身存在 $c$ 号儿子，则忽略</li>
+            </ul>
+            <pre class="fragment"><code data-trim data-line-numbers class="cpp" style="min-width: 510px;"><script type="text/template">
+                void insert(const string & s) {
+                    int u = 1;
+                    for (int i = 0, dir; i < s.length(); i++) {
+                        dir = s[i] - 'A';
+                        if (!ch[u][dir])
+                            ch[u][dir] = ++tot;
+                        u = ch[u][dir];
+                    }
+                    flg[u] = 1;
+                }
+            </script></code></pre>
+        </div>
+        <div class="right">
+            <iframe style="min-width: 500px; min-height: 500px;" data-src="./animation/Trie插入.html" rate="1.05"></iframe>
+        </div>
+    </section>
+    <section>
+        <h2>Trie树的遍历</h2>
+        <p>把Trie树的插入中新建节点那一步删掉，就是Trie树的查询了</p>
+        <pre class="fragment"><code data-trim data-line-numbers class="cpp"><script type="text/template">
+            int query(const string & s) {
+                int u = 1;
+                for (int i = 0, dir; i < s.length(); i++) {
+                    dir = s[i] - 'A';
+                    if (!ch[u][dir])
+                        return 0;
+                    u = ch[u][dir];
+                }
+                return u;
+            }
+        </script></code></pre>
+    </section>
+</section>

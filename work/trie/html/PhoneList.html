@@ -1,0 +1,31 @@
+<section>
+    <section>
+        <h1>Phone List</h1>
+        <p>如果两个字符串 $s$ 和 $t$，满足 $s$ 是 $t$ 的前缀，那么它们在Trie树上的关系是什么</p>
+    </section>
+    <section data-background-iframe="http://43.143.204.105/problem/921" data-background-interactive>
+    </section>
+    <section>
+        <h2>Phone List</h2>
+        <p>给定 $n$ 个字符串，判断其中是否存在两个字符串 $s$ 和 $t$，满足 $s$ 是 $t$ 的前缀</p>
+        <p class="fragment">如果两个字符串 $s$ 和 $t$，满足 $s$ 是 $t$ 的前缀，那么它们在Trie树上的关系是什么</p>
+        <p class="fragment">$s$ 所对应的节点，是 $t$ 所对应的节点的祖先</p>
+    </section>
+    <section>
+        <h2>Phone List</h2>
+        <p>所以我们在做Trie的插入的时候，判断一下是否存在两个<b>终止节点</b>有<b>祖先-后代关系</b>即可</p>
+        <pre class="fragment"><code data-trim data-line-numbers class="cpp"><script type="text/template">
+            void insert() {
+                int len = strlen(s + 1), u = 1;
+                for (int i = 1; i <= len; i++) {
+                    int dir = s[i] - '0';
+                    if (!ch[u][dir])
+                        ch[u][dir] = ++tot;
+                    u = ch[u][dir];
+                    if (flg[u]) Ans = true;
+                }
+                flg[u] = true;
+            }
+        </script></code></pre>
+    </section>
+</section>
