@@ -1,12 +1,41 @@
 <section>
     <section>
-        <h1>Splay</h1>
+        <h1>Splay引入</h1>
     </section>
     <section>
-        <h2>Splay</h2>
-        <p>Splay是一种基于<b>均摊时间复杂度</b>的平衡树</p>
-        <p class="fragment">也就是说，Splay并不能保证任何时刻，这棵二叉查找树都长得非常均衡，但是能保证，如果进行 $m$ 次操作，当 $m\rightarrow +\infty$ 的时候，这 $m$ 次操作的总时间复杂度是 $O(mlogn)$ 的，均摊到单次操作的时间复杂度为 $O(logn)$</p>
-        <p class="fragment">Splay的核心思想是通过旋转操作进行<b>自我调整</b>，从而获得均摊较低的时间复杂度</p>
-        <p class="fragment"><del>由于Splay的时间复杂度的证明过于复杂且没有什么参考价值，所以本篇不会涉及到Splay的时间复杂度的证明</del></p>
+        <h2>Splay的功能</h2>
+        <p>刚刚我们所举的通过用户ID查用户名的场景，还远远没有体现出Splay的强大之处</p>
+        <p class="fragment">所以先让我们看几个例子，体验一下Splay的神奇功效</p>
+        <p class="fragment">比较简单的操作（例如单点修改，单点插入之类的）在此就略过了，我们只关注Splay的那些杀手级功能</p>
+    </section>
+    <section>
+        <h2>区间修改和区间查询</h2>
+        <p>区间修改和区间查询是Splay最基本的功能，在这一点上它和线段树一样</p>
+        <pre><code data-trim data-line-numbers class="cpp"><script type="text/template">
+            int l = read(), r = read()， d = read();
+            add(l, r, d);
+            int l = read(), r = read();
+            cout << sum(l, r) << "\n";
+        </script></code></pre>
+    </section>
+    <section>
+        <h2>区间分裂、区间删除和区间插入</h2>
+        <p>和线段树不同的是，Splay是一种支持动态序列的维护的数据结构</p>
+        <pre><code data-trim data-line-numbers class="cpp"><script type="text/template">
+            int l = read(), r = read();
+            erase(l, r); // 区间删除 
+
+            int l = read(), r = read(), k = read();
+            int x = split(l, r); // 区间分裂 
+            insertAfter(k, x); // 区间插入
+        </script></code></pre>
+    </section>
+    <section>
+        <h2>找第 $k$ 大</h2>
+        <p>Splay还能找其内部所拥有的元素中，第 $k$ 大的元素是谁</p>
+        <pre><code data-trim data-line-numbers class="cpp"><script type="text/template">
+            int k = read();
+            int x = findKth(k);
+        </script></code></pre>
     </section>
 </section>

@@ -13,121 +13,76 @@ const links = [
 ]
 const fa = sd.make1d(100);
 const ch = sd.make2d(100, 2);
-global.s = s;
 
+init();
 main();
 
 async function main() {
-    await s.rotate(3);
+    await sd.pause();
+    tree.startAnimate().color(6, C.blue).endAnimate();
+    await rotate(tree, 6);
+    await rotate(tree, 6);
+    await rotate(tree, 6);
+    await sd.pause();
+    tree.startAnimate().color(6, C.white).endAnimate();
+    await sd.pause();
 }
 
-function makeSplay() {
-    t.width(1000).y(280).cx(600).root(root);
-    for (let i = 0; i < data.length; i++) {
-        let cur = data[i][0];
-        let lc = data[i][1];
-        let rc = data[i][2];
+function init() {
+    tree.width(600).y(50).cx(600).root(root);
+    links.forEach(data => {
+        const cur = data[0];
+        const lc = data[1];
+        const rc = data[2];
         if (lc) link(cur, lc, 0);
         if (rc) link(cur, rc, 1);
-    }
+    })
     function link(x, y, flg) {
         fa[y] = x; ch[x][flg] = y;
-        if (flg === 0) t.leftChild(x, y);
-        else t.rightChild(x, y);
+        if (flg === 0) tree.leftChild(x, y);
+        else tree.rightChild(x, y);
     }
-    function remove(x, y) {
-        let e = t.element(x, y);
-        e.startAnimate().fadeTtoS().endAnimate();
-        t.after(e).cut(x, y);
+    tree.update();
+}
+
+/**
+ * @param {sd.BinaryTree} tree
+ * @param {number|string} x
+ */
+async function rotate(tree, x) {
+    const cutAnimations = [];
+    const linkAnimations = [];
+    const y = fa[x], z = fa[y], L = (ch[y][0] === x ? 0 : 1), R = L^1;
+    if (ch[z][0] === y) {
+        const chz0 = ch[z][0];
+        if (chz0) cutAnimations.push(() => tree.cut(z, chz0));
+        if (z) linkAnimations.push(() => tree.leftChild(z, x));
+        ch[z][0] = x;
+    } else {
+        const chz1 = ch[z][1];
+        if (chz1) cutAnimations.push(() => tree.cut(z, chz1));
+        if (z) linkAnimations.push(() => tree.rightChild(z, x));
+        ch[z][1] = x;
     }
-    function appear(elem) {
-        return elem.opacity(0).startAnimate().opacity(1).endAnimate();
+    cutAnimations.push(() => tree.cut(y, x));
+    fa[x] = z;
+    fa[y] = x;
+    if (ch[x][R]) {
+        const chxR = ch[x][R];
+        cutAnimations.push(() => tree.cut(x, chxR));
+        linkAnimations.push(() => tree.link(y, chxR, L));
+        fa[ch[x][R]] = y;
     }
-    t.update();
+    ch[y][L] = ch[x][R];
+    linkAnimations.push(() => tree.link(x, y, R));
+    ch[x][R] = y;
 
-    function dfs(u, delta) {
-        t.element(u)._.recordDepth += delta;
-        let children = t.childrenOnTree(u);
-        for (let v of children) {
-            dfs(v.nodeId, delta);
-        }
-    }
-
-    self.rotate = async function rotateAnimate(x) {
-        t.record();
-        await sd.pause();
-        rotateCode.startAnimate().opacity(1).endAnimate();
-        await sd.pause();
-        rotateCode.startAnimate().focus(1).endAnimate();
-        await sd.pause();
-        rotateCode.startAnimate().focus(2).endAnimate();
-        await sd.pause();
-        let y = fa[x], z = fa[y], L = (ch[y][0] === x ? 0 : 1), R = L^1;
-        let pointToX = appear(sd.Pointer(t, "x", "b").moveTo(x));
-        let pointToY = y ? appear(sd.Pointer(t, "y", "b").moveTo(y)) : null;
-        let pointToZ = z ? appear(sd.Pointer(t, "z", "b").moveTo(z)) : null;
-        if (z === 0) {
-            await sd.pause();
-            rotateCode.startAnimate().focus(3).endAnimate();
-        }
-        else if (ch[z][0] === y) {
-            await sd.pause();
-            rotateCode.startAnimate().focus(3).endAnimate();
-            await sd.pause();
-            if (ch[z][0]) remove(z, ch[z][0]);
-            t.startAnimate().leftChild(z, x).endAnimate();
-
-            ch[z][0] = x;
-        } else {
-            await sd.pause();
-            rotateCode.startAnimate().focus(3).endAnimate();
-            await sd.pause();
-            if (ch[z][1]) remove(z, ch[z][1]);
-            t.startAnimate().rightChild(z, x).endAnimate();
-           
-            ch[z][1] = x;
-        }
-
-        await sd.pause();
-        rotateCode.startAnimate().focus(4).endAnimate();
-        await sd.pause();
-        remove(y, x);
-        t.element(x).parentNodeId = z ? z : undefined;
-        dfs(x, -1); dfs(y, +1);
-        t.startAnimate().update().endAnimate();
-        fa[x] = z;
-        fa[y] = x;
-
-        await sd.pause();
-        rotateCode.startAnimate().focus(5).endAnimate();
-
-        if (ch[x][R]) {
-            await sd.pause();
-            remove(x, ch[x][R]);
-            dfs(ch[x][R], +1);
-            t.startAnimate().link(y, ch[x][R], L).endAnimate();
-            fa[ch[x][R]] = y;
-        }
-        ch[y][L] = ch[x][R];
-
-        await sd.pause();
-        rotateCode.startAnimate().focus(6).endAnimate();
-
-        await sd.pause();
-        t.startAnimate().link(x, y, R).endAnimate();
-        ch[x][R] = y;
-
-        await sd.pause();
-        rotateCode.startAnimate().focus(7).endAnimate();
-
-        await sd.pause();
-        pointToX.startAnimate().opacity(0).remove();
-        pointToY?.startAnimate().opacity(0).remove();
-        pointToZ?.startAnimate().opacity(0).remove();
-        t.startAnimate().record(false).update().endAnimate();
-        rotateCode.startAnimate().focus(null).opacity(0).endAnimate();
-        await sd.pause();
-    }
-    
-    return self;
+    await sd.pause();
+    tree.startAnimate();
+    cutAnimations.forEach(animation => animation());
+    tree.endAnimate();
+    await sd.pause();
+    tree.startAnimate();
+    linkAnimations.forEach(animation => animation());
+    tree.endAnimate();
 }

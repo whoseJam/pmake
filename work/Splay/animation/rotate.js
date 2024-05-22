@@ -10,37 +10,32 @@ void rotate(int x,int &f){
     pushUp(y);pushUp(x);
 }`
 
-let svg = sd.svg();
-let C = sd.color();
-let s = makeSplay();
-global.help = function() {
-    return `
-此场景中存在一个s对象
-s.rotate(x): 对x点进行一次旋转`;
-}
-global.s = s;
+const svg = sd.svg();
+const C = sd.color();
+const s = makeSplay();
 
 main();
 
 async function main() {
-    await s.rotate(3);
+    await s.rotate(6);
+    await s.rotate(6);
+    await s.rotate(6);
 }
 
 function makeSplay() {
     let self = {};
     let t = new sd.Splay(svg);
-    let rotateCode = new sd.Code(svg).code(rotateCodeStr).opacity(0).cx(600).y(20);
-    let root = 4, n = 8;
+    let rotateCode = new sd.Code(svg).code(rotateCodeStr).opacity(0).cx(600).y(50);
+    let root = 2, n = 9;
     let data = [
-        [4, 3, 5],
-        [3, 1, 0],
-        [1, 0, 2],
-        [5, 0, 7],
-        [7, 6, 8]
+        [2, 1, 4],
+        [4, 3, 8],
+        [8, 6, 9],
+        [6, 5, 7]
     ];
     let fa = sd.make1d(100);
     let ch = sd.make2d(100, 2);
-    t.width(1000).y(280).cx(600).root(root);
+    t.width(800).cx(600).y(330).root(root);
     for (let i = 0; i < data.length; i++) {
         let cur = data[i][0];
         let lc = data[i][1];
