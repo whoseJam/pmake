@@ -1,10 +1,10 @@
 <section>
     <section>
-        <h1>Trie引入</h1>
+        <h1>Trie 引入</h1>
     </section>
     <section>
         <h2>用户存储和查找</h2>
-        <p>假设你在写一个PVP联机小游戏，现在有 $n$ 个用户，每个用户有自己的用户名（假设用户名最长长度为 $m$，且用户名全部由大写字母构成），还有一些其他基础信息（像是生命值，战斗力等等属性）</p>
+        <p>假设你在写一个 PVP 联机小游戏，现在有 $n$ 个用户，每个用户有自己的用户名（假设用户名最长长度为 $m$，且用户名全部由大写字母构成），还有一些其他基础信息（像是生命值，战斗力等等属性）</p>
         <p class="fragment">我们可以把用户抽象为一个二元组：$(username,information)$，其中 $information$ 包含了用户各种各样的基础信息</p>
         <p class="fragment">我们现在会多次根据用户名，查找到对应用户，然后修改用户的某项信息</p>
         <ul class="fragment">
@@ -34,7 +34,7 @@
                 <li class="fragment">插入一个用户的信息的时间复杂度好像也是 $O(m)$</li>
                 <li class="fragment">当字符串的公共前缀比较多时，在一定程度上压缩了空间</li>
             </ol>
-            <p class="fragment">右图这玩意就叫做Trie，也叫做字典树</p>
+            <p class="fragment">右图这玩意就叫做 Trie，也叫做字典树</p>
         </div>
         <div class="right">
             <iframe

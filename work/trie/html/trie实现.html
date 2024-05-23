@@ -1,9 +1,9 @@
 <section>
     <section>
-        <h1>Trie实现</h1>
+        <h1>Trie 实现</h1>
     </section>
     <section>
-        <h2>Trie实现</h2>
+        <h2>Trie 实现</h2>
         <p>首先定义一下数据结构，我们先假设所有字符串都是由大写字母构成，那么字符集大小就是 $26$，我们所需要的就是一棵 $26$ 叉树，所以做如下定义：</p>
         <pre class="fragment"><code data-trim data-line-numbers class="cpp"><script type="text/template">
             int ch[N][26];
@@ -15,9 +15,9 @@
         </script></code></pre>
     </section>
     <section>
-        <h2>Trie插入</h2>
+        <h2>Trie 插入</h2>
         <div class="left">
-            <p>Trie树插入比较简单，顺次遍历字符串中的每一个字符 $c$，并让一个指针 $u$ 在Trie树上行走</p>
+            <p>Trie 的插入比较简单，顺次遍历字符串中的每一个字符 $c$，并让一个指针 $u$ 在 Trie 上行走</p>
             <ul class="fragment">
                 <li>如果 $u$ 不存在，则新建一个节点，并设置为 $u$ 的 $c$ 号儿子</li>
                 <li>如果 $u$ 本身存在 $c$ 号儿子，则忽略</li>
@@ -40,8 +40,8 @@
         </div>
     </section>
     <section>
-        <h2>Trie树的遍历</h2>
-        <p>把Trie树的插入中新建节点那一步删掉，就是Trie树的查询了</p>
+        <h2>Trie 的查询</h2>
+        <p>把 Trie 的插入中新建节点那一步删掉，就是 Trie 的查询了</p>
         <pre class="fragment"><code data-trim data-line-numbers class="cpp"><script type="text/template">
             int query(const string & s) {
                 int u = 1;

@@ -1,0 +1,23 @@
+<section>
+    <section>
+        <h1>Vasiliy's Multiset</h1>
+    </section>
+    <section data-background-iframe="http://43.143.204.105/problem/944" data-background-interactive>
+    </section>
+    <section>
+        <h2>Vasiliy's Multiset</h2>
+        <p>让你使用某种数据结构 $A$，支持以下三种操作：</p>
+        <ul class="fragment">
+            <li><code>+ x</code>：把数字 $x$ 加入 $A$</li>
+            <li><code>- x</code>：把数字 $x$ 移出 $A$</li>
+            <li><code>? x</code>：在 $A$ 中找一个数字 $y$，使得 $x\otimes y$ 最大</li>
+        </ul>
+        <p class="fragment">可能出现多个相同的数字被加入 $A$</p>
+    </section>
+    <section>
+        <h2>Vasiliy's Multiset</h2>
+        <p>容易发现在没有把数字移出 $A$ 这个操作的话，只需要一个普通的01Trie就行了</p>
+        <p class="fragment">而把数字移出 $A$，就相当于从01Trie中删掉一个01串</p>
+        <p class="fragment">在代码实现上，如果真的去把一个节点删掉有点麻烦，我们不妨给每个节点 $u$ 加上一个 $siz_u$ 属性，来表示其子树内有多少个没有被删掉的01串，如果一个节点 $u$ 的 $siz_u$ 为 $0$，那么这个节点 $u$ 实际上是已经被删掉了的</p>
+    </section>
+</section>

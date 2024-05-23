@@ -34,6 +34,7 @@ void insert(){
 		u=ch[u][dir];
 		if(flg[u])Ans=true;
 	}
+	if(u!=tot)Ans=true;
 	flg[u]=true;
 }
 

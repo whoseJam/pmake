@@ -6,5 +6,4 @@ Trie：
 01Trie：
 #943.The XOR Largest Pair：https://loj.ac/p/10050
 #944.Vasiliy's Multiset：https://www.luogu.com.cn/problem/CF706D
-#828.Xor Sum：http://acm.hdu.edu.cn/showproblem.php?pid=4825
 #829.最长异或路径：https://www.luogu.com.cn/problem/P4551
