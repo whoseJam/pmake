@@ -1,0 +1,5 @@
+序列差分：
+#526.语文成绩：https://www.luogu.com.cn/problem/P2367
+#1055.Lycanthropy：https://www.luogu.com.cn/problem/P5026
+#1056.三步必杀：https://www.luogu.com.cn/problem/P4231
+#1057.IncDec Sequence：https://www.luogu.com.cn/problem/P4552
