@@ -1,0 +1,10 @@
+Kruskal：
+#1058.最小生成树：https://www.luogu.com.cn/problem/P3366
+
+Prim：
+#84.聪明的猴子：https://www.luogu.com.cn/problem/P2504
+
+最小生成树：
+#68.繁忙的都市：https://www.luogu.com.cn/problem/P2330
+#69.新的开始：https://www.luogu.com.cn/problem/T243513
+#1060.Slim Span：http://poj.org/problem?id=3522

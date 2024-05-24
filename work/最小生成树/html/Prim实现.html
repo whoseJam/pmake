@@ -1,0 +1,45 @@
+<section>
+    <section>
+        <h1>Prim</h1>
+        <p>适合稠密图的最小生成树算法</p>
+    </section>
+    <section>
+        <h2>Prim</h2>
+        <p>Prim的实现有点类似Dijkstra：</p>
+        <ol class="fragment">
+            <li>首先从图 $G$ 中随便选一个点 $s$ 当作起点，从这个起点出发构造生成树 $T$，$T$ 是逐渐逐渐变大的</li>
+            <li>设 $dis(u)$ 表示 $u$ 和连通块 $T$ 中的任意一个点直连的边中，边权最小值，即：
+                $$
+                dis(u)=\mathop{min}_{(u,v)\in E,v\in T,u\notin T}\{w(u,v)\}
+                $$
+            </li>
+            <li>选出不在 $T$ 中的某个节点 $u$，满足 $u$ 的 $dis(u)$ 最小</li>
+            <li>将 $u$ 加入 $T$</li>
+        </ol>
+    </section>
+    <section>
+        <h2>Prim</h2>
+        <iframe
+            style="min-width: 1000px; min-height: 500px;"
+            data-src="./animation/Prim实现.html"></iframe>
+    </section>
+    <section>
+        <h2>Prim</h2>
+        <pre><code data-trim data-line-numbers class="cpp"><script type="text/template">
+            void Prim(int s) {
+                for (int i = 1; i <= n; i++) dis[i] = inf;
+                dis[s] = 0;
+                dis[0] = inf;
+                for (int i = 1; i <= n; i++) {
+                    int u = 0;
+                    for (int v = 1; v <= n; v++)
+                        if (!vis[v] && dis[u] > dis[v]) u = v;
+                    mxl = max(mxl, dis[u]);
+                    vis[u] = 1;
+                    for (int v = 1; v <= n; v++)
+                        if (!vis[v]) dis[v] = min(dis[v], getDist(u, v));
+                }
+            }
+        </script></code></pre>
+    </section>
+</section>
