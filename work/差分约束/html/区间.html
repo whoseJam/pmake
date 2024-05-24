@@ -15,16 +15,28 @@
             sum(b_i)\ge sum(a_i-1)+c_i
             $$
         </p>
+        <p class="fragment">又因为元素存在于整点上，每个整点要么属于 $Z$，要么不属于 $Z$，所以：</p>
+        <p class="fragment">
+            $$
+            sum(i)\le sum(i+1)\\
+            sum(i)+1\ge sum(i+1)
+            $$
+        </p>
     </section>
     <section>
         <h2>区间</h2>
         <p>又由于题目希望求 $Z$ 集合中元素的最小值，即希望 $sum(n)$ 尽可能小，所以我们把条件写为最长路的松弛形式：</p>
         <p class="fragment">
             $$
-            sum(b_i)\ge sum(a_i-1)+c_i
+            \left\{
+            \begin{aligned}
+            sum(b_i)&\ge sum(a_i-1)+c_i\\
+            sum(j+1)&\ge sum(j)+0\\
+            sum(j)&\ge sum(j+1)-1
+            \end{aligned}
+            \right.
             $$
         </p>
-        <p class="fragment"><del>原形式就是最长路松弛形式</del></p>
         <p class="fragment">然后就结束了</p>
     </section>
 </section>

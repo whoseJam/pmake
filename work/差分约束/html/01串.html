@@ -11,7 +11,7 @@
     <section>
         <h2>01串</h2>
         <p>设满足条件的二进制串为 $S[1...n]$</p>
-        <p class="fragment">设 $X_i$ 表示 $S$ 的前 $i$ 个字符中`1`的个数，则我们可以列出如下不等式：</p>
+        <p class="fragment">设 $X_i$ 表示 $S$ 的前 $i$ 个字符中 $1$ 的个数，则我们可以列出如下不等式：</p>
         <ul>
             <li class="fragment">$X_0=0$</li>
             <li class="fragment">$X_i-X_{i-1}\le 1$</li>
@@ -40,5 +40,8 @@
             <li>$X_{i+L_1-1}-X_{i-1}\ge A_1$</li>
             <li>$X_{i+L_1-1}-X_{i-1}\le B_1$</li>
         </ul>
+        <p class="fragment">由于题目要求 $1$ 的数量尽可能多</p>
+        <p class="fragment">那么 $x_i$ 就应该尽可能大</p>
+        <p class="fragment">那么就应该跑最短路</p>
     </section>
 </section>
