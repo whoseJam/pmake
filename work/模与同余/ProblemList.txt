@@ -1,0 +1,3 @@
+同余方程：
+#236.同余方程：https://www.luogu.com.cn/problem/P1082
+#228.青蛙的约会：https://www.luogu.com.cn/problem/P1516

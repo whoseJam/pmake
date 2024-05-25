@@ -1,0 +1,38 @@
+<section>
+    <section>
+        <h1>模</h1>
+        <p>%%%%%</p>
+    </section>
+    <section>
+        <h2>模</h2>
+        <p>在这里提到的模单纯指C/C++中的取模运算</p>
+        <ul>
+            <li class="fragment"><code>5 % 3 = </code><code class="fragment">2</code></li>
+            <li class="fragment"><code>-5 % 3 = </code><code class="fragment">-2</code></li>
+            <li class="fragment"><code>5 % -3 = </code><code class="fragment">2</code></li>
+            <li class="fragment"><code>-5 % -3 = </code><code class="fragment">-2</code></li>
+        </ul>
+        <p class="fragment">答案的正负仅取决于被模数的正负</p>
+        <p class="fragment">答案的绝对值直接看把被模数、模数的负号摘掉后，取模的结果</p>
+    </section>
+    <section>
+        <h2>模</h2>
+        <p>
+            $$
+            a \% b = a-\lfloor\frac a b \rfloor b
+            $$
+        </p>
+        <pre><code data-trim data-line-numbers class="cpp"><script type="text/template">
+            int Mod(int a, int b) {
+                return a - (a / b) * b;
+            }
+            int main() {
+                assert(5 % 3 == Mod(5, 3));
+                assert(-5 % 3 == Mod(-5, 3));
+                assert(5 % -3 == Mod(5, -3));
+                assert(-5 % -3 == Mod(-5, -3));
+                return 0;
+            }
+        </script></code></pre>
+    </section>
+</section>
