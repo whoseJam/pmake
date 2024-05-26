@@ -56,7 +56,6 @@ void Tarjan(int u){
 						stk.pop();
 						if(t==v)break;
 					}
-					assert(stk.top()==u);
 					blk[BCC].push_back(u);
 				}
 			}else low[u]=min(low[u],dfn[v]);

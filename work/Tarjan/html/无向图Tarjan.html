@@ -66,7 +66,7 @@
     </section>
     <section>
         <h2>割点</h2>
-        <p>以下是判断割点的代码</p>
+        <p>以下是判断割点的代码：</p>
         <pre><code data-trim data-line-numbers class="cpp"><script type="text/template">
             void Tarjan(int u) {
                 dfn[u] = low[u] = ++tot;
@@ -78,7 +78,7 @@
                             Tarjan(v);
                             low[u] = min(low[u], low[v]);
                             if (low[v] >= dfn[u]) {
-                                if (mark[u] == 0) mark[u] = 1; // 满足判断条件则 u 为割点
+                                mark[u] = 1; // 满足判断条件则 u 为割点
                                 if (u == 1) sonCount++; // sonCount用于统计根的子节点数量
                             }
                         } else low[u] = min(low[u], dfn[v]);

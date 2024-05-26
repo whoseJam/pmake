@@ -1,0 +1,36 @@
+<section>
+    <section>
+        <h1>CLooooops</h1>
+    </section>
+    <section data-background-iframe="http://43.143.204.105/problem/237" data-background-interactive>
+    </section>
+    <section>
+        <h2>CLooooops</h2>
+        <p>给出这么一段代码：</p>
+        <pre><code data-trim data-line-numbers class="cpp"><script type="text/template">
+            for (i = A; i != B; i += C) {
+                // do something
+            }
+        </script></code></pre>
+        <p class="fragment">假设 $i,A,B,C$ 均为 $k$ 位无符号整数，给出 $A,B,C$，我们希望知道这个循环会执行多少次</p>
+        <p class="fragment quote">
+            $k$ 位无符号整数的取值范围为 $[0,2^k-1]$，并且溢出相当于对 $2^k$ 取模
+        </p>
+    </section>
+    <section>
+        <h2>CLooooops</h2>
+        <p>假设循环一共执行了 $x$ 次</p>
+        <p class="fragment">则有：
+            $$
+            A+xC\equiv B(mod\ 2^k)
+            $$
+        </p>
+        <p class="fragment">化作二元一次不定方程的形式：
+            $$
+            xC\equiv B-A(mod\ 2^k) \\
+            Cx+2^k y= B-A
+            $$
+        </p>
+        <p class="fragment">求出 $x$ 的最小非负整数解即可，如果无解则代表循环永远不会停止</p>
+    </section>
+</section>

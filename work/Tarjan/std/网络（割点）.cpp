@@ -28,7 +28,7 @@ void Tarjan(int u){
 				Tarjan(v);
 				low[u]=min(low[u],low[v]);
 				if(low[v]>=dfn[u]){
-					if(mark[u]==0)mark[u]=1;
+					mark[u]=1;
 					if(u==1)sonCount++;
 				}
 			}else low[u]=min(low[u],dfn[v]);
