@@ -1,0 +1,23 @@
+<section>
+    <section>
+        <h1>高级打字机</h1>
+    </section>
+    <section data-background-iframe="http://43.143.204.105/problem/1073" data-background-interactive>
+    </section>
+    <section>
+        <h2>高级打字机</h2>
+        <p>有一个打字机，要求支持以下三种操作：</p>
+        <ul>
+            <li><code>T x</code>：在文章末尾打下一个小写字母 $x$</li>
+            <li><code>U x</code>：撤销最后的 $x$ 次修改操作</li>
+            <li><code>Q x</code>：询问当前文章第 $x$ 次修改操作</li>
+        </ul>
+    </section>
+    <section>
+        <h2>高级打字机</h2>
+        <p>我们可以把打下的字符串当作一个字符数组</p>
+        <p class="fragment">为了支持撤销最后的 $x$ 修改操作，我们把字符数组的历史版本记录下来</p>
+        <p class="fragment">假设第 $i$ 个历史版本对应的字符数组为 $A_i$，如果希望往前回退 $x$ 次修改操作，那么我们只需要取出 $A_{i-x}$ 这个字符数组出来继续做修改即可</p>
+        <p class="fragment">用可持久化线段树来模拟可持久化数组</p>
+    </section>
+</section>

@@ -1,0 +1,51 @@
+<section>
+    <section>
+        <h1>可持久化线段树2</h1>
+        <p>分析一下可持久化数据结构中，版本之间的信息可减性</p>
+    </section>
+    <section data-background-iframe="http://43.143.204.105/problem/1072" data-background-interactive>
+    </section>
+    <section>
+        <h2>可持久化线段树2</h2>
+        <p>对于一个长度为 $n$ 的序列，题目希望多次查询一段区间 $[l,r]$ 的第 $k$ 大</p>
+        <p class="fragment">如果我们能快速得到将 $[l,r]$ 这个区间里面的元素，全部插入到一个权值线段树 $S$ 中，用权值线段树来维护一段区间中<b>元素的个数</b>，我们就能在 $S$ 上做二分，来定位到区间第 $k$ 大了</p>
+        <p class="fragment">
+            现在的问题就是，如何快速求出：
+            $$
+            S=\{insert(a_L)\}+\{insert(a_{L+1})\}+...+\{insert(a_R)\}
+            $$
+        </p>
+        <p class="fragment quote">
+            在这里，我们可以把一个线段树看作是若干修改操作的“相加”，这里的相加是一种广义的相加，代表这些操作最终共同作用到一个权值线段树 $S$ 上去了
+        </p>
+    </section>
+    <section>
+        <h2>可持久化线段树2</h2>
+        <p>
+            注意到，如果我们以序列位置为版本，建立出 $n$ 棵权值线段树，第 $i$ 个版本的权值线段树 $S_i$ 满足：
+            $$
+            S_i=S_{i-1}+\{insert(a_i,1)\}
+            $$
+        </p>
+        <p class="fragment">
+            那么：
+            $$
+            \begin{aligned}
+            S&=\{insert(a_L)\}+\{insert(a_{L+1})\}+...+\{insert(a_R)\} \\
+            &=S_{R}-S_{L-1}
+            \end{aligned}
+            $$
+        </p>
+        <p class="fragment">等等，两个线段树 $S_R$ 和 $S_{L-1}$ 相减是什么意思？它们能做减法的理论依据是什么？</p>
+        <p class="fragment">由于我们在权值线段树上的每个节点 $(x,l,r,siz)$ 维护的是属于 $[l,r]$ 这个范围内的元素个数 $siz$，而个数显然是可以用来做减法的，我们定义两个线段树相减其结果仍然为一棵线段树，并且答案线段树中每个节点的 $siz$ 值为被减线段树的 $siz$ 减去减数线段树的 $siz$</p>
+    </section>
+    <section>
+        <h2>可持久化线段树2</h2>
+        <p>在这个题中，我们似乎做了一个前缀和，不过这个前缀和不是数字的前缀和，而是<b>数据结构的前缀和</b></p>
+        <ul>
+            <li class="fragment">前缀和相邻两项的增量为一个修改操作 $\{insert(a_i)\}$</li>
+            <li class="fragment">前缀和相减变成了两棵线段树相减</li>
+            <li class="fragment">前缀和相减的结果，仍然是一棵线段树，这棵线段树记录了一段区间的修改： $\{insert(a_L)\}+\{insert(a_{L+1})\}+...+\{insert(a_R)\}$</li>
+        </ul>
+    </section>
+</section>

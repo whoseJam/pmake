@@ -1,0 +1,80 @@
+<section>
+    <section>
+        <h1>可持久化</h1>
+    </section>
+    <section>
+        <h2>可持久化</h2>
+        <p>假设我有一个数据结构 $S$，这个数据结构支持两类操作：修改类操作和查询类操作</p>
+        <p class="fragment">如果每一次我要修改 $S$ 时，我不直接在原来的 $S$ 上做修改，我新建一个 $S$ 的副本 $S'$，再在 $S'$ 上做修改，那么我们相当于同时拥有了 $S$ 的<b>最新版本</b>和<b>历史版本</b></p>
+        <p class="fragment">假设总共发生了 $k$ 次修改操作，修改轨迹如下：
+            $$
+            S_0\stackrel {M_1}{\rightarrow} S_1 \stackrel{M_2}{\rightarrow} S_2 \stackrel{M_3}{\rightarrow}...\stackrel{M_k}{\rightarrow} S_k
+            $$
+        </p>
+        <p class="fragment">如果我们能把这 $k$ 次历史版本都记录下来，那么我们就能在任意时刻<b>回忆历史</b>，这可能为我们的数据结构 $S$ 带来更强大的能力</p>
+    </section>
+    <section>
+        <h2>可持久化</h2>
+        <p>例如，如果数据结构里面维护的数据满足<b>可减性</b>，同时我把前 $k$ 次修改操作都记录了下来：
+            $$
+            S_0\stackrel {M_1}{\rightarrow} S_1 \stackrel{M_2}{\rightarrow} S_2 \stackrel{M_3}{\rightarrow}...\stackrel{M_k}{\rightarrow} S_k
+            $$
+        </p>
+        <p class="fragment">那么我们设 $S_a=S_R-S_L$，就能通过在 $S_a$ 上做查询，知道 $M_L,M_{L+1}...M_{R}$ 对 $S$ 的影响</p>
+    </section>
+    <section>
+        <h2>可持久化</h2>
+        <p>但是如果每次都全量拷贝原数据结构，存储它的一个副本，时空复杂度怎么看都很高</p>
+        <p class="fragment">所以我们大体的思路是，只记录每次操作造成的修改，从而避免了对数据结构 $S$ 的全量拷贝，只做增量修改</p>
+        <p class="fragment">然而并不是所有数据结构都能拿来可持久化的</p>
+    </section>
+    <section>
+        <h2>可持久化线段树</h2>
+        <p>刚才我们一直没有点明数据结构 $S$ 到底是什么</p>
+        <p class="fragment">事实上我们有：
+            <ul>
+                <li class="fragment">可持久化数组</li>
+                <li class="fragment">可持久化栈</li>
+                <li class="fragment">可持久化队列</li>
+                <li class="fragment">可持久化并查集</li>
+                <li class="fragment">可持久化线段树</li>
+            </ul>
+        </p>
+        <p class="fragment">其中最为常用的就是我们今天的主角，可持久化线段树</p>
+        <p class="fragment">而前面四个可持久化数据结构，都基于可持久化线段树的实现</p>
+    </section>
+    <section>
+        <h2>可持久化线段树</h2>
+        <p>假设我们需要维护一个线段树，支持：</p>
+        <ol>
+            <li><code>modify x d</code>：在前一个线段树版本的基础上新建一个版本，并修改第 $x$ 个元素为 $d$</li>
+            <li><code>query v l r</code>：查询第 $v$ 个版本中，线段树中 $[l,r]$ 区间的元素的和</li>
+        </ol>
+    </section>
+    <section>
+        <h2>可持久化线段树</h2>
+        <iframe
+            style="min-width: 1000px; min-height: 500px;"
+            data-src="./animation/可持久化线段树.html"></iframe>
+    </section>
+    <section>
+        <h2>可持久化线段树</h2>
+        <pre><code data-trim data-line-numbers class="cpp"><script type="text/template">
+            struct seg {
+                int lc, rc, sum;
+            } t[N * 30];
+            int rt[N];
+            void pushUp(int x) {
+                t[x].sum = t[t[x].lc].sum + t[t[x].rc].sum;
+            }
+            void insert(int & x, int last, int l, int r, int p, int d) {
+                t[x = ++tot] = t[last]; // 复制上一个版本的线段树节点
+                if (l == r) { t[x].sum = d; return; }
+                int mid = (l + r) >> 1;
+                if (p <= mid) insert(t[x].lc, t[last].lc, l, r, p, d);
+                else insert(t[x].rc, t[last].rc, l, r, p, d);
+                pushUp(x); // 更新当前版本的线段树节点的sum信息
+            }
+        </script></code></pre>
+    </section>
+</section>
