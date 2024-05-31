@@ -1,0 +1,53 @@
+<section>
+    <section>
+        <h1>可持久化线段树</h1>
+    </section>
+    <section>
+        <h2>可持久化线段树</h2>
+        <p>顾名思义，就是把线段树这个数据结构拖过来持久化了</p>
+        <p class="fragment">基于可持久化线段树，我们可以做：
+            <ul>
+                <li class="fragment">可持久化数组</li>
+                <li class="fragment"><del>可持久化队列</del></li>
+                <li class="fragment"><del>可持久化栈</del></li>
+                <li class="fragment">可持久化并查集</li>
+            </ul>
+        </p>
+    </section>
+    <section>
+        <h2>可持久化线段树</h2>
+        <p>假设我们需要维护一个求和线段树，支持：</p>
+        <ol>
+            <li><code>modify x d</code>：在前一个线段树版本的基础上新建一个版本，并修改第 $x$ 个元素为 $d$</li>
+            <li><code>query v l r</code>：查询第 $v$ 个版本中，线段树中 $[l,r]$ 区间的元素的和</li>
+        </ol>
+        <p class="fragment">对于 <code>modify</code> 来说，由于线段树的单点修改只会影响大约 $logn$ 个点，所以我们新建一个版本时只需要新建大约 $logn$ 个点，其余节点<b>复用</b>以前的节点就行了</p>
+        <p class="fragment">对于 <code>query</code> 来说，这是一种恒等操作，不需要新建任何东西，直接找到对应版本的线段树做查询即可</p>
+    </section>
+    <section>
+        <h2>可持久化线段树</h2>
+        <iframe
+            style="min-width: 1000px; min-height: 500px;"
+            data-src="./animation/可持久化线段树.html"></iframe>
+    </section>
+    <section>
+        <h2>可持久化线段树</h2>
+        <pre><code data-trim data-line-numbers class="cpp"><script type="text/template">
+            struct seg {
+                int lc, rc, sum;
+            } t[N * 30];
+            int rt[N];
+            void pushUp(int x) {
+                t[x].sum = t[t[x].lc].sum + t[t[x].rc].sum;
+            }
+            void insert(int & x, int last, int l, int r, int p, int d) {
+                t[x = ++tot] = t[last]; // 复制上一个版本的线段树节点
+                if (l == r) { t[x].sum = d; return; }
+                int mid = (l + r) >> 1;
+                if (p <= mid) insert(t[x].lc, t[last].lc, l, r, p, d);
+                else insert(t[x].rc, t[last].rc, l, r, p, d);
+                pushUp(x); // 更新当前版本的线段树节点的sum信息
+            }
+        </script></code></pre>
+    </section>
+</section>
