@@ -15,9 +15,6 @@
             S=\{insert(a_L)\}+\{insert(a_{L+1})\}+...+\{insert(a_R)\}
             $$
         </p>
-        <p class="fragment quote">
-            在这里，我们可以把一个线段树看作是若干修改操作的“相加”，这里的相加是一种广义的相加，代表这些操作最终共同作用到一个权值线段树 $S$ 上去了
-        </p>
     </section>
     <section>
         <h2>可持久化线段树2</h2>
@@ -36,16 +33,21 @@
             \end{aligned}
             $$
         </p>
-        <p class="fragment">等等，两个线段树 $S_R$ 和 $S_{L-1}$ 相减是什么意思？它们能做减法的理论依据是什么？</p>
-        <p class="fragment">由于我们在权值线段树上的每个节点 $(x,l,r,siz)$ 维护的是属于 $[l,r]$ 这个范围内的元素个数 $siz$，而个数显然是可以用来做减法的，我们定义两个线段树相减其结果仍然为一棵线段树，并且答案线段树中每个节点的 $siz$ 值为被减线段树的 $siz$ 减去减数线段树的 $siz$</p>
     </section>
     <section>
         <h2>可持久化线段树2</h2>
-        <p>在这个题中，我们似乎做了一个前缀和，不过这个前缀和不是数字的前缀和，而是<b>数据结构的前缀和</b></p>
-        <ul>
-            <li class="fragment">前缀和相邻两项的增量为一个修改操作 $\{insert(a_i)\}$</li>
-            <li class="fragment">前缀和相减变成了两棵线段树相减</li>
-            <li class="fragment">前缀和相减的结果，仍然是一棵线段树，这棵线段树记录了一段区间的修改： $\{insert(a_L)\}+\{insert(a_{L+1})\}+...+\{insert(a_R)\}$</li>
-        </ul>
+        <pre><code data-trim data-line-numbers class="cpp"><script type="text/template">
+            int nodeSize(int xl, int xr) {
+                return t[xr].siz - t[xl].siz;
+            }
+            int query(int xl, int xr, int l, int r, int k) {
+                if (l == r) return l;
+                int mid = (l + r) >> 1, siz = nodeSize(t[xl].lc, t[xr].lc);
+                if (k <= siz) return query(t[xl].lc, t[xr].lc, l, mid, k);
+                else return query(t[xl].rc, t[xr].rc, mid + 1, r, k - siz);
+            }
+            // 查询 [l,r] 这个范围内的操作对应的权值线段树第 k 大
+            cout << query(rt[l - 1], rt[r], mna, mxa, k) << '\n';
+        </script></code></pre>
     </section>
 </section>

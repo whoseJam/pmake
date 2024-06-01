@@ -116,6 +116,7 @@
             }
         </script></code></pre>
     </section>
+
     <section>
         <h2>查询前驱/后继 <code>int findPrev/findNext(int x)</code></h2>
         <p>首先把 $x$ 旋转到树根，然后：</p>
@@ -140,6 +141,12 @@
         </script></code></pre>
     </section>
     <section>
+        <h2>查询前驱 <code>int findPrev(int x)</code></h2>
+        <p>例如我们要定位 $6$ 号节点的前驱节点编号</p>
+        <iframe style="min-width: 1000px; min-height: 500px;" data-src="./animation/findPrev演示.html"></iframe>
+    </section>
+    
+    <section>
         <h2>插入到某节点之后 <code>void insertAfter(int x, int v)</code></h2>
         <p>首先把 $x$ 旋转到根，再把 $x$ 的后继 $y$ 旋转到根的右儿子上，此时 $y$ 的左儿子一定为空</p>
         <p class="fragment">然后新建一个节点 $z$，把 $z$ 挂在 $y$ 的左儿子上，并进行 <code>pushUp</code> 就行了</p>
@@ -155,6 +162,12 @@
         </script></code></pre>
     </section>
     <section>
+        <h2>插入到某节点之后 <code>void insertAfter(int x, int v)</code></h2>
+        <p>例如我们要插入一个新节点到 $5$ 号节点之后</p>
+        <iframe style="min-width: 1000px; min-height: 500px;" data-src="./animation/insertAfter演示.html"></iframe>
+    </section>
+
+    <section>
         <h2>找到第 $k$ 个元素 <code>int findKth(int k)</code></h2>
         <p>我们先假设Splay上有哨兵，并且值为 $-\infty$ 的那个哨兵为第 $1$ 个元素（之后的讨论都是基于此假设）</p>
         <p class="fragment">为了支持这个功能，Splay上每个节点 $u$ 需要维护自己子树的大小 $siz(u)$</p>
@@ -169,6 +182,7 @@
             }
         </script></code></pre>
     </section>
+
     <section>
         <h2>提取一段区间 <code>int extract(int l, int r)</code></h2>
         <p>我们定位到第 $l-1$ 个元素 $a$ 和第 $r+1$ 个元素 $b$</p>
@@ -182,6 +196,12 @@
             }
         </script></code></pre>
     </section>
+    <section>
+        <h2>提取一段区间 <code>int extract(int l, int r)</code></h2>
+        <p>例如我们要提取第 $3$ 个节点到第 $6$ 个节点这段区间</p>
+        <iframe style="min-width: 1000px; min-height: 500px;" data-src="./animation/extract演示.html"></iframe>
+    </section>
+
     <section>
         <h2>区间求和<code>sum(l, r)</code></h2>
         <p>我们把 $[l,r]$ 这段区间提取出来，然后直接调用在 <code>pushUp</code> 中维护好的区间和就行了</p>

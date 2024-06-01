@@ -17,20 +17,20 @@
             \{\sum_{1\le i\le t} [L\le x_i\le R] \}\ge S
             $$
         </p>
-        <p class="fragment">我们二分这个时刻 $t$，然后就是需要能快速计算，前 $t$ 个子弹中有多少个子弹的射击位置落在 $[L,R]$ 之间</p>
+        <p class="fragment">我们二分这个时刻 $t$，如果能快速计算 $\{\sum_{1\le i\le t} [L\le x_i\le R] \}$，那么就能用它和 $S$ 的大小做比较，缩小二分的范围，最终得出当前这块木板会在什么时候被击穿</p>
+        <p class="fragment">
+            设 $T_t=\{insert(x_1)\}+\{insert(x_2)\}+...+\{insert(x_t)\}$，则只需要在 $T_t$ 上做一个 $[L,R]$ 的范围查询即可
+        </p>
         <p class="fragment">我们以位置为版本建立可持久化线段树，第 $i$ 个版本的线段树 $T_i$ 定义如下：
             $$
             T_i=T_{i-1}+\{insert(x_i)\}
             $$
         </p>
-        <pre class="fragment"><code data-trim data-line-numbers class="cpp"><script type="text/template">
-            int l = 1, r = n, mid;
-            while (l <= r) {
-                mid = (l + r) >> 1;
-                if (T(mid).ask(L, R) >= S) r = mid - 1;
-                else l = mid + 1;
-            }
-            cout << l << "\n";
+    </section>
+    <section>
+        <h2>天天爱射击</h2>
+        <pre><code data-trim data-line-numbers class="cpp"><script type="text/template">
+            
         </script></code></pre>
     </section>
 </section>

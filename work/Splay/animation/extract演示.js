@@ -1,4 +1,4 @@
-import * as sd from "../../../lib/slide";
+import * as sd from "@/slide";
 import { rotate } from "./Splay基础动画库";
 
 const svg = sd.svg();
@@ -20,12 +20,20 @@ main();
 
 async function main() {
     await sd.pause();
-    tree.startAnimate().color(6, C.blue).endAnimate();
-    await rotate(tree, 6, fa, ch);
-    await rotate(tree, 6, fa, ch);
-    await rotate(tree, 6, fa, ch);
+    tree.startAnimate().color(2, C.orange).endAnimate();
+    await rotate(tree, 2, fa, ch);
+    await rotate(tree, 2, fa, ch);
+    await rotate(tree, 2, fa, ch);
     await sd.pause();
-    tree.startAnimate().color(6, C.white).endAnimate();
+    tree.startAnimate().color(7, C.orange).endAnimate();
+    await rotate(tree, 7, fa, ch);
+    await rotate(tree, 7, fa, ch);
+    await sd.pause();
+    tree.startAnimate();
+    for (let i = 3; i <= 6; i++) tree.color(i, C.green);
+    tree.endAnimate();
+    await sd.pause();
+    tree.startAnimate().color(C.white).endAnimate();
     await sd.pause();
 }
 

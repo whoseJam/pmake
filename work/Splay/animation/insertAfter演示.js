@@ -1,13 +1,14 @@
-import * as sd from "../../../lib/slide";
-import { rotate } from "./Splay基础动画库";
+import * as sd from "@/slide";
+import { findNextWithoutAnimation, rotate } from "./Splay基础动画库";
+import { findPrev } from "./Splay基础动画库";
 
 const svg = sd.svg();
 const C = sd.color();
 const tree = new sd.Splay(svg);
-const root = 4, n = 8;
+const root = 3, n = 8;
 const links = [
-    [4, 3, 5],
-    [3, 1, 0],
+    [4, 0, 5],
+    [3, 1, 4],
     [1, 0, 2],
     [5, 0, 7],
     [7, 6, 8]
@@ -20,12 +21,15 @@ main();
 
 async function main() {
     await sd.pause();
-    tree.startAnimate().color(6, C.blue).endAnimate();
-    await rotate(tree, 6, fa, ch);
-    await rotate(tree, 6, fa, ch);
-    await rotate(tree, 6, fa, ch);
+    tree.startAnimate().color(5, C.blue).endAnimate();
+    await rotate(tree, 5, fa, ch);
+    await rotate(tree, 5, fa, ch);
     await sd.pause();
-    tree.startAnimate().color(6, C.white).endAnimate();
+    const next = findNextWithoutAnimation(tree, fa, ch);
+    tree.startAnimate().color(next, C.orange).endAnimate();
+    await rotate(tree, next, fa, ch);
+    await sd.pause();
+    tree.startAnimate().color(5, C.white).color(next, C.white).endAnimate();
     await sd.pause();
 }
 
