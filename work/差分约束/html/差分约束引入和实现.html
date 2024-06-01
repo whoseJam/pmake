@@ -31,6 +31,7 @@
         <h2>差分约束</h2>
         <p>假设构成负环的点为 $a_1\rightarrow a_2\rightarrow a_3...\rightarrow a_k\rightarrow a_1$</p>
         <p class="fragment">
+            按照最短路的定义，有：
             $$
             a_1+c(1,2)\ge a_2 \\
             a_2+c(2,3)\ge a_3 \\
@@ -61,14 +62,122 @@
         <p class="fragment">事实上，如果仅仅是<b>判断解的存在性</b>，这两者是可以相互转化的，例如题目给的是 $X_i\le X_j + k$ 形式的约束条件，那么我自然可以通过移项，将其变为 $X_j\ge X_i+(-k)$，前者需要使用SPFA跑最短路，后者则需要使用SPFA跑最长路</p>
         <p class="fragment">只需要保证题目给的 $m$ 个约束条件，最终统一成最短路的松弛的形式，或者统一成最长路的松弛形式即可</p>
     </section>
+    
+    <section>
+        <h2>非连通图问题</h2>
+        <p>先举一个例子，来说明非连通图问题是如何产生的，考虑下述三条约束：</p>
+        <p>
+            $$
+            x_1\le x_2+3 \\
+            x_3\le x_4+5 \\
+            x_1\le x_4-6
+            $$
+        </p>
+        <p class="fragment">我们建完图跑最短路，如果选取的起点不当，就有可能导致整张图不能完全跑完</p>
+        <iframe style="min-width: 1000px; min-height: 300px;" data-src="./animation/非连通图的差分约束.html"></iframe>
+    </section>
+
+    <section>
+        <h2>最短路中的非连通图问题</h2>
+        <ul>
+            <li class="fragment">方法1：建立一个超级源点 $S$，从 $S$ 到任意节点的边权都是 $0$，然后跑最短路SPFA的时候就从 $S$ 开始跑</li>
+            <li class="fragment">方法2：在跑最短路SPFA时，初始把所有节点都加入队列，并将所有点的 $dis_u$ 都初始化为 $0$</li>
+        </ul>
+        <p class="fragment">容易看出，方法(1)和方法(2)是等效的两种做法，不过更推荐方法(2)</p>
+        <div class="fragment quote">
+            <h3>为什么可以这么做</h3>
+            <p>容易发现超级源点本身不会引入负圈（与其他点相连的边权都是 $0$），所以：</p>
+            <ul>
+                <li>如果引入虚点之前最短路存在，那么引入这个虚点之后，最短路依然存在，并且每个约束在最短路语义下依然满足</li>
+                <li>如果引入虚点之前最短路就不存在，那么引入虚点之后，最短路也不会因为虚点的加入而变得存在</li>
+            </ul>
+        </div>
+        <p class="fragment">不过引入超级源点之后相当于多了 $n$ 条约束，第 $i$ 条约束表示 $x_i\le 0$</p>
+    </section>
+    <section>
+        <h2>最短路中的非连通图问题</h2>
+        <iframe style="min-width: 1000px; min-height: 200px;" data-src="./animation/最短路中的非连通图问题.html"></iframe>
+        <p class="fragment">可以检验 $x_1=-6,x_2=0,x_3=0,x_4=0$ 的确是
+            $$
+            \left\{
+            \begin{aligned}
+            x_1\le x_2+3 \\
+            x_3\le x_4+5 \\
+            x_1\le x_4-6
+            \end{aligned}
+            \right.
+            $$
+            的一组解
+        </p>
+    </section>
+
+    <section>
+        <h2>最长路中的非连通图问题</h2>
+        <ul>
+            <li class="fragment">方法1：建立一个超级源点 $S$，从 $S$ 到任意节点的边权都是 $0$，然后跑最长路SPFA的时候就从 $S$ 开始跑</li>
+            <li class="fragment">方法2：在跑最长路SPFA时，初始把所有节点都加入队列，并将所有点的 $dis_u$ 都初始化为 $0$</li>
+        </ul>
+        <p class="fragment">容易看出，方法(1)和方法(2)是等效的两种做法，不过更推荐方法(2)</p>
+        <div class="fragment quote">
+            <h3>为什么可以这么做</h3>
+            <p>容易发现超级源点本身不会引入正圈（与其他点相连的边权都是 $0$），所以：</p>
+            <ul>
+                <li>如果引入虚点之前最长路存在，那么引入这个虚点之后，最长路依然存在，并且每个约束在最长路语义下依然满足</li>
+                <li>如果引入虚点之前最长路就不存在，那么引入虚点之后，最长路也不会因为虚点的加入而变得存在</li>
+            </ul>
+        </div>
+        <p class="fragment">不过引入超级源点之后相当于多了 $n$ 条约束，第 $i$ 条约束表示 $x_i\ge 0$</p>
+    </section>
+    <section>
+        <h2>最长路中的非连通图问题</h2>
+        <iframe style="min-width: 1000px; min-height: 200px;" data-src="./animation/最长路中的非连通图问题.html"></iframe>
+        <p class="fragment">可以检验 $x_1=0,x_2=0,x_3=0,x_4=6$ 的确是
+            $$
+            \left\{
+            \begin{aligned}
+            x_1\le x_2+3 \\
+            x_3\le x_4+5 \\
+            x_1\le x_4-6
+            \end{aligned}
+            \right.
+            $$
+            的一组解
+        </p>
+    </section>
+
     <section>
         <h2>最短路 vs 最长路</h2>
-        <p>如果题目还希望你输出一组解，那此时就要谨慎选择，到底是使用SPFA跑最长路，还是使用SPFA跑最短路了</p>
+        <p>我们分析一下最短路和最长路跑出的两组解的性质，我们把它们都转化到 $[0,+\infty)$ 这个区间上</p>
+        <iframe style="min-width: 1000px; min-height: 200px;" data-src="./animation/最短路解和最长路解的比较.html"></iframe>
+        </iframe>
+        <div style="margin-top: -60px;">
+            <div class="fragment left">
+                $$
+                最短路解=
+                \left\{
+                \begin{aligned}
+                x_1=0\\ x_2=6\\ x_3=6\\ x_4=6
+                \end{aligned}
+                \right.
+                $$
+            </div>
+            <div class="fragment right">
+                $$
+                最长路解=
+                \left\{
+                \begin{aligned}
+                x_1=0\\ x_2=0\\ x_3=0\\ x_4=6
+                \end{aligned}
+                \right.
+                $$
+            </div>
+        </div>
         <ul>
-            <li class="fragment">如果题目明说希望你求出最大解，那么此时应该按照最短路的松弛形式建图，并且使用SPFA跑最短路</li>
-            <li class="fragment">如果题目明说希望你求出最小解，那么此时应该按照最长路的松弛形式建图，并且使用SPFA跑最长路</li>
+            <li class="fragment">最短路有一种把解的间距扩大的倾向，把每个解往最大解靠拢</li>
+            <li class="fragment">最长路有一种把解的间距缩小的倾向，把每个解往最小解靠拢</li>
         </ul>
     </section>
+
     <section>
         <h2>最短路的解的性质</h2>
         <p>假设图中起点 $S$ 到终点 $T$ 的最短路经过了 $v_1,v_2...v_k$ 这些中间点</p>
@@ -83,7 +192,7 @@
             $$
         </p>
         <p class="fragment">所以有$x_T-x_S\le sum\_of\_w$，而且由于我们跑的最短路，所以中途每一个 $\le$ 都取到了等于号，那么就说明 $x_T-x_S$ 取到了它的理论上限</p>
-        <p class="fragment">所以我们希望跑出来的解最大时，我们选择跑最短路</p>
+        <p class="fragment">所以最短路有一种把每个解往最大解靠拢的倾向</p>
     </section>
     <section>
         <h2>最长路的解的性质</h2>
@@ -99,77 +208,43 @@
             $$
         </p>
         <p class="fragment">所以有$x_T-x_S\ge sum\_of\_w$，而且由于我们跑的最长路，所以中途每一个 $\ge$ 都取到了等于号，那么就说明 $x_T-x_S$ 取到了它的理论下限</p>
-        <p class="fragment">所以我们希望跑出来的解最小时，我们选择跑最长路</p>
+        <p class="fragment">所以最长路有一种把每个解往最小解靠拢的倾向</p>
+    </section>
+
+    <section>
+        <h2>最大解</h2>
+        <p>如果题目要求我们构造一组最大解，那么我们应该选择使用最短路来建模差分约束，因为最短路会让每一个解往最大解靠拢</p>
+        <p class="fragment">在使用最短路跑最大解时一定不能使用超级源点</p>
+        <iframe style="min-width: 1000px; min-height: 400px;" data-src="./animation/最大解构造方法.html"></iframe>
     </section>
     <section>
-        <h2>非连通图问题</h2>
-        <p>先举一个例子，来说明非连通图问题是如何产生的，考虑下述三条约束：</p>
-        <p>
-            $$
-            x_1\le x_2+3 \\
-            x_3\le x_4+5 \\
-            x_1\le x_4-6
-            $$
-        </p>
-        <p class="fragment">我们建完图跑最短路，如果选取的起点不当，就有可能导致整张图不能完全跑完</p>
+        <h2>最小解</h2>
+        <p>如果题目要求我们构造一组最小解，那么我们应该选择使用最长路来建模差分约束，因为最长路会让每一个解往最小解靠拢</p>
+        <p class="fragment">在使用最长路跑最小解时，一定要使用超级源点</p>
+        <iframe style="min-width: 1000px; min-height: 400px;" data-src="./animation/最小解构造方法.html"></iframe>
     </section>
-    <section>
-        <h2>最短路中的非连通图问题</h2>
-        <ul>
-            <li class="fragment">方法1：建立一个超级源点 $S$，从 $S$ 到任意节点的边权都是 $0$，然后跑最短路SPFA的时候就从 $S$ 开始跑</li>
-            <li class="fragment">方法2：在跑最短路SPFA时，初始把所有节点都加入队列，并将所有点的 $dis_u$ 都初始化为 $0$</li>
-        </ul>
-        <p class="fragment">容易看出，方法(1)和方法(2)是等效的两种做法，不过更推荐方法(2)</p>
-        <div class="fragment quote">
-            <h3>为什么可以这么做</h3>
-            <p>容易发现超级源点本身不会引入负圈（与其他点相连的边权都是 $0$），所以：
-                <ul>
-                    <li>如果引入虚点之前最短路存在，那么引入这个虚点之后，最短路依然存在，并且每个约束在最短路语义下依然满足</li>
-                    <li>如果引入虚点之前最短路就不存在，那么引入虚点之后，最短路也不会因为虚点的加入而变得存在</li>
-                </ul>
-            </p>
-        </div>
-        <p class="fragment">不过引入超级源点之后相当于多了 $n$ 条约束，第 $i$ 条约束表示 $x_i\le 0$，注意在需要利用最短路找解的上限的题目中不能使用这个方法</p>
-    </section>
-    <section>
-        <h2>最长路中的非连通图问题</h2>
-        <ul>
-            <li class="fragment">方法1：建立一个超级源点 $S$，从 $S$ 到任意节点的边权都是 $0$，然后跑最长路SPFA的时候就从 $S$ 开始跑</li>
-            <li class="fragment">方法2：在跑最长路SPFA时，初始把所有节点都加入队列，并将所有点的 $dis_u$ 都初始化为 $0$</li>
-        </ul>
-        <p class="fragment">容易看出，方法(1)和方法(2)是等效的两种做法，不过更推荐方法(2)</p>
-        <div class="fragment quote">
-            <h3>为什么可以这么做</h3>
-            <p>容易发现超级源点本身不会引入正圈（与其他点相连的边权都是 $0$），所以：
-                <ul>
-                    <li>如果引入虚点之前最长路存在，那么引入这个虚点之后，最长路依然存在，并且每个约束在最长路语义下依然满足</li>
-                    <li>如果引入虚点之前最长路就不存在，那么引入虚点之后，最长路也不会因为虚点的加入而变得存在</li>
-                </ul>
-            </p>
-        </div>
-        <p class="fragment">不过引入超级源点之后相当于多了 $n$ 条约束，第 $i$ 条约束表示 $x_i\ge 0$</p>
-    </section>
+
     <section>
         <h2>总结</h2>
         <table>
 
                 <tr>
                     <th></th>
-                    <th>解存在性</th>
+                    <th>解存在性/任意解</th>
                     <th>最小解</th>
                     <th>最大解</th>
                 </tr>
                 <tr>
                     <td>原图连通</td>
                     <td>最短路最长路皆可<br>超级源点可有可无</td>
-                    <td>最长路<br>超级源点可有可无</td>
+                    <td>最长路<br>加超级源点</td>
                     <td>最短路<br>不加超级源点</td>
                 </tr>
                 <tr>
                     <td>原图不连通</td>
                     <td>最短路最长路皆可<br>加超级源点</td>
                     <td>最长路<br>加超级源点</td>
-                    <td>GG<br>我目前没看见过这种题</td>
+                    <td>不可做<br>我目前没有见过这种题</td>
                 </tr>
         </table>
     </section>
