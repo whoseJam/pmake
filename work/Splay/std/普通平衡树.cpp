@@ -3,7 +3,7 @@
 #include<cstdio>
 using namespace std;
 
-const int N=10000005;
+const int N=100005;
 const int inf=0x3f3f3f3f;
 int ch[N][2],fa[N],val[N],siz[N],num[N];
 int cnt,rt,n;

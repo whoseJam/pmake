@@ -46,7 +46,7 @@
     </section>
     <section>
         <h2>Splay</h2>
-        <p>在代码实现中，我们会定义一个函数签名为 <code>void rotate(int x, int& f)</code> 的函数，和之前的定义稍有不同，第二个参数是用于传递根/某元素的子元素的<b>引用</b>的，这样定义是为了方便之后的一些操作</p>
+        <p>在代码实现中，我们会定义一个函数签名为 <code>void rotate(int x, int & f)</code> 的函数，和之前的定义稍有不同，第二个参数是用于传递根/某元素的子元素的<b>引用</b>的，这样定义是为了方便之后的一些操作</p>
         <pre><code data-trim data-line-numbers class="cpp"><script type="text/template">
             void rotate(int x, int & f) {
                 int y = fa[x], z = fa[y], L = (ch[y][0] == x ? 0 : 1), R = (L ^ 1);
@@ -61,8 +61,8 @@
     </section>
     <section>
         <h2>Splay</h2>
-        <p>最终，我们得到了 $rotate(x)$ 这么一个非常有用的小工具，它可以帮我们改变二叉查找树的形态，但不改变二叉查找树的性质，我们就用它来实现Splay</p>
-        <p class="fragment">在Splay中，还有一个重要函数就叫 <code>void Splay(int x, int& f)</code>，其作用是把 $x$ 这个点旋转到 $f$ 这个地方上去，当 $f=rt$ 时，就是把 $x$ 旋转到树根上去。在 <code>void Splay(int x, int& f)</code> 内部，就是通过不断调用 <code>void rotate(int x, int& f)</code> 来实现的</p>
+        <p>最终，我们得到了 <code>void rotate(int x, int & f)</code> 这么一个非常有用的小工具，它可以帮我们改变二叉查找树的形态，但不改变二叉查找树的性质，我们就用它来实现Splay</p>
+        <p class="fragment">在Splay中，还有一个重要函数就叫 <code>void Splay(int x, int & f)</code>，其作用是把 $x$ 这个点旋转到 $f$ 这个地方上去，当 $f=rt$ 时，就是把 $x$ 旋转到树根上去。在 <code>void Splay(int x, int & f)</code> 内部，就是通过不断调用 <code>void rotate(int x, int & f)</code> 来实现的</p>
         <pre class="fragment"><code data-trim data-line-numbers class="cpp"><script type="text/template">
             void Splay(int x, int & f) { // 单旋Splay
                 while (x != f) {
@@ -86,14 +86,14 @@
     </section>
     <section>
         <h2>Splay</h2>
-        <p>研究发现，对于一棵大小为 $m$ 的二叉查找树，使用 $m$ 次 <code>void Splay(int x, int& f)</code> 函数，无论输入的数据 $x$ 是什么，以什么样的顺序出现，它的均摊复杂度都是 $O(mlogn)$</p>
+        <p>研究发现，对于一棵大小为 $m$ 的二叉查找树，使用 $m$ 次 <code>void Splay(int x, int & f)</code> 函数，无论输入的数据 $x$ 是什么，以什么样的顺序出现，它的均摊复杂度都是 $O(mlogn)$</p>
     </section>
     <section>
         <h2>Splay</h2>
         <p>现在我们拥有了：</p>
         <ul>
-            <li><code>void rotate(int x, int& f)</code>：用于将 $x$ 和自己的父节点 $fa(x)$ 倒反天罡</li>
-            <li><code>void Splay(int x, int& f)</code>：用于将 $x$ 旋转到 $f$ 上去，$f$ 可能是树根，可能是某元素的子节点</li>
+            <li><code>void rotate(int x, int & f)</code>：用于将 $x$ 和自己的父节点 $fa(x)$ 倒反天罡</li>
+            <li><code>void Splay(int x, int & f)</code>：用于将 $x$ 旋转到 $f$ 上去，$f$ 可能是树根，可能是某元素的子节点</li>
         </ul>
         <p class="fragment">乍看之下这两个函数平平无奇，但实际上我们已经能用它们做一切区间操作了，包括区间插入，区间查询，区间删除，区间提取</p>
         <p class="fragment">同时一切在线段树中接触过的懒标记思想，可以无痛迁移到Splay上来</p>
@@ -192,7 +192,7 @@
                 int a = findKth(l - 1);
                 int b = findKth(r + 1);
                 Splay(a, rt); Splay(b, ch[a][1]);
-                return ch[b][1];
+                return ch[b][0];
             }
         </script></code></pre>
     </section>
@@ -227,7 +227,7 @@
     <section>
         <h2>还有很多操作</h2>
         <p>大家其实应该能看出这些操作的套路了</p>
-        <p class="fragment">我们就是用 <code>void Splay(int x, int& f)</code> 这个函数，通过调整点的位置，把我们想要的单点或区间给提取出来，一般来说我们会把目标单点放在根上去，把目标区间放在靠近根的位置上去</p>
+        <p class="fragment">我们就是用 <code>void Splay(int x, int & f)</code> 这个函数，通过调整点的位置，把我们想要的单点或区间给提取出来，一般来说我们会把目标单点放在根上去，把目标区间放在靠近根的位置上去</p>
         <p class="fragment">Splay上的每一个节点代表的都是一个区间，区间包含的元素就是其子树内的所有元素</p>
     </section>
 </section>

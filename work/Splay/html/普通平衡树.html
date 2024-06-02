@@ -11,7 +11,7 @@
     </section>
     <section>
         <h2>普通平衡树</h2>
-        <p>首先把Splay的基本操作（<code>void rotate(int x, int& f)</code> 和 <code>void Splay(int x, int& f)</code>）糊上去</p>
+        <p>首先把Splay的基本操作（<code>void rotate(int x, int & f)</code> 和 <code>void Splay(int x, int & f)</code>）糊上去</p>
         <pre class="fragment"><code data-trim data-line-numbers class="cpp"><script type="text/template">
             void rotate(int x, int & f) {
                 int y = fa[x], z = fa[y], L = (ch[y][0] != x), R = (L ^ 1);
@@ -51,7 +51,7 @@
     <section>
         <h2>普通平衡树</h2>
         <p>我们之前说的哨兵怎么添加呢？</p>
-        <p class="fragment">写一个 <code>init()</code> 函数，在Splay一切操作开始前调用一下就行了</p>
+        <p class="fragment">写一个 <code>void init()</code> 函数，在Splay一切操作开始前调用一下就行了</p>
         <pre class="fragment"><code data-trim data-line-numbers class="cpp"><script type="text/template">
             void init() {
                 fa[2] = 1; ch[1][1] = 2;
@@ -123,7 +123,7 @@
                     Splay(x, rt);
                     int prev = findPrev();
                     int next = findNext();
-                    Splay(prev, rt);Splay(next, ch[rt][1]);
+                    Splay(prev, rt); Splay(next, ch[rt][1]);
                     fa[x] = 0; ch[next][0] = 0;
                     pushUp(next); pushUp(prev);
                 } else Splay(x, rt);
