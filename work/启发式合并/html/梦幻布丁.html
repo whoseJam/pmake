@@ -1,0 +1,29 @@
+<section>
+    <section>
+        <h1>梦幻布丁</h1>
+    </section>
+    <section data-background-iframe="http://43.143.204.105/problem/391" data-background-interactive>
+    </section>
+    <section>
+        <h2>梦幻布丁</h2>
+        <p>我们可以用可变长数组去维护每一种颜色的布丁出现的所有位置</p>
+        <p class="fragment">那么在把一种颜色的布丁更改为另一种颜色的时候，需要判断有多少段颜色被合并为一段颜色，有多少段颜色被销毁了</p>
+        <iframe style="min-width: 1000px; min-height: 500px;" data-src="./animation/梦幻布丁.html"></iframe>
+    </section>
+    <section>
+        <h2>梦幻布丁</h2>
+        <pre><code data-trim data-line-numbers class="cpp"><script type="text/template">
+            void Merge(int A, int B) { //A->B,siz[A]<=siz[B]
+                vector < int > & posA = pos[A];
+                vector < int > & posB = pos[B];
+                for (auto p: posA) {
+                    if (col[p - 1] == B) ans--;
+                    if (col[p + 1] == B) ans--;
+                }
+                for (auto p: posA) col[p] = B;
+                for (auto p: posA) posB.push_back(p);
+                posA.clear();
+            }
+        </script></code></pre>
+    </section>
+</section>

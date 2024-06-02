@@ -1,0 +1,3 @@
+#391.梦幻布丁：https://www.luogu.com.cn/problem/P3201
+#752.DP一般看规律：https://loj.ac/p/516
+#393.永无乡：https://www.luogu.com.cn/problem/P3224
