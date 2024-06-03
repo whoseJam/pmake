@@ -1,0 +1,43 @@
+<section>
+    <section>
+        <h1>树上启发式合并</h1>
+        <p>又叫DSU on Tree</p>
+    </section>
+    <section>
+        <h2>树上启发式合并</h2>
+        <p>树上启发式合并是一种思想，而不是某种具体的数据结构</p>
+        <p class="fragment">假设有一棵 $n$ 个节点的树，我们需要统计其上每个点的某种子树信息，且我们可以通过把子树内所有节点丢到某个数据结构 $S$ 中去完成统计</p>
+        <p class="fragment">假设数据结构 $S$ 单次插入的时间复杂度为 $O(K)$，最简单最暴力的统计方式就是对每个节点的子树：</p>
+        <ol class="fragment">
+            <li>暴力添加</li>
+            <li>查询答案</li>
+            <li>暴力删除</li>
+        </ol>
+        <p class="fragment">这么做时间复杂度显然是 $O(n^2K)$</p>
+    </section>
+    <section>
+        <h2>树上启发式合并</h2>
+        <iframe style="min-width: 1000px; min-height: 500px;" data-src="./animation/暴力统计子树.html"></iframe>
+    </section>
+
+    <section>
+        <h2>树上启发式合并</h2>
+        <p>注意到我们在暴力统计子树信息的时候，是存在大量的<b>信息浪费和重复统计</b>的</p>
+        <p class="fragment">例如，对于下图，我们先后<b>独立统计</b>了 $1$ 的子树信息和 $2$ 的子树信息</p>
+        <p class="fragment">但实际上，我们可以先统计 $2$ 的子树信息，统计结束后不立刻将 $2$ 的子树信息从数据结构 $S$ 中删除，而是把 $3$ 的子树信息加入到 $S$ 中，然后接着统计 $1$ 的子树信息</p>
+        <iframe style="min-width: 1000px; min-height: 500px; margin-top: -40px;" data-src="./animation/信息浪费和重复统计.html"></iframe>
+    </section>
+    <section>
+        <h2>树上启发式合并</h2>
+        <p>所以我们自然希望在统计 $u$ 的子树信息时候，尽可能保留其子树已经添加好的信息</p>
+        <p class="fragment">具体来说，我们希望保留下 $u$ 的最重的那个儿子的子树信息：</p>
+        <ol class="fragment">
+            <li>我们先统计 $u$ 的轻儿子的子树信息，统计完一个轻儿子就暴力删除该轻儿子子树信息</li>
+            <li>然后再统计重儿子的子树信息，统计完之后重儿子信息就没必要删了</li>
+            <li>最后再把轻儿子子树信息添加回来</li>
+            <li>统计 $u$ 的子树信息</li>
+        </ol>
+        <iframe style="min-width: 1000px; min-height: 400px;" data-src="./animation/树上启发式合并.html">
+        </iframe>
+    </section>
+</section>
