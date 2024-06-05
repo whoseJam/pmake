@@ -1,0 +1,19 @@
+<section>
+    <section>
+        <h1>距离查询</h1>
+    </section>
+    <section data-background-iframe="http://43.143.204.105/problem/888" data-background-interactive>
+    </section>
+    <section>
+        <h2>距离查询</h2>
+        <div style="text-align: center;"><img data-src="./image/距离查询.png"></div>
+        <p class="fragment">容易发现树上两个节点 $x$ 和 $y$ 的距离即为：
+            $$
+            \begin{aligned}
+            &(dep_x-dep_{LCA(x,y)})+(dep_y-dep_{LCA(x,y)}) \\
+            =&dep_x+dep_y-2dep_{LCA(x,y)}
+            \end{aligned}
+            $$
+        </p>
+    </section>
+</section>
