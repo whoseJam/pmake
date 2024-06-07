@@ -22,7 +22,43 @@
     </section>
     <section>
         <h2>点双连通分量</h2>
-        <p>我们想要构建出圆方树，首先得把图中每一个点双连通分量都找到才行：</p>
+        <p>我们想要构建出圆方树，首先得把图中每一个点双连通分量都找到才行</p>
+        <p class="fragment">找点双和边双类似，在Tarjan的过程中，我们用栈把经过的点保存下来，在统计点双的时候把节点从栈中弹出；并且也在每个点双的<b>顶端</b>统计点双里面的所有节点</p>
+        <ul>
+            <li class="fragment">如果点对 $(u,v)$ 满足 $dfn(u)\gt low(v)$，则说明 $v$ 这个连通块的点双<b>顶端</b>另有其人，绝不可能是 $u$</li>
+            <li class="fragment">如果点对 $(u,v)$ 满足 $dfn(u)\le low(v)$，则说明 $u$ 是和 $v$ 相连的这个子图的点双<b>顶端</b></li>
+        </ul>
+        <pre class="fragment"><code data-trim data-line-numbers class="cpp"><script type="text/template">
+            if (low[v] >= dfn[u]) {
+                BCC++;
+                while (true) {
+                    int t = stk.top();
+                    blk[BCC].push_back(t);
+                    stk.pop();
+                    if (t == v) break; // 注意这里的判断条件
+                }
+                blk[BCC].push_back(u);
+            }
+        </script></code></pre>
+    </section>
+    <section>
+        <h2>点双连通分量</h2>
+        <pre><code data-trim data-line-numbers class="cpp"><script type="text/template">
+            if (low[v] >= dfn[u]) {
+                BCC++;
+                while (true) {
+                    int t = stk.top();
+                    blk[BCC].push_back(t);
+                    stk.pop();
+                    if (t == v) break; // 注意这里的判断条件
+                }
+                blk[BCC].push_back(u);
+            }
+        </script></code></pre>
+        <iframe style="min-width: 1000px; min-height: 300px;" rate="1.01" data-src="./animation/统计点双弹栈判断条件.html"></iframe>
+    </section>
+    <section>
+        <h2>点双连通分量</h2>
         <pre><code data-trim data-line-numbers class="cpp" style="min-height: 570px;"><script type="text/template">
             void Tarjan(int u) {
                 int count = 0;

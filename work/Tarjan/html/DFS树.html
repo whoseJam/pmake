@@ -20,10 +20,18 @@
     </section>
     <section>
         <h2>DFS树</h2>
-        <p>让我们站在DFS树的角度再来看看割点和割边，割点和割边显然一定不能被返祖边所跨越，所以我们对每一条返祖边 $(u,f)$，在DFS树上将 $u\rightarrow f$ 这条路径上（不包含 $f$）的点标记为非割点（同时树的叶子节点显然也是非割点），这条路径上的边标记为非割边，就能找到割点和桥了</p>
-        <p class="fragment">之前我们之所以不讲这种做法，是因为对一条路径打标记，实际上需要借用树链剖分，做起来就有点小题大做了</p>
+        <p><b>性质2</b>：返祖边一定不是割边，割边一定不能被返祖边所跨越</p>
         <iframe
             style="min-width: 1000px; min-height: 400px;"
             data-src="./animation/DFS树.html"></iframe>
+    </section>
+    <section>
+        <h2>DFS树</h2>
+        <p>让我们站在DFS树的角度再来看看割边，割边不能被返祖边所跨越，所以我们对每一条返祖边 $(u,f)$，在DFS树上将 $u\rightarrow f$ 这条路径上的边标记为非割边，就能找到所有割边了</p>
+        <p class="fragment">之前我们之所以不讲这种做法，是因为对一条路径打标记，实际上需要借用树链剖分，做起来就有点小题大做了</p>
+        <iframe
+            style="min-width: 1000px; min-height: 300px;" rate="1.01"
+            data-src="./animation/DFS树.html"></iframe>
+        <p class="fragment quote">割点也类似，不过情况略微复杂一点，感兴趣的同学可以自己推一推</p>
     </section>
 </section>

@@ -11,6 +11,30 @@
         <iframe
             style="min-width: 1000px; min-height: 500px;"
             data-src="./animation/边双连通分量.html"></iframe>
+        <p class="fragment quote">容易发现一个点只能属于一个边双连通分量</p>
+    </section>
+    <section>
+        <h2>边双连通分量</h2>
+
+        <p>在Tarjan的过程中，我们用栈把经过的点保存下来，在统计边双的时候把节点从栈中弹出</p>
+        <p class="fragment">我们考虑在每个边双的<b>顶端</b>统计边双里面的所有节点</p>
+        <ul>
+            <li class="fragment">如果点 $u$ 满足 $low(u)\gt dfn(u)$，则说明这个点一定不是边双连通分量<b>顶端</b>的点，不需要做任何操作</li>
+            <li class="fragment">如果点 $u$ 满足 $low(u)=dfn(u)$，此乃<b>顶端</b>，把所有属于这个边双的点从栈中弹出</li>
+        </ul>
+        <pre class="fragment"><code data-trim data-line-numbers class="cpp"><script type="text/template">
+            if (low[u] == dfn[u]) {
+                ans.push_back({});
+                while (true) {
+                    int cur = stk.top();
+                    ans[eBCC].push_back(cur);
+                    stk.pop();
+                    bel[cur] = eBCC;
+                    if (cur == u) break;
+                }
+                eBCC++;
+            }
+        </script></code></pre>
     </section>
     <section>
         <h2>边双连通分量</h2>
