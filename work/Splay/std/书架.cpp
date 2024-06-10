@@ -2,14 +2,6 @@
 using namespace std;
 
 namespace FastIO{
-	const int L=(1<<20);
-	char buf[L],*S,*T;
-	#ifdef ONLINE_JUDGE
-	inline char getchar(){
-		if(S==T){T=(S=buf)+fread(buf,1,L,stdin);if(S==T)return EOF;}
-		return *S++;
-	}
-	#endif
 	inline int read(){
 		int s=0,f=1;char t=getchar();
 		while('0'>t||t>'9'){if(t=='-')f=-1;t=getchar();}
@@ -21,21 +13,9 @@ using FastIO::read;
 
 const int N=100005;
 const int inf=0x3f3f3f3f;
-int ch[N][2],fa[N],val[N],siz[N],rev[N];
-int cnt,rt,n,m;
-
-void pushRev(int x){
-	rev[x]^=1;
-	swap(ch[x][0],ch[x][1]);
-}
-
-void pushDown(int x){
-	if(rev[x]){
-		pushRev(ch[x][0]);
-		pushRev(ch[x][1]);
-		rev[x]=0;
-	}
-}
+int ch[N][2],fa[N],val[N],siz[N];
+int rt,n,m;
+map<int,int> trans;
 
 void pushUp(int x){
 	siz[x]=siz[ch[x][0]]+siz[ch[x][1]]+1;
@@ -52,8 +32,6 @@ void rotate(int x,int &f){
 void Splay(int x,int &f){
 	while(x!=f){
 		int y=fa[x],z=fa[y];
-		if(z)pushDown(z);
-		pushDown(y);pushDown(x);
 		if(y!=f){
 			if((ch[y][0]==x)^(ch[z][0]==y))rotate(x,f);
 			else rotate(y,f);
@@ -63,28 +41,36 @@ void Splay(int x,int &f){
 }
 
 void build(int& x,int f,int l,int r){
-	x=++cnt;fa[x]=f;
-	int mid=(l+r)>>1;
-	val[x]=mid;
+	int mid=(l+r)>>1;x=mid;fa[x]=f;
 	if(l<=mid-1)build(ch[x][0],x,l,mid-1);
 	if(mid+1<=r)build(ch[x][1],x,mid+1,r);
 	pushUp(x);
 }
 
 void init(){
-	fa[2]=1;ch[1][1]=2;
-	val[1]=-inf;val[2]=inf;
-	rt=1;cnt=2;
-	build(ch[2][0],2,1,n);
-	pushUp(2);pushUp(1);
+	fa[n+2]=n+1;ch[n+1][1]=n+2;
+	val[n+1]=-inf;val[n+2]=inf;rt=n+1;
+	build(ch[n+2][0],n+2,1,n);
+	pushUp(n+2);pushUp(n+1);
 }
 
 int findKth(int x,int k){
-	pushDown(x);
 	if(!x)return 0;
 	if(siz[ch[x][0]]+1>=k&&siz[ch[x][0]]<k)return x;
 	else if(siz[ch[x][0]]>=k)return findKth(ch[x][0],k);
 	else return findKth(ch[x][1],k-siz[ch[x][0]]-1);
+}
+
+int findPrev(){
+	int x=ch[rt][0];
+	while(ch[x][1])x=ch[x][1];
+	return x;
+}
+
+int findNext(){
+	int x=ch[rt][1];
+	while(ch[x][0])x=ch[x][0];
+	return x;
 }
 
 int findKth(int k){
@@ -92,21 +78,33 @@ int findKth(int k){
 	return x;
 }
 
-int extract(int l,int r){
-	int prev=findKth(l-1);
-	int next=findKth(r+1);
+int takeOut(int x){
+//	int x=findKth(k);
+	Splay(x,rt);
+	int prev=findPrev();
+	int next=findNext();
 	Splay(prev,rt);
 	Splay(next,ch[rt][1]);
-	return ch[next][0];
+	fa[x]=ch[next][0]=0;
+	pushUp(next);pushUp(prev);
+	return x;
 }
 
-void Rev(int l,int r){
-	int x=extract(l,r);
-	pushRev(x);
+void insertAfter(int x,int k){
+	int prev=findKth(k);
+	Splay(prev,rt);
+	int next=findNext();
+	Splay(next,ch[rt][1]);
+	fa[x]=next;ch[next][0]=x;
+	pushUp(next);pushUp(prev);
+}
+
+int Rank(int x){
+	Splay(x,rt);
+	return siz[ch[rt][0]];
 }
 
 void visitVal(int x){
-	pushDown(x);
 	if(ch[x][0])visitVal(ch[x][0]);
 	if(val[x]!=inf&&val[x]!=-inf)cout<<val[x]<<' ';
 	if(ch[x][1])visitVal(ch[x][1]);
@@ -114,12 +112,38 @@ void visitVal(int x){
 
 int main(){
 	n=read();m=read();
-	init();
-	for(int i=1,l,r;i<=m;i++){
-		l=read();r=read();
-		Rev(l+1,r+1);
+	for(int i=1;i<=n;i++){
+		val[i]=read();
+		trans[val[i]]=i;
 	}
-	visitVal(rt);
+	init();
+	
+	char op[10];
+	for(int i=1,l,r;i<=m;i++){
+		scanf("%s",op);
+		if(op[0]=='T'){
+			int s=trans[read()];
+			int id=takeOut(s);
+			insertAfter(id,1);
+		}else if(op[0]=='B'){
+			int s=trans[read()];
+			int id=takeOut(s);
+			insertAfter(id,n);
+		}else if(op[0]=='I'){
+			int s=trans[read()];
+			int t=read();
+			int rk=Rank(s)+t;
+			int id=takeOut(s);
+			insertAfter(id,rk);
+		}else if(op[0]=='A'){
+			int s=trans[read()];
+			cout<<Rank(s)-1<<'\n';
+		}else if(op[0]=='Q'){
+			int s=read();
+			int x=findKth(s+1);
+			cout<<val[x]<<'\n';
+		}
+	}
 	return 0;
 }
 

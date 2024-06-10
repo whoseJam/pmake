@@ -3,7 +3,6 @@
 #1072.可持久化线段树2：https://www.luogu.com.cn/problem/P3834
 #1074.天天爱射击：https://www.luogu.com.cn/problem/P7424
 #382.Count on a Tree：https://www.luogu.com.cn/problem/P2633
-P3293.美味：https://www.luogu.com.cn/problem/P3293
 
 #385.可持久化并查集：https://www.luogu.com.cn/problem/P3402
 

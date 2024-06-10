@@ -23,7 +23,7 @@ void Tarjan(int u){
 	low[u]=dfn[u]=++tot;
 	for(int i=h[u],v;i;i=l[i].Nxt){
 		v=l[i].to;
-		if(prt[v]!=u){
+		if(prt[u]!=v){
 			if(dfn[v]==0){
 				prt[v]=u;
 				Tarjan(v);
@@ -34,8 +34,8 @@ void Tarjan(int u){
 }
 
 void getAns(int u){
-	if(u==s)return;
-	if(low[u]>=dfn[prt[u]]&&prt[u]<ans&&prt[u]!=s)ans=prt[u];
+	if(prt[u]==s)return;
+	if(low[u]>=dfn[prt[u]])ans=min(ans,prt[u]);
 	getAns(prt[u]);
 }
 

@@ -1,4 +1,5 @@
 #include<iostream>
+#include<sstream>
 #include<cstring>
 #include<cstdio>
 using namespace std;
@@ -47,19 +48,18 @@ void Clear(){
 
 void Solve(){
 	Clear();
-	while(true){
-		int u,v;
-		char tmp;
-		cin>>u;
-		tmp=getchar();
+	
+	int u,v;
+	while(cin>>u){
 		if(u==0)break;
-		while(true){
-			cin>>v;
-			tmp=getchar();
+		string line;
+		getline(cin,line);
+		istringstream input(line);
+		while(input>>v){
 			Link(u,v);
-			if(tmp=='\n')break;
 		}
 	}
+	
 	Tarjan(1);
 	if(sonCount==1)mark[1]=0;
 	

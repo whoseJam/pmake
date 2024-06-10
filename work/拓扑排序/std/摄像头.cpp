@@ -30,11 +30,11 @@ void Link(int u,int v){
 
 void Toposort(){
 	queue<int>q;
-	for(int i=1;i<N;i++)
+	for(int i=1;i<=n;i++)
 		if(!Ind[i])q.push(i);
 	while(q.size()){
 		int u=q.front();q.pop();
-		if(u<=n)tot++;
+		tot++;
 		for(int i=h[u],v;i;i=l[i].Nxt){
 			v=l[i].to;
 			Ind[v]--;
@@ -65,4 +65,3 @@ int main(){
 	Toposort();
 	return 0;
 }
-

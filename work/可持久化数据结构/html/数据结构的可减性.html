@@ -4,9 +4,9 @@
     </section>
     <section>
         <h2>操作视角</h2>
-        <p>我们之前定义了数据结构与操作的加法，一个数据结构 $S$ 可以通过加上一个操作 $m$ 演变成另一个数据结构 $S'$，即：
+        <p>我们之前定义了数据结构与操作的加法，一个数据结构 $S$ 可以通过加上一个操作 $M$ 演变成另一个数据结构 $S'$，即：
             $$
-            S'=S+m
+            S'=S+M
             $$
         </p>
         <p class="fragment">如果数据结构能相加，那我能不能定义数据结构的减法呢？</p>
@@ -81,7 +81,7 @@
             <table class="fragment">
                 <thead>
                     <tr>
-                        <th>i</th>
+                        <th>$i$</th>
                         <th>$S_t(i)$</th>
                         <th>$M(i)$</th>
                         <th>$S_{t+1}(i)$</th>
@@ -161,7 +161,7 @@
             $$
             \begin{aligned}
             S_R-S_{L-1}&=\{S_0(i)\oplus M_1(i)\oplus...\oplus M_{R}(i)\ominus [S_0(i)\oplus M_1(i)\oplus...\oplus M_{L-1}(i)]|i\in [1,k]\} \\
-            &=\{M_{L}\oplus M_{L+1}\oplus ...\oplus M_R|i\in [1,k]\}
+            &=\{M_{L}(i)\oplus M_{L+1}(i)\oplus ...\oplus M_R(i)|i\in [1,k]\}
             \end{aligned}
             $$
         </p>

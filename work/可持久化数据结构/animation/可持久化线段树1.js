@@ -122,6 +122,7 @@ async function insert(pos, value) {
         const lastVertex = findNodeById(lastx);
         if (lastVertex) {
             if (pos <= mid) {
+                await sd.pause();
                 vertex.leftChild = tot + 1;
                 vertex.rightChild = lastVertex.rightChild;
                 const lastRightChild = findNodeById(lastVertex.rightChild);

@@ -33,7 +33,7 @@
         <pre><code data-trim data-line-numbers class="cpp"><script type="text/template">
             void Toposort() {
                 queue < int > q;
-                for (int i = 1; i < N; i++)
+                for (int i = 1; i <= n; i++)
                     if (!Ind[i]) q.push(i);
                 while (q.size()) {
                     int u = q.front();

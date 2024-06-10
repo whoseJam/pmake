@@ -27,6 +27,7 @@ function init() {
     sd.Link(tree.element(7), tree.element(2)).arrow();
     sd.Link(tree.element(10), tree.element(2)).arrow();
     sd.Link(tree.element(9), tree.element(3), sd.Curve).bending(0.5).arrow();
+    sd.Link(tree.element(5), tree.element(1)).arrow();
 }
 
 async function main() {
