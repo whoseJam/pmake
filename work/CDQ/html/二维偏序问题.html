@@ -1,0 +1,32 @@
+<section>
+    <section>
+        <h1>二维偏序问题</h1>
+        <p>稍微进阶一点的开胃小菜，完全用不到CDQ</p>
+    </section>
+    <section>
+        <h2>二维偏序问题</h2>
+        <p>给你 $n$ 个坐标，第 $i$ 个坐标为 $(x_i,y_i)$</p>
+        <p>如果两个坐标 $i$ 和 $j$，满足：
+            $$
+            \left\{
+            \begin{aligned}
+            x_i\lt x_j \\
+            y_i\lt y_j
+            \end{aligned}
+            \right.
+            $$
+            则我们认为坐标 $i$ 比坐标 $j$ 更小
+        </p>
+        <p class="fragment">
+            你需要对每个坐标 $i$，统计有多少个坐标比 $(x_i,y_i)$ 小
+        </p>
+        <p class="fragment quote">为了讨论简单，我们假设每个坐标的 $x$ 和 $y$ 互不相同</p>
+    </section>
+    <section>
+        <h2>二维偏序问题</h2>
+        <p>先按第一维度排序，再用某种支持区间操作的线性数据结构去约束第二个维度就行了</p>
+        <iframe rate="1.05" style="min-width: 1000px; min-height: 200px;" data-src="./animation/二维偏序问题.html">
+        </iframe>
+        <p class="fragment">假设我们正在枚举第 $i$ 个坐标 $(x_i,y_i)$，通过这种方法，我们保证所有 $x$ 比 $x_i$ 小的坐标，都以 $y_i$ 为关键字插入到了数据结构中，我们只需要查询数据结构指定范围内的坐标个数，就能准确找到所有 $x$ 比 $x_i$ 小，$y$ 比 $y_i$ 小的元素个数了</p>
+    </section>
+</section>
