@@ -204,6 +204,7 @@ function getWebpackAnimationConfig(sourceFilePath, animationName) {
         performance: {
             hints: false
         },
+        cache: true,
         resolve: {
             alias: {
                 "@": path.resolve(__dirname, "lib")
