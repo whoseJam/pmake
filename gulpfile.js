@@ -1,9 +1,13 @@
 const gulp = require("gulp");
 const webpack = require("webpack-stream");
 const fs = require("fs");
+const getWebpackAniConfig = require("../pmake/asset/build/aniConfig");
+const getWebpackPPTConfig = require("../pmake/asset/build/pptConfig");
 
 const defaultAnimationTargetFilePath = "C:/Users/27670/Desktop/output/animation";
 const defaultPPTTargetFilePath = "C:/Users/27670/Desktop/output";
+
+global["projectRoot"] = __dirname.replaceAll("\\", "/");
 
 function parseInput() {
     const length = process.argv.length;
@@ -35,7 +39,7 @@ function prepareAnimationTask() {
 
 function animationTask(sourceFilePath, targetFilePath, animationName) {
     return gulp.src(sourceFilePath)
-        .pipe(webpack(getWebpackAnimationConfig(sourceFilePath, animationName)))
+        .pipe(webpack(getWebpackAniConfig(sourceFilePath, animationName)))
         .pipe(gulp.dest(targetFilePath));
 }
 
@@ -168,83 +172,3 @@ gulp.task("ppt", (done) => {
     const STDwatchPattern = `${STDFileFolder}/**.cpp`;
     gulp.watch(STDwatchPattern, gulp.task("transfer-std"));
 })
-
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const TerserPlugin = require("terser-webpack-plugin");
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const path = require("path");
-function getWebpackAnimationConfig(sourceFilePath, animationName) {
-    const mode = global["d"] ? "development" : "production";
-    return {
-        mode: mode,
-        output: {
-            filename: `${animationName}.js`
-        },
-        watch: true,
-        plugins: [
-            new HtmlWebpackPlugin({
-                template: "./asset/animationIndex.html",
-                inject: "body",
-                inlineSource: ".(js)$",
-                minify: false,
-                filename: `${animationName}.html`
-            })
-        ],
-        module: {
-            rules: [
-                {   test: /\.js$/,
-                    exclude: /node_modules/,
-                    loader: "babel-loader"
-                },
-                {   test: /\.css$/,
-                    use: ["style-loader", "css-loader"]
-                }
-            ]
-        },
-        performance: {
-            hints: false
-        },
-        cache: true,
-        resolve: {
-            alias: {
-                "@": path.resolve(__dirname, "lib")
-            }
-        }
-    };
-}
-
-function getWebpackPPTConfig(pptFilePath) {
-    // pptFilePath: ./work/xxx/ppt.html
-    const mode = global["d"] ? "development" : "production";
-    const pptFilePathAbsolute = __dirname.replaceAll("\\", "/") + pptFilePath.slice(1)
-    return {
-        mode: mode,
-        entry: "./asset/pptMain.js",
-        watch: true,
-        plugins: [
-            new HtmlWebpackPlugin({
-                template: "./asset/pptIndex.html",
-            }),
-        ],
-        module: {
-            rules: [
-                {   test: /.js$/,
-                    use: [
-                        "babel-loader",
-                        {   loader: "./asset/ppt-loader",
-                            options: {
-                                url: pptFilePathAbsolute
-                            }
-                        }
-                ]
-                },
-                {   test: /.html$/,
-                    use: ["html-loader"]
-                },
-                {   test: /.css$/,
-                    use: ["style-loader", "css-loader"]
-                },
-            ]
-        }
-    }
-}
