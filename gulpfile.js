@@ -49,6 +49,11 @@ function copyFile(srcPath, destPath) {
         .pipe(gulp.dest(destPath));
 }
 
+function copyImage(srcPath, destPath) {
+    return gulp.src(srcPath, { encoding: false })
+        .pipe(gulp.dest(destPath));
+}
+
 function pptTask(pptFilePath, targetFilePath) {
     return gulp.src(pptFilePath)
         .pipe(webpack(getWebpackPPTConfig(pptFilePath)))
@@ -80,7 +85,7 @@ gulp.task("ppt", (done) => {
     const STDFileFolder = `${sourceFileFolder}/std`;      ifNotExistThenCreateFolder(STDFileFolder);
     const pptTargetFilePath = global["o"] ? global["o"] : defaultPPTTargetFilePath;
 
-    makeTransferTask(IMGFileFolder , pptTargetFilePath, "image");
+    makeTransferTask(IMGFileFolder , pptTargetFilePath, "image", copyImage);
     makeTransferTask(MDFileFolder  , pptTargetFilePath, "markdown");
     makeTransferTask(HTMLFileFolder, pptTargetFilePath, "html");
     makeTransferTask(STDFileFolder , pptTargetFilePath, "std");
@@ -96,6 +101,8 @@ gulp.task("ppt", (done) => {
         gulp.task("transfer-html"),
         gulp.task("transfer-std")
     );
+
+    cleanFilesInFolder(`${pptTargetFilePath}/animation`);
     
     const animationList = fs.readdirSync(JSFileFolder);
     animationList.forEach(animation => {    // 迁移动画
@@ -126,7 +133,7 @@ gulp.task("ppt", (done) => {
     const MDwatchPattern = `${MDFileFolder}/**.md`;
     const HTMLwatchPattern = `${HTMLFileFolder}/**.html`;
     const STDwatchPattern = `${STDFileFolder}/**.cpp`;
-    watchFiles(IMGwatchPattern , IMGFileFolder , `${pptTargetFilePath}/image`);
+    watchFiles(IMGwatchPattern , IMGFileFolder , `${pptTargetFilePath}/image`, copyImage);
     watchFiles(MDwatchPattern  , MDFileFolder  , `${pptTargetFilePath}/markdown`);
     watchFiles(HTMLwatchPattern, HTMLFileFolder, `${pptTargetFilePath}/html`);
     watchFiles(STDwatchPattern , STDFileFolder , `${pptTargetFilePath}/std`);
@@ -138,7 +145,7 @@ gulp.task("ppt", (done) => {
  * @param outputPath 指向输出文件根目录，例如 ./output
  * @param {"std"|"markdown"|"image"|"html"} resourceType 
  */
-function makeTransferTask(inputPath, outputPath, resourceType) {
+function makeTransferTask(inputPath, outputPath, resourceType, copy = copyFile) {
     gulp.task(`transfer-${resourceType}`, (done) => {
         const targetFilePath = `${outputPath}/${resourceType}`;
         ifNotExistThenCreateFolder(targetFilePath);
@@ -146,14 +153,14 @@ function makeTransferTask(inputPath, outputPath, resourceType) {
         const fileList = fs.readdirSync(inputPath);
         fileList.forEach(file => {
             const sourceFilePath = `${inputPath}/${file}`;
-            gulp.task(file, () => copyFile(sourceFilePath, targetFilePath));
+            gulp.task(file, () => copy(sourceFilePath, targetFilePath));
             gulp.task(file)();
         })
         done();
     })
 }
 
-function watchFiles(pattern, inputPath, outputPath) {
+function watchFiles(pattern, inputPath, outputPath, copy = copyFile) {
     const watcher = gulp.watch(pattern);
     watcher.on("change", function(path, stats) {
         const file = pathToFile(path);
@@ -164,7 +171,7 @@ function watchFiles(pattern, inputPath, outputPath) {
         const file = pathToFile(path);
         const sourceFilePath = `${inputPath}/${file}`;
         const targetFilePath = `${outputPath}`;
-        gulp.task(file, () => copyFile(sourceFilePath, targetFilePath));
+        gulp.task(file, () => copy(sourceFilePath, targetFilePath));
         gulp.task(file)();
     });
     watcher.on("unlink", function(path, stats) {

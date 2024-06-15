@@ -10,6 +10,9 @@
             <li class="fragment">如果当前的最短路经过点 $k$，那么 $d_{i,j,k}=d_{i,k,k-1}+d_{k,j,k-1}$</li>
             <li class="fragment">如果当前的最短路不经过点 $k$，那么 $d_{i,j,k}=d_{i,j,k-1}$</li>
         </ul>
+        <div class="fragment" style="text-align: center;">
+            <img data-src="./image/floyd状态转移.png" height="200px" />
+        </div>
         <p class="fragment">
             综上，状态转移方程为：
             <p class="fragment">
