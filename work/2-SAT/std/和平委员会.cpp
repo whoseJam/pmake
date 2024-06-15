@@ -23,9 +23,7 @@ const int N=16005;
 const int M=40005;
 int low[N],dfn[N],ins[N],bel[N],SCC,tot;
 stack<int> stk;
-vector<int> blk[N];
-vector<int> rG[N];
-int n,m,Ind[N],col[N];
+int n,m,Ind[N];
 
 struct line{
 	int Nxt,to;

@@ -60,7 +60,7 @@
                 <li class="fragment">随后，一定会导致 $V_m$ 这个取值成立</li>
             </ul>
         </p>
-        <p class="fragment">就像多米诺骨牌一样，<b>变量取值的确定性</b>，就沿着这么一条链传递下去了，</p>
+        <p class="fragment">就像多米诺骨牌一样，<b>变量取值的确定性</b>，就沿着这么一条链传递下去了</p>
     </section>
     <section>
         <h2>2-SAT解的存在性</h2>
@@ -98,32 +98,26 @@
     <section>
         <h2>2-SAT解的构造</h2>
         <p>不过我们代码实现上，判断 $u\rightarrow v$ 有点难写</p>
-        <p class="fragment">更常见地，我们使用拓扑排序来构造一组解</p>
-        <p class="fragment">设原图 $G$ 强连通分量缩点之后的有向无环图为 $G'$，对 $G'$ 建立其<b>反图</b>$G''$</p>
-        <p class="fragment">
-            对 $G''$ 做拓扑排序，对于拓扑排序一次迭代中，设当前点 $u$：<br>
-            假设 $u$ 还没有被染过色，那么就把 $u$ 以及所属强连通分量 $Bel_u$ 中的每个点染色为 $1$，
-            并且把 $Bel_u$ 中每个点的另一个取值对应的点染色为 $2$；<br>
-            如果 $u$ 已经被染过色了，那么跳过 <br>
-            最终每个变量的取值，就是被染色为 $1$ 的点对应的解
-        </p>
+        <p class="fragment">更常见地，我们用Tarjan求出的每个点的 $bel_u$ 来判断2-SAT的解</p>
+        <p class="fragment">假设变量 $i$ 对应的真取值点为 $Y_i$，假取值点为 $N_i$</p>
+        <ul>
+            <li class="fragment">如果 $bel_{Y_i}\gt bel_{N_i}$，则说明DFS树上 $N_i$ 在 $Y_i$ 之后访问，如果它们存在可达性关系，那么也一定是从 $Y_i\rightarrow N_i$，所以此时我们可以把 $N_i$ 当作变量 $i$ 的取值</li>
+            <li class="fragment">如果 $bel_{Y_i}\lt bel_{N_i}$，则说明DFS树上 $Y_i$ 在 $N_i$ 之后访问，如果它们存在可达性关系，那么也一定是从 $N_i\rightarrow Y_i$，所以此时我们可以把 $Y_i$ 当作变量 $i$ 的取值</li>
+            <li class="fragment">如果 $bel_{Y_i}=bel_{N_i}$，问题无解</li>
+        </ul>
     </section>
     <section>
         <h2>2-SAT解的构造</h2>
-        <p>伪代码如下</p>
+        <p>代码如下：</p>
         <pre><code data-trim data-line-numbers><script type="text/template">
-            const G2 = ReverseGraph(Tarjan(G));
-            const Q = Queue();
-            for u in V(G2):
-                if inDegree(u) == 0:
-                    Q.push(u);
-            while Q is not empty:
-                u = Q.frontAndPop();
-                if color(u) === undefined:
-                    for v in belong(u):
-                        setColor(v, 1);
-                        setColor(opp(v), 2);
-                // 把拓扑排序过程中，入度变为 0 的点塞入 Q
+            // 简单来说，取 bel 小的那个节点当作解
+            for (int i = 1; i <= n; i++) {
+                int fir = i * 2;
+                int sec = i * 2 - 1;
+                if (bel[fir] < bel[sec]) {
+                    cout << fir << '\n';
+                } else cout << sec << '\n';
+            }
         </script></code></pre>
     </section>
 </section>

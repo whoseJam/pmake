@@ -9,24 +9,23 @@
         <p>
             一般，我们给定了一组有 $n$ 个<b>变量</b>的集合 $S=\{x_1,x_2...x_n\}$，以及和其中的每一个变量相关联的两个<b>文字</b>
         </p>
-        <div class="divide fragment"></div>
-        <p class="fragment">
-            比如，小明举办了一个婚礼，小明有 $n$ 个朋友，每个朋友可能<b>来了</b>，可能<b>没来</b>
-        </p>
-        <p class="fragment">
-            这里的 $n$ 个朋友的到场情况，就是 $n$ 个变量，它们组成了一个集合 $S$，每一个变量的取值要么是<b>来了</b>，要么是<b>没来</b>
-        </p>
+        <div class="fragment quote">
+            <p style="margin-top: 0px;">比如，小明举办了一个婚礼，小明有 $n$ 个朋友，每个朋友可能<b>来了</b>，可能<b>没来</b></p>
+            <div class="fragment">这里的 $n$ 个朋友的到场情况，就是 $n$ 个变量，它们组成了一个集合 $S$，每一个变量的取值要么是<b>来了</b>，要么是<b>没来</b></div>
+        </div>
     </section>
     <section>
         <h2>SAT</h2>
         <p>一堆变量的“或”操作，就构成了一个子句</p>
-        <p class="fragment">还是以小明的婚礼为例，假设第 $i$ 个朋友的出场情况为 $a_i$，如果 $a_i=0$ 就说明没到场，如果 $a_i=1$ 就说明到场了</p>
-        <ul>
-            <li class="fragment">第 $3$ 个朋友到场了，或第 $5$ 个朋友没到场：$c_1=a_3 \lor\lnot a_5$</li>
-            <li class="fragment">第 $3$ 个朋友到场了，或第 $4$ 个朋友到场了，或第 $8$ 个朋友到场了：$c_2=a_3\lor a_4\lor a_8$</li>
-            <li class="fragment">第 $2$ 个朋友没有到场：$c_3=\lnot a_2$</li>
-        </ul>
-        <p class="fragment">在上面我们定义了三个子句：$c_1,c_2,c_3$</p>
+        <div class="fragment quote">
+            <p style="margin-top: 0px;">还是以小明的婚礼为例，假设第 $i$ 个朋友的出场情况为 $a_i$，如果 $a_i=0$ 就说明没到场，如果 $a_i=1$ 就说明到场了</p>
+            <ul>
+                <li class="fragment">第 $3$ 个朋友到场了，或第 $5$ 个朋友没到场：$c_1=a_3 \lor\lnot a_5$</li>
+                <li class="fragment">第 $3$ 个朋友到场了，或第 $4$ 个朋友到场了，或第 $8$ 个朋友到场了：$c_2=a_3\lor a_4\lor a_8$</li>
+                <li class="fragment">第 $2$ 个朋友没有到场：$c_3=\lnot a_2$</li>
+            </ul>
+            <p style="margin-bottom: 0px;" class="fragment">在上面我们定义了三个子句：$c_1,c_2,c_3$</p>    
+        </div>
         <p class="fragment">一个SAT问题，就是给你了 $m$ 个子句 $c_1,c_2...c_m$，然后让你判断，通过合理为这 $n$ 个变量赋值，能否使得这 $m$ 个子句都被满足</p>
     </section>
     <section>
@@ -35,6 +34,6 @@
         <p class="fragment">例如有些子句可能只需要两个变量的参与：$c_1=\lnot a_1 \lor a_2$</p>
         <p class="fragment">有些子句可能只需要一个变量的参与：$c_2=a_5$</p>
         <p class="fragment">而有些子句需要四个变量的参与：$c_3=a_3\lor \lnot a_4 \lor a_5\lor a_8$</p>
-        <p class="fragment">研究表明，只有给出的 $m$ 个子句，每个子句<b>最多有两个变量的参与时</b>，我们有多项式时间复杂度解法，而这样的问题，就叫做2-SAT</p>
+        <p class="fragment">研究表明，对于给出的 $m$ 个子句，只有当每个子句<b>最多有两个变量的参与时</b>，我们有多项式时间复杂度解法，而这样的问题，就叫做2-SAT</p>
     </section>
 </section>

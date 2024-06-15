@@ -90,7 +90,7 @@ bool Check(int k){
 	}
 	for(int i=1;i<=n*4;i++)
 		if(!dfn[i])Tarjan(i);
-	for(int i=1;i<=n;i++)
+	for(int i=1;i<=n*2;i++)
 		if(bel[F(i)]==bel[T(i)])return false;
 	return true;
 }
@@ -121,4 +121,3 @@ int main(){
 	}
 	return 0;
 }
-

@@ -8,17 +8,17 @@
     <section>
         <h2>开门</h2>
         <p>以下是看上去能和2-SAT产生关系的东西：</p>
-        <p class="fragment">一对钥匙到底选哪个来开锁，假设第 $i$ 对钥匙由 $A_i$ 和 $B_i$ 组成</p>
-        <p class="fragment">一扇门到底由哪把锁来开启，假设门 $j$ 可以被钥匙 $C_i$ 和 $D_i$ 打开</p>
-        <p class="fragment">钥匙 $k$ 有被使用 $T_k$ 和不被使用 $F_k$ 两种状态</p>
-        <p class="fragment">一对钥匙中，<b>只能选一把</b>来开锁</p>
-        <p class="fragment">一扇门，<b>至少需要被一把钥匙撬动</b>才能打开</p>
+        <ul>
+            <li class="fragment">一对钥匙到底选哪个来开锁，这一对钥匙中选择了其中一把钥匙，那么另一把就不能用了</li>
+            <li class="fragment">一扇门到底由哪把锁来开启，可以撬掉这扇门的第一把锁，可以撬掉这扇门的第二把锁，还可以两把都撬掉</li>
+        </ul>
+        <p class="fragment">在这里我们选择每把钥匙的<b>用</b>或<b>不用</b>，作为2-SAT的状态变量</p>
     </section>
     <section>
         <h2>开门</h2>
-        <p>我们二分枚举答案，然后用2-SAT来检验</p>
+        <p>我们二分枚举答案，假设一定要开启前 $k$ 扇门，我们用2-SAT来检验这个目标是否能完成</p>
         <p class="fragment">
-            为了表征一对钥匙中只能选一把来开锁，假设这一对钥匙包含 $A$ 和 $B$两把钥匙，我们可以建立如下两条边：
+            为了表征一对钥匙中只能选一把来开锁，假设这一对钥匙包含 $A$ 和 $B$ 两把钥匙，我们可以建立如下两条边：
             <ul class="fragment">
                 <li>$T_A\rightarrow F_B$</li>
                 <li>$T_B\rightarrow F_A$</li>
