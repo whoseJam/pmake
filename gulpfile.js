@@ -192,6 +192,7 @@ function cleanFile(path) {
 }
 
 function cleanFilesInFolder(directoryPath) {
+    ifNotExistThenCreateFolder(directoryPath);
     const files = fs.readdirSync(directoryPath);
     files.forEach((file) => {
         const filePath = path.join(directoryPath, file);

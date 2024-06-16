@@ -9,26 +9,4 @@
         <h2>TATT</h2>
         <p>常见的三维偏序，第一维度排序，第二维度CDQ，第三维度树状数组，那么四维偏序呢？</p>
     </section>
-    <section>
-        <h2>TATT</h2>
-        <pre><code data-trim data-line-numbers class="cpp"><script type="text/template">
-        void CDQ2(l, r) {
-            CDQ2(l, mid);
-            CDQ2(mid + 1, r);
-            以 c 为关键字进行归并排序
-                如果按照 c 排序后在左半边，并且存在1标记，则以 d 为关键字插入树状数组
-                如果按照 c 排序后在右半边，并且存在2标记，则以 d 为关键字在树状数组中查询
-        }
-        void CDQ1(l, r) {
-            CDQ1(l, mid);
-            CDQ1(mid + 1, r);
-            以 b 为关键字进行归并排序，并将左半边的元素打上1标记，把右半边的元素打上2标记
-            CDQ2(l, r);
-        }
-        int main() {
-            对 a 这一维度排序
-            CDQ1(1, n);
-        }
-        </script></code></pre>
-    </section>
 </section>

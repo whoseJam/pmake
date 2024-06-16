@@ -1,0 +1,9 @@
+最大流：
+#186.草地排水：https://www.luogu.com.cn/problem/P2740
+#195.蜥蜴：https://www.luogu.com.cn/problem/P2472
+#1105.飞行员配对方案问题：https://www.luogu.com.cn/problem/P2756
+#416.星际战争：https://www.luogu.com.cn/problem/P3324
+
+最小割：
+#703.Dual Core CPU：http://poj.org/problem?id=3469
+#193.最大获利：https://www.luogu.com.cn/problem/P4174
