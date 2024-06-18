@@ -6,4 +6,12 @@
 
 最小割：
 #703.Dual Core CPU：http://poj.org/problem?id=3469
+#593.文理分科：https://www.luogu.com.cn/problem/P4313
 #193.最大获利：https://www.luogu.com.cn/problem/P4174
+#191.解雇：http://poj.org/problem?id=2987
+
+费用流：
+#209.运输问题：https://www.luogu.com.cn/problem/P4015
+#315.数字梯形问题：https://www.luogu.com.cn/problem/P4013
+#229.餐巾问题：https://www.luogu.com.cn/problem/P1251
+#377.星际竞速：https://www.luogu.com.cn/problem/P2469
