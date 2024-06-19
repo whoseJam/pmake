@@ -15,3 +15,9 @@
 #315.数字梯形问题：https://www.luogu.com.cn/problem/P4013
 #229.餐巾问题：https://www.luogu.com.cn/problem/P1251
 #377.星际竞速：https://www.luogu.com.cn/problem/P2469
+
+上下界网络流：
+#218.无源汇有上下界可行流：https://loj.ac/p/115
+#221.有源汇有上下界最大流：https://loj.ac/p/116
+#222.有源汇有上下界最小流：https://loj.ac/p/117
+#220.Budget：http://poj.org/problem?id=2396
