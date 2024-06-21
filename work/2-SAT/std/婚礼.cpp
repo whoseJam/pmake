@@ -1,92 +1,118 @@
 #include<iostream>
-#include<cstdio>
 #include<cstring>
+#include<cstdio>
 #include<stack>
+
 using namespace std;
-int N,M,T=0,SCC=0;
-int belong[200005],dfn[200005],low[200005],Instack[200005],opp[200005],mark[200005];
+
+const int M=100005;
+const int N=20005;
+int n,m,tot,SCC;
+int bel[N],dfn[N],low[N],ins[N];
 stack<int>s;
 
-struct line
-{
-	int nextLine,to;
-}l[1000005];
-int cnt=0,h[200005];
+struct line{
+	int Nxt,to;
+}l[M];
+int cnt,h[N];
 
-void addEdge(int fa,int kid)
-{
-	cnt++;
-	l[cnt].nextLine=h[fa];
-	l[cnt].to=kid;
-	h[fa]=cnt;
+void Link(int u,int v){
+	l[++cnt]=(line){h[u],v};h[u]=cnt;
 }
 
-void Tarjan(int u)
-{
-	dfn[u]=low[u]=++T;
-	s.push(u);Instack[u]=1;
-	for(int i=h[u];i;i=l[i].nextLine)
-	{
+int seeWife(int x){
+	return x;
+}
+
+int seeHusband(int x){
+	return x+n;
+}
+
+void Tarjan(int u){
+	dfn[u]=low[u]=++tot;
+	s.push(u);ins[u]=1;
+	for(int i=h[u];i;i=l[i].Nxt){
 		int v=l[i].to;
-		if(!dfn[v])
-		{
+		if(!dfn[v]){
 			Tarjan(v);
 			low[u]=min(low[u],low[v]);
 		}
-		else if(Instack[v])low[u]=min(low[u],dfn[v]);
+		else if(ins[v])low[u]=min(low[u],dfn[v]);
 	}
-	if(dfn[u]==low[u])
-	{
+	if(dfn[u]==low[u]){
 		SCC++;
-		for(;;)
-		{
-			belong[s.top()]=SCC;
-			Instack[s.top()]=0;
+		while(true){
+			bel[s.top()]=SCC;
+			ins[s.top()]=0;
 			if(s.top()==u){s.pop();break;}
 			s.pop();
 		}
 	}
 }
 
-int main()
-{
-	scanf("%d%d",&N,&M);
+void Build(int i1,char s1,int i2,char s2){
+	if(i1==i2)return;
+	if(i1!=0&&i2==0)swap(i1,i2),swap(s1,s2);
+	if(i1==0){
+		if(s1=='w')return;
+		if(s1=='h'){
+			if(s2=='h')Link(seeHusband(i2),seeWife(i2));
+			if(s2=='w')Link(seeWife(i2),seeHusband(i2));
+		}
+		return;
+	}
+	if(s1==s2&&s1=='w'){
+		Link(seeWife(i1),seeHusband(i2));
+		Link(seeWife(i2),seeHusband(i1));
+	}else if(s1==s2&&s1=='h'){
+		Link(seeHusband(i1),seeWife(i2));
+		Link(seeHusband(i2),seeWife(i1));
+	}else if(s1=='w'&&s2=='h'){
+		Link(seeWife(i1),seeWife(i2));
+		Link(seeHusband(i2),seeHusband(i1));
+	}else if(s1=='h'&&s2=='w'){
+		Link(seeHusband(i1),seeHusband(i2));
+		Link(seeWife(i2),seeWife(i1));
+	}
+}
+
+void Clear(){
+	cnt=tot=SCC=0;
+	memset(h,0,sizeof(h));
+	memset(low,0,sizeof(low));
+	memset(dfn,0,sizeof(dfn));
+	memset(bel,0,sizeof(bel));
+}
+
+void Solve(){
+	Clear();
 	
 	int num1,num2;
 	char sex1[3],sex2[3];
-	for(int i=1;i<=M;i++)
-	{
+	for(int i=1;i<=m;i++){
 		scanf("%d%s%d%s",&num1,&sex1,&num2,&sex2);
-		if(sex1[0]=='w')num1+=N;
-		if(sex2[0]=='w')num2+=N;
-		addEdge(num1+2*N,num2);addEdge(num2+2*N,num1);
+		Build(num1,sex1[0],num2,sex2[0]);
 	}
-	for(int i=1;i<N;i++)
-	{
-		addEdge(i,i+3*N);addEdge(i+3*N,i);
-		addEdge(i+N,i+2*N);addEdge(i+2*N,i+N);
-	}
-	addEdge(0,2*N);addEdge(3*N,N);
 	
-	for(int i=0;i<=4*N-1;i++)
+	for(int i=0;i<2*n;i++)
 		if(!dfn[i])Tarjan(i);
-	for(int i=0;i<=2*N-1;i++)
-	{
-		if(belong[i]==belong[i+2*N])
-		{
+	for(int i=0;i<n;i++){
+		if(bel[seeWife(i)]==bel[seeHusband(i)]){
 			printf("bad luck\n");
-			return 0;
+			return;
 		}
-		opp[belong[i]]=belong[i+2*N];
-		opp[belong[i+2*N]]=belong[i];
 	}
-	
-	for(int i=1;i<=SCC;i++)
-		if(!mark[i])mark[i]=1,mark[opp[i]]=2;
-	for(int i=1;i<=N-1;i++)
-	{
-		if(mark[belong[i]]==1)printf("%dh ",i);
-		else if(mark[belong[i+N]]==1)printf("%dw ",i);
+	for(int i=1;i<n;i++){
+		if(bel[seeWife(i)]<bel[seeHusband(i)])printf("%dh ",i);
+		else printf("%dw ",i);
+	}
+	printf("\n");
+}
+
+int main(){
+	while(scanf("%d%d",&n,&m)!=EOF){
+		if(n==0&&m==0)break;
+		Solve();
 	}
 	return 0;
 }
