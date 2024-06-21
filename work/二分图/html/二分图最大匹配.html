@@ -1,0 +1,56 @@
+<section>
+    <section>
+        <h1>二分图的最大匹配</h1>
+        <p>匈牙利算法，或者网络流</p>
+    </section>
+    <section>
+        <h2>二分图的匹配</h2>
+        <p>给定一个二分图 $G$，在 $G$ 的一个子图 $M$ 中，$M$ 的边集 $\{E\}$ 中的任意两条边都不依附同一个节点，则称 $M$ 是一个匹配</p>
+        <div class="fragment" style="text-align: center;">
+            <img height="200px" data-src="./image/二分图样例.png">
+        </div>
+        <div class="fragment" style="text-align: center;">
+            <img height="200px" data-src="./image/二分图的匹配概念.png">
+        </div>
+    </section>
+    <section>
+        <h2>二分图的匹配</h2>
+        <p>如果 $M$ 的边集 $\{E\}$ 没有办法继续扩大了，则称 $M$ 为图的一个<b>最大匹配</b></p>
+        <div class="fragment" style="text-align: center;">
+            <img height="300px" data-src="./image/二分图的最大匹配概念.png">
+        </div>
+        <p class="fragment">如果一个匹配中，图中的每个节点都和图中的某条边相关联，则称此匹配为完全匹配，也成为完备匹配</p>
+    </section>
+    <section>
+        <h2>匈牙利算法</h2>
+        <p>匈牙利通过在图中不断找增广路，来扩大匹配大小，直到抵达最大匹配</p>
+        <p class="fragment quote">此处的增广路就类似于网络流中的增广路的作用</p>
+        <p class="fragment">在二分图的匹配中，<b>增广路</b>是一条路径，在这条路径上<b>匹配边</b>和<b>非匹配边</b>交替出现</p>
+    </section>
+    <section>
+        <h2>增广路</h2>
+        <p>在下图中，红色边表示匹配边</p>
+        <p class="fragment">
+            $$
+            x_4\rightarrow 
+            y_3\rightarrow
+            x_2\rightarrow
+            y_1\rightarrow
+            x_1\rightarrow
+            y_2
+            $$
+            就是一条增广路
+        </p>
+        <p class="fragment">增广路上的边为
+            $(x_4,y_3)$，
+            <span style="color: red;">$(y_3,x_2)$</span>，
+            $(x_2,y_1)$，
+            <span style="color: red;">$(y_1,x_1)$</span>，
+            $(x_1,y_2)$
+        </p>
+        <p class="fragment">我们可以通过“翻转”增广路，来获取一个更大的匹配</p>
+        <iframe 
+            style="min-width: 1000px; min-height: 300px;"
+            data-src="./animation/增广路.html"></iframe>
+    </section>
+</section>

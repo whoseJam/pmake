@@ -1,9 +1,8 @@
-import * as sd from "#lib/slide";
+import * as sd from "@/slide";
 
 let svg = sd.svg();
 let C = sd.color();
-let g = sd.BipartiteGraph(svg).x(200).y(100).width(800);
-g.drag(true).resizeable(true);
+let g = new sd.BipartiteGraph(svg).x(200).y(100).width(800);
 
 for (let i = 1; i <= 4; i++) 
     g.newNode(`x${i}`, `x${i}`, 0);
