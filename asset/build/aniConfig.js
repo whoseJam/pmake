@@ -30,6 +30,11 @@ module.exports = function(sourceFilePath, animationName) {
                 },
                 {   test: /\.css$/,
                     use: ["style-loader", "css-loader"]
+                },
+                {
+                    test: /\.ts$/,
+                    exclude: /node_modules/,
+                    loader: "ts-loader"
                 }
             ]
         },
@@ -42,6 +47,6 @@ module.exports = function(sourceFilePath, animationName) {
                 "@": path.resolve(global["projectRoot"], "lib")
             }
         },
-        externals: ["d3", "dagre"]
+        externals: ["dagre"]
     };
 }

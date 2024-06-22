@@ -14,7 +14,6 @@
 #209.运输问题：https://www.luogu.com.cn/problem/P4015
 #315.数字梯形问题：https://www.luogu.com.cn/problem/P4013
 #229.餐巾问题：https://www.luogu.com.cn/problem/P1251
-#377.星际竞速：https://www.luogu.com.cn/problem/P2469
 
 上下界网络流：
 #218.无源汇有上下界可行流：https://loj.ac/p/115

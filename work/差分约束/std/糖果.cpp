@@ -21,7 +21,7 @@ void Link(int u,int v,int w){
 
 int Spfa(){
 	queue<int>q;
-	for(int i=0;i<=n;i++){
+	for(int i=1;i<=n;i++){
 		dis[i]=0;
 		q.push(i);
 		inq[i]=1;

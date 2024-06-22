@@ -18,7 +18,7 @@
     </section>
     <section>
         <h2>负环</h2>
-        <pre><code style="min-height: 505px;" data-trim data-line-numbers class="cpp"><script type="text/template">
+        <pre><code style="min-height: 465px;" data-trim data-line-numbers class="cpp"><script type="text/template">
             bool SPFA(int S) {
                 for (int i = 1; i <= n; i++) dis[i] = inf;
                 dis[S] = 0;
@@ -26,9 +26,7 @@
                 queue < int > q;
                 q.push(S);
                 while (q.size()) {
-                    int u = q.front();
-                    q.pop();
-                    Inq[u] = 0;
+                    int u = q.front(); q.pop(); Inq[u] = 0;
                     for (int i = h[u], v; i; i = l[i].Nxt) {
                         v = l[i].to;
                         if (dis[v] > dis[u] + l[i].val) {

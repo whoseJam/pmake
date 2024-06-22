@@ -18,6 +18,7 @@ import mainCode from "PPT_SOURCE";
 const revealPlugins = [];
 const slideBody = document.getElementsByClassName("slides")[0];
 if (!slideBody) throw new Error("Slide Body Not Found");
+// slideBody.innerHTML = `<div w3-include-html="./ppt.html">`;
 slideBody.innerHTML = mainCode;
 
 import { w3IncludeHTML } from "./reveal/w3data";
@@ -35,18 +36,53 @@ const RevealCustomControls = window.RevealCustomControls; revealPlugins.push(Rev
 // 把 Reveal 暴露给 window，方便 decktape 将 WebPPT 导出为 pdf
 window.Reveal = Reveal;
 
+const iframeCache = {};
+function getRateFromIframe(iframe) {
+    const rate = iframe.getAttribute("rate");
+    return rate ? rate : 1.5;
+}
+function SetAnimationSizeByMe(iframe, x, y, width, height) {
+    const rate = getRateFromIframe(iframe);
+    const bbox = iframe.getBoundingClientRect();
+    if (iframe.contentWindow && iframe.contentWindow.SetViewBox) {
+        iframe.contentWindow.SetViewBox(x, y, width, height, bbox.width, bbox.height, rate);
+    }
+}
+window.SetAnimationSize = function(name, x, y, width, height) {
+    iframeCache[name].size = {
+        x: x,
+        y: y,
+        width: width,
+        height: height
+    };
+    setTimeout(() => {
+        SetAnimationSizeByMe(iframeCache[name].iframe, x, y, width, height);
+    }, 200);
+}
 function maintain(iframe) {
+    const dataSrc = iframe.getAttribute("data-src");
+    if (!(dataSrc in iframeCache)) {
+        iframeCache[dataSrc] = {
+            iframe: iframe,
+            size: null
+        };
+    }
     iframe.onload = () => {
-        const rate = iframe.getAttribute("rate");
-        const bbox = iframe.getBoundingClientRect();
-        iframe.contentWindow.postMessage({
-            action: "flush",
-            rate: rate ? rate : 1.5,
-            export: needToExportAsPdf,
-            width: bbox.width,
-            height: bbox.height,
-        }, "*");
-        iframe.onload = undefined;
+        console.log("iframe onload dataSrc=", dataSrc, "iframeCache = ", iframeCache[dataSrc]);
+        const size = iframeCache[dataSrc].size;
+        if (size) {
+            SetAnimationSizeByMe(iframe, size.x, size.y, size.width, size.height);
+        } else {
+            const bbox = iframe.getBoundingClientRect();
+            iframe.contentWindow.Flush(
+                dataSrc,
+                bbox.width,
+                bbox.height,
+                getRateFromIframe(iframe),
+                needToExportAsPdf
+            );
+            iframe.onload = undefined;
+        }
     };
 }
 
@@ -80,7 +116,25 @@ Reveal.addEventListener("slidechanged", function(event) {
     const iframes = currentSlide.getElementsByTagName("iframe");
     for (let i = 0; i < iframes.length; i++) {
         const iframe = iframes[i];
-        maintain(iframe)
+        const dataSrc = iframe.getAttribute("data-src");
+        const src = iframe.getAttribute("src");
+        if (dataSrc && (!src || src == "")) {
+            iframe.setAttribute("src", dataSrc);
+            maintain(iframe);
+        }
+    }
+});
+
+Reveal.on("fragmentshown", function(event) {
+    const fragmentElement = event.fragment;
+    if (fragmentElement.tagName == "iframe") {
+        const iframe = fragmentElement;
+        const dataSrc = iframe.getAttribute("data-src");
+        const src = iframe.getAttribute("src");
+        if (dataSrc && (!src || src == "")) {
+            iframe.setAttribute("src", dataSrc);
+            maintain(iframe);
+        }
     }
 });
 

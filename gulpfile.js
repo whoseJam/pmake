@@ -55,6 +55,8 @@ function copyImage(srcPath, destPath) {
 }
 
 function pptTask(pptFilePath, targetFilePath) {
+    // return gulp.src(pptFilePath)
+    //     .pipe(gulp.dest(targetFilePath));
     return gulp.src(pptFilePath)
         .pipe(webpack(getWebpackPPTConfig(pptFilePath)))
         .pipe(gulp.dest(targetFilePath));
@@ -93,6 +95,9 @@ gulp.task("ppt", (done) => {
     gulp.task("transfer-ppt", (done) => {   // 迁移ppt
         return pptTask(pptFilePath, pptTargetFilePath);
     });
+    // gulp.watch(pptFilePath, function(done) {
+    //     return gulp.task("transfer-ppt")();
+    // })
 
     let project = gulp.parallel(
         gulp.task("transfer-ppt"),
