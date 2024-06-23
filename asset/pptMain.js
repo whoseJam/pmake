@@ -1,7 +1,7 @@
 import "./reveal/theme/reset.css";
 import "./reveal/theme/reveal.css";
 import "./reveal/theme/monokai.css";
-import "./reveal/theme/white.css";
+import "../css/theme/source/sky.scss";
 import "./reveal/theme/chalkboard.css";
 import "./reveal/theme/customcontrols.css";
 
@@ -19,13 +19,13 @@ if (!slideBody) throw new Error("Slide Body Not Found");
 // slideBody.innerHTML = `<div w3-include-html="./ppt.html">`;
 // slideBody.innerHTML = mainCode;
 
-import Reveal from "./reveal/reveal";
-import RevealMath from "./reveal/plugin/math";            revealPlugins.push(RevealMath);
-import RevealZoom from "./reveal/plugin/zoom";            revealPlugins.push(RevealZoom);
-import RevealNotes from "./reveal/plugin/notes";          revealPlugins.push(RevealNotes);
-import RevealSearch from "./reveal/plugin/search";        revealPlugins.push(RevealSearch);
-import RevealMarkdown from "./reveal/plugin/markdown";    revealPlugins.push(RevealMarkdown);
-import RevealHighlight from "./reveal/plugin/highlight";  revealPlugins.push(RevealHighlight);
+import Reveal from "./slide/reveal";
+import RevealMath from "./slide/plugin/math";            revealPlugins.push(RevealMath);
+import RevealZoom from "./slide/plugin/zoom";            revealPlugins.push(RevealZoom);
+import RevealNotes from "./slide/plugin/notes";          revealPlugins.push(RevealNotes);
+import RevealSearch from "./slide/plugin/search";        revealPlugins.push(RevealSearch);
+import RevealMarkdown from "./slide/plugin/markdown";    revealPlugins.push(RevealMarkdown);
+import RevealHighlight from "./slide/plugin/highlight";  revealPlugins.push(RevealHighlight);
 const RevealChalkboard = window.RevealChalkboard;         revealPlugins.push(RevealChalkboard);
 const RevealCustomControls = window.RevealCustomControls; revealPlugins.push(RevealCustomControls);
 

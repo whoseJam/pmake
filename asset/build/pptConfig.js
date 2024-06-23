@@ -33,8 +33,12 @@ module.exports = function(pptFilePath) {
                 {   test: /.html$/,
                     use: ["html-loader"]
                 },
-                {   test: /.css$/,
-                    use: ["style-loader", "css-loader"]
+                {   test: /\.(s[ac]ss|css)$/,
+                    use: [
+                        "style-loader",
+                        "css-loader",
+                        "sass-loader"
+                    ]
                 },
                 {
                     test: /\.ts$/,
