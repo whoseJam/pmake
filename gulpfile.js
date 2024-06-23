@@ -54,9 +54,12 @@ function copyImage(srcPath, destPath) {
         .pipe(gulp.dest(destPath));
 }
 
+function transferPPTTask(pptFilePath, targetFilePath) {
+    return gulp.src(pptFilePath)
+        .pipe(gulp.dest(targetFilePath));
+}
+
 function pptTask(pptFilePath, targetFilePath) {
-    // return gulp.src(pptFilePath)
-    //     .pipe(gulp.dest(targetFilePath));
     return gulp.src(pptFilePath)
         .pipe(webpack(getWebpackPPTConfig(pptFilePath)))
         .pipe(gulp.dest(targetFilePath));
@@ -93,13 +96,15 @@ gulp.task("ppt", (done) => {
     makeTransferTask(STDFileFolder , pptTargetFilePath, "std");
     
     gulp.task("transfer-ppt", (done) => {   // 迁移ppt
-        return pptTask(pptFilePath, pptTargetFilePath);
+        return transferPPTTask(pptFilePath, pptTargetFilePath);
     });
-    // gulp.watch(pptFilePath, function(done) {
-    //     return gulp.task("transfer-ppt")();
-    // })
+    gulp.task("ppt-task", (done) => {
+        return pptTask(pptFilePath, pptTargetFilePath);
+    })
+    gulp.watch(pptFilePath, gulp.task("transfer-ppt"));
 
     let project = gulp.parallel(
+        gulp.task("ppt-task"),
         gulp.task("transfer-ppt"),
         gulp.task("transfer-image"),
         gulp.task("transfer-markdown"),

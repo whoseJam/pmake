@@ -103,9 +103,6 @@ int main(){
 	for(int i=1;i<=tot;i++){
 		int ni=d[i].cnt;
 		int fi=f[d[i].id]+(ni-1);
-		int a=d[i].a;
-		int b=d[i].b;
-		int c=d[i].c;
 		ans[fi]+=ni;
 	}
 	for(int i=0;i<n;i++)

@@ -13,15 +13,11 @@ function inDecktapeEnvironment() {
 }
 const needToExportAsPdf = inDecktapeEnvironment();
 
-import mainCode from "PPT_SOURCE";
-
 const revealPlugins = [];
 const slideBody = document.getElementsByClassName("slides")[0];
 if (!slideBody) throw new Error("Slide Body Not Found");
 // slideBody.innerHTML = `<div w3-include-html="./ppt.html">`;
-slideBody.innerHTML = mainCode;
-
-import { w3IncludeHTML } from "./reveal/w3data";
+// slideBody.innerHTML = mainCode;
 
 import Reveal from "./reveal/reveal";
 import RevealMath from "./reveal/plugin/math";            revealPlugins.push(RevealMath);
@@ -138,7 +134,9 @@ Reveal.on("fragmentshown", function(event) {
     }
 });
 
-w3IncludeHTML(() => {
+import { includeHTML } from "./slide/inject.ts";
+
+includeHTML(function() {
     Reveal.initialize({
         controls: true,
         progress: true,
