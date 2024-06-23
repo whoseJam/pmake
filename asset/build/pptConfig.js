@@ -20,15 +20,8 @@ module.exports = function(pptFilePath) {
         ],
         module: {
             rules: [
-                {   test: /.js$/,
-                    use: [
-                        "babel-loader",
-                        {   loader: `${global["projectRoot"]}/asset/ppt-loader`,
-                            options: {
-                                url: pptFilePathAbsolute
-                            }
-                        }
-                ]
+                {   test: /\.tsx?$/,
+                    use: ["ts-loader"]
                 },
                 {   test: /.html$/,
                     use: ["html-loader"]
@@ -39,13 +32,11 @@ module.exports = function(pptFilePath) {
                         "css-loader",
                         "sass-loader"
                     ]
-                },
-                {
-                    test: /\.ts$/,
-                    exclude: /node_modules/,
-                    loader: "ts-loader"
                 }
             ]
+        },
+        resolve: {
+            extensions: [".tsx", ".ts", ".js"]
         }
     }
 }

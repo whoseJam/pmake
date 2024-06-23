@@ -24,7 +24,8 @@
     ]
   },
   "include": [
-    "lib/**/*.ts"
+    "lib/**/*.ts",
+    "asset/**/*.ts"
   ],
   "exclude": [
     "node_modules"

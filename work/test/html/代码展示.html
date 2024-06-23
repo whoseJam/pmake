@@ -5,7 +5,7 @@
     <section>
         <h2>代码展示</h2>
         <pre><code data-trim data-line-numbers class="cpp"><script type="text/template">
-            ll Sap() {
+            ll Sap() { // 这是注释
                 ll ans = 0;
                 memset(gap, 0, sizeof(gap));
                 memset(dis, 0, sizeof(dis));
@@ -14,5 +14,20 @@
                 return ans;
             }
         </script></code></pre>
+    </section>
+    <section>
+        <h2>代码展示</h2>
+        <codeblock>
+            <script type="text/template">
+                ll Sap() {
+                    ll ans = 0;
+                    memset(gap, 0, sizeof(gap));
+                    memset(dis, 0, sizeof(dis));
+                    gap[0] = tot;
+                    while (dis[S] < tot) ans += Stream(S, inf);
+                    return ans;
+                }
+            </script>
+        </codeblock>
     </section>
 </section>

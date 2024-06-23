@@ -19,8 +19,8 @@
  * Solarized colors by Ethan Schoonover
  */
 html * {
-	color-profile: sRGB;
-	rendering-intent: auto;
+    color-profile: sRGB;
+    rendering-intent: auto;
 }
 
 // Solarized colors
@@ -42,6 +42,13 @@ $cyan:      #2aa198;
 $green:     #859900;
 
 // Override theme settings (see ../template/settings.scss)
+$systemFontsMono: Menlo,
+                  Consolas,
+                  Monaco,
+                  Liberation Mono,
+                  Lucida Console,
+                  monospace;
+$codeFont: "Fira Code", $systemFontsMono;
 $mainColor: $base00;
 $headingColor: $base01;
 $headingTextShadow: none;
@@ -55,7 +62,7 @@ $overlayElementFgColor: 240, 240, 240;
 
 // Background generator
 // @mixin bodyBackground() {
-// 	@include radial-gradient( rgba($base3,1), rgba(lighten($base3, 20%),1) );
+//     @include radial-gradient( rgba($base3,1), rgba(lighten($base3, 20%),1) );
 // }
 
 
@@ -63,3 +70,54 @@ $overlayElementFgColor: 240, 240, 240;
 // Theme template ------------------------------
 @import "../template/theme";
 // ---------------------------------------------
+
+
+.hljs {
+    color: #3e5915;
+    background:#f6f5b2;
+}
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal {
+    color:#005599;
+    font-weight:bold;
+}
+.hljs-subst {
+    color: #3e5915;
+}
+.hljs-string,
+.hljs-title,
+.hljs-section,
+.hljs-type,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-attribute,
+.hljs-built_in,
+.hljs-addition,
+.hljs-variable,
+.hljs-template-tag,
+.hljs-template-variable,
+.hljs-link {
+    color: #2c009f;
+}
+.hljs-comment,
+.hljs-quote,
+.hljs-deletion,
+.hljs-meta {
+    color: #e60415;
+}
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal,
+.hljs-doctag,
+.hljs-title,
+.hljs-section,
+.hljs-type,
+.hljs-name,
+.hljs-selector-id,
+.hljs-strong {
+    font-weight: bold;
+}
+.hljs-emphasis {
+    font-style: italic;
+}
