@@ -1,0 +1,29 @@
+<section>
+    <section>
+        <h1>筛法其三</h1>
+    </section>
+    <problem data-src="http://43.143.204.105/problem/1129"></problem>
+    <section>
+        <h2>筛法其三</h2>
+        <p>定义质因子种类数函数 $f(x)=x不同的质因子的个数$，让你把 $[1,n]$ 的 $f$ 函数的值求出来</p>
+        <p class="fragment">只要在每次筛合数的时候，在当前质因数是唯一最小质因子时，让质因子种类数 $+1$ 即可</p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                void Sieve(int n) {
+                    for (int i = 2; i <= n; i++) {
+                        if (!vis[i]) {
+                            prim[++tot] = i;
+                            f[i] = 1;
+                        }
+                        for (int j = 1; j <= tot && i * prim[j] <= n; j++) {
+                            vis[i * prim[j]] = 1;
+                            f[i * prim[j]] = f[i];
+                            if (i % prim[j] == 0) break;
+                            f[i * prim[j]]++;
+                        }
+                    }
+                }
+            </script>
+        </codeblock>
+    </section>
+</section>

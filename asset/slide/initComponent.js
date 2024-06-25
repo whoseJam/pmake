@@ -1,6 +1,12 @@
 function replace(parent, oldElement, newElement) {
+    copyStyles(oldElement, newElement);
     parent.insertBefore(newElement, oldElement.previousSibling);
     parent.removeChild(oldElement);
+}
+
+function copyStyles(source, target) {
+    const style = source.getAttribute("style");
+    target.setAttribute("style", style);
 }
 
 function initCodeblock() {
