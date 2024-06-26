@@ -1,6 +1,6 @@
 import "./reveal/theme/reset.css";
 import "./reveal/theme/reveal.css";
-import "../css/theme/source/serif.scss";
+import "../css/theme/source/sky.scss";
 
 import "./reveal/theme/chalkboard.css";
 import "./reveal/theme/customcontrols.css";

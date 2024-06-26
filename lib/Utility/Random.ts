@@ -1,6 +1,6 @@
-import { int } from "./Util.ts";
+import { int } from "./Util";
 
-export function rand(l, r) {
+export function rand(l: any, r: any): number {
     l = int(l);
     r = int(r);
     let ans = Math.floor(Math.random() * (r - l + 2));

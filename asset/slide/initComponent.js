@@ -45,9 +45,9 @@ function initPicture() {
     if (width) image.setAttribute("width", width);
     if (height) image.setAttribute("height", height);
     div.className = element.className;
-    div.style["textAlign"] = "center";
     div.append(image);
     replace(parent, element, div);
+    div.setAttribute("style", "text-align: center;");
     initPicture();
 }
 

@@ -1,0 +1,85 @@
+<section>
+    <section>
+        <h1>引子</h1>
+        <p>故事要从2022年的寒假说起......</p>
+    </section>
+    <section>
+        <h2>引子</h2>
+        <p>2022年寒假，我在鲁能巴蜀中学教学算法</p>
+        <p class="fragment">我还记得，那一节课是关于DFS的算法课，在尝试了99种方法给学生教授DFS之后，我发现了传统的使用静态图片或者画笔教授的若干问题：</p>
+        <ol>
+            <li class="fragment">静态图片难以描绘复杂的算法的动态过程</li>
+            <li class="fragment">使用画笔教学是<b>非标准化</b>的，意味着即使是同一个老师，在不同的场次教学的效果也是不一样的</li>
+            <li class="fragment">在画笔的使用过程中，有很多时间浪费在画图上了</li>
+        </ol>
+        <p class="fragment quote">
+            对于第二点，非标准化不一定是坏事，不过在上文的语境当中，和我之后将要提到的动画这种教学手段相比，单纯使用画笔通常意味着<b>更大的教学水平方差</b>，<b>更低的平均教学水平</b>
+        </p>
+    </section>
+    <section>
+        <h2>引子</h2>
+        <p>基于以上种种考虑，我想到如果能使用动画给学生做DFS的教学那就好了</p>
+        <p class="fragment">于是，我不知天高地厚，开始用PPT做DFS的动画......</p>
+        <picture class="fragment" data-src="https://zh.minecraft.wiki/images/Clock_JE3_BE3.gif?3e186" height="50px">
+        </picture>
+        <p class="fragment">
+            或许过了1H？或许过了2H？终于，在经历了各种<b>折磨</b>之后，我终于在PPT上把一个长度为 $3$ 的全排列DFS动画做了一半
+        </p>
+        <p class="fragment">是的，你没有看错：</p>
+        <ul>
+            <li class="fragment">时间之长，以小时为单位计量</li>
+            <li class="fragment">效率之低，只做了长度为 $3$ 的全排列</li>
+            <li class="fragment"><del>还没做完</del></li>
+        </ul>
+    </section>
+    <section>
+        <h2>引子</h2>
+        <p>令人庆幸的是，我立刻停止了这种愚蠢的行为<span class="fragment"><del>，并用那做了一半的PPT给学生把DFS讲了</del></span></p>
+        <p class="fragment">
+            虽然，动画解决了教学的非标准化问题，提高了教学的质量，降低了老师的心智负担
+        </p>
+        <p class="fragment">
+            但是，动画制作本身引入了极高的心智负担
+        </p>
+    </section>
+    <section>
+        <h2>PPT动画</h2>
+        <p>简单介绍一下PPT动画的心智负担</p>
+    </section>
+    <section>
+        <h2>PPT动画</h2>
+        <picture data-src="./image/PPT动画的心智负担1.png" height="250px"></picture>
+        <p class="fragment">其一在于在制作PPT动画的时候，我们得把：</p>
+        <ul>
+            <li class="fragment">场景中一开始就出现过的动画元素，之后一直存在的元素</li>
+            <li class="fragment">场景中一开始就出现过，之后消失的元素</li>
+            <li class="fragment">场景中一会消失一会出现的元素</li>
+        </ul>
+        <p class="fragment">都在编辑视图中一股脑先加入到场景里面</p>
+        <p class="fragment">导致<b>编辑视图混乱</b>，<b>元素选择困难</b></p>
+    </section>
+    <section>
+        <h2>PPT动画</h2>
+        <p>其次——请看下图</p>
+        <picture data-src="./image/PPT动画的心智负担2.png" height="200px"></picture>
+        <p class="fragment" style="margin-top: 0px;">在这里我展示了一个简单的DFS求全排列，所需要设置的动画步骤（高达上百步），每一个步骤都需要你选择元素、添加动画，这就引出了以下几个问题：</p>
+        <ul style="margin-top: -15px;">
+            <li class="fragment">做动画脑子不清醒做错了一个步骤怎么办？</li>
+            <li class="fragment">要测试动画的准确性，每过一遍动画要花多长时间？</li>
+            <li class="fragment">如果动画涉及到100个步骤，假设前30个步骤就把学生教会了，怎么快速跳过后70个步骤？</li>
+            <li class="fragment">在这里我做的全排列涉及到 $\{1,2,3\}$ 这三个元素，现在需求一改——我要做 $\{2,3,4\}$ 这三个元素的全排列，怎么办？</li>
+            <li class="fragment">在动画细节上，如果我先觉得要把某个算法的 $A$，$B$ 两个步骤分开动画化，后来觉得效果不太好，要改成合在一起动画化，怎么改？</li>
+        </ul>
+    </section>
+    <section>
+        <h2>PPT动画</h2>
+        <p>我想破脑袋，直到现在也想不到怎么解决</p>
+        <p class="fragment">其实刚才说了那么多问题，总结下来就三个方面：</p>
+        <ul>
+            <li class="fragment">PPT动画没有可维护性</li>
+            <li class="fragment">PPT动画没有可重用性</li>
+            <li class="fragment">PPT动画没有可拓展性</li>
+        </ul>
+        <p class="fragment">改不动PPT，我决定掀桌子了，所以SD动画框架应运而生</p>
+    </section>
+</section>

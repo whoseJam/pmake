@@ -5,8 +5,8 @@ const path = require("path");
 const getWebpackAniConfig = require("../pmake/asset/build/aniConfig");
 const getWebpackPPTConfig = require("../pmake/asset/build/pptConfig");
 
-const defaultAnimationTargetFilePath = "C:/Users/27670/Desktop/output/animation";
-const defaultPPTTargetFilePath = "C:/Users/27670/Desktop/output";
+const defaultAnimationTargetFilePath = "/Users/whosejam/Desktop/output/animation";
+const defaultPPTTargetFilePath = "/Users/whosejam/Desktop/output";
 
 global["projectRoot"] = __dirname.replaceAll("\\", "/");
 

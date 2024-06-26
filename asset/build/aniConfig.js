@@ -24,17 +24,12 @@ module.exports = function(sourceFilePath, animationName) {
         ],
         module: {
             rules: [
-                {   test: /\.js$/,
+                {   test: /\.tsx?$/,
                     exclude: /node_modules/,
-                    loader: "babel-loader"
+                    loader: "ts-loader"
                 },
                 {   test: /\.css$/,
                     use: ["style-loader", "css-loader"]
-                },
-                {
-                    test: /\.ts$/,
-                    exclude: /node_modules/,
-                    loader: "ts-loader"
                 }
             ]
         },
@@ -45,7 +40,8 @@ module.exports = function(sourceFilePath, animationName) {
         resolve: {
             alias: {
                 "@": path.resolve(global["projectRoot"], "lib")
-            }
+            },
+            extensions: [".tsx", ".ts", ".js"]
         },
         externals: ["dagre"]
     };
