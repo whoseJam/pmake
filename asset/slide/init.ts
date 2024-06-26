@@ -127,8 +127,12 @@ const RevealCustomControls = window.RevealCustomControls; revealPlugins.push(Rev
 window.Reveal = Reveal
 
 // @ts-ignore
+import { initArrow } from "./initArrow";
+
+// @ts-ignore
 Reveal.addEventListener("slidechanged", function(event) {
     const currentSlide = event.currentSlide;
+    initArrow(currentSlide);
     const iframes = currentSlide.getElementsByTagName("iframe");
     for (let i = 0; i < iframes.length; i++) {
         const iframe = iframes[i];
