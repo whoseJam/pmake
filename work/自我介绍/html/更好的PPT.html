@@ -1,0 +1,80 @@
+<section>
+    <section>
+        <h1>更好的PPT</h1>
+    </section>
+    <section>
+        <h2>以前我的工作流</h2>
+        <p>在我创造出SD动画框架后，曾经有一段时间，我是传统PPT和动画并用</p>
+        <picture class="fragment" width="500px" data-src="./image/以前的工作流1.png"></picture>
+        <picture class="fragment" width="500px" data-src="./image/以前的工作流2.png"></picture>
+    </section>
+    <section>
+        <h2>以前我的工作流</h2>
+        <p>这导致PPT的内容可能和动画是有点分裂的</p>
+        <p class="fragment">同时我想对某个算法展示动画的时候，我得退出PPT，打开动画做演示，做完再切回PPT</p>
+        <p class="fragment"><del>不过这都是小问题，我捏着鼻子也能忍了</del></p>
+        <p class="fragment">最大的问题还是出在PPT本身上</p>
+    </section>
+    <section>
+        <h2>排版麻烦</h2>
+        <p>我个人在制作PPT的时候，会花费大量的时间在排版上</p>
+        <p class="fragment">而且当我想要稍微修改一下PPT的内容的时候，重排版的时间不可忽视</p>
+    </section>
+    <section>
+        <h2>动画麻烦</h2>
+        <p>PPT即使没有那种很复杂的算法动画，或多或少也涉及到一些文本动画，就像这样：</p>
+        <ul>
+            <li class="fragment">我是第一个出现的文本</li>
+            <li class="fragment">我是第二个出现的文本</li>
+            <li class="fragment fade-up">我是第三个出现的文本<span class="fragment">，我还没完</span></li>
+            <li class="fragment">
+                <span class="fragment highlight-red">我是能变红的文本</span>
+            </li>
+        </ul>
+        <p class="fragment">我认为PPT提供的动画系统太庞大，每次手动设置这些动画很麻烦</p>
+    </section>
+    <section>
+        <h2>保存速度慢</h2>
+        <p>以前我从未感觉到一个PPT的保存速度很慢<span class="fragment">——直到我做了一份90页的PPT</span></p>
+        <p class="fragment">这对于一个有顺手Ctrl+S保存文件的人来说简直就是灾难</p>
+        <p class="fragment quote">顺手Ctrl+S是我高中搞竞赛保留下来的习惯，我觉得是一个好习惯</p>
+    </section>
+    <section>
+        <h2>公式不友好</h2>
+        <p>这个是我在准备数学这一块的讲义的时候发现的</p>
+        <p class="fragment">在这一章节，我们会大量使用数学公式<span class="fragment">，在PPT中，你得这么做：</span></p>
+        <picture class="fragment" height="400px" data-src="./image/数学公式不友好.png"></picture>
+    </section>
+    <section>
+        <h2>公式不友好</h2>
+        <p>但是，对于一个熟悉Markdown/Latex/论文写作的人来说，更好的方式是直接写代码生成公式：</p>
+        <div style="display: flex; justify-content: space-around; align-items: center;">
+            <codeblock class="fragment" style="width: 400px; flex-grow: 0;">
+                <script type="text/template">
+                    $$
+                    \sum_{i=1}^na_i=S_n
+                    $$
+                </script>
+            </codeblock>
+            <div class="fragment" style="flex-grow: 1;">$$\Longrightarrow$$</div>
+            <div class="fragment" style="flex-grow: 1;">$\sum_{i=1}^na_i=S_n$</div>
+        </div>
+    </section>
+    <section>
+        <h2>PPT的罪过</h2>
+        <ul>
+            <li>排版麻烦</li>
+            <li>动画麻烦</li>
+            <li>保存速度慢</li>
+            <li>公式不友好</li>
+        </ul>
+        <p>千言万语汇聚成一句话，就是PPT的效率太低了</p>
+        <p class="fragment">本来这也都不是什么大问题，我多花点时间去做PPT，肯定还是能做出来的</p>
+        <p class="fragment">问题出就出在，我前段要去腾讯实习了，再不增加生产力，我肯定是忙不过来的</p>
+    </section>
+    <section>
+        <h2>程序员的美德</h2>
+        <p>在这种情况下，我必须充分发挥程序员的美德——懒惰，拿出一件可以替代PPT的生产工具来，减少我的工作量</p>
+        <p class="fragment">非常庆幸的是，我又拿出来了，并且还把SD动画框架完美集成到里面去了<span class="fragment">（现在呈现在大家面前的这份“PPT”，就是用这个生产工具去做的）</span></p>
+    </section>
+</section>

@@ -1,0 +1,109 @@
+<section>
+    <section>
+        <h1>MyReveal</h1>
+        <p>一个基于Reveal的，更好的PPT框架</p>
+    </section>
+    <section>
+        <h2>MyReveal</h2>
+        <p>MyReveal希望解决PPT的排版问题，动画问题，保存速度慢问题和数学公式问题</p>
+    </section>
+    <section>
+        <h2>排版问题</h2>
+        <p>MyReveal希望PPT的制作者能更多关系PPT的内容，而不需要在意PPT的版式<span class="fragment">，<b>即样式和内容分离</b></span></p>
+        <div style="display: flex;">
+            <div style="display: flex; align-items: center;">
+                <picture class="fragment" width="450px"
+                    data-src="https://img.88icon.com/download/jpg/202006/60f5a403aa8daa5cf32561448989c3e8_512_512.jpg!bg">
+                </picture>
+            </div>
+            <div style="display: flex; flex-wrap: wrap; margin-left: 20px;">
+                <div style="display: flex; align-items: center;">
+                    <span class="fragment">$\Longrightarrow$</span>
+                    <picture class="fragment" data-src="./image/simple.png" height="100px"></picture>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <span class="fragment">$\Longrightarrow$</span>
+                    <picture class="fragment" data-src="./image/beige.png" height="100px"></picture>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <span class="fragment">$\Longrightarrow$</span>
+                    <picture class="fragment" data-src="./image/dracula.png" height="100px"></picture>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <span class="fragment">$\Longrightarrow$</span>
+                    <picture class="fragment" data-src="./image/sky.png" height="100px"></picture>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <span class="fragment">$\Longrightarrow$</span>
+                    <picture class="fragment" data-src="./image/solarized.png" height="100px"></picture>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <span class="fragment">$\Longrightarrow$</span>
+                    <picture class="fragment" data-src="./image/white.png" height="100px"></picture>
+                </div>
+                <div style="display: flex; align-items: center;">
+                    <span class="fragment">$\Longrightarrow$</span>
+                    <picture class="fragment" data-src="./image/serif.png" height="100px"></picture>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section>
+        <h2>动画问题</h2>
+        <p>在MyReveal中，可以很方便地通过添加<code>fragment</code>属性，来为元素添加动画</p>
+        <pre class="fragment"><code class="html" data-trim data-line-numbers>
+            <ul>
+                <li class="fragment">你好</li>
+                <li class="fragment">再见</li>
+            </ul>
+        </code></pre>
+        <ul>
+            <li class="fragment">你好</li>
+            <li class="fragment">再见</li>
+        </ul>
+    </section>
+    <section>
+        <h2>保存速度慢</h2>
+        <p>这个建议大家实际体验一下</p>
+    </section>
+    <section>
+        <h2>数学公式支持</h2>
+        <p class="fragment">
+            $$
+            \left\{
+            \begin{aligned}
+            & x\equiv r_1(mod\ m_1) \\
+            & x\equiv r_2(mod\ m_2) \\
+            & ...... \\
+            & x\equiv r_k(mod\ m_k)
+            \end{aligned}
+            \right.
+            $$
+        </p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                $$
+                \left\{
+                \begin{aligned}
+                & x\equiv r_1(mod\ m_1) \\
+                & x\equiv r_2(mod\ m_2) \\
+                & ...... \\
+                & x\equiv r_k(mod\ m_k)
+                \end{aligned}
+                \right.
+                $$
+            </script>
+        </codeblock>
+    </section>
+    <section>
+        <h2>与SD动画框架的集成</h2>
+        <iframe class="fragment" style="width: 1000px; height: 400px;"
+            data-src="./animation/暴力LCA.html"></iframe>
+        <pre class="fragment"><code class="html" data-trim data-line-numbers>
+            <iframe class="fragment" style="width: 1000px; height: 400px;" data-src="./animation/暴力LCA.html"></iframe>
+        </code></pre>
+    </section>
+    <section>
+        <h2>别忘了还有画图功能</h2>
+    </section>
+</section>

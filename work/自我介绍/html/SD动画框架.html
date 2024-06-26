@@ -20,8 +20,20 @@
     </section>
     <section>
         <h2>数组演示</h2>
+        <codeblock>
+            <script type="text/template">
+                // 把质数涂成蓝色
+                arr.startAnimate();
+                for (let i = 1; i <= 10; i++) {
+                    if (isPrime(i)) {
+                        arr.color(i, C.blue);
+                    }
+                }
+                arr.endAnimate();
+            </script>
+        </codeblock>
         <iframe rate="1.2" 
-            style="width: 1000px; height: 300px;"
+            style="width: 1000px; height: 200px;"
             data-src="./animation/Array演示.html"></iframe>
     </section>
     <section>
@@ -30,5 +42,12 @@
         <iframe rate="1.2"
             style="width: 1000px; height: 300px;"
             data-src="./animation/Array演示全家福.html"></iframe>
+        <p class="fragment">而且程序里面，对动画的掌控度是很高的</p>
+    </section>
+    <section>
+        <h2>全家福展示</h2>
+        <p>目前内置的数据结构包含数组、网格、树、图、指针、代码块以及数学公式，在这里就不一一单独展示了</p>
+        <p class="fragment">接下来我会以我做过的几个动画，来讲解一下它们在实际教学场景中的应用</p>
+        <p class="fragment">如果未来有机会，我可以专门出一个Tutorial，挨个组件做介绍<del>（咕咕咕）</del></p>
     </section>
 </section>
