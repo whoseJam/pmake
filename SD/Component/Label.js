@@ -1,4 +1,4 @@
-import { Mathjax, Text } from "../slide";
+import { Mathjax, Text } from "../SD";
 
 /**
  * 为node节点创建标签

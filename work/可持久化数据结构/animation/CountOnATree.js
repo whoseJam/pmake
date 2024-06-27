@@ -1,4 +1,4 @@
-import * as sd from "@/slide";
+import * as sd from "@/SD";
 import { xml } from "d3";
 
 const svg = sd.svg();

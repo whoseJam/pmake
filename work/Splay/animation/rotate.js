@@ -1,4 +1,4 @@
-import * as sd from "../../../lib/slide";
+import * as sd from "@/SD";
 
 const rotateCodeStr = `
 void rotate(int x,int &f){

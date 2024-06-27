@@ -1,4 +1,4 @@
-import * as sd from "@/slide";
+import * as sd from "@/SD";
 import { flow } from "./网络流动画库";
 
 const svg = sd.svg();

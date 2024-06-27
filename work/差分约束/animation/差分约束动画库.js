@@ -1,4 +1,4 @@
-import * as sd from "@/slide";
+import * as sd from "@/SD";
 
 /**
  * @param {sd.GraphBase} graph 

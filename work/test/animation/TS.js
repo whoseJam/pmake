@@ -1,4 +1,4 @@
-import * as sd from "@/slide";
+import * as sd from "@/SD";
 
 const svg = sd.svg();
 const a = sd.make1d(5, 3);

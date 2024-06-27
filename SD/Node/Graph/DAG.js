@@ -3,7 +3,7 @@ import { GraphBase } from "./GraphBase";
 import { SDNode } from "../Node";
 import { Vertex } from "../Element/Vertex";
 import { Line } from "../Basic/Line";
-import { trim } from "../../slide";
+import { trim } from "../../SD";
 import * as dagre from "dagre";
 
 /**

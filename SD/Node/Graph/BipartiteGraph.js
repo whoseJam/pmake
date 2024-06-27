@@ -1,7 +1,7 @@
 import { Line } from "../Basic/Line";
 import { Vertex } from "../Element/Vertex";
 import { GraphBase } from "./GraphBase";
-import { trim } from "../../slide";
+import { trim } from "../../SD";
 
 export class BipartiteGraph extends GraphBase {
     constructor(node) {

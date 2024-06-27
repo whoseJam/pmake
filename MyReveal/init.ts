@@ -106,7 +106,7 @@ const iframeCache = new IFrameCache();
 
 const revealPlugins: Array<any> = [];
 // @ts-ignore
-import Reveal from "./reveal";
+import Reveal from "reveal.js";
 // @ts-ignore
 import RevealMath from "./plugin/math";            revealPlugins.push(RevealMath);
 // @ts-ignore

@@ -2,8 +2,8 @@ const gulp = require("gulp");
 const webpack = require("webpack-stream");
 const fs = require("fs");
 const path = require("path");
-const getWebpackAniConfig = require("../pmake/asset/build/aniConfig");
-const getWebpackPPTConfig = require("../pmake/asset/build/pptConfig");
+const getWebpackAniConfig = require("./build/aniConfig");
+const getWebpackPPTConfig = require("./build/pptConfig");
 
 const defaultAnimationTargetFilePath = "C:/Users/27670/Desktop/output/animation";
 const defaultPPTTargetFilePath = "C:/Users/27670/Desktop/output";

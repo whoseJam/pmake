@@ -1,4 +1,4 @@
-import * as sd from "@/slide";
+import * as sd from "@/SD";
 import { rotate } from "./Splay基础动画库";
 
 const svg = sd.svg();

@@ -1,4 +1,4 @@
-import * as sd from "../../../lib/slide";
+import * as sd from "@/SD";
 import { 有向图Tarjan } from "../../Tarjan/animation/Tarjan";
 
 const svg = sd.svg();

@@ -1,4 +1,4 @@
-import * as sd from "../../../lib/slide";
+import * as sd from "@/SD";
 
 const svg = sd.svg();
 const graph = new sd.BipartiteGraph(svg).cx(600).cy(300);

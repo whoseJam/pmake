@@ -1,4 +1,4 @@
-import * as sd from "../../../lib/slide";
+import * as sd from "@/SD";
 
 const svg = sd.svg();
 const courseMap = new sd.BoxDAG(svg);   // type: Node

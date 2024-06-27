@@ -1,5 +1,5 @@
-import { Text } from "../slide";
-import { svg } from "../slide";
+import { Text } from "../SD";
+import { svg } from "../SD";
 
 export function ValueBoard(name, init=0) {
     let board = new Text(svg());

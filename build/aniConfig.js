@@ -1,8 +1,4 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const TerserPlugin = require("terser-webpack-plugin");
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
-const SpeedMeasurePlugin = require("speed-measure-webpack-plugin");
-const smp = new SpeedMeasurePlugin(); 
 const path = require("path");
 
 module.exports = function(sourceFilePath, animationName) {
@@ -15,7 +11,7 @@ module.exports = function(sourceFilePath, animationName) {
         watch: true,
         plugins: [
             new HtmlWebpackPlugin({
-                template: `${global["projectRoot"]}/asset/aniIndex.html`,
+                template: `${global["projectRoot"]}/build/aniIndex.html`,
                 inject: "body",
                 inlineSource: ".(js)$",
                 minify: false,
@@ -39,7 +35,7 @@ module.exports = function(sourceFilePath, animationName) {
         cache: true,
         resolve: {
             alias: {
-                "@": path.resolve(global["projectRoot"], "lib")
+                "@": path.resolve(global["projectRoot"], "SD")
             },
             extensions: [".tsx", ".ts", ".js"]
         },

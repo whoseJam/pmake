@@ -1,4 +1,4 @@
-import * as sd from "@/slide";
+import * as sd from "@/SD";
 
 const svg = sd.svg();
 const graph = new sd.TinyGraph(svg).width(200).height(200).cx(600).cy(300);

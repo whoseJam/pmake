@@ -41,6 +41,6 @@ export function trim(link: LinkBase, from: SDNode|null|undefined, to: SDNode|nul
     const t = trimTo(link, to);
     const source = link.at(f);
     const target = link.at(t);
-    link.source(source)
-        .target(target);
+    link.source(source[0], source[1])
+        .target(target[0], target[1]);
 }

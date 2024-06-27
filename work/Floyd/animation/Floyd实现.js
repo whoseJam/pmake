@@ -1,4 +1,4 @@
-import * as sd from "../../../lib/slide";
+import * as sd from "@/SD";
 import { floyd } from "./Floyd";
 
 const svg = sd.svg();

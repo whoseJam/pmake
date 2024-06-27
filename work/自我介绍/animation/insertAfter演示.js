@@ -1,4 +1,4 @@
-import * as sd from "@/slide";
+import * as sd from "@/SD";
 import { findNextWithoutAnimation, rotate } from "./Splay基础动画库";
 import { findPrev } from "./Splay基础动画库";
 

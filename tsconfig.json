@@ -24,8 +24,8 @@
     ]
   },
   "include": [
-    "lib/**/*.ts",
-    "asset/**/*.ts"
+    "SD/**/*.ts",
+    "MyReveal/**/*.ts"
   ],
   "exclude": [
     "node_modules"

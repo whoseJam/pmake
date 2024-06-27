@@ -1,4 +1,4 @@
-import * as sd from "../../../lib/slide";
+import * as sd from "@/SD";
 import { draw } from "../../common/维恩图";
 
 const svg = sd.svg();
