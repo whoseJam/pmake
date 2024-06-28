@@ -38,6 +38,64 @@
     </section>
     <section>
         <h2>边双连通分量</h2>
+        <p>由于本题可能存在重边，所以我们做一些额外的处理</p>
+        <codeblock>
+            <script type="text/template">
+                struct line {
+                    ll Nxt, to;
+                }
+                l[M * 2];
+                ll h[N], cnt = 1;
+                void Link(ll u, ll v, ll f) {
+                    l[++cnt] = (line) { h[u], v }; h[u] = cnt;
+                    l[++cnt] = (line) { h[v], u }; h[v] = cnt;
+                }
+            </script>
+        </codeblock>
+        <div class="fragment quote">注意到我们的cnt是从1开始的，因为我们把边的编号两两划为一组，分别为：
+            <table>
+                <tr>
+                    <td></td>
+                    <td>第一组边</td>
+                    <td>第二组边</td>
+                    <td>第三组边</td>
+                    <td>......</td>
+                </tr>
+                <tr>
+                    <td>组内第一条边编号</td>
+                    <td>$2=(10)_2$</td>
+                    <td>$4=(100)_2$</td>
+                    <td>$6=(110)_2$</td>
+                    <td>......</td>
+                </tr>
+                <tr>
+                    <td>组内第二条边编号</td>
+                    <td>$3=(11)_2$</td>
+                    <td>$5=(101)_2$</td>
+                    <td>$7=(111)_2$</td>
+                    <td>......</td>
+                </tr>
+            </table>
+            <div class="fragment">这样可以保证任意一条边，假设其编号为 $i$，我可以直接通过计算 $i\otimes 1$，来得到和它同组的另一条边的编号</div>
+        </div>
+    </section>
+    <section>
+        <h2>边双连通分量</h2>
+        <iframe data-src="./animation/无向图Tarjan重边.html"
+            style="width: 1000px; height: 300px;"></iframe>
+        <div>
+            <div class="fragment left">
+                在左图中，从 $u$ 到 $v$ 后，$v$ 能返祖到 $u$
+            </div>
+            <div class="fragment right">
+                在右图中，从 $u$ 到 $v$ 后，$v$ 不能返祖到 $u$
+            </div>
+        </div>
+        <div style="padding: 10px;"></div>
+        <p class="fragment">我们用prt数组来记录，到底是经由哪条边的编号到达 $u$ 的。假设经由 $k=prt_u$ 这条边来到了 $u$，那么就不能走 $k\otimes 1$ 这条边返祖</p>
+    </section>
+    <section>
+        <h2>边双连通分量</h2>
         <pre><code data-trim data-line-numbers class="cpp" style="min-height: 525px;"><script type="text/template">
             void Tarjan(int u) {
                 dfn[u] = low[u] = ++tot;

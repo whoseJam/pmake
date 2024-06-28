@@ -6,9 +6,24 @@
     </section>
     <section>
         <h2>关键网线</h2>
-        <p>容易发现，把DFS树建立出来后，如果一条树边 $(u,v)$ 是割边，并且 $v$ 所代表的子树中的节点都是一个类型，或者 $v$ 所代表的子树的反树，所有节点都是一个类型，那么 $(u,v)$ 就是一条关键网线</p>
-        <iframe
-            style="min-width: 1000px; min-height: 500px;"
+        <p>二话不说先建一个DFS出来，然后观察</p>
+        <iframe style="width: 1000px; height: 400px;"
             data-src="./animation/关键网线.html"></iframe>
+        <p class="fragment quote" style="margin-top: -20px;">
+            什么情况下一条网线会是关键网线？
+        </p>
+        <ul>
+            <li class="fragment">这条网线对应的<b>子树</b>中不同时存在红色和蓝色的节点</li>
+            <span class="fragment">或......</span>
+            <li class="fragment">这条网线对应的<b>反树</b>中不同时存在红色和蓝色的节点</li>
+        </ul>
+    </section>
+    <section>
+        <h2>关键网线</h2>
+        <iframe style="width: 1000px; height: 300px;"
+            data-src="./animation/关键网线.html"></iframe>
+        <p class="quote">如何检验一条网线对应的<b>子树</b>中，不同时存在红色和蓝色的节点？</p>
+        <p class="fragment quote">如何检验一条网线对应的<b>反树</b>中，不同时存在红色和蓝色的节点？</p>
+        <p class="fragment quote">可以正难则反吗？</p>
     </section>
 </section>

@@ -37,7 +37,7 @@ async function main() {
     for (let i = 1; i <= 12; i++) {
         if (A.includes(i)) {
             tree.element(i).color(C.coral);
-        } else tree.element(i).color(C.blue);
+        } else if (i%2==0) tree.element(i).color(C.blue);
     }
     await sd.pause();
 }

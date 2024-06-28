@@ -14,7 +14,7 @@
             <li>$dfn(u)$：表示访问 $u$ 节点的时间戳，$dfn(u)\in [1,n]$</li>
             <li>$low(u)$：$u$ 节点的追溯值，表示从 $u$ 节点出发，沿着有向轨（父子边）出发能到达的节点 $v$ 中，$dfn(v)$ 的最小值</li>
         </ul>
-        <iframe 
+        <iframe class="fragment"
             style="min-width: 1000px; min-height: 400px;"
             data-src="./animation/无向图边分类.html"></iframe>
     </section>
@@ -79,7 +79,8 @@
                             low[u] = min(low[u], low[v]);
                             if (low[v] >= dfn[u]) {
                                 mark[u] = 1; // 满足判断条件则 u 为割点
-                                if (u == 1) sonCount++; // sonCount用于统计根的子节点数量
+                                // sonCount用于统计根的子节点数量
+                                if (u == 1) sonCount++;
                             }
                         } else low[u] = min(low[u], dfn[v]);
                     }
