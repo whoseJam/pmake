@@ -22,10 +22,10 @@
         <h2>最大流</h2>
         <p>那么我们如何去找一个图的最大流呢？</p>
         <p class="fragment">最朴素的思想，自然是不断DFS出源点到汇点的剩余容量不为 $0$ 的道路，找到这条道路的瓶颈，然后在这条道路上放尽可能多的流</p>
-        <iframe rate="1.05"
+        <iframe rate="1.05" class="fragment"
             style="min-width: 1000px; min-height: 400px;"
             data-src="./animation/成功的朴素最大流.html"></iframe>
-        <p class="fragment">我们把一条从源点到汇点的剩余容量不为 $0$ 的道路，叫做一条<b>增广路</b>，意指这条路可以让我们的最大流变大</p>
+        <p class="fragment">我们把一条从源点到汇点、剩余容量不为 $0$ 的道路，叫做一条<b>增广路</b>，意指这条路可以让我们的最大流变大</p>
     </section>
     <section>
         <h2>最大流</h2>
@@ -56,8 +56,8 @@
             $$
         </p>
         <p class="fragment">我们可以把走正向弧看作流量的决策，走反向弧看作流量的反悔</p>
-        <iframe rate="2"
-            style="min-width: 1000px; min-height: 20px;"
+        <iframe rate="2" class="fragment"
+            style="width: 1000px; height: 80px;"
             data-src="./animation/流量的决策和反悔.html">
         </iframe>
     </section>

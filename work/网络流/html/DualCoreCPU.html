@@ -26,6 +26,19 @@
     <section>
         <h2>Dual Core CPU</h2>
         <p>上图看来有点妙手偶得，我如何确保在赛场上能灵感一现呢？</p>
-        <p class="fragment">事实上最小割的题目的题目元素往往会出现两种取值，把元素建模为图中的节点后，我们把割到和源点 $S$ 属于一个连通块的节点看作取值第一类，把割到和汇点 $T$ 属于一个连通块的节点看作取值第二类</p>
+        <p class="fragment">最小割一定会把源点和汇点分开，让它们划分到不同的集合中去</p>
+        <ul>
+            <li class="fragment">我们把源点 $S$ 所属的集合叫做 $Set_S$</li>
+            <li class="fragment">我们把汇点 $T$ 所属的集合叫做 $Set_T$</li>
+        </ul>
+        <p class="fragment">一般来说，能用最小割做的题目描述中，往往会有 $n$ 个元素，并且每个元素 $u$ <b>恰有两种取值</b></p>
+        <p class="fragment">而这两种取值，正好和把 $u$ 划分到 $Set_S$ 中，或者把 $u$ 划分到 $Set_T$ 中，这两种不同的划分方式对应起来</p>
+    </section>
+    <section>
+        <h2>Dual Core CPU</h2>
+        <p>我们可以先让 $u$ 点和 $S$ 点、$T$ 点分别连边，再根据不同的题目要求，连一些额外的辅助边，帮我们解决问题</p>
+        <iframe rate="1.05" class="fragment"
+            style="min-width: 1000px; min-height: 300px;"
+            data-src="./animation/DualCoreCPU.html"></iframe>
     </section>
 </section>

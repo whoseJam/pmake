@@ -114,7 +114,6 @@ export class Line extends LinkBase {
     y1(y) {
         this.dirtyCheck("q");
         if (y === undefined) return this._.y1;
-        console.log("Line set y1 = ", y, equal(y, this._.y1));
         if (equal(y, this._.y1)) return this;
         new Action(
             this.delay(),
@@ -124,7 +123,6 @@ export class Line extends LinkBase {
             this, "y1"
         );
         this._.y1 = y;
-        console.log("new Y1=", this._.y1);
         this.dirty(this, "R");
         return this;
     }

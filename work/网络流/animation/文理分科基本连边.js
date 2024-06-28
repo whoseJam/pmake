@@ -1,0 +1,23 @@
+import * as sd from "@/SD";
+
+const svg = sd.svg();
+const C = sd.color();
+const R = sd.rule();
+const graph = new sd.GridGraph(svg);
+
+init();
+main();
+
+function init() {
+    graph.at(0.5, 0).newNode("S");
+    graph.at(0.5, 0.5).newNode("u");
+    graph.at(0.5, 1).newNode("T");
+    graph.newLink("S", "u");
+    graph.element("S", "u").arrow().value("a", R.PointAtPathByRate(0.5, "cx", "my"));
+    graph.newLink("u", "T");
+    graph.element("u", "T").arrow().value("s", R.PointAtPathByRate(0.5, "cx", "my"));
+}
+
+async function main() {
+    await sd.pause();
+}
