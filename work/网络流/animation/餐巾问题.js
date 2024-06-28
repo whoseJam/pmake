@@ -27,16 +27,28 @@ function init() {
 
     function link(u, v, value, xloc, yloc, col = C.black) {
         graph.newLink(u, v);
-        graph.element(u, v).arrow()
+        graph.element(u, v)
+            .arrow()
             .stroke(col)
             .value(value, R.PointAtPathByRate(0.5, xloc, yloc));
+    }
+    function simpleLink(u, v) {
+        graph.newLink(u, v);
+        graph.element(u, v).arrow();
     }
 
     link("S", "3", "R/0", "x", "cy");
     link("3'", "T", "R/0", "x", "cy");
-    link("3", "4'", "∞/f", "mx", "y");
-    link("3", "5'", "∞/s", "x", "my");
+    link("3", "4'", "∞/f", "mx", "y", C.red);
+    link("3", "5'", "∞/s", "x", "my", C.deepSkyBlue);
 
+    simpleLink("1'", "2'");
+    simpleLink("2'", "3'");
+    simpleLink("3'", "4'");
+    simpleLink("4'", "5'");
+
+    graph._.linkType = sd.Curve;
+    link("S", "1'", "∞/p", "mx", "my");
 }
 
 async function main() {
