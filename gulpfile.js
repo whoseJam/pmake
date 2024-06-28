@@ -5,8 +5,10 @@ const path = require("path");
 const getWebpackAniConfig = require("./build/aniConfig");
 const getWebpackPPTConfig = require("./build/pptConfig");
 
-const defaultAnimationTargetFilePath = "C:/Users/27670/Desktop/output/animation";
-const defaultPPTTargetFilePath = "C:/Users/27670/Desktop/output";
+const defaultConfig = require("./myconfig.json");
+
+const defaultAnimationTargetFilePath = defaultConfig["defaultAnimationTargetFilePath"];
+const defaultPPTTargetFilePath = defaultConfig["defaultPPTTargetFilePath"];
 
 global["projectRoot"] = __dirname.replaceAll("\\", "/");
 
