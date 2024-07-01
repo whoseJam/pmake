@@ -1,30 +1,10 @@
 import { Action } from "@/Animate/Action";
+import { BaseNake } from "./BaseNake";
 import { Interp } from "@/Animate/Interp";
-import { D3Layer } from "@/Node/D3Layer";
-import { SDNode } from "@/Node/Node";
-import { BaseRect } from "./BaseRect";
 
-/**
- * @class Rect
- * @description <rect>标签的代表类
- */
-export class Rect extends BaseRect {
-    /**
-     * @constructor
-     * @param {SDNode|D3Layer} node 
-     */
-    constructor(node) {
-        super(node, "rect");
-        this.g().type("Rect");
-
-        const nake = this._.nake;
-        nake.setAttribute("fill", this._.fill = "#ffffff");
-        nake.setAttribute("stroke", this._.stroke = "#000000");
-
-        this.member.new("x", 0);
-        this.member.new("y", 0);
-        this.member.new("width", 0);
-        this.member.new("height", 0);
+export class BaseRect extends BaseNake {
+    constructor(parent, tag) {
+        super(parent, tag);
     }
 
     x(x) {
@@ -64,9 +44,6 @@ export class Rect extends BaseRect {
     }
 
     update() {
-        this.preUpdate();
-        console.log("Rect update");
-
         if (this.member.hasChanged("x")) {
             new Action(
                 this.delay(),
@@ -89,13 +66,27 @@ export class Rect extends BaseRect {
             );
             this.member.flush("y");
         }
-        this.children.forEach(child => {
-            child.freeze();
-            if (child._.rule) {
-                child._.rule(this, child);
-            }
-            child.unfreeze();
-        })
-        // this.postUpdate();
+        if (this.member.hasChanged("width")) {
+            new Action(
+                this.delay(),
+                this.delay() + this.duration(),
+                this.member.oldValue("width"),
+                this.member.get("width"),
+                Interp.numberInterp(this._.nake, "width"),
+                this, "width"
+            );
+            this.member.flush("width");
+        }
+        if (this.member.hasChanged("height")) {
+            new Action(
+                this.delay(),
+                this.delay() + this.duration(),
+                this.member.oldValue("height"),
+                this.member.get("height"),
+                Interp.numberInterp(this._.nake, "height"),
+                this, "height"
+            );
+            this.member.flush("height");
+        }
     }
 }

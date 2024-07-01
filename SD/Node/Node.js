@@ -6,6 +6,7 @@ import { Interp } from "../Animate/Interp";
 import { svg } from "../Interact/Svg";
 import { equal } from "../Utility/Math";
 import { Animate } from "./Animate";
+import { SDMember } from "./SDMember";
 
 let id = 0;
 
@@ -25,7 +26,10 @@ export class SDNode {
         this.parent = ("g" in node) ? node : node.node;
         this.children = new Children(this);
         this.sdNodeId = ++id;
+        this.id = id;
         this.animate = new Animate(this);
+
+        this.member = new SDMember();
         
         this._ = {
             /** @type {number} */
@@ -460,6 +464,36 @@ export class SDNode {
             if (type === "q") update();
         }
         return this;
+    }
+
+    freeze() {
+        this._.freeze = true;
+        return this;
+    }
+
+    unfreeze() {
+        this._.freeze = false;
+        if (this._.pendUpdate) {
+            this._.pendUpdate = false;
+            this.update();
+        }
+        return this;
+    }
+
+    freezing() {
+        return this._.freeze;
+    }
+
+    pendUpdate() {
+        this._.pendUpdate = true;
+    }
+
+    tryUpdate() {
+        if (this.freezing()) {
+            this.pendUpdate();
+        } else {
+            this.update();
+        }
     }
 }
 

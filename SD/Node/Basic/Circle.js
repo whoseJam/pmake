@@ -46,7 +46,6 @@ export class Circle extends BasicBase {
      * @returns {number}
      */
     cx(x) {
-        this.dirtyCheck("q");
         if (x === undefined) return this._.cx;
         if (equal(x, this._.cx)) return this;
         new Action(
