@@ -5,5 +5,136 @@
     <problem data-src="http://43.143.204.105/problem/1130"></problem>
     <section>
         <h2>筛法其四</h2>
+        <p>定义因子数函数 $f(x)=x的因子个数$，让你把 $[1,n]$ 的 $f$ 函数的值求出来</p>
+        <p class="fragment quote">在做这个题目之前，我们可能先得研究一下<b>因子数函数 $f$</b></p>
+    </section>
+    <section>
+        <h2>筛法其四</h2>
+        <div class="quote">
+            <h3>因数个数和定理</h3>
+            一个自然数因数的个数等于它分解质因数后各质因数指数加 $1$ 的和的乘积<br>
+            <p style="text-align: right; margin: 0px;">——by 《五年级数学》</p>
+        </div>
+        <p class="fragment">若 $N=p_1^{a_1}p_2^{a_2}...p_n^{a_n}$，则 $N$ 的因数个数和为：
+            $$
+            (a_1+1)(a_2+1)...(a_n+1)
+            $$
+        </p>
+        <div class="fragment quote">
+            以 $60$ 为例，$60=2^2\times 3\times 5$
+            <table>
+                <tr>
+                    <td>质因子 $2$</td>
+                    <td>质因子 $3$</td>
+                    <td>质因子 $5$</td>
+                </tr>
+                <tr>
+                    <td>$1=2^0$</td>
+                    <td>$1=3^0$</td>
+                    <td>$1=5^0$</td>
+                </tr>
+                <tr>
+                    <td>$2=2^1$</td>
+                    <td>$3=3^1$</td>
+                    <td>$5=5^1$</td>
+                </tr>
+                <tr>
+                    <td>$4=2^2$</td>
+                </tr>
+            </table>
+        </div>
+    </section>
+    <section>
+        <h2>筛法其四</h2>
+        <p>
+            若 $N=p_1^{a_1}p_2^{a_2}...p_n^{a_n}$，则有：
+            $$
+            f(N)=(a_1+1)(a_2+1)...(a_n+1)
+            $$
+        </p>
+        <p class="fragment">显然质数 $p$ 的 $f(p)=2$</p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                if (!vis[i]) {
+                    prim[++tot] = i;
+                    f[i] = 2;
+                }
+            </script>
+        </codeblock>
+        <p class="fragment quote">能否在线性筛筛合数的过程中，顺便把合数的 $f$ 算出来呢？</p>
+        <div class="fragment quote">
+            <span>按照线性筛筛合数的过程，我们需要讨论：</span>
+            <ul>
+                <li>如果 $x=i\times p_j$，$i$ 中不存在 $p_j$ 这个质因子，那么 $f(x)$ 和 $f(i)$ 的关系是什么？</li>
+                <li>如果 $x=i\times p_j$，$i$ 中存在 $p_j$ 这个质因子，那么 $f(x)$ 和 $f(i)$ 的关系是什么？</li>
+            </ul>
+        </div>
+    </section>
+    <section>
+        <h2>筛法其四</h2>
+        <p>如果 $x=i\times p_j$，$i$ 中不存在 $p_j$ 这个质因子，那么 $f(x)$ 和 $f(i)$ 的关系是什么？</p>
+        <p class="fragment">
+            不妨设 $i=p_2^{a_2}p_3^{a_3}...p_n^{a_n}$
+            <span class="fragment">，$x=p_1p_2^{a_2}p_3^{a_3}...p_n^{a_n}$</span>
+        </p>
+        <ul>
+            <li class="fragment">$f(i)=(a_2+1)(a_3+1)...(a_n+1)$</li>
+            <li class="fragment">$f(x)=(1+1)(a_2+1)(a_3+1)...(a_n+1)$</li>
+        </ul>
+        <p class="fragment">所以 $f(x)=f(i)\times 2$</p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                if (i % prim[j] == 0) {
+                    // 做一些事情
+                    break;
+                }
+                f[i * prim[j]] = f[i] * 2;
+            </script>
+        </codeblock>
+    </section>
+    <section>
+        <h2>筛法其四</h2>
+        <p>如果 $x=i\times p_j$，$i$ 中存在 $p_j$ 这个质因子，那么 $f(x)$ 和 $f(i)$ 的关系是什么？</p>
+        <p class="fragment">
+            不妨设 $i=p_1^{a_1}p_2^{a_2}...p_n^{a_n}$
+            <span class="fragment">，$x=p_1^{a_1+1}p_2^{a_2}...p_n^{a_n}$</span>
+        </p>
+        <ul>
+            <li class="fragment">$f(i)=(a_1+1)(a_2+1)...(a_n+1)$</li>
+            <li class="fragment">$f(x)=(a_1+2)(a_2+1)...(a_n+1)$</li>
+        </ul>
+        <p class="fragment">所以 $f(x)=\frac{a_1+2}{a_1+1}f(i)$</p>
+        <p class="fragment quote">所以我们还需要记录一个数的最小质因子的个数，假设 $n$ 的最小质因子个数为 $cnt_n$</p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                if (i % prim[j] == 0) {
+                    f[i * prim[j]] = f[i] / (cnt[i] + 1) * (cnt[i] + 2);
+                    break;
+                }
+            </script>
+        </codeblock>
+    </section>
+    <section>
+        <h2>筛法其四</h2>
+        <codeblock>
+            <script type="text/template">
+                for (int i = 2; i <= n; i++) {
+                    if (!vis[i]) {
+                        prim[++tot] = i;
+                        f[i] = 2; cnt[i] = 1;
+                    }
+                    for (int j = 1; j <= tot && i * prim[j] <= n; j++) {
+                        vis[i * prim[j]] = 1;
+                        if (i % prim[j] == 0) {
+                            f[i * prim[j]] = f[i] / (cnt[i] + 1) * (cnt[i] + 2);
+                            cnt[i * prim[j]] = cnt[i] + 1;
+                            break;
+                        }
+                        f[i * prim[j]] = f[i] * 2;
+                        cnt[i * prim[j]] = 1;
+                    }
+                }
+            </script>
+        </codeblock>
     </section>
 </section>

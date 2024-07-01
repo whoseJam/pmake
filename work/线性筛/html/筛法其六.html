@@ -5,5 +5,79 @@
     <problem data-src="http://43.143.204.105/problem/1132"></problem>
     <section>
         <h2>筛法其六</h2>
+        <p>假设 $N=p_1^{a_1}p_2^{a_2}...p_n^{a_n}$，则：
+            $$
+            \varphi(N)=p_1^{a_1-1}(p_1-1)p_2^{a_2-1}(p_2-1)...p_n^{a_n-1}(p_n-1)
+            $$
+        </p>
+        <div class="fragment quote">
+            <span>按照线性筛筛合数的过程，我们需要讨论：</span>
+            <ul>
+                <li>如果 $x=i\times p_j$，$i$ 中不存在 $p_j$ 这个质因子，那么 $\varphi(x)$ 和 $\varphi(i)$ 的关系是什么？</li>
+                <li>如果 $x=i\times p_j$，$i$ 中存在 $p_j$ 这个质因子，那么 $\varphi(x)$ 和 $\varphi(i)$ 的关系是什么？</li>
+            </ul>
+        </div>
+    </section>
+    <section>
+        <h2>筛法其六</h2>
+        <p>如果 $x=i\times p_j$，$i$ 中不存在 $p_j$ 这个质因子，那么 $\varphi(x)$ 和 $\varphi(i)$ 的关系是什么？</p>
+        <p class="fragment">
+            不妨设 $i=p_2^{a_2}p_3^{a_3}...p_n^{a_n}$
+            <span class="fragment">，$x=p_1p_2^{a_2}p_3^{a_3}...p_n^{a_n}$</span>
+        </p>
+        <ul>
+            <li class="fragment">$\varphi(i)=p_2^{a_2-1}(p_2-1)...p_n^{a_n-1}(p_n-1)$</li>
+            <li class="fragment">$\varphi(x)=(p_1-1)p_2^{a_2-1}(p_2-1)...p_n^{a_n-1}(p_n-1)$</li>
+        </ul>
+        <codeblock class="fragment">
+            <script type="text/template">
+                if (i % prim[j] == 0) {
+                    // 做一些处理
+                    break;
+                }
+                phi[i * prim[j]] = phi[i] * (prim[j] - 1);
+            </script>
+        </codeblock>
+    </section>
+    <section>
+        <h2>筛法其六</h2>
+        <p>如果 $x=i\times p_j$，$i$ 中存在 $p_j$ 这个质因子，那么 $\varphi(x)$ 和 $\varphi(i)$ 的关系是什么？</p>
+        <p class="fragment">
+            不妨设 $i=p_1^{a_1}p_2^{a_2}...p_n^{a_n}$
+            <span class="fragment">，$x=p_1^{a_1+1}p_2^{a_2}...p_n^{a_n}$</span>
+        </p>
+        <ul>
+            <li class="fragment">$\varphi(i)=p_1^{a_1-1}(p_1-1)p_2^{a_2-1}(p_2-1)...p_n^{a_n-1}(p_n-1)$</li>
+            <li class="fragment">$\varphi(x)=p_1^{a_1}(p_1-1)p_2^{a_2-1}(p_2-1)...p_n^{a_n-1}(p_n-1)$</li>
+        </ul>
+        <codeblock class="fragment">
+            <script type="text/template">
+                if (i % prim[j] == 0) {
+                    phi[i * prim[j]] = phi[i] * prim[j];
+                    break;
+                }
+            </script>
+        </codeblock>
+    </section>
+    <section>
+        <h2>筛法其六</h2>
+        <codeblock>
+            <script type="text/template">
+                for (int i = 2; i <= n; i++) {
+                    if (!vis[i]) {
+                        prim[++tot] = i;
+                        phi[i] = i - 1;
+                    }
+                    for (int j = 1; j <= tot && i * prim[j] <= n; j++) {
+                        vis[i * prim[j]] = 1;
+                        if (i % prim[j] == 0) {
+                            phi[i * prim[j]] = phi[i] * prim[j];
+                            break;
+                        }
+                        phi[i * prim[j]] = phi[i] * (prim[j] - 1);
+                    }
+                }
+            </script>
+        </codeblock>
     </section>
 </section>

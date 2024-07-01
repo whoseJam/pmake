@@ -5,5 +5,31 @@
     <problem data-src="http://43.143.204.105/problem/1133"></problem>
     <section>
         <h2>筛法其七</h2>
+        <p>设 $N=p_1^{a_1}p_2^{a_2}...p_n^{a_n}$，莫比乌斯函数 $\mu(N)$ 定义如下：</p>
+        <ul>
+            <li class="fragment">若 $a_1=a_2=...=a_n=1$，则 $\mu(N)=(-1)^n$</li>
+            <li class="fragment">若存在 $a_i\ge 2$，则 $\mu(N)=0$</li>
+        </ul>
+    </section>
+    <section>
+        <h2>筛法其七</h2>
+        <codeblock>
+            <script type="text/template">
+                for (int i = 2; i <= n; i++) {
+                    if (!vis[i]) {
+                        prim[++tot] = i;
+                        mu[i] = -1;
+                    }
+                    for (int j = 1; j <= tot && i * prim[j] <= n; j++) {
+                        vis[i * prim[j]] = 1;
+                        if (i % prim[j] == 0) {
+                            mu[i * prim[j]] = 0;
+                            break;
+                        }
+                        mu[i * prim[j]] = -mu[i];
+                    }
+                }
+            </script>
+        </codeblock>
     </section>
 </section>
