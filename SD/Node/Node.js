@@ -27,18 +27,11 @@ export class SDNode {
         this.children = new Children(this);
         this.sdNodeId = ++id;
         this.id = id;
+        this._ = {};
         this.animate = new Animate(this);
-
         this.member = new SDMember();
-        
-        this._ = {
-            /** @type {number} */
-            opacity: 1,
-            /** @type {SDNode|undefined} */
-            dirtyBy: undefined,
-            /** @type {"U"|"R"|"C"|""} */
-            dirtyLevel: "",
-        };
+
+        this.member.new("global-opacity", 1);
 
         // console.log("create node id =", this.sdNodeId, "this =", this);
 
@@ -89,7 +82,6 @@ export class SDNode {
      * @returns {this}
      */
     childAs(childName, child, rule) {
-        child.dirtyCheck("q");
         if (child.parent !== this) child.attachTo(this);
         this.children.push(childName, child, rule);
         this.dirty(this, "R");
@@ -194,17 +186,11 @@ export class SDNode {
      * @returns {number}
      */
     opacity(opacity) {
-        this.dirtyCheck();
-        if (opacity === undefined) return this._.opacity;
-        if (opacity === this._.opacity) return this;
-        new Action(
-            this.delay(),
-            this.delay() + this.duration(),
-            this._.opacity, opacity,
-            Interp.numberInterp(this.d3layer.nake(), "opacity"),
-            this, "opacity"
-        );
-        this._.opacity = opacity;
+        if (opacity === undefined) {
+            return this.member.get("global-opacity");
+        }
+        this.member.setByDqual("global-opacity", opacity);
+        this.tryUpdate();
         return this;
     }
     /**
@@ -239,12 +225,7 @@ export class SDNode {
      * @returns {number}
      */
     x(x) {
-        this.dirtyCheck();
-        if (x === undefined) return this._.x;
-        if (equal(x, this._.x)) return this;
-        this._.x = x;
-        this.dirty(this, "U");
-        return this;
+        throw new Error("Not Implemented Yet");
     }
     
     /**
@@ -256,12 +237,7 @@ export class SDNode {
      * @returns {number}
      */
     y(y) {
-        this.dirtyCheck();
-        if (y === undefined) return this._.y;
-        if (equal(y, this._.y)) return this;
-        this._.y = y;
-        this.dirty(this, "U");
-        return this;
+        throw new Error("Not Implemented Yet");
     }
 
     /**
@@ -273,12 +249,7 @@ export class SDNode {
      * @returns {number}
      */
     width(width) {
-        this.dirtyCheck();
-        if (width === undefined) return this._.width;
-        if (equal(width, this._.width)) return this;
-        this._.width = width;
-        this.dirty(this, "U");
-        return this;
+        throw new Error("Not Implemented Yet");
     }
 
     /**
@@ -290,12 +261,7 @@ export class SDNode {
      * @returns {number}
      */
     height(height) {
-        this.dirtyCheck();
-        if (height === undefined) return this._.height;
-        if (equal(height, this._.height)) return this;
-        this._.height = height;
-        this.dirty(this, "U");
-        return this;
+        throw new Error("Not Implemented Yet");
     }
 
     /**
@@ -393,77 +359,48 @@ export class SDNode {
     }
 
 
-    // --------------------延迟更新--------------------
     preUpdate() {
-        this._.dirtyLevel = "";
-        this._.dirtyBy = undefined;
-        // console.log(`--------------------Update ${this._.nodeId}:`, this, this._.x, this._.y, `--------------------`);
-        // if (updateChain.length > 0 && updateChain[updateChain.length - 1] == this.constructor.name) {
-        //     updateChain.push(this.constructor.name);
-        //     console.log(`--------------------Update ${this._.nodeId}:`, this, `--------------------`);
-        //     console.log(updateChain);
-        //     console.trace();
-        // } else updateChain.push(this.constructor.name);
+        this.children.forEach(child => {
+            child.freeze();
+        })
     }
+
     postUpdate() {
-        this.children.update();
-        // updateChain.pop();
-    }
-
-    /**
-     * 更新子树，移除所有dirty标记
-     * @returns {this}
-     */
-    update() {
-        this.preUpdate();
-        this.postUpdate();
-        return this;
-    }
-
-    /**
-     * 弄脏子树，深度浅的节点的dirty标记会覆盖深度深的节点的dirty标记
-     * @param {SDNode} dirtyBy
-     * @param {"C"|"U"|"R"} dirtyLevel
-     * @returns {this}
-     */
-    dirty(dirtyBy, dirtyLevel) {
-        if (this._.dirtyBy) {
-            const rankDirtyLevel = {
-                "C": 100,
-                "U": 50,
-                "R": 0
-            };
-            if (rankDirtyLevel[this._.dirtyLevel] < rankDirtyLevel[dirtyLevel])
-                this._.dirtyLevel = dirtyLevel;
-            return this;
-        }
-        this._.dirtyBy = dirtyBy;
-        this._.dirtyLevel = dirtyLevel;
-        this.children.dirty(dirtyBy, "U");
-        return this;
-    }
-
-    /**
-     * 检测是否存在dirty标记，如果存在，完成更新
-     * @param {"a"|"q"|"m"} type
-     * @returns {this}
-     */
-    dirtyCheck(type) {
-        const update = () => {
-            if (!global.dirtyCheckAndUpdate) {
-                global.dirtyCheckAndUpdate = true;
-                this._.dirtyBy.update();
-                global.dirtyCheckAndUpdate = false;
-            } else if (this._.dirtyBy === this && this._.enter) {
-                this._.dirtyBy.update();
+        this.children.forEach(child => {
+            const rule = child._.rule;
+            if (!rule) {
+                return;
             }
+            this.tryMove(child, () => {
+                rule(this, child);
+            });
+        });
+        this.children.forEach(child => {
+            child.unfreeze();
+        })
+    }
+
+    tryMove(element, move) {
+        if (element._.enter) {
+            element._.enter(element, move);
+            element._.enter = undefined;
+        } else {
+            move();
         }
-        if (type === "a" && this._.dirtyBy) update();
-        else if (this._.dirtyLevel === "C") update();
-        else if (this._.dirtyLevel === "U") {
-            if (type === "q") update();
+    }
+
+    update() {
+        if (this.member.hasChanged("global-opacity")) {
+            new Action(
+                this.delay(),
+                this.delay() + this.duration(),
+                this.member.oldValue("global-opacity"), 
+                this.member.get("global-opacity"),
+                Interp.numberInterp(this.d3layer.nake(), "opacity"),
+                this, "opacity"
+            );
+            this.member.flush("global-opacity");
         }
-        return this;
     }
 
     freeze() {
@@ -496,5 +433,3 @@ export class SDNode {
         }
     }
 }
-
-let updateChain = [];

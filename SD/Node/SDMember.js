@@ -12,14 +12,14 @@ export class SDMember {
 
     get(key) {
         if (!this.values[key]) {
-            return undefined;
+            throw new Error(`Unknown Key ${key}`);
         }
         return this.values[key].get();
     }
 
     set(key, value) {
         if (!this.values[key]) {
-            return;
+            throw new Error(`Unknown Key ${key}`);
         }
         this.values[key].set(value);
         return;
@@ -27,7 +27,7 @@ export class SDMember {
 
     setByEqual(key, value) {
         if (!this.values[key]) {
-            return;
+            throw new Error(`Unknown Key ${key}`);
         }
         this.values[key].setByEqual(value);
         return;
@@ -35,7 +35,7 @@ export class SDMember {
 
     setByDqual(key, value) {
         if (!this.values[key]) {
-            return;
+            throw new Error(`Unknown Key ${key}`);
         }
         this.values[key].setByDqual(value);
         return;
@@ -43,23 +43,24 @@ export class SDMember {
 
     hasChanged(key) {
         if (!this.values[key]) {
-            return false;
+            throw new Error(`Unknown Key ${key}`);
         }
         return this.values[key].hasChanged();
     }
 
     oldValue(key) {
         if (!this.values[key]) {
-            return undefined;
+            throw new Error(`Unknown Key ${key}`);
         }
         return this.values[key].oldValue;
     }
 
     flush(key) {
         if (!this.values[key]) {
-            return;
+            throw new Error(`Unknown Key ${key}`);
         }
         this.values[key].isDirty = false;
+        this.values[key].oldValue = this.values[key].value;
         return;
     }
 }

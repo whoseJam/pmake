@@ -1,10 +1,22 @@
 import { Action } from "@/Animate/Action";
 import { BaseNake } from "./BaseNake";
 import { Interp } from "@/Animate/Interp";
+import { Vec } from "@/Utility/Math";
 
 export class BaseCircle extends BaseNake {
     constructor(parent, tag) {
         super(parent, tag);
+    }
+
+    /**
+     * 判断vec是否落在元素范围内
+     * @param {[number, number]} vec 
+     * @returns {boolean}
+     */
+    inRange(vec) {
+        const center = [this.cx(), this.cy()];
+        const length = Vec.length(Vec.sub(vec, center));
+        return length <= this.r();
     }
 
     cx(cx) {
@@ -25,6 +37,14 @@ export class BaseCircle extends BaseNake {
         return this;
     }
 
+    /**
+     * 设置元素的半径
+     * @overload
+     * @param {number} r 
+     * @returns {this}
+     * @overload
+     * @returns {number}
+     */
     r(r) {
         if(r === undefined) {
             return this.member.get("r");
@@ -35,6 +55,7 @@ export class BaseCircle extends BaseNake {
     }
 
     update() {
+        super.update();
         if (this.member.hasChanged("cx")) {
             new Action(
                 this.delay(),
@@ -62,7 +83,7 @@ export class BaseCircle extends BaseNake {
                 this.delay(),
                 this.delay() + this.duration(),
                 this.member.oldValue("r"),
-                this.member.get("y"),
+                this.member.get("r"),
                 Interp.numberInterp(this._.nake, "r"),
                 this, "r"
             );

@@ -13,7 +13,7 @@ export class SDValue {
 
     set(value) {
         this.value = value;
-        this.isDirty = (this.oldValue === this.value);
+        this.isDirty = !(this.oldValue === this.value);
     }
 
     setByEqual(value) {

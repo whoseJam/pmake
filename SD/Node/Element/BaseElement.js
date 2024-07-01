@@ -5,10 +5,10 @@ import { toNode } from "@/Utility/Tool";
 import { svg } from "@/Interact/Svg";
 
 /**
- * @class ElementBase
+ * @class BaseElement
  * @description 元素/节点类的基类
  */
-export class ElementBase extends SDNode {
+export class BaseElement extends SDNode {
     /**
      * @param {SDNode|D3Layer} node 
      */
@@ -16,11 +16,13 @@ export class ElementBase extends SDNode {
         super(node);
         this.newLayer("underBackground");
         this.newLayer("background");
-        this._.x = 0;
-        this._.y = 0;
-        this._.width = 40;
-        this._.height = 40;
-        this._.rate = 1.2;
+
+        this.member.new("x", 0);
+        this.member.new("y", 0);
+        this.member.new("width", 40);
+        this.member.new("height", 40);
+        this.member.new("rate", 1.2);
+        this.member.new("value", undefined);
     }
 
     /**
@@ -31,11 +33,11 @@ export class ElementBase extends SDNode {
      * @returns {number}
      */
     rate(rate) {
-        if (rate === undefined) return this._.rate;
-        this._.rate = rate;
-        const value = this.child("value");
-        if (value) value._.rule = CenterFixAspect(this._.rate);
-        this.dirty(this, "R");
+        if (rate === undefined) {
+            return this.member.get("rate");
+        }
+        this.member.set("rate", rate);
+        this.tryUpdate();
         return this;
     }
 
@@ -58,8 +60,10 @@ export class ElementBase extends SDNode {
      * @returns {SDNode}
      */
     value(value, rule) {
-        if (value === undefined) return this.child("value");
-        rule = rule ? rule : CenterFixAspect(this._.rate);
+        if (value === undefined) {
+            return this.member.get("value");
+        }
+        rule = rule ? rule : CenterFixAspect(this.member.get("rate"));
         value = toNode(this, value);
         const ovalue = this.children.erase("value");
         if (ovalue) ovalue.opacity(0).remove();
@@ -72,8 +76,8 @@ export class ElementBase extends SDNode {
             node.startAnimate(this);
             node.opacity(1);
         };
-        this.dirty(this, "R");
         this.children.push("value", value, rule);
+        this.tryUpdate();
         return this;
     }
 

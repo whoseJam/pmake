@@ -1,8 +1,8 @@
 import { initSvg } from "../Interact/Svg";
 import { appendCanvas } from "../Interact/Canvas";
 import { initText } from "../Node/Basic/Text";
-import { initPath } from "../Node/Basic/Path";
-import { initFragment } from "../Node/Basic/Fragment";
+// import { initPath } from "../Node/Basic/Path";
+// import { initFragment } from "../Node/Basic/Fragment";
 import { initMessage } from "./Message";
 
 export function init() {
@@ -11,8 +11,8 @@ export function init() {
     initAdjust();
     const svg = initSvg();
     initText(svg);
-    initPath(svg);
-    initFragment(svg);
+    // initPath(svg);
+    // initFragment(svg);
     appendCanvas()
     initMessage();
 }

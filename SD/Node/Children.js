@@ -51,7 +51,6 @@ export class Children {
             child = arguments[0];
             rule = arguments[1] ? arguments[1] : undefined;
         }
-        child.dirtyCheck();
         child.parent = this.node;
         this.children[childName] = child;
         if (rule) child._.rule = rule;
@@ -80,15 +79,6 @@ export class Children {
         return child;
     }
 
-    /**
-     * @param {SDNode} dirtyBy 
-     * @param {"U"|"C"|"R"} dirtyLevel 
-     */
-    dirty(dirtyBy, dirtyLevel) {
-        this.forEach(child => {
-            child.dirty(dirtyBy, dirtyLevel);
-        });
-    }
 
     /**
      * 

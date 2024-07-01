@@ -1,8 +1,7 @@
 import { Action } from "@/Animate/Action";
-import { BasicBase } from "@/Node/Basic/BasicBase";
+import { BaseNake } from "@/Node/Basic/BaseNake";
 import { D3Layer } from "@/Node/D3Layer";
 import { d3ToNake } from "@/Utility/Tool";
-import { equal } from "@/Utility/Math";
 import { Interp } from "@/Animate/Interp";
 import { SDNode } from "@/Node/Node";
 
@@ -10,26 +9,55 @@ import { SDNode } from "@/Node/Node";
  * @class Text
  * @description <text>标签的代表类
  */
-export class Text extends BasicBase {
+export class Text extends BaseNake {
     /**
      * @constructor
-     * @param {SDNode|D3Layer} node 
+     * @param {SDNode|D3Layer} parent 
      * @param {number|string|undefined} text 
      * @returns 
      */
-    constructor(node, text) {
-        super(node, "text")
-        this._.text = "";
+    constructor(parent, text) {
+        super(parent, "text")
+
+        this.g().type("Text");
+        
+        this.member.set("fill", "#000000");
+        this.member.set("stroke-width", 0);
+        this.member.new("x", 0);
+        this.member.new("y", 0);
+        this.member.new("text", "");
+        this.member.new("font-size", 20);
+        this.member.new("width", 0);
+        this.member.new("height", 0);
+
         const nake = this._.nake;
         nake.setAttribute("text-anchor", "start");
         nake.setAttribute("dy", ".92em");
-        nake.setAttribute("x", this._.x = 0);
-        nake.setAttribute("y", this._.y = 0);
-        nake.setAttribute("font-size", this._.fontSize = 20);
+        nake.setAttribute("x", this.member.get("x"));
+        nake.setAttribute("y", this.member.get("y"));
+        nake.setAttribute("font-size", this.member.get("font-size"));
         nake.setAttribute("font-family", "consolas");
-        nake.setAttribute("fill", this._.fill = "#000000");
-        nake.setAttribute("stroke-width", this._.strokeWidth = 0);
+        nake.setAttribute("fill", this.member.get("fill"));
+        nake.setAttribute("stroke-width", this.member.get("stroke-width"));
+
         if (text !== undefined && text !== null) this.text(text);
+    }
+
+    x(x) {
+        if (x === undefined) {
+            return this.member.get("x");
+        }
+        this.member.setByEqual("x", x);
+        this.tryUpdate();
+        return this;
+    }
+
+    y(y) {
+        if (y === undefined) {
+            return this.member.get("y");
+        }
+        this.member.setByEqual("y", y);
+        this.tryUpdate();
         return this;
     }
 
@@ -41,10 +69,11 @@ export class Text extends BasicBase {
      * @returns {number}
      */
     width(width) {
-        this.dirtyCheck("q");
-        if (width === undefined) return this._.width;
-        if (equal(width, this._.width)) return this;
-        this.fontSize(widthToFontSize(this._.text, width));
+        if (width === undefined) {
+            return this.member.get("width");
+        }
+        const fontSize = widthToFontSize(this.member.get("text"), width);
+        this.fontsize(fontSize);
         return this;
     }
 
@@ -56,10 +85,11 @@ export class Text extends BasicBase {
      * @returns {number}
      */
     height(height) {
-        this.dirtyCheck("q");
-        if (height === undefined) return this._.height;
-        if (equal(height, this._.height)) return this;
-        this.fontSize(heightToFontSize(this._.text, height));
+        if (height === undefined) {
+            return this.member.get("height");
+        }
+        const fontSize = heightToFontSize(this.member.get("text"), height);
+        this.fontSize(fontSize);
         return this;
     }
 
@@ -71,20 +101,14 @@ export class Text extends BasicBase {
      * @returns {string}
      */
     text(text) {
-        if (text === undefined) return this._.text;
+        if (text === undefined) {
+            return this.member.get("text");
+        }
         text = parseText(String(text));
-        new Action(
-            this.delay(),
-            this.delay() + this.duration(),
-            this._.text, text,
-            Interp.innerHTMLInterp(this._.nake),
-            this, "text"
-        );
-        const box = fontSizeToBox(text, this._.fontSize);
-        this._.text = text;
-        this._.width = box.width;
-        this._.height = box.height;
-        this.dirty(this, "R");
+        console.log("text=", text);
+        this.member.set("text", text);
+        console.log("text has changed=", this.member.hasChanged("text"), "last=", this.member.oldValue("text"), "new=", this.member.get("text"));
+        this.tryUpdate();
         return this;
     }
 
@@ -96,22 +120,69 @@ export class Text extends BasicBase {
      * @returns {number}
      */
     fontSize(fontSize) {
-        this.dirtyCheck("q");
-        if (fontSize === undefined) return this._.fontSize;
-        if (equal(fontSize, this._.fontSize)) return this;
-        new Action(
-            this.delay(),
-            this.delay() + this.duration(),
-            this._.fontSize, fontSize,
-            Interp.numberInterp(this._.nake, "font-size"),
-            this, "font-size"
-        );
-        const box =  fontSizeToBox(this._.text, fontSize);
-        this._.fontSize = fontSize;
-        this._.width = box.width;
-        this._.height = box.height;
-        this.dirty(this, "R");
+        if (fontSize === undefined) {
+            return this.member.get("font-size");
+        }
+        this.member.setByEqual("font-size", fontSize);        
+        this.tryUpdate();
         return this;
+    }
+
+    update() {
+        this.preUpdate();
+        if (this.member.hasChanged("x")) {
+            new Action(
+                this.delay(),
+                this.delay() + this.duration(),
+                this.member.oldValue("x"),
+                this.member.get("x"),
+                Interp.numberInterp(this._.nake, "x"),
+                this, "x"
+            );
+            this.member.flush("x");
+        }
+        if (this.member.hasChanged("y")) {
+            new Action(
+                this.delay(),
+                this.delay() + this.duration(),
+                this.member.oldValue("y"),
+                this.member.get("y"),
+                Interp.numberInterp(this._.nake, "y"),
+                this, "y"
+            );
+            this.member.flush("y");
+        }
+        if (this.member.hasChanged("text") || this.member.hasChanged("font-size")) {
+            const box = fontSizeToBox(
+                this.member.get("text"),
+                this.member.get("font-size")
+            );
+            this.member.set("width", box.width);
+            this.member.set("height", box.height);
+        }
+        if (this.member.hasChanged("text")) {
+            new Action(
+                this.delay(),
+                this.delay() + this.duration(),
+                this.member.oldValue("text"),
+                this.member.get("text"),
+                Interp.innerHTMLInterp(this._.nake),
+                this, "text"
+            );
+            this.member.flush("text");  
+        }
+        if (this.member.hasChanged("font-size")) {
+            new Action(
+                this.delay(),
+                this.delay() + this.duration(),
+                this.member.oldValue("font-size"),
+                this.member.get("font-size"),
+                Interp.numberInterp(this._.nake, "font-size"),
+                this, "font-size"
+            );
+            this.member.flush("font-size");
+        }
+        this.postUpdate();
     }
 }
 

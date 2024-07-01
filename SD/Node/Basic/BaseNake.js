@@ -1,7 +1,6 @@
 import { Action } from "@/Animate/Action";
 import { D3Layer } from "@/Node/D3Layer";
 import { d3ToNake } from "@/Utility/Tool";
-import { equal } from "@/Utility/Math";
 import { Interp } from "@/Animate/Interp";
 import { nakeToSnap } from "@/Utility/Tool";
 import { SDNode } from "@/Node/Node";
@@ -140,16 +139,11 @@ export class BaseNake extends SDNode {
      * @returns {Array<number>}
      */
     strokeDashArray(array) {
-        this.dirtyCheck("q");
-        if (array === undefined) return this._.strokeDashArray;
-        new Action(
-            this.delay(),
-            this.delay() + this.duration(),
-            this._.strokeDashArray, array,
-            Interp.arrayInterp(this._.nake, "stroke-dasharray"),
-            this, "stroke-dasharray"
-        );
-        this._.strokeDashArray = array;
+        if (array === undefined) {
+            return this.member.get("stroke-dasharray");
+        }
+        this.member.set("stroke-dasharray", array);
+        this.tryUpdate();
         return this;
     }
 
@@ -161,10 +155,17 @@ export class BaseNake extends SDNode {
      * @returns {{ main: string, border: string }}
      */
     color(color) {
-        if (color === undefined) return { main: this.fill(), border: this.stroke() };
+        if (color === undefined) {
+            return {
+                main: this.fill(),
+                border: this.stroke()
+            };
+        }
         if (typeof(color) === "string") {
             this.fill(color);
-            if (this instanceof Text) this.stroke(color);
+            if (this instanceof Text) {
+                this.stroke(color);
+            }
         } else {
             this.fill(color.main);
             this.stroke(color.border);
@@ -173,6 +174,7 @@ export class BaseNake extends SDNode {
     }
 
     update() {
+        super.update();
         if (this.member.hasChanged("fill")) {
             new Action(
                 this.delay(),
@@ -244,7 +246,7 @@ export class BaseNake extends SDNode {
                 this.delay(),
                 this.delay() + this.duration(),
                 this.member.oldValue("stroke-dasharray"),
-                this.member.get("stroke-dashrarray"),
+                this.member.get("stroke-dasharray"),
                 Interp.arrayInterp(this._.nake, "stroke-dasharray"),
                 this, "stroke-dasharray"
             );

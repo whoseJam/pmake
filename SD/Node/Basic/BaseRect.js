@@ -44,6 +44,7 @@ export class BaseRect extends BaseNake {
     }
 
     update() {
+        super.update();
         if (this.member.hasChanged("x")) {
             new Action(
                 this.delay(),

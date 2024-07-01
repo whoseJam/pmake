@@ -1,5 +1,3 @@
-import { Action } from "@/Animate/Action";
-import { Interp } from "@/Animate/Interp";
 import { D3Layer } from "@/Node/D3Layer";
 import { SDNode } from "@/Node/Node";
 import { BaseRect } from "./BaseRect";
@@ -11,91 +9,32 @@ import { BaseRect } from "./BaseRect";
 export class Rect extends BaseRect {
     /**
      * @constructor
-     * @param {SDNode|D3Layer} node 
+     * @param {SDNode|D3Layer} parent 
      */
-    constructor(node) {
-        super(node, "rect");
+    constructor(parent) {
+        super(parent, "rect");
         this.g().type("Rect");
 
-        const nake = this._.nake;
-        nake.setAttribute("fill", this._.fill = "#ffffff");
-        nake.setAttribute("stroke", this._.stroke = "#000000");
-
+        this.member.set("fill", "#ffffff");
+        this.member.set("stroke", "#000000");
         this.member.new("x", 0);
         this.member.new("y", 0);
-        this.member.new("width", 0);
-        this.member.new("height", 0);
+        this.member.new("width", 40);
+        this.member.new("height", 40);
+
+        const nake = this._.nake;
+        nake.setAttribute("fill", this.member.get("fill"));
+        nake.setAttribute("stroke", this.member.get("stroke"));
+        nake.setAttribute("x", this.member.get("x"));
+        nake.setAttribute("y", this.member.get("y"));
+        nake.setAttribute("width", this.member.get("width"));
+        nake.setAttribute("height", this.member.get("height"));
     }
 
-    x(x) {
-        if (x === undefined) {
-            return this.member.get("x");
-        }
-        this.member.setByEqual("x", x);
-        this.tryUpdate();
-        return this;
-    }
-
-    y(y) {
-        if (y === undefined) {
-            return this.member.get("y");
-        }
-        this.member.setByEqual("y", y);
-        this.tryUpdate();
-        return this;
-    }
-
-    width(width) {
-        if (width === undefined) {
-            return this.member.get("width");
-        }
-        this.member.setByEqual("width", width);
-        this.tryUpdate();
-        return this;
-    }
-
-    height(height) {
-        if (height === undefined) {
-            return this.member.get("height");
-        }
-        this.member.setByEqual("height", height);
-        this.tryUpdate();
-        return this;
-    }
-
+ 
     update() {
         this.preUpdate();
-        console.log("Rect update");
-
-        if (this.member.hasChanged("x")) {
-            new Action(
-                this.delay(),
-                this.delay() + this.duration(),
-                this.member.oldValue("x"),
-                this.member.get("x"),
-                Interp.numberInterp(this._.nake, "x"),
-                this, "x"
-            );
-            this.member.flush("x");
-        }
-        if (this.member.hasChanged("y")) {
-            new Action(
-                this.delay(),
-                this.delay() + this.duration(),
-                this.member.oldValue("y"),
-                this.member.get("y"),
-                Interp.numberInterp(this._.nake, "y"),
-                this, "y"
-            );
-            this.member.flush("y");
-        }
-        this.children.forEach(child => {
-            child.freeze();
-            if (child._.rule) {
-                child._.rule(this, child);
-            }
-            child.unfreeze();
-        })
-        // this.postUpdate();
+        super.update();
+        this.postUpdate();
     }
 }

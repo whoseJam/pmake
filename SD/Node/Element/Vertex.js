@@ -1,14 +1,14 @@
 import { Circle } from "@/Node/Basic/Circle"; 
 import { CircleBackground } from "@/Rule/Background";
 import { D3Layer } from "@/Node/D3Layer";
-import { ElementBase } from "./ElementBase";
+import { BaseElement } from "./BaseElement";
 import { SDNode } from "@/Node/Node";
 import { Vec } from "@/Utility/Math";
 
 /**
  * @class Vertex
  */
-export class Vertex extends ElementBase {
+export class Vertex extends BaseElement {
     /**
      * @constructor
      * @param {SDNode|D3Layer} node 

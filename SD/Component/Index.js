@@ -42,6 +42,5 @@ export function Index(node, position="t") {
         else if (position === "r") child.x(parent.mx() + 2).y(parent.y());
     }
     node.childAs(`index_${++id}`, index, rule);
-    node.dirty();
     return index;
 }

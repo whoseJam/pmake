@@ -15,7 +15,6 @@ export function Link(elem1, elem2, linkClass = Line, xloc1 = "cx", yloc1 = "cy",
         link.update();
     }
     elem1.childAs(`link_${++id}`, link, move);
-    elem1.dirty();
     elem2.childAs(`link_${++id}`, link, move);
     return link;
 }

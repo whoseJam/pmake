@@ -1,5 +1,5 @@
 import { Action } from "@/Animate/Action";
-import { BasicBase } from "@/Node/Basic/BasicBase";
+import { BaseNake } from "@/Node/Basic/BaseNake";
 import { Context } from "@/Animate/Context";
 import { D3Layer } from "@/Node/D3Layer";
 import { Interp } from "@/Animate/Interp";
@@ -8,7 +8,7 @@ import { SDNode } from "@/Node/Node";
 /**
  * @class PathBase
  */
-export class PathBase extends BasicBase {
+export class PathBase extends BaseNake {
     /**
      * @constructor
      * @param {SDNode|D3Layer} node

@@ -34,7 +34,6 @@ export class Array extends ArrayBase {
      * @returns {number}
      */
     width(width) {
-        this.dirtyCheck("q");
         if (width === undefined) return this._.width;
         const length = this.length() ? this.length() : 1;
         this.elementWidth(width / length);
@@ -50,8 +49,9 @@ export class Array extends ArrayBase {
      * @returns {number}
      */
     height(height) {
-        this.dirtyCheck("q");
-        if (height === undefined) return this._.height;
+        if (height === undefined) {
+            return this._.height;
+        }
         this.elementHeight(height);
         return this;
     }

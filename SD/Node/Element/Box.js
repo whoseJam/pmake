@@ -1,13 +1,13 @@
 import { Background } from "@/Rule/Background";
 import { D3Layer } from "@/Node/D3Layer";
-import { ElementBase } from "./ElementBase";
+import { BaseElement } from "./BaseElement";
 import { Rect } from "@/Node/Basic/Rect";
 import { SDNode } from "@/Node/Node";
 
 /**
  * @class Box
  */
-export class Box extends ElementBase {
+export class Box extends BaseElement {
     /**
      * @constructor
      * @param {SDNode|D3Layer} node 

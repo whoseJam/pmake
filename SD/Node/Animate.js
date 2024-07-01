@@ -45,7 +45,6 @@ export class Animate {
             l = arg0;
             r = arg1;
         }
-        if (this.startTimestamp !== l || this.endTimestamp !== r) this.node.dirtyCheck("a");
         this.startTimestamp = l;
         this.endTimestamp = r;
         this.animating = true;
@@ -55,7 +54,6 @@ export class Animate {
 
     endAnimate() {
         this.animateCheck();
-        this.dirtyCheck("a");
         this.startTimestamp = this.endTimestamp;
         const node = this.node;
         node.children.forEach(child => {
@@ -66,7 +64,6 @@ export class Animate {
 
     after(delay) {
         this.animateCheck();
-        this.dirtyCheck("a");
         if (typeof(delay) !== "number") delay = delay.delay();
         this.startTimestamp = delay;
         this.endTimestamp = delay;
@@ -89,9 +86,5 @@ export class Animate {
     isAnimating() {
         this.animateCheck();
         return this.animating;
-    }
-
-    dirtyCheck(range) {
-        this.node.dirtyCheck(range);
     }
 }
