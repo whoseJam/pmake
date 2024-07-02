@@ -25,6 +25,42 @@ export class BaseElement extends SDNode {
         this.member.new("value", undefined);
     }
 
+    x(x) {
+        if (x === undefined) {
+            return this.member.get("x");
+        }
+        this.member.setByEqual("x", x);
+        this.tryUpdate();
+        return this;
+    }
+
+    y(y) {
+        if (y === undefined) {
+            return this.member.get("y");
+        }
+        this.member.setByEqual("y", y);
+        this.tryUpdate();
+        return this;
+    }
+
+    width(width) {
+        if (width === undefined) {
+            return this.member.get("width");
+        }
+        this.member.setByEqual("width", width);
+        this.tryUpdate();
+        return this;
+    }
+
+    height(height) {
+        if (height === undefined) {
+            return this.member.get("height");
+        }
+        this.member.setByEqual("height", height);
+        this.tryUpdate();
+        return this;
+    }
+
     /**
      * @overload
      * @param {number} rate 
@@ -103,6 +139,7 @@ export class BaseElement extends SDNode {
     valueFromExist(value, rule) {
         rule = rule ? rule : CenterFixAspect(this._.rate);
         const ovalue = this.children.erase("value");
+        console.log("ovalue=", ovalue);
         if (ovalue) ovalue.startAnimate(this).opacity(0).remove();
         value._.enter = (node, move) => {
             node.startAnimate(this);
@@ -110,8 +147,8 @@ export class BaseElement extends SDNode {
             move();
             node.opacity(1);
         };
-        this.dirty(this, "R");
         this.children.push("value", value, rule);
+        this.tryUpdate();
         return this;
     }
 
@@ -197,5 +234,9 @@ export class BaseElement extends SDNode {
         if (strokeWidth === undefined) return back.strokeWidth();
         back.strokeWidth(strokeWidth);
         return this;
+    }
+
+    update() {
+        super.update();
     }
 }

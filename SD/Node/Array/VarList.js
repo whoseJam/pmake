@@ -35,7 +35,7 @@ export class VarList extends ArrayBase {
         this.dirtyCheck("q");
         if (fontSize === undefined) return this._.fontSize;
         this._.fontSize = fontSize;
-        this.dirty(this, "U");
+        this.tryUpdate();
         return this;
     }
 
@@ -47,7 +47,6 @@ export class VarList extends ArrayBase {
      * @returns {number}
      */
     width(width) {
-        this.dirtyCheck("q");
         if (width === undefined) return this._.width;
         const owidth = this._.width;
         const k = owidth > 0 ? width / owidth : 1;
@@ -101,8 +100,8 @@ export class VarList extends ArrayBase {
             element.startAnimate(this);
             element.opacity(1);
         }
-        this.dirty(this, "U");
         this.insertByArrayBase(this.end() + 1, element);
+        this.tryUpdate();
         return this;
     }
 
@@ -178,6 +177,7 @@ export class VarList extends ArrayBase {
         }
         this._.width = width;
         this._.height = height;
+        super.update();
         this.postUpdate();
         return this;
     }

@@ -84,7 +84,7 @@ export class SDNode {
     childAs(childName, child, rule) {
         if (child.parent !== this) child.attachTo(this);
         this.children.push(childName, child, rule);
-        this.dirty(this, "R");
+        this.tryUpdate();
         return this;
     }
 

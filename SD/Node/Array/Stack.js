@@ -29,7 +29,6 @@ export class Stack extends Array {
      * @returns {number}
      */
     width(width) {
-        this.dirtyCheck("q");
         if (width === undefined) return this._.width;
         this.elementWidth(width);
         return this;
@@ -43,7 +42,6 @@ export class Stack extends Array {
      * @returns {number}
      */
     height(height) {
-        this.dirtyCheck("q");
         if (height === undefined) return this._.height;
         const length = this.length() ? this.length() : 1;
         this.elementHeight(height / length);
@@ -58,12 +56,11 @@ export class Stack extends Array {
      * @returns {number}
      */
     elementWidth(width) {
-        this.dirtyCheck("q");
         if (width === undefined) return this._.elementWidth;
         if (equal(width, this._.elementWidth)) return this;
         this._.elementWidth = width;
         this._.width = width;
-        this.dirty(this, "R");
+        this.tryUpdate();
         return this;
     }
 
@@ -75,12 +72,11 @@ export class Stack extends Array {
      * @returns {number}
      */
     elementHeight(height) {
-        this.dirtyCheck("q");
         if (height === undefined) return this._.elementHeight;
         if (equal(height, this._.elementHeight)) return this;
         this._.elementHeight = height;
         this._.height = height * this._.elements.length;
-        this.dirty(this, "R");
+        this.tryUpdate();
         return this;
     }
 
@@ -105,6 +101,7 @@ export class Stack extends Array {
         }
         this._.width = elementWidth;
         this._.height = elementHeight * elements.length;
+        super.update();
         this.postUpdate();
         return this;
     }

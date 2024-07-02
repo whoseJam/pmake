@@ -2,23 +2,27 @@ import { Action } from "@/Animate/Action";
 import { D3Layer } from "@/Node/D3Layer";
 import { d3ToNake } from "@/Utility/Tool";
 import { equal } from "@/Utility/Math";
-import { LinkBase } from "@/Node/Basic/LinkBase";
 import { SDNode } from "@/Node/Node";
 import { snapAction } from "@/Utility/Tool";
+import { BaseLink } from "./BaseLink";
 
 /**
  * @class Path
  */
-export class Path extends LinkBase {
+export class Path extends BaseLink {
     /**
      * @constructor
-     * @param {SDNode|D3Layer} node 
+     * @param {SDNode|D3Layer} parent
      */
-    constructor(node) {
-        super(node, "path");
+    constructor(parent) {
+        super(parent, "path");
+
         this.g().type("Path");
-        this._.nake.setAttribute("d", "M 0, 0 L 0, 0");
-        this._.d = "M 0, 0 L 0, 0";
+        
+        this.member.new("d", "M 0, 0 L 0, 0");
+
+        const nake = this._.nake;
+        nake.setAttribute("d", this.member.get("d"));
     }
 
     /**
@@ -27,7 +31,7 @@ export class Path extends LinkBase {
      * @returns {[number, number]}
      */
     at(k) {
-        return getPointByRate(this._.d, k);
+        return getPointByRate(this.member.get("d"), k);
     }
 
     /**
@@ -36,7 +40,7 @@ export class Path extends LinkBase {
      * @returns {[number, number]}
      */
     getPointAtLength(length) {
-        return getPointAtLength(this._.d, length);
+        return getPointAtLength(this.member.get("d"), length);
     }
 
     /**
@@ -44,7 +48,7 @@ export class Path extends LinkBase {
      * @returns {number}
      */
     totalLength() {
-        return getTotalLength(this._.d);
+        return getTotalLength(this.member.get("d"));
     }
 
     /**
@@ -55,12 +59,14 @@ export class Path extends LinkBase {
      * @returns {number}
      */
     x(x) {
-        this.dirtyCheck();
-        if (x === undefined) return this._.x;
-        if (equal(x, this._.x)) return this;
-        this.d(move(this._.d, x - this._.x, 0));
-        this._.x = x;
-        this.dirty(this, "R");
+        if (x === undefined) {
+            return this.member.get("x");
+        }
+        this.member.setByEqual("x", x);
+        this.d(move(
+            this.member.get("d"),
+            x - this.member.get("x"),
+            0));
         return this;
     }
 
@@ -72,12 +78,14 @@ export class Path extends LinkBase {
      * @returns {number}
      */
     y(y) {
-        this.dirtyCheck();
-        if (y === undefined) return this._.y;
-        if (equal(y, this._.y)) return this;
-        this.d(move(this._.d, 0, y - this._.y));
-        this._.y = y;
-        this.dirty(this, "R");
+        if (y === undefined) {
+            return this.member.get("y");
+        }
+        this.member.setByEqual("y", y);
+        this.d(move(
+            this.member.get("d"),
+            0,
+            y - this.member.get("y")));
         return this;
     }
 
@@ -88,11 +96,8 @@ export class Path extends LinkBase {
      * @overload
      * @returns {number}
      */
-    width(width) {
-        this.dirtyCheck();
-        if (width === undefined) return this._.width;
-        if (equal(width, this._.width)) return this;
-        throw new Error("Not Implemented Yet");
+    width() {
+        return this.member.get("width");
     }
     
     /**
@@ -102,11 +107,8 @@ export class Path extends LinkBase {
      * @overload
      * @returns {number}
      */
-    height(height) {
-        this.dirtyCheck();
-        if (height === undefined) return this._.height;
-        if (equal(height, this._.height)) return this;
-        throw new Error("Not Implemented Yet");
+    height() {
+        return this.member.get("height");
     }
 
     /**
@@ -117,34 +119,51 @@ export class Path extends LinkBase {
      * @returns {string}
      */
     d(d) {
-        this.dirtyCheck("m");
-        if (d === undefined) return this._.d;
-        const duration = this.duration();
-        const snap = this._.snap;
-        new Action(
-            this.delay(),
-            this.delay() + this.duration(),
-            this._.d, d,
-            function(t) {
-                if (t === 0) {
-                    snapAction({
-                        elem: snap,
-                        start: 0,
-                        end: duration,
-                        key: "d",
-                        value: this.to
-                    });
-                }
-            },
-            this, "d"
-        );
-        const box = pathToBox(this._.d = d);
-        this._.x = box.x;
-        this._.y = box.y;
-        this._.width = box.width;
-        this._.height = box.height;
-        this.dirty(this, "R");
+        if (d === undefined) {
+            return this.member.get("d");
+        }
+        this.member.set("d", d);
+        this.tryUpdate();
         return this;
+    }
+
+    update() {
+        this.preUpdate();
+        
+        if (this.member.hasChanged("d")) {
+            const duration = this.duration();
+            const snap = this._.snap;
+            new Action(
+                this.delay(),
+                this.delay() + this.duration(),
+                this.member.oldValue("d"),
+                this.member.get("d"),
+                function(t) {
+                    if (t === 0) {
+                        snapAction({
+                            elem: snap,
+                            start: 0,
+                            end: duration,
+                            key: "d",
+                            value: this.to
+                        });
+                    }
+                },
+                this, "d"
+            );
+            const box = pathToBox(this._.d = d);
+            this.member.set("x", box.x);
+            this.member.set("y", box.y);
+            this.member.set("width", box.width);
+            this.member.set("height", box.height);
+            this.member.flush("x");
+            this.member.flush("y");
+            this.member.flush("width");
+            this.member.flush("height");
+            this.member.flush("d");
+        }
+        
+        this.postUpdate();
     }
 }
 

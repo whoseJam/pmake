@@ -73,7 +73,7 @@ export class Text extends BaseNake {
             return this.member.get("width");
         }
         const fontSize = widthToFontSize(this.member.get("text"), width);
-        this.fontsize(fontSize);
+        this.fontSize(fontSize);
         return this;
     }
 
@@ -105,9 +105,7 @@ export class Text extends BaseNake {
             return this.member.get("text");
         }
         text = parseText(String(text));
-        console.log("text=", text);
         this.member.set("text", text);
-        console.log("text has changed=", this.member.hasChanged("text"), "last=", this.member.oldValue("text"), "new=", this.member.get("text"));
         this.tryUpdate();
         return this;
     }
@@ -182,6 +180,7 @@ export class Text extends BaseNake {
             );
             this.member.flush("font-size");
         }
+        super.update();
         this.postUpdate();
     }
 }

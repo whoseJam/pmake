@@ -59,15 +59,17 @@ export class Fragment extends BaseRect {
             );
             this.member.flush("html");
             const box = getBox(this.member.get("html"));
-            this.member.set("x", box.x);
-            this.member.set("y", box.y);
-            this.member.set("width", box.width);
-            this.member.set("height", box.height);
+            this.member.setByEqual("x", box.x);
+            this.member.setByEqual("y", box.y);
+            this.member.setByEqual("width", box.width);
+            this.member.setByEqual("height", box.height);
             this.member.set("snapshot", box);
+            this.member.set("transform", getMatrix(1, 1, 1, 1, box.x, box.y));
             this.member.flush("x");
             this.member.flush("y");
             this.member.flush("width");
             this.member.flush("height");
+            this.member.flush("transform");
         }
         if (this.member.get("snapshot") &&
            (this.member.hasChanged("x") ||

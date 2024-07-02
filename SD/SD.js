@@ -18,8 +18,8 @@ export { Line } from "./Node/Basic/Line.js";
 // export { Path } from "./Node/Basic/Path.js";
 // export { Svg } from "./Node/Basic/Svg.js";
 
-// export { Box } from "./Node/Element/Box.js";
-// export { Vertex } from "./Node/Element/Vertex.js";
+export { Box } from "./Node/Element/Box.js";
+export { Vertex } from "./Node/Element/Vertex.js";
 
 // export { Array } from "./Node/Array/Array.js";
 // export { ValueArray } from "./Node/Array/ValueArray.js";

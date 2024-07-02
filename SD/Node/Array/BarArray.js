@@ -58,7 +58,7 @@ export class BarArray extends Array {
             elem.startAnimate(this);
             elem.opacity(1);
         };
-        this.dirty(this, "U");
+        this.tryUpdate();
         return this;
     }
 
@@ -79,7 +79,7 @@ export class BarArray extends Array {
         let elem = this.element(idx);
         this.eraseByArrayBase(idx);
         elem.startAnimate(this).opacity(0).remove();
-        this.dirty(this, "U");
+        this.tryUpdate();
         return this;
     }
 
@@ -108,6 +108,7 @@ export class BarArray extends Array {
         this._.width = elementWidth * elements.length;
         this._.height = maxHeight;
         this._.y = y - maxHeight;
+        super.update();
         this.postUpdate();
         return this;
     }

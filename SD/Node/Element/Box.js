@@ -22,4 +22,10 @@ export class Box extends BaseElement {
             Background())
         if (value) this.value(value);
     }
+
+    update() {
+        this.preUpdate();
+        super.update();
+        this.postUpdate();
+    }
 }

@@ -70,7 +70,7 @@ export class Array extends ArrayBase {
         if (equal(width, this._.elementWidth)) return this;
         this._.elementWidth = width;
         this._.width = width * this._.elements.length;
-        this.dirty(this, "R");
+        this.tryUpdate();
         return this;
     }
 
@@ -107,8 +107,8 @@ export class Array extends ArrayBase {
             elem.startAnimate(this);
             elem.opacity(1);
         };
-        this.dirty(this, "U");
         this.insertByArrayBase(idx, elem);
+        this.tryUpdate();
         return this;
     }
 
@@ -127,8 +127,8 @@ export class Array extends ArrayBase {
             elem.opacity(1);
             elem.valueFromExist(value);
         };
-        this.dirty(this, "U");
         this.insertByArrayBase(idx, elem);
+        this.tryUpdate();
         return this;
     }
 
@@ -146,8 +146,8 @@ export class Array extends ArrayBase {
             move();
             elem.opacity(1);
         };
-        this.dirty(this, "U");
         this.insertByArrayBase(idx, value);
+        this.tryUpdate();
         return this;
     }
 
@@ -172,6 +172,7 @@ export class Array extends ArrayBase {
         }
         this._.width = elementWidth * elements.length;
         this._.height = elementHeight;
+        super.update();
         this.postUpdate();
         return this;
     }

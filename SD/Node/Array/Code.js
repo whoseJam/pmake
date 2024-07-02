@@ -81,10 +81,9 @@ export class Code extends ArrayBase {
      * @returns {number}
      */
     fontSize(fontSize) {
-        this.dirtyCheck("q");
         if (fontSize === undefined) return this._.fontSize;
         this._.fontSize = fontSize;
-        this.dirty(this, "R");
+        this.tryUpdate();
         return this;
     }
 
@@ -101,8 +100,8 @@ export class Code extends ArrayBase {
             elem.startAnimate(this);
             elem.opacity(1);
         }
-        this.dirty(this, "U");
         this.insertByArrayBase(idx, elem);
+        this.tryUpdate();
         return this;
     }
     
@@ -155,7 +154,7 @@ export class Code extends ArrayBase {
                 elem.opacity(1);
             };
         }
-        this.dirty(this, "R");
+        this.tryUpdate();
         return this;
     }
 
@@ -182,6 +181,7 @@ export class Code extends ArrayBase {
         }
         this._.width = width;
         this._.height = height;
+        super.update();
         this.postUpdate();
         return this;
     }

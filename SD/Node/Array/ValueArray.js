@@ -33,8 +33,8 @@ export class ValueArray extends Array {
             elem.startAnimate(this);
             elem.opacity(1);
         };
-        this.dirty(this, "U");
         this.insertByArrayBase(idx, elem);
+        this.tryUpdate();
         return this;
     }
 
@@ -51,8 +51,8 @@ export class ValueArray extends Array {
             move();
             elem.opacity(1);
         };
-        this.dirty(this, "U");
         this.insertByArrayBase(idx, elem);
+        this.tryUpdate();
         return this;
     }
 

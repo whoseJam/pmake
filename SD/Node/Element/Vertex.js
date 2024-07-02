@@ -17,7 +17,9 @@ export class Vertex extends BaseElement {
     constructor(node, value = null) {
         super(node);
         this.g().type("Vertex");
-        this._.r = 20;
+
+        this.member.new("r", 20);
+        
         this.childAs(
             "background",
             new Circle(this.layer("background")),
@@ -69,10 +71,17 @@ export class Vertex extends BaseElement {
      * @returns {number}
      */
     r(r) {
-        this.dirtyCheck("m");
-        if (r === undefined) return this._.r;
-        this._.r = r;
-        this.dirty(this, "U");
+        if (r === undefined) {
+            return this.member.get("r");
+        }
+        this.member.setByEqual("r", r);
+        this.tryUpdate();
         return this;
+    }
+
+    update() {
+        this.preUpdate();
+        super.update();
+        this.postUpdate();
     }
 }
