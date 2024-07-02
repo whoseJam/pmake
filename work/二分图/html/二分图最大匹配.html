@@ -58,6 +58,39 @@
         <h2>二分图的最大匹配</h2>
         <p>我们只需要从每一个点开始，都尝试一次找增广路就行了</p>
         <iframe data-src="./animation/最大匹配.html"
-            style="width: 1000px; height: 500px;"></iframe>
+            style="width: 1000px; height: 250px;"></iframe>
+        <codeblock>
+            <script type="text/template">
+                bool findPath(int u) { // 从u这个点开始找增广路，如果能找到则返回true
+                    for (int i = h[u], v; i; i = l[i].Nxt) {
+                        v = l[i].to;
+                        if (!vis[v]) { // v没有被标记过
+                            vis[v] = true;
+                            if (!match[v] || findPath(match[v])) {
+                                match[v] = u; // v没有与别的点匹配，或和v匹配的点可以换人匹配
+                                return true;
+                            }
+                        }
+                    }
+                    return false;
+                }
+            </script>
+        </codeblock>
+    </section>
+    <section>
+        <h2>二分图最大匹配</h2>
+        <codeblock>
+            <script type="text/template">
+                int MaxMatch() {
+                    int ans = 0;
+                    memset(match, 0, sizeof(match));
+                    for (int u = 1; u <= n; u++) {
+                        memset(vis, 0, sizeof(vis));
+                        if (findPath(u)) ans++;
+                    }
+                    return ans;
+                }
+            </script>
+        </codeblock>
     </section>
 </section>

@@ -2,6 +2,7 @@ import * as sd from "@/SD";
 
 const svg = sd.svg();
 const I = sd.input();
+const C =  sd.color();
 const boxes = [];
 
 const data = `
@@ -11,6 +12,7 @@ wwbww
 wwwwb
 wwwbw
 `
+const mp = I.readCharMatrix(data, 5, 5);
 
 init();
 main();
@@ -21,10 +23,8 @@ function init() {
             const box = new sd.Box(svg);
             box.i = i;
             box.j = j;
-            if (i == 4) {
-                if (j == 2) box.value("a");
-                if (j == 4) box.value("b");
-            }
+            if (mp[i][j] == "b")
+                box.color(C.grey);
             boxes.push(box);
         }
     }
@@ -38,8 +38,8 @@ async function main() {
     startAnimate();
     reorder({
         1: 2,
-        2: 3,
-        3: 1,
+        2: 1,
+        3: 3,
         4: 5,
         5: 4
     });
@@ -52,4 +52,25 @@ function reorder(mp) {
     boxes.forEach(box => {
         box.i = mp[box.i];
     })
+}
+
+function startAnimate() {
+    boxes.forEach(box => {
+        box.startAnimate();
+    })
+}
+
+function endAnimate() {
+    boxes.forEach(box => {
+        box.endAnimate();
+    })
+}
+
+function update() {
+    boxes.forEach(box => {
+        const i = box.i;
+        const j = box.j;
+        box.x((i-1) * 40 + 40)
+            .y((j-1) * 40 + 40);
+    });
 }
