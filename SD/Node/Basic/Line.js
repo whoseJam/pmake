@@ -2,23 +2,29 @@ import { Action } from "@/Animate/Action";
 import { D3Layer } from "@/Node/D3Layer";
 import { equal } from "@/Utility/Math";
 import { Interp } from "@/Animate/Interp";
-import { LinkBase } from "@/Node/Basic/LinkBase";
 import { SDNode } from "@/Node/Node";
 import { Vec } from "@/Utility/Math";
+import { BaseLink } from "./BaseLink";
 
-export class Line extends LinkBase {
+export class Line extends BaseLink {
     /**
      * @constructor
-     * @param {SDNode|D3Layer} node 
+     * @param {SDNode|D3Layer} parent
      */
-    constructor(node) {
-        super(node, "line");
+    constructor(parent) {
+        super(parent, "line");
         this.g().type("Line");
+
+        this.member.new("x1", 0);
+        this.member.new("y1", 0);
+        this.member.new("x2", 40);
+        this.member.new("y2", 40);
+
         const nake = this._.nake;
-        nake.setAttribute("x1", this._.x1 = 0);
-        nake.setAttribute("y1", this._.y1 = 0);
-        nake.setAttribute("x2", this._.x2 = 40);
-        nake.setAttribute("y2", this._.y2 = 40);
+        nake.setAttribute("x1", this.member.get("x1"));
+        nake.setAttribute("y1", this.member.get("y1"));
+        nake.setAttribute("x2", this.member.get("x2"));
+        nake.setAttribute("y2", this.member.get("y2"));
     }
     
     /**
@@ -49,12 +55,11 @@ export class Line extends LinkBase {
      * @returns {number}
      */
     totalLength() {
-        this.dirtyCheck("m");
+        const x1 = this.x1(), y1 = this.y1();
+        const x2 = this.x2(), y2 = this.y2();
         return Math.sqrt(
-            (this._.x1 - this._.x2) * 
-            (this._.x1 - this._.x2) + 
-            (this._.y1 - this._.y2) *
-            (this._.y1 - this._.y2)
+            (x1 - x2) * (x1 - x2) +
+            (y1 - y2) * (y1 - y2)
         );
     }
 
@@ -66,18 +71,11 @@ export class Line extends LinkBase {
      * @returns {number}
      */
     x1(x) {
-        this.dirtyCheck("q");
-        if (x === undefined) return this._.x1;
-        if (equal(x, this._.x1)) return this;
-        new Action(
-            this.delay(),
-            this.delay() + this.duration(),
-            this._.x1, x,
-            Interp.numberInterp(this._.nake, "x1"),
-            this, "x1"
-        );
-        this._.x1 = x;
-        this.dirty(this, "R");
+        if (x === undefined) {
+            return this.member.get("x1");
+        }
+        this.member.setByEqual("x1", x);
+        this.tryUpdate();
         return this;
     }
 
@@ -89,18 +87,11 @@ export class Line extends LinkBase {
      * @returns {number}
      */
     x2(x) {
-        this.dirtyCheck("q");
-        if (x === undefined) return this._.x2;
-        if (equal(x, this._.x2)) return this;
-        new Action(
-            this.delay(),
-            this.delay() + this.duration(),
-            this._.x2, x,
-            Interp.numberInterp(this._.nake, "x2"),
-            this, "x2"
-        );
-        this._.x2 = x;
-        this.dirty(this, "R");
+        if (x === undefined) {
+            return this.member.get("x2");
+        }
+        this.member.setByEqual("x2", x);
+        this.tryUpdate();
         return this;
     }
 
@@ -112,18 +103,11 @@ export class Line extends LinkBase {
      * @returns {number}
      */
     y1(y) {
-        this.dirtyCheck("q");
-        if (y === undefined) return this._.y1;
-        if (equal(y, this._.y1)) return this;
-        new Action(
-            this.delay(),
-            this.delay() + this.duration(),
-            this._.y1, y,
-            Interp.numberInterp(this._.nake, "y1"),
-            this, "y1"
-        );
-        this._.y1 = y;
-        this.dirty(this, "R");
+        if (y === undefined) {
+            return this.member.get("y1");
+        }
+        this.member.setByEqual("y1", y);
+        this.tryUpdate();
         return this;
     }
 
@@ -135,18 +119,61 @@ export class Line extends LinkBase {
      * @returns {number}
      */
     y2(y) {
-        this.dirtyCheck("q");
-        if (y === undefined) return this._.y2;
-        if (equal(y, this._.y2)) return this;
-        new Action(
-            this.delay(),
-            this.delay() + this.duration(),
-            this._.y2, y,
-            Interp.numberInterp(this._.nake, "y2"),
-            this, "y2"
-        );
-        this._.y2 = y;
-        this.dirty(this, "R");
+        if (y === undefined) {
+            return this.member.get("y2");
+        }
+        this.member.setByEqual("y2", y);
+        this.tryUpdate();
         return this;
+    }
+
+    update() {
+        this.preUpdate();
+        super.update();
+        if (this.member.hasChanged("x1")) {
+            new Action(
+                this.delay(),
+                this.delay() + this.duration(),
+                this.member.oldValue("x1"),
+                this.member.get("x1"),
+                Interp.numberInterp(this._.nake, "x1"),
+                this, "x1"
+            );
+            this.member.flush("x1");
+        }
+        if (this.member.hasChanged("y1")) {
+            new Action(
+                this.delay(),
+                this.delay() + this.duration(),
+                this.member.oldValue("y1"),
+                this.member.get("y1"),
+                Interp.numberInterp(this._.nake, "y1"),
+                this, "y1"
+            );
+            this.member.flush("y1");
+        }
+        if (this.member.hasChanged("x2")) {
+            new Action(
+                this.delay(),
+                this.delay() + this.duration(),
+                this.member.oldValue("x2"),
+                this.member.get("x2"),
+                Interp.numberInterp(this._.nake, "x2"),
+                this, "x2"
+            );
+            this.member.flush("x2");
+        }
+        if (this.member.hasChanged("y2")) {
+            new Action(
+                this.delay(),
+                this.delay() + this.duration(),
+                this.member.oldValue("y2"),
+                this.member.get("y2"),
+                Interp.numberInterp(this._.nake, "y2"),
+                this, "y2"
+            );
+            this.member.flush("y2");
+        }
+        this.postUpdate();
     }
 }

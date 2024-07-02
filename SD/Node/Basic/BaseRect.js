@@ -5,6 +5,11 @@ import { Interp } from "@/Animate/Interp";
 export class BaseRect extends BaseNake {
     constructor(parent, tag) {
         super(parent, tag);
+
+        this.member.new("x", 0);
+        this.member.new("y", 0);
+        this.member.new("width", 40);
+        this.member.new("height", 40);
     }
 
     x(x) {

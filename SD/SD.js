@@ -13,8 +13,8 @@ export { SDNode } from "./Node/Node.js";
 export { Rect } from "./Node/Basic/Rect.js";
 export { Circle } from "./Node/Basic/Circle.js";
 export { Text } from "./Node/Basic/Text.js";
-// export { Fragment } from "./Node/Basic/Fragment.js";
-// export { Line } from "./Node/Basic/Line.js";
+export { Fragment } from "./Node/Basic/Fragment.js";
+export { Line } from "./Node/Basic/Line.js";
 // export { Path } from "./Node/Basic/Path.js";
 // export { Svg } from "./Node/Basic/Svg.js";
 
