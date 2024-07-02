@@ -3,7 +3,7 @@ import { D3Layer } from "@/Node/D3Layer";
 import { d3ToNake } from "@/Utility/Tool";
 import { equal } from "@/Utility/Math";
 import { Interp } from "@/Animate/Interp";
-import { SDNode } from "@/Node/Node";
+import { SDNode } from "@/Node/SDNode";
 import { BaseRect } from "./BaseRect";
 
 /**

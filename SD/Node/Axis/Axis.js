@@ -1,5 +1,5 @@
 import { Svg } from "../Basic/Svg";
-import { SDNode } from "../Node";
+import { SDNode } from "../SDNode";
 import * as Rule from "../../Rule/Rule";
 import { Color } from "../../Utility/Color";
 import { Circle } from "../Basic/Circle";

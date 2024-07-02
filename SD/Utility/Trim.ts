@@ -1,7 +1,7 @@
 // @ts-ignore
 import { LinkBase } from "@/Node/Basic/LinkBase";
 // @ts-ignore
-import { SDNode } from "@/Node/Node";
+import { SDNode } from "@/Node/SDNode";
 
 function trimFrom(link: LinkBase, from: SDNode|null|undefined): number {
     if (!from) {

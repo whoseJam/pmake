@@ -2,7 +2,7 @@ import { Circle } from "@/Node/Basic/Circle";
 import { CircleBackground } from "@/Rule/Background";
 import { D3Layer } from "@/Node/D3Layer";
 import { BaseElement } from "./BaseElement";
-import { SDNode } from "@/Node/Node";
+import { SDNode } from "@/Node/SDNode";
 import { Vec } from "@/Utility/Math";
 
 /**

@@ -1,6 +1,6 @@
 import { D3Layer } from "@/Node/D3Layer";
 import { d3TreeLayout } from "@/Node/Tree/Tree";
-import { SDNode } from "@/Node/Node";
+import { SDNode } from "@/Node/SDNode";
 import { Tree } from "@/Node/Tree/Tree";
 
 /**

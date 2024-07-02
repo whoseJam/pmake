@@ -1,6 +1,6 @@
 import { CenterFixAspect } from "@/Rule/Center";
 import { D3Layer } from "@/Node/D3Layer";
-import { SDNode } from "@/Node/Node";
+import { SDNode } from "@/Node/SDNode";
 import { toNode } from "@/Utility/Tool";
 import { svg } from "@/Interact/Svg";
 

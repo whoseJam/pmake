@@ -1,4 +1,4 @@
-import { SDNode } from "../Node";
+import { SDNode } from "../SDNode";
 
 export class GridBase extends SDNode {
     constructor(node) {

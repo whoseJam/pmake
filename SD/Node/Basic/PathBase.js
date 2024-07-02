@@ -3,7 +3,7 @@ import { BaseNake } from "@/Node/Basic/BaseNake";
 import { Context } from "@/Animate/Context";
 import { D3Layer } from "@/Node/D3Layer";
 import { Interp } from "@/Animate/Interp";
-import { SDNode } from "@/Node/Node";
+import { SDNode } from "@/Node/SDNode";
 
 /**
  * @class PathBase

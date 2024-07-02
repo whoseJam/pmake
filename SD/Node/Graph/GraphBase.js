@@ -1,5 +1,5 @@
 import { D3Layer } from "../D3Layer";
-import { SDNode } from "../Node";
+import { SDNode } from "../SDNode";
 import { Vertex } from "@/Node/Element/Vertex";
 import { Line }from "@/Node/Basic/Line";
 

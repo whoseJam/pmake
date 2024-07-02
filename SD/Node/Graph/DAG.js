@@ -1,6 +1,6 @@
 import { dagreGraphToBox } from "../../Utility/Tool";
 import { GraphBase } from "./GraphBase";
-import { SDNode } from "../Node";
+import { SDNode } from "../SDNode";
 import { Vertex } from "../Element/Vertex";
 import { Line } from "../Basic/Line";
 import { trim } from "../../SD";
@@ -12,7 +12,7 @@ import * as dagre from "dagre";
 export class DAG extends GraphBase {
     /**
      * @constructor
-     * @param {SDNode|import("../Node").D3Node} node 
+     * @param {SDNode|import("../SDNode").D3Node} node 
      */
     constructor(node) {
         super(node);

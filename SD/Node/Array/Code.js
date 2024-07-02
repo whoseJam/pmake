@@ -3,7 +3,7 @@ import { Context } from "@/Animate/Context";
 import { Color } from "@/Utility/Color";
 import { D3Layer } from "@/Node/D3Layer";
 import { Rect } from "@/Node/Basic/Rect";
-import { SDNode } from "@/Node/Node";
+import { SDNode } from "@/Node/SDNode";
 import { toNode } from "@/Utility/Tool";
 
 /**

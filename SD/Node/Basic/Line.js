@@ -2,7 +2,7 @@ import { Action } from "@/Animate/Action";
 import { D3Layer } from "@/Node/D3Layer";
 import { equal } from "@/Utility/Math";
 import { Interp } from "@/Animate/Interp";
-import { SDNode } from "@/Node/Node";
+import { SDNode } from "@/Node/SDNode";
 import { Vec } from "@/Utility/Math";
 import { BaseLink } from "./BaseLink";
 

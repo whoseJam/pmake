@@ -2,7 +2,7 @@ import { Background } from "@/Rule/Background";
 import { D3Layer } from "@/Node/D3Layer";
 import { BaseElement } from "./BaseElement";
 import { Rect } from "@/Node/Basic/Rect";
-import { SDNode } from "@/Node/Node";
+import { SDNode } from "@/Node/SDNode";
 
 /**
  * @class Box

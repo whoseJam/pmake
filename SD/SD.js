@@ -8,7 +8,7 @@ import { init } from "./Interact/Init.js";
 
 init();
 
-export { SDNode } from "./Node/Node.js";
+export { SDNode } from "./Node/SDNode.js";
 
 export { Rect } from "./Node/Basic/Rect.js";
 export { Circle } from "./Node/Basic/Circle.js";

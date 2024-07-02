@@ -1,7 +1,7 @@
 import { Color } from "../Utility/Color";
 import { Rect } from "../Node/Basic/Rect";
 import { Context } from "../Animate/Context";
-import { SDNode } from "../Node/Node";
+import { SDNode } from "../Node/SDNode";
 import { ArrayBase } from "@/Node/Array/ArrayBase";
 
 let id = 0;

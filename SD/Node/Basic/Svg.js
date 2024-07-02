@@ -3,7 +3,7 @@ import { d3ToNake } from "@/Utility/Tool";
 import { equal } from "@/Utility/Math";
 import { Interp } from "@/Animate/Interp";
 import { nakeToSnap } from "@/Utility/Tool";
-import { SDNode } from "@/Node/Node";
+import { SDNode } from "@/Node/SDNode";
 
 export class Svg extends SDNode {
     constructor(node) {

@@ -1,6 +1,6 @@
 import { D3Layer } from "@/Node/D3Layer";
 import { Line } from "@/Node/Basic/Line";
-import { SDNode } from "@/Node/Node";
+import { SDNode } from "@/Node/SDNode";
 import { TreeBase } from "@/Node/Tree/TreeBase";
 import { trim } from "@/Utility/Trim";
 import { Vertex } from "@/Node/Element/Vertex";

@@ -1,6 +1,6 @@
 import { PointAtPathByRate } from "@/Rule/Path";
 import { toNode } from "@/Utility/Tool";
-import { SDNode } from "@/Node/Node";
+import { SDNode } from "@/Node/SDNode";
 import { PathBase } from "@/Node/Basic/PathBase";
 
 /**

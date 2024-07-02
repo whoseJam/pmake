@@ -1,6 +1,6 @@
 import { CurveBase } from "./CurveBase";
 import { D3Layer } from "../D3Layer";
-import { SDNode } from "../Node";
+import { SDNode } from "../SDNode";
 import { Vec } from "../../Utility/Math";
 
 /**

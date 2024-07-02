@@ -3,7 +3,7 @@ import { BaseNake } from "@/Node/Basic/BaseNake";
 import { D3Layer } from "@/Node/D3Layer";
 import { d3ToNake } from "@/Utility/Tool";
 import { Interp } from "@/Animate/Interp";
-import { SDNode } from "@/Node/Node";
+import { SDNode } from "@/Node/SDNode";
 
 /**
  * @class Text

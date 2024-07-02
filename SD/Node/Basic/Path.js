@@ -2,7 +2,7 @@ import { Action } from "@/Animate/Action";
 import { D3Layer } from "@/Node/D3Layer";
 import { d3ToNake } from "@/Utility/Tool";
 import { equal } from "@/Utility/Math";
-import { SDNode } from "@/Node/Node";
+import { SDNode } from "@/Node/SDNode";
 import { snapAction } from "@/Utility/Tool";
 import { BaseLink } from "./BaseLink";
 

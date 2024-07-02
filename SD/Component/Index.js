@@ -1,4 +1,4 @@
-import { SDNode } from "../Node/Node";
+import { SDNode } from "../Node/SDNode";
 import { Stack } from "../Node/Array/Stack";
 import { Array } from "../Node/Array/Array";
 

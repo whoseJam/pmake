@@ -1,6 +1,6 @@
 import { D3Layer } from "@/Node/D3Layer";
 import { equal } from "@/Utility/Math";
-import { SDNode } from "@/Node/Node";
+import { SDNode } from "@/Node/SDNode";
 
 /**
  * @class ArrayBase

@@ -1,7 +1,7 @@
 import { ArrayBase } from "@/Node/Array/ArrayBase";
 import { Context } from "@/Animate/Context";
 import { D3Layer } from "@/Node/D3Layer";
-import { SDNode } from "@/Node/Node";
+import { SDNode } from "@/Node/SDNode";
 import { Text } from "@/Node/Basic/Text";
 
 /**
