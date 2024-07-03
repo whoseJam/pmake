@@ -33,16 +33,4 @@ function init() {
 
 async function main() {
     await sd.pause();
-    graph.startAnimate();
-    color([1, 2, 3, 4, 5], C.red);
-    color([6, 7], C.deepSkyBlue);
-    color([8, 9], C.green);
-    graph.endAnimate();
-    await sd.pause();
-}
-
-function color(path, col) {
-    path.forEach(node => {
-        graph.color(node, col);
-    })
 }
