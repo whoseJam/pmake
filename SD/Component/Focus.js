@@ -12,7 +12,7 @@ function focusOn1Element(rect, elem) {
 
 function focusOn2Element(rect, elem1, elem2) {
     const x = Math.min(elem1.x(), elem2.x()), mx = Math.max(elem1.mx(), elem2.mx());
-    const y = Math.min(elem2.y(), elem2.y()), my = Math.max(elem1.my(), elem2.my());
+    const y = Math.min(elem1.y(), elem2.y()), my = Math.max(elem1.my(), elem2.my());
     rect.x(x).y(y).width(mx - x).height(my - y);
 }
 
@@ -64,7 +64,7 @@ export function Focus(node) {
                 context.till(0, 1);
                 this.opacity(1);
             } else {
-                if (elem2) focusOn1Element(this, elem1, elme2);
+                if (elem2) focusOn2Element(this, elem1, elem2);
                 else focusOn1Element(this, elem1);
             }
         } else this.opacity(0);
