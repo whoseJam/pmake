@@ -1,7 +1,7 @@
 import { trim } from "../../Utility/Trim";
 import { Line } from "../Basic/Line";
 import { Vertex } from "../Element/Vertex";
-import { GraphBase } from "./GraphBase";
+import { GraphBase } from "./BaseGraph";
 
 export class GridGraph extends GraphBase {
     constructor(node) {

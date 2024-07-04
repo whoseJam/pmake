@@ -21,18 +21,18 @@ export { Line } from "./Node/Basic/Line.js";
 export { Box } from "./Node/Element/Box.js";
 export { Vertex } from "./Node/Element/Vertex.js";
 
-// export { Array } from "./Node/Array/Array.js";
+export { Array } from "./Node/Array/Array.js";
 // export { ValueArray } from "./Node/Array/ValueArray.js";
-// export { Stack } from "./Node/Array/Stack.js";
+export { Stack } from "./Node/Array/Stack.js";
 // export { ValueStack } from "./Node/Array/ValueStack.js";
-// export { BarArray } from "./Node/Array/BarArray.js";
-// export { Code } from "./Node/Array/Code.js";
+export { BarArray } from "./Node/Array/BarArray.js";
+export { Code } from "./Node/Array/Code.js";
 // export { VarList } from "./Node/Array/VarList.js";
 
-// export { Grid } from "./Node/Grid/Grid.js";
+export { Grid } from "./Node/Grid/Grid.js";
 
 // export { TreeBase } from "./Node/Tree/TreeBase.js";
-// export { Tree } from "./Node/Tree/Tree.js";
+export { Tree } from "./Node/Tree/Tree.js";
 // export { BoxTree } from "./Node/Tree/BoxTree.js";
 // export { RoundSquareTree } from "./Node/Tree/RoundSquareTree.js";
 // export { HorizontalTree } from "./Node/Tree/HorizontalTree.js";
@@ -62,7 +62,7 @@ export { Vertex } from "./Node/Element/Vertex.js";
 // export { ValueBoard } from "./Component/ValueBoard.js";
 // export { Label } from "./Component/Label.js";
 // export { MathjaxLabel } from "./Component/Label.js";
-// export { Index } from "./Component/Index.js";
+export { Index } from "./Component/Index.js";
 // export { Pointer } from "./Component/Pointer.js";
 // export { Focus } from "./Component/Focus.js";
 // export { Stress } from "./Component/Stress.js";

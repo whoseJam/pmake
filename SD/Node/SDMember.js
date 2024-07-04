@@ -17,6 +17,13 @@ export class SDMember {
         return this.values[key].get();
     }
 
+    dirty(key) {
+        if (!this.values[key]) {
+            throw new Error(`Unknown Key ${key}`);
+        }
+        this.values[key].dirty();
+    }
+
     set(key, value) {
         if (!this.values[key]) {
             throw new Error(`Unknown Key ${key}`);

@@ -1,115 +1,127 @@
-import { Array } from "@/Node/Array/Array";
-import { D3Layer } from "@/Node/D3Layer";
 import { Rect } from "@/Node/Basic/Rect";
-import { SDNode } from "@/Node/SDNode";
+import { BaseArray } from "./BaseArray";
+import { naiveGetterAndSetter } from "../Common";
+
+export function BarArray(parent) {
+    BaseArray.call(this, parent);
+
+    this.g().type("BarArray");
+    this.newLayer("elements");
+
+    this.member.new("x", 0);
+    this.member.new("y", 0);
+    this.member.new("elementWidth", 40);
+    this.member.new("elementHeight", 40);
+    this.member.new("height", 0);
+}
+    
+BarArray.prototype = {
+    ...BaseArray.prototype
+};
+
+BarArray.prototype.elementWidth  = naiveGetterAndSetter("elementWidth", "setByEqual");
+BarArray.prototype.elementHeight = naiveGetterAndSetter("elementHeight", "setByEqual");
+BarArray.prototype.updateList = [
+    ...BarArray.prototype.updateList,
+    update
+];
+
+BarArray.prototype.width = function(width) {
+    if (width === undefined) {
+        return this.elementWidth() * this.length();
+    }
+    const length = this.length() ? 1 : this.length();
+    this.elementWidth(width / length);
+    return this;
+}
+
+BarArray.prototype.height = function(height) {
+    if (height === undefined) {
+        return this.member.get("height");
+    }
+    const elements = this.member.get("elements");
+    let maxValue = 1;
+    for (let element of elements) {
+        maxValue = Math.max(maxValue, element._.value);
+    }
+    this.elementHeight(height / maxValue);
+    return this;
+}
 
 /**
- * @class BarArray
- * @description 
- * 
- * 用柱状图的形式去展示一个数组
- * 
- * 数组中的每个元素的本质必须是一个数字（可以不为整数），表现为一个Rect，所有Rect具有相同的宽度，一个
- * Rect的高度随元素价值的不同而不同，计算公式如下：
- * 
- * height(Rect) = value * elementHeight(BarArray)
- * 
- * 当一个Rect在BarArray被创建时，会往Rect中添加配套的value方法，调用value方法会修改Rect的高度和内部
- * 保存的元素价值
+ * 插入一个元素到数组的指定位置处
+ * @param {number} idx 
+ * @param {number|string} value 
+ * @returns {this}
  */
-export class BarArray extends Array {
-    /**
-     * @constructor
-     * @param {SDNode|D3Layer} node
-     */
-    constructor(node) {
-        super(node);
-        this.g().type("BarArray");
-        this._.x = 0;
-        this._.y = 0;
-        this._.width = 0;
-        this._.height = 0;
-    }
-    
-    /**
-     * 插入一个元素到数组的指定位置处
-     * @param {number} idx 
-     * @param {number|string} value 
-     * @returns {this}
-     */
-    insert(idx, value) {
-        value = +value;
-        if (typeof(value) !== "number") throw new Error("Invalid Arguments");
-        const parent = this;
-        const elem = new Rect(this.layer("elements"));
-        elem._.value = value;
-        elem.value = function(value) {
-            if (value === undefined) return this._.value;
-            this._.value = value;
-            let baseline = this.my();
-            this.height(value * parent.elementHeight());
-            this.my(baseline);
-            return this;
-        }
-        this.insertByArrayBase(idx, elem);
-        elem._.enter = (elem, move) => {
-            elem.opacity(0);
-            move();
-            elem.startAnimate(this);
-            elem.opacity(1);
-        };
-        this.tryUpdate();
+BarArray.prototype.insert = function(idx, value) {
+    value = +value;
+    if (typeof(value) !== "number") throw new Error("Invalid Arguments");
+    const parent = this;
+    const elem = new Rect(this.layer("elements"));
+    elem._.value = value;
+    elem.value = function(value) {
+        if (value === undefined) return this._.value;
+        this._.value = value;
+        let baseline = this.my();
+        this.height(value * parent.elementHeight());
+        this.my(baseline);
         return this;
     }
+    this.insertByBaseArray(idx, elem);
+    elem._.enter = (elem, move) => {
+        elem.opacity(0);
+        move();
+        elem.unfreeze();
+        elem.freeze();
+        elem.startAnimate(this);
+        elem.opacity(1);
+    };
+    this.tryUpdate();
+    return this;
+}
 
-    insertFromExistValue() {
-        throw new Error("Not Implemented Yet");
-    }
+/**
+ * 删除数组中的一个元素
+ * @param {number} idx 
+ * @returns {this}
+ */
+BarArray.prototype.erase = function(idx) {
+    let elem = this.element(idx);
+    this.eraseByArrayBase(idx);
+    elem.startAnimate(this).opacity(0).remove();
+    this.tryUpdate();
+    return this;
+}
 
-    insertFromExistElement() {
-        throw new Error("Not Implemented Yet");
-    }
-
-    /**
-     * 删除数组中的一个元素
-     * @param {number} idx 
-     * @returns {this}
-     */
-    erase(idx) {
-        let elem = this.element(idx);
-        this.eraseByArrayBase(idx);
-        elem.startAnimate(this).opacity(0).remove();
-        this.tryUpdate();
-        return this;
-    }
-
-    update() {
-        this.preUpdate();
+function update() {
+    if (this.member.hasChanged("x") ||
+        this.member.hasChanged("y") ||
+        this.member.hasChanged("elementWidth") ||
+        this.member.hasChanged("elementHeight") ||
+        this.member.hasChanged("elements")) {
         let x = this.x();
         const y = this.my();
         const elementWidth = this.elementWidth();
         const elementHeight = this.elementHeight();
-        const elements = this._.elements;
+        const elements = this.member.get("elements");
         let maxHeight = 0;
-        for (let elem of elements) {
-            const height = elem.value() * elementHeight;
-            const move = () => {
-                elem.width(elementWidth);
-                elem.height(height);
-                elem.x(x).my(y);
-            }
-            if (elem._.enter) {
-                elem._.enter(elem, move);
-                elem._.enter = undefined;
-            } else move();
+        for (let element of elements) {
+            const height = element.value() * elementHeight;
+            this.tryMove(element, () => {
+                element.width(elementWidth);
+                element.height(height);
+                element.x(x).my(y);
+            })
             maxHeight = Math.max(maxHeight, height);
             x += elementWidth;
         }
-        this._.width = elementWidth * elements.length;
-        this._.height = maxHeight;
-        this._.y = y - maxHeight;
-        super.update();
-        this.postUpdate();
-        return this;
+        this.member.set("height", maxHeight);
+        this.member.set("y", y - maxHeight);
+        this.member.flush("x");
+        this.member.flush("y");
+        this.member.flush("elementWidth");
+        this.member.flush("elementHeight");
+        this.member.flush("elements");
     }
 }

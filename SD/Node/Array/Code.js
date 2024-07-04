@@ -1,208 +1,201 @@
-import { ArrayBase } from "@/Node/Array/ArrayBase";
 import { Context } from "@/Animate/Context";
 import { Color } from "@/Utility/Color";
-import { D3Layer } from "@/Node/D3Layer";
 import { Rect } from "@/Node/Basic/Rect";
-import { SDNode } from "@/Node/SDNode";
 import { toNode } from "@/Utility/Tool";
+import { BaseArray } from "./BaseArray";
+import { naiveGetterAndSetter } from "../Common";
+
+export function Code(parent) {
+    BaseArray.call(this, parent);
+
+    this.g().type("Code");
+
+    this.member.new("l", null);
+    this.member.new("r", null);
+    this.member.new("x", 0);
+    this.member.new("y", 0);
+    this.member.new("width", 0);
+    this.member.new("height", 0);
+    this.member.new("font-size", 20);
+    this.member.set("start", 1);
+
+    this.children.push(
+        "focus",
+        new Rect(this).color(Color.BLUE).opacity(0),
+        (parent, child) => {
+            if (typeof(parent.l()) !== "number") return;
+            const elementL = parent.element(parent.l());
+            const elementR = parent.element(parent.r());
+            child.x(elementL.x());
+            child.y(elementL.y());
+            child.width(parent.width());
+            child.height(elementR.my() - elementL.y());
+        }
+    );
+
+    this.newLayer("elements");
+
+    return this;
+}
+
+Code.prototype = {
+    ...BaseArray.prototype
+};
+
+Code.prototype.fontSize = naiveGetterAndSetter("font-size", "setByEqual");
+
+Code.prototype.updateList = [
+    ...Code.prototype.updateList,
+    update
+];
 
 /**
- * @class Code
+ * @overload
+ * @param {number} width 
+ * @returns {this}
+ * @overload
+ * @returns {number}
  */
-export class Code extends ArrayBase {
-    /**
-     * @constructor
-     * @param {SDNode|D3Layer} node 
-     */
-    constructor(node) {
-        super(node);
-        this.g().type("Code");
-        this._.x = 0;
-        this._.y = 0;
-        this._.width = 0;
-        this._.height = 0;
-        this._.fontSize = 20;
-        this._.start = 1;
-        this.children.push(
-            "focus",
-            new Rect(this).color(Color.BLUE).opacity(0),
-            (parent, child) => {
-                if (typeof(parent.l()) !== "number") return;
-                const elementL = parent.element(parent.l());
-                const elementR = parent.element(parent.r());
-                child.x(elementL.x());
-                child.y(elementL.y());
-                child.width(parent.width());
-                child.height(elementR.my() - elementL.y());
-            }
-        );
-        this.newLayer("elements");
+Code.prototype.width = function(width) {
+    if (width === undefined) {
+        return this.member.get("width");
     }
+    const k = width / this.member.get("width");
+    this.fontSize(this.fontSize() * k);
+    return this;
+}
 
-    /**
-     * @overload
-     * @param {number} width 
-     * @returns {this}
-     * @overload
-     * @returns {number}
-     */
-    width(width) {
-        this.dirtyCheck("q");
-        if (width === undefined) return this._.width;
-        if (!this._.width) return this;
-        const k = width / this._.width;
-        const fontSize = this.fontSize();
-        this.fontSize(fontSize * k);
-        return this;
+/**
+ * @overload
+ * @param {number} height 
+ * @returns {this}
+ * @overload
+ * @returns {number}
+ */
+Code.prototype.height = function(height) {
+    if (height === undefined) {
+        return this.member.get("height");
     }
+    const k = height / this.member.get("height");
+    this.fontSize(this.fontSize() * k);
+    return this;
+}
 
-    /**
-     * @overload
-     * @param {number} height 
-     * @returns {this}
-     * @overload
-     * @returns {number}
-     */
-    height(height) {
-        this.dirtyCheck("q");
-        if (height === undefined) return this._.height;
-        if (!this._.height) return this;
-        const k = height / this._.height;
-        const fontSize = this.fontSize();
-        this.fontSize(fontSize * k);
-        return this;
+/**
+ * @param {number} idx 
+ * @param {string} value 
+ * @returns 
+ */
+Code.prototype.insert = function(idx, value = "") {
+    const elem = toNode(this.layer("elements"), value);
+    elem._.enter = (elem, move) => {
+        elem.opacity(0);
+        move();
+        elem.unfreeze();
+        elem.freeze();
+        elem.startAnimate(this);
+        elem.opacity(1);
     }
-
-    /**
-     * @overload
-     * @param {number} fontSize 
-     * @returns {this}
-     * @overload
-     * @returns {number}
-     */
-    fontSize(fontSize) {
-        if (fontSize === undefined) return this._.fontSize;
-        this._.fontSize = fontSize;
-        this.tryUpdate();
-        return this;
-    }
-
-    /**
-     * @param {number} idx 
-     * @param {string} value 
-     * @returns 
-     */
-    insert(idx, value = "") {
-        const elem = toNode(this.layer("elements"), value);
-        elem._.enter = (elem, move) => {
-            elem.opacity(0);
-            move();
-            elem.startAnimate(this);
-            elem.opacity(1);
-        }
-        this.insertByArrayBase(idx, elem);
-        this.tryUpdate();
-        return this;
-    }
+    this.insertByBaseArray(idx, elem);
+    this.tryUpdate();
+    return this;
+}
     
-    /**
-     * 设置代码块的内容，代码块原本的内容会被覆盖掉
-     * @param {string} source 
-     * @returns {this}
-     */
-    code(source) {
-        for (let i = this.end(); i >= this.start(); i--)
-            this.erase(i);
-        let ans = "";
-        for (let i = 0; i < source.length; i++) {
-            if (source[i] === "\n") {
-                if (ans != "") this.push(ans);
-                ans = "";
-            } else ans += source[i];
-        }
-        if (ans.length > 0) this.push(ans);
+/**
+ * 设置代码块的内容，代码块原本的内容会被覆盖掉
+ * @param {string} source 
+ * @returns {this}
+ */
+Code.prototype.code = function(source) {
+    for (let i = this.end(); i >= this.start(); i--)
+        this.erase(i);
+    let ans = "";
+    for (let i = 0; i < source.length; i++) {
+        if (source[i] === "\n") {
+            if (ans != "") this.push(ans);
+            ans = "";
+        } else ans += source[i];
+    }
+    if (ans.length > 0) this.push(ans);
+    return this;
+}
+
+/**
+ * @overload
+ * @param {number} l 
+ * @param {number} r 
+ * @returns {this}
+ * @overload
+ * @param {number} line
+ * @returns {this}
+ * @overload
+ * @param {null} status
+ * @returns {this}
+ */
+Code.prototype.focus = function(l, r) {
+    const focus = this.child("focus");
+    if (l === null) {
+        this.member.set("l", null);
+        this.member.set("r", null);
+        focus.opacity(0);
         return this;
+    } else if (arguments.length === 1) {
+        l = r = arguments[0];
     }
+    this.member.set("l", l);
+    this.member.set("r", r);
+    if (!focus.opacity()) {
+        focus._.enter = (elem, move) => {
+            const context = new Context(this);
+            elem.startAnimate(context.tillc(0, 0));
+            move();
+            elem.unfreeze();
+            elem.freeze();
+            elem.startAnimate(context.tillc(0, 1));
+            elem.opacity(1);
+        };
+    }
+    this.tryUpdate();
+    return this;
+}
 
-    /**
-     * @overload
-     * @param {number} l 
-     * @param {number} r 
-     * @returns {this}
-     * @overload
-     * @param {number} line
-     * @returns {this}
-     * @overload
-     * @param {null} status
-     * @returns {this}
-     */
-    focus(l, r) {
-        const focus = this.child("focus");
-        if (l === null) {
-            this._.l = this._.r = null;
-            focus.opacity(0);
-            return this;
-        } else if (arguments.length === 1) l = r = arguments[0];
-        this._.l = l;
-        this._.r = r;
-        if (!focus.opacity()) {
-            focus._.enter = (elem, move) => {
-                const context = new Context(this);
-                elem.startAnimate(context.tillc(0, 0));
-                move();
-                elem.startAnimate(context.tillc(0, 1));
-                elem.opacity(1);
-            };
-        }
-        this.tryUpdate();
-        return this;
-    }
+/**
+ * 获取代码高亮的起始行
+ * @returns {number}
+ */
+Code.prototype.l = function() {
+    return this.member.get("l");
+}
 
-    update() {
-        this.preUpdate();
-        const x = this.x();
-        let y = this.y();
-        let width = 0;
-        let height = 0;
-        const fontSize = this.fontSize();
-        const elements = this._.elements;
-        for (let element of elements) {
-            const move = () => {
-                element.fontSize(fontSize);
-                element.x(x).y(y);
-            };
-            if (element._.enter) {
-                element._.enter(element, move);
-                element._.enter = undefined;
-            } else move();
-            y += element.height();
-            width = Math.max(width, element.width());
-            height += element.height();
-        }
-        this._.width = width;
-        this._.height = height;
-        super.update();
-        this.postUpdate();
-        return this;
-    }
+/**
+ * 获取代码高亮的终止行
+ * @returns {number}
+ */
+Code.prototype.r = function() {
+    return this.member.get("r");
+}
 
-    /**
-     * 获取代码高亮的起始行
-     * @returns {number}
-     */
-    l() {
-        return this._.l;
-    }
+Code.prototype.value = function() {
+    return this.element.apply(this, arguments);
+}
 
-    /**
-     * 获取代码高亮的终止行
-     * @returns {number}
-     */
-    r() {
-        return this._.r;
+function update() {
+    const x = this.x();
+    let y = this.y();
+    let width = 0;
+    let height = 0;
+    const fontSize = this.fontSize();
+    const elements = this.member.get("elements");
+    for (let element of elements) {
+        this.tryMove(element, () => {
+            element.fontSize(fontSize);
+            element.x(x).y(y);
+        });
+        y += element.height();
+        width = Math.max(width, element.width());
+        height += element.height();
     }
-
-    value() {
-        return this.element.apply(this, arguments);
-    }
+    this.member.set("width", width);
+    this.member.set("height", height);
+    return this;
 }

@@ -1,5 +1,5 @@
 import { dagreGraphToBox } from "../../Utility/Tool";
-import { GraphBase } from "./GraphBase";
+import { GraphBase } from "./BaseGraph";
 import { SDNode } from "../SDNode";
 import { Vertex } from "../Element/Vertex";
 import { Line } from "../Basic/Line";
