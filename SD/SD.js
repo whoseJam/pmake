@@ -42,10 +42,10 @@ export { Tree } from "./Node/Tree/Tree.js";
 // export { Splay } from "./Node/Tree/Splay.js";
 
 // export { GraphBase } from "./Node/Graph/GraphBase.js";
-// export { DAG } from "./Node/Graph/DAG.js";
+export { DAG } from "./Node/Graph/DAG.js";
 // export { BoxDAG } from "./Node/Graph/BoxDAG.js";
 // export { GridGraph } from "./Node/Graph/GridGraph.js";
-// export { BipartiteGraph } from "./Node/Graph/BipartiteGraph.js";
+export { BipartiteGraph } from "./Node/Graph/BipartiteGraph.js";
 // export { TinyGraph } from "./Node/Graph/TinyGraph.js";
 
 // export { Curve } from "./Node/Curve/Curve.js";

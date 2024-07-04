@@ -1,9 +1,9 @@
-import { Line } from "../Basic/Line";
+import { Line } from "../Nake/Line";
 import { Vertex } from "../Element/Vertex";
-import { GraphBase } from "./BaseGraph";
+import { BaseGraph } from "./BaseGraph";
 import { trim } from "../../SD";
 
-export class BipartiteGraph extends GraphBase {
+export class BipartiteGraph extends BaseGraph {
     constructor(node) {
         super(node);
         this.g().type("BipartiteGraph");
@@ -17,7 +17,7 @@ export class BipartiteGraph extends GraphBase {
     }
 
     /**
-     * 新建一个编号为id，点集为setNo的节点，如果价值未指定，则默认为id，随后交由GraphBase完成信息的存储工作和update的工作
+     * 新建一个编号为id，点集为setNo的节点，如果价值未指定，则默认为id，随后交由BaseGraph完成信息的存储工作和update的工作
      * @overload
      * @param {number|string} id 
      * @param {0|1} setNo
@@ -28,43 +28,41 @@ export class BipartiteGraph extends GraphBase {
      * @returns 当前节点
      */
     newNode(id, value, setNo) {
-        const elem = new Vertex(this.layer("vertex")).r(this._.r);
+        const elem = new Vertex(this.layer("nodes")).r(this._.r);
         if (value !== 0 && value !== 1) elem.value(value).setNo = setNo;
         else elem.value(id).setNo = value;
-        this.newNodeByGraphBase(id, elem);
+        this.newNodeByBaseGraph(id, elem);
         elem._.enter = (elem, move) => {
             elem.opacity(0);
             move();
             elem.startAnimate(this).opacity(1);
         };
-        this.dirty(this, "U");
         return this;
     }
 
     /**
-     * 新建一条从x指向y的，价值为value的边，随后交由GraphBase完成信息的存储工作和update的工作
+     * 新建一条从x指向y的，价值为value的边，随后交由BaseGraph完成信息的存储工作和update的工作
      * @param {string|number} x 
      * @param {string|number} y 
      * @param {Node|undefined} value 
      * @returns 当前节点
      */
     newLink(x, y, value = null) {
-        const elem = this._.makeLink(this.layer("link"));
+        const elem = this._.makeLink(this.layer("links"));
         if (value !== null) elem.value(value);
-        this.newLinkByGraphBase(x, y, elem);
+        this.newLinkByBaseGraph(x, y, elem);
         elem._.enter = (elem, move) => {
             elem.opacity(0);
             move();
             elem.startAnimate(this).opacity(1);
         };
-        this.dirty(this, "U");
         return this;
     }
 
     update() {
         this.preUpdate();
-        const nodes = this._.nodes;
-        const links = this._.links;
+        const nodes = this.member.get("nodes");
+        const links = this.member.get("links");
         const flatten = [];
         const cnt = [0, 0];
         const cur = [1, 1];

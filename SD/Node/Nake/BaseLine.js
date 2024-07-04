@@ -31,9 +31,9 @@ BaseLine.prototype.markerMid   = markerGetterAndSetter("marker-mid");
 BaseLine.prototype.markerEnd   = markerGetterAndSetter("marker-end");
 BaseLine.prototype.updateList = [
     ...BaseLine.prototype.updateList,
-    naiveUpdate("marker-start"),
-    naiveUpdate("marker-mid"),
-    naiveUpdate("marker-end")
+    naiveUpdate("marker-start", Interp.stringInterp),
+    naiveUpdate("marker-mid", Interp.stringInterp),
+    naiveUpdate("marker-end", Interp.stringInterp)
 ];
 
 function markerGetterAndSetter(key) {
