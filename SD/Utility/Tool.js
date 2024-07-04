@@ -1,5 +1,5 @@
 import { SDNode } from "../Node/SDNode";
-import { Text } from "../Node/Basic/Text";
+import { Text } from "../Node/Nake/Text";
 
 /**
  * 将任意对象，转为一个SDNode

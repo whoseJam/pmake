@@ -1,4 +1,4 @@
-import { Circle } from "@/Node/Basic/Circle"; 
+import { Circle } from "@/Node/Nake/Circle"; 
 import { CircleBackground } from "@/Rule/Background";
 import { D3Layer } from "@/Node/D3Layer";
 import { BaseElement } from "./BaseElement";

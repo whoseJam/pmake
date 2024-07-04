@@ -1,4 +1,4 @@
-import { Line } from "@/Node/Basic/Line";
+import { Line } from "@/Node/Nake/Line";
 import { trim } from "@/Utility/Trim";
 import { Vertex } from "@/Node/Element/Vertex";
 import { Vec } from "@/Utility/Math";

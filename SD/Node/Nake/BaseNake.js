@@ -1,10 +1,7 @@
-import { Action } from "@/Animate/Action";
-import { D3Layer } from "@/Node/D3Layer";
 import { d3ToNake } from "@/Utility/Tool";
 import { Interp } from "@/Animate/Interp";
 import { nakeToSnap } from "@/Utility/Tool";
 import { SDNode } from "@/Node/SDNode";
-import { Text } from "@/Node/Basic/Text";
 import { naiveGetterAndSetter, naiveUpdate } from "../Common";
 
 export function BaseNake(parent, tag) {

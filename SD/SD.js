@@ -3,20 +3,20 @@ export { svg } from "./Interact/Svg.js";
 export { color } from "./Utility/Color.js";
 export { rule } from "./Rule/Rule.js";
 export { input } from "./Utility/Reader.js";
-export { vec } from "./Utility/Math.ts";
+export { vec } from "./Utility/Math.js";
 import { init } from "./Interact/Init.js";
 
 init();
 
 export { SDNode } from "./Node/SDNode.js";
 
-export { Rect } from "./Node/Basic/Rect.js";
-export { Circle } from "./Node/Basic/Circle.js";
-export { Text } from "./Node/Basic/Text.js";
-export { Fragment } from "./Node/Basic/Fragment.js";
-export { Line } from "./Node/Basic/Line.js";
-// export { Path } from "./Node/Basic/Path.js";
-// export { Svg } from "./Node/Basic/Svg.js";
+export { Rect } from "./Node/Nake/Rect.js";
+export { Circle } from "./Node/Nake/Circle.js";
+export { Text } from "./Node/Nake/Text.js";
+export { Fragment } from "./Node/Nake/Fragment.js";
+export { Line } from "./Node/Nake/Line.js";
+// export { Path } from "./Node/Nake/Path.js";
+// export { Svg } from "./Node/Nake/Svg.js";
 
 export { Box } from "./Node/Element/Box.js";
 export { Vertex } from "./Node/Element/Vertex.js";
@@ -57,7 +57,7 @@ export { Tree } from "./Node/Tree/Tree.js";
 
 // export { Mathjax } from "./Node/Text/Mathjax.js";
 
-// export { Marker } from "./Node/Basic/Marker.js";
+// export { Marker } from "./Node/Nake/Marker.js";
 
 // export { ValueBoard } from "./Component/ValueBoard.js";
 // export { Label } from "./Component/Label.js";

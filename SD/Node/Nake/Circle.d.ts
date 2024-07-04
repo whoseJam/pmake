@@ -1,5 +1,5 @@
 import { BaseNake } from "./BaseNake";
 
-export class Rect extends BaseNake {
+export class Circle extends BaseNake {
     constructor(parent: any);
 }

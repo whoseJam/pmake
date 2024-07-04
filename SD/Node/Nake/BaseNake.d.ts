@@ -1,7 +1,8 @@
+import { SDNode } from "../SDNode";
 
 type color = string;
 
-export class BaseNake {
+export class BaseNake extends SDNode {
     constructor(parent: any, tag: string);
 
     fill(): color;

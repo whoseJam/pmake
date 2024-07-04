@@ -1,6 +1,6 @@
 import { Background } from "@/Rule/Background";
 import { BaseElement } from "./BaseElement";
-import { Rect } from "@/Node/Basic/Rect";
+import { Rect } from "@/Node/Nake/Rect";
 
 export function Box(parent, value = undefined) {
     BaseElement.call(this, parent);

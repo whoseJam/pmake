@@ -1,4 +1,4 @@
-import { dequal, equal } from "@/Utility/Math";
+import { dqual, equal } from "@/Utility/Math";
 
 export class SDValue {
     constructor(value) {
@@ -23,7 +23,7 @@ export class SDValue {
 
     setByDqual(value) {
         this.value = value;
-        this.isDirty = !dequal(value, this.oldValue);
+        this.isDirty = !dqual(value, this.oldValue);
     }
 
     dirty() {

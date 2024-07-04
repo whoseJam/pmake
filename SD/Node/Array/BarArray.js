@@ -1,4 +1,4 @@
-import { Rect } from "@/Node/Basic/Rect";
+import { Rect } from "@/Node/Nake/Rect";
 import { BaseArray } from "./BaseArray";
 import { naiveGetterAndSetter } from "../Common";
 

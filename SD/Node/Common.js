@@ -1,6 +1,5 @@
 import { Vec } from "@/Utility/Math";
-
-const { Action } = require("@/Animate/Action");
+import { Action } from "@/Animate/Action";
 
 export function naiveGetterAndSetter(key, mode) {
     return function(value) {

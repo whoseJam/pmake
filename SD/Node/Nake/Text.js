@@ -1,4 +1,4 @@
-import { BaseNake } from "@/Node/Basic/BaseNake";
+import { BaseNake } from "@/Node/Nake/BaseNake";
 import { d3ToNake } from "@/Utility/Tool";
 import { Interp } from "@/Animate/Interp";
 import { naiveGetterAndSetter, naiveUpdate } from "../Common";

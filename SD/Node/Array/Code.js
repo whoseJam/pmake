@@ -1,6 +1,6 @@
 import { Context } from "@/Animate/Context";
 import { Color } from "@/Utility/Color";
-import { Rect } from "@/Node/Basic/Rect";
+import { Rect } from "@/Node/Nake/Rect";
 import { toNode } from "@/Utility/Tool";
 import { BaseArray } from "./BaseArray";
 import { naiveGetterAndSetter } from "../Common";
