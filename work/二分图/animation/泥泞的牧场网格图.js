@@ -70,8 +70,8 @@ async function main() {
 
     for (let i = 1; i <= n; i++) {
         for (let j = 1; j <= n; j++) {
-            const I = rowId[i][j];
-            const J = colId[i][j];
+            const I = row[i][j];
+            const J = col[i][j];
             if (!graph.element(`R${I}`, `C${J}`) && mp[i][j] == "*") {
                 await sd.pause();
                 grid.startAnimate().color(i, j, C.orange).endAnimate();
