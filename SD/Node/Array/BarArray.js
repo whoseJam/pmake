@@ -48,12 +48,6 @@ BarArray.prototype.height = function(height) {
     return this;
 }
 
-/**
- * 插入一个元素到数组的指定位置处
- * @param {number} idx 
- * @param {number|string} value 
- * @returns {this}
- */
 BarArray.prototype.insert = function(idx, value) {
     value = +value;
     if (typeof(value) !== "number") throw new Error("Invalid Arguments");
@@ -68,7 +62,6 @@ BarArray.prototype.insert = function(idx, value) {
         this.my(baseline);
         return this;
     }
-    this.insertByBaseArray(idx, elem);
     elem._.enter = (elem, move) => {
         elem.opacity(0);
         move();
@@ -77,20 +70,7 @@ BarArray.prototype.insert = function(idx, value) {
         elem.startAnimate(this);
         elem.opacity(1);
     };
-    this.tryUpdate();
-    return this;
-}
-
-/**
- * 删除数组中的一个元素
- * @param {number} idx 
- * @returns {this}
- */
-BarArray.prototype.erase = function(idx) {
-    let elem = this.element(idx);
-    this.eraseByArrayBase(idx);
-    elem.startAnimate(this).opacity(0).remove();
-    this.tryUpdate();
+    this.insertByBaseArray(idx, elem);
     return this;
 }
 

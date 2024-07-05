@@ -1,5 +1,4 @@
 import { Context } from "@/Animate/Context";
-import { Color } from "@/Utility/Color";
 import { Rect } from "@/Node/Nake/Rect";
 import { toNode } from "@/Utility/Tool";
 import { BaseArray } from "./BaseArray";
@@ -49,13 +48,6 @@ Code.prototype.updateList = [
     update
 ];
 
-/**
- * @overload
- * @param {number} width 
- * @returns {this}
- * @overload
- * @returns {number}
- */
 Code.prototype.width = function(width) {
     if (width === undefined) {
         return this.member.get("width");
@@ -65,13 +57,6 @@ Code.prototype.width = function(width) {
     return this;
 }
 
-/**
- * @overload
- * @param {number} height 
- * @returns {this}
- * @overload
- * @returns {number}
- */
 Code.prototype.height = function(height) {
     if (height === undefined) {
         return this.member.get("height");
@@ -81,11 +66,6 @@ Code.prototype.height = function(height) {
     return this;
 }
 
-/**
- * @param {number} idx 
- * @param {string} value 
- * @returns 
- */
 Code.prototype.insert = function(idx, value = "") {
     const elem = toNode(this.layer("elements"), value);
     elem._.enter = (elem, move) => {
@@ -100,12 +80,7 @@ Code.prototype.insert = function(idx, value = "") {
     this.tryUpdate();
     return this;
 }
-    
-/**
- * 设置代码块的内容，代码块原本的内容会被覆盖掉
- * @param {string} source 
- * @returns {this}
- */
+
 Code.prototype.code = function(source) {
     for (let i = this.end(); i >= this.start(); i--)
         this.erase(i);
@@ -120,18 +95,6 @@ Code.prototype.code = function(source) {
     return this;
 }
 
-/**
- * @overload
- * @param {number} l 
- * @param {number} r 
- * @returns {this}
- * @overload
- * @param {number} line
- * @returns {this}
- * @overload
- * @param {null} status
- * @returns {this}
- */
 Code.prototype.focus = function(l, r) {
     const focus = this.child("focus");
     if (l === null) {
@@ -159,18 +122,10 @@ Code.prototype.focus = function(l, r) {
     return this;
 }
 
-/**
- * 获取代码高亮的起始行
- * @returns {number}
- */
 Code.prototype.l = function() {
     return this.member.get("l");
 }
 
-/**
- * 获取代码高亮的终止行
- * @returns {number}
- */
 Code.prototype.r = function() {
     return this.member.get("r");
 }

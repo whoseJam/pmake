@@ -1,6 +1,6 @@
+import { Vector } from "SD/Utility/Math";
 
 type Rule = (parent: SDNode, child: SDNode) => void;
-type Vector = [number, number];
 
 export class SDNode {
     constructor(parent: any);

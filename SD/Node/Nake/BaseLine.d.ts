@@ -1,4 +1,4 @@
-import { Vector } from "../SDNode";
+import { Vector } from "SD/Utility/Math";
 import { BaseNake } from "./BaseNake";
 
 export class BaseLine extends BaseNake {
@@ -27,4 +27,33 @@ export class BaseLine extends BaseNake {
     target(): Vector;
     target(vector: Vector): this
     target(x: number, y: number): this
+
+    x1(): number;
+    x1(x: number): this;
+    x2(): number;
+    x2(x: number): this;
+    y1(): number;
+    y1(y: number): this;
+    y2(): number;
+    y2(y: number): this;
+
+    /**
+     * 获取线上的k分位点
+     * @param {number} k
+     * @returns {[number, number]}
+     */
+    at(k: number): Vector;
+
+    /**
+     * 获取线上距离起点长度length的点
+     * @param {number} length 
+     * @returns {[number, number]}
+     */
+    getPointAtLength(length: number): Vector;
+
+    /**
+     * 获取线的总长
+     * @returns {number}
+     */
+    totalLength(): number;
 }

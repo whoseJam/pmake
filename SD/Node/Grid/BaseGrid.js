@@ -26,44 +26,20 @@ BaseGrid.prototype.endN = function() {
     return this.startN() + this.n() - 1;
 }
 
-/**
- * 查询网格组件在M方向上的终止索引
- * @overload
- * @param {number} idx 查询第idx行
- * @returns {number} 网格在第idx行上的终止索引
- * 
- * @overload
- * @returns {number} 网格所有行中的最大终止索引
- */
 BaseGrid.prototype.endM = function(idx) {
     if (idx === undefined) return this.startM() + this.m() - 1;
     let elems = this.member.get("elements");
     return this.startM() + elems[this.idxN(idx)].length - 1;
 }
 
-/**
- * 将一个逻辑行索引，转化成物理行索引
- * @param {number} idx 逻辑行索引
- * @returns {number} 对应的物理行索引
- */
 BaseGrid.prototype.idxN = function(idx) {
     return idx - this.startN();
 }
 
-/**
- * 将一个逻辑列索引，转化成物理列索引
- * @param {number} idx 逻辑列索引
- * @returns {number} 对应的物理列索引
- */
 BaseGrid.prototype.idxM = function(idx) {
     return idx - this.startM();
 }
 
-/**
- * 将网格组件的行数，对齐到给定行数
- * @param {number} n 对齐行数
- * @returns {this} 当前节点
- */
 BaseGrid.prototype.n = function(n) {
     let on = this.member.get("n");
     if (n === undefined) return on;
@@ -72,11 +48,6 @@ BaseGrid.prototype.n = function(n) {
     return this;
 }
 
-/**
- * 将网格组件的列数，对齐到给定列数
- * @param {number} m 对齐列数
- * @returns {this} 当前节点
- */
 BaseGrid.prototype.m = function(m) {
     let om = this.member.get("m");
     if (m === undefined) return om;
@@ -118,12 +89,8 @@ BaseGrid.prototype.eraseByBaseGrid = function(i, j) {
     return this;
 }
 
-/**
- * 将网格的每一行新建一列
- * @returns {this} 当前节点
- */
 BaseGrid.prototype.pushCol = function(rows) {
-    let l = this.startM();
+    let l = this.startN();
     let r = (rows === undefined) ? this.endN() : l + rows - 1;
     console.log("pushCol l=", l, "r=", r, "n=", this.n());
     for (let i = l; i <= r; i++) {

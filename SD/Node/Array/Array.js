@@ -26,14 +26,6 @@ Array.prototype.updateList = [
     update
 ];
 
-/**
- * 操作数组的width属性
- * @overload
- * @param {number} width 
- * @returns {this}
- * @overload
- * @returns {number}
- */
 Array.prototype.width = function(width) {
     if (width === undefined) {
         return this.elementWidth() * this.length();
@@ -43,15 +35,6 @@ Array.prototype.width = function(width) {
     return this;
 }
 
-
-/**
- * 操作数组的height属性
- * @overload
- * @param {number} height 
- * @returns {this}
- * @overload
- * @returns {number}
- */
 Array.prototype.height = function(height) {
     if (height === undefined) {
         return this.elementHeight();
@@ -60,12 +43,6 @@ Array.prototype.height = function(height) {
     return this;
 }
 
-/**
- * 插入一个元素到数组的指定位置处
- * @param {number} idx 
- * @param {SDNode|null} value 
- * @returns {this}
- */
 Array.prototype.insert = function(idx, value = null) {
     const elem = new Box(this.layer("elements"));
     elem.value(value);
@@ -78,7 +55,6 @@ Array.prototype.insert = function(idx, value = null) {
         elem.opacity(1);
     };
     this.insertByBaseArray(idx, elem);
-    this.tryUpdate();
     return this;
 }
 
@@ -98,16 +74,9 @@ Array.prototype.insertFromExistValue = function(idx, value) {
         elem.valueFromExist(value);
     };
     this.insertByBaseArray(idx, elem);
-    this.tryUpdate();
     return this;
 }
 
-/**
- * 插入一个已经存在的元素，到数组的指定位置处
- * @param {number} idx 
- * @param {Box} value 
- * @returns {this}
- */
 Array.prototype.insertFromExistElement = function(idx, value) {
     if (!(value instanceof Box)) throw new Error("Invalid Arguments");
     value._.enter = (elem, move) => {
@@ -117,7 +86,6 @@ Array.prototype.insertFromExistElement = function(idx, value) {
         elem.opacity(1);
     };
     this.insertByBaseArray(idx, value);
-    this.tryUpdate();
     return this;
 }
 

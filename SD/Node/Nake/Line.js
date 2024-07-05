@@ -36,11 +36,6 @@ Line.prototype.updateList = [
     naiveUpdate("y2", Interp.numberInterp)
 ];
 
-/**
- * 获取线上的k分位点
- * @param {number} k
- * @returns {[number, number]}
- */
 Line.prototype.at = function(k) {
     const v1 = [this.x1(), this.y1()];
     const v2 = [this.x2(), this.y2()];
@@ -48,21 +43,12 @@ Line.prototype.at = function(k) {
     return Vec.add(v1, Vec.numberMul(d, k));
 }
 
-/**
- * 获取线上距离起点长度length的点
- * @param {number} length 
- * @returns {[number, number]}
- */
 Line.prototype.getPointAtLength = function(length) {
     const total = this.totalLength();
     const k = length / total;
     return this.at(k);
 }
 
-/**
- * 获取线的总长
- * @returns {number}
- */
 Line.prototype.totalLength = function() {
     const x1 = this.x1(), y1 = this.y1();
     const x2 = this.x2(), y2 = this.y2();

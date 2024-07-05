@@ -1,77 +1,51 @@
-import { D3Layer } from "@/Node/D3Layer";
-import { SDNode } from "@/Node/SDNode";
 import { Stack } from "@/Node/Array/Stack";
 import { ValueArray } from "@/Node/Array/ValueArray";
 
-/**
- * @class ValueStack
- */
-export class ValueStack extends Stack {
-    /**
-     * @constructor
-     * @param {SDNode|D3Layer} node 
-     */
-    constructor(node) {
-        super(node);
-        this.g().type("ValueStack");
-        this._.x = 0;
-        this._.y = 0;
-        this._.width = 40;
-        this._.height = 0;
-    }
+export function ValueStack(parent) {
+    Stack.call(this, parent);
 
-    /**
-     * @param {number} idx 
-     * @param {SDNode} value 
-     * @returns {this}
-     */
-    insert(idx, value) {
-        const insert = ValueArray.prototype.insert;
-        insert.call(this, idx, value);
-        return this;
-    }
+    this.g().type("ValueStack");
 
-    /**
-     * @param {number} idx 
-     * @param {SDNode} value 
-     * @returns {this}
-     */
-    insertFromExistValue(idx, value) {
-        const insertFromExistValue = ValueArray.prototype.insertFromExistValue;
-        insertFromExistValue.call(this, idx, value);
-        return this;
-    }
+    return this;
+}
 
-    /**
-     * @param {number} idx 
-     * @param {SDNode} value
-     * @returns {this} 
-     */
-    insertFromExistElement(idx, value) {
-        return this.insertFromExistValue(idx, value);
-    }
+ValueStack.prototype = {
+    ...Stack.prototype
+};
 
-    update() {
-        this.preUpdate();
-        const x = this.x();
-        let y = this.y();
-        const elementWidth = this.elementWidth();
-        const elementHeight = this.elementHeight();
-        const elements = this._.elements;
-        for (let element of elements) {
-            function move() {
-                element.cx(x + ewidth / 2);
-                element.cy(y + eheight / 2);
-            }
-            if (element._.enter) {
-                element._.enter(elem, move);
-                element._.enter = undefined;
-            } else move();
-            y += elementHeight;
-        }
-        this._.width = elementWidth;
-        this._.height = elementHeight * elements.length;
-        this.postUpdate();
-        return this;
+ValueStack.prototype.updateList = [
+    ...ValueStack.prototype.updateList.slice(0, -1),
+    update
+];
+
+ValueStack.prototype.insert = function(idx, value) {
+    const insert = ValueArray.prototype.insert;
+    insert.call(this, idx, value);
+    return this;
+}
+
+ValueStack.prototype.insertFromExistValue = function(idx, value) {
+    const insertFromExistValue = ValueArray.prototype.insertFromExistValue;
+    insertFromExistValue.call(this, idx, value);
+    return this;
+}
+
+ValueStack.prototype.insertFromExistElement = function(idx, value) {
+    return this.insertFromExistValue(idx, value);
+}
+
+function update() {
+    const x = this.x();
+    let y = this.y();
+    const elementWidth = this.elementWidth();
+    const elementHeight = this.elementHeight();
+    const elements = this.member.get("elements");
+    for (let element of elements) {
+        this.tryMove(element, () => {
+            element.cx(x + elementWidth / 2);
+            element.cy(y + elementHeight / 2);
+        });
+        y += elementHeight;
     }
+    return this;
 }

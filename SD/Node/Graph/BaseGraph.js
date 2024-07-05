@@ -27,16 +27,6 @@ BaseGraph.prototype.y      = naiveGetterAndSetter("y", "setByEqual");
 BaseGraph.prototype.width  = naiveGetterAndSetter("width", "setByEqual");
 BaseGraph.prototype.height = naiveGetterAndSetter("height", "setByEqual");
 
-/**
- * 获取图的内部元素，可以是节点，可以是边
- * @overload
- * @param {string|number} arg0
- * @returns {any}
- * @overload
- * @param {string|number} arg0
- * @param {string|number} arg1
- * @returns {any}
- */
 BaseGraph.prototype.element = function(arg0, arg1) {
     if (arguments.length === 1)
         return this.findNodeById(arg0);
@@ -46,21 +36,6 @@ BaseGraph.prototype.element = function(arg0, arg1) {
     throw new Error("Invalid Arguments");
 }
 
-/**
- * 获取图内部元素的value，或者设置内部元素的value
- * @overload
- * @param {string|number} arg0
- * @returns {any}
- * @overload
- * @param {string|number} arg0
- * @param {string|number|SDNode} arg1
- * @returns {any}
- * @overload
- * @param {string|number} arg0
- * @param {string|number} arg1
- * @param {string|number|SDNode} arg2
- * @returns {this} 
- */
 BaseGraph.prototype.value = function(arg0, arg1, arg2) {
     if (arguments.length === 1) 
         return this.findNodeById(arg0).value();
@@ -77,25 +52,6 @@ BaseGraph.prototype.value = function(arg0, arg1, arg2) {
     throw new Error("Invalid Arguments");
 }
 
-/**
- * 设置图的整体透明度，或者设置内部元素的透明度，或者获取内部元素的透明度
- * @overload
- * @returns {number}
- * @overload
- * @param {number} opacity - 透明度
- * @returns {this}
- * @overload
- * @param {number|string} nodeId
- * @returns {number}
- * @overload
- * @param {number|string} nodeId
- * @param {number} opacity
- * @returns {this}
- * @overload
- * @param {number|string} fromNodeId
- * @param {number|string} toNodeId
- * @returns {number}
- */
 BaseGraph.prototype.opacity = function(arg0, arg1, arg2) {
     if (arguments.length === 0) {
         return SDNode.opacity.call(this);
@@ -116,28 +72,6 @@ BaseGraph.prototype.opacity = function(arg0, arg1, arg2) {
     throw new Error("Invalid Arguments");
 }
 
-/**
- * 设置图整体的颜色，或者设置内部元素的颜色，或者获取内部元素的颜色
- * @overload
- * @param {import("../../Utility/Color").SDColor} color
- * @returns {this}
- * @overload
- * @param {number|string} nodeId
- * @returns {import("../../Utility/Color").SDColor}
- * @overload
- * @param {number|string} nodeId
- * @param {import("../../Utility/Color").SDColor} color
- * @returns {this}
- * @overload
- * @param {number|string} fromNodeId
- * @param {number|string} toNodeId
- * @returns {import("../../Utility/Color").SDColor}
- * @overload
- * @param {number|string} fromNodeId
- * @param {number|string} toNodeId
- * @param {import("../../Utility/Color").SDColor} color
- * @returns {this}
- */
 BaseGraph.prototype.color = function(arg0, arg1, arg2) {
     if (arguments.length === 1) {
         if (typeof(arg0) === "string" || "main" in arg0) {
@@ -182,16 +116,6 @@ BaseGraph.prototype.findLinkById = function(fromNodeId, toNodeId) {
     return links.find(link => String(link.fromNodeId) === targetFromNodeId && String(link.toNodeId) === targetToNodeId);
 }
 
-/**
- * 获取某节点的所有入节点
- * @overload
- * @param {number|string} x
- * @param {"direct"|"undirect"} mode
- * @returns {Array<SDNode>}
- * @overload
- * @param {number|string} x
- * @returns {Array<SDNode>}
- */
 BaseGraph.prototype.inNodes = function(x, mode = "direct") {
     const targetToNodeId = String(x);
     const links = this.inLinks(x, mode);
@@ -202,16 +126,6 @@ BaseGraph.prototype.inNodes = function(x, mode = "direct") {
     return [...new Set(ins)].map(nodeId => this.findNodeById(nodeId));
 }
 
-/**
- * 获取某节点的所有入边
- * @overload
- * @param {number|string} x
- * @param {"direct"|"undirect"} mode 
- * @returns {Array<SDNode>}
- * @overload
- * @param {number|string} x
- * @returns {Array<SDNode>}
- */
 BaseGraph.prototype.inLinks = function(x, mode = "direct") {
     const targetToNodeId = String(x);
     const links = this.member.get("links");
@@ -222,16 +136,6 @@ BaseGraph.prototype.inLinks = function(x, mode = "direct") {
     return ins;
 }
 
-/**
- * 获取某节点的所有出节点
- * @overload
- * @param {number|string} x
- * @param {"direct"|"undirect"} mode  
- * @returns {Array<SDNode>}
- * @overload
- * @param {number|string} x
- * @returns {Array<SDNode>}
- */
 BaseGraph.prototype.outNodes = function(x, mode = "direct") {
     const targetFromNodeId = String(x);
     const links = this.outLinks(x, mode);
@@ -242,16 +146,6 @@ BaseGraph.prototype.outNodes = function(x, mode = "direct") {
     return [...new Set(outs)].map(nodeId => this.findNodeById(nodeId));
 }
 
-/**
- * 获取某节点的所有出边
- * @overload
- * @param {number|string} x
- * @param {"direct"|"undirect"} mode 
- * @returns {Array<SDNode>}
- * @overload
- * @param {number|string} x
- * @returns {Array<SDNode>}
- */
 BaseGraph.prototype.outLinks = function(x, mode = "direct") {
     const targetFromNodeId = String(x);
     const links = this.member.get("links");
@@ -262,12 +156,6 @@ BaseGraph.prototype.outLinks = function(x, mode = "direct") {
     return outs;
 }
 
-/**
- * 新建一个编号为id，节点元素为elem的节点，所有继承GraphBase的子类需要自行构造elem
- * @param {string|number} id 
- * @param {SDNode} elem 
- * @returns 当前节点
- */
 BaseGraph.prototype.newNodeByBaseGraph = function(id, elem) {
     elem.nodeId = id;
     this.member.get("nodes").push(elem);
@@ -275,14 +163,7 @@ BaseGraph.prototype.newNodeByBaseGraph = function(id, elem) {
     this.tryUpdate();
     return this;
 }
-    
-/**
- * 新建一条从x指向y的边，所有继承GraphBase的子类需要自行构造elem
- * @param {string|number} x 父节点编号 
- * @param {string|number} y 子节点编号
- * @param {Node} elem 边的象征节点
- * @returns 当前节点
- */
+
 BaseGraph.prototype.newLinkByBaseGraph = function(x, y, elem) {
     elem.fromNodeId = x;
     elem.toNodeId = y;
@@ -292,13 +173,6 @@ BaseGraph.prototype.newLinkByBaseGraph = function(x, y, elem) {
     return this;
 }
 
-/**
- * 新建一条从x到y的连边，其中x是起点，y是终点
- * @param {string|number} x 起点的节点编号
- * @param {string|number} y 终点的节点编号 
- * @param {Node|undefined} value 该连边的价值 
- * @returns 当前节点
- */
 BaseGraph.prototype.link = function(x, y, value = null) {
     if (!this.findNodeById(y)) this.newNode(y);
     if (!this.findNodeById(x)) this.newNode(x);
@@ -306,12 +180,6 @@ BaseGraph.prototype.link = function(x, y, value = null) {
     return this;
 }
 
-/**
- * 切断Graph中x到y的边
- * @param {string|number} x 起点的节点编号 
- * @param {string|number} y 终点的节点编号
- * @returns 当前节点
- */
 BaseGraph.prototype.cut = function(x, y) {
     const links = this.member.get("links");
     let link = this.findLinkById(x, y);
@@ -333,14 +201,9 @@ BaseGraph.prototype.links = function() {
 
 BaseGraph.prototype.nodesId = function() {
     const nodesId = this.member.get("nodes").map(node => node.nodeId);
-    return [... new Set(nodesId)];
+    return [...new Set(nodesId)];
 }
 
-/**
- * @param {number|string} fromNodeId 
- * @param {SDNode} link 
- * @returns {number|string}
- */
 BaseGraph.prototype.toNodeId = function(fromNodeId, link) {
     const targetFromNodeId = String(fromNodeId);
     if (String(link.fromNodeId) === targetFromNodeId) return link.toNodeId;

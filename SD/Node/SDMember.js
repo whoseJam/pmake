@@ -29,7 +29,6 @@ export class SDMember {
             throw new Error(`Unknown Key ${key}`);
         }
         this.values[key].set(value);
-        return;
     }
 
     setByEqual(key, value) {
@@ -37,7 +36,6 @@ export class SDMember {
             throw new Error(`Unknown Key ${key}`);
         }
         this.values[key].setByEqual(value);
-        return;
     }
 
     setByDqual(key, value) {
@@ -45,7 +43,14 @@ export class SDMember {
             throw new Error(`Unknown Key ${key}`);
         }
         this.values[key].setByDqual(value);
-        return;
+    }
+
+    setAndFlush(key, value) {
+        if (!this.values[key]) {
+            throw new Error(`Unknown Key ${key}`);
+        }
+        this.values[key].set(value);
+        this.values[key].flush();
     }
 
     hasChanged(key) {
@@ -68,6 +73,5 @@ export class SDMember {
         }
         this.values[key].isDirty = false;
         this.values[key].oldValue = this.values[key].value;
-        return;
     }
 }
