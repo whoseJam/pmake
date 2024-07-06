@@ -51,6 +51,9 @@ export class SDNode {
     remove(): void
 
     pos(xLocator: string, yLocator: string, dx: number, dy: number): Vector;
+    center(): Vector;
+    center(center: Vector): this;
+    center(cx: number, cy: number): this;
     kx(k: number): number;
     ky(k: number): number;
     cx(): number;

@@ -29,4 +29,8 @@ async function main() {
         g.endAnimate();
     }
     await sd.pause();
+    g.startAnimate().rankDir("RL").endAnimate();
+    await sd.pause();
+    g.startAnimate().align("DL").endAnimate();
+    await sd.pause();
 }

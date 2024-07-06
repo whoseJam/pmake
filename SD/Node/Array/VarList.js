@@ -32,16 +32,16 @@ VarList.prototype.updateList = [
 
 VarList.prototype.put = function(key, value) {
     const stringValue = value === Infinity ? "inf" : value;
-    const elements = this._.elements;
+    const elements = this.member.get("elements");
     for (let element of elements) {
         if (element.key == key) {
             const context = new Context(this);
             element.startAnimate(context.tillc(0, 0.5));
-            element.opacity(0).dx(this._.dx);
+            element.opacity(0).dx(this.member.get("dx"));
             element.value = value;
             element.text(`${key}=${stringValue}`);
             element.startAnimate(context.tillc(0.5, 1));
-            element.opacity(1).dx(-this._.dx);
+            element.opacity(1).dx(-this.member.get("dx"));
             element.startAnimate(this);
             return this;
         }
@@ -61,14 +61,14 @@ VarList.prototype.put = function(key, value) {
 }
 
 VarList.prototype.get = function(key) {
-    const elements = this._.elements;
+    const elements = this.member.get("elements");
     for (let element of elements)
         if (element.key == key) return element.value;
     return undefined;
 }
 
 VarList.prototype.element = function(key) {
-    const elements = this._.elements;
+    const elements = this.member.get("elements");
     for (let element of elements)
         if (element.key == key) return element;
     throw new Error("Value Not Found In VarList");
@@ -90,14 +90,14 @@ VarList.prototype.incBy = function(key, delta) {
 }
 
 function update() {
-    const x = this._.x;
-    let y = this._.y;
+    const x = this.member.get("x");
+    let y = this.member.get("y");
     let width = 0;
     let height = 0;
-    const elements = this._.elements;
+    const elements = this.member.get("elements");
     for (let element of elements) {
         const move = () => {
-            element.fontSize(this._.fontSize);
+            element.fontSize(this.member.get("fontSize"));
             element.x(x).y(y);
         }
         if (element._.enter) {
@@ -108,6 +108,6 @@ function update() {
         height += element.height();
         y += element.height();
     }
-    this._.width = width;
-    this._.height = height;
+    this.member.setAndFlush("width", width);
+    this.member.setAndFlush("height", height);
 }

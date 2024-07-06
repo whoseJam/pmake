@@ -1,6 +1,10 @@
 import { SDNode } from "../Node/SDNode";
 import { Text } from "../Node/Nake/Text";
 
+export function evaluateValue(id, value) {
+    return value === undefined || value === null ? id : value;
+}
+
 /**
  * 将任意对象，转为一个SDNode
  * @param {SDNode} node 

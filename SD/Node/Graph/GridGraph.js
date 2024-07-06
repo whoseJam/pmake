@@ -9,6 +9,7 @@ export function GridGraph(parent) {
 
     this.g().type("GridGraph");
 
+    this.member.new("r", 20);
     this.member.new("n", 1);
     this.member.new("m", 1);
     this.member.new("curN", 0);
@@ -36,11 +37,11 @@ GridGraph.prototype.at = function(i, j) {
 }
 
 GridGraph.prototype.newNode = function(id, value = null) {
-    let elem = new this._.nodeType(this).r(this._.r);
+    let elem = new this._.nodeType(this);
     if (value !== null) elem.value(value);
     else elem.value(id);
-    elem.posN = this._.curN;
-    elem.posM = this._.curM;
+    elem.posN = this.member.get("curN");
+    elem.posM = this.member.get("curM");
     elem._.enter = (elem, move) => {
         elem.opacity(0);
         move();
@@ -65,28 +66,23 @@ GridGraph.prototype.newLink = function(x, y, value = null) {
 }
 
 function update() {
-    const x = this.x(), mx = this.mx(), W = (mx - x) / this._.m;
-    const y = this.y(), my = this.my(), H = (my - y) / this._.n;
+    const x = this.x(), mx = this.mx(), W = (mx - x) / this.member.get("m");
+    const y = this.y(), my = this.my(), H = (my - y) / this.member.get("n");
     const realX = node => node.posM * W + x;
     const realY = node => node.posN * H + y;
-    for (let node of this._.nodes) {
-        const move = () => node.cx(realX(node)).cy(realY(node));
-        if (node._.enter) {
-            node._.enter(node, move);
-            node._.enter = undefined;
-        } else move();
+    for (let node of this.member.get("nodes")) {
+        this.tryMove(node, () => {
+            node.cx(realX(node));
+            node.cy(realY(node));
+        });
     }
-    for (let link of this._.links) {
+    for (let link of this.member.get("links")) {
         const nx = this.findNodeById(link.fromNodeId);
         const ny = this.findNodeById(link.toNodeId);
-        const move = () => {
+        this.tryMove(link, () => {
             link.source(nx.cx(), nx.cy());
             link.target(ny.cx(), ny.cy());
             trim(link, nx, ny);
-        };
-        if (link._.enter) {
-            link._.enter(link, move);
-            link._.enter = undefined;
-        } else move();
+        });
     }
 }

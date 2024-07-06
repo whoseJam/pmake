@@ -92,23 +92,12 @@ BaseGraph.prototype.color = function(arg0, arg1, arg2) {
     throw new Error("Invalid Arguments"); 
 }
 
-/**
- * 通过nodeId，查询树中对应节点的编号，注意此处的编号相等判断用的是"=="
- * @param {string|number} nodeId 待查询的节点编号 
- * @returns {any|undefined}
- */
 BaseGraph.prototype.findNodeById = function(nodeId) {
     const targetNodeId = String(nodeId);
     const nodes = this.member.get("nodes");
     return nodes.find(node => String(node.nodeId) === targetNodeId);
 }
 
-/**
- * 查询一条从fromNodeId指向toNodeId的树边，注意此处的编号相等判断用的是"=="
- * @param {string|number} fromNodeId 待查询的边的父节点编号
- * @param {string|number} toNodeId 待查询的边的子节点编号
- * @returns {any|undefined}
- */
 BaseGraph.prototype.findLinkById = function(fromNodeId, toNodeId) {
     const targetFromNodeId = String(fromNodeId);
     const targetToNodeId = String(toNodeId);

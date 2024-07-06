@@ -3,6 +3,8 @@ import { BaseNake } from "./BaseNake";
 import { Context } from "@/Animate/Context";
 import { Interp } from "@/Animate/Interp";
 import { naiveUpdate } from "../Common";
+import { PointAtPathByRate } from "@/Rule/Path";
+import { toNode } from "@/Utility/Tool";
 
 export function BaseLine(parent, tag) {
     BaseNake.call(this, parent, tag);
@@ -188,5 +190,33 @@ BaseLine.prototype.height = function(height) {
     } else {
         this.y1(y2 + height);
     }
+    return this;
+}
+
+BaseLine.prototype.value = function(value, rule) {
+    const oldValue = this.child("value");
+    if (value === undefined) {
+        return oldValue;
+    }
+    rule = rule ? rule : PointAtPathByRate(0.5, "cx", "cy");
+    value = toNode(this, value);
+
+    if (oldValue) {
+        oldValue.opacity(0).remove();
+    }
+    if (!value) {
+        return this;
+    }
+    value._.enter = (element, move) => {
+        element.attachTo(this);
+        element.after(this);
+        element.opacity(0);
+        move();
+        element.unfreeze().freeze();
+        element.startAnimate(this);
+        element.opacity(1);
+    };
+    this.children.push("value", value, rule);
+    this.tryUpdate();
     return this;
 }

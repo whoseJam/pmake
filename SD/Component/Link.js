@@ -1,4 +1,4 @@
-import { Line } from "../Node/Basic/Line";
+import { Line } from "../Node/Nake/Line";
 import { svg } from "../Interact/Svg";
 import { trim } from "../Utility/Trim";
 

@@ -51,7 +51,6 @@ Grid.prototype.height = function(height) {
 
 Grid.prototype.insert = function(i, j, value = null) {
     let elem = new Box(this.layer("elements"), value);
-    this.insertByBaseGrid(i, j, elem);
     this.member.set("width", this.elementWidth() * this.m());
     this.member.set("height", this.elementHeight() * this.n());
     elem._.enter = (elem, move) => {
@@ -61,18 +60,17 @@ Grid.prototype.insert = function(i, j, value = null) {
         elem.freeze();
         elem.startAnimate(this).opacity(1);
     };
-    this.tryUpdate();
+    this.insertByBaseGrid(i, j, elem);
     return this;
 }
 
 
 Grid.prototype.erase = function(i, j) {
     let elem = this.element(i, j);
-    this.eraseByBaseGrid(i, j);
     this.member.set("width", this.elementWidth() * this.m());
     this.member.set("height", this.elementHeight() * this.n());
     elem.startAnimate(this).opacity(0).remove();
-    this.tryUpdate();
+    this.eraseByBaseGrid(i, j);
     return this;
 }
 

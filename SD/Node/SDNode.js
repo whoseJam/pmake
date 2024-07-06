@@ -120,6 +120,18 @@ SDNode.prototype.pos = function(xloc, yloc, dx = 0, dy = 0) {
     ];
 }
 
+SDNode.prototype.center = function(cx, cy) {
+    if (cx === undefined) {
+        return [this.cx(), this.cy()];
+    } else if (arguments.length === 1) {
+        const center = arguments[0];
+        return this.center(center[0], center[1]);
+    }
+    this.cx(cx);
+    this.cy(cy);
+    return this;
+}
+
 SDNode.prototype.kx = function(k) {
     return this.x() + k * this.width();
 }

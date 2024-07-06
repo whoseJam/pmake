@@ -54,10 +54,9 @@ export class TinyGraph extends BaseGraph {
     }
 
     update() {
-        console.log("TinyGraph Update, length=", this._.nodes.length);
         this.preUpdate();
-        const nodes = this._.nodes;
-        const links = this._.links;
+        const nodes = this.member.get("nodes");
+        const links = this.member.get("links");
         if (nodes.length === 1) update1.call(this, nodes);
         if (nodes.length === 2) update2.call(this, nodes);
         if (nodes.length === 3) update3.call(this, nodes);

@@ -30,6 +30,11 @@ export class SDValue {
         this.isDirty = true;
     }
 
+    flush() {
+        this.isDirty = false;
+        this.oldValue = this.value;
+    }
+
     hasChanged() {
         return this.isDirty; 
     }

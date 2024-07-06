@@ -36,7 +36,7 @@ BipartiteGraph.prototype.updateList = [
  * @returns 当前节点
  */
 BipartiteGraph.prototype.newNode = function(id, value, setNo) {
-    const elem = new Vertex(this.layer("nodes")).r(this._.r);
+    const elem = new Vertex(this.layer("nodes"));
     if (value !== 0 && value !== 1) elem.value(value).setNo = setNo;
     else elem.value(id).setNo = value;
     elem._.enter = (elem, move) => {

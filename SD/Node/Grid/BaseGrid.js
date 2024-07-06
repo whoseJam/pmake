@@ -76,6 +76,7 @@ BaseGrid.prototype.insertByBaseGrid = function(i, j, elem) {
     this.children.push(elem);
     this.member.set("n", Math.max(ri + 1, this.member.get("n")));
     this.member.set("m", Math.max(rj + 1, this.member.get("m")));
+    this.tryUpdate();
     return this;
 }
 
@@ -86,6 +87,7 @@ BaseGrid.prototype.eraseByBaseGrid = function(i, j) {
     let elems = this.member.get("elements");
     elems[ri].splice(rj, 1);
     this.children.erase(elem);
+    this.tryUpdate();
     return this;
 }
 
@@ -154,21 +156,6 @@ BaseGrid.prototype.intValue = function(x, y) {
     return +value.text();
 }
 
-/**
- * 获取或者设置网格元素的透明度
- * @overload
- * @param {number} opacity 网格所有元素的透明度都被设置为opacity
- * @returns {this} 当前节点
- * @overload
- * @param {number} i 行索引
- * @param {number} j 列索引
- * @returns {number} 网格中位于(i,j)处的元素的透明度
- * @overload
- * @param {number} i 行索引
- * @param {number} j 列索引
- * @param {number} opacity 透明度
- * @returns {this} 当前节点
- */
 BaseGrid.prototype.opacity = function() {
     if (arguments.length === 0) return SDNode.prototype.opacity.call(this);
     if (arguments.length === 1) {

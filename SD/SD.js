@@ -55,14 +55,14 @@ export { Mathjax } from "./Node/Text/Mathjax.js";
 
 // export { Marker } from "./Node/Nake/Marker.js";
 
-// export { ValueBoard } from "./Component/ValueBoard.js";
-// export { Label } from "./Component/Label.js";
-// export { MathjaxLabel } from "./Component/Label.js";
+export { ValueBoard } from "./Component/ValueBoard.js";
+export { Label } from "./Component/Label.js";
+export { MathjaxLabel } from "./Component/Label.js";
 export { Index } from "./Component/Index.js";
-// export { Pointer } from "./Component/Pointer.js";
-// export { Focus } from "./Component/Focus.js";
-// export { Stress } from "./Component/Stress.js";
-// export { Link } from "./Component/Link.js";
+export { Pointer } from "./Component/Pointer.js";
+export { Focus } from "./Component/Focus.js";
+export { Stress } from "./Component/Stress.js";
+export { Link } from "./Component/Link.js";
 
 export { pause } from "./Animate/Animate.js";
 export { rand } from "./Utility/Random.js";
