@@ -1,35 +1,41 @@
-import { LinkBase } from "../Node/Basic/LinkBase";
-import { SDNode } from "../Node/Node";
-
-/**
- * @param {LinkBase} link 
- * @param {SDNode} from 
- * @param {SDNode} to 
- */
-export function trim(link, from, to) {
-    try {
-        let vf = 0, vt = 0;
-        if (from) {
-            let l = 0, r = 1;
-            while (r - l > 0.001) {
-                const mid = (l + r) / 2.0;
-                if (from.inRange(link.at(mid))) l = mid;
-                else r = mid;
-            } vf = l;
-        } else vf = 0;
-        if (to) {
-            let l = 0, r = 1;
-            while (r - l > 0.001) {
-                const mid = (l + r) / 2.0;
-                if (to.inRange(link.at(mid))) r = mid;
-                else l = mid;
-            } vt = l;
-        } else vt = 1;
-        const source = link.at(vf);
-        const target = link.at(vt);
-        link.source(source[0], source[1]);
-        link.target(target[0], target[1]);
-    } catch(e) {
-        console.warn(e);
+function trimFrom(link, from) {
+    if (!from) {
+        return 0;
     }
+    let l = 0, r = 1;
+    while (r - l > 1e-3) {
+        const mid = (l + r) / 2.0;
+        if (from.inRange(link.at(mid))) {
+            l = mid;
+        } else {
+            r = mid;
+        }
+    }
+    return l;
+}
+
+function trimTo(link, to) {
+    if (!to) {
+        return 1;
+    }
+    let l = 0, r = 1;
+    while (r - l > 1e-3) {
+        const mid = (l + r) / 2.0;
+        if (to.inRange(link.at(mid))) {
+            r = mid;
+        } else {
+            l = mid;
+        }
+    }
+    return l;
+}
+
+export function trim(link, from, to) {
+    link.update();
+    const f = trimFrom(link, from);
+    const t = trimTo(link, to);
+    const source = link.at(f);
+    const target = link.at(t);
+    link.source(source[0], source[1])
+        .target(target[0], target[1]);
 }

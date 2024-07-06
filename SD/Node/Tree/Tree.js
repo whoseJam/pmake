@@ -20,6 +20,8 @@ export function Tree(parent) {
     this.member.new("width", 300);
     this.member.new("height", 0);
     this.member.new("layerHeight", 60);
+
+    return this;
 }
 
 Tree.prototype = {
@@ -72,19 +74,7 @@ Tree.prototype.newNode = function(id, value = null) {
     this.tryUpdate();
     return this;
 }
-    
-/**
- * 创建一条从x指向y的连边
- * @overload
- * @param {number|string} x
- * @param {number|string} y
- * @returns {this}
- * @overload
- * @param {number|string} x
- * @param {number|string} y
- * @param {SDNode} value
- * @returns {this}
- */
+
 Tree.prototype.newLink = function(x, y, value = null) {
     const elem = new this._.linkType(this.layer("links"));
     if (value !== null) elem.value(value);
@@ -151,7 +141,10 @@ export function d3TreeLayout(mode, transX, transY, minDistanceRatio, parentSizeI
     for (let i = 0; i < sizeCof.length; i++)
         sizeCof[i] = Math.min(sizeCof[i], limit / minDistanceRatio[i]);
 
+    console.log("start update");
+
     info.descendants().forEach(nodeInfo => {
+        console.log("update node info = ", nodeInfo);
         const x = transX(nodeInfo);
         const y = transY(nodeInfo);
         const node = nodeInfo.data.data;

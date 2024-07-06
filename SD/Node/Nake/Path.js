@@ -1,169 +1,109 @@
 import { Action } from "@/Animate/Action";
-import { D3Layer } from "@/Node/D3Layer";
 import { d3ToNake } from "@/Utility/Tool";
-import { equal } from "@/Utility/Math";
-import { SDNode } from "@/Node/SDNode";
 import { snapAction } from "@/Utility/Tool";
-import { BaseLink } from "./BaseLink";
+import { BaseLine } from "./BaseLine";
 
-/**
- * @class Path
- */
-export class Path extends BaseLink {
-    /**
-     * @constructor
-     * @param {SDNode|D3Layer} parent
-     */
-    constructor(parent) {
-        super(parent, "path");
+export function Path(parent) {
+    BaseLine.call(this, parent, "path");
 
-        this.g().type("Path");
-        
-        this.member.new("d", "M 0, 0 L 0, 0");
+    this.g().type("Path");
 
-        const nake = this._.nake;
-        nake.setAttribute("d", this.member.get("d"));
+    this.member.new("x", 0);
+    this.member.new("y", 0);
+    this.member.new("width", 0);
+    this.member.new("height", 0);
+    this.member.new("d", "M 0, 0 L 0, 0");
+
+    const nake = this._.nake;
+    nake.setAttribute("d", this.member.get("d"));
+}
+
+Path.prototype = {
+    ...BaseLine.prototype
+};
+
+Path.prototype.updateList = [
+    ...Path.prototype.updateList,
+    update
+];
+
+Path.prototype.at = function(k) {
+    return getPointByRate(this.member.get("d"), k);
+}
+
+Path.prototype.getPointAtLength = function(length) {
+    return getPointAtLength(this.member.get("d"), length);
+}
+
+Path.prototype.totalLength = function() {
+    return getTotalLength(this.member.get("d"));
+}
+
+Path.prototype.x = function(x) {
+    if (x === undefined) {
+        return this.member.get("x");
     }
+    this.member.setByEqual("x", x);
+    this.d(move(
+        this.member.get("d"),
+        x - this.member.get("x"),
+        0));
+    return this;
+}
 
-    /**
-     * 获取线上的k分位点
-     * @param {number} k
-     * @returns {[number, number]}
-     */
-    at(k) {
-        return getPointByRate(this.member.get("d"), k);
+Path.prototype.y = function(y) {
+    if (y === undefined) {
+        return this.member.get("y");
     }
+    this.member.setByEqual("y", y);
+    this.d(move(
+        this.member.get("d"),
+        0,
+        y - this.member.get("y")));
+    return this;
+}
 
-    /**
-     * 获取线上距离起点长度length的点
-     * @param {number} length 
-     * @returns {[number, number]}
-     */
-    getPointAtLength(length) {
-        return getPointAtLength(this.member.get("d"), length);
+Path.prototype.d = function(d) {
+    if (d === undefined) {
+        return this.member.get("d");
     }
+    this.member.set("d", d);
+    this.tryUpdate();
+    return this;
+}
 
-    /**
-     * 获取线的总长
-     * @returns {number}
-     */
-    totalLength() {
-        return getTotalLength(this.member.get("d"));
-    }
-
-    /**
-     * @overload
-     * @param {number} x 
-     * @returns {this}
-     * @overload
-     * @returns {number}
-     */
-    x(x) {
-        if (x === undefined) {
-            return this.member.get("x");
-        }
-        this.member.setByEqual("x", x);
-        this.d(move(
+function update() {
+    if (this.member.hasChanged("d")) {
+        const duration = this.duration();
+        const snap = this._.snap;
+        new Action(
+            this.delay(),
+            this.delay() + this.duration(),
+            this.member.oldValue("d"),
             this.member.get("d"),
-            x - this.member.get("x"),
-            0));
-        return this;
-    }
-
-    /**
-     * @overload
-     * @param {number} y 
-     * @returns {this}
-     * @overload
-     * @returns {number}
-     */
-    y(y) {
-        if (y === undefined) {
-            return this.member.get("y");
-        }
-        this.member.setByEqual("y", y);
-        this.d(move(
-            this.member.get("d"),
-            0,
-            y - this.member.get("y")));
-        return this;
-    }
-
-    /**
-     * @overload
-     * @param {number} width 
-     * @returns {this}
-     * @overload
-     * @returns {number}
-     */
-    width() {
-        return this.member.get("width");
-    }
-    
-    /**
-     * @overload
-     * @param {number} height 
-     * @returns {this}
-     * @overload
-     * @returns {number}
-     */
-    height() {
-        return this.member.get("height");
-    }
-
-    /**
-     * @overload
-     * @param {string} d 
-     * @returns {this}
-     * @overload
-     * @returns {string}
-     */
-    d(d) {
-        if (d === undefined) {
-            return this.member.get("d");
-        }
-        this.member.set("d", d);
-        this.tryUpdate();
-        return this;
-    }
-
-    update() {
-        this.preUpdate();
-        
-        if (this.member.hasChanged("d")) {
-            const duration = this.duration();
-            const snap = this._.snap;
-            new Action(
-                this.delay(),
-                this.delay() + this.duration(),
-                this.member.oldValue("d"),
-                this.member.get("d"),
-                function(t) {
-                    if (t === 0) {
-                        snapAction({
-                            elem: snap,
-                            start: 0,
-                            end: duration,
-                            key: "d",
-                            value: this.to
-                        });
-                    }
-                },
-                this, "d"
-            );
-            const box = pathToBox(this._.d = d);
-            this.member.set("x", box.x);
-            this.member.set("y", box.y);
-            this.member.set("width", box.width);
-            this.member.set("height", box.height);
-            this.member.flush("x");
-            this.member.flush("y");
-            this.member.flush("width");
-            this.member.flush("height");
-            this.member.flush("d");
-        }
-        
-        this.postUpdate();
+            function(t) {
+                if (t === 0) {
+                    snapAction({
+                        elem: snap,
+                        start: 0,
+                        end: duration,
+                        key: "d",
+                        value: this.to
+                    });
+                }
+            },
+            this, "d"
+        );
+        const box = pathToBox(this.member.get("d"));
+        this.member.set("x", box.x);
+        this.member.set("y", box.y);
+        this.member.set("width", box.width);
+        this.member.set("height", box.height);
+        this.member.flush("x");
+        this.member.flush("y");
+        this.member.flush("width");
+        this.member.flush("height");
+        this.member.flush("d");
     }
 }
 

@@ -18,16 +18,6 @@ BaseTree.prototype = {
 BaseTree.prototype.x = naiveGetterAndSetter("x", "setByEqual");
 BaseTree.prototype.y = naiveGetterAndSetter("y", "setByEqual");
 
-/**
- * 获取树的内部元素，可以是节点，可以是树边
- * @overload
- * @param {string|number} arg0
- * @returns {any} 对应树上的节点
- * @overload
- * @param {string|number} arg0
- * @param {string|number} arg1
- * @returns {any} 对应树上的边
- */
 BaseTree.prototype.element = function(arg0, arg1) {
     if (arguments.length === 1)
         return this.findNodeById(arg0);
@@ -37,21 +27,6 @@ BaseTree.prototype.element = function(arg0, arg1) {
     throw new Error("Invalid Arguments");
 }
 
-/**
- * 获取树内部元素的value，或者设置内部元素的value
- * @overload
- * @param {string|number} arg0
- * @returns {any}
- * @overload
- * @param {string|number} arg0
- * @param {string|number|SDNode} arg1
- * @returns {any}
- * @overload
- * @param {string|number} arg0
- * @param {string|number} arg1
- * @param {string|number|SDNode} arg2
- * @returns {this} 
- */
 BaseTree.prototype.value = function(arg0, arg1, arg2) {
     if (arguments.length === 1)
         return this.findNodeById(arg0).value();
@@ -69,28 +44,11 @@ BaseTree.prototype.value = function(arg0, arg1, arg2) {
     throw new Error("Invalid Arguments");
 }
 
-/**
- * 设置树的整体透明度，或者设置内部元素的透明度，或者获取内部元素的透明度
- * @overload
- * @param {number} opacity - 透明度
- * @returns {this}
- * @overload
- * @param {number|string} nodeId
- * @returns {number}
- * @overload
- * @param {number|string} nodeId
- * @param {number} opacity
- * @returns {this}
- * @overload
- * @param {number|string} parentNodeId
- * @param {number|string} childNodeId
- * @returns {number}
- */
 BaseTree.prototype.opacity = function(arg0, arg1, arg2) {
     if (arguments.length === 0) {
-        return SDNode.opacity.call(this);
+        return SDNode.prototype.opacity.call(this);
     } else if (arguments.length === 1) {
-        if (0 <= arg0 && arg0 <= 1) return SDNode.opacity.call(this, arg0);
+        if (0 <= arg0 && arg0 <= 1) return SDNode.prototype.opacity.call(this, arg0);
         return this.findNodeById(arg0).opacity();
     } else if (arguments.length === 2) {
         if (0 <= arg1 && arg1 <= 1) {
@@ -106,28 +64,6 @@ BaseTree.prototype.opacity = function(arg0, arg1, arg2) {
     throw new Error("Invalid Arguments");
 }
 
-/**
- * 设置树整体的颜色，或者设置内部元素的颜色，或者获取内部元素的颜色
- * @overload
- * @param {string|{main: string, border: string}} color
- * @returns {this}
- * @overload
- * @param {number|string} nodeId
- * @returns {string|{main: string, border: string}}
- * @overload
- * @param {number|string} nodeId
- * @param {string|{main: string, border: string}} color
- * @returns {this}
- * @overload
- * @param {number|string} parentNodeId
- * @param {number|string} childNodeId
- * @returns {string|{main: string, border: string}}
- * @overload
- * @param {number|string} parentNodeId
- * @param {number|string} childNodeId
- * @param {string|{main: string, border: string}} color
- * @returns {this}
- */
 BaseTree.prototype.color = function(arg0, arg1, arg2) {
     if (arguments.length === 1) {
         if (typeof(arg0) === "string" || "main" in arg0) {
@@ -155,51 +91,25 @@ BaseTree.prototype.stratify = function() {
     return stratify(this.member.get("nodes"));
 }
 
-/**
- * 通过nodeId，查询树中对应节点的编号，注意此处的编号相等判断用的是"=="
- * @param {number|string} nodeId 待查询的节点编号 
- * @returns {SDNode}
- */
 BaseTree.prototype.findNodeById = function(nodeId) {
     const target = String(nodeId);
     const nodes = this.member.get("nodes");
     return nodes.find(node => String(node.nodeId) === target);
 }
 
-/**
- * 查询一条从parentNodeId指向childNodeId的树边
- * @param {number|string} parentNodeId 待查询的边的父节点编号
- * @param {number|string} childNodeId 待查询的边的子节点编号
- * @returns {SDNode}
- */
 BaseTree.prototype.findLinkById = function(parentNodeId, childNodeId) {
     const targetParentId = String(parentNodeId);
     const targetChildId = String(childNodeId);
     const links = this.member.get("links");
     return links.find(link => String(link.parentNodeId) === targetParentId && String(link.childNodeId) === targetChildId);
 }
-    
-/**
- * 获取编号为id的节点的父节点
- * @param {number|string} id 待查询节点的节点编号
- * @returns {SDNode}
- */
+
 BaseTree.prototype.father = function(id) {
     const node = this.findNodeById(id);
     if (!node) return undefined;
     return this.findNodeById(node.parentNodeId);
 }
 
-/**
- * 查询深度信息
- * - depth() 获取树的深度
- * - depth(6) 获取6号节点对应的深度
- * @overload
- * @returns {number} 树的深度
- * @overload
- * @param {number|string} u
- * @returns {number}
- */
 BaseTree.prototype.depth = function(u) {
     if (u === undefined) {
         let root = this.stratify();
@@ -212,12 +122,6 @@ BaseTree.prototype.depth = function(u) {
     }
 }
 
-/**
- * 获取两个节点的最近公共祖先
- * @param {number|string} x 
- * @param {number|string} y 
- * @returns {number|string} 
- */
 BaseTree.prototype.lca = function(x, y) {
     let depthx = this.depth(x);
     let depthy = this.depth(y);
@@ -233,11 +137,6 @@ BaseTree.prototype.lca = function(x, y) {
     return x;
 }
 
-/**
- * 获取树上某个点的子节点
- * @param {number|string} x 
- * @returns {Array<SDNode>}
- */
 BaseTree.prototype.childrenOnTree = function(x) {
     const nodes = this.member.get("nodes");
     const target = String(x);
@@ -245,27 +144,15 @@ BaseTree.prototype.childrenOnTree = function(x) {
     return children; 
 }
 
-/**
- * 新建一个编号为id，节点元素为elem的节点
- * @param {number|string} id 
- * @param {SDNode} elem 
- * @returns {this}
- */
 BaseTree.prototype.newNodeByBaseTree = function(id, elem) {
     elem.nodeId = id;
     const nodes = this.member.get("nodes");
     nodes.push(elem);
     this.children.push(elem);
+    this.tryUpdate();
     return this;
 }
-    
-/**
- * 新建一条从x指向y的树边
- * @param {number|string} x 父节点编号 
- * @param {number|string} y 子节点编号
- * @param {SDNode} elem 边的象征节点
- * @returns {this}
- */
+
 BaseTree.prototype.newLinkByBaseTree = function(x, y, elem) {
     elem.parentNodeId = x;
     elem.childNodeId = y;
@@ -274,57 +161,30 @@ BaseTree.prototype.newLinkByBaseTree = function(x, y, elem) {
     let links = this.member.get("links");
     links.push(elem);
     this.children.push(elem);
+    this.tryUpdate();
     return this;
 }
 
-/**
- * 删除从x指向y的树边
- * @param {number|string} x 
- * @param {number|string} y 
- * @returns {this}
- */
 BaseTree.prototype.eraseLinkByBaseTree = function(x, y) {
     const link = this.findLinkById(x, y);
     const links = this.member.get("links");
     const idx = links.indexOf(link);
     links.splice(idx, 1);
     this.children.erase(link);
+    this.tryUpdate();
     return this;
 }
 
-/**
- * 操作树的树根
- * @overload
- * @param {number|string} id
- * @returns {this}
- * @overload
- * @param {number|string} id
- * @param {SDNode} value
- * @returns {this}
- * @overload
- * @returns {any} 树根
- */
 BaseTree.prototype.root = function(id, value = null) {
     if (id === undefined) {
         const nodes = this.member.get("nodes");
         return nodes.find(node => node.parentNodeId === undefined);
     }
+    console.log("new node id=", id, "value=", value);
     this.newNode(id, value);
     return this;
 }
 
-/**
- * 新建一条从x到y的连边，其中x是父节点，y是子节点
- * @overload
- * @param {number|string} x 父节点的节点编号
- * @param {number|string} y 子节点的节点编号 
- * @param {SDNode} value 该连边的价值 
- * @returns {this}
- * @overload
- * @param {number|string} x
- * @param {number|string} y
- * @returns {this}
- */
 BaseTree.prototype.link = function(x, y, value = null) {
     if (!this.findNodeById(y)) this.newNode(y);
     if (!this.findNodeById(x)) this.newNode(x);
@@ -332,12 +192,6 @@ BaseTree.prototype.link = function(x, y, value = null) {
     return this;
 }
 
-/**
- * 切断树中x到y的边
- * @param {number|string} x 父节点编号 
- * @param {number|string} y 子节点编号
- * @returns 当前节点
- */
 BaseTree.prototype.cut = function(x, y) {
     const link = this.findLinkById(x, y);
     const node = this.findNodeById(y);
@@ -350,24 +204,12 @@ BaseTree.prototype.cut = function(x, y) {
     return this;
 }
 
-/**
- * 获取树上某个元素持有的文本，如果不存在对应的元素，或者元素上不存在文本，则返回空字符串
- * - text(3) 获取3号节点上的文本
- * - text(1,5) 获取1->5这条边上的文本
- * @returns {string}
- */
 BaseTree.prototype.text = function() {
     const value = this.element.apply(this, arguments).value();
     if (!value || !value.text) return "";
     return value.text();
 }
 
-/**
- * 获取树上某个元素持有的值，如果不存在对应的元素，或者元素上不存在值，则返回0
- * - intValue(3) 获取3号节点上的值
- * - intValue(1,5) 获取1->5这条边上的值
- * @returns {number}
- */
 BaseTree.prototype.intValue = function() {
     const text = this.text.apply(this, arguments);
     return +text;

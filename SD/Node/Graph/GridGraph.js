@@ -1,5 +1,5 @@
 import { trim } from "../../Utility/Trim";
-import { Line } from "../Basic/Line";
+import { Line } from "../Nake/Line";
 import { naiveGetterAndSetter, naiveUpdate } from "../Common";
 import { Vertex } from "../Element/Vertex";
 import { BaseGraph, GraphBase } from "./BaseGraph";

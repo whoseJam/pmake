@@ -1,69 +1,48 @@
-import { D3Layer } from "@/Node/D3Layer";
-import { Fragment } from "@/Node/Basic/Fragment";
-import { SDNode } from "@/Node/SDNode";
+import { Fragment } from "@/Node/Nake/Fragment";
 
-/**
- * @class Mathjax
- */
-export class Mathjax extends Fragment {
-    /**
-     * @constructor
-     * @param {SDNode|D3Layer} node 
-     * @param {string} text 
-     */
-    constructor(node, text) {
-        super(node);
-        this.g().type("Mathjax");
-        if (text) this.math(text);
+export function Mathjax(parent, text) {
+    Fragment.call(this, parent);
+
+    this.g().type("Mathjax");
+
+    if (text) {
+        this.math(text);
     }
 
-    /**
-     * @param {string} text 
-     * @returns {this}
-     */
-    math(text) {
-        const svg = MathJax.tex2svg(text).children[0];
-        this.fragment(svg.outerHTML);
-        return this;
-    }
+    return this;
+}
 
-    /**
-     * @overload
-     * @param {number} width 
-     * @returns {this}
-     * @overload
-     * @returns {number}
-     */
-    width(width) {
-        this.dirtyCheck("q");
-        const owidth = this._.width;
-        const oheight = this._.height;
-        if (width === undefined)
-            return owidth;
-        const k = width / owidth;
-        this._.width = owidth * k;
-        this._.height = oheight * k;
-        this.dirty(this, "R");
-        return this;
-    }
+Mathjax.prototype = {
+    ...Fragment.prototype
+};
 
-    /**
-     * @overload
-     * @param {number} height 
-     * @returns {this}
-     * @overload
-     * @returns {number}
-     */
-    height(height) {
-        this.dirtyCheck("q");
-        const owidth = this._.width;
-        const oheight = this._.height;
-        if (height === undefined)
-            return oheight;
-        const k = height / oheight;
-        this._.width = owidth * k;
-        this._.height = oheight * k;
-        this.dirty(this, "R");
-        return this;
-    }
+Mathjax.prototype.math = function(text) {
+    const svg = MathJax.tex2svg(text).children[0];
+    this.fragment(svg.outerHTML);
+    return this;
+}
+
+Mathjax.prototype.width = function(width) {
+    const owidth = this.member.get("width");
+    const oheight = this.member.get("height");
+    if (width === undefined)
+        return owidth;
+    const k = width / owidth;
+    this.member.set("width", owidth * k);
+    this.member.set("height", oheight * k);
+    this.tryUpdate();
+    return this;
+}
+
+
+Mathjax.prototype.height = function(height) {
+    const owidth = this.member.get("width");
+    const oheight = this.member.get("height");
+    if (height === undefined)
+        return oheight;
+    const k = height / oheight;
+    this.member.set("width", owidth * k);
+    this.member.set("height", oheight * k);
+    this.tryUpdate();
+    return this;
 }

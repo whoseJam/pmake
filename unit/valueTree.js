@@ -1,4 +1,4 @@
-import * as sd from "../lib/slide";
+import * as sd from "@/SD";
 
 let svg = sd.svg();
 let t = new sd.ValueTree(svg).cx(600).y(50).layerHeight(120);

@@ -54,67 +54,35 @@ BaseArray.prototype.element = function(idx) {
     throw new Error("Index Out Of Range");
 }
 
-/**
- * 获取序列中的第一个元素
- * @returns {SDNode}
- */
 BaseArray.prototype.firstElement = function() {
     return this.element(this.start());
 }
 
-/**
- * 获取序列中的最后一个元素
- * @returns {SDNode}
- */
 BaseArray.prototype.lastElement = function() {
     return this.element(this.end());
 }
 
-/**
- * 插入一个元素到序列的末尾
- * @param {number|string|SDNode|null} value
- * @returns {this}
- */
 BaseArray.prototype.push = function(value = null) {
     this.insert(this.end() + 1, value);
     return this;
 }
 
-/**
- * 将一个数组中全部元素插入到序列的末尾
- * @param {Array<any>|string} array
- * @returns {this}
- */
 BaseArray.prototype.pushArray = function(array) {
     for (let i = 0; i < array.length; i++)
         this.push(array[i]);
     return this;
 }
 
-/**
- * 插入一个现存的值元素到序列的末尾
- * @param {SDNode} value 
- * @returns {this}
- */
 BaseArray.prototype.pushFromExistValue = function(value) {
     this.insertFromExistValue(this.end() + 1, value);
     return this;
 }
 
-/**
- * 插入一个现存的元素到序列的末尾
- * @param {SDNode} value 
- * @returns {this}
- */
 BaseArray.prototype.pushFromExistElement = function(value) {
     this.insertFromExistElement(this.end() + 1, value);
     return this;
 }
 
-/**
- * 弹出序列的末尾元素
- * @returns {this}
- */
 BaseArray.prototype.pop = function() {
     this.erase(this.end());
     return this;
@@ -174,11 +142,11 @@ BaseArray.prototype.intValue = function(idx) {
 
 BaseArray.prototype.opacity = function() {
     if (arguments.length === 0) {
-        return SDNode.opacity.call(this);
+        return SDNode.prototype.opacity.call(this);
     } else if (arguments.length === 1) {
         const opacity = arguments[0];
         if (0 <= opacity && opacity <= 1) {
-            SDNode.opacity.call(this, opacity);
+            SDNode.prototype.opacity.call(this, opacity);
             return this;
         }
         const idx = arguments[0];

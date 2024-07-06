@@ -170,9 +170,9 @@ BaseGrid.prototype.intValue = function(x, y) {
  * @returns {this} 当前节点
  */
 BaseGrid.prototype.opacity = function() {
-    if (arguments.length === 0) return SDNode.opacity.call(this);
+    if (arguments.length === 0) return SDNode.prototype.opacity.call(this);
     if (arguments.length === 1) {
-        SDNode.opacity.call(this, arguments[0]);
+        SDNode.prototype.opacity.call(this, arguments[0]);
         return this;
     }
     if (arguments.length === 2) return opacity2.apply(this, arguments);

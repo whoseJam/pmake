@@ -1,6 +1,6 @@
 import { BaseGraph } from "./BaseGraph";
 
-export class BipartiteGraph extends BaseGraph{
+export class BipartiteGraph extends BaseGraph {
     constructor(parent: any);
 
     // @ts-ignore

@@ -1,8 +1,7 @@
-import { ArrayBase } from "@/Node/Array/ArrayBase";
 import { Context } from "@/Animate/Context";
 import { D3Layer } from "@/Node/D3Layer";
 import { SDNode } from "@/Node/SDNode";
-import { Text } from "@/Node/Basic/Text";
+import { Text } from "@/Node/Nake/Text";
 import { BaseArray } from "./BaseArray";
 import { naiveGetterAndSetter } from "../Common";
 import { Code } from "./Code";
@@ -17,6 +16,10 @@ export function VarList(parent) {
 
     return this;
 }
+
+VarList.prototype = { 
+    ...BaseArray.prototype
+};
 
 VarList.prototype.fontSize = naiveGetterAndSetter("font-size", "setByEqual"); 
 
@@ -87,7 +90,6 @@ VarList.prototype.incBy = function(key, delta) {
 }
 
 function update() {
-    this.preUpdate();
     const x = this._.x;
     let y = this._.y;
     let width = 0;
@@ -108,7 +110,4 @@ function update() {
     }
     this._.width = width;
     this._.height = height;
-    super.update();
-    this.postUpdate();
-    return this;
 }

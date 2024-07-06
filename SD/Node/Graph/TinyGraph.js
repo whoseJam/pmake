@@ -1,9 +1,9 @@
 import { trim } from "../../Utility/Trim";
-import { Line } from "../Basic/Line";
+import { Line } from "../Nake/Line";
 import { Vertex } from "../Element/Vertex";
-import { GraphBase } from "./BaseGraph";
+import { BaseGraph } from "./BaseGraph";
 
-export class TinyGraph extends GraphBase {
+export class TinyGraph extends BaseGraph {
     constructor(node) {
         super(node);
         this.g().type("TinyGraph");
