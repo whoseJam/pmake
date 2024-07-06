@@ -1,0 +1,39 @@
+<section>
+    <section>
+        <h1>RMQ引入</h1>
+    </section>
+    <section>
+        <h2>范围最大值问题</h2>
+        <p>给出一个包含 $n$ 个元素的数组 $\{A\}=A_1,A_2...A_n$，请你设计一种数据结构，支持查询<b>区间最大值</b>：</p>
+        <ul>
+            <li>
+                $Query(l,r)=max\{A_l,A_{l+1}...A_r\}$
+            </li>
+        </ul>
+        <codeblock class="fragment">
+            <script type="text/template">
+                int Query(int l, int r) {
+                    int mx = 0;
+                    for (int i = l; i <= r; i++) {
+                        mx = max(mx, A[i]);
+                    }
+                    return mx;
+                }
+            </script>
+        </codeblock>
+        <p class="fragment quote">
+            假设总共有 $m$ 次查询操作，上述做法的最坏时间复杂度是多少呢？
+            <br><span class="fragment">——时间复杂度为 $O(nm)$</span>
+        </p>
+    </section>
+    <section>
+        <h2>范围最大值问题</h2>
+        <p>在实际应用中，我们通常使用Tarjan提出的SparseTable去解决区间最大值问题</p>
+        <p class="fragment">SparseTable，简称<b>ST表</b>，它可以做到：</p>
+        <ul>
+            <li class="fragment">预处理时间复杂度 $O(nlogn)$</li>
+            <li class="fragment">单次查询复杂度 $O(1)$</li>
+            <li class="fragment">空间复杂度 $O(nlogn)$</li>
+        </ul>
+    </section>
+</section>

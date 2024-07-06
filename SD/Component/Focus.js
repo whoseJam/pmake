@@ -57,6 +57,7 @@ export function Focus(node) {
 
         const context = new Context(this);
         if (elem1) {
+            console.log("this.opacity=", this.opacity());
             if (!this.opacity()) {
                 context.till(0, 0);
                 if (elem2) focusOn2Element(this, elem1, elem2);

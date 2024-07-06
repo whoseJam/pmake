@@ -1,22 +1,23 @@
-import * as sd from "#lib/slide";
+import * as sd from "@/SD";
 
 let svg = sd.svg();
 let C = sd.color();
 let n = 10;
 let m = Math.floor(Math.log2(n)) + 1;
 let data = [0, 2, 4, 3, 7, 4, 6, 8, 3, 1, 5];
-let arr = sd.Array(svg).start(1).x(100).y(100).indexed(true);
+let arr = new sd.Array(svg).start(1).x(100).y(100);
 for (let i = 1; i <= n; i++) arr.push(data[i]);
-let st = sd.Grid(svg).n(m).m(n).startM(1).x(100).y(300);
+sd.Index(arr, "t");
+let st = new sd.Grid(svg).n(m).m(n).startM(1).x(100).y(300);
 for (let i = 1; i <= n; i++) {
-    st.children.push(sd.Text(st, i).fontSize(20), function(parent, child) {
+    st.children.push(new sd.Text(st, i).fontSize(20), function(parent, child) {
         let elem = st.element(m - 1, i);
         child.cx(elem.cx());
         child.y(elem.my() + 3);
     })
 }
 for (let i = 0; i < m; i++) {
-    st.children.push(sd.Mathjax(st).math(`2^${i}`).height(20), function(parent, child) {
+    st.children.push(new sd.Mathjax(st).math(`2^${i}`).height(20), function(parent, child) {
         let elem = st.element(m - 1 - i, 1);
         child.mx(elem.x() - 5);
         child.cy(elem.cy());
@@ -47,8 +48,8 @@ async function query(l, r) {
     let k = Math.floor(Math.log2(r-l+1)), a1, a2;
     {   await sd.pause();
         let L = l, R = l + (1<<k) - 1;
-        a1 = sd.Array(svg);
-        let rct = sd.Rect(svg).strokeWidth(3).stroke(C.red);
+        a1 = new sd.Array(svg);
+        let rct = new sd.Rect(svg).strokeWidth(3).stroke(C.red);
         rct.fillOpacity(0).x(arr.element(L).x()).y(arr.element(L).y());
         rct.width(arr.elementWidth() * (R - L + 1));
         rct.height(arr.elementHeight());
@@ -61,8 +62,8 @@ async function query(l, r) {
     }
     {   await sd.pause();
         let L = r - (1<<k) + 1, R = r;
-        a2 = sd.Array(svg);
-        let rct = sd.Rect(svg).strokeWidth(3).stroke(C.red);
+        a2 = new sd.Array(svg);
+        let rct = new sd.Rect(svg).strokeWidth(3).stroke(C.red);
         rct.fillOpacity(0).x(arr.element(L).x()).y(arr.element(L).y());
         rct.width(arr.elementWidth() * (R - L + 1));
         rct.height(arr.elementHeight());
@@ -97,7 +98,7 @@ async function show(pos, i) {
         for (let j = l; j <= r; j++)
             arr.color(j, C.orange);
         arr.endAnimate();
-        let rct = sd.Rect(svg).strokeWidth(3).stroke(C.red);
+        let rct = new sd.Rect(svg).strokeWidth(3).stroke(C.red);
         rct.x(arr.element(l).x()).y(arr.element(l).y());
         rct.width(arr.elementWidth() * (r-l+1));
         rct.height(arr.elementHeight());

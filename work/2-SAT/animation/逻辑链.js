@@ -21,6 +21,9 @@ async function main() {
     for (let i = 1; i < 7; i++) {
         path.element(i, i+1).arrow();
     }
+    for (let i = 1; i <= 7; i++) {
+        path.element(i).fillOpacity(0);
+    }
     path.layerWidth(100);
     await sd.pause();
 }
