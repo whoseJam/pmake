@@ -13,6 +13,11 @@ export function BoxDAG(parent) {
     this.member.new("elementWidth", 40);
     this.member.new("elementHeight", 40);
 
+    this.member.set("updateNodeSize", (element) => {
+        element.width(this.member.get("elementWidth"));
+        element.height(this.member.get("elementHeight"));
+    })
+
     return this;
 }
 
@@ -39,54 +44,6 @@ BoxDAG.prototype.newNode = function(id, value = null) {
         width: this.member.get("elementWidth"),
         height: this.member.get("elementHeight")
     });
-    this.newNodeByBaseGraph(id, elem);
-    return this;
-}
-
-function update() {
-    dagre.layout(this._.graph);
-    const box = dagreGraphToBox(this._.graph);
-    const realX = x => {
-        if (box.width === 0) return this._.x;
-        return this._.x + (x - box.x) / box.width * this._.width;
-    }
-    const realY = y => {
-        if (box.height === 0) return this._.y;
-        return this._.y + (y - box.y) / box.height * this._.height;
-    }
-    const elementWidth = this._.elementWidth;
-    const elementHeight = this._.elementHeight;
-    this._.graph.nodes().forEach(nodeId => {
-        const node = this.findNodeById(nodeId);
-        const layout = this._.graph.node(nodeId);
-        const x = realX(layout.x);
-        const y = realY(layout.y);
-        const move = () => {
-            node.width(elementWidth);
-            node.height(elementHeight);
-            node.cx(x).cy(y);
-        }
-        if (node._.enter) {
-            node._.enter(node, move);
-            node._.enter = undefined;
-        } else move();
-    });
-    this._.graph.edges().forEach(linkInfo => {
-        const x = linkInfo.v;
-        const y = linkInfo.w;
-        const link = this.findLinkById(x, y);
-        const nx = this.findNodeById(x);
-        const ny = this.findNodeById(y);
-        const move = () => {
-            link.source(nx.cx(), nx.cy());
-            link.target(ny.cx(), ny.cy());
-            trim(link, nx, ny);
-        }
-        if (link._.enter) {
-            link._.enter(link, move);
-            link._.enter = undefined;
-        } else move();
-    });
-    this.postUpdate();
+    this.newNodeByBaseGraph(id, element);
     return this;
 }

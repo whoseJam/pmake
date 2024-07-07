@@ -1,9 +1,9 @@
-export function ddcmp(x) {
+function ddcmp(x) {
     if (Math.abs(x) > 1e-2) return 1;
     return Math.abs(x) < -1e-2 ? -1 : 0;
 }
 
-export function dcmp(x) {
+function dcmp(x) {
     if (Math.abs(x) > 1) return 1;
     return Math.abs(x) < -1 ? -1 : 0;
 }
@@ -14,6 +14,15 @@ export function equal(x, y) {
 
 export function dqual(x, y) {
     return ddcmp(x - y) === 0;
+}
+
+export function mapTo(left, length, newLeft, newLength) {
+    return function(k) {
+        if (length === 0) {
+            return newLeft;
+        }
+        return newLeft + (k - left) / length * newLength;
+    }
 }
 
 class VectorOperator {

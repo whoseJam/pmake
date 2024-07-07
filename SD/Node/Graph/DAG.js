@@ -1,9 +1,7 @@
 import { dagreGraphToBox, evaluateValue } from "../../Utility/Tool";
 import { BaseGraph } from "./BaseGraph";
-import { SDNode } from "../SDNode";
-import { Vertex } from "../Element/Vertex";
-import { Line } from "../Nake/Line";
 import { trim } from "../../SD";
+import { mapTo } from "@/Utility/Math";
 import * as dagre from "dagre";
 
 export function DAG(parent) {
@@ -14,6 +12,13 @@ export function DAG(parent) {
     this.member.new("graph", new dagre.graphlib.Graph());
     this.member.new("rankDir", "TB");
     this.member.new("align", undefined);
+
+    this.member.new("updateNodeSize", (element) => {
+        if ("r" in element) {
+            const r = this.member.get("r");
+            element.r(r);
+        }
+    })
     
     const graph = this.member.get("graph");
     graph.setGraph({ rankdir: "TB" });
@@ -85,26 +90,27 @@ function update() {
     const graph = this.member.get("graph");
     dagre.layout(graph);
     const box = dagreGraphToBox(graph);
-    const convertX = node => {
-        const x = this.member.get("x");
-        if (box.width === 0) {
-            return x;
-        }
-        const width = this.member.get("width");
-        return x + (node.x - box.x) / box.width * width;
-    }
-    const convertY = node => {
-        const y = this.member.get("y");
-        if (box.height === 0) {
-            return y;
-        }
-        const height = this.member.get("height");
-        return y + (node.y - box.y) / box.height * height;
-    }
+
+    const convertXInner = mapTo(
+        box.x,
+        box.width,
+        this.member.get("x"),
+        this.member.get("width")
+    );
+    const convertYInner = mapTo(
+        box.y,
+        box.height,
+        this.member.get("y"),
+        this.member.get("height")
+    );
+    const convertX = node => convertXInner(node.x);
+    const convertY = node => convertYInner(node.y);
+    const updateSize = this.member.get("updateNodeSize");
     graph.nodes().forEach(nodeId => {
         const node = this.findNodeById(nodeId);
         const layout = graph.node(nodeId);
         this.tryMove(node, () => {
+            updateSize(node);
             node.cx(convertX(layout));
             node.cy(convertY(layout));
         });
