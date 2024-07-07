@@ -1,8 +1,7 @@
-import { trim } from "../../Utility/Trim";
-import { Line } from "../Nake/Line";
-import { naiveGetterAndSetter, naiveUpdate } from "../Common";
-import { Vertex } from "../Element/Vertex";
-import { BaseGraph, GraphBase } from "./BaseGraph";
+import { evaluateValue } from "@/Utility/Tool";
+import { trim } from "@/Utility/Trim";
+import { naiveGetterAndSetter } from "../Common";
+import { BaseGraph } from "./BaseGraph";
 
 export function GridGraph(parent) {
     BaseGraph.call(this, parent);
@@ -36,53 +35,56 @@ GridGraph.prototype.at = function(i, j) {
     return this;
 }
 
-GridGraph.prototype.newNode = function(id, value = null) {
-    let elem = new this._.nodeType(this);
-    if (value !== null) elem.value(value);
-    else elem.value(id);
-    elem.posN = this.member.get("curN");
-    elem.posM = this.member.get("curM");
-    elem._.enter = (elem, move) => {
-        elem.opacity(0);
+GridGraph.prototype.newNode = function(id, value) {
+    const element = new this._.nodeType(this.layer("nodes"));
+    element.value(evaluateValue(id, value));
+    element.posN = this.member.get("curN");
+    element.posM = this.member.get("curM");
+    element._.enter = (element, move) => {
+        element.opacity(0);
         move();
-        elem.unfreeze().freeze();
-        elem.startAnimate(this).opacity(1);
+        element.unfreeze().freeze();
+        element.startAnimate(this).opacity(1);
     };
-    this.newNodeByBaseGraph(id, elem);
+    this.newNodeByBaseGraph(id, element);
     return this;
 }
 
-GridGraph.prototype.newLink = function(x, y, value = null) {
-    let elem = new this._.linkType(this);
-    if (value !== null) elem.value(value);
-    elem._.enter = (elem, move) => {
-        elem.opacity(0);
+GridGraph.prototype.newLink = function(x, y, value) {
+    const element = new this._.linkType(this.layer("links"));
+    element.value(value);
+    element._.enter = (element, move) => {
+        element.opacity(0);
         move();
-        elem.unfreeze().freeze();
-        elem.startAnimate(this).opacity(1);
+        element.unfreeze().freeze();
+        element.startAnimate(this).opacity(1);
     };
-    this.newLinkByBaseGraph(x, y, elem);
+    this.newLinkByBaseGraph(x, y, element);
     return this;
 }
 
 function update() {
     const x = this.x(), mx = this.mx(), W = (mx - x) / this.member.get("m");
     const y = this.y(), my = this.my(), H = (my - y) / this.member.get("n");
-    const realX = node => node.posM * W + x;
-    const realY = node => node.posN * H + y;
-    for (let node of this.member.get("nodes")) {
+    const convertX = node => node.posM * W + x;
+    const convertY = node => node.posN * H + y;
+    const nodes = this.member.get("nodes");
+    const links = this.member.get("links");
+    for (let node of nodes) {
         this.tryMove(node, () => {
-            node.cx(realX(node));
-            node.cy(realY(node));
+            node.cx(convertX(node));
+            node.cy(convertY(node));
         });
     }
-    for (let link of this.member.get("links")) {
-        const nx = this.findNodeById(link.fromNodeId);
-        const ny = this.findNodeById(link.toNodeId);
+    for (let link of links) {
+        const sourceId = link.fromNodeId;
+        const targetId = link.toNodeId;
+        const source = this.findNodeById(sourceId);
+        const target = this.findNodeById(targetId);
         this.tryMove(link, () => {
-            link.source(nx.cx(), nx.cy());
-            link.target(ny.cx(), ny.cy());
-            trim(link, nx, ny);
+            link.source(source.center());
+            link.target(target.center());
+            trim(link, source, target);
         });
     }
 }
