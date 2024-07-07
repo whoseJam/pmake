@@ -1,8 +1,6 @@
 import { Box } from "../Element/Box";
 import { DAG } from "./DAG";
-import { dagreGraphToBox, evaluateValue } from "../../Utility/Tool";
-import { trim } from "../../Utility/Trim";
-import * as dagre from "dagre";
+import { evaluateValue } from "../../Utility/Tool";
 import { naiveGetterAndSetter } from "../Common";
 
 export function BoxDAG(parent) {
