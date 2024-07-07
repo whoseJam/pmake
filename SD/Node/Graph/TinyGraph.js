@@ -1,84 +1,66 @@
-import { trim } from "../../Utility/Trim";
-import { Line } from "../Nake/Line";
-import { Vertex } from "../Element/Vertex";
+import { trim } from "@/Utility/Trim";
 import { BaseGraph } from "./BaseGraph";
+import { evaluateValue } from "@/Utility/Tool";
+import { GridGraph } from "./GridGraph";
 
-export class TinyGraph extends BaseGraph {
-    constructor(node) {
-        super(node);
-        this.g().type("TinyGraph");
-        this._.r = 20;
-        this._.makeLink = function(node) {
-            return new Line(node);
-        }
-    }
+export function TinyGraph(parent) {
+    BaseGraph.call(this, parent);
 
-    /**
-     * 新建一个编号为id，价值为value的节点
-     * @param {string|number} id 
-     * @param {Node|undefined} value
-     * @returns 当前节点
-     */
-    newNode(id, value = null) {
-        const elem = new Vertex(this).r(this._.r);
-        if (value !== null) elem.value(value);
-        else elem.value(id);
-        this.newNodeByGraphBase(id, elem);
-        elem._.enter = (elem, move) => {
-            elem.opacity(0);
-            move();
-            elem.startAnimate(this).opacity(1);
+    this.g().type("TinyGraph");
+
+    this.member.new("r", 20);
+
+    return this;
+}
+
+TinyGraph.prototype = {
+    ...BaseGraph.prototype
+};
+
+TinyGraph.prototype.newLink = GridGraph.prototype.newLink;
+
+TinyGraph.prototype.updateList = {
+    ...TinyGraph.prototype.updateList,
+    update_update
+};
+
+TinyGraph.prototype.newNode = function(id, value) {
+    const element = new this._.nodeType(this.layer("nodes"));
+    element.value(evaluateValue(id, value));
+    element._.enter = (element, move) => {
+        element.opacity(0);
+        move();
+        element.unfreeze().freeze();
+        element.startAnimate(this).opacity(1);
+    };
+    this.newNodeByGraphBase(id, element);
+    return this;
+}
+
+function update_update() {
+    const nodes = this.member.get("nodes");
+    const links = this.member.get("links");
+    if (nodes.length === 1) update1.call(this, nodes);
+    if (nodes.length === 2) update2.call(this, nodes);
+    if (nodes.length === 3) update3.call(this, nodes);
+    if (nodes.length === 4) update4.call(this, nodes);
+    if (nodes.length === 5) update5.call(this, nodes);
+    if (nodes.length === 6) update6.call(this, nodes);
+    if (nodes.length >= 7) throw new Error("Cannot Process Graph With count(Nodes) >= 7");
+    for (let link of links) {
+        const sourceId = link.sourceId;
+        const targetId = link.targetId;
+        const x = this.findNodeById(link.fromNodeId);
+        const y = this.findNodeById(link.toNodeId);
+        const move = () => {
+            link.source(x.cx(), x.cy());
+            link.target(y.cx(), y.cy());
+            trim(link, x, y);
         };
-        this.dirty(this, "U");
-        return this;
-    }
-
-    /**
-     * 新建一条从x指向y的，价值为value的边，随后交由GraphBase完成信息的存储工作和update的工作
-     * @param {string|number} x 
-     * @param {string|number} y 
-     * @param {Node|undefined} value 
-     * @returns 当前节点
-     */
-    newLink(x, y, value = null) {
-        const elem = this._.makeLink(this);
-        if (value !== null) elem.value(value);
-        this.newLinkByGraphBase(x, y, elem);
-        elem._.enter = (elem, move) => {
-            elem.opacity(0);
-            move();
-            elem.startAnimate(this).opacity(1);
-        };
-        this.dirty(this, "U");
-        return this;
-    }
-
-    update() {
-        this.preUpdate();
-        const nodes = this.member.get("nodes");
-        const links = this.member.get("links");
-        if (nodes.length === 1) update1.call(this, nodes);
-        if (nodes.length === 2) update2.call(this, nodes);
-        if (nodes.length === 3) update3.call(this, nodes);
-        if (nodes.length === 4) update4.call(this, nodes);
-        if (nodes.length === 5) update5.call(this, nodes);
-        if (nodes.length === 6) update6.call(this, nodes);
-        if (nodes.length >= 7) throw new Error("TinyGraph无法处理节点数超过7的图")
-        for (let link of links) {
-            const x = this.findNodeById(link.fromNodeId);
-            const y = this.findNodeById(link.toNodeId);
-            const move = () => {
-                link.source(x.cx(), x.cy());
-                link.target(y.cx(), y.cy());
-                trim(link, x, y);
-            };
-            if (link._.enter) {
-                link._.enter(link, move);
-                link._.enter = undefined;
-            } else move();
-        }
-        this.postUpdate();
-        return this;
+        if (link._.enter) {
+            link._.enter(link, move);
+            link._.enter = undefined;
+        } else move();
     }
 }
 
