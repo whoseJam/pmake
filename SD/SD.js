@@ -31,7 +31,6 @@ export { ValueStack } from "./Node/Array/ValueStack.js";
 export { Grid } from "./Node/Grid/Grid.js";
 
 export { Tree }                from "./Node/Tree/Tree.js";
-export { Splay }               from "./Node/Tree/Splay.js";
 export { BoxTree }             from "./Node/Tree/BoxTree.js";
 export { ValueTree }           from "./Node/Tree/ValueTree.js";
 export { BinaryTree }          from "./Node/Tree/BinaryTree.js";
