@@ -1,116 +1,90 @@
-import { trim } from "../../Utility/Trim";
-import { Line } from "../Basic/Line";
-import { Vertex } from "../Element/Vertex";
-import { GraphBase } from "./GraphBase";
+import { evaluateValue } from "@/Utility/Tool";
+import { trim } from "@/Utility/Trim";
+import { naiveGetterAndSetter } from "../Common";
+import { BaseGraph } from "./BaseGraph";
 
-export class GridGraph extends GraphBase {
-    constructor(node) {
-        super(node);
-        this.g().type("GridGraph");
-        this._.r = 20;
-        this._.n = 1;
-        this._.m = 1;
-        this._.curN = 0;
-        this._.curM = 0;
+export function GridGraph(parent) {
+    BaseGraph.call(this, parent);
+
+    this.g().type("GridGraph");
+
+    this.member.new("r", 20);
+    this.member.new("n", 1);
+    this.member.new("m", 1);
+    this.member.new("curN", 0);
+    this.member.new("curM", 0);
+
+    return this;
+}
+
+GridGraph.prototype = {
+    ...BaseGraph.prototype
+};
+
+GridGraph.prototype.n = naiveGetterAndSetter("n", "set");
+GridGraph.prototype.m = naiveGetterAndSetter("m", "set");
+
+GridGraph.prototype.updateList = [
+    ...GridGraph.prototype.updateList,
+    update
+];
+
+GridGraph.prototype.at = function(i, j) {
+    this.member.setAndFlush("curN", i);
+    this.member.setAndFlush("curM", j);
+    return this;
+}
+
+GridGraph.prototype.newNode = function(id, value) {
+    const element = new this._.nodeType(this.layer("nodes"));
+    element.value(evaluateValue(id, value));
+    element.posN = this.member.get("curN");
+    element.posM = this.member.get("curM");
+    element._.enter = (element, move) => {
+        element.opacity(0);
+        move();
+        element.unfreeze().freeze();
+        element.startAnimate(this).opacity(1);
+    };
+    this.newNodeByBaseGraph(id, element);
+    return this;
+}
+
+GridGraph.prototype.newLink = function(x, y, value) {
+    const element = new this._.linkType(this.layer("links"));
+    element.value(value);
+    element._.enter = (element, move) => {
+        element.opacity(0);
+        move();
+        element.unfreeze().freeze();
+        element.startAnimate(this).opacity(1);
+    };
+    this.newLinkByBaseGraph(x, y, element);
+    return this;
+}
+
+function update() {
+    const x = this.x(), mx = this.mx(), W = (mx - x) / this.member.get("m");
+    const y = this.y(), my = this.my(), H = (my - y) / this.member.get("n");
+    const convertX = node => node.posM * W + x;
+    const convertY = node => node.posN * H + y;
+    const nodes = this.member.get("nodes");
+    const links = this.member.get("links");
+    for (let node of nodes) {
+        this.tryMove(node, () => {
+            node.cx(convertX(node));
+            node.cy(convertY(node));
+        });
     }
-
-    /**
-     * @param {number} n 
-     * @returns {this}
-     */
-    n(n) {
-        if (n === undefined) return this._.n;
-        this._.n = n;
-        this.dirty(this, "U");
-        return this;
-    }
-
-    /**
-     * @param {number} m 
-     * @returns {this}
-     */
-    m(m) {
-        if (m === undefined) return this._.m;
-        this._.m = m;
-        this.dirty(this, "U");
-        return this;
-    }
-
-    at(i, j) {
-        this._.curN = i;
-        this._.curM = j;
-        return this;
-    }
-
-    /**
-     * 新建一个编号为id，价值为value的节点
-     * @param {string|number} id 
-     * @param {Node|undefined} value
-     * @returns 当前节点
-     */
-    newNode(id, value = null) {
-        let elem = new this._.nodeType(this).r(this._.r);
-        if (value !== null) elem.value(value);
-        else elem.value(id);
-        this.newNodeByGraphBase(id, elem);
-        elem.posN = this._.curN;
-        elem.posM = this._.curM;
-        elem._.enter = (elem, move) => {
-            elem.opacity(0);
-            move();
-            elem.startAnimate(this).opacity(1);
-        };
-        this.dirty(this, "U");
-        return this;
-    }
-
-    /**
-     * 新建一条从x指向y的，价值为value的边，随后交由GraphBase完成信息的存储工作和update的工作
-     * @param {string|number} x 
-     * @param {string|number} y 
-     * @param {Node|undefined} value 
-     * @returns 当前节点
-     */
-    newLink(x, y, value = null) {
-        let elem = new this._.linkType(this);
-        if (value !== null) elem.value(value);
-        this.newLinkByGraphBase(x, y, elem);
-        elem._.enter = (elem, move) => {
-            elem.opacity(0);
-            move();
-            elem.startAnimate(this).opacity(1);
-        };
-        this.dirty(this, "U");
-        return this;
-    }
-
-    update() {
-        this.preUpdate();
-        const x = this.x(), mx = this.mx(), W = (mx - x) / this._.m;
-        const y = this.y(), my = this.my(), H = (my - y) / this._.n;
-        const realX = node => node.posM * W + x;
-        const realY = node => node.posN * H + y;
-        for (let node of this._.nodes) {
-            const move = () => node.cx(realX(node)).cy(realY(node));
-            if (node._.enter) {
-                node._.enter(node, move);
-                node._.enter = undefined;
-            } else move();
-        }
-        for (let link of this._.links) {
-            const nx = this.findNodeById(link.fromNodeId);
-            const ny = this.findNodeById(link.toNodeId);
-            const move = () => {
-                link.source(nx.cx(), nx.cy());
-                link.target(ny.cx(), ny.cy());
-                trim(link, nx, ny);
-            };
-            if (link._.enter) {
-                link._.enter(link, move);
-                link._.enter = undefined;
-            } else move();
-        }
-        this.postUpdate();
-        return this;
+    for (let link of links) {
+        const sourceId = link.fromNodeId;
+        const targetId = link.toNodeId;
+        const source = this.findNodeById(sourceId);
+        const target = this.findNodeById(targetId);
+        this.tryMove(link, () => {
+            link.source(source.center());
+            link.target(target.center());
+            trim(link, source, target);
+        });
     }
 }

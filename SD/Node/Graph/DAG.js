@@ -1,148 +1,130 @@
-import { dagreGraphToBox } from "../../Utility/Tool";
-import { GraphBase } from "./GraphBase";
-import { SDNode } from "../Node";
-import { Vertex } from "../Element/Vertex";
-import { Line } from "../Basic/Line";
+import { dagreGraphToBox, evaluateValue } from "../../Utility/Tool";
+import { BaseGraph } from "./BaseGraph";
 import { trim } from "../../SD";
+import { mapTo } from "@/Utility/Math";
 import * as dagre from "dagre";
 
-/**
- * @class DAG
- */
-export class DAG extends GraphBase {
-    /**
-     * @constructor
-     * @param {SDNode|import("../Node").D3Node} node 
-     */
-    constructor(node) {
-        super(node);
-        this.g().type("DAG");
-        this._.r = 20;
-        this._.graph = new dagre.graphlib.Graph();
-        this._.rankDir = "TB";
-        this._.align = undefined;
-        this._.graph.setGraph({ rankdir: "TB" });
-        this._.graph.setDefaultEdgeLabel(function() { return {}; });
-        this._.makeLink = function(node) {
-            return new Line(node);
+export function DAG(parent) {
+    BaseGraph.call(this, parent);
+
+    this.g().type("DAG");
+    this.member.new("r", 20);
+    this.member.new("graph", new dagre.graphlib.Graph());
+    this.member.new("rankDir", "TB");
+    this.member.new("align", undefined);
+
+    this.member.new("updateNodeSize", (element) => {
+        if ("r" in element) {
+            const r = this.member.get("r");
+            element.r(r);
         }
-    }
+    })
+    
+    const graph = this.member.get("graph");
+    graph.setGraph({ rankdir: "TB" });
+    graph.setDefaultEdgeLabel(function() { return {}; });
+}
 
-    /**
-     * 新建一个编号为id，价值为value的节点
-     * @param {string|number} id 
-     * @param {SDNode|null} value
-     * @returns {this}
-     */
-    newNode(id, value = null) {
-        let elem = new Vertex(this.layer("vertex")).r(this._.r);
-        if (value !== null) elem.value(value);
-        else elem.value(id);
-        this.newNodeByGraphBase(id, elem);
-        elem._.enter = (elem, move) => {
-            elem.opacity(0);
-            move();
-            elem.startAnimate(this).opacity(1);
-        };
-        this._.graph.setNode(id, {
-            label: id,
-            width: this._.r * 2,
-            height: this._.r * 2
-        });
-        this.dirty(this, "U");
-        return this;
-    }
+DAG.prototype = {
+    ...BaseGraph.prototype
+};
 
-    /**
-     * 新建一条从x指向y的，价值为value的边，随后交由GraphBase完成信息的存储工作和update的工作
-     * @overload
-     * @param {number|string} x
-     * @param {number|string} y
-     * @returns {this}
-     * @overload
-     * @param {number|string} x 
-     * @param {number|string} y 
-     * @param {SDNode} value
-     * @returns {this}
-     */
-    newLink(x, y, value = null) {
-        let elem = this._.makeLink(this.layer("link"));
-        if (value !== null) elem.value(value);
-        this.newLinkByGraphBase(x, y, elem);
-        elem._.enter = (elem, move) => {
-            elem.opacity(0);
-            move();
-            elem.startAnimate(this).opacity(1);
-        };
-        this._.graph.setEdge(x, y);
-        this.dirty(this, "U");
-        return this;
-    }
+DAG.prototype.align   = dagreGetterAndSetter("align", "align");
+DAG.prototype.rankDir = dagreGetterAndSetter("rankDir", "rankdir");
 
-    /**
-     * 操作有向图的布局顺序
-     * @param {"TB"|"BT"|"LR"|"RL"} rankDir 
-     * @returns {this}
-     */
-    rankDir(rankDir) {
-        if (rankDir === undefined) return this._.rankDir;
-        this._.rankDir = rankDir;
-        this._.graph.setGraph({ rankdir: rankDir });
-        this.dirty(this, "U");
-        return this;
-    }
+DAG.prototype.updateList = [
+    ...DAG.prototype.updateList,
+    update
+];
 
-    /**
-     * 操作有向图节点的对齐方式
-     * @param {"UL"|"UR"|"DL"|"DR"|"C"} align 
-     * @returns {this}
-     */
-    align(align) {
-        if (align === undefined) return this._.align;
-        this._.align = align;
-        this._.graph.setGraph({ align: align });
-        this.dirty(this, "U");
-        return this;
-    }
+DAG.prototype.newNode = function(id, value) {
+    const element = new this._.nodeType(this.layer("nodes"));
+    element.value(evaluateValue(id, value));
+    element._.enter = (element, move) => {
+        element.opacity(0);
+        move();
+        element.unfreeze().freeze();
+        element.startAnimate(this).opacity(1);
+    };
+    const graph = this.member.get("graph");
+    graph.setNode(id, {
+        label: id,
+        width: this.member.get("r") * 2,
+        height: this.member.get("r") * 2
+    });
+    this.newNodeByBaseGraph(id, element);
+    return this;
+}
 
-    update() {
-        this.preUpdate();
-        dagre.layout(this._.graph);
-        const box = dagreGraphToBox(this._.graph);
-        const realX = x => {
-            if (box.width === 0) return this._.x;
-            return this._.x + (x - box.x) / box.width * this._.width;
+DAG.prototype.newLink = function(x, y, value) {
+    const element = new this._.linkType(this.layer("links"));
+    element.value(value);
+    element._.enter = (element, move) => {
+        element.opacity(0);
+        move();
+        element.unfreeze().freeze();
+        element.startAnimate(this).opacity(1);
+    };
+    const graph = this.member.get("graph");
+    graph.setEdge(x, y);
+    this.newLinkByBaseGraph(x, y, element);
+    return this;
+}
+
+function dagreGetterAndSetter(key, keyInDagre) {
+    return function(value) {
+        if (value === undefined) {
+            return this.member.get(key);
         }
-        const realY = y => {
-            if (box.height === 0) return this._.y;
-            return this._.y + (y - box.y) / box.height * this._.height;
-        }
-        this._.graph.nodes().forEach(nodeId => {
-            const node = this.findNodeById(nodeId);
-            const layout = this._.graph.node(nodeId);
-            const move = () => node.cx(realX(layout.x)).cy(realY(layout.y));
-            if (node._.enter) {
-                node._.enter(node, move);
-                node._.enter = undefined;
-            } else move();
-        });
-        this._.graph.edges().forEach(linkInfo => {
-            const x = linkInfo.v;
-            const y = linkInfo.w;
-            const link = this.findLinkById(x, y);
-            const nx = this.findNodeById(x);
-            const ny = this.findNodeById(y);
-            const move = () => {
-                link.source(nx.cx(), nx.cy());
-                link.target(ny.cx(), ny.cy());
-                trim(link, nx, ny);
-            }
-            if (link._.enter) {
-                link._.enter(link, move);
-                link._.enter = undefined;
-            } else move();
-        });
-        this.postUpdate();
+        this.member.setAndFlush(key, value);
+        const graph = this.member.get("graph");
+        const dict = {};
+        dict[keyInDagre] = value;
+        graph.setGraph(dict);
+        this.tryUpdate();
         return this;
     }
+}
+
+function update() {
+    const graph = this.member.get("graph");
+    dagre.layout(graph);
+    const box = dagreGraphToBox(graph);
+
+    const convertXInner = mapTo(
+        box.x,
+        box.width,
+        this.member.get("x"),
+        this.member.get("width")
+    );
+    const convertYInner = mapTo(
+        box.y,
+        box.height,
+        this.member.get("y"),
+        this.member.get("height")
+    );
+    const convertX = node => convertXInner(node.x);
+    const convertY = node => convertYInner(node.y);
+    const updateSize = this.member.get("updateNodeSize");
+    graph.nodes().forEach(nodeId => {
+        const node = this.findNodeById(nodeId);
+        const layout = graph.node(nodeId);
+        this.tryMove(node, () => {
+            updateSize(node);
+            node.cx(convertX(layout));
+            node.cy(convertY(layout));
+        });
+    });
+    graph.edges().forEach(linkInfo => {
+        const sourceId = linkInfo.v;
+        const targetId = linkInfo.w;
+        const link = this.findLinkById(sourceId, targetId);
+        const source = this.findNodeById(sourceId);
+        const target = this.findNodeById(targetId);
+        this.tryMove(link, () => {
+            link.source(source.center());
+            link.target(target.center());
+            trim(link, source, target);
+        });
+    });
 }

@@ -1,4 +1,4 @@
-import { Line } from "../Basic/Line";
+import { Line } from "../Nake/Line";
 import { BinaryTree } from "./BinaryTree";
 import { trim } from "../../Utility/Trim";
 

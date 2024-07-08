@@ -1,4 +1,4 @@
-import * as sd from "../lib/slide";
+import * as sd from "@/SD";
 
 let svg = sd.svg();
 let vertex = new sd.Vertex(svg).x(100).y(100);

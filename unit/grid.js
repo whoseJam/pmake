@@ -1,8 +1,8 @@
-import * as sd from "../lib/slide";
+import * as sd from "@/SD";
 
 let svg = sd.svg();
 let C = sd.color();
-let g = new sd.Grid(svg).x(100).y(100).m(5).n(6);
+let g = new sd.Grid(svg).x(100).y(100).n(6).m(5);
 console.log("start test grid");
 
 main();

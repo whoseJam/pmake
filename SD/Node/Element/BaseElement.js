@@ -1,0 +1,113 @@
+import { CenterFixAspect } from "@/Rule/Center";
+import { D3Layer } from "@/Node/D3Layer";
+import { SDNode } from "@/Node/SDNode";
+import { toNode } from "@/Utility/Tool";
+import { svg } from "@/Interact/Svg";
+import { naiveGetterAndSetter } from "../Common";
+
+export function BaseElement(parent) {
+    SDNode.call(this, parent);
+
+    this.newLayer("underBackground");
+    this.newLayer("background");
+
+    this.member.new("x", 0);
+    this.member.new("y", 0);
+    this.member.new("width", 40);
+    this.member.new("height", 40);
+    this.member.new("rate", 1.2);
+    this.member.new("value", undefined);
+}
+
+BaseElement.prototype = {
+    ...SDNode.prototype
+};
+
+BaseElement.prototype.x             = naiveGetterAndSetter("x", "setByEqual");
+BaseElement.prototype.y             = naiveGetterAndSetter("y", "setByEqual");
+BaseElement.prototype.width         = naiveGetterAndSetter("width", "setByEqual");
+BaseElement.prototype.height        = naiveGetterAndSetter("height", "setByEqual");
+BaseElement.prototype.rate          = naiveGetterAndSetter("rate", "setByDqual");
+BaseElement.prototype.color         = backgroundGetterAndSetter("color");
+BaseElement.prototype.fill          = backgroundGetterAndSetter("fill");
+BaseElement.prototype.fillOpacity   = backgroundGetterAndSetter("fillOpacity");
+BaseElement.prototype.stroke        = backgroundGetterAndSetter("stroke");
+BaseElement.prototype.strokeOpacity = backgroundGetterAndSetter("strokeOpacity");
+BaseElement.prototype.strokeWidth   = backgroundGetterAndSetter("strokeWidth");
+
+BaseElement.prototype.drop = function() {
+    const value = this.child("value");
+    this.children.erase(value);
+    value.attachTo(svg());
+    return value;
+}
+
+BaseElement.prototype.value = function(value, rule) {
+    if (arguments.length === 0) {
+        return this.member.get("value");
+    }
+    rule = rule ? rule : CenterFixAspect(this.member.get("rate"));
+    value = toNode(this, value);
+    const oldValue = this.member.get("value");
+    if (oldValue) {
+        this.children.erase(oldValue);
+        oldValue.opacity(0).remove();
+    }
+    if (value === undefined || value === null) {
+        return this;
+    }
+    value._.enter = (element, move) => {
+        element.attachTo(this).after(this);
+        element.opacity(0);
+        move();
+        element.unfreeze().freeze();
+        element.startAnimate(this);
+        element.opacity(1);
+    }
+    this.children.push("value", value, rule);
+    this.member.setAndFlush("value", value);
+    this.tryUpdate();
+    return this;
+}
+
+BaseElement.prototype.intValue = function() {
+    const value = this.member.get("value");
+    if (!value) return 0;
+    return +value.text();
+}
+
+BaseElement.prototype.valueFromExist = function(value, rule) {
+    rule = rule ? rule : CenterFixAspect(this.member.get("rate"));
+    const oldValue = this.children.erase("value");
+    if (oldValue) {
+        oldValue.opacity(0).remove();
+    }
+    value._.enter = (node, move) => {
+        node.startAnimate(this);
+        node.attachTo(this);
+        move();
+        node.opacity(1);
+    };
+    this.children.push("value", value, rule);
+    this.tryUpdate();
+    return this;
+}
+
+BaseElement.prototype.rule = function(rule) {
+    this.member.set("rule", rule);
+    const value = this.member.get("value");
+    if (value) {
+        value._.rule = rule;
+    }
+}
+
+function backgroundGetterAndSetter(key) {
+    return function(value) {
+        const background = this.child("background");
+        if (value === undefined) {
+            return background[key]();
+        }
+        background[key](value);
+        return this;
+    }
+}

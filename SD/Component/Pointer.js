@@ -1,7 +1,7 @@
 import { SDNode } from "@/SD";
 import { Context } from "../Animate/Context";
-import { Line } from "../Node/Basic/Line";
-import { Text } from "../Node/Basic/Text";
+import { Line } from "../Node/Nake/Line";
+import { Text } from "../Node/Nake/Text";
 
 let id = 0;
 

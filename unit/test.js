@@ -1,38 +1,12 @@
-// Parent1 类
-class Parent1 {
-  method1() {
-    console.log('Parent1 method1');
-  }
-}
+import * as sd from "@/SD";
 
-// Parent2 类
-function Parent2() {
-  this.method2 = () => {
-    console.log('Parent2 method2');
-  }
-}
 
-// Child 类继承 Parent1 和 Parent2
-class Child extends Parent1 {
-  constructor() {
-    super();
-    // 在构造函数中调用 Parent2 的构造函数
-    Parent2.call(this);
-  }
+const svg = sd.svg();
+const R = sd.rule();
+const nakeSvg = document.getElementById("svg");
 
-  method3() {
-    console.log('Child method3');
-  }
-}
+const d = new sd.SDNode(svg);
+console.log("d=", d);
 
-// 创建 Child 类的实例
-/** @type {Child & Parent2} */
-const c = new Child();
-
-// 测试
-c.method1(); // Parent1 method1
-c.method2();
-c.method3(); // Child method3
-console.log(c instanceof Child); // true
-console.log(c instanceof Parent1); // true
-console.log(c instanceof Parent2); // true
+const r = new sd.Rect(svg).x(100).y(100);
+console.log("r=", r);

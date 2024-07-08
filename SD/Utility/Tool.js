@@ -1,5 +1,9 @@
-import { SDNode } from "../Node/Node";
-import { Text } from "../Node/Basic/Text";
+import { SDNode } from "../Node/SDNode";
+import { Text } from "../Node/Nake/Text";
+
+export function evaluateValue(id, value) {
+    return value === undefined || value === null ? id : value;
+}
 
 /**
  * 将任意对象，转为一个SDNode
@@ -24,7 +28,7 @@ export function nakeToD3(nake) {
 
 /**
  * 将一个D3Node，转为原生DOM元素
- * @param {import("../Node/Node").D3Node} d3 
+ * @param {import("../Node/SDNode").D3Node} d3 
  * @returns {SVGElement}
  */
 export function d3ToNake(d3) {
@@ -34,7 +38,7 @@ export function d3ToNake(d3) {
 /**
  * 将一个原生DOM元素，转为SnapNode
  * @param {SVGElement} nake 
- * @returns {import("../Node/Node").SnapNode}
+ * @returns {import("../Node/SDNode").SnapNode}
  */
 export function nakeToSnap(nake) {
     // @ts-ignore
@@ -43,7 +47,7 @@ export function nakeToSnap(nake) {
 
 /**
  * 将一个SnapNode，转为原生DOM元素
- * @param {import("../Node/Node").SnapNode} snap
+ * @param {import("../Node/SDNode").SnapNode} snap
  * @returns {SVGElement}
  */
 export function snapToNake(snap) {
@@ -52,7 +56,7 @@ export function snapToNake(snap) {
 
 /**
  * 使用Snapsvg的方法，发起一段动画
- * @param {import("../Node/Node").SnapNode} elem 
+ * @param {import("../Node/SDNode").SnapNode} elem 
  * @param {string} name 
  * @param {any} value 
  * @param {number} start 

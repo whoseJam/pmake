@@ -1,4 +1,4 @@
-import * as sd from "../lib/slide";
+import * as sd from "@/SD";
 
 let svg = sd.svg();
 let t = new sd.HorizontalValueTree(svg).x(100).cy(300).layerWidth(300);

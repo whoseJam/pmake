@@ -1,115 +1,95 @@
-import { Line } from "../Basic/Line";
-import { Vertex } from "../Element/Vertex";
-import { GraphBase } from "./GraphBase";
-import { trim } from "../../SD";
+import { evaluateValue } from "@/Utility/Tool";
+import { BaseGraph } from "./BaseGraph";
+import { trim } from "@/Utility/Trim";
 
-export class BipartiteGraph extends GraphBase {
-    constructor(node) {
-        super(node);
-        this.g().type("BipartiteGraph");
-        this._.r = 20;
-        this._.rank = 0;
-        this._.width = 600;
-        this._.height = 250;
-        this._.makeLink = function(node) {
-            return new Line(node);
-        }
+export function BipartiteGraph(parent) {
+    BaseGraph.call(this, parent);
+
+    this.member.new("r", 20);
+    this.member.new("rank", 0);
+    this.member.new("width", 600);
+    this.member.new("height", 250);
+
+    return this;
+}
+
+BipartiteGraph.prototype = {
+    ...BaseGraph.prototype
+};
+
+BipartiteGraph.prototype.updateList = [
+    ...BipartiteGraph.prototype.updateList,
+    update
+];
+
+BipartiteGraph.prototype.newNode = function(id, value, setNo) {
+    const element = new this._.nodeType(this.layer("nodes"));
+    if (arguments.length === 2) {
+        return this.newNode(id, undefined, value);
     }
+    element.value(evaluateValue(id, value));
+    element.setNo = setNo;
+    element._.enter = (element, move) => {
+        element.opacity(0);
+        move();
+        element.unfreeze().freeze();
+        element.startAnimate(this).opacity(1);
+    };
+    this.newNodeByBaseGraph(id, element);
+    return this;
+}
 
-    /**
-     * 新建一个编号为id，点集为setNo的节点，如果价值未指定，则默认为id，随后交由GraphBase完成信息的存储工作和update的工作
-     * @overload
-     * @param {number|string} id 
-     * @param {0|1} setNo
-     * @overload
-     * @param {number|string} id
-     * @param {any} value
-     * @param {0|1} setNo
-     * @returns 当前节点
-     */
-    newNode(id, value, setNo) {
-        const elem = new Vertex(this.layer("vertex")).r(this._.r);
-        if (value !== 0 && value !== 1) elem.value(value).setNo = setNo;
-        else elem.value(id).setNo = value;
-        this.newNodeByGraphBase(id, elem);
-        elem._.enter = (elem, move) => {
-            elem.opacity(0);
-            move();
-            elem.startAnimate(this).opacity(1);
-        };
-        this.dirty(this, "U");
-        return this;
+BipartiteGraph.prototype.newLink = function(x, y, value) {
+    const element = new this._.linkType(this.layer("links"));
+    element.value(value);
+    element._.enter = (element, move) => {
+        element.opacity(0);
+        move();
+        element.unfreeze().freeze();
+        element.startAnimate(this).opacity(1);
+    };
+    this.newLinkByBaseGraph(x, y, element);
+    return this;
+}
+
+function update() {
+    const nodes = this.member.get("nodes");
+    const links = this.member.get("links");
+    const orderedNodes = [];
+    const count = [0, 0];
+    const currentIndex = [1, 1];
+    for (let node of nodes) {
+        orderedNodes.push(node);
+        count[node.setNo]++;
     }
-
-    /**
-     * 新建一条从x指向y的，价值为value的边，随后交由GraphBase完成信息的存储工作和update的工作
-     * @param {string|number} x 
-     * @param {string|number} y 
-     * @param {Node|undefined} value 
-     * @returns 当前节点
-     */
-    newLink(x, y, value = null) {
-        const elem = this._.makeLink(this.layer("link"));
-        if (value !== null) elem.value(value);
-        this.newLinkByGraphBase(x, y, elem);
-        elem._.enter = (elem, move) => {
-            elem.opacity(0);
-            move();
-            elem.startAnimate(this).opacity(1);
-        };
-        this.dirty(this, "U");
-        return this;
-    }
-
-    update() {
-        this.preUpdate();
-        const nodes = this._.nodes;
-        const links = this._.links;
-        const flatten = [];
-        const cnt = [0, 0];
-        const cur = [1, 1];
-        for (let node of nodes) {
-            flatten.push(node);
-            cnt[node.setNo]++;
-        }
-        flatten.sort(function(a, b) {
-            return a.rank - b.rank;
+    orderedNodes.sort((nodeA, nodeB) => {
+        return nodeA.rank - nodeB.rank;
+    });
+    const minX = this.x();
+    const maxX = this.mx();
+    const gap = [
+        (maxX - minX) / (count[0] + 1),
+        (maxX - minX) / (count[1] + 1)
+    ];
+    const convertX = node => minX + gap[node.setNo] * currentIndex[node.setNo];
+    for (let node of orderedNodes) {
+        const x = convertX(node);
+        const yLocator = ["y", "my"][node.setNo];
+        this.tryMove(node, () => {
+            node.cx(x);
+            node[yLocator](this[yLocator]());
         });
-        const minX = this.x();
-        const maxX = this.mx();
-        const gap = [
-            (maxX - minX) / (cnt[0] + 1),
-            (maxX - minX) / (cnt[1] + 1)
-        ];
-        const yloc = ["y", "my"];
-        const realX = node => minX + gap[node.setNo] * cur[node.setNo];
-        for (let node of flatten) {
-            const x = realX(node);
-            const move = () => {
-                node.cx(x);
-                const ylocactor = yloc[node.setNo];
-                node[ylocactor](this[ylocactor]());
-            };
-            if (node._.enter) {
-                node._.enter(node, move);
-                node._.enter = undefined;
-            } else move();
-            cur[node.setNo]++;
-        }
-        for (let link of links) {
-            const nx = this.findNodeById(link.fromNodeId);
-            const ny = this.findNodeById(link.toNodeId);
-            const move = () => {
-                link.source(nx.cx(), nx.cy());
-                link.target(ny.cx(), ny.cy());
-                trim(link, nx, ny);
-            };
-            if (link._.enter) {
-                link._.enter(link, move);
-                link._.enter = undefined;
-            } else move();
-        }
-        this.postUpdate();
-        return this;
+        currentIndex[node.setNo]++;
+    }
+    for (let link of links) {
+        const sourceId = link.fromNodeId;
+        const targetId = link.toNodeId;
+        const source = this.findNodeById(sourceId);
+        const target = this.findNodeById(targetId);
+        this.tryMove(link, () => {
+            link.source(source.center());
+            link.target(target.center());
+            trim(link, source, target);
+        })
     }
 }

@@ -73,7 +73,9 @@ export const Interp = {
      */
     innerHTMLInterp(owner) {
         return function(t) {
-            if (t === 1) owner.innerHTML = this.to;
+            if (t === 1) {
+                owner.innerHTML = this.to;
+            }
         }
     },
 

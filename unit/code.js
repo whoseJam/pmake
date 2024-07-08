@@ -1,4 +1,4 @@
-import * as sd from "../lib/slide";
+import * as sd from "@/SD";
 
 let svg = sd.svg();
 let code = new sd.Code(svg).x(100).y(100);

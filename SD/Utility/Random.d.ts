@@ -1,0 +1,1 @@
+export function rand(l: any, r: any): number;

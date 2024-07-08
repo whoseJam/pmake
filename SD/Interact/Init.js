@@ -1,8 +1,8 @@
 import { initSvg } from "../Interact/Svg";
 import { appendCanvas } from "../Interact/Canvas";
-import { initText } from "../Node/Basic/Text";
-import { initPath } from "../Node/Basic/Path";
-import { initFragment } from "../Node/Basic/Fragment";
+import { initText } from "../Node/Nake/Text";
+import { initPath } from "../Node/Nake/Path";
+import { initFragment } from "../Node/Nake/Fragment";
 import { initMessage } from "./Message";
 
 export function init() {
