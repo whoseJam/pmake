@@ -42,62 +42,42 @@ BaseElement.prototype.drop = function() {
     return value;
 }
 
-/**
- * @overload
- * @param {SDNode} value 
- * @param {(parent: SDNode, child: SDNode) => void} rule 
- * @returns {this}
- * @overload
- * @param {SDNode} value
- * @returns {this}
- * @overload
- * @returns {SDNode}
- */
 BaseElement.prototype.value = function(value, rule) {
-    if (value === undefined) {
+    if (arguments.length === 0) {
         return this.member.get("value");
     }
     rule = rule ? rule : CenterFixAspect(this.member.get("rate"));
     value = toNode(this, value);
-    const ovalue = this.children.erase("value");
-    if (ovalue) ovalue.opacity(0).remove();
-    if (!value) return this;
-    value._.enter = (node, move) => {
-        node.attachTo(this);
-        node.after(this);
-        node.opacity(0);
+    const oldValue = this.member.get("value");
+    if (oldValue) {
+        this.children.erase(oldValue);
+        oldValue.opacity(0).remove();
+    }
+    if (value === undefined || value === null) {
+        return this;
+    }
+    value._.enter = (element, move) => {
+        element.attachTo(this).after(this);
+        element.opacity(0);
         move();
-        node.unfreeze();
-        node.freeze();
-        node.startAnimate(this);
-        node.opacity(1);
-    };
+        element.unfreeze().freeze();
+        element.startAnimate(this);
+        element.opacity(1);
+    }
     this.children.push("value", value, rule);
+    this.member.setAndFlush("value", value);
     this.tryUpdate();
     return this;
 }
 
-/**
- * @returns {number}
- */
 BaseElement.prototype.intValue = function() {
-    const value = this.child("value");
+    const value = this.member.get("value");
     if (!value) return 0;
-    if ("text" in value) return +value.text();
-    throw new Error("Mismatch Function");
+    return +value.text();
 }
 
-/**
- * @overload
- * @param {SDNode} value 
- * @param {(parent: SDNode, child: SDNode) => void} rule 
- * @returns {this}
- * @overload
- * @param {SDNode} value
- * @returns {this}
- */
 BaseElement.prototype.valueFromExist = function(value, rule) {
-    rule = rule ? rule : CenterFixAspect(this._.rate);
+    rule = rule ? rule : CenterFixAspect(this.member.get("rate"));
     const ovalue = this.children.erase("value");
     if (ovalue) ovalue.startAnimate(this).opacity(0).remove();
     value._.enter = (node, move) => {

@@ -2,7 +2,7 @@ import { Background } from "@/Rule/Background";
 import { BaseElement } from "./BaseElement";
 import { Rect } from "@/Node/Nake/Rect";
 
-export function Box(parent, value = undefined) {
+export function Box(parent, value) {
     BaseElement.call(this, parent);
     
     this.g().type("Box");
@@ -10,11 +10,11 @@ export function Box(parent, value = undefined) {
     this.children.push(
         "background",
         new Rect(this.layer("background")),
-        Background())
+        Background());
+    
+    this.value(value);
 
-    if (value) {
-        this.value(value);
-    }
+    return this;
 }
 
 Box.prototype = {

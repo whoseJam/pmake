@@ -50,17 +50,13 @@ function update_update() {
     for (let link of links) {
         const sourceId = link.sourceId;
         const targetId = link.targetId;
-        const x = this.findNodeById(link.fromNodeId);
-        const y = this.findNodeById(link.toNodeId);
-        const move = () => {
-            link.source(x.cx(), x.cy());
-            link.target(y.cx(), y.cy());
-            trim(link, x, y);
-        };
-        if (link._.enter) {
-            link._.enter(link, move);
-            link._.enter = undefined;
-        } else move();
+        const source = this.findNodeById(sourceId);
+        const target = this.findNodeById(targetId);
+        this.tryMove(link, () => {
+            link.source(source.center());
+            link.target(target.center());
+            trim(link, source, target);
+        });
     }
 }
 

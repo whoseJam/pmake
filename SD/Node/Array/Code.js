@@ -66,18 +66,16 @@ Code.prototype.height = function(height) {
     return this;
 }
 
-Code.prototype.insert = function(idx, value = "") {
-    const elem = toNode(this.layer("elements"), value);
-    elem._.enter = (elem, move) => {
-        elem.opacity(0);
+Code.prototype.insert = function(index, value = "") {
+    const element = toNode(this.layer("elements"), value);
+    element._.enter = (element, move) => {
+        element.opacity(0);
         move();
-        elem.unfreeze();
-        elem.freeze();
-        elem.startAnimate(this);
-        elem.opacity(1);
+        element.unfreeze().freeze();
+        element.startAnimate(this);
+        element.opacity(1);
     }
-    this.insertByBaseArray(idx, elem);
-    this.tryUpdate();
+    this.insertByBaseArray(index, element);
     return this;
 }
 
@@ -98,22 +96,21 @@ Code.prototype.code = function(source) {
 Code.prototype.focus = function(l, r) {
     const focus = this.child("focus");
     if (l === null) {
-        this.member.set("l", null);
-        this.member.set("r", null);
+        this.member.setAndFlush("l", null);
+        this.member.setAndFlush("r", null);
         focus.opacity(0);
         return this;
     } else if (arguments.length === 1) {
         l = r = arguments[0];
     }
-    this.member.set("l", l);
-    this.member.set("r", r);
+    this.member.setAndFlush("l", l);
+    this.member.setAndFlush("r", r);
     if (!focus.opacity()) {
         focus._.enter = (elem, move) => {
             const context = new Context(this);
             elem.startAnimate(context.tillc(0, 0));
             move();
-            elem.unfreeze();
-            elem.freeze();
+            elem.unfreeze().freeze();
             elem.startAnimate(context.tillc(0, 1));
             elem.opacity(1);
         };
@@ -150,7 +147,7 @@ function update() {
         width = Math.max(width, element.width());
         height += element.height();
     }
-    this.member.set("width", width);
-    this.member.set("height", height);
+    this.member.setAndFlush("width", width);
+    this.member.setAndFlush("height", height);
     return this;
 }
