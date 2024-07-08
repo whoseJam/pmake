@@ -16,6 +16,8 @@ export function BaseLine(parent, tag) {
     this.member.new("marker-start", "");
     this.member.new("marker-mid", "");
     this.member.new("marker-end", "");
+    this.member.new("value", undefined);
+    this.member.new("rule", undefined);
 
     const nake = this._.nake;
     nake.setAttribute("fill-opacity", this.member.get("fill-opacity"));
@@ -198,7 +200,8 @@ BaseLine.prototype.value = function(value, rule) {
     if (value === undefined) {
         return oldValue;
     }
-    rule = rule ? rule : PointAtPathByRate(0.5, "cx", "cy");
+    rule = rule ? rule : 
+           this.member.get("rule") ? this.member.get("rule") : PointAtPathByRate(0.5, "cx", "cy");
     value = toNode(this, value);
 
     if (oldValue) {
@@ -219,4 +222,21 @@ BaseLine.prototype.value = function(value, rule) {
     this.children.push("value", value, rule);
     this.tryUpdate();
     return this;
+}
+
+BaseLine.prototype.rule = function(rule) {
+    const value = this.child("value");
+    this.member.setAndFlush("rule", rule);
+    if (value) {
+        value._.rule = rule;
+        this.tryUpdate();
+    }
+}
+
+BaseLine.prototype.intValue = function() {
+    const value = this.child("value");
+    if (!value) {
+        return 0;
+    }
+    return +value.text();
 }

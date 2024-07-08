@@ -73,7 +73,6 @@ function update() {
         const dx = x - snapshot.x;
         const dy = y - snapshot.y;
         const transform = getMatrix(sx, sy, dx, dy, snapshot.x, snapshot.y);
-        console.log("transform = ", transform);
         this.member.set("transform", transform);
         new Action(
             this.delay(),

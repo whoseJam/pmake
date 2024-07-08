@@ -60,33 +60,30 @@ BaseGrid.prototype.getM = function(idx) {
     return this.endM() - this.startM() + 1;
 }
 
-/**
- * 将一个elem插入到网格第i,j位置上，并将elem记录为当前节点的子节点
- * @param {number} i 
- * @param {number} j 
- * @param {SDNode} elem 
- * @returns 当前节点
- */
-BaseGrid.prototype.insertByBaseGrid = function(i, j, elem) {
-    let ri = this.idxN(i);
-    let rj = this.idxM(j);
-    let elems = this.member.get("elements");
-    while (elems.length <= ri) elems.push([]);
-    elems[ri].splice(rj, 0, elem);
-    this.children.push(elem);
+BaseGrid.prototype.insertByBaseGrid = function(i, j, element) {
+    const ri = this.idxN(i);
+    const rj = this.idxM(j);
+    const elements = this.member.get("elements");
+    while (elements.length <= ri) {
+        elements.push([]);
+    }
+    elements[ri].splice(rj, 0, element);
+    this.children.push(element);
     this.member.set("n", Math.max(ri + 1, this.member.get("n")));
     this.member.set("m", Math.max(rj + 1, this.member.get("m")));
+    this.member.dirty("elements");
     this.tryUpdate();
     return this;
 }
 
 BaseGrid.prototype.eraseByBaseGrid = function(i, j) {
-    let elem = this.element(i, j);
-    let ri = this.idxN(i);
-    let rj = this.idxM(j);
-    let elems = this.member.get("elements");
-    elems[ri].splice(rj, 1);
-    this.children.erase(elem);
+    const element = this.element(i, j);
+    const ri = this.idxN(i);
+    const rj = this.idxM(j);
+    const elements = this.member.get("elements");
+    elements[ri].splice(rj, 1);
+    this.children.erase(element);
+    this.member.dirty("elements");
     this.tryUpdate();
     return this;
 }
@@ -94,7 +91,6 @@ BaseGrid.prototype.eraseByBaseGrid = function(i, j) {
 BaseGrid.prototype.pushCol = function(rows) {
     let l = this.startN();
     let r = (rows === undefined) ? this.endN() : l + rows - 1;
-    console.log("pushCol l=", l, "r=", r, "n=", this.n());
     for (let i = l; i <= r; i++) {
         this.insert(i, this.endM(i) + 1, null);
     }
@@ -102,10 +98,6 @@ BaseGrid.prototype.pushCol = function(rows) {
     return this;
 }
 
-/**
- * 将网格新建一行，新行拥有的列数与网格中最大列数相同
- * @returns {this} 当前节点
- */
 BaseGrid.prototype.pushRow = function(cols) {
     let n = this.endN() + 1;
     let l = this.startM();
@@ -119,30 +111,11 @@ BaseGrid.prototype.pushRow = function(cols) {
     return this;
 }
 
-/**
- * 获取网格中(i,j)处的元素
- * @param {number} i 行索引
- * @param {number} j 列索引
- * @returns {SDNode} 网格中位于(i,j)处的元素
- */
 BaseGrid.prototype.element = function(i, j) {
     let elems = this.member.get("elements");
     return elems[this.idxN(i)][this.idxM(j)];
 }
 
-/**
- * 获取或者查询网格中(i,j)处的元素的价值
- * @overload
- * @param {number} i 行索引
- * @param {number} j 列索引
- * @returns {SDNode} 网格中位于(i,j)处的元素的价值
- * 
- * @overload
- * @param {number} i 行索引
- * @param {number} j 列索引
- * @param {SDNode} value 新价值
- * @returns {this} 当前节点
- */
 BaseGrid.prototype.value = function() {
     if (arguments.length === 2) return value2.apply(this, arguments);
     if (arguments.length === 3) return value3.apply(this, arguments);
@@ -168,21 +141,6 @@ BaseGrid.prototype.opacity = function() {
     throw new Error("无效的参数");
 }
 
-/**
- * 获取或者设置网格元素的颜色
- * @overload
- * @param {import("../../Utility/Color").SDColor} color 网格所有元素的颜色都被设置为color
- * @returns {this} 当前节点
- * @overload
- * @param {number} i 行索引
- * @param {number} j 列索引
- * @returns {import("../../Utility/Color").SDColor} 网格中位于(i,j)处的元素的颜色
- * @overload
- * @param {number} i 行索引
- * @param {number} j 列索引
- * @param {Color} color 颜色
- * @returns {this} 当前节点
- */
 BaseGrid.prototype.color = function() {
     if (arguments.length === 1) return color1.apply(this, arguments);
     if (arguments.length === 2) return color2.apply(this, arguments);

@@ -46,6 +46,7 @@ SDNode.prototype.layer = function(layerName) {
 SDNode.prototype.attachTo = function(node) {
     const otherLayer = ("g" in node) ? node.g() : node;
     this.d3layer.attachTo(otherLayer);
+    return this;
 }
 
 SDNode.prototype.childAs = function(childName, child, rule) {

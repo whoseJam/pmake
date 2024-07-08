@@ -28,7 +28,7 @@ HorizontalTree.prototype.width = function(width) {
 }
 
 HorizontalTree.prototype.updateList = [
-    ...HorizontalTree.prototype.updateList,
+    ...HorizontalTree.prototype.updateList.slice(0, -1),
     update
 ];
 

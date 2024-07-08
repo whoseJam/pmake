@@ -1,3 +1,4 @@
+import { evaluateValue } from "@/Utility/Tool";
 import { BaseGraph } from "./BaseGraph";
 import { trim } from "@/Utility/Trim";
 
@@ -26,7 +27,7 @@ BipartiteGraph.prototype.newNode = function(id, value, setNo) {
     if (arguments.length === 2) {
         return this.newNode(id, undefined, value);
     }
-    element.value(value);
+    element.value(evaluateValue(id, value));
     element.setNo = setNo;
     element._.enter = (element, move) => {
         element.opacity(0);

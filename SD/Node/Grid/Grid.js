@@ -33,7 +33,7 @@ Grid.prototype.updateList = [
 
 Grid.prototype.width = function(width) {
     if (width === undefined) {
-        return this.member.get("width");
+        return this.m() * this.elementWidth();
     }
     const n = this.n() ? this.n() : 1;
     this.elementWidth(width / n);
@@ -42,55 +42,56 @@ Grid.prototype.width = function(width) {
 
 Grid.prototype.height = function(height) {
     if (height === undefined) {
-        return this.member.get("height");
+        return this.n() * this.elementHeight();
     }
     const m = this.m() ? this.m() : 1;
     this.elementHeight(height / m);
     return this;
 }
 
-Grid.prototype.insert = function(i, j, value = null) {
-    let elem = new Box(this.layer("elements"), value);
-    this.member.set("width", this.elementWidth() * this.m());
-    this.member.set("height", this.elementHeight() * this.n());
-    elem._.enter = (elem, move) => {
-        elem.opacity(0);
+Grid.prototype.insert = function(i, j, value) {
+    const element = new Box(this.layer("elements"), value);
+    element._.enter = (element, move) => {
+        element.opacity(0);
         move();
-        elem.unfreeze();
-        elem.freeze();
-        elem.startAnimate(this).opacity(1);
+        element.unfreeze().freeze();
+        element.startAnimate(this)
+        element.opacity(1);
     };
-    this.insertByBaseGrid(i, j, elem);
+    this.insertByBaseGrid(i, j, element);
     return this;
 }
 
 
 Grid.prototype.erase = function(i, j) {
-    let elem = this.element(i, j);
-    this.member.set("width", this.elementWidth() * this.m());
-    this.member.set("height", this.elementHeight() * this.n());
-    elem.startAnimate(this).opacity(0).remove();
+    const element = this.element(i, j);
+    element.startAnimate(this).opacity(0).remove();
     this.eraseByBaseGrid(i, j);
     return this;
 }
 
 function update() {
-    const x = this.x();
-    const y = this.y();
-    const elementWidth = this.elementWidth();
-    const elementHeight = this.elementHeight();
-    const elements = this.member.get("elements");
-    for (let i = 0; i < elements.length; i++) {
-        if (!elements[i]) continue;
-        for (let j = 0; j < elements[i].length; j++) {
-            const element = elements[i][j];
-            const locx = x + j * elementWidth;
-            const locy = y + i * elementHeight;
-            this.tryMove(element, () => {
-                element.width(elementWidth);
-                element.height(elementHeight);
-                element.x(locx).y(locy);
-            });
+    if (this.member.hasChanged("x") ||
+        this.member.hasChanged("y") ||
+        this.member.hasChanged("elementWidth") ||
+        this.member.hasChanged("elementHeight") ||
+        this.member.hasChanged("elements")) {
+        const x = this.x();
+        const y = this.y();
+        const elementWidth = this.elementWidth();
+        const elementHeight = this.elementHeight();
+        const elements = this.member.get("elements");
+        for (let i = 0; i < elements.length; i++) {
+            if (!elements[i]) continue;
+            for (let j = 0; j < elements[i].length; j++) {
+                const element = elements[i][j];
+                this.tryMove(element, () => {
+                    element.width(elementWidth);
+                    element.height(elementHeight);
+                    element.x(x + j * elementWidth)
+                    element.y(y + i * elementHeight);
+                });
+            }
         }
     }
 }

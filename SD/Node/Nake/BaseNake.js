@@ -3,6 +3,7 @@ import { Interp } from "@/Animate/Interp";
 import { nakeToSnap } from "@/Utility/Tool";
 import { SDNode } from "@/Node/SDNode";
 import { naiveGetterAndSetter, naiveUpdate } from "../Common";
+import { Text } from "./Text";
 
 export function BaseNake(parent, tag) {
     SDNode.call(this, parent);
@@ -41,7 +42,9 @@ BaseNake.prototype.color = function(color) {
     }
     if (typeof(color) === "string") {
         this.fill(color);
-        this.stroke(color);
+        if (this instanceof Text) {
+            this.stroke(color);
+        }
     } else {
         this.fill(color.main);
         this.stroke(color.border);

@@ -5,9 +5,7 @@ const svg = sd.svg();
 const C = sd.color();
 const graph = new sd.BipartiteGraph(svg).cx(600).cy(300);
 const text = new sd.Text(svg).x(550).y(450).fontSize(25);
-graph._.makeLink = (node) => {
-    return new sd.Curve(node).bending(-0.3);
-};
+graph._.linkType = sd.Curve;
 const n = 4;
 const colorList = [
     C.red, C.blue, C.green, C.purple, C.orange, C.grey

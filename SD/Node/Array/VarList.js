@@ -9,8 +9,12 @@ export function VarList(parent) {
 
     this.g().type("VarList");
 
-    this.new("font-size", 25);
-    this.new("dx", 40);
+    this.member.new("x", 0);
+    this.member.new("y", 0);
+    this.member.new("width", 0);
+    this.member.new("height", 0);
+    this.member.new("font-size", 25);
+    this.member.new("dx", 40);
 
     return this;
 }
@@ -53,8 +57,7 @@ VarList.prototype.put = function(key, value) {
         element.startAnimate(this);
         element.opacity(1);
     }
-    this.insertByArrayBase(this.end() + 1, element);
-    this.tryUpdate();
+    this.insertByBaseArray(this.end() + 1, element);
     return this;
 }
 

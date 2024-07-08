@@ -27,7 +27,7 @@ ValueArray.prototype.insert = function(index, value) {
         element.startAnimate(this);
         element.opacity(1);
     };
-    this.insertByArrayBase(index, element);
+    this.insertByBaseArray(index, element);
     return this;
 }
 
@@ -39,7 +39,7 @@ ValueArray.prototype.insertFromExistValue = function(index, value) {
         move();
         element.opacity(1);
     };
-    this.insertByArrayBase(index, element);
+    this.insertByBaseArray(index, element);
     return this;
 }
 

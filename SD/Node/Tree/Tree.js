@@ -5,6 +5,7 @@ import { Vec } from "@/Utility/Math";
 import { BaseTree } from "./BaseTree";
 import { naiveGetterAndSetter } from "../Common";
 import * as d3 from "d3";
+import { evaluateValue } from "@/Utility/Tool";
 
 export function Tree(parent) {
     BaseTree.call(this, parent);
@@ -45,33 +46,17 @@ Tree.prototype.updateList = [
     update
 ];
 
-/**
- * 新建一个编号为id，值元素为value的节点
- * - newNode(1) 创建一个编号为1，值元素也为1的节点
- * - newNode(1, "H1") 创建一个编号为1，值元素为"H1"的节点
- * - newNode(1, new Mathjax(...)) 创建一个编号为1，值元素为Mathjax类型的节点
- * @overload
- * @param {number|string} id 
- * @returns {this}
- * @overload
- * @param {number|string} id
- * @param {SDNode} value 
- * @returns {this}
- */
-Tree.prototype.newNode = function(id, value = null) {
-    const elem = new this._.nodeType(this.layer("nodes"));
-    if (value === null) elem.value(id);
-    else elem.value(value);
-    elem._.enter = (elem, move) => {
-        elem.opacity(0);
+Tree.prototype.newNode = function(id, value) {
+    const element = new this._.nodeType(this.layer("nodes"));
+    element.value(evaluateValue(id, value));
+    element._.enter = (element, move) => {
+        element.opacity(0);
         move();
-        elem.unfreeze();
-        elem.freeze();
-        elem.startAnimate(this)
-        elem.opacity(1);
+        element.unfreeze().freeze();
+        element.startAnimate(this)
+        element.opacity(1);
     };
-    this.newNodeByBaseTree(id, elem);
-    this.tryUpdate();
+    this.newNodeByBaseTree(id, element);
     return this;
 }
 
@@ -87,7 +72,6 @@ Tree.prototype.newLink = function(x, y, value = null) {
         elem.opacity(1);
     };
     this.newLinkByBaseTree(x, y, elem);
-    this.tryUpdate();
     return this;
 }
 
@@ -141,10 +125,7 @@ export function d3TreeLayout(mode, transX, transY, minDistanceRatio, parentSizeI
     for (let i = 0; i < sizeCof.length; i++)
         sizeCof[i] = Math.min(sizeCof[i], limit / minDistanceRatio[i]);
 
-    console.log("start update");
-
     info.descendants().forEach(nodeInfo => {
-        console.log("update node info = ", nodeInfo);
         const x = transX(nodeInfo);
         const y = transY(nodeInfo);
         const node = nodeInfo.data.data;

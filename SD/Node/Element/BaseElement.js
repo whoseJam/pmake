@@ -78,8 +78,10 @@ BaseElement.prototype.intValue = function() {
 
 BaseElement.prototype.valueFromExist = function(value, rule) {
     rule = rule ? rule : CenterFixAspect(this.member.get("rate"));
-    const ovalue = this.children.erase("value");
-    if (ovalue) ovalue.startAnimate(this).opacity(0).remove();
+    const oldValue = this.children.erase("value");
+    if (oldValue) {
+        oldValue.opacity(0).remove();
+    }
     value._.enter = (node, move) => {
         node.startAnimate(this);
         node.attachTo(this);
@@ -89,6 +91,14 @@ BaseElement.prototype.valueFromExist = function(value, rule) {
     this.children.push("value", value, rule);
     this.tryUpdate();
     return this;
+}
+
+BaseElement.prototype.rule = function(rule) {
+    this.member.set("rule", rule);
+    const value = this.member.get("value");
+    if (value) {
+        value._.rule = rule;
+    }
 }
 
 function backgroundGetterAndSetter(key) {

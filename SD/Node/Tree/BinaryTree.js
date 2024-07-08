@@ -25,9 +25,9 @@ BinaryTree.prototype.leftChild = function(x, y, value = null) {
         return nodes.find(node => String(node.parentNodeId) === target && node.dir === 0);
     }
     if (!this.findNodeById(y)) this.newNode(y);
-    this.newLink(x, y, value);
     this.findNodeById(y).dir = 0;
     this.findNodeById(y).parentNodeId = x;
+    this.newLink(x, y, value);
     return this;
 }
 
@@ -38,9 +38,9 @@ BinaryTree.prototype.rightChild = function(x, y, value = null) {
         return nodes.find(node => String(node.parentNodeId) === target && node.dir === 1);
     }
     if (!this.findNodeById(y)) this.newNode(y);
-    this.newLink(x, y, value);
     this.findNodeById(y).dir = 1;
     this.findNodeById(y).parentNodeId = x;
+    this.newLink(x, y, value);
     return this;
 }
 
@@ -75,7 +75,7 @@ export function binaryTreeLayout(mode) {
         const y = realY(rank, gap, u.depth);
         const node = u.data;
         this.tryMove(node, () => {
-            mode.cx(x).cy(y);
+            node.cx(x).cy(y);
         });
         if (children.length > 2) throw new Error("Invalid Tree Structure");
         if (children.length === 2 && children[0].data.dir === children[1].data.dir) throw new Error("Invalid Tree Structure");
@@ -83,7 +83,7 @@ export function binaryTreeLayout(mode) {
             dfs(child, rank * 2 + child.data.dir, gap / 2);
         }
     }
-    const gap = ((mode === "vertical") ? this._.width : this._.height) / 2;
+    const gap = ((mode === "vertical") ? this.member.get("width") : this.member.get("height")) / 2;
     dfs(root, 0, gap);
     
     const links = this.member.get("links");

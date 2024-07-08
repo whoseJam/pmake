@@ -9,7 +9,7 @@ async function main() {
     const genBox = (node) => {
         return new sd.Box(path, node).rate(1.5).width(60).strokeOpacity(0).height(30);
     }
-    path.x(100).y(100).root(1, genBox(new sd.Mathjax(path, "V_1")));
+    path.root(1, genBox(new sd.Mathjax(path, "V_1")));
     for (let i = 2; i <= 5; i++) {
         path.newNode(i, genBox(new sd.Mathjax(path, `V_${i}`)));
         path.newLink(i-1, i);

@@ -14,6 +14,7 @@ function init() {
 
 async function main() {
     await sd.pause();
+    arr.freeze();
     const group = [];
     for (let i = 0; i < data.length; i++) {
         group.push({
@@ -27,6 +28,7 @@ async function main() {
     for (let i = 0; i < group.length; i++) {
         arr.pushFromExistElement(group[i].element);
     }
+    arr.unfreeze();
     arr.endAnimate();
     await sd.pause();
     const focusFront = sd.Focus(arr).stroke(C.deepSkyBlue);
