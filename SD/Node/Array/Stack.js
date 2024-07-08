@@ -28,13 +28,6 @@ Stack.prototype.updateList = [
     update
 ];
 
-/**
- * @overload
- * @param {number} width 
- * @returns {this}
- * @overload
- * @returns {number}
- */
 Stack.prototype.width = function(width) {
     if (width === undefined) {
         return this.elementWidth();
@@ -43,13 +36,6 @@ Stack.prototype.width = function(width) {
     return this;
 }
 
-/**
- * @overload
- * @param {number} height 
- * @returns {this}
- * @overload
- * @returns {number}
- */
 Stack.prototype.height = function(height) {
     if (height === undefined) {
         return this.elementHeight() * this.length();

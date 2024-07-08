@@ -1,6 +1,5 @@
 import { BaseArray } from "@/Node/Array/BaseArray";
 import { Box } from "@/Node/Element/Box";
-import { SDNode } from "@/Node/SDNode";
 import { naiveGetterAndSetter } from "../Common";
 
 export function Array(parent) {
@@ -43,49 +42,42 @@ Array.prototype.height = function(height) {
     return this;
 }
 
-Array.prototype.insert = function(idx, value = null) {
-    const elem = new Box(this.layer("elements"));
-    elem.value(value);
-    elem._.enter = (elem, move) => {
-        elem.opacity(0);
+Array.prototype.insert = function(index, value) {
+    const element = new Box(this.layer("elements"));
+    element.value(value);
+    element._.enter = (element, move) => {
+        element.opacity(0);
         move();
-        elem.unfreeze();
-        elem.freeze();
-        elem.startAnimate(this);
-        elem.opacity(1);
+        element.unfreeze().freeze();
+        element.startAnimate(this);
+        element.opacity(1);
     };
-    this.insertByBaseArray(idx, elem);
+    this.insertByBaseArray(index, element);
     return this;
 }
 
-/**
- * 插入一个已经存在的元素，到数组的指定位置处
- * @param {number} idx 
- * @param {SDNode} value 
- * @returns {this}
- */
-Array.prototype.insertFromExistValue = function(idx, value) {
-    const elem = new Box(this.layer("elements"));
-    elem._.enter = (elem, move) => {
-        elem.opacity(0);
+Array.prototype.insertFromExistValue = function(index, value) {
+    const element = new Box(this.layer("elements"));
+    element._.enter = (element, move) => {
+        element.opacity(0);
         move();
-        elem.startAnimate(this);
-        elem.opacity(1);
-        elem.valueFromExist(value);
+        element.startAnimate(this);
+        element.opacity(1);
+        element.valueFromExist(value);
     };
-    this.insertByBaseArray(idx, elem);
+    this.insertByBaseArray(index, element);
     return this;
 }
 
-Array.prototype.insertFromExistElement = function(idx, value) {
+Array.prototype.insertFromExistElement = function(index, value) {
     if (!(value instanceof Box)) throw new Error("Invalid Arguments");
-    value._.enter = (elem, move) => {
-        elem.attachTo(this.layer("elements"));
-        elem.startAnimate(this);
+    value._.enter = (element, move) => {
+        element.attachTo(this.layer("elements"));
+        element.startAnimate(this);
         move();
-        elem.opacity(1);
+        element.opacity(1);
     };
-    this.insertByBaseArray(idx, value);
+    this.insertByBaseArray(index, value);
     return this;
 }
 

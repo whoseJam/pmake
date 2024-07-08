@@ -17,49 +17,53 @@ ValueArray.prototype.updateList = [
     update
 ];
 
-ValueArray.prototype.insert = function(idx, value) {
-    const elem = value;
-    elem._.enter = (elem, move) => {
-        elem.attachTo(this.layer("elements"));
-        elem.opacity(0);
+ValueArray.prototype.insert = function(index, value) {
+    const element = value;
+    element._.enter = (element, move) => {
+        element.attachTo(this.layer("elements"));
+        element.opacity(0);
         move();
-        elem.unfreeze();
-        elem.freeze();
-        elem.startAnimate(this);
-        elem.opacity(1);
+        element.unfreeze().freeze();
+        element.startAnimate(this);
+        element.opacity(1);
     };
-    this.insertByArrayBase(idx, elem);
+    this.insertByArrayBase(index, element);
     return this;
 }
 
-ValueArray.prototype.insertFromExistValue = function(idx, value) {
-    const elem = value;
-    elem._.enter = (elem, move) => {
-        elem.attachTo(this.layer("elements"));
-        elem.startAnimate(this);
+ValueArray.prototype.insertFromExistValue = function(index, value) {
+    const element = value;
+    element._.enter = (element, move) => {
+        element.attachTo(this.layer("elements"));
+        element.startAnimate(this);
         move();
-        elem.opacity(1);
+        element.opacity(1);
     };
-    this.insertByArrayBase(idx, elem);
+    this.insertByArrayBase(index, element);
     return this;
 }
 
-ValueArray.prototype.insertFromExistElement = function(idx, value) {
-    return this.insertFromExistValue(idx, value);
+ValueArray.prototype.insertFromExistElement = function(index, value) {
+    return this.insertFromExistValue(index, value);
 }
 
 function update() {
-    let x = this.x();
-    const y = this.y();
-    const elementWidth = this.elementWidth();
-    const elementHeight = this.elementHeight();
-    const elements = this.member.get("elements");
-    for (let element of elements) {
-        this.tryMove(() => {
-            element.cx(x + elementWidth / 2)
-            element.cy(y + elementHeight / 2);
-        });
-        x += elementWidth;
+    if (this.member.hasChanged("x") ||
+        this.member.hasChanged("y") ||
+        this.member.hasChanged("elementWidth") ||
+        this.member.hasChanged("elementHeight") ||
+        this.member.hasChanged("elements")) {
+        let x = this.x();
+        const y = this.y();
+        const elementWidth = this.elementWidth();
+        const elementHeight = this.elementHeight();
+        const elements = this.member.get("elements");
+        for (let element of elements) {
+            this.tryMove(element, () => {
+                element.cx(x + elementWidth / 2)
+                element.cy(y + elementHeight / 2);
+            });
+            x += elementWidth;
+        }
     }
-    return this;
 }

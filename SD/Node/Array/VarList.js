@@ -1,6 +1,4 @@
 import { Context } from "@/Animate/Context";
-import { D3Layer } from "@/Node/D3Layer";
-import { SDNode } from "@/Node/SDNode";
 import { Text } from "@/Node/Nake/Text";
 import { BaseArray } from "./BaseArray";
 import { naiveGetterAndSetter } from "../Common";
@@ -90,24 +88,26 @@ VarList.prototype.incBy = function(key, delta) {
 }
 
 function update() {
-    const x = this.member.get("x");
-    let y = this.member.get("y");
-    let width = 0;
-    let height = 0;
-    const elements = this.member.get("elements");
-    for (let element of elements) {
-        const move = () => {
-            element.fontSize(this.member.get("fontSize"));
-            element.x(x).y(y);
+    if (this.member.hasChanged("x") ||
+        this.member.hasChanged("y") ||
+        this.member.hasChanged("font-size") ||
+        this.member.hasChanged("elements")) {
+        const x = this.member.get("x");
+        let y = this.member.get("y");
+        let width = 0;
+        let height = 0;
+        const fontSize = this.member.get("font-size");
+        const elements = this.member.get("elements");
+        for (let element of elements) {
+            this.tryMove(element, () => {
+                element.fontSize(fontSize);
+                element.x(x).y(y);
+            });
+            width = Math.max(width, element.width());
+            height += element.height();
+            y += element.height();
         }
-        if (element._.enter) {
-            element._.enter(element, move);
-            element._.enter = undefined;
-        } else move();
-        width = Math.max(width, element.width());
-        height += element.height();
-        y += element.height();
+        this.member.setAndFlush("width", width);
+        this.member.setAndFlush("height", height);
     }
-    this.member.setAndFlush("width", width);
-    this.member.setAndFlush("height", height);
 }

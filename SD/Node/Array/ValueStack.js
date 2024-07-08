@@ -18,34 +18,26 @@ ValueStack.prototype.updateList = [
     update
 ];
 
-ValueStack.prototype.insert = function(idx, value) {
-    const insert = ValueArray.prototype.insert;
-    insert.call(this, idx, value);
-    return this;
-}
-
-ValueStack.prototype.insertFromExistValue = function(idx, value) {
-    const insertFromExistValue = ValueArray.prototype.insertFromExistValue;
-    insertFromExistValue.call(this, idx, value);
-    return this;
-}
-
-ValueStack.prototype.insertFromExistElement = function(idx, value) {
-    return this.insertFromExistValue(idx, value);
-}
+ValueStack.prototype.insert                 = ValueArray.prototype.insert;
+ValueStack.prototype.insertFromExistValue   = ValueArray.prototype.insertFromExistValue;
+ValueStack.prototype.insertFromExistElement = ValueArray.prototype.insertFromExistElement;
 
 function update() {
-    const x = this.x();
-    let y = this.y();
-    const elementWidth = this.elementWidth();
-    const elementHeight = this.elementHeight();
-    const elements = this.member.get("elements");
-    for (let element of elements) {
-        this.tryMove(element, () => {
-            element.cx(x + elementWidth / 2);
-            element.cy(y + elementHeight / 2);
-        });
-        y += elementHeight;
+    if (this.member.hasChanged("x") ||
+        this.member.hasChanged("y") ||
+        this.member.hasChanged("elementWidth") ||
+        this.member.hasChanged("elementHeight")) {
+        const x = this.x();
+        let y = this.y();
+        const elementWidth = this.elementWidth();
+        const elementHeight = this.elementHeight();
+        const elements = this.member.get("elements");
+        for (let element of elements) {
+            this.tryMove(element, () => {
+                element.cx(x + elementWidth / 2);
+                element.cy(y + elementHeight / 2);
+            });
+            y += elementHeight;
+        }
     }
-    return this;
 }

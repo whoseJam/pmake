@@ -132,22 +132,26 @@ Code.prototype.value = function() {
 }
 
 function update() {
-    const x = this.x();
-    let y = this.y();
-    let width = 0;
-    let height = 0;
-    const fontSize = this.fontSize();
-    const elements = this.member.get("elements");
-    for (let element of elements) {
-        this.tryMove(element, () => {
-            element.fontSize(fontSize);
-            element.x(x).y(y);
-        });
-        y += element.height();
-        width = Math.max(width, element.width());
-        height += element.height();
+    if (this.member.hasChanged("x") ||
+        this.member.hasChanged("y") ||
+        this.member.hasChanged("font-size") ||
+        this.member.hasChanged("elements")) {
+        const x = this.x();
+        let y = this.y();
+        let width = 0;
+        let height = 0;
+        const fontSize = this.fontSize();
+        const elements = this.member.get("elements");
+        for (let element of elements) {
+            this.tryMove(element, () => {
+                element.fontSize(fontSize);
+                element.x(x).y(y);
+            });
+            y += element.height();
+            width = Math.max(width, element.width());
+            height += element.height();
+        }
+        this.member.setAndFlush("width", width);
+        this.member.setAndFlush("height", height);
     }
-    this.member.setAndFlush("width", width);
-    this.member.setAndFlush("height", height);
-    return this;
 }

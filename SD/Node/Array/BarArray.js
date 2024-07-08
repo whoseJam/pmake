@@ -48,13 +48,13 @@ BarArray.prototype.height = function(height) {
     return this;
 }
 
-BarArray.prototype.insert = function(idx, value) {
+BarArray.prototype.insert = function(index, value) {
     value = +value;
     if (typeof(value) !== "number") throw new Error("Invalid Arguments");
     const parent = this;
-    const elem = new Rect(this.layer("elements"));
-    elem._.value = value;
-    elem.value = function(value) {
+    const element = new Rect(this.layer("elements"));
+    element._.value = value;
+    element.value = function(value) {
         if (value === undefined) return this._.value;
         this._.value = value;
         let baseline = this.my();
@@ -62,15 +62,14 @@ BarArray.prototype.insert = function(idx, value) {
         this.my(baseline);
         return this;
     }
-    elem._.enter = (elem, move) => {
-        elem.opacity(0);
+    element._.enter = (element, move) => {
+        element.opacity(0);
         move();
-        elem.unfreeze();
-        elem.freeze();
-        elem.startAnimate(this);
-        elem.opacity(1);
+        element.unfreeze().freeze();
+        element.startAnimate(this);
+        element.opacity(1);
     };
-    this.insertByBaseArray(idx, elem);
+    this.insertByBaseArray(index, element);
     return this;
 }
 
@@ -96,10 +95,9 @@ function update() {
             maxHeight = Math.max(maxHeight, height);
             x += elementWidth;
         }
-        this.member.set("height", maxHeight);
-        this.member.set("y", y - maxHeight);
+        this.member.setAndFlush("height", maxHeight);
+        this.member.setAndFlush("y", y - maxHeight);
         this.member.flush("x");
-        this.member.flush("y");
         this.member.flush("elementWidth");
         this.member.flush("elementHeight");
         this.member.flush("elements");
