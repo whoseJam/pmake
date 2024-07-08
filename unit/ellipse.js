@@ -1,0 +1,13 @@
+import * as sd from "@/SD";
+
+const svg = sd.svg();
+
+const e = new sd.Ellipse(svg).cx(600).cy(300);
+
+main();
+
+async function main() {
+    await sd.pause();
+    e.startAnimate().width(60).endAnimate();
+    await sd.pause();
+}

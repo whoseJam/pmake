@@ -13,6 +13,7 @@ export { Path }     from "./Node/Nake/Path.js";
 export { Rect }     from "./Node/Nake/Rect.js";
 export { Text }     from "./Node/Nake/Text.js";
 export { Circle }   from "./Node/Nake/Circle.js";
+export { Ellipse }  from "./Node/Nake/Ellipse.js";
 export { Fragment } from "./Node/Nake/Fragment.js";
 // export { Svg } from "./Node/Nake/Svg.js";
 
