@@ -1,5 +1,5 @@
 import { d3ToNake } from "../Utility/Tool";
-import { SDNode } from "./Node";
+import { SDNode } from "./SDNode";
 import { Action } from "@/Animate/Action";
 
 export class D3Layer {

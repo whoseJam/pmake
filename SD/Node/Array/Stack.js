@@ -1,112 +1,74 @@
 import { Array } from "@/Node/Array/Array";
-import { D3Layer } from "@/Node/D3Layer";
-import { equal } from "@/Utility/Math";
-import { SDNode } from "@/Node/Node";
+import { BaseArray } from "./BaseArray";
+import { naiveGetterAndSetter } from "../Common";
 
-/**
- * @class Stack
- * @description 普通的栈，向下增长
- */
-export class Stack extends Array {
-    /**
-     * @constructor
-     * @param {SDNode|D3Layer} node 
-     */
-    constructor(node) {
-        super(node);
-        this.g().type("Stack");
-        this._.x = 0;
-        this._.y = 0;
-        this._.width = 40;
-        this._.height = 0;
+export function Stack(parent) {
+    BaseArray.call(this, parent);
+
+    this.g().type("Stack");
+    this.newLayer("elements");
+
+    this.member.new("x", 0);
+    this.member.new("y", 0);
+    this.member.new("elementWidth", 40);
+    this.member.new("elementHeight", 40);
+}
+
+Stack.prototype = {
+    ...BaseArray.prototype
+};
+
+Stack.prototype.elementWidth  = naiveGetterAndSetter("elementWidth", "setByEqual");
+Stack.prototype.elementHeight = naiveGetterAndSetter("elementHeight", "setByEqual");
+Stack.prototype.insert                 = Array.prototype.insert;
+Stack.prototype.insertFromExistValue   = Array.prototype.insertFromExistValue;
+Stack.prototype.insertFromExistElement = Array.prototype.insertFromExistElement;
+Stack.prototype.updateList = [
+    ...Stack.prototype.updateList,
+    update
+];
+
+Stack.prototype.width = function(width) {
+    if (width === undefined) {
+        return this.elementWidth();
     }
+    this.elementWidth(width);
+    return this;
+}
 
-    /**
-     * @overload
-     * @param {number} width 
-     * @returns {this}
-     * @overload
-     * @returns {number}
-     */
-    width(width) {
-        this.dirtyCheck("q");
-        if (width === undefined) return this._.width;
-        this.elementWidth(width);
-        return this;
+Stack.prototype.height = function(height) {
+    if (height === undefined) {
+        return this.elementHeight() * this.length();
     }
+    const length = this.length() ? this.length() : 1;
+    this.elementHeight(height / length);
+    return this;
+}
 
-    /**
-     * @overload
-     * @param {number} height 
-     * @returns {this}
-     * @overload
-     * @returns {number}
-     */
-    height(height) {
-        this.dirtyCheck("q");
-        if (height === undefined) return this._.height;
-        const length = this.length() ? this.length() : 1;
-        this.elementHeight(height / length);
-        return this;
-    }
-
-    /**
-     * @overload
-     * @param {number} width 
-     * @returns {this}
-     * @overload
-     * @returns {number}
-     */
-    elementWidth(width) {
-        this.dirtyCheck("q");
-        if (width === undefined) return this._.elementWidth;
-        if (equal(width, this._.elementWidth)) return this;
-        this._.elementWidth = width;
-        this._.width = width;
-        this.dirty(this, "R");
-        return this;
-    }
-
-    /**
-     * @overload
-     * @param {number} height 
-     * @returns {this}
-     * @overload
-     * @returns {number}
-     */
-    elementHeight(height) {
-        this.dirtyCheck("q");
-        if (height === undefined) return this._.elementHeight;
-        if (equal(height, this._.elementHeight)) return this;
-        this._.elementHeight = height;
-        this._.height = height * this._.elements.length;
-        this.dirty(this, "R");
-        return this;
-    }
-
-    update() {
-        this.preUpdate();
+function update() {
+    if (this.member.hasChanged("x") ||
+        this.member.hasChanged("y") || 
+        this.member.hasChanged("elementWidth") ||
+        this.member.hasChanged("elementHeight") ||
+        this.member.hasChanged("elements")) {
         const x = this.x();
         let y = this.y();
         const elementWidth = this.elementWidth();
         const elementHeight = this.elementHeight();
-        const elements = this._.elements;
-        for (let elem of elements) {
-            const move = () => {
-                elem.width(elementWidth);
-                elem.height(elementHeight);
-                elem.x(x).y(y);
-            }
-            if (elem._.enter) {
-                elem._.enter(elem, move);
-                elem._.enter = undefined;
-            } else move();
+        const elements = this.member.get("elements");
+        for (let element of elements) {
+            this.tryMove(element, () => {
+                element.width(elementWidth);
+                element.height(elementHeight);
+                element.x(x).y(y);
+            });
             y += elementHeight;
         }
-        this._.width = elementWidth;
-        this._.height = elementHeight * elements.length;
-        this.postUpdate();
-        return this;
+        this.member.flush("x");
+        this.member.flush("y");
+        this.member.flush("elementWidth");
+        this.member.flush("elementHeight");
+        this.member.flush("elements");
     }
 }
 

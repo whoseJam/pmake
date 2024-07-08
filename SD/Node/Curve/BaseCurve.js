@@ -1,0 +1,29 @@
+import { naiveGetterAndSetter } from "../Common";
+import { Path } from "../Nake/Path";
+
+export function BaseCurve(parent) {
+    Path.call(this, parent);
+
+    this.member.new("x1", 0);
+    this.member.new("y1", 0);
+    this.member.new("x2", 40);
+    this.member.new("y2", 40);
+
+    return this;
+}
+
+BaseCurve.prototype = {
+    ...Path.prototype
+};
+
+BaseCurve.prototype.x1 = naiveGetterAndSetter("x1", "setByEqual");
+BaseCurve.prototype.y1 = naiveGetterAndSetter("y1", "setByEqual");
+BaseCurve.prototype.x2 = naiveGetterAndSetter("x2", "setByEqual");
+BaseCurve.prototype.y2 = naiveGetterAndSetter("y2", "setByEqual");
+
+BaseCurve.prototype.updateList = [
+    function() {
+        this.member.set("d", this.pathCalculator());
+    },
+    ...Path.prototype.updateList,
+]

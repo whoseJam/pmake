@@ -1,5 +1,5 @@
 
-import * as sd from "../../lib/slide";
+import * as sd from "../@/SD";
 
 let svg = sd.svg();
 let C = sd.color();

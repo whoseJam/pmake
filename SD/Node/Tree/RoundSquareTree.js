@@ -32,7 +32,7 @@ export class RoundSquareTree extends Tree {
 
     root(id, nodeClass = Vertex, value = null) {
         if (id === undefined) {
-            const nodes = this._.nodes;
+            const nodes = this.member.get("nodes");
             return nodes.find(node => node.parentNodeId === undefined);
         }
         this.newNode(id, nodeClass, value);

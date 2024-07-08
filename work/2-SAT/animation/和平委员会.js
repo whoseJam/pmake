@@ -5,9 +5,7 @@ const svg = sd.svg();
 const C = sd.color();
 const graph = new sd.BipartiteGraph(svg).cx(600).cy(300);
 const text = new sd.Text(svg).x(550).y(450).fontSize(25);
-graph._.makeLink = (node) => {
-    return new sd.Curve(node).bending(-0.3);
-};
+graph._.linkType = sd.Curve;
 const n = 4;
 const colorList = [
     C.red, C.blue, C.green, C.purple, C.orange, C.grey
@@ -46,7 +44,7 @@ async function main() {
     const nodesId = [];
     for (let i = 1; i <= n * 2; i++) nodesId.push(i);
     有向图Tarjan(graph, nodesId);
-    const links = graph._.links;
+    const links = graph.member.get("links");
     sd.globalUpdate();
     links.forEach(e => e.opacity(0));
     for (let i = 0; i < relationships.length; i++) {

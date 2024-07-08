@@ -1,8 +1,8 @@
 import { Color } from "../Utility/Color";
-import { Rect } from "../Node/Basic/Rect";
+import { Rect } from "../Node/Nake/Rect";
 import { Context } from "../Animate/Context";
-import { SDNode } from "../Node/Node";
-import { ArrayBase } from "@/Node/Array/ArrayBase";
+import { SDNode } from "../Node/SDNode";
+import { BaseArray } from "@/Node/Array/BaseArray";
 
 let id = 0;
 
@@ -43,7 +43,7 @@ export function Focus(node) {
             elem1 = arguments[0];
             elem2 = undefined;
         } else if (arguments.length === 2) {
-            if (node instanceof ArrayBase) {
+            if (node instanceof BaseArray) {
                 elem1 = node.element(arg0);
                 elem2 = node.element(arg1);
             } else {

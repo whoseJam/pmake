@@ -1,14 +1,19 @@
-import * as sd from "../lib/slide";
+import * as sd from "@/SD";
 
 let svg = sd.svg();
 let C = sd.color();
-let board = new sd.Text(svg);
-let obj = new sd.Rect(svg).cx(600).cy(300);
+// let board = new sd.Text(svg);
+let obj = new sd.Rect(svg);
+obj.
+
+console.log("obj=", obj);
+obj.cx(600).cy(300);
+
 
 main();
 
 function test(code) {
-    board.text(code);
+    // board.text(code);
     eval(code);
 }
 

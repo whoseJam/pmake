@@ -1,162 +1,87 @@
-import { D3Layer } from "@/Node/D3Layer";
-import { Line } from "@/Node/Basic/Line";
-import { SDNode } from "@/Node/Node";
-import { TreeBase } from "@/Node/Tree/TreeBase";
+import { Line } from "@/Node/Nake/Line";
 import { trim } from "@/Utility/Trim";
 import { Vertex } from "@/Node/Element/Vertex";
 import { Vec } from "@/Utility/Math";
+import { BaseTree } from "./BaseTree";
+import { naiveGetterAndSetter } from "../Common";
 import * as d3 from "d3";
+import { evaluateValue } from "@/Utility/Tool";
 
-/**
- * @class Tree
- */
-export class Tree extends TreeBase {
-    /**
-     * @constructor
-     * @param {SDNode|D3Layer} node 
-     */
-    constructor(node) {
-        super(node);
-        this.g().type("Tree");
-        this.newLayer("link");
-        this.newLayer("vertex");
-        this._.nodeType = Vertex;
-        this._.linkType = Line;
-        this._.r = 20;
-        this._.width = 300;
-        this._.height = 0;
-        this._.layerHeight = 60;
-    }
+export function Tree(parent) {
+    BaseTree.call(this, parent);
 
-    /**
-     * 操作树的width属性
-     * @overload
-     * @param {number} width 
-     * @returns {this}
-     * @overload
-     * @returns {number}
-     */
-    width(width) {
-        this.dirtyCheck("q");
-        if (width === undefined) return this._.width;
-        this._.width = width;
-        this.dirty(this, "R");
-        return this;
-    }
+    this.g().type("Tree");
+    this.newLayer("links");
+    this.newLayer("nodes");
 
-    /**
-     * 操作树的height属性
-     * @overload
-     * @param {number} height 
-     * @returns {this}
-     * @overload
-     * @returns {number}
-     */
-    height(height) {
-        this.dirtyCheck("q");
-        if (height === undefined) return this._.height;
-        const depth = this.depth();
-        this.layerHeight(height / depth);
-        this.dirty(this, "R");
-        return this;
-    }
+    this._.nodeType = Vertex;
+    this._.linkType = Line;
 
-    /**
-     * 操作树上节点的半径
-     * @overload
-     * @param {number} r 
-     * @returns {this}
-     * @overload
-     * @returns {number}
-     */
-    r(r) {
-        this.dirtyCheck("q");
-        if (r === undefined) return this._.r;
-        this._.r = r;
-        this.dirty(this, "R");
-        return this;
-    }
+    this.member.new("r", 20);
+    this.member.new("width", 300);
+    this.member.new("height", 0);
+    this.member.new("layerHeight", 60);
 
-    /**
-     * 操作树的层高
-     * - layerHeight() 获取树的层高
-     * - layerHeight(80) 设置层高为80
-     * @overload
-     * @param {number} height
-     * @returns {this}
-     * @overload
-     * @returns {number}
-     */
-    layerHeight(height) {
-        this.dirtyCheck("q");
-        if (height === undefined) return this._.layerHeight;
-        this._.layerHeight = height;
-        this.dirty(this, "R");
-        return this;
-    }
-    
-    /**
-     * 新建一个编号为id，值元素为value的节点
-     * - newNode(1) 创建一个编号为1，值元素也为1的节点
-     * - newNode(1, "H1") 创建一个编号为1，值元素为"H1"的节点
-     * - newNode(1, new Mathjax(...)) 创建一个编号为1，值元素为Mathjax类型的节点
-     * @overload
-     * @param {number|string} id 
-     * @returns {this}
-     * @overload
-     * @param {number|string} id
-     * @param {SDNode} value 
-     * @returns {this}
-     */
-    newNode(id, value = null) {
-        const elem = new this._.nodeType(this.layer("vertex"));
-        if (value === null) elem.value(id);
-        else elem.value(value);
-        elem._.enter = (elem, move) => {
-            elem.opacity(0);
-            move();
-            elem.startAnimate(this)
-            elem.opacity(1);
-        };
-        this.dirty(this, "R");
-        this.newNodeByTreeBase(id, elem);
-        return this;
-    }
-    
-    /**
-     * 创建一条从x指向y的连边
-     * @overload
-     * @param {number|string} x
-     * @param {number|string} y
-     * @returns {this}
-     * @overload
-     * @param {number|string} x
-     * @param {number|string} y
-     * @param {SDNode} value
-     * @returns {this}
-     */
-    newLink(x, y, value = null) {
-        const elem = new this._.linkType(this.layer("link"));
-        if (value !== null) elem.value(value);
-        elem._.enter = (elem, move) => {
-            elem.opacity(0);
-            move();
-            elem.startAnimate(this)
-            elem.opacity(1);
-        };
-        this.dirty(this, "R");
-        this.newLinkByTreeBase(x, y, elem);
-        return this;
-    }
+    return this;
+}
 
-    update() {
-        return d3TreeLayout.call(
-            this,
-            "vertical",
-            node => node.x + this.x(),
-            node => node.y + this.y(),
-            [2.1], ["r"], ["r"]);
+Tree.prototype = {
+    ...BaseTree.prototype
+};
+
+Tree.prototype.width       = naiveGetterAndSetter("width", "setByEqual");
+Tree.prototype.r           = naiveGetterAndSetter("r", "setByEqual");
+Tree.prototype.layerHeight = naiveGetterAndSetter("layerHeight", "setByEqual");
+Tree.prototype.height = function(height) {
+    if (height === undefined) {
+        return this.member.get("height");
     }
+    const depth = this.depth();
+    this.layerHeight(height / depth);
+    return this;
+}
+
+Tree.prototype.updateList = [
+    ...Tree.prototype.updateList,
+    update
+];
+
+Tree.prototype.newNode = function(id, value) {
+    const element = new this._.nodeType(this.layer("nodes"));
+    element.value(evaluateValue(id, value));
+    element._.enter = (element, move) => {
+        element.opacity(0);
+        move();
+        element.unfreeze().freeze();
+        element.startAnimate(this)
+        element.opacity(1);
+    };
+    this.newNodeByBaseTree(id, element);
+    return this;
+}
+
+Tree.prototype.newLink = function(x, y, value = null) {
+    const elem = new this._.linkType(this.layer("links"));
+    if (value !== null) elem.value(value);
+    elem._.enter = (elem, move) => {
+        elem.opacity(0);
+        move();
+        elem.unfreeze();
+        elem.freeze();
+        elem.startAnimate(this)
+        elem.opacity(1);
+    };
+    this.newLinkByBaseTree(x, y, elem);
+    return this;
+}
+
+function update() {
+    d3TreeLayout.call(
+        this,
+        "vertical",
+        node => node.x + this.x(),
+        node => node.y + this.y(),
+        [2.1], ["r"], ["r"]);
 }
 
 /**
@@ -170,22 +95,20 @@ export class Tree extends TreeBase {
  * @returns {this}
  */
 export function d3TreeLayout(mode, transX, transY, minDistanceRatio, parentSizeIndex, childSizeIndex) {
-    this.preUpdate();
-    console.log("update tree start");
     let rt, tr;
     try {
         rt = d3.stratify()
         rt.id(d => d["nodeId"])
         rt.parentId(d => d["parentNodeId"])
-        rt = rt(this._.nodes);
+        rt = rt(this.member.get("nodes"));
     } catch(error) { console.log(error); return this; }
     const hierarchy = d3.hierarchy(rt);
     if (mode === "vertical") {
-        this._.height = hierarchy.height * this.layerHeight();
-        tr = d3.tree().size([this._.width, this._.height]);
+        this.member.set("height", hierarchy.height * this.layerHeight());
+        tr = d3.tree().size([this.member.get("width"), this.member.get("height")]);
     } else {
-        this._.width = hierarchy.height * this.layerWidth();
-        tr = d3.tree().size([this._.height, this._.width]);
+        this.member.set("width", hierarchy.height * this.layerWidth());
+        tr = d3.tree().size([this.member.get("height"), this.member.get("width")]);
     }
     const info = tr(hierarchy);
     let limit = Infinity;
@@ -206,15 +129,11 @@ export function d3TreeLayout(mode, transX, transY, minDistanceRatio, parentSizeI
         const x = transX(nodeInfo);
         const y = transY(nodeInfo);
         const node = nodeInfo.data.data;
-        const move = () => {
+        this.tryMove(node, () => {
             for (let i = 0; i < childSizeIndex.length; i++)
                 if (childSizeIndex[i] in node) node[childSizeIndex[i]](sizeCof[i]);
             node.cx(x).cy(y);
-        }
-        if (node._.enter) {
-            node._.enter(node, move);
-            node._.enter = undefined;
-        } else move();
+        });
     });
     info.links().forEach(linkInfo => {
         const source = linkInfo.source;
@@ -223,17 +142,10 @@ export function d3TreeLayout(mode, transX, transY, minDistanceRatio, parentSizeI
         const tgt = target.data.id;
         const link = this.findLinkById(src, tgt);
         if (!link) return;
-        console.log(transX(source), transY(source), transX(target), transY(target), "source and target", src, tgt);
-        const move = () => {
+        this.tryMove(link, () => {
             link.source(transX(source), transY(source));
             link.target(transX(target), transY(target));
-            trim(link, this.findNodeById(src), this.findNodeById(tgt));            
-        }
-        if (link._.enter) {
-            link._.enter(link, move);
-            link._.enter = undefined;
-        } else move();
+            trim(link, this.findNodeById(src), this.findNodeById(tgt));
+        });
     });
-    this.postUpdate();
-    return this;
 }

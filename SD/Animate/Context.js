@@ -1,4 +1,4 @@
-import { SDNode } from "@/Node/Node";
+import { SDNode } from "@/Node/SDNode";
 
 /**
  * @class Context

@@ -1,5 +1,5 @@
 
-import * as sd from "../../lib/slide";
+import * as sd from "../@/SD";
 
 /**
  * @param {SDNode} node 

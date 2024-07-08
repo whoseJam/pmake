@@ -1,9 +1,14 @@
-import * as sd from "../lib/slide";
+import * as sd from "../SD/SD";
 
 let svg = sd.svg();
 let C = sd.color();
 let R = sd.rule();
-let box = new sd.Box(svg).cx(600).cy(300);
+let box = new sd.Box(svg).cx(600).cy(300).value(new sd.Circle(svg));
+let r = new sd.Rect(svg).fillOpacity(0);
+
+function trace(obj) {
+    r.x(obj.x()).y(obj.y()).width(obj.width()).height(obj.height());
+}
 
 main();
 
@@ -13,10 +18,14 @@ async function main() {
     for (let i = 0; i < txt.length; i++) {
         str.push(new sd.Text(svg, txt[i]).x(Math.random() * 1200).y(Math.random() * 600));
     }
-    await sd.pause();
+    
     for (let i = 0; i < str.length; i++) {
+        await sd.pause();
         let t = str[i];
-        box.startAnimate().valueFromExist(t).endAnimate();
+        trace(t);
+        await sd.pause();
+        box.startAnimate().value(t).endAnimate();
+        trace(t);
     }
     await sd.pause();
 

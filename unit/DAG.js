@@ -1,4 +1,4 @@
-import * as sd from "../lib/slide";
+import * as sd from "@/SD";
 
 let svg = sd.svg();
 let C = sd.color();
@@ -28,5 +28,9 @@ async function main() {
         g.element(e[i][0], e[i][1]).arrow().strokeWidth(1.2);
         g.endAnimate();
     }
+    await sd.pause();
+    g.startAnimate().rankDir("RL").endAnimate();
+    await sd.pause();
+    g.startAnimate().align("DL").endAnimate();
     await sd.pause();
 }

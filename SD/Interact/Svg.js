@@ -1,6 +1,5 @@
 import { d3ToNake } from "../Utility/Tool";
-import { Marker } from "../Node/Basic/Marker";
-import { D3Layer } from "@/Node/D3Layer";
+import { Marker } from "../Node/Nake/Marker";
 import * as d3 from "d3";
 
 let svgSel;
@@ -94,18 +93,6 @@ export function globalUpdate(flush = false) {
         const children = node.children;
         children.forEach(flushUpdate);
     }
-    const dfs = node => {
-        if (node._.dirtyBy === node) {
-            global.dirtyCheckAndUpdate = true;
-            node.update();
-            global.dirtyCheckAndUpdate = false;
-            return;
-        }
-        const children = node.children;
-        children.forEach(dfs);
-    }
-    for (let child of children)
-        dfs(child);
     if (window.__FLUSH__ || flush) {
         for (let child of children)
             flushUpdate(child);
