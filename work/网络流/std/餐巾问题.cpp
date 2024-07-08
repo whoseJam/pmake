@@ -9,7 +9,16 @@ typedef long long ll;
 const ll N=4005;
 const ll M=500005;
 ll n,p,m1,f1,m2,f2,INF=0x3f3f3f3f;
-ll dis[N],Inque[N],prt[N],R[N];
+ll dis[N],Inq[N],prt[N],R[N];
+ll S,T,tot;
+
+ll Day(ll x){
+	return x;
+}
+
+ll Dirty(ll x){
+	return x+n;
+}
 
 struct line{
 	ll nextLine,to,flow,cost;
@@ -23,17 +32,17 @@ void addEdge(ll u,ll v,ll Flow,ll Cost){
 
 ll SPFA(){
 	queue<ll>q;
-	for(ll i=1;i<=n*2+2;i++)dis[i]=INF,Inque[i]=0,prt[i]=0;
-	dis[n*2+1]=0;Inque[n*2+1]=1;q.push(n*2+1);
+	for(ll i=1;i<=n*2+2;i++)dis[i]=INF,Inq[i]=0,prt[i]=0;
+	dis[n*2+1]=0;Inq[n*2+1]=1;q.push(n*2+1);
 	while(q.size()){
 		ll u=q.front();q.pop();
-		Inque[u]=0;
+		Inq[u]=0;
 		for(ll i=h[u];i;i=l[i].nextLine){
 			ll v=l[i].to;
 			if(dis[v]>dis[u]+l[i].cost&&l[i].flow>0){
 				prt[v]=i;
 				dis[v]=dis[u]+l[i].cost;
-				if(!Inque[v])Inque[v]=1,q.push(v);
+				if(!Inq[v])Inq[v]=1,q.push(v);
 			}
 		}
 	}
@@ -58,13 +67,17 @@ int main(){
 	scanf("%lld",&n);
 	for(ll i=1;i<=n;i++)cin>>R[i];
 	scanf("%lld%lld%lld%lld%lld",&p,&m1,&f1,&m2,&f2);
+	
+	S=n*2+1;
+	T=n*2+2;
+	tot=n*2+2;
 	for(ll i=1;i<=n;i++){
-		addEdge(n*2+1,i+n,R[i],0);
-		addEdge(i,n*2+2,R[i],0);
-		if(i+m1<=n)addEdge(i+n,i+m1,INF,f1);
-		if(i+m2<=n)addEdge(i+n,i+m2,INF,f2);
-		if(i!=1)addEdge(i-1,i,INF,0);
-		else addEdge(n*2+1,i,INF,p);
+		addEdge(S,Dirty(i),R[i],0);
+		addEdge(Day(i),T,R[i],0);
+		if(i+m1<=n)addEdge(Dirty(i),Day(i+m1),INF,f1);
+		if(i+m2<=n)addEdge(Dirty(i),Day(i+m2),INF,f2);
+		if(i!=1)addEdge(Day(i-1),Day(i),INF,0);
+		else addEdge(S,Day(1),INF,p);
 	}
 	while(SPFA())Adjust(ans);
 	printf("%lld",ans);
