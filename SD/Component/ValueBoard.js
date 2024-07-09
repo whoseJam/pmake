@@ -1,21 +1,27 @@
-import { Text } from "../SD";
-import { svg } from "../SD";
+import { Context } from "@/Animate/Context";
+import { Text } from "@/Node/Nake/Text";
+import { svg } from "@/Interact/Svg";
 
-export function ValueBoard(name, init=0) {
-    let board = new Text(svg());
+export function ValueBoard(name, init = 0) {
+    const board = new Text(svg());
+    
     let inner = init;
+    
     board.text(`${name} = ${init}`);
+    
     board.value = function(value) {
         if (value === undefined)
             return inner;
         inner = value;
-        if (this.isAnimating()) {
-            let length = this.duration();
-            this.endAnimate();
-            this.startAnimate(length / 2).opacity(0).endAnimate();
-            this.text(`${name} = ${inner}`);
-            this.startAnimate(length / 2).opacity(1).endAnimate();
-        } else this.text(`${name} = ${inner}`);
+
+        const context = new Context(this);
+        context.till(0, 0.5);
+        this.opacity(0);
+        context.till(0.5, 0.5);
+        this.text(`${name} = ${inner}`);
+        context.till(0.5, 1);
+        this.opacity(1);
+
         return this;
     }
     return board;

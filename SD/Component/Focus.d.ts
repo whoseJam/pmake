@@ -1,5 +1,6 @@
+import { SDNode } from "SD/Node/SDNode";
 
-interface FocusType {
+interface FocusType extends SDNode {
     /**
      * 关注父组件整体
      */

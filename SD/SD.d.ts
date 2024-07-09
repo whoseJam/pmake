@@ -42,3 +42,5 @@ export { Bezier }      from "./Node/Curve/Bezier";
 export { CircleCurve } from "./Node/Curve/CircleCurve";
 
 export { Mathjax } from "./Node/Text/Mathjax";
+
+export { Pointer } from "./Component/Pointer";

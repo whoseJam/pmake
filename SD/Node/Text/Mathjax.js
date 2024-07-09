@@ -5,6 +5,8 @@ export function Mathjax(parent, text) {
 
     this.g().type("Mathjax");
 
+    this.member.new("text", "");
+
     if (text) {
         this.math(text);
     }
@@ -17,9 +19,14 @@ Mathjax.prototype = {
 };
 
 Mathjax.prototype.math = function(text) {
+    this.member.setAndFlush("text", text);
     const svg = MathJax.tex2svg(text).children[0];
     this.fragment(svg.outerHTML);
     return this;
+}
+
+Mathjax.prototype.text = function() {
+    return this.member.get("text");
 }
 
 Mathjax.prototype.width = function(width) {
