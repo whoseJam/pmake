@@ -43,4 +43,9 @@ export { CircleCurve } from "./Node/Curve/CircleCurve";
 
 export { Mathjax } from "./Node/Text/Mathjax";
 
-export { Pointer } from "./Component/Pointer";
+export { Focus }        from "./Component/Focus";
+export { Label }        from "./Component/Label";
+export { Stress }       from "./Component/Stress";
+export { Pointer }      from "./Component/Pointer";
+export { ValueBoard }   from "./Component/ValueBoard";
+export { MathjaxLabel } from "./Component/Label";

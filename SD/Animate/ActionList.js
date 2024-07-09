@@ -13,20 +13,12 @@ export class ActionList {
         this.actionCount = 0;
     }
     
-    /**
-     * 添加一个 action 到调度器中，会启动自动优化
-     * @param {Action} action 
-     */
     push(action) {
         this.actionCount++;
         this.rebuild(action);
         this.directPush(action);
     }
 
-    /**
-     * 添加一个 action 到调度器中，不会启动自动优化
-     * @param {Action} action 
-     */
     directPush(action) {
         if (this.actionList === null) {
             this.actionList = this.actionListEnd = action;
@@ -37,11 +29,6 @@ export class ActionList {
         if (!action.isStopped && !action.hidden) this.size++;
     }
 
-    /**
-     * 检查两个 action 之间的冲突
-     * @param {Action} before 先进入调度器的 action
-     * @param {Action} after 后进入调度器的 action
-     */
     checkConflict(before, after) {
         /**
          * before: |
@@ -79,10 +66,6 @@ export class ActionList {
         return;
     }
 
-    /**
-     * 将一个 action 与之前已经存在于调度器中的 action，做一个自动优化
-     * @param {Action} action 
-     */
     rebuild(action) {
         for (let other = this.actionList; other; other = other.next) {
             if (other.hidden) continue;
@@ -94,9 +77,6 @@ export class ActionList {
         this.flushHidden();
     }
 
-    /**
-     * 将所有被标记为 hidden 的 action，从调度器中删去
-     */
     flushHidden() {
         let prevAction = null, actionList = null;
         for (let action = this.actionList; action; action = action.next) {
@@ -112,10 +92,6 @@ export class ActionList {
         this.actionListEnd = prevAction;
     }
 
-    /**
-     * 触发一次动画渲染，这个函数应该在 requestAnimationFrame 中被使用
-     * @param {number} timestamp 
-     */
     tick(timestamp) {
         this.currentTimestamp = timestamp;
         for (let action = this.actionList; action; action = action.next) {
@@ -126,10 +102,6 @@ export class ActionList {
         }
     }
 
-    /**
-     * 重启该调度器
-     * @param {number} timestamp 
-     */
     restart(timestamp) {
         for (let action = this.actionList; action; action = action.next) {
             action.startTimestamp = timestamp;
@@ -137,9 +109,6 @@ export class ActionList {
         }
     }
 
-    /**
-     * 强制该调度器内所有的 action 立刻结束
-     */
     finish() {
         for (let action = this.actionList; action; action = action.next) {
             if (action.hidden || action.isStopped) continue;
@@ -147,20 +116,12 @@ export class ActionList {
         }
     }
 
-    /**
-     * 查询调度器中是否所有 action 都已结束
-     * @returns {boolean}
-     */
     finished() {
         for (let action = this.actionList; action; action = action.next)
             if (!action.hidden && !action.isStopped) return false;
         return true;
     }
 
-    /**
-     * 将当前调度器的时间线反转，返回一个新的反转后的调度器
-     * @returns {ActionList}
-     */
     rollback() {
         const other = new ActionList();
         let maxTimestamp = 0;
@@ -182,10 +143,6 @@ export class ActionList {
         return other;
     }
 
-    /**
-     * 返回一个新的和本调度器相同的调度器
-     * @returns {ActionList}
-     */
     replay() {
         const other = new ActionList();
         for (let action = this.actionList; action; action = action.next) {
@@ -212,5 +169,24 @@ export class ActionList {
                     "rate =", used / this.actionCount);
         console.log("---------------Action List debug---------------");
         console.log("");
+    }
+
+    updateWindowSize() {
+        for (let action = this.actionList; action; action = action.next) {
+            if (action.hidden) {
+                continue;
+            }
+            const owner = action.owner;
+            if ("opacity" in owner && owner.opacity() > 0) {
+                const x = node.x();
+                const mx = node.mx();
+                const y = node.y();
+                const my = node.my();
+                window.SVG_MAXX = Math.max(window.SVG_MAXX, mx);
+                window.SVG_MINX = Math.min(window.SVG_MINX, x);
+                window.SVG_MAXY = Math.max(window.SVG_MAXY, my);
+                window.SVG_MINY = Math.min(window.SVG_MINY, y);
+            }
+        }
     }
 }
