@@ -23,10 +23,10 @@ BipartiteGraph.prototype.updateList = [
 ];
 
 BipartiteGraph.prototype.newNode = function(id, value, setNo) {
-    const element = new this._.nodeType(this.layer("nodes"));
     if (arguments.length === 2) {
         return this.newNode(id, undefined, value);
     }
+    const element = new this._.nodeType(this.layer("nodes"));
     element.value(evaluateValue(id, value));
     element.setNo = setNo;
     element._.enter = (element, move) => {

@@ -3,7 +3,7 @@ import * as sd from "@/SD";
 const svg = sd.svg();
 const C = sd.color();
 const n = 5;
-const grid = new sd.Grid(svg).startN(1).startM(1).n(n).m(n).x(40).y(40);
+const grid = new sd.Grid(svg).startN(1).startM(1).n(n).m(n);
 
 init();
 main();

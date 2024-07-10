@@ -63,8 +63,8 @@ export { ValueBoard }   from "./Component/ValueBoard.js";
 export { MathjaxLabel } from "./Component/Label.js";
 export { Link }         from "./Component/Link.js";
 
-export { pause } from "./Animate/Animate.js";
-export { rand } from "./Utility/Random.js";
-export { make1d, make2d } from "./Utility/Util.js"
-export { trim } from "./Utility/Trim.js";
-export { globalUpdate } from "./Interact/Svg.js";
+export { pause }  from "./Animate/Window.js";
+export { rand }   from "./Utility/Random.js";
+export { make1d } from "./Utility/Util.js"
+export { make2d } from "./Utility/Util.js";
+export { trim }   from "./Utility/Trim.js";

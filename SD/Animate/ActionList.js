@@ -1,12 +1,6 @@
 import { Action } from "@/Animate/Action";
 
-/**
- * @class ActionList
- */
 export class ActionList {
-    /**
-     * @constructor
-     */
     constructor() {
         this.actionList = null;
         this.actionListEnd = null;
@@ -177,11 +171,11 @@ export class ActionList {
                 continue;
             }
             const owner = action.owner;
-            if ("opacity" in owner && owner.opacity() > 0) {
-                const x = node.x();
-                const mx = node.mx();
-                const y = node.y();
-                const my = node.my();
+            if ("opacity" in owner && owner.opacity() > 0 && owner._.nake) {
+                const x = owner.x();
+                const mx = owner.mx();
+                const y = owner.y();
+                const my = owner.my();
                 window.SVG_MAXX = Math.max(window.SVG_MAXX, mx);
                 window.SVG_MINX = Math.min(window.SVG_MINX, x);
                 window.SVG_MAXY = Math.max(window.SVG_MAXY, my);

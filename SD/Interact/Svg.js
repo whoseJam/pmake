@@ -74,27 +74,3 @@ export function svg() {
 export function def() {
     return defsSel;
 }
-
-export function globalUpdate(flush = false) {
-    const children = svgSel.children;
-    const flushUpdate = node => {
-        const x = node.x();
-        const mx = node.mx();
-        const y = node.y();
-        const my = node.my();
-        const opacity = node.opacity();
-        if (opacity === 0) return;
-        if (x !== 0 && y !== 0) {
-            window.SVG_MAXX = Math.max(window.SVG_MAXX, mx);
-            window.SVG_MINY = Math.min(window.SVG_MINY, y);
-            window.SVG_MAXY = Math.max(window.SVG_MAXY, my);
-            window.SVG_MINX = Math.min(window.SVG_MINX, x);
-        }
-        const children = node.children;
-        children.forEach(flushUpdate);
-    }
-    if (window.__FLUSH__ || flush) {
-        for (let child of children)
-            flushUpdate(child);
-    }
-}

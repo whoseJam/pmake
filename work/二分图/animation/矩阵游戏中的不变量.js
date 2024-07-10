@@ -75,7 +75,7 @@ function update() {
     boxes.forEach(box => {
         const i = box.i;
         const j = box.j;
-        box.x((i-1) * 40 + 40)
-            .y((j-1) * 40 + 40);
+        box.x((i-1) * 40)
+            .y((j-1) * 40);
     });
 }

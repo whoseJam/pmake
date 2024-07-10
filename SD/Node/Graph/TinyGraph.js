@@ -19,10 +19,10 @@ TinyGraph.prototype = {
 
 TinyGraph.prototype.newLink = GridGraph.prototype.newLink;
 
-TinyGraph.prototype.updateList = {
+TinyGraph.prototype.updateList = [
     ...TinyGraph.prototype.updateList,
     update_update
-};
+];
 
 TinyGraph.prototype.newNode = function(id, value) {
     const element = new this._.nodeType(this.layer("nodes"));
@@ -33,7 +33,7 @@ TinyGraph.prototype.newNode = function(id, value) {
         element.unfreeze().freeze();
         element.startAnimate(this).opacity(1);
     };
-    this.newNodeByGraphBase(id, element);
+    this.newNodeByBaseGraph(id, element);
     return this;
 }
 
@@ -48,8 +48,8 @@ function update_update() {
     if (nodes.length === 6) update6.call(this, nodes);
     if (nodes.length >= 7) throw new Error("Cannot Process Graph With count(Nodes) >= 7");
     for (let link of links) {
-        const sourceId = link.sourceId;
-        const targetId = link.targetId;
+        const sourceId = link.fromNodeId;
+        const targetId = link.toNodeId;
         const source = this.findNodeById(sourceId);
         const target = this.findNodeById(targetId);
         this.tryMove(link, () => {

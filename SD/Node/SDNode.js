@@ -216,6 +216,7 @@ SDNode.prototype.update = function() {
         updateCallback.call(this);
     });
     this.postUpdate();
+    return this;
 }
 
 SDNode.prototype.freeze = function() {

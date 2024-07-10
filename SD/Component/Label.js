@@ -9,7 +9,7 @@ function isMathjax(str) {
 export function Label(parent, text, position = "lc", fontSize = 20, gap = 10) {
     const label = (typeof(text) === "string" || typeof(text) === "number") ?
                     new (isMathjax(text) ? Mathjax : Text)(parent, text) : text;
-    label[["height", "fontSize"]["fontSize" in label]](fontSize);
+    label["fontSize" in label ? "fontSize": "height"](fontSize);
 
     parent.childAs(`label_${label.text()}`, label, function(parent, child) {
         if (position === "lt")      child.mx(parent.x() - gap).y(parent.y());
@@ -30,5 +30,5 @@ export function Label(parent, text, position = "lc", fontSize = 20, gap = 10) {
 }
 
 export function MathjaxLabel(parent, text, position = "lc", fontSize = 20, gap = 10) {
-    return Label(node, new Mathjax(parent, text), position, fontSize, gap);
+    return Label(parent, new Mathjax(parent, text), position, fontSize, gap);
 }

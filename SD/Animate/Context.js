@@ -1,37 +1,20 @@
-import { SDNode } from "@/Node/SDNode";
-
-/**
- * @class Context
- */
 export class Context {
-    /**
-     * @param {SDNode} node 
-     */
-    constructor(node) {
-        this.node = node;
-        this.start = node.delay();
-        this.duration = node.duration();
-        this.isAnimating = node.isAnimating();
+    constructor(parent) {
+        this.parent = parent;
+        this.start = parent.delay();
+        this.duration = parent.duration();
+        this.isAnimating = parent.isAnimating();
     }
 
-    /**
-     * @param {number} l 
-     * @param {number} r 
-     */
     till(l, r) {
         if (this.isAnimating) {
-            let node = this.node;
-            node.endAnimate();
-            node.after(this.start + this.duration * l);
-            if (r > l + 1e-7) node.startAnimate(this.duration * (r - l));
+            const parent = this.parent;
+            parent.endAnimate();
+            parent.after(this.start + this.duration * l);
+            if (r > l + 1e-7) parent.startAnimate(this.duration * (r - l));
         }
     }
 
-    /**
-     * @param {number} l 
-     * @param {number} r 
-     * @returns {{animate: {delay: () => number, duration: () => number}}}
-     */
     tillc(l, r) {
         return {
             animate: {
@@ -43,10 +26,10 @@ export class Context {
 
     recover() {
         if (this.isAnimating) {
-            let node = this.node;
-            node.endAnimate();
-            node.after(this.start);
-            node.startAnimate(this.duration);
+            const parent = this.parent;
+            parent.endAnimate();
+            parent.after(this.start);
+            parent.startAnimate(this.duration);
         }
     }
 }
