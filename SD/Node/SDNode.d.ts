@@ -50,6 +50,15 @@ export class SDNode {
 
     remove(): void
 
+    x(): number;
+    x(x: number): this;
+    y(): number;
+    y(y: number): this;
+    scale(scale: number): this;
+    width(): number;
+    width(width: number): this;
+    height(): number;
+    height(height: number): this;
     pos(xLocator: string, yLocator: string, dx: number, dy: number): Vector;
     center(): Vector;
     center(center: Vector): this;

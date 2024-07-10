@@ -7,6 +7,7 @@ export { Line }     from "./Node/Nake/Line";
 export { Path }     from "./Node/Nake/Path";
 export { Rect }     from "./Node/Nake/Rect";
 export { Text }     from "./Node/Nake/Text";
+export { Image }    from "./Node/Nake/Image";
 export { Circle }   from "./Node/Nake/Circle";
 export { Ellipse }  from "./Node/Nake/Ellipse";
 export { Fragment } from "./Node/Nake/Fragment";
@@ -49,3 +50,6 @@ export { Stress }       from "./Component/Stress";
 export { Pointer }      from "./Component/Pointer";
 export { ValueBoard }   from "./Component/ValueBoard";
 export { MathjaxLabel } from "./Component/Label";
+
+export { rule } from "./Rule/Rule";
+export { Rule } from "./Rule/Rule";

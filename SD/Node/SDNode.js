@@ -114,6 +114,14 @@ SDNode.prototype.remove = function() {
     this.opacity(0);
 }
 
+SDNode.prototype.scale = function(scale) {
+    const width = this.width();
+    const height = this.height();
+    this.width(width * scale);
+    this.height(height * scale);
+    return this;
+}
+
 SDNode.prototype.pos = function(xloc, yloc, dx = 0, dy = 0) {
     return [
         this[xloc]() + dx,

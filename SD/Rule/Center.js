@@ -2,8 +2,8 @@ import { equal } from "@/Utility/Math";
 
 export function CenterOnly() {
     return function(parent, child) {
-        let cx = parent.cx();
-        let cy = parent.cy();
+        const cx = parent.cx();
+        const cy = parent.cy();
         child.cx(cx).cy(cy);
     }
 }

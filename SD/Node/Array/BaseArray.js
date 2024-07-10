@@ -124,6 +124,10 @@ BaseArray.prototype.dropElement = function(idx) {
     return elem;
 }
 
+BaseArray.prototype.dropLastElement = function() {
+    return this.dropElement(this.end());
+}
+
 BaseArray.prototype.dropValue = function(idx) {
     const elem = this.element(idx);
     this.eraseByBaseArray(idx);

@@ -1,4 +1,5 @@
-import { Aside, OnRightSide } from "./Aside";
+import { Aside } from "./Aside";
+import { Background, CircleBackground } from "./Background";
 import { CenterFixAspect, CenterOnly } from "./Center";
 import { PointAtPathByLength } from "./Path";
 import { PointAtPathByRate } from "./Path";
@@ -13,20 +14,15 @@ export { TriangleCenterFixAspect } from "./Center";
 export { PointAtPathByRate } from "./Path";
 export { PointAtPathByLength } from "./Path";
 
-export { OnRightSide } from "./Aside";
-
-/**
- * @typedef {(SDNode, SDNode) => void} Rule
- */
-
 const Rule = {
-    OnRightSide: OnRightSide,
     PointAtPathByRate: PointAtPathByRate,
     PointAtPathByLength: PointAtPathByLength,
     CenterOnly: CenterOnly,
     CenterFixAspect: CenterFixAspect,
-    Aside: Aside
-}
+    Aside: Aside,
+    Background: Background,
+    CircleBackground: CircleBackground
+};
 
 export function rule() {
     return Rule;

@@ -1,18 +1,18 @@
 
 export function Background() {
-    return (parent, child) => {
-        let x = parent.x();
-        let y = parent.y();
-        let width = parent.width();
-        let height = parent.height();
-        child.x(x).y(y);
+    return function(parent, child) {
+        const x = parent.x();
+        const y = parent.y();
+        const width = parent.width();
+        const height = parent.height();
         child.width(width);
         child.height(height);
+        child.x(x).y(y);
     }
 }
 
 export function CircleBackground() {
-    return (parent, child) => {
+    return function(parent, child) {
         const x = parent.x();
         const y = parent.y();
         const r = parent.r();

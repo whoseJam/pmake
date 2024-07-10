@@ -19,17 +19,16 @@ ValueTree.prototype.updateList = [
 ];
 
 ValueTree.prototype.newNode = function(id, value) {
-    const elem = value;
-    value._.enter = (elem, move) => {
-        console.log("elem=", elem, "move=", move);
-        elem.attachTo(this.layer("nodes"));
-        elem.opacity(0);
+    const element = value;
+    value._.enter = (element, move) => {
+        element.attachTo(this.layer("nodes"));
+        element.opacity(0);
         move();
-        elem.freeze().unfreeze();
-        elem.startAnimate(this);
-        elem.opacity(1);
+        element.freeze().unfreeze();
+        element.startAnimate(this);
+        element.opacity(1);
     };
-    this.newNodeByBaseTree(id, elem);
+    this.newNodeByBaseTree(id, element);
     return this;
 }
 

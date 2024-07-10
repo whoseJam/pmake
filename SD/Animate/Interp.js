@@ -22,12 +22,6 @@ function anyToArray(value) {
 }
 
 export const Interp = {
-    /**
-     * 对数字进行插值
-     * @param {SVGElement} owner
-     * @param {string} prop
-     * @returns {(t: number) => void}
-     */
     numberInterp(owner, prop) {
         return function(t) {
             const A = this.from;
@@ -37,12 +31,6 @@ export const Interp = {
         }
     },
     
-    /**
-     * 对RGB颜色进行插值
-     * @param {SVGElement} owner
-     * @param {string} prop
-     * @returns {(t: number) => void}
-     */
     colorInterp(owner, prop) {
         return function(t) {
             const fRGB = typeof(this.from) === "string" ? hexToRgb(this.from) : this.from;
@@ -54,23 +42,12 @@ export const Interp = {
         }
     },
 
-    /**
-     * 对字符串进行插值
-     * @param {SVGElement} owner
-     * @param {string} prop
-     * @returns {(t: number) => void}
-     */
     stringInterp(owner, prop) {
         return function(t) {
             if (t === 1) owner.setAttribute(prop, this.to);
         }
     },
     
-    /**
-     * 对innerHTML进行插值
-     * @param {SVGElement} owner
-     * @returns {(t: number) => void}
-     */
     innerHTMLInterp(owner) {
         return function(t) {
             if (t === 1) {
@@ -79,12 +56,6 @@ export const Interp = {
         }
     },
 
-    /**
-     * 对数组进行插值
-     * @param {SVGElement} owner
-     * @param {string} prop
-     * @returns {(t: number) => void}
-     */
     arrayInterp(owner, prop) {
         return function(t) {
             const A = anyToArray(this.from);
@@ -101,12 +72,6 @@ export const Interp = {
         }
     },
 
-    /**
-     * 对matrix(a, b, c, d, e, f)进行插值
-     * @param {SVGElement} owner
-     * @param {"transform"} prop
-     * @returns {(t: number) => void} 
-     */
     matrixInterp(owner, prop) {
         return function(t) {
             const A = this.from;
@@ -123,12 +88,6 @@ export const Interp = {
         }
     },
 
-    /**
-     * 对viewBox进行插值
-     * @param {SVGElement} owner
-     * @param {"viewBox"} prop
-     * @returns {(t: number) => void}
-     */
     viewBoxInterp(owner, prop) {
         return function(t) {
             const A = this.from;
