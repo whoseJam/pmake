@@ -29,6 +29,7 @@ Fragment.prototype.y        = naiveGetterAndSetter("y", "setByEqual");
 Fragment.prototype.width    = naiveGetterAndSetter("width", "setByEqual");
 Fragment.prototype.height   = naiveGetterAndSetter("height", "setByEqual");
 Fragment.prototype.fragment = naiveGetterAndSetter("html", "set");
+Fragment.prototype.html     = naiveGetterAndSetter("html", "set");
 Fragment.prototype.updateList = [
     ...Fragment.prototype.updateList,
     update

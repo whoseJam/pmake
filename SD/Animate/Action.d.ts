@@ -1,5 +1,16 @@
 
 export class Action {
+    constructor(
+        l: number,
+        r: number,
+        from: any,
+        to: any,
+        callback: (t: number) => void,
+        owner: any,
+        channel: string,
+        flag: boolean
+    );
+
     /**
      * 动画开始的相对时间戳
      */

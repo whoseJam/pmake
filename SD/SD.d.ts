@@ -3,14 +3,15 @@
 export { SDNode }  from "./Node/SDNode";
 export { SDValue } from "./Node/SDValue";
 
-export { Line }     from "./Node/Nake/Line";
-export { Path }     from "./Node/Nake/Path";
-export { Rect }     from "./Node/Nake/Rect";
-export { Text }     from "./Node/Nake/Text";
-export { Image }    from "./Node/Nake/Image";
-export { Circle }   from "./Node/Nake/Circle";
-export { Ellipse }  from "./Node/Nake/Ellipse";
-export { Fragment } from "./Node/Nake/Fragment";
+export { Line }          from "./Node/Nake/Line";
+export { Path }          from "./Node/Nake/Path";
+export { Rect }          from "./Node/Nake/Rect";
+export { Text }          from "./Node/Nake/Text";
+export { Image }         from "./Node/Nake/Image";
+export { Circle }        from "./Node/Nake/Circle";
+export { Ellipse }       from "./Node/Nake/Ellipse";
+export { Fragment }      from "./Node/Nake/Fragment";
+export { ForeignObject } from "./Node/Nake/ForeignObject";
 
 export { Box }    from "./Node/Element/Box";
 export { Vertex } from "./Node/Element/Vertex";
