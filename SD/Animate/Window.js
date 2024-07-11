@@ -39,9 +39,9 @@ export function pause() {
     }
     if (window.__FLUSH__ || 
         window.__EXPORT__) {
+        Animate.currentActionList.updateWindowSize();
         return 0;
     }
-    Animate.currentActionList.updateWindowSize();
     return new Promise(function(resolve) {
         const fn = function() {
             if (window.__WHOSEJAM__ > 0 ||

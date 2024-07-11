@@ -173,12 +173,29 @@ export class ActionList {
     }
 
     updateWindowSize() {
+        console.log("update Window Size");
         for (let action = this.actionList; action; action = action.next) {
             if (action.hidden) {
                 continue;
             }
+            if (action.channel !== "x" &&
+                action.channel !== "y" &&
+                action.channel !== "cx" &&
+                action.channel !== "cy" &&
+                action.channel !== "width" &&
+                action.channel !== "height" &&
+                action.channel !== "d" &&
+                action.channel !== "x1" &&
+                action.channel !== "y1" &&
+                action.channel !== "x2" &&
+                action.channel !== "y2") continue;
             const owner = action.owner;
-            if ("opacity" in owner && owner.opacity() > 0 && owner._.nake) {
+            if (!("g" in owner) || !owner._.nake) { // D3Layer
+                continue;
+            }
+            if ("opacity" in owner && owner._.nake && isVisble(owner)) {
+                const nake = owner._.nake;
+                console.log("owner = ", owner.g().type());
                 const x = owner.x();
                 const mx = owner.mx();
                 const y = owner.y();
@@ -190,4 +207,14 @@ export class ActionList {
             }
         }
     }
+}
+
+function isVisble(element) {
+    if (element && "opacity" in element) {
+        if (element.opacity() === 0) {
+            return false;
+        }
+        return isVisble(element.parent);
+    }
+    return true;
 }

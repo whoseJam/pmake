@@ -187,7 +187,6 @@ SDNode.prototype.my = function(my) {
     return this;
 }
 
-
 SDNode.prototype.preUpdate = function() {
     this.children.forEach(child => {
         child.freeze();
