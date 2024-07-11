@@ -13,16 +13,20 @@ class ActionPool {
     }
 
     tick(timestamp) {
-        this.currentTimestamp = timestamp;
-        let currentActionList = this.currentActionList;
-        if (window.__FLUSH__ || window.__EXPORT__) return;
-        currentActionList.tick(timestamp);
-        // if (window.__WHOSEJAM__ === 0) {
-        //     if (!this.lastTickFlag) currentActionList.restart(timestamp);
-        //     this.lastTickFlag = true;
-        //     currentActionList.tick(timestamp);
-        // }
-        requestAnimationFrame(this.tick.bind(this));
+        if (timestamp !== undefined) {
+            this.currentTimestamp = timestamp;
+            let currentActionList = this.currentActionList;
+            if (window.__FLUSH__ || window.__EXPORT__) return;
+            currentActionList.tick(timestamp);
+            // if (window.__WHOSEJAM__ === 0) {
+            //     if (!this.lastTickFlag) currentActionList.restart(timestamp);
+            //     this.lastTickFlag = true;
+            //     currentActionList.tick(timestamp);
+            // }
+            requestAnimationFrame(this.tick.bind(this));
+        } else {
+            this.currentActionList.tick();
+        }
     }
 
     /**

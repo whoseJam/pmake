@@ -87,12 +87,19 @@ export class ActionList {
     }
 
     tick(timestamp) {
-        this.currentTimestamp = timestamp;
-        for (let action = this.actionList; action; action = action.next) {
-            if (action.hidden || action.isStopped) continue;
-            if (!action.startTimestamp) action.startTimestamp = timestamp;
-            const duration = this.currentTimestamp - action.startTimestamp;
-            action.call(duration);
+        if (timestamp !== undefined) {
+            this.currentTimestamp = timestamp;
+            for (let action = this.actionList; action; action = action.next) {
+                if (action.hidden || action.isStopped) continue;
+                if (!action.startTimestamp) action.startTimestamp = timestamp;
+                const duration = this.currentTimestamp - action.startTimestamp;
+                action.call(duration);
+            }
+        } else {
+            for (let action = this.actionList; action; action = action.next) {
+                if (action.hidden || action.isStopped) continue;
+                if (action.firstCall) action.call(0);
+            }
         }
     }
 

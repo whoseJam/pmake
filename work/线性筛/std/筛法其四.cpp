@@ -22,7 +22,7 @@ namespace FastIO{
 using FastIO::read;
 
 const int N=1000005;
-int prim[N],tot,f[N],cnt[N];
+int prim[N],tot,f[N],g[N];
 bool vis[N];
 
 void Sieve(int n){
@@ -30,17 +30,17 @@ void Sieve(int n){
 		if(!vis[i]){
 			prim[++tot]=i;
 			f[i]=2;
-			cnt[i]=1;
+			g[i]=1;
 		}
 		for(int j=1;j<=tot&&i*prim[j]<=n;j++){
 			vis[i*prim[j]]=1;
 			if(i%prim[j]==0){
-				f[i*prim[j]]=f[i]/(cnt[i]+1)*(cnt[i]+2);
-				cnt[i*prim[j]]=cnt[i]+1;
+				f[i*prim[j]]=f[i]/(g[i]+1)*(g[i]+2);
+				g[i*prim[j]]=g[i]+1;
 				break;
 			}
 			f[i*prim[j]]=f[i]*2;
-			cnt[i*prim[j]]=1;
+			g[i*prim[j]]=1;
 		}
 	}
 }

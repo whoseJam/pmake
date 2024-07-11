@@ -33,9 +33,11 @@ void Sieve(int n){
 		}
 		for(int j=1;j<=tot&&i*prim[j]<=n;j++){
 			vis[i*prim[j]]=1;
-			f[i*prim[j]]=f[i];
-			if(i%prim[j]==0)break;
-			f[i*prim[j]]++;
+			if(i%prim[j]==0){
+				f[i*prim[j]]=f[i];
+				break;
+			}
+			f[i*prim[j]]=f[i]+1;
 		}
 	}
 }

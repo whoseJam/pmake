@@ -57,6 +57,8 @@ export { Mathjax } from "./Node/Text/Mathjax.js";
 
 // export { Marker } from "./Node/Nake/Marker.js";
 
+export { Button } from "./Node/HTML/Button.js";
+
 export { Focus }        from "./Component/Focus.js";
 export { Label }        from "./Component/Label.js";
 export { Stress }       from "./Component/Stress.js";
