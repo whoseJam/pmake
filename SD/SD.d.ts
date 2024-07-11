@@ -49,6 +49,7 @@ export { Focus }        from "./Component/Focus";
 export { Label }        from "./Component/Label";
 export { Stress }       from "./Component/Stress";
 export { Pointer }      from "./Component/Pointer";
+export { WithBrace }    from "./Component/WithBrace";
 export { ValueBoard }   from "./Component/ValueBoard";
 export { MathjaxLabel } from "./Component/Label";
 

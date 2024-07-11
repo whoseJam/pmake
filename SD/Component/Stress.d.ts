@@ -1,7 +1,5 @@
-import { SDNode } from "SD/Node/SDNode";
-
-interface StressType extends SDNode {
+interface StressType {
     stress(): this;
 }
 
-export function Stress(parent: any): StressType;
+export function Stress<T>(parent: T): StressType&T;

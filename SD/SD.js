@@ -61,6 +61,7 @@ export { Focus }        from "./Component/Focus.js";
 export { Label }        from "./Component/Label.js";
 export { Stress }       from "./Component/Stress.js";
 export { Pointer }      from "./Component/Pointer.js";
+export { WithBrace }    from "./Component/WithBrace.js";
 export { ValueBoard }   from "./Component/ValueBoard.js";
 export { MathjaxLabel } from "./Component/Label.js";
 export { Link }         from "./Component/Link.js";

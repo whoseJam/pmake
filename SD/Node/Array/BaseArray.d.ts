@@ -1,7 +1,7 @@
 import { Color } from "SD/Utility/Color";
 import { SDNode } from "../SDNode";
 
-export class BaseArray {
+export class BaseArray extends SDNode {
     constructor(parent: any);
 
     start(): number;
