@@ -18,7 +18,7 @@
     <section>
         <h2>能量采集</h2>
         <p>从 $(0,0)$ 到 $(x,y)$ 会经历 $gcd(x,y)+1$ 个网格点，去掉首尾两个，还剩下 $gcd(x,y)-1$ 个</p>
-        <p class="fragment">那么本题实际上是在算：
+        <p class="fragment math-fragment">那么本题实际上是在算：
             $$
             \begin{aligned}
             answer&=\sum_{x=1}^n\sum_{y=1}^m \{2[gcd(x,y)-1]+1\} \\
@@ -39,7 +39,7 @@
     </section>
     <section>
         <h2>能量采集</h2>
-        <p>
+        <p class="math-fragment">
             $$
             \begin{aligned}
             \sum_{x=1}^n\sum_{y=1}^mgcd(x,y)&=\sum_{x=1}^n\sum_{y=1}^m\sum_{d|gcd(x,y)}\varphi(d)\\

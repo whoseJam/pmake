@@ -14,7 +14,7 @@
     </section>
     <section>
         <h2>YY的GCD</h2>
-        <p>
+        <p class="math-fragment">
             $$
             \begin{aligned}
             \sum_{x=1}^n\sum_{y=1}^m[gcd(x,y)是质数]
@@ -32,7 +32,7 @@
         <p>
             $$
             \begin{aligned}
-            answer=
+            answer
             &=\sum_{k\in P}\sum_{d=1}^{min(n/k,m/k)}\mu(d)\sum_{x=1\\x|d}^{n/k}\sum_{y=1\\y|d}^{m/k}1 \\
             &=\sum_{k\in P}\sum_{d=1}^{min(n/k,m/k)}\mu(d) \lfloor\frac{n}{kd}\rfloor \lfloor\frac{m}{kd}\rfloor \\
             &=\sum_{T=1}^{min(n,m)} \lfloor\frac n T\rfloor \lfloor\frac m T\rfloor \sum_{d|T}\mu(d)[\frac T d\in P]
