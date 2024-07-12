@@ -1,4 +1,4 @@
-import * as sd from "@/SD";
+import * as sd from "@/sd";
 
 let svg = sd.svg();
 let s = new sd.Splay(svg).x(100).y(100);

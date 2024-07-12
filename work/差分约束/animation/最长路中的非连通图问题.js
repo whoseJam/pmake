@@ -1,4 +1,4 @@
-import * as sd from "@/SD";
+import * as sd from "@/sd";
 import { SpfaWithoutAnimation } from "./差分约束动画库";
 
 const svg = sd.svg();

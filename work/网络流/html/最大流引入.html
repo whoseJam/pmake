@@ -14,7 +14,7 @@
     <section>
         <h2>最大流</h2>
         <iframe 
-            style="min-width: 1000px; min-height: 400px;"
+            style="width: 1000px; height: 400px;"
             data-src="./animation/最大流例子.html"></iframe>
         <p class="fragment">上图的最大流条数就是 $5$ 条</p>
     </section>
@@ -23,7 +23,7 @@
         <p>那么我们如何去找一个图的最大流呢？</p>
         <p class="fragment">最朴素的思想，自然是不断DFS出源点到汇点的剩余容量不为 $0$ 的道路，找到这条道路的瓶颈，然后在这条道路上放尽可能多的流</p>
         <iframe rate="1.05" class="fragment"
-            style="min-width: 1000px; min-height: 400px;"
+            style="width: 1000px; height: 400px;"
             data-src="./animation/成功的朴素最大流.html"></iframe>
         <p class="fragment">我们把一条从源点到汇点、剩余容量不为 $0$ 的道路，叫做一条<b>增广路</b>，意指这条路可以让我们的最大流变大</p>
     </section>
@@ -31,14 +31,14 @@
         <h2>最大流</h2>
         <p>但是这样做是有反例的</p>
         <iframe rate="1.05"
-            style="min-width: 1000px; min-height: 400px;"
+            style="width: 1000px; height: 400px;"
             data-src="./animation/失败的朴素最大流.html"></iframe>
     </section>
     <section>
         <h2>最大流</h2>
         <p>于是，我们引入了反悔流</p>
         <iframe rate="1.05"
-            style="min-width: 1000px; min-height: 400px;"
+            style="width: 1000px; height: 400px;"
             data-src="./animation/反悔最大流.html"></iframe>
         <p class="fragment quote" style="margin-top: -20px;">更专业的说法叫做引入反向弧，允许网络退流</p>
     </section>
@@ -74,7 +74,7 @@
     <section>
         <h2>ISAP分层优化</h2>
         <iframe rate="1.05"
-            style="min-width: 1000px; min-height: 400px;"
+            style="width: 1000px; height: 400px;"
             data-src="./animation/ISAP分层优化的必要性.html"></iframe>
         <p class="fragment">为了避免上图中展示的这种情况，我们对原图进行分层，为每一个节点分配一个深度 $dis_u$，每一次找增广路的时候，保证如果 $u\rightarrow v$ 是一条增广路上的边，那么一定有 $dis_u=dis_v+1$</p>
     </section>
@@ -136,7 +136,7 @@
     <section>
         <h2>ISAP</h2>
         <p>然后是找增广路：</p>
-        <pre><code data-trim data-line-numbers style="min-height: 505px;" class="cpp"><script type="text/template">
+        <pre><code data-trim data-line-numbers style="height: 505px;" class="cpp"><script type="text/template">
             ll Stream(ll u, ll cur) {  // 有 cur 流跑到了节点 u
                 ll sum = 0, d;
                 if (u == T) return cur;
@@ -168,6 +168,6 @@
         <h2>ISAP</h2>
         <iframe rate="1.01"
             data-src="./animation/ISAP.html"
-            style="min-width: 1000px; min-height: 500px;"></iframe>
+            style="width: 1000px; height: 500px;"></iframe>
     </section>
 </section>

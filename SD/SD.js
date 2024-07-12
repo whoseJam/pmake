@@ -1,4 +1,5 @@
 import "../MyReveal/slide.css";
+
 export { svg } from "./Interact/Svg.js";
 export { color } from "./Utility/Color.js";
 export { rule } from "./Rule/Rule.js";
@@ -8,7 +9,7 @@ import { init } from "./Interact/Init.js";
 
 init();
 
-export { Line }          from "./Node/Nake/Line.js";
+export { Line }          from "./Node/Nake/Line.js";           
 export { Path }          from "./Node/Nake/Path.js";
 export { Rect }          from "./Node/Nake/Rect.js";
 export { Text }          from "./Node/Nake/Text.js";

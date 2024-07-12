@@ -1,6 +1,6 @@
 import { dagreGraphToBox, evaluateValue } from "../../Utility/Tool";
 import { BaseGraph } from "./BaseGraph";
-import { trim } from "../../SD";
+import { trim } from "@/Utility/Trim";
 import { mapTo } from "@/Utility/Math";
 import * as dagre from "dagre";
 

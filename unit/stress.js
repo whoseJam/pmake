@@ -1,4 +1,4 @@
-import * as sd from "@/SD";
+import * as sd from "@/sd";
 
 let svg = sd.svg();
 // let text = new sd.Text(svg, "Hello World").x(100).y(100);

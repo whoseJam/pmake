@@ -1,4 +1,4 @@
-import * as sd from "@/SD";
+import * as sd from "@/sd";
 
 const svg = sd.svg();
 const graph = new sd.GridGraph(svg).cx(600).cy(300).n(1).m(1);

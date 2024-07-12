@@ -1,4 +1,4 @@
-import * as sd from "@/SD";
+import * as sd from "@/sd";
 import { flow } from "./网络流动画库";
 
 const svg = sd.svg();

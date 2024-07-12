@@ -1,9 +1,11 @@
 
 export class Storage {
-    version: number = 0;
-    storage: Array<any> = [];
-
-    store(object: any) {
+    constructor() {
+        this.version = 0;
+        this.storage = [];
+    }
+ 
+    store(object) {
         if (this.version + 1 < this.storage.length) {
             this.storage[++this.version] = object;
         } else {
@@ -12,13 +14,13 @@ export class Storage {
         }
     }
 
-    lastVersion(callback: (object: any) => void) {
+    lastVersion(callback) {
         if (this.version > 0) {
             callback(this.storage[--this.version]);
         }
     }
 
-    nextVersion(callback: (object: any) => void) {
+    nextVersion(callback) {
         if (this.version + 1 < this.storage.length) {
             callback(this.storage[++this.version]);
         }

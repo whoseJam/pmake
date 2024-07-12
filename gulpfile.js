@@ -4,6 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const getWebpackAniConfig = require("./build/aniConfig");
 const getWebpackPPTConfig = require("./build/pptConfig");
+const getWebpackLibConfig = require("./build/libConfig");
 
 const defaultConfig = require("./myconfig.json");
 
@@ -67,6 +68,12 @@ function pptTask(pptFilePath, targetFilePath) {
         .pipe(gulp.dest(targetFilePath));
 }
 
+gulp.task("lib", () => {
+    return gulp.src("./SD/SD.js")
+        .pipe(webpack(getWebpackLibConfig()))
+        .pipe(gulp.dest(defaultAnimationTargetFilePath))
+})
+
 gulp.task("animation", () => {
     parseInput();
     prepareAnimationTask();
@@ -111,7 +118,8 @@ gulp.task("ppt", (done) => {
         gulp.task("transfer-image"),
         gulp.task("transfer-markdown"),
         gulp.task("transfer-html"),
-        gulp.task("transfer-std")
+        gulp.task("transfer-std"),
+        gulp.task("lib")
     );
 
     cleanFilesInFolder(`${pptTargetFilePath}/animation`);

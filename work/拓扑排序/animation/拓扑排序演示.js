@@ -1,4 +1,4 @@
-import * as sd from "@/SD";
+import * as sd from "@/sd";
 import { toposort } from "./拓扑排序";
 
 const svg = sd.svg();

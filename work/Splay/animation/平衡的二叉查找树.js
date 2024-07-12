@@ -1,4 +1,4 @@
-import * as sd from "@/SD";
+import * as sd from "@/sd";
 
 const svg = sd.svg();
 const tree = new sd.BinaryTree(svg).width(500).cx(600).cy(300);

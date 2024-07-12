@@ -1,4 +1,4 @@
-import * as sd from "@/SD";
+import * as sd from "@/sd";
 
 const rotateCodeStr = `
 void rotate(int x,int &f){

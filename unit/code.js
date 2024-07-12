@@ -1,4 +1,4 @@
-import * as sd from "@/SD";
+import * as sd from "@/sd";
 
 let svg = sd.svg();
 let code = new sd.Code(svg).x(100).y(100);

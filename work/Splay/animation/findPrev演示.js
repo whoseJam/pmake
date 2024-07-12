@@ -1,4 +1,4 @@
-import * as sd from "@/SD";
+import * as sd from "@/sd";
 import { rotate } from "./Splay基础动画库";
 import { findPrev } from "./Splay基础动画库";
 

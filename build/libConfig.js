@@ -1,21 +1,21 @@
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const JavaScriptObfuscator = require('webpack-obfuscator');
 const path = require("path");
 
-module.exports = function(sourceFilePath, animationName) {
+module.exports = function() {
     const mode = global["d"] ? "development" : "production";
     return {
         mode: mode,
         output: {
-            filename: `${animationName}.js`
+            filename: 'sd.js',
+            library: 'sd',
+            libraryTarget: 'umd',
+            umdNamedDefine: true,
+            globalObject: 'this',
         },
         watch: true,
         plugins: [
-            new HtmlWebpackPlugin({
-                template: `${global["projectRoot"]}/build/aniIndex.html`,
-                inject: "body",
-                inlineSource: ".(js)$",
-                minify: false,
-                filename: `${animationName}.html`
+            new JavaScriptObfuscator({
+                rotateUnicodeArray: true
             })
         ],
         module: {
@@ -41,7 +41,6 @@ module.exports = function(sourceFilePath, animationName) {
         },
         externals: {
             "dagre": "dagre",
-            "@/sd": "sd"
         }
     };
 }

@@ -1,4 +1,4 @@
-import * as sd from "@/SD";
+import * as sd from "@/sd";
 import { DSUOnTree } from "./树上启发式合并动画库";
 
 const svg = sd.svg();

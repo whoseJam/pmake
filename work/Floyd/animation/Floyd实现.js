@@ -1,4 +1,4 @@
-import * as sd from "@/SD";
+import * as sd from "@/sd";
 import { floyd } from "./Floyd";
 
 const svg = sd.svg();

@@ -1,4 +1,4 @@
-import * as sd from "@/SD";
+import * as sd from "@/sd";
 
 let svg = sd.svg();
 let g = new sd.TinyGraph(svg).cx(600).y(100);

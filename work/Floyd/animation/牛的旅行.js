@@ -1,4 +1,4 @@
-import * as sd from "@/SD";
+import * as sd from "@/sd";
 
 const svg = sd.svg();
 const r1 = new sd.Circle(svg).r(50).cx(100).cy(200);

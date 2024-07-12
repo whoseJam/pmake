@@ -1,4 +1,4 @@
-import { Storage } from "../Utility/Storage.ts";
+import { Storage } from "../Utility/Storage";
 import { d3ToNake } from "../Utility/Tool";
 import { Color } from "../Utility/Color";
 import * as d3 from "d3";

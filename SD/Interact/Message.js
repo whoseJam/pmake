@@ -1,3 +1,4 @@
+import { Animate } from "@/Animate/Animate";
 import { setViewBox } from "./Svg";
 
 export function initMessage() {
@@ -8,6 +9,7 @@ export function initMessage() {
         window.IFRAME_RATE = rate;
         window.IFRAME_WIDTH = width;
         window.IFRAME_HEIGHT = height;
+        Animate.currentActionList.updateWindowSize();
     }
     window.SetViewBox = function(x, y, width, height, pwidth, pheight, rate) {
         setViewBox(x, y, width, height, pwidth, pheight, rate);

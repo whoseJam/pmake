@@ -1,4 +1,4 @@
-import * as sd from "../SD/SD";
+import * as sd from "../SD/sd";
 
 let svg = sd.svg();
 let C = sd.color();

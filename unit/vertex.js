@@ -1,4 +1,4 @@
-import * as sd from "@/SD";
+import * as sd from "@/sd";
 
 let svg = sd.svg();
 let vertex = new sd.Vertex(svg).x(100).y(100);

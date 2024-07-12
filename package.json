@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-  },
+  "scripts": {},
   "repository": {
     "type": "",
     "url": ""
@@ -46,6 +45,7 @@
     "webpack": "^5.92.1",
     "webpack-bundle-analyzer": "^4.10.2",
     "webpack-cli": "^5.1.4",
+    "webpack-obfuscator": "^3.5.1",
     "webpack-stream": "^7.0.0"
   },
   "dependencies": {
