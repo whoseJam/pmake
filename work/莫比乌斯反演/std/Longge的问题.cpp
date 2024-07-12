@@ -14,7 +14,7 @@ inline LL read(){
 
 LL n;
 
-LL Phi(LL N){
+LL phi(LL N){
 	LL ans=N;
 	for(LL i=2;i<=sqrt(n);i++)
 		if(N%i==0){
@@ -30,8 +30,8 @@ int main(){
 	LL ans=0;
 	for(LL i=1;i<=sqrt(n);i++){
 		if(n%i==0){
-			ans+=i*Phi(n/i);
-			if(i*i<n)ans+=(n/i)*Phi(i);
+			ans+=i*phi(n/i);
+			if(i*i<n)ans+=(n/i)*phi(i);
 		}
 	}
 	printf("%lld",ans);
