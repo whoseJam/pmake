@@ -68,11 +68,11 @@ function pptTask(pptFilePath, targetFilePath) {
         .pipe(gulp.dest(targetFilePath));
 }
 
-gulp.task("lib", () => {
+function libTask(targetFilePath) {
     return gulp.src("./SD/SD.js")
         .pipe(webpack(getWebpackLibConfig()))
-        .pipe(gulp.dest(defaultAnimationTargetFilePath))
-})
+        .pipe(gulp.dest(targetFilePath))
+}
 
 gulp.task("animation", () => {
     parseInput();
@@ -109,6 +109,9 @@ gulp.task("ppt", (done) => {
     });
     gulp.task("ppt-task", (done) => {
         return pptTask(pptFilePath, pptTargetFilePath);
+    })
+    gulp.task("lib", () => {
+        return libTask(`${pptTargetFilePath}/animation`);
     })
     gulp.watch(pptFilePath, gulp.task("transfer-ppt"));
 

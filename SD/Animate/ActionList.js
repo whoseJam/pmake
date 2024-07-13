@@ -195,7 +195,6 @@ export class ActionList {
             }
             if ("opacity" in owner && owner._.nake && isVisble(owner)) {
                 const nake = owner._.nake;
-                console.log("owner = ", owner.g().type());
                 const x = owner.x();
                 const mx = owner.mx();
                 const y = owner.y();

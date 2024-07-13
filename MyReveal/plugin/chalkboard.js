@@ -686,7 +686,7 @@ const initChalkboard = function ( Reveal ) {
 		if ( !indices ) indices = slideIndices;
 		var data;
 		for ( var i = 0; i < storage[ id ].data.length; i++ ) {
-			if ( storage[ id ].data[ i ].slide.h === indices.h && storage[ id ].data[ i ].slide.v === indices.v && storage[ id ].data[ i ].slide.f === indices.f ) {
+			if ( storage[ id ].data[ i ].slide.h === indices.h && storage[ id ].data[ i ].slide.v === indices.v) {
 				data = storage[ id ].data[ i ];
 				return data;
 			}
@@ -711,7 +711,7 @@ const initChalkboard = function ( Reveal ) {
 		var duration = 0;
 		for ( var id = 0; id < 2; id++ ) {
 			for ( var i = 0; i < storage[ id ].data.length; i++ ) {
-				if ( storage[ id ].data[ i ].slide.h === indices.h && storage[ id ].data[ i ].slide.v === indices.v && storage[ id ].data[ i ].slide.f === indices.f ) {
+				if ( storage[ id ].data[ i ].slide.h === indices.h && storage[ id ].data[ i ].slide.v === indices.v) {
 					duration = Math.max( duration, storage[ id ].data[ i ].duration );
 					break;
 				}

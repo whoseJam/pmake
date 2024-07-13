@@ -101,8 +101,8 @@ import RevealNotes from "./plugin/notes";          revealPlugins.push(RevealNote
 import RevealSearch from "./plugin/search";        revealPlugins.push(RevealSearch);
 import RevealMarkdown from "./plugin/markdown";    revealPlugins.push(RevealMarkdown);
 import RevealHighlight from "./plugin/highlight";  revealPlugins.push(RevealHighlight);
-const RevealChalkboard = window.RevealChalkboard;         revealPlugins.push(RevealChalkboard);
-const RevealCustomControls = window.RevealCustomControls; revealPlugins.push(RevealCustomControls);
+import "./plugin/Chalkboard";
+const RevealChalkboard = window.RevealChalkboard;  revealPlugins.push(RevealChalkboard);
 window.Reveal = Reveal
 
 
@@ -133,7 +133,6 @@ Reveal.on("fragmentshown", function(event) {
     }
 });
 
-import customControls from "./initControls";
 import chalkboardConfig from "./initChalkboard";
 
 import { includeHTML } from "./inject";
@@ -146,7 +145,6 @@ includeHTML(function() {
         progress: true,
         center: true,
         hash: true,
-        customcontrols: customControls,
         chalkboard: chalkboardConfig,
         plugins: revealPlugins
     });
