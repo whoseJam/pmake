@@ -13,7 +13,6 @@ main();
 function init() {
     lineO.strokeWidth(10).stroke(C.grey);
     lineI.strokeWidth(5).stroke(C.red);
-    sd.globalUpdate();
     const L = lineI.totalLength();
     lineI.strokeDashArray([L, L]);
     lineI.strokeDashOffset(L);

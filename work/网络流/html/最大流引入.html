@@ -136,32 +136,34 @@
     <section>
         <h2>ISAP</h2>
         <p>然后是找增广路：</p>
-        <pre><code data-trim data-line-numbers style="height: 505px;" class="cpp"><script type="text/template">
-            ll Stream(ll u, ll cur) {  // 有 cur 流跑到了节点 u
-                ll sum = 0, d;
-                if (u == T) return cur;
-                for (ll i = h[u], v; i; i = l[i].Nxt) {
-                    v = l[i].to;
-                    if (l[i].flw > 0 && dis[v] + 1 == dis[u]) {
-                        d = Stream(v, min(cur, l[i].flw)); // 流出 d 流
-                        l[i].flw -= d; l[i ^ 1].flw += d;  // 更新正反弧流量
-                        sum += d; cur -= d;
-                        if (dis[S] == tot || !cur) return sum;
+        <codeblock style="height: 505px;">
+            <script type="text/template">
+                ll Stream(ll u, ll cur) {  // 有 cur 流跑到了节点 u
+                    ll sum = 0, d;
+                    if (u == T) return cur;
+                    for (ll i = h[u], v; i; i = l[i].Nxt) {
+                        v = l[i].to;
+                        if (l[i].flw > 0 && dis[v] + 1 == dis[u]) {
+                            d = Stream(v, min(cur, l[i].flw)); // 流出 d 流
+                            l[i].flw -= d; l[i ^ 1].flw += d;  // 更新正反弧流量
+                            sum += d; cur -= d;
+                            if (dis[S] == tot || !cur) return sum;
+                        }
                     }
+                    if (!(--gap[dis[u]])) dis[S] = tot; // 出现断层
+                    gap[++dis[u]]++;
+                    return sum;
                 }
-                if (!(--gap[dis[u]])) dis[S] = tot; // 出现断层
-                gap[++dis[u]]++;
-                return sum;
-            }
-            ll Sap() {
-                ll ans = 0;
-                memset(gap, 0, sizeof(gap));
-                memset(dis, 0, sizeof(dis));
-                gap[0] = tot;
-                while (dis[S] < tot) ans += Stream(S, inf);
-                return ans;
-            }
-        </script></code></pre>
+                ll Sap() {
+                    ll ans = 0;
+                    memset(gap, 0, sizeof(gap));
+                    memset(dis, 0, sizeof(dis));
+                    gap[0] = tot;
+                    while (dis[S] < tot) ans += Stream(S, inf);
+                    return ans;
+                }
+            </script>
+        </codeblock>
     </section>
 
     <section>
