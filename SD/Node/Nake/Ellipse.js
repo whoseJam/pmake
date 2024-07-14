@@ -10,8 +10,8 @@ export function Ellipse(parent) {
     this.member.new("cy", 20);
     this.member.new("rx", 20);
     this.member.new("ry", 20);
-    this.member.set("fill", "#ffffff");
-    this.member.set("stroke", "#000000");
+    this.member.setAndFlush("fill", "#ffffff");
+    this.member.setAndFlush("stroke", "#000000");
 
     const nake = this._.nake;
     nake.setAttribute("cx", this.member.get("cx"));

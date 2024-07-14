@@ -10,8 +10,8 @@ export function Rect(parent) {
     this.member.new("y", 0);
     this.member.new("width", 40);
     this.member.new("height", 40);
-    this.member.set("fill", "#ffffff");
-    this.member.set("stroke", "#000000");
+    this.member.setAndFlush("fill", "#ffffff");
+    this.member.setAndFlush("stroke", "#000000");
 
     const nake = this._.nake;
     nake.setAttribute("fill", this.member.get("fill"));

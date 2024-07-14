@@ -9,10 +9,10 @@ import { toNode } from "@/Utility/Tool";
 export function BaseLine(parent, tag) {
     BaseNake.call(this, parent, tag);
 
-    this.member.set("fill-opacity", 0);
-    this.member.set("stroke-opacity", 1);
-    this.member.set("stroke-width", 1);
-    this.member.set("stroke", "#000000");
+    this.member.setAndFlush("fill-opacity", 0);
+    this.member.setAndFlush("stroke-opacity", 1);
+    this.member.setAndFlush("stroke-width", 1);
+    this.member.setAndFlush("stroke", "#000000");
     this.member.new("marker-start", "");
     this.member.new("marker-mid", "");
     this.member.new("marker-end", "");

@@ -8,8 +8,8 @@ export function Text(parent, text = "") {
 
     this.g().type("Text");
 
-    this.member.set("fill", "#000000");
-    this.member.set("stroke-width", 0);
+    this.member.setAndFlush("fill", "#000000");
+    this.member.setAndFlush("stroke-width", 0);
     this.member.new("x", 0);
     this.member.new("y", 0);
     this.member.new("text", "");

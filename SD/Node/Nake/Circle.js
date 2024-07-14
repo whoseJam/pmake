@@ -10,8 +10,8 @@ export function Circle(parent) {
     this.member.new("cx", 20);
     this.member.new("cy", 20);
     this.member.new("r", 20);
-    this.member.set("fill", "#ffffff");
-    this.member.set("stroke", "#000000");
+    this.member.setAndFlush("fill", "#ffffff");
+    this.member.setAndFlush("stroke", "#000000");
 
     const nake = this._.nake;
     nake.setAttribute("fill", this.member.get("fill"));
