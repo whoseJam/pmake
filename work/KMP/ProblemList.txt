@@ -1,0 +1,5 @@
+普通KMP：
+#941. KMP（模板）：https://www.luogu.com.cn/problem/P3375
+#35.Power Strings：http://poj.org/problem?id=2406
+Period：http://poj.org/problem?id=1961
+Seek the Name,Seek the Fame：http://poj.org/problem?id=2752

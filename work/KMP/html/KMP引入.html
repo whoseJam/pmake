@@ -1,0 +1,68 @@
+<section>
+    <section>
+        <h1>KMP</h1>
+        <p>一种字符串匹配算法</p>
+    </section>
+    <section>
+        <h2>KMP</h2>
+        <p>KMP算法，又称模式匹配算法，可以在线性时间内找出字符串 $B$ 中所有模式字符串 $A$</p>
+        <code class="fragment">A=ababab</code><br>
+        <code class="fragment">B=abababaabababab</code><br>
+        <code class="fragment">B=<span style="color: red;">ababab</span>aabababab</code><br>
+        <code class="fragment">B=abababa<span style="color: red;">ababab</span>ab</code><br>
+        <code class="fragment">B=abababaab<span style="color: red;">ababab</span></code>
+    </section>
+    <section>
+        <h2>在KMP以前......</h2>
+        <p>暴力匹配，把字符串 $A$ 和字符串 $B$ 的后缀 $B[i...M]$ 对齐，然后扫描逐一比较</p>
+        <p class="fragment">时间复杂度 $O(|A||B|)$</p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                for (int i = 1; i <= lenB - lenA + 1; i++) {
+                    bool flag = true;
+                    for (int j = 1; j <= lenB; j++) {
+                        if (A[i] != B[j]) {
+                            flag = false;
+                            break;
+                        }
+                    }
+                    if (flag) 找到了一个匹配点;
+                }
+            </script>
+        </codeblock>
+    </section>
+    <section>
+        <h2>在KMP以前......</h2>
+        <p>又或者，我们可以用Hash，在 $O(|A|+|B|)$ 的时间复杂度内预处理出字符串 $A$ 和字符串 $B$ 的前缀Hash值，然后就可以 $O(1)$ 查询该字符串的任意一个子串的Hash值</p>
+        <codeblock>
+            <script type="text/template">
+                for (int i = 1; i <= lenB - lenA + 1; i++) {
+                    if (Hash(A, 1, lenA) == Hash(B, i, i + lenA - 1))
+                        找到一个匹配点;
+                }
+            </script>
+        </codeblock>
+    </section>
+    <section>
+        <h2>KMP</h2>
+        <p>KMP算法以 $O(n+m)$ 的复杂度解决这个问题，并且相比于Hash算法，为我们提供了更多的<b>额外辅助信息</b></p>
+        <p class="fragment">KMP算法分为两步：</p>
+        <ol>
+            <li class="fragment">对字符串 $A$ 进行<b>自我匹配</b>：求出一个数组 $nxt$，其中 $nxt[i]$ 表示考虑 $A[1...i]$ 这个子串，
+                <span style="color: red;">除自身外的</span>，
+                <span style="color: deepskyblue;">最长的</span>的前缀和后缀能匹配的长度</li>
+            <image class="fragment" data-src="./image/nxt数组.png"></image>
+            <li class="fragment">对字符串 $A$ 和 $B$ 进行匹配：利用 $nxt$ 进行匹配</li>
+        </ol>
+    </section>
+    <section>
+        <h2>KMP</h2>
+        <iframe data-src="./animation/求解nxt数组.html"
+            style="width: 1000px; height: 500px;"></iframe>
+    </section>
+    <section>
+        <h2>KMP</h2>
+        <iframe data-src="./animation/A和B匹配.html"
+            style="width: 1000px; height: 500px;"></iframe>
+    </section>
+</section>

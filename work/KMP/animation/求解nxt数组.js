@@ -1,15 +1,15 @@
-import * as sd from "../@/SD";
+import * as sd from "@/sd";
 
-let svg = sd.svg();
-let C = sd.color();
+const svg = sd.svg();
+const C = sd.color();
 let str = " abababaabaababba";
 let n = str.length - 1;
-let arr = new sd.Array(svg).indexed(true).x(100).y(200);
+let arr = new sd.Array(svg).x(100).y(200);
 let nxt = sd.make1d(100, 0);
 let rctHead = new sd.Rect(svg).strokeOpacity(0).fillOpacity(0);
 let rctTail = new sd.Rect(svg).strokeOpacity(0).fillOpacity(0);
-let pntCur = makePointer("cur");
-let pntI = makePointer("i");
+let pntCur = sd.Pointer(arr, "cur");
+let pntI = sd.Pointer(arr, "i");
 
 for (let i = 0; i <= n; i++) {
     arr.push(str[i]);
@@ -22,6 +22,7 @@ async function main() {
     movePointer(pntI, 2);
     movePointer(pntCur, 0);
     for (let i = 2; i <= n; i++) {
+        await sd.pause();
         movePointer(pntI, i);
         await sd.pause();
         arr.startAnimate().color(i, C.orange).endAnimate();
@@ -82,17 +83,7 @@ function defocus(rct) {
 }
 
 function movePointer(pointer, to) {
-    let e = arr.element(to);
     pointer.startAnimate();
-    pointer.cx(e.cx()).my(e.y() - 50);
+    pointer.moveTo(to);
     pointer.endAnimate();
-}
-
-function makePointer(label) {
-    let ans = new sd.Line(svg).source(0, 0).target(0, 50).arrow();
-    let tmp = new sd.Text(svg, label).fontSize(20);
-    ans.children.push(tmp, function(parent, child) {
-        tmp.cx(ans.cx()).my(ans.y() - 10).opacity(1);
-    });
-    return ans;
 }

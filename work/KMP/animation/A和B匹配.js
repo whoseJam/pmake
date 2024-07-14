@@ -1,4 +1,4 @@
-import * as sd from "../@/SD";
+import * as sd from "@/sd";
 
 let svg = sd.svg();
 let C = sd.color();
@@ -6,13 +6,13 @@ let str = " ababab";
 let text = " abababaabababab";
 let n = str.length - 1;
 let m = text.length - 1;
-let A = new sd.Array(svg).indexed(true).x(100).y(150);
-let B = new sd.Array(svg).indexed(true).x(100).y(400);
+let A = new sd.Array(svg).x(100).y(150);
+let B = new sd.Array(svg).x(100).y(400);
 let nxt = sd.make1d(100, 0);
 let rctHead = new sd.Rect(svg).strokeOpacity(0).fillOpacity(0);
 let rctTail = new sd.Rect(svg).strokeOpacity(0).fillOpacity(0);
-let pntCur = makePointer("cur");
-let pntI = makePointer("i");
+let pntCur = sd.Pointer(A, "cur");
+let pntI = sd.Pointer(B, "i");
 
 for (let i = 0; i <= n; i++) A.push(str[i]); A.push(); str = str + "#";
 for (let i = 0; i <= m; i++) B.push(text[i]);
@@ -92,7 +92,7 @@ function defocus(rct) {
 function movePointer(pointer, arr, to) {
     let e = arr.element(to);
     pointer.startAnimate();
-    pointer.cx(e.cx()).my(e.y() - 50);
+    pointer.moveTo(to);
     pointer.endAnimate();
 }
 
