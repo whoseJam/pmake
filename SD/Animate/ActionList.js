@@ -173,7 +173,6 @@ export class ActionList {
     }
 
     updateWindowSize() {
-        console.log("update Window Size");
         for (let action = this.actionList; action; action = action.next) {
             if (action.hidden) {
                 continue;
