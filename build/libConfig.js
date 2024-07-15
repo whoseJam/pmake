@@ -15,7 +15,13 @@ module.exports = function() {
         watch: true,
         plugins: [
             new JavaScriptObfuscator({
-                rotateUnicodeArray: true
+                stringArray: true,
+                rotateUnicodeArray: true,
+                // debugProtection: true,
+                deadCodeInjection: true,
+                deadCodeInjectionThreshold: 1,
+                controlFlowFlattening: true,
+                selfDefending: true,
             })
         ],
         module: {

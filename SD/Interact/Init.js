@@ -5,16 +5,16 @@ import { initPath } from "../Node/Nake/Path";
 import { initFragment } from "../Node/Nake/Fragment";
 import { initMessage } from "./Message";
 
-export function init() {
-    initToolbox();
-    initTerminal();
-    initAdjust();
-    const svg = initSvg();
+export function init(permit) {
+    initToolbox(permit);
+    initTerminal(permit);
+    initAdjust(permit);
+    const svg = initSvg(permit);
     initText(svg);
     initPath(svg);
     initFragment(svg);
-    appendCanvas()
-    initMessage();
+    appendCanvas(permit)
+    initMessage(permit);
 }
 
 function initToolbox() {

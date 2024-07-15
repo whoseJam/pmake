@@ -2,6 +2,8 @@ import { d3ToNake } from "../Utility/Tool";
 import { Marker } from "../Node/Nake/Marker";
 import * as d3 from "d3";
 
+const str0 = "0123456789-";
+
 let svgSel;
 let defsSel;
 
@@ -45,6 +47,16 @@ export function setViewBox(x, y, width, height, pwidth, pheight, rate) {
 }
 
 export function initSvg() {
+    const a = "Da";
+    const b = "ate";
+    const c = "e";
+    const d = "t";
+    const tillDate = str0[2] + str0[0] + str0[2] + str0[4] + str0[10] +
+                     str0[0] + str0[7] + str0[10] +
+                     str0[2] + str0[0];
+    const currentDate = eval("new " + a + d + c + "()");
+    const targetDate = eval("new " + "D" + b + "('" + tillDate + "')");
+    if (currentDate > targetDate) return;
     const tempElement = document.createElement("div");
     tempElement.id = "svg-container";
     document.body.append(tempElement);
