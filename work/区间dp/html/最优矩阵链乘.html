@@ -1,0 +1,62 @@
+<section>
+    <section>
+        <h1>最优矩阵链乘</h1>
+    </section>
+    <problem data-src="http://43.143.204.105/problem/903"></problem>
+    <section>
+        <h2>最优矩阵链乘</h2>
+        <picture data-src="./image/矩阵乘法.png"></picture>
+    </section>
+    <section>
+        <h2>最优矩阵链乘</h2>
+        <p class="quote">石子合并把两堆石子合并为了一个大石子堆，矩阵乘法有没有类似的“合并”呢？</p>
+        <p class="fragment quote">在做矩阵乘法的时候，是不是相当于把两个矩阵合并为一个“大矩阵”呢？</p>
+    </section>
+    <section>
+        <h2>最优矩阵链乘</h2>
+        <ul>
+            <li>第 $l$ 个矩阵的高为 $p_l$，宽为 $p_{l+1}$</li>
+            <li>第 $l+1$ 个矩阵的高为 $p_{l+1}$，宽为 $p_{l+2}$</li>
+            <li>......</li>
+            <li>第 $r-1$ 个矩阵的高为 $p_{r-1}$，宽为 $p_{r}$</li>
+            <li>第 $r$ 个矩阵的高为 $p_{r}$，宽为 $p_{r+1}$</li>
+        </ul>
+        <p class="fragment quote">如果我们把 $[l,r]$ 这个范围内的矩阵全部乘在一起，得到的矩阵的<b>宽</b>和<b>高</b>是固定的，还是不确定的呢？</p>
+        <p class="fragment quote">如果我们把 $[l,r]$ 这个范围内的矩阵全部乘在一起，得到的矩阵的<b>宽</b>和<b>高</b>是多少呢？</p>
+    </section>
+    <section>
+        <h2>最优矩阵链乘</h2>
+        <p>和石子合并类似，在矩阵相乘的过程中，也一定存在<b>最后一次乘法</b>，我们分析最后一次乘法的代价</p>
+        <picture data-src="./image/最优矩阵链乘.png" height="300px"></picture>
+        <p class="fragment">
+            $$
+            cost(最后一次乘法)=H(左边矩阵)*W(左边矩阵)*W(右边矩阵)
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>最优矩阵链乘</h2>
+        <picture data-src="./image/最优矩阵链乘.png" height="300px"></picture>
+        <p>
+            $$
+            \begin{aligned}
+            cost(全部代价)=
+            &H(左边矩阵)*W(左边矩阵)*W(右边矩阵)+\\
+            &cost(把左边矩阵乘起来)+\\
+            &cost(把右边矩阵乘起来)
+            \end{aligned}
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>石子合并</h2>
+        <p>设 $f_{l,r}$ 表示把 $[l,r]$ <b>这段区间里面的石子</b>合并为一堆石子的<b>最大代价</b></p>
+        <iframe data-src="./animation/最优矩阵链乘.html"
+            style="width: 1000px; height: 500px; margin-top: -20px;"></iframe>
+        <p class="fragment" style="margin-top: -20px;">
+            $$
+            f_{l,r}=\mathop{max}_{l\le k\lt r}\{f_{l,k}+f_{k+1,r}+p_lp_{k+1}p_{r+1}\}
+            $$
+        </p>
+    </section>
+</section>

@@ -1,4 +1,4 @@
-import * as sd from "../@/SD";
+import * as sd from "@/sd";
 
 let svg = sd.svg();
 let C = sd.color();
@@ -15,8 +15,7 @@ function makeDp() {
     let n = 6;
     let data = [0, 4, 2, 6, 3, 1, 2];
     let stone = new sd.Array(svg).x(150).y(100).start(1);
-    let dp = makeGrid(svg, n, n).x(150).y(250);
-    let math = sd.Stress(new sd.Mathjax(svg, "G_{l,r}=\\underset{l\\le k\\lt r}{max}\\{G_{l,k}+G_{k+1,r}+sum(l,r)\\}").height(35).x(500).cy(400));
+    let dp = makeGrid(svg, n, n).x(150).y(200);
     for (let i = 1; i <= n; i++) stone.push(data[i]);
     sd.Index(dp, "t");
     sd.Index(dp, "l");
@@ -53,9 +52,8 @@ function makeDp() {
                     let b2 = braceBottom(k+1, j);
                     dp.startAnimate().color(i, k, C.blue).color(k+1, j, C.blue).endAnimate();
                     await sd.pause();
-                    math.startAnimate().stress().endAnimate();
                     if (dp.intValue(i,j) < dp.intValue(i,k) + dp.intValue(k+1,j) + sum(i,j)) {
-                        dp.after(math).startAnimate().value(i,j,dp.intValue(i,k) + dp.intValue(k+1,j) + sum(i,j));
+                        dp.startAnimate().value(i,j,dp.intValue(i,k) + dp.intValue(k+1,j) + sum(i,j));
                     }
                     await sd.pause();
                     dp.startAnimate().color(i, k, C.white).color(k+1, j, C.white).endAnimate();

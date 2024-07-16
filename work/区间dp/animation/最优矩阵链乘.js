@@ -1,4 +1,4 @@
-import * as sd from "../@/SD";
+import * as sd from "@/sd";
 
 let svg = sd.svg();
 let C = sd.color();
@@ -15,16 +15,14 @@ function makeDp() {
     let data = [0, 3, 2, 5, 3, 2, 2];
     // let data = [0, 2, 3, 4, 5];
     let n = data.length - 1;
-    let math = sd.Stress(new sd.Mathjax(svg, "F_{l,r}=\\underset{1\\le k\\lt r}{min}\\{F_{l,k}+F_{k+1,r}+p[l]p[k+1]p[r+1]\\}").height(35).x(500).cy(400));
     let matrix = new sd.ValueArray(svg).y(100).start(1).elementWidth(100).elementHeight(60);
-    let dp = new sd.Grid(svg).n(n-1).m(n-1).x(100).y(250).startN(1).startM(1);
+    let dp = new sd.Grid(svg).n(n-1).m(n-1).x(100).y(200).startN(1).startM(1);
     for (let i = 1; i <= n-1; i++) matrix.push(makeMatrix(matrix, getMatrixRows(i), getMatrixCols(i)));
-    matrix.cx(math.cx());
+    matrix.cx(dp.cx()).y(dp.my() + 20);
     sd.Index(dp, "t");
     sd.Index(dp, "l");
     sd.Label(dp, "L", "lc", 20, 20);
     sd.Label(dp, "R", "tc", 20, 20);
-    console.log("box=", matrix.x(), matrix.y(), matrix.width(), matrix.height());
 
     self.dp = async function() {
         let MAXN = n - 1;
@@ -50,7 +48,6 @@ function makeDp() {
                     let o3 = matrixMul(o1.matrix, o2.matrix);
                     dp.startAnimate().color(i,k,C.blue).color(k+1,j,C.blue).endAnimate();
                     await sd.pause();
-                    math.startAnimate().stress().endAnimate();
                     let cur = dp.intValue(i,k) + dp.intValue(k+1,j) + data[i]*data[k+1]*data[j+1];
                     if (k > i) cur = Math.min(cur, dp.intValue(i, j)); 
                     dp.startAnimate().value(i, j, cur).endAnimate();
@@ -75,7 +72,7 @@ function makeDp() {
     function matrixMul(m1, m2) {
         let m = makeMatrix(svg, m1.n(), m2.m());
         let b = makeBrace(m1, m2);
-        m.y(b.my() + 5).cx(b.cx());
+        m.y(b.my() + 20).cx(b.cx());
         m.opacity(0).startAnimate().opacity(1).endAnimate();
         return {
             remove: function() {
