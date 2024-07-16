@@ -1,4 +1,4 @@
-import * as sd from "../@/SD";
+import * as sd from "@/sd";
 
 let svg = sd.svg();
 let C = sd.color();
@@ -18,7 +18,7 @@ function makeDp() {
     let dy = [2, -2, 1, -1, 2, -2, 1, -1, 0];
     let cx = 4, cy = 3;
     let mp = makeGrid(svg, n, m);
-    let latex = new sd.Mathjax(svg, "f(i,j)=f(i,j-1)+f(i-1,j)").height(30).cx(600).cy(400);
+    sd.Label(mp, "从(1,1)到当前位置的路径数", "bc");
     for (let i = 0; i < 9; i++) {
         let tx = cx + dx[i];
         let ty = cy + dy[i];
@@ -26,11 +26,6 @@ function makeDp() {
             mp.value(tx, ty, new sd.Circle(svg).color(C.ORANGE));
     }
     mp.cx(600).y(100);
-    let owidth = latex.width();
-    function highlight() {
-        latex.startAnimate(150).width(owidth * 1.2).cx(600).cy(400).endAnimate();
-        latex.startAnimate(150).width(owidth).cx(600).cy(400).endAnimate();
-    }
     self.dp = async function() {
         await sd.pause();
         mp.startAnimate().color(1, 1, C.blue).endAnimate();
@@ -46,8 +41,6 @@ function makeDp() {
                 if (i-1 >= 1 && mp.value(i-1, j).text) ans += +mp.value(i-1, j).text(), mp.color(i-1, j, C.blue);
                 if (j-1 >= 1 && mp.value(i, j-1).text) ans += +mp.value(i, j-1).text(), mp.color(i, j-1, C.blue);
                 mp.endAnimate();
-                await sd.pause();
-                highlight();
                 await sd.pause();
                 mp.value(i, j, ans);
                 await sd.pause();

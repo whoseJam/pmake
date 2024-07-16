@@ -1,0 +1,51 @@
+<section>
+    <section>
+        <h1>数字三角形</h1>
+    </section>
+    <problem data-src="http://43.143.204.105/problem/951"></problem>
+    <section>
+        <h2>数字三角形</h2>
+        <iframe style="width: 1000px; height: 300px;"
+            data-src="./animation/数字三角形.html"></iframe>
+        <p class="fragment">设 $f(i,j)$ 表示从 $(1,1)$ 走到 $(i,j)$ 能拿到的最大价值</p>
+        <p class="fragment">
+            $$
+            f(i,j)=max\{f(i-1,j-1),f(i-1,j)\}
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>数字三角形</h2>
+        <p>
+            $$
+            f(i,j)=max\{f(i-1,j-1),f(i-1,j)\}
+            $$
+        </p>
+        <p class="fragment">递推：</p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                int Solve() {
+                    for (int i = 1; i <= n; i++) {
+                        for (int j = 1; j <= i; j++) {
+                            F[i][j] = A[i][j] + max(F[i - 1][j - 1], F[i - 1][j]);
+                        }
+                    }
+                    int ans = 0;
+                    for (int j = 1; j <= n; j++) ans = max(ans, F[n][j]);
+                    return ans;
+                }
+            </script>
+        </codeblock>
+        <p class="fragment">记忆化搜索：</p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                int Dfs(int i, int j) {
+                    if (i == 0 || j == 0) return 0;
+                    if (F[i][j] != -1) return F[i][j];
+                    F[i][j] = A[i][j] + max(Dfs(i - 1, j - 1), Dfs(i - 1, j));
+                    return F[i][j];
+                }
+            </script>
+        </codeblock>
+    </section>
+</section>
