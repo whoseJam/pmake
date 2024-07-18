@@ -1,4 +1,4 @@
-import { Fragment } from "SD/sd";
+import { Fragment } from "@/sd";
 
 export class Mathjax extends Fragment {
     constructor(parent: any);

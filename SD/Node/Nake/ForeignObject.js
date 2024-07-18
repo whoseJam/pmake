@@ -11,6 +11,7 @@ export function ForeignObject(parent) {
     this.member.new("width", 40);
     this.member.new("height", 40);
     this.member.new("html", "");
+    this.member.new("dom", undefined);
 
     const nake = this._.nake;
     nake.setAttribute("x", this.member.get("x"));
@@ -30,6 +31,7 @@ ForeignObject.prototype.y      = naiveGetterAndSetter("y", "setByEqual");
 ForeignObject.prototype.width  = naiveGetterAndSetter("width", "setByEqual");
 ForeignObject.prototype.height = naiveGetterAndSetter("height", "setByEqual");
 ForeignObject.prototype.html   = naiveGetterAndSetter("html", "set");
+ForeignObject.prototype.dom    = naiveGetterAndSetter("dom", "set");
 
 ForeignObject.prototype.updateList = [
     ...ForeignObject.prototype.updateList,
@@ -51,5 +53,16 @@ function update() {
             this, "html"
         );
         this.member.flush("html");
+    }
+    if (this.member.hasChanged("dom")) {
+        new Action(
+            this.delay(),
+            this.delay() + this.duration(),
+            this.member.oldValue("dom"),
+            this.member.get("dom"),
+            Interp.childInterp(this._.nake),
+            this, "dom"
+        );
+        this.member.flush("dom");
     }
 }

@@ -1,3 +1,5 @@
+import { render } from "react-dom";
+
 /**
  * 把十六进制表示的颜色，转为RGB对象表示的颜色
  * @param {string} hex 
@@ -97,6 +99,14 @@ export const Interp = {
             const width = A.viewWidth * (1 - t) + B.viewWidth * t;
             const height = A.viewHeight * (1 - t) + B.viewHeight * t;
             owner.setAttribute(prop, `${x} ${y} ${width} ${height}`);
+        }
+    },
+
+    childInterp(owner, prop) {
+        return function(t) {
+            if (t === 1) {
+                render(this.to, owner);
+            }
         }
     }
 }
