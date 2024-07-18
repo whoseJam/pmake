@@ -1,4 +1,4 @@
-import * as sd from "../@/SD";
+import * as sd from "@/sd";
 
 let svg = sd.svg();
 let C = sd.color();
@@ -25,7 +25,7 @@ function makeDp() {
     ];
     let tri = makeTriGrid(svg, n);
     let dp = makeTriGrid(svg, n);
-    let latex = new sd.Mathjax(svg, "f(i,j)=max\\{f(i-1,j-1),f(i-1,j)\\}+a[i,j]").height(30).cx(600).cy(400);
+    sd.Label(dp, "从(1,1)到当前位置的最大价值", "bc");
     for (let i = 1; i <= n; i++) {
         for (let j = 1; j <= i; j++) {
             tri.value(i, j, data[i][j]);
@@ -33,11 +33,6 @@ function makeDp() {
     }
     tri.x(100).y(100);
     dp.x(600).y(100);
-    let owidth = latex.width();
-    function highlight() {
-        latex.startAnimate(150).width(owidth * 1.2).cx(600).cy(400).endAnimate();
-        latex.startAnimate(150).width(owidth).cx(600).cy(400).endAnimate();
-    }
     self.dp = async function() {
         for (let i = 1; i <= n; i++) {
             for (let j = 1; j <= i; j++) {
@@ -57,8 +52,6 @@ function makeDp() {
                 }
                 dp.endAnimate();
                 tri.startAnimate().color(i, j, C.blue).endAnimate();
-                await sd.pause();
-                highlight();
 
                 await sd.pause();
                 dp.startAnimate().value(i, j, v + data[i][j]).endAnimate();

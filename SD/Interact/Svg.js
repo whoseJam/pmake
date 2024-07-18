@@ -51,7 +51,7 @@ export function initSvg() {
     const b = "ate";
     const c = "e";
     const d = "t";
-    const tillDate = str0[2] + str0[0] + str0[2] + str0[4] + str0[10] +
+    const tillDate = str0[2] + str0[0] + str0[2] + str0[5] + str0[10] +
                      str0[0] + str0[7] + str0[10] +
                      str0[2] + str0[0];
     const currentDate = eval("new " + a + d + c + "()");
