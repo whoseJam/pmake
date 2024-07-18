@@ -83,6 +83,20 @@ gulp.task("animation", () => {
     return animationTask(sourceFilePath, targetFilePath, animationName);
 });
 
+gulp.task("animation-and-lib", () => {
+    parseInput();
+    prepareAnimationTask();
+    const targetFilePath = global.targetFilePath;
+    gulp.task("lib", () => {
+        return libTask(targetFilePath);
+    });
+    const project = gulp.parallel(
+        gulp.task("lib"),
+        gulp.task("animation")
+    );
+    project();
+});
+
 function ifNotExistThenCreateFolder(folderPath) {
     if (fs.existsSync(folderPath)) return;
     fs.mkdirSync(folderPath);

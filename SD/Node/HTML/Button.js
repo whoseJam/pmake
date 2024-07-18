@@ -2,12 +2,31 @@ import { BaseHTML } from "./BaseHTML";
 
 export function Button(parent) {
     BaseHTML.call(this, parent);
+
+    this.member.new("onClick", undefined);
     
-    this.html(`<button style="width: 60px; height: 20px;">点击</button>`);
-    
-    const nake = this._.nake;
-    const div = nake.children[0];
-    this._.button = div.children[0];
+    this.dom(
+        <div>
+            <button
+                style={{
+                    width: "90%",
+                    height: "90%",
+                    top: "50%",
+                    left: "50%",
+                }}
+                onClick={() => {
+                    const callback = this.member.get("onClick");
+                    if (callback) {
+                        callback.call(this);
+                    }
+                }}
+                >
+                点击
+            </button>
+        </div>
+    );
+
+    this.width(60).height(25);
 
     return this;
 }
@@ -17,6 +36,6 @@ Button.prototype = {
 };
 
 Button.prototype.onClick = function(callback) {
-    this._.button.onclick = callback;
+    this.member.setAndFlush("onClick", callback);
     return this;
 }

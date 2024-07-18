@@ -20,9 +20,13 @@ module.exports = function(sourceFilePath, animationName) {
         ],
         module: {
             rules: [
-                {   test: /\.js?$/,
-                    exclude: /node_modules/,
-                    loader: "babel-loader"
+                {   test: /.js$/,
+                    use: {
+                        loader: 'babel-loader',
+                        options: {
+                            presets: ['@babel/preset-react', '@babel/preset-env'],
+                        },
+                    },
                 },
                 {   test: /\.css$/,
                     use: ["style-loader", "css-loader"]
@@ -37,7 +41,6 @@ module.exports = function(sourceFilePath, animationName) {
             alias: {
                 "@": path.resolve(global["projectRoot"], "SD")
             },
-            extensions: [".tsx", ".ts", ".js"]
         },
         externals: {
             "dagre": "dagre",
