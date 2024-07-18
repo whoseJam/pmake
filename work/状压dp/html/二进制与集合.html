@@ -1,0 +1,57 @@
+<section>
+    <section>
+        <h1>二进制与集合</h1>
+    </section>
+    <section>
+        <h2>二进制与集合</h2>
+        <p>我们可以把一个二进制数和一个集合关联起来</p>
+        <p class="fragment">
+            例如全集 $U=\{e_1,e_2,e_3,e_4,e_5\}$
+        </p>
+        <ul>
+            <li class="fragment">如果 $e_i$ 在集合中，就让二进制数第 $i$ 个二进制位为 $1$</li>
+            <li class="fragment">如果 $e_i$ 不在集合中，就让二进制数第 $i$ 个二进制位为 $0$</li>
+        </ul>
+        <p class="fragment quote">在这里我们提到的二进制位标号<b>从 $1$ 开始</b></p>
+        <p class="fragment quote">
+            $$
+            U=(11111)_2=31
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>二进制与集合</h2>
+        <p>例如全集 $U=\{e_1,e_2,e_3,e_4,e_5\}$</p>
+        <p>设 $S=\{e_1,e_2,e_4\}$</p>
+        <p class="fragment quote">
+            $$
+            S=(01011)_2=11
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>二进制与集合</h2>
+        <p>例如全集 $U=\{e_1,e_2,e_3,e_4,e_5\}$</p>
+        <p>设 $T=\{e_2,e_5\}$</p>
+        <p class="fragment quote">
+            $$
+            T=(10010)_2=18
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>二进制与集合</h2>
+        <p>以全集 $U=\{e_1,e_2,e_3\}$，我们实际上把 $[0,2^n-1]$ 内的自然数和全集的任意一个子集建立起了对应关系</p>
+        <table>
+            <tr><td>十进制数</td><td>二进制数</td><td>对应集合</td></tr>
+            <tr><td>$0$</td><td>$(000)_2$</td><td>$\{\}$</td></tr>
+            <tr><td>$1$</td><td>$(001)_2$</td><td>$\{e_1\}$</td></tr>
+            <tr><td>$2$</td><td>$(010)_2$</td><td>$\{e_2\}$</td></tr>
+            <tr><td>$3$</td><td>$(011)_2$</td><td>$\{e_1,e_2\}$</td></tr>
+            <tr><td>$4$</td><td>$(100)_2$</td><td>$\{e_3\}$</td></tr>
+            <tr><td>$5$</td><td>$(101)_2$</td><td>$\{e_1,e_3\}$</td></tr>
+            <tr><td>$6$</td><td>$(110)_2$</td><td>$\{e_2,e_3\}$</td></tr>
+            <tr><td>$7$</td><td>$(111)_2$</td><td>$\{e_1,e_2,e_3\}$</td></tr>
+        </table>
+    </section>
+</section>
