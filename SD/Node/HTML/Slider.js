@@ -1,15 +1,13 @@
-import { useState } from "react";
 import { BaseHTML } from "./BaseHTML";
-import { naiveGetterAndSetter, naiveUpdate } from "../Common";
-import { Action } from "@/Animate/Action";
+import { naiveGetterAndSetter, normalUpdate } from "../Common";
+import { Interp } from "@/Animate/Interp";
 
 export function Slider(parent) {
     BaseHTML.call(this, parent);
 
-    // const [l, setL] = useState(0);
-    // [r, setR] = useState(10);
-
     this.member.new("onChanged", undefined);
+    this.member.new("min", 0);
+    this.member.new("max", 10);
 
     this.dom(
         <div>
@@ -24,7 +22,7 @@ export function Slider(parent) {
                 max={ 10 }
                 onChange={
                     (event) => {
-                        const callback = this.member.get("onChanged");
+                        const callback = this.member.get("onChange");
                         if (callback) {
                             const nativeEvent = event.nativeEvent;
                             const sourceElement = nativeEvent.srcElement;
@@ -34,7 +32,7 @@ export function Slider(parent) {
                 } />
         </div>
     )
-
+    this._.slider = this._.nake.children[0].children[0];
     this.width(60).height(25);
 
     return this;
@@ -44,31 +42,19 @@ Slider.prototype = {
     ...BaseHTML.prototype
 };
 
-Slider.prototype.onChanged = function(callback) {
-    this.member.setAndFlush("onChanged", callback);
+Slider.prototype.onChange = function(callback) {
+    this.member.setAndFlush("onChange", callback);
     return this;
 }
 
 Slider.prototype.max = naiveGetterAndSetter("max", "set");
+Slider.prototype.min = naiveGetterAndSetter("min", "set");
+Slider.prototype.value = function() {
+    return this._.slider.value;
+}
 
 Slider.prototype.updateList = [
-    ...Slider.prototype.updateList
+    ...Slider.prototype.updateList,
+    normalUpdate("max", Interp.numberInterp, "slider"),
+    normalUpdate("min", Interp.numberInterp, "slider")
 ]
-
-function update() {
-    if (this.member.hasChanged("max")) {
-        const elementId = this.id;
-        new Action(
-            this.delay(),
-            this.delay() + this.duration(),
-            this.member.oldValue("max"),
-            this.member.get("max"),
-            function(t) {
-                const from = this.from;
-                const to = this.to;
-                const e = document.getElementById(elementId);
-            },
-            this, "max"
-        );
-    }
-}

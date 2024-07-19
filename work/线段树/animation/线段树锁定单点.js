@@ -5,12 +5,24 @@ const R = sd.rule();
 const C = sd.color();
 const n = 8;
 const tree = initSegmentTree(svg, 1, n).cx(600).cy(200);
-const array = new sd.Array(svg).cx(tree.cx().y(tree.my() + 20));
+const array = new sd.Array(svg).resize(n).start(1).cx(tree.cx()).y(tree.my() + 40);
+const target = sd.Pointer(array, "target", "t");
+const focus = sd.Focus(array);
 
+init();
 main();
 
+function init() {
+    for (let i = 1; i <= n; i++) {
+        array.element(i).onClick(() => {
+            console.log(`click ${i}th element`);
+            tree.colorOn(i, C.green);
+        })
+    }
+}
+
 async function main() {
-    await collectImpact();
+    await sd.pause();
 }
 
 function initSegmentTree(parent, l, r) {
@@ -37,19 +49,32 @@ function initSegmentTree(parent, l, r) {
     build(1, l, r);
     tree.unfreeze();
 
-    tree.colorOn = function(ql, qr, color) {
-        function colorOn(x, l, r) {
-            if (ql <= l && r <= qr) {
-                tree.color(x, color);
+    tree.colorOn = async function(pos, color) {
+        if (pos < l || pos > r) throw new Error("Invalid Range");
+        await sd.pause();
+        target.startAnimate().moveTo(pos).endAnimate();
+        async function colorOn(x, l, r) {
+            await sd.pause();
+            focus.startAnimate().focus(l, r).endAnimate();
+            tree.startAnimate().color(x, color).endAnimate();
+            if (l === r) {
+                await sd.pause();
+                tree.startAnimate().color(x, C.white).endAnimate();
                 return;
             }
             if (l === r) return;
             const mid = (l + r) >> 1;
-            if (ql <= mid) colorOn(lc(x), l, mid);
-            if (qr > mid) colorOn(rc(x), mid+1, r);
+            if (pos <= mid) await colorOn(lc(x), l, mid);
+            if (pos > mid) await colorOn(rc(x), mid+1, r);
+            await sd.pause();
+            focus.startAnimate().focus(l, r).endAnimate();
+            await sd.pause();
+            tree.startAnimate().color(x, C.white).endAnimate();
         }
-        if (ql > qr || ql < l || qr > r) throw new Error("Invalid Range");
-        colorOn(1, l, r);
+        await colorOn(1, l, r);
+        await sd.pause();
+        target.startAnimate().moveTo(null).endAnimate();
+        focus.startAnimate().focus(null).endAnimate();
         return this;
     }
     tree.impact = function(ql, qr, color) {

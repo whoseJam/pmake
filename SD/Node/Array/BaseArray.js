@@ -11,6 +11,7 @@ export function BaseArray(parent) {
 BaseArray.prototype = {
     ...SDNode.prototype
 };
+BaseArray.prototype.baseArray = true;
 
 BaseArray.prototype.x     = naiveGetterAndSetter("x", "setByEqual");
 BaseArray.prototype.y     = naiveGetterAndSetter("y", "setByEqual");

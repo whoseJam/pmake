@@ -1,4 +1,5 @@
 import { ForeignObject } from "../Nake/ForeignObject";
+import { render } from "react-dom";
 
 export function BaseHTML(parent) {
     ForeignObject.call(this, parent);
@@ -12,13 +13,9 @@ BaseHTML.prototype = {
     ...ForeignObject.prototype
 };
 
-BaseHTML.prototype.html = function(html) {
-    if (html === undefined) {
-        return this.member.get("innerHtml");
-    }
-    this.member.setAndFlush("innerHtml", html);
-    const div = document.createElement("div");
-    div.innerHTML = html;
-    this._.nake.append(div);
+BaseHTML.prototype.html = undefined;
+BaseHTML.prototype.dom = function(jsx) {
+    const nake = this._.nake;
+    render(jsx, nake);
     return this;
 }
