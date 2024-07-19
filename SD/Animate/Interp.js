@@ -1,5 +1,3 @@
-import { render } from "react-dom";
-
 /**
  * 把十六进制表示的颜色，转为RGB对象表示的颜色
  * @param {string} hex 

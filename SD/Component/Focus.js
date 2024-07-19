@@ -46,7 +46,7 @@ export function Focus(parent) {
             element1 = typeof(arg0) === "object" ? arg0 : parent.element(arg0);
             element2 = undefined;
         } else if (arguments.length === 2) {
-            if (parent instanceof BaseArray) {
+            if (parent.baseArray) {
                 element1 = parent.element(arg0);
                 element2 = parent.element(arg1);
             } else {

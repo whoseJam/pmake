@@ -28,6 +28,22 @@ export function naiveUpdate(key, interp) {
     }
 }
 
+export function normalUpdate(key, interp, target) {
+    return function() {
+        if (this.member.hasChanged(key)) {
+            new Action(
+                this.delay(),
+                this.delay() + this.duration(),
+                this.member.oldValue(key),
+                this.member.get(key),
+                interp(this._[target], key),
+                this, key
+            );
+            this.member.flush(key);
+        }
+    }
+}
+
 export function inRange(mode) {
     if (mode === "circle") {
         return function(vec) {

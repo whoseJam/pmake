@@ -45,6 +45,10 @@ export { CircleCurve } from "./Node/Curve/CircleCurve";
 
 export { Mathjax } from "./Node/Text/Mathjax";
 
+export { Input }  from "./Node/HTML/Input";
+export { Button } from "./Node/HTML/Button";
+export { Slider } from "./Node/HTML/Slider";
+
 export { Focus }        from "./Component/Focus";
 export { Label }        from "./Component/Label";
 export { Stress }       from "./Component/Stress";

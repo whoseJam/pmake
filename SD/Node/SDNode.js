@@ -5,6 +5,7 @@ import { Interp } from "../Animate/Interp";
 import { svg } from "../Interact/Svg";
 import { Animate } from "./Animate";
 import { SDMember } from "./SDMember";
+import { d3ToNake, nakeToSnap } from "@/Utility/Tool";
 
 let id = 0;
 
@@ -267,7 +268,21 @@ SDNode.prototype.updateList = [
                 Interp.numberInterp(this.d3layer.nake(), "opacity"),
                 this, "global-opacity"
             );
+            if (this.member.get("global-opacity") === 0) {
+                this.d3layer.d3.style("pointer-events", "none");
+            } else {
+                this.d3layer.d3.style("pointer-events", "auto")
+            }
             this.member.flush("global-opacity");
         }
     }
 ]
+
+SDNode.prototype.onClick = function(callback) {
+    const nake = d3ToNake(this.d3layer.d3);
+    console.log("on click nake =", nake);
+    nake.addEventListener("click", () => {
+        console.log("this is clicked ", this);
+        callback(this);
+    })
+}
