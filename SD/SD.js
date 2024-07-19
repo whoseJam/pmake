@@ -56,8 +56,7 @@ export { CircleCurve } from "./Node/Curve/CircleCurve.js";
 
 export { Mathjax } from "./Node/Text/Mathjax.js";
 
-// export { Marker } from "./Node/Nake/Marker.js";
-
+export { Input } from  "./Node/HTML/Input.js";
 export { Button } from "./Node/HTML/Button.js";
 export { Slider } from "./Node/HTML/Slider.js";
 
