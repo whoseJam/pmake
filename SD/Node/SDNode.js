@@ -280,9 +280,7 @@ SDNode.prototype.updateList = [
 
 SDNode.prototype.onClick = function(callback) {
     const nake = d3ToNake(this.d3layer.d3);
-    console.log("on click nake =", nake);
     nake.addEventListener("click", () => {
-        console.log("this is clicked ", this);
         callback(this);
     })
 }

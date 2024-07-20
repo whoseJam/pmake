@@ -187,7 +187,8 @@ export class ActionList {
                 action.channel !== "x1" &&
                 action.channel !== "y1" &&
                 action.channel !== "x2" &&
-                action.channel !== "y2") continue;
+                action.channel !== "y2" &&
+                action.channel !== "transform") continue;
             const owner = action.owner;
             if (!("g" in owner) || !owner._.nake) { // D3Layer
                 continue;

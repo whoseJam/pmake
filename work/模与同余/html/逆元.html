@@ -109,7 +109,7 @@
         <p>假设我希望求出 $[1,n]$ 这个范围内每一个数字的模 $M$ 乘法逆元，如果用Exgcd或者费马小定理来求解方法，时间复杂度为 $O(nlogM)$</p>
         <p class="fragment">不过实际上是存在 $O(n)$ 的复杂度的递推做法的</p>
         <p class="fragment">
-            设 $x\in [1,n]$，$k=\lfloor\frac P x \rfloor$，$r=M\% x$
+            设 $x\in [1,n]$，$k=\lfloor\frac M x \rfloor$，$r=M\% x$
         </p>
         <p class="fragment">则有：
             $$

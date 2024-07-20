@@ -63,7 +63,7 @@ async function main() {
             if (exist(i+1, j)) graph.value(Out[i][j], In[i+1][j], "inf/0")
             if (exist(i+1, j+1)) graph.value(Out[i][j], In[i+1][j+1], "inf/0");
             if (i === 1) graph.value("S", In[i][j], "1/0");
-            if (i === n) graph.value(Out[i][j], "T", "1/0");
+            if (i === n) graph.value(Out[i][j], "T", "inf/0");
         }
     }
     graph.endAnimate();

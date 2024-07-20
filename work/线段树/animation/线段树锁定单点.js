@@ -7,7 +7,18 @@ const n = 8;
 const tree = initSegmentTree(svg, 1, n).cx(600).cy(200);
 const array = new sd.Array(svg).resize(n).start(1).cx(tree.cx()).y(tree.my() + 40);
 const target = sd.Pointer(array, "target", "t");
+const lPointer = sd.Pointer(array, "l", "t");
+const rPointer = sd.Pointer(array, "r", "t");
 const focus = sd.Focus(array);
+
+const input = new sd.ValueStack(svg);
+const lInput = new sd.Input(svg).label("l");
+const rInput = new sd.Input(svg).label("r");
+const button = new sd.Button(svg).text("Query").onClick(() => {
+    tree.query(+lInput.value(), +rInput.value(), C.blue);
+});
+input.push(lInput).push(rInput).push(button);
+input.mx(tree.x() - 60).cy(tree.cy());
 
 init();
 main();
@@ -15,7 +26,6 @@ main();
 function init() {
     for (let i = 1; i <= n; i++) {
         array.element(i).onClick(() => {
-            console.log(`click ${i}th element`);
             tree.colorOn(i, C.green);
         })
     }
@@ -49,6 +59,33 @@ function initSegmentTree(parent, l, r) {
     build(1, l, r);
     tree.unfreeze();
 
+    tree.query = async function(ql, qr, color) {
+        await sd.pause();
+        lPointer.startAnimate().moveTo(ql).endAnimate();
+        rPointer.startAnimate().moveTo(qr).endAnimate();
+        async function colorOn(x, l, r) {
+            await sd.pause();
+            focus.startAnimate().focus(l, r).endAnimate();
+            tree.startAnimate().color(x, color).endAnimate();
+            if (ql <= l && r <= qr) {
+                await sd.pause();
+                tree.startAnimate().color(x, C.orange).endAnimate();
+                return;
+            }
+            const mid = (l + r) >> 1;
+            if (ql <= mid) await colorOn(lc(x), l, mid);
+            if (qr > mid) await colorOn(rc(x), mid + 1, r);
+            await sd.pause();
+            focus.startAnimate().focus(l, r).endAnimate();
+        }
+        await colorOn(1, l, r);
+        await sd.pause();
+        lPointer.startAnimate().moveTo(null).endAnimate();
+        rPointer.startAnimate().moveTo(null).endAnimate();
+        focus.startAnimate().focus(null).endAnimate();
+        tree.startAnimate().color(C.white).endAnimate();
+        return this;
+    }
     tree.colorOn = async function(pos, color) {
         if (pos < l || pos > r) throw new Error("Invalid Range");
         await sd.pause();

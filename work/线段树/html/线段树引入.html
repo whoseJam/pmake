@@ -1,0 +1,46 @@
+<section>
+    <section>
+        <h1>线段树</h1>
+    </section>
+    <section>
+        <h2>区间查询问题</h2>
+        <p>给定一个 $n$ 个元素的数组 $A_1,A_2...A_n$，你需要设计一种数据结构，支持以下两种操作：</p>
+        <ol>
+            <li><code>Add(x, d)</code>：让 $A_x$ 的数值增加 $d$（$d$ 可正可负）</li>
+            <li><code>QueryMax(l, r)</code>：求 $[l,r]$ 这个范围内的区间最大值</li>
+            <li><code>QueryMin(l, r)</code>：求 $[l,r]$ 这个范围内的区间最小值</li>
+            <li><code>QuerySum(l, r)</code>：求 $[l,r]$ 这个范围内的区间和</li>
+        </ol>
+    </section>
+    <section>
+        <h2>分析</h2>
+        <p>
+            朴素做法低效的原因是，所有的维护都是针对<b>元素</b>的
+            而题目中的所有维护都是针对<b>区间</b>的
+        </p>
+        <p class="fragment">
+            我们的优化也从这里入手，假设我们设计一种数据结构，
+            能<b>直接维护所需处理的区间</b>，那么也就能更加有效地解决这个问题了
+        </p>
+    </section>
+    <section>
+        <h2>简化问题</h2>
+        <p>我们对问题做一个抽象，我们需要支持序列上：</p>
+        <ul>
+            <li class="fragment">单点修改</li>
+            <li class="fragment">区间查询</li>
+        </ul>
+    </section>
+    <section>
+        <h2>线段树</h2>
+        <iframe data-src="./animation/线段树锁定单点.html"></iframe>
+    </section>
+    <section>
+        <h2>线段树</h2>
+        <codeblock>
+            <script type="text/template">
+                
+            </script>
+        </codeblock>
+    </section>
+</section>
