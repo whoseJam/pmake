@@ -33,14 +33,132 @@
     </section>
     <section>
         <h2>线段树</h2>
-        <iframe data-src="./animation/线段树锁定单点.html"></iframe>
+        <iframe data-src="./animation/线段树锁定单点.html"
+            style="width: 1000px; height: 500px;"></iframe>
+    </section>
+    <section>
+        <h2>线段树</h2>
+        <p>对于问题而言，我们显然需要维护一个区间的：</p>
+        <ul>
+            <li>最小值，用<code>mn</code>来存储</li>
+            <li>最大值，用<code>mx</code>来存储</li>
+            <li>区间和，用<code>sm</code>来存储</li>
+        </ul>
+        <codeblock class="fragment">
+            <script type="text/template">
+                struct seg {
+                    int l, r, mx, mn, sm;
+                } t[N * 4];
+            </script>
+        </codeblock>
+        <iframe class="fragment"
+            style="width: 1000px; height: 300px;"
+            data-src="./animation/线段树节点结构定义.html"> 
+        </iframe>
+    </section>
+    <section>
+        <h2>线段树</h2>
+        <p>我们并未存储某个节点的左右儿子编号，因为我们可以采用堆式建树：</p>
+        <iframe data-src="./animation/线段树的节点编号.html"
+            style="width: 1000px; height: 300px;"></iframe>
+        <p class="fragment">
+            在这种建树方案中，每个节点 $x$ 的左儿子编号一定是 $2x$，右儿子编号一定是 $2x+1$
+        </p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                #define lc (x << 1)
+                #define rc (x << 1 | 1)
+
+                // 当我想访问 x 的左儿子时
+                t[lc]......
+
+                // 当我想访问 x 的右儿子时
+                t[rc]......
+            </script>
+        </codeblock>
+    </section>
+    <section>
+        <h2>线段树的建立</h2>
+        <ul>
+            <li>把线段树结构建立出来</li>
+            <li>初始化每条线段的特征</li>
+        </ul>
+        <codeblock>
+            <script type="text/template">
+                void pushUp(int x) {
+                    t[x].mn = min(t[lc].mn, t[rc].mn);
+                    t[x].mx = max(t[lc].mx, t[rc].mx);
+                    t[x].sm = t[lc].sm + t[rc].sm;
+                }
+                void build(int x, int l, int r) {
+                    t[x].l = l; t[x].r = r; // 建立线段树结构
+                    if (l == r) { // x 是一个叶子节点，对应一个长度为 1 的区间
+                        t[x].mn = t[x].mx = t[x].sm = a[l]; // 初始化线段特征
+                        return;
+                    }
+                    int mid = (l + r) >> 1;
+                    build(lc, l, mid);
+                    build(rc, mid + 1, r);
+                    pushUp(x); // 初始化线段特征
+                }
+            </script>
+        </codeblock>
     </section>
     <section>
         <h2>线段树</h2>
         <codeblock>
             <script type="text/template">
-                
+                void pushUp(int x) {
+                    t[x].mn = min(t[lc].mn, t[rc].mn);
+                    t[x].mx = max(t[lc].mx, t[rc].mx);
+                    t[x].sm = t[lc].sm + t[rc].sm;
+                }
             </script>
         </codeblock>
+        <iframe style="width: 1000px; height: 300px;"
+            data-src="./animation/线段树节点结构定义.html"> 
+        </iframe>
+        <p class="fragment">通过 $pushUp$，我们可以很方便地<b>合并两个区间的特征</b>，得到<b>一个更大的区间的特征</b></p>
+    </section>
+
+    <section>
+        <h2>线段树单点修改</h2>
+        <codeblock>
+            <script type="text/template">
+                void update(int x, int pos, int d) {
+                    if (t[x].l == t[x].r) {
+                        t[x].mn += d;
+                        t[x].mx += d;
+                        t[x].sm += d;
+                        return;
+                    }
+                    int mid = (t[x].l + t[x].r) >> 1;
+                    if (pos <= mid) update(lc, pos, d);
+                    else update(rc, pos, d);
+                    pushUp(x);
+                }
+            </script>
+        </codeblock>
+        <iframe data-src="./animation/线段树修改单点.html"
+            style="width: 1000px; height: 350px;"></iframe>
+    </section>
+    <section>
+        <h2>线段树区间查询</h2>
+        <codeblock>
+            <script type="text/template">
+                int querySum(int x, int l, int r) {
+                    if (l <= t[x].l && t[x].r <= r) {
+                        return t[x].sum;
+                    }
+                    int mid = (t[x].l + t[x].r) >> 1;
+                    int ans = 0;
+                    if (l <= mid) ans += querySum(lc, l, r);
+                    if (r > mid) ans += querySum(rc, l, r);
+                    return ans;
+                }
+            </script>
+        </codeblock>
+        <iframe data-src="./animation/线段树查询区间.html"
+            style="width: 1000px; height: 350px;"></iframe>
     </section>
 </section>
