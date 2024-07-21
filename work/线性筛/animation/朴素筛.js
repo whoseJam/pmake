@@ -6,7 +6,6 @@ const R = sd.rule();
 const n = 20;
 const arr = new sd.Array(svg).start(2).resize(n - 1);
 
-
 init();
 main();
 

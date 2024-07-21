@@ -6,28 +6,6 @@
     <section>
         <h2>筛法其三</h2>
         <p>定义质因子种类数函数 $f(x)=x不同的质因子的个数$，让你把 $[1,n]$ 的 $f$ 函数的值求出来</p>
-        <p class="fragment quote">在线性筛中，一个合数只会被自己最小的质因子筛去，那我如何统计一个合数的质因子种类呢？</p>
-        <p class="fragment">只要在每次筛合数的时候，在当前质因数是唯一最小质因子时，让质因子种类数 $+1$ 即可</p>
-        <codeblock class="fragment">
-            <script type="text/template">
-                void Sieve(int n) {
-                    for (int i = 2; i <= n; i++) {
-                        if (!vis[i]) {
-                            prim[++tot] = i;
-                            f[i] = 1;
-                        }
-                        for (int j = 1; j <= tot && i * prim[j] <= n; j++) {
-                            vis[i * prim[j]] = 1;
-                            f[i * prim[j]] = f[i];
-                            // i里面已经有pj这个质因子了，则f[i*pj]=f[i]
-                            if (i % prim[j] == 0) break;
-                            // i里面不存在pj这个质因子，那么f[i*pj]=f[i]+1
-                            f[i * prim[j]]++;
-                        }
-                    }
-                }
-            </script>
-        </codeblock>
     </section>
     <section>
         <h2>筛法其三</h2>
@@ -51,7 +29,7 @@
             $$f(i)=f(p_2^{a_2}p_3^{a_3}...p_n^{a_n})=n-1$$
         </p>
         <p class="fragment">
-            $$f(x)=f(p_1p_2^{a_2}p_3^{a_3}p_n^{a_n})=n$$
+            $$f(x)=f(p_1p_2^{a_2}p_3^{a_3}...p_n^{a_n})=n$$
         </p>
         <codeblock class="fragment">
             <script type="text/template">
@@ -71,7 +49,7 @@
             $$f(i)=f(p_1^{a_1}p_2^{a_2}...p_n^{a_n})=n$$
         </p>
         <p class="fragment">
-            $$f(x)=f(p_1^{a_1+1}p_2^{a_2}p_n^{a_n})=n$$
+            $$f(x)=f(p_1^{a_1+1}p_2^{a_2}...p_n^{a_n})=n$$
         </p>
         <codeblock class="fragment">
             <script type="text/template">
