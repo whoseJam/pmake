@@ -1,7 +1,17 @@
+const gulp              = require("gulp");
+const path              = require("path");
+const webpack           = require("webpack-stream");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-const path = require("path");
 
-module.exports = function(sourceFilePath, animationName) {
+module.exports = function animationTask(sourceFilePath, targetFilePath) {
+    const animationName = String(sourceFilePath).split("/").slice(-1)[0].split(".")[0];
+    const webpackConfiguration = animationConfiguration(animationName);
+    return gulp.src(sourceFilePath)
+               .pipe(webpack(webpackConfiguration))
+               .pipe(gulp.dest(targetFilePath));
+}
+
+function animationConfiguration(animationName) {
     const mode = global["d"] ? "development" : "production";
     return {
         mode: mode,

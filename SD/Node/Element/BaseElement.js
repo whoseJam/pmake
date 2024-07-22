@@ -23,6 +23,18 @@ BaseElement.prototype = {
     ...SDNode.prototype
 };
 
+BaseElement.prototype.updateList = [
+    ...BaseElement.prototype.updateList,
+    function() {
+        if (this.member.hasChanged("rate")) {
+            const rule = CenterFixAspect(this.member.get("rate"));
+            const value = this.child("value");
+            value._.rule = rule;
+            this.member.flush("rate");
+        }
+    }
+]
+
 BaseElement.prototype.x             = naiveGetterAndSetter("x", "setByEqual");
 BaseElement.prototype.y             = naiveGetterAndSetter("y", "setByEqual");
 BaseElement.prototype.width         = naiveGetterAndSetter("width", "setByEqual");

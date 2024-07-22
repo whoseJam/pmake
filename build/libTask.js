@@ -1,7 +1,16 @@
+const gulp                 = require("gulp");
+const path                 = require("path");
+const webpack              = require("webpack-stream");
 const JavaScriptObfuscator = require('webpack-obfuscator');
-const path = require("path");
 
-module.exports = function() {
+module.exports = function libraryTask(targetFilePath) {
+    const webpackConfiguration = libraryConfiguration();
+    return gulp.src("./SD/SD.js")
+               .pipe(webpack(webpackConfiguration))
+               .pipe(gulp.dest(targetFilePath));
+}
+
+function libraryConfiguration() {
     const mode = global["d"] ? "development" : "production";
     return {
         mode: mode,
