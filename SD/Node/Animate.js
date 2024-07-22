@@ -1,10 +1,4 @@
-import { SDNode } from "./SDNode";
-
 export class Animate {
-    /**
-     * @constructor
-     * @param {SDNode} node 
-     */
     constructor(node) {
         this.node = node;
         this.animating = false;

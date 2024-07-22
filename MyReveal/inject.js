@@ -1,9 +1,5 @@
 
-interface VoidFunction {
-    (): void
-}
-
-export function includeHTML(callback: VoidFunction|null|undefined): void {
+export function includeHTML(callback) {
     const elements = document.getElementsByTagName("*");
     for (let i = 0; i < elements.length; i++) {
         const element = elements[i];

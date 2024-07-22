@@ -1,12 +1,7 @@
 import { d3ToNake } from "../Utility/Tool";
-import { SDNode } from "./SDNode";
 import { Action } from "@/Animate/Action";
 
 export class D3Layer {
-    /**
-     * @param {SDNode|D3Layer} node 
-     * @param {number|string} name 
-     */
     constructor(node, name) {
         const parentLayer = ("g" in node) ? node.g() : node;
         const parentNode = ("g" in node) ? node : node.node;
@@ -16,10 +11,6 @@ export class D3Layer {
         if (name) this.d3.attr(name, "");
     }
 
-    /**
-     * @param {number|string} layerName 
-     * @returns {D3Layer}
-     */
     newLayer(layerName) {
         const layer = `layer_${layerName}`;
         if (layer in this) throw new Error("Layer Name Already Existed");
@@ -28,18 +19,11 @@ export class D3Layer {
         return this[layer];
     }
 
-    /**
-     * @param {number|string} layerName 
-     * @returns {D3Layer}
-     */
     layer(layerName) {
         const layer = `layer_${layerName}`;
         return this[layer];
     }
 
-    /**
-     * @param {D3Layer} layer 
-     */
     attachTo(layer) {
         const node = this.node;
         const d3 = this.d3;
@@ -60,17 +44,8 @@ export class D3Layer {
             this, "attach-to"
         );
         this.parent = layer;
-        // Snap(d3ToNake(layer.d3)).append(
-        //     Snap(d3ToNake(this.d3)));
     }
 
-    /**
-     * @overload
-     * @param {number|string} layerName
-     * @returns {void}
-     * @overload
-     * @returns {string}
-     */
     type(layerName) {
         const nake = d3ToNake(this.d3);
         if (layerName === undefined) {
@@ -80,17 +55,10 @@ export class D3Layer {
         nake.setAttribute("type", layerName);
     }
 
-    /**
-     * @param {string} tag 
-     * @returns {d3.Selection}
-     */
     append(tag) {
         return this.d3.append(tag);
     }
 
-    /**
-     * @returns {SVGElement}
-     */
     nake() {
         return d3ToNake(this.d3);
     }
