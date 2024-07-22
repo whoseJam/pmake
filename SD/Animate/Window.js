@@ -42,6 +42,8 @@ export function pause() {
         Animate.currentActionList.updateWindowSize();
         return 0;
     }
+    console.log("current = ", Animate.currentActionList);
+    Animate.currentActionList.debug();
     return new Promise(function(resolve) {
         const fn = function() {
             if (window.__WHOSEJAM__ > 0 ||

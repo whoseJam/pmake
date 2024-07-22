@@ -14,6 +14,7 @@ export function SDNode(parent) {
         svg().children.push(this);
     }
     this.d3layer = new D3Layer(parent);
+    this.d3layer.nake().setAttribute("id", id + 1);
     this.d3layer.node = this;
     this.parent = ("g" in parent) ? parent : parent.node;
     this.children = new Children(this);
@@ -27,7 +28,7 @@ export function SDNode(parent) {
 
     new Action(0, 0, 0, 1, 
         Interp.numberInterp(this.d3layer.nake(), "opacity"),
-        this, "opacity");
+        this, "global-opacity");
     return this;
 }
 

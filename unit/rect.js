@@ -4,7 +4,6 @@ let svg = sd.svg();
 let C = sd.color();
 // let board = new sd.Text(svg);
 let obj = new sd.Rect(svg);
-obj.
 
 console.log("obj=", obj);
 obj.cx(600).cy(300);
