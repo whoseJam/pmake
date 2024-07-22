@@ -2,7 +2,7 @@
 #212.并查集（模板）：https://www.luogu.com.cn/problem/P3367
 #810.亲戚：https://www.luogu.com.cn/problem/P1551
 格子游戏：https://oj.aicoders.cn/problem/1860
-星球大战：https://www.luogu.com.cn/problem/P1197
+#812.星球大战：https://www.luogu.com.cn/problem/P1197
 #816.奶酪：https://www.luogu.com.cn/problem/P3958
 
 带权并查集：

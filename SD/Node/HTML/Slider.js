@@ -5,7 +5,7 @@ import { Interp } from "@/Animate/Interp";
 export function Slider(parent) {
     BaseHTML.call(this, parent);
 
-    this.member.new("onChanged", undefined);
+    this.member.new("onChange", undefined);
     this.member.new("min", 0);
     this.member.new("max", 10);
 
@@ -49,8 +49,12 @@ Slider.prototype.onChange = function(callback) {
 
 Slider.prototype.max = naiveGetterAndSetter("max", "set");
 Slider.prototype.min = naiveGetterAndSetter("min", "set");
-Slider.prototype.value = function() {
-    return this._.slider.value;
+Slider.prototype.value = function(value) {
+    if (value === undefined) {
+        return this._.slider.value;
+    }
+    this._.slider.value = value;
+    return this;
 }
 
 Slider.prototype.updateList = [
