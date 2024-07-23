@@ -1,4 +1,5 @@
-import { dqual, equal } from "@/Utility/Math";
+import { dqual } from "@/Utility/Math";
+import { equal } from "@/Utility/Math";
 
 export class SDValue {
     constructor(value) {

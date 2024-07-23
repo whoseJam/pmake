@@ -12,7 +12,6 @@ export function Link(elem1, elem2, linkClass = Line, xloc1 = "cx", yloc1 = "cy",
         link.source(x1, y1);
         link.target(x2, y2);
         trim(link, elem1, elem2);
-        link.update();
     }
     elem1.childAs(`link_${++id}`, link, move);
     elem2.childAs(`link_${++id}`, link, move);

@@ -27,4 +27,35 @@ export class Action {
     owner: any;
     channel: string;
     callback: (t: number) => void;
+    
+    /**
+     * 触发该Action的渲染行为
+     * @param timestamp 时间戳
+     */
+    call(timestamp: number): void;
+
+    /**
+     * 强制结束
+     */
+    finish(): void;
+
+    /**
+     * 停止
+     */
+    stop(): void;
+
+    /**
+     * 隐藏
+     */
+    hide(): void;
+
+    /**
+     * 打印日志
+     */
+    log(): string;
+
+    /**
+     * 克隆一个Action
+     */
+    clone(): Action;
 }

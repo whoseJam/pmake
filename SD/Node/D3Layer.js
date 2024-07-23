@@ -3,17 +3,20 @@ import { Action } from "@/Animate/Action";
 
 export class D3Layer {
     constructor(node, name) {
-        const parentLayer = ("g" in node) ? node.g() : node;
-        const parentNode = ("g" in node) ? node : node.node;
-        this.d3 = parentLayer.append("g");
-        this.node = parentNode;
+        const isSDNode = "g" in node;
+        const parentLayer = isSDNode ? node.g() : node;
+        const parentNode  = isSDNode ? node : node.node;
+        this.d3     = parentLayer.append("g");
+        this.node   = parentNode;
         this.parent = parentLayer;
         if (name) this.d3.attr(name, "");
     }
 
     newLayer(layerName) {
         const layer = `layer_${layerName}`;
-        if (layer in this) throw new Error("Layer Name Already Existed");
+        if (layer in this) {
+            throw new Error(`Layer Named ${layerName} Already Existed`);
+        }
         this[layer] = new D3Layer(this.node, layerName);
         this[layer].node = this.node;
         return this[layer];
@@ -21,7 +24,10 @@ export class D3Layer {
 
     layer(layerName) {
         const layer = `layer_${layerName}`;
-        return this[layer];
+        if (layer in this) {
+            return this[layer];
+        }
+        throw new Error(`Layer Named ${layerName} Not Exists`);
     }
 
     attachTo(layer) {
@@ -61,5 +67,17 @@ export class D3Layer {
 
     nake() {
         return d3ToNake(this.d3);
+    }
+
+    self() {
+        return this.d3;
+    }
+
+    allowPointerEvents() {
+        this.d3.style("pointer-events", "auto");
+    }
+
+    disablePointerEvents() {
+        this.d3.style("pointer-events", "none");
     }
 }

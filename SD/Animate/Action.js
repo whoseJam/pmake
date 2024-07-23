@@ -1,17 +1,9 @@
 import { Animate } from "@/Animate/Animate";
 
-/**
- * 默认缓动函数
- * @param {number} t 
- * @returns {number}
- */
 function easeInOut(t) {
     return 0.5 * (1 - Math.cos(Math.PI * t));
 }
 
-/**
- * @class Action
- */
 export class Action {
     /**
      * @constructor
@@ -60,40 +52,23 @@ export class Action {
         this.firstCall = false;
     }
     
-    /**
-     * 将 action 强制停止
-     */
     finish() {
         this.call(this.r + 5);
         if (!this.isStopped) this.call(this.r + 5);
     }
 
-    /**
-     * 停止该 action
-     */
     stop() {
         this.isStopped = true;
     }
     
-    /**
-     * 将该 action 隐藏起来
-     */
     hide() {
         this.hidden = true;
     }
 
-    /**
-     * 打印 action 的日志
-     * @returns {string}
-     */
     log() {
         return `[${this.l}, ${this.r}] channel=${this.channel} from=${this.from} to=${this.to} id=${this.owner.sdNodeId} frame=${this.frame}`;
     }
 
-    /**
-     * 克隆一个 action
-     * @returns {Action}
-     */
     clone() {
         const other = new Action(this.l, this.r, this.from, this.to, this.callback, this.owner, this.channel, false);
         other.frame = this.frame;

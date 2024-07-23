@@ -1,9 +1,11 @@
+import { D3Layer } from "SD/Node/D3Layer";
+
 import { Vector } from "SD/Utility/Math";
 
 type Rule = (parent: SDNode, child: SDNode) => void;
 
 export class SDNode {
-    constructor(parent: any);
+    constructor(parent: SDNode|D3Layer);
     g(): any;
     newLayer(name: number|string): any
     layer(name: number|string): any

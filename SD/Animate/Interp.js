@@ -1,8 +1,4 @@
-/**
- * 把十六进制表示的颜色，转为RGB对象表示的颜色
- * @param {string} hex 
- * @returns {r: number, g: number, b: number}
- */
+
 function hexToRgb(hex) {
     hex = hex.replace("#", "");
     const r = parseInt(hex.substring(0, 2), 16);
@@ -11,11 +7,6 @@ function hexToRgb(hex) {
     return { r: r, g: g, b: b };
 }
 
-/**
- * 把常见的可以转为数字数组的任意对象，转化为数字数组
- * @param {number|Array<number>} value 
- * @returns {Array<number}
- */
 function anyToArray(value) {
     if (typeof(value) === "number") return [value];
     return value;

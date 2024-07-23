@@ -1,11 +1,14 @@
-import { Action } from "../Animate/Action";
-import { Children } from "./Children";
-import { D3Layer } from "./D3Layer";
-import { Interp } from "../Animate/Interp";
-import { svg } from "../Interact/Svg";
-import { Animate } from "./Animate";
-import { SDMember } from "./SDMember";
-import { d3ToNake, nakeToSnap } from "@/Utility/Tool";
+import { svg } from "@/Interact/Svg";
+
+import { Action } from "@/Animate/Action";
+import { Interp } from "@/Animate/Interp";
+
+import { Animate }  from "@/Node/Animate";
+import { D3Layer }  from "@/Node/D3Layer";
+import { Children } from "@/Node/Children";
+import { SDMember } from "@/Node/SDMember";
+
+import { d3ToNake } from "@/Utility/Tool";
 
 let id = 0;
 
@@ -13,12 +16,13 @@ export function SDNode(parent) {
     if (parent === svg()) {
         svg().children.push(this);
     }
+    id++;
     this.d3layer = new D3Layer(parent);
-    this.d3layer.nake().setAttribute("id", id + 1);
+    this.d3layer.nake().setAttribute("id", id);
     this.d3layer.node = this;
     this.parent = ("g" in parent) ? parent : parent.node;
     this.children = new Children(this);
-    this.sdNodeId = ++id;
+    this.sdNodeId = id;
     this.id = id;
     this._ = {};
     this.animate = new Animate(this);
@@ -35,7 +39,6 @@ export function SDNode(parent) {
 SDNode.prototype.g = function() {
     return this.d3layer;
 }
-SDNode.prototype.updateList = [];
 
 SDNode.prototype.newLayer = function(layerName) {
     return this.d3layer.newLayer(layerName);
@@ -46,7 +49,8 @@ SDNode.prototype.layer = function(layerName) {
 }
 
 SDNode.prototype.attachTo = function(node) {
-    const otherLayer = ("g" in node) ? node.g() : node;
+    const isSDNode = ("g" in node);
+    const otherLayer = isSDNode ? node.g() : node;
     this.d3layer.attachTo(otherLayer);
     return this;
 }
@@ -229,12 +233,18 @@ SDNode.prototype.update = function() {
 }
 
 SDNode.prototype.freeze = function() {
-    this._.freeze = true;
+    this._.freeze++;
     return this;
 }
 
 SDNode.prototype.unfreeze = function() {
-    this._.freeze = false;
+    this._.freeze--;
+    if (this._.freeze > 0) {
+        return this;
+    }
+    if (this._.freeze < 0) {
+        throw new Error("Too Many Unfreeze Operation");
+    }
     if (this._.pendUpdate) {
         this._.pendUpdate = false;
         this.update();
@@ -243,7 +253,7 @@ SDNode.prototype.unfreeze = function() {
 }
 
 SDNode.prototype.freezing = function() {
-    return this._.freeze;
+    return this._.freeze > 0;
 }
 
 SDNode.prototype.pendUpdate = function() {
@@ -261,19 +271,25 @@ SDNode.prototype.tryUpdate = function() {
 SDNode.prototype.updateList = [
     function() {
         if (this.member.hasChanged("global-opacity")) {
+            const d3layer = this.d3layer;
             new Action(
                 this.delay(),
                 this.delay() + this.duration(),
                 this.member.oldValue("global-opacity"),
                 this.member.get("global-opacity"),
-                Interp.numberInterp(this.d3layer.nake(), "opacity"),
+                function(t) {
+                    const A = this.from;
+                    const B = this.to;
+                    const current = (A * (1 - t) + B * t);
+                    d3layer.nake().setAttribute("opacity", current);
+                    if (t === 1) {
+                        const isVisible = (current !== 0);
+                        const choose = isVisible ? "allowPointerEvents" : "disablePointerEvents";
+                        d3layer[choose]();
+                    }
+                },
                 this, "global-opacity"
             );
-            if (this.member.get("global-opacity") === 0) {
-                this.d3layer.d3.style("pointer-events", "none");
-            } else {
-                this.d3layer.d3.style("pointer-events", "auto")
-            }
             this.member.flush("global-opacity");
         }
     }

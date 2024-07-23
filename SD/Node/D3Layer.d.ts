@@ -17,5 +17,6 @@ export class D3Layer {
 
     append(tag: string): D3Selection;
 
+    self(): D3Selection;
     nake(): Element;
 }
