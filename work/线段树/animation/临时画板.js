@@ -1,5 +1,5 @@
 import { trim } from "../../lib/Utility/Trim";
-import * as sd from "../@/SD";
+import * as sd from "@/sd";
 
 let svg = sd.svg();
 let R = sd.rule();

@@ -126,6 +126,7 @@ export function d3TreeLayout(mode, transX, transY, minDistanceRatio, parentSizeI
         sizeCof[i] = Math.min(sizeCof[i], limit / minDistanceRatio[i]);
 
     info.descendants().forEach(nodeInfo => {
+        console.log("nodeInfo =", nodeInfo);
         const x = transX(nodeInfo);
         const y = transY(nodeInfo);
         const node = nodeInfo.data.data;

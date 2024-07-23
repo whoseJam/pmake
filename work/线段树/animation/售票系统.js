@@ -1,12 +1,13 @@
-import * as sd from "../@/SD";
+import * as sd from "@/sd";
 
-let svg = sd.svg();
-let C = sd.color();
+const svg = sd.svg();
+const C = sd.color();
 
+init();
 main();
 
-async function main() {
-    let t = new sd.HorizontalValueTree(svg).x(100).y(100).layerWidth(100);
+function init() {
+    const t = new sd.HorizontalValueTree(svg).x(100).y(100).layerWidth(100);
     function makeVertex(i) {
         return new sd.Vertex(svg).rate(1.6).value(new sd.Mathjax(svg, `C_{${i}}`));
     }
@@ -15,4 +16,8 @@ async function main() {
         t.newNode(i, makeVertex(i));
         t.newLink(i-1, i, new sd.Code(svg).code(`lim=${sd.rand(2, 5)}\nid=${i-1}`).fontSize(15));
     }
+}
+
+async function main() {
+    await sd.pause();
 }

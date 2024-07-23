@@ -3,6 +3,7 @@ import { Rect } from "@/Node/Nake/Rect";
 import { toNode } from "@/Utility/Tool";
 import { BaseArray } from "./BaseArray";
 import { naiveGetterAndSetter } from "../Common";
+import { color } from "@/Utility/Color";
 
 export function Code(parent) {
     BaseArray.call(this, parent);
@@ -20,7 +21,7 @@ export function Code(parent) {
 
     this.children.push(
         "focus",
-        new Rect(this).color(Color.BLUE).opacity(0),
+        new Rect(this).color(color().BLUE).opacity(0),
         (parent, child) => {
             if (typeof(parent.l()) !== "number") return;
             const elementL = parent.element(parent.l());

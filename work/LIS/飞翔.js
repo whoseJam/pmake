@@ -1,4 +1,4 @@
-import * as sd from "../@/SD";
+import * as sd from "@/sd";
 
 let svg = sd.svg();
 let g = new sd.Grid(svg).n(10).m(10).x(100).y(100).startN(1).startM(1);
