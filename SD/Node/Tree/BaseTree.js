@@ -1,6 +1,7 @@
-import { D3Layer } from "@/Node/D3Layer";
-import { SDNode } from "@/Node/SDNode";
-import { naiveGetterAndSetter } from "../Common";
+import { SDNode }               from "@/Node/SDNode";
+import { naiveGetterAndSetter } from "@/Node/Common";
+
+import { isNumberOrString } from "@/Utility/Tool";
 
 export function BaseTree(parent) {
     SDNode.call(this, parent);
@@ -23,24 +24,40 @@ BaseTree.prototype.element = function(arg0, arg1) {
         return this.findNodeById(arg0);
     if (arguments.length === 2)
         return this.findLinkById(arg0, arg1);
-    console.error(arguments);
+    console.log(arguments);
     throw new Error("Invalid Arguments");
 }
 
 BaseTree.prototype.value = function(arg0, arg1, arg2) {
-    if (arguments.length === 1)
-        return this.findNodeById(arg0).value();
+    if (arguments.length === 1) {
+        const node = this.findNodeById(arg0);
+        if (!node) {
+            throw new Error(`Node (id = ${arg0}) Do Not Exists`);
+        }
+        return node.value();
+    }
     else if (arguments.length === 2) {
-        const link = this.findLinkById(arg0, arg1);
-        if (link) return link.value();
-        this.element(arg0).value(arg1);
+        if (isNumberOrString(arg0) && isNumberOrString(arg1)) {
+            const link = this.findLinkById(arg0, arg1);
+            if (link) {
+                return link.value();
+            }
+        }
+        const node = this.findNodeById(arg0);
+        if (!node) {
+            throw new Error(`Node (id = ${arg0}) Do Not Exists`);
+        }
+        node.value(arg1);
         return this;
     } else if (arguments.length === 3) {
         const link = this.findLinkById(arg0, arg1);
+        if (!link) {
+            throw new Error(`Link (parentId = ${arg0} childId = ${arg1}) Do Not Exists`);
+        }
         link.value(arg2);
         return this;
     }
-    console.error(arguments);
+    console.log(arguments);
     throw new Error("Invalid Arguments");
 }
 

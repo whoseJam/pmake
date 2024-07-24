@@ -4,12 +4,45 @@ import { SDNode } from "../SDNode";
 export class BaseTree {
     constructor(parent: any);
 
-    element(nodeId: number|string): SDNode;
-    element(parentId: number|string, childId: number|string): SDNode;
+    /**
+     * 获取某个节点
+     * @param nodeId 
+     */
+    element(nodeId: number|string): SDNode|undefined;
 
+    /**
+     * 获取某条边
+     * @param parentId 
+     * @param childId 
+     */
+    element(parentId: number|string, childId: number|string): SDNode|undefined;
+
+    /**
+     * 获取某个节点的 value
+     * @param nodeId 
+     */
     value(nodeId: number|string): SDNode;
+
+    /**
+     * 设置某个节点的 value
+     * @param nodeId 
+     * @param value 
+     */
     value(nodeId: number|string, value: any): this;
+
+    /**
+     * 获取某条边的 value
+     * @param parentId 
+     * @param childId 
+     */
     value(parentId: number|string, childId: number|string): SDNode;
+
+    /**
+     * 设置某条边的 value
+     * @param parentId 
+     * @param childId 
+     * @param value 
+     */
     value(parentId: number|string, childId: number|string, value: any): this;
 
     opacity(): number;
@@ -27,10 +60,10 @@ export class BaseTree {
 
     stratify(): any;
 
-    findNodeById(nodeId: number|string): SDNode;
-    findLinkById(parentId: number|string, childId: number|string): SDNode;
+    findNodeById(nodeId: number|string): SDNode|undefined;
+    findLinkById(parentId: number|string, childId: number|string): SDNode|undefined;
 
-    father(nodeId: number|string): SDNode;
+    father(nodeId: number|string): SDNode|undefined;
 
     depth(): number;
     depth(nodeId: number|string): number;

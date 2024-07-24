@@ -1,5 +1,5 @@
-import { SDNode } from "@/Node/SDNode";
-import { naiveGetterAndSetter } from "../Common";
+import { SDNode }               from "@/Node/SDNode";
+import { naiveGetterAndSetter } from "@/Node/Common";
 
 export function BaseArray(parent) {
     SDNode.call(this, parent);
@@ -23,9 +23,12 @@ BaseArray.prototype.length = function(size) {
         const elements = this.member.get("elements");
         return elements.length;
     }
-    let len = this.length();
-    while (len < size) { this.push(); len++; }
-    while (len > size) { this.pop(); len--; }
+    if (typeof(size) !== "number" || size < 0) {
+        throw new Error(`Size Must Be A Positive Number (size = ${size}`);
+    }
+    let currentLength = this.length();
+    while (currentLength < size) { this.push(); currentLength++; }
+    while (currentLength > size) { this.pop();  currentLength--; }
     return this;
 }
 
@@ -42,11 +45,6 @@ BaseArray.prototype.idx = function(idx) {
     return idx - this.start();
 }
 
-/**
- * 根据逻辑下标，获取对应的元素
- * @param {number} idx
- * @returns {SDNode}
- */
 BaseArray.prototype.element = function(idx) {
     const elements = this.member.get("elements");
     const index = this.idx(idx);
@@ -108,21 +106,17 @@ BaseArray.prototype.eraseByBaseArray = function(idx) {
     return this;
 }
 
-/**
- * @param {number} idx 
- * @returns {this}
- */
 BaseArray.prototype.erase = function(idx) {
-    const elem = this.element(idx);
+    const element = this.element(idx);
     this.eraseByBaseArray(idx);
-    elem.opacity(0).remove();
+    element.opacity(0).remove();
     return this;
 }
 
 BaseArray.prototype.dropElement = function(idx) {
-    const elem = this.element(idx);
+    const element = this.element(idx);
     this.eraseByBaseArray(idx);
-    return elem;
+    return element;
 }
 
 BaseArray.prototype.dropLastElement = function() {
@@ -130,10 +124,10 @@ BaseArray.prototype.dropLastElement = function() {
 }
 
 BaseArray.prototype.dropValue = function(idx) {
-    const elem = this.element(idx);
+    const element = this.element(idx);
     this.eraseByBaseArray(idx);
-    const value = elem.after(this.delay()).drop();
-    elem.startAnimate(this).opacity(0).remove();
+    const value = element.after(this.delay()).drop();
+    element.startAnimate(this).opacity(0).remove();
     return value;
 }
 
@@ -162,7 +156,7 @@ BaseArray.prototype.opacity = function() {
         this.element(idx).opacity(opacity);
         return this;
     }
-    console.error(arguments);
+    console.log(arguments);
     throw new Error("Invalid Arguments");
 }
 
@@ -176,7 +170,7 @@ BaseArray.prototype.value = function() {
         this.element(idx).value(value);
         return this;
     }
-    console.error(arguments);
+    console.log(arguments);
     throw new Error("Invalid Arguments");
 }
 
@@ -201,6 +195,6 @@ BaseArray.prototype.color = function() {
             this.element(i).color(color);
         return this;
     }
-    console.error(arguments);
+    console.log(arguments);
     throw new Error("Invalid Arguments");
 }

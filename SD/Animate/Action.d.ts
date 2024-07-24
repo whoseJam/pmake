@@ -29,7 +29,7 @@ export class Action {
     callback: (t: number) => void;
     
     /**
-     * 触发该Action的渲染行为
+     * 触发该 Action 的渲染行为
      * @param timestamp 时间戳
      */
     call(timestamp: number): void;
@@ -55,7 +55,7 @@ export class Action {
     log(): string;
 
     /**
-     * 克隆一个Action
+     * 克隆一个 Action
      */
     clone(): Action;
 }

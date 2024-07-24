@@ -5,6 +5,10 @@ export function evaluateValue(id, value) {
     return value === undefined || value === null ? id : value;
 }
 
+export function isNumberOrString(value) {
+    return typeof(value) === "number" || typeof(value) === "string";
+}
+
 /**
  * 将任意对象，转为一个SDNode
  * @param {SDNode} node 
