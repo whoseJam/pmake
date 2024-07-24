@@ -1,5 +1,5 @@
 
-import * as sd from "../@/SD";
+import * as sd from "@/sd";
 
 /**
  * @param {SDNode} node 

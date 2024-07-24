@@ -1,5 +1,5 @@
 import { A } from "@svgdotjs/svg.js";
-import * as sd from "../@/SD";
+import * as sd from "@/sd";
 
 let svg = sd.svg();
 let C = sd.color();
