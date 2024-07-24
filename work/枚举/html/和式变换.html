@@ -1,0 +1,94 @@
+<section>
+    <section>
+        <h1>和式变换</h1>
+    </section>
+    <section>
+        <h2>和式变换</h2>
+        <p>和式变换，尝试将某个形式的 $\sum$，转化为另一个更简单或者更接近某个目标的 $\sum$</p>
+    </section>
+    <section>
+        <h2>结合律</h2>
+        <p>
+            $$
+            \sum_{p(k)}(a_k+b_k)=\sum_{p(k)}a_k+\sum_{p(k)}b_k
+            $$
+        </p>
+        <div class="fragment quote">
+            $$
+            \begin{aligned}
+            answer&=(a_1+b_1)+(a_2+b_2)+(a_3+b_3)+...+(a_n+b_n) \\
+            &=(a_1+a_2+a_3+...+a_n)+(b_1+b_2+b_3+...+b_n)
+            \end{aligned}
+            $$
+        </div>
+    </section>
+    <section>
+        <h2>分配律</h2>
+        <p>
+            $$
+            \sum_{p(k)}C a_k=C\sum_{p(k)}a_k
+            $$
+        </p>
+        <div class="fragment quote">
+            $$
+            \begin{aligned}
+            answer&=(Ca_1+Ca_2+Ca_3+...+Ca_n) \\
+            &=C(a_1+a_2+a_3+...+a_n)
+            \end{aligned}
+            $$
+        </div>
+    </section>
+    
+    <section>
+        <h2>小试一下</h2>
+        <p>
+            我们尝试化简一下：
+            $$
+            \sum_{1\le i\le n}\sum_{1\le j\le n}a_ib_j
+            $$
+        </p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                int Solve() {
+                    int ans = 0;
+                    for (int i = 1; i <= n; i++) {
+                        for (int j = 1; j <= n; j++) {
+                            ans += a[i] * b[j];
+                        }
+                    }
+                    return ans;
+                }
+            </script>
+        </codeblock>
+    </section>
+    <section>
+        <h2>小试一下</h2>
+        <p class="math-fragment">
+            $$
+            \begin{aligned}
+            answer&=\sum_{1\le i\le n}\sum_{1\le j\le n}a_ib_j \\
+            &=\sum_{1\le i\le n}a_i\sum_{1\le j\le n}b_j \\
+            &=\big( \sum_{1\le i\le n}a_i \big) \big( \sum_{1\le j\le n}b_j \big)
+            \end{aligned}
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>小试一下</h2>
+        <p>
+            $$
+            answer=\big( \sum_{1\le i\le n}a_i \big) \big( \sum_{1\le j\le n}b_j \big)
+            $$
+        </p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                int Solve() {
+                    int A = 0, B = 0;
+                    for (int i = 1; i <= n; i++) A += a[i];
+                    for (int j = 1; j <= n; j++) B += b[j];
+                    return A * B;
+                }
+            </script>
+        </codeblock>
+    </section>
+</section>

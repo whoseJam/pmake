@@ -1,0 +1,3 @@
+#905.棋盘问题：https://www.luogu.com.cn/problem/P1548
+#911.M钱买N鸡：http://43.143.204.105/problem/911
+#912.百慕大三角：http://43.143.204.105/problem/912
