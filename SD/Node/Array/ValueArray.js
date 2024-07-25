@@ -23,7 +23,7 @@ ValueArray.prototype.insert = function(index, value) {
         element.attachTo(this.layer("elements"));
         element.opacity(0);
         move();
-        element.unfreeze().freeze();
+        element.update();
         element.startAnimate(this);
         element.opacity(1);
     };

@@ -1,5 +1,6 @@
 import { Color } from "SD/Utility/Color";
-import { SDNode } from "../SDNode";
+
+import { SDNode } from "SD/Node/SDNode";
 
 export class BaseElement {
     constructor(parent: any);

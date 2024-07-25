@@ -1,7 +1,8 @@
-import { Circle } from "@/Node/Nake/Circle"; 
 import { CircleBackground } from "@/Rule/Background";
-import { BaseElement } from "./BaseElement";
-import { naiveGetterAndSetter } from "../Common";
+
+import { Circle }               from "@/Node/Nake/Circle"; 
+import { BaseElement }          from "@/Node/Element/BaseElement";
+import { naiveGetterAndSetter } from "@/Node/Common";
 
 export function Vertex(parent, value) {
     BaseElement.call(this, parent);

@@ -1,9 +1,11 @@
-import { CenterFixAspect } from "@/Rule/Center";
-import { D3Layer } from "@/Node/D3Layer";
-import { SDNode } from "@/Node/SDNode";
-import { toNode } from "@/Utility/Tool";
 import { svg } from "@/Interact/Svg";
-import { naiveGetterAndSetter } from "../Common";
+
+import { SDNode }               from "@/Node/SDNode";
+import { naiveGetterAndSetter } from "@/Node/Common";
+
+import { toNode } from "@/Utility/Tool";
+
+import { CenterFixAspect } from "@/Rule/Center";
 
 export function BaseElement(parent) {
     SDNode.call(this, parent);
@@ -72,7 +74,7 @@ BaseElement.prototype.value = function(value, rule) {
         element.attachTo(this).after(this);
         element.opacity(0);
         move();
-        element.unfreeze().freeze();
+        element.update();
         element.startAnimate(this);
         element.opacity(1);
     }

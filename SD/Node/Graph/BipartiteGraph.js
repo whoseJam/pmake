@@ -32,7 +32,7 @@ BipartiteGraph.prototype.newNode = function(id, value, setNo) {
     element._.enter = (element, move) => {
         element.opacity(0);
         move();
-        element.unfreeze().freeze();
+        element.update();
         element.startAnimate(this).opacity(1);
     };
     this.newNodeByBaseGraph(id, element);
@@ -45,7 +45,7 @@ BipartiteGraph.prototype.newLink = function(x, y, value) {
     element._.enter = (element, move) => {
         element.opacity(0);
         move();
-        element.unfreeze().freeze();
+        element.update();
         element.startAnimate(this).opacity(1);
     };
     this.newLinkByBaseGraph(x, y, element);

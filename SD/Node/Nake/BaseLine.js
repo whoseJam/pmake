@@ -215,7 +215,7 @@ BaseLine.prototype.value = function(value, rule) {
         element.after(this);
         element.opacity(0);
         move();
-        element.unfreeze().freeze();
+        element.update();
         element.startAnimate(this);
         element.opacity(1);
     };

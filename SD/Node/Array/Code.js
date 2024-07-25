@@ -72,7 +72,7 @@ Code.prototype.insert = function(index, value = "") {
     element._.enter = (element, move) => {
         element.opacity(0);
         move();
-        element.unfreeze().freeze();
+        element.update();
         element.startAnimate(this);
         element.opacity(1);
     }
@@ -111,7 +111,7 @@ Code.prototype.focus = function(l, r) {
             const context = new Context(this);
             elem.startAnimate(context.tillc(0, 0));
             move();
-            elem.unfreeze().freeze();
+            elem.update();
             elem.startAnimate(context.tillc(0, 1));
             elem.opacity(1);
         };

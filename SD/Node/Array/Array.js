@@ -48,7 +48,7 @@ Array.prototype.insert = function(index, value) {
     element._.enter = (element, move) => {
         element.opacity(0);
         move();
-        element.unfreeze().freeze();
+        element.update();
         element.startAnimate(this);
         element.opacity(1);
     };

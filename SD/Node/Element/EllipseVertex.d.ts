@@ -1,8 +1,5 @@
 import { BaseElement } from "SD/Node/Element/BaseElement";
 
-export class Vertex extends BaseElement {
+export class EllipseVertex extends BaseElement {
     constructor(parent: any);
-
-    r(): number;
-    r(r: number): this;
 }
