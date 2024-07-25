@@ -1,7 +1,8 @@
+import { trim }          from "@/Utility/Trim";
 import { evaluateValue } from "@/Utility/Tool";
-import { trim } from "@/Utility/Trim";
-import { naiveGetterAndSetter } from "../Common";
-import { BaseGraph } from "./BaseGraph";
+
+import { BaseGraph }            from "@/Node/Graph/BaseGraph";
+import { naiveGetterAndSetter } from "@/Node/Common";
 
 export function GridGraph(parent) {
     BaseGraph.call(this, parent);

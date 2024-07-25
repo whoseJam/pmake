@@ -1,10 +1,12 @@
 import { Color } from "SD/Utility/Color";
-import { SDNode } from "../SDNode";
+
+import { SDNode }  from "SD/Node/SDNode";
+import { D3Layer } from "SD/Node/D3Layer";
 
 type GraphMode = "direct"|"undirect";
 
 export class BaseGraph extends SDNode {
-    constructor(parent: any);
+    constructor(parent: SDNode|D3Layer);
 
     newNode(nodeId: number|string): this;
     newNode(nodeId: number|string, value: any): this;

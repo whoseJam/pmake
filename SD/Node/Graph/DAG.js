@@ -1,15 +1,19 @@
-import { dagreGraphToBox, evaluateValue } from "../../Utility/Tool";
-import { BaseGraph } from "./BaseGraph";
-import { trim } from "@/Utility/Trim";
-import { mapTo } from "@/Utility/Math";
-import * as dagre from "dagre";
+import { trim }            from "@/Utility/Trim";
+import { mapTo }           from "@/Utility/Math";
+import { evaluateValue }   from "@/Utility/Tool";
+import { dagreGraphToBox } from "@/Utility/Tool";
+
+import { BaseGraph } from "@/Node/Graph/BaseGraph";
+
+import { layout as dagreLayout }     from "dagre";
+import { graphlib as dagreGraphLib } from "dagre";
 
 export function DAG(parent) {
     BaseGraph.call(this, parent);
 
     this.g().type("DAG");
     this.member.new("r", 20);
-    this.member.new("graph", new dagre.graphlib.Graph());
+    this.member.new("graph", new dagreGraphLib.Graph());
     this.member.new("rankDir", "TB");
     this.member.new("align", undefined);
 
@@ -88,7 +92,7 @@ function dagreGetterAndSetter(key, keyInDagre) {
 
 function update() {
     const graph = this.member.get("graph");
-    dagre.layout(graph);
+    dagreLayout(graph);
     const box = dagreGraphToBox(graph);
 
     const convertXInner = mapTo(

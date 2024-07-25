@@ -1,7 +1,8 @@
-import { Box } from "../Element/Box";
-import { DAG } from "./DAG";
-import { evaluateValue } from "../../Utility/Tool";
-import { naiveGetterAndSetter } from "../Common";
+import { evaluateValue } from "@/Utility/Tool";
+
+import { DAG }                  from "@/Node/Graph/DAG";
+import { Box }                  from "@/Node/Element/Box";
+import { naiveGetterAndSetter } from "@/Node/Common";
 
 export function BoxDAG(parent) {
     DAG.call(this, parent);
@@ -33,7 +34,7 @@ BoxDAG.prototype.newNode = function(id, value = null) {
     element._.enter = (element, move) => {
         element.opacity(0);
         move();
-        element.freeze().unfreeze();
+        element.update();
         element.startAnimate(this).opacity(1);
     };
     const graph = this.member.get("graph");

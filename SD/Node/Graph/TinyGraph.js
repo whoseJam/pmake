@@ -1,7 +1,8 @@
-import { trim } from "@/Utility/Trim";
-import { BaseGraph } from "./BaseGraph";
+import { trim }          from "@/Utility/Trim";
 import { evaluateValue } from "@/Utility/Tool";
-import { GridGraph } from "./GridGraph";
+
+import { BaseGraph } from "@/Node/Graph/BaseGraph";
+import { GridGraph } from "@/Node/Graph/GridGraph";
 
 export function TinyGraph(parent) {
     BaseGraph.call(this, parent);

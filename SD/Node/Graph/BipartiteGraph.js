@@ -1,6 +1,7 @@
+import { trim }          from "@/Utility/Trim";
 import { evaluateValue } from "@/Utility/Tool";
-import { BaseGraph } from "./BaseGraph";
-import { trim } from "@/Utility/Trim";
+
+import { BaseGraph } from "@/Node/Graph/BaseGraph";
 
 export function BipartiteGraph(parent) {
     BaseGraph.call(this, parent);

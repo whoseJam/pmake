@@ -1,6 +1,9 @@
+import { SDNode }    from "SD/Node/SDNode";
+import { D3Layer }   from "SD/Node/D3Layer";
+import { BaseGraph } from "SD/Node/Graph/BaseGraph";
 
-export class GridGraph {
-    constructor(parent: any);
+export class GridGraph extends BaseGraph {
+    constructor(parent: SDNode|D3Layer);
 
     n(): number;
     n(n: number): this;

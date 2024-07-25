@@ -1,7 +1,7 @@
-import { SDNode } from "../SDNode";
-import { Vertex } from "@/Node/Element/Vertex";
-import { Line }from "@/Node/Nake/Line";
-import { naiveGetterAndSetter } from "../Common";
+import { Line }                 from "@/Node/Nake/Line";
+import { SDNode }               from "@/Node/SDNode";
+import { Vertex }               from "@/Node/Element/Vertex";
+import { naiveGetterAndSetter } from "@/Node/Common";
 
 export function BaseGraph(parent) {
     SDNode.call(this, parent);
