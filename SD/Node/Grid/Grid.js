@@ -1,6 +1,6 @@
-import { BaseGrid } from "./BaseGrid";
-import { Box } from "../Element/Box";
-import { naiveGetterAndSetter } from "../Common";
+import { Box }                  from "@/Node/Element/Box";
+import { BaseGrid }             from "@/Node/Grid/BaseGrid";
+import { naiveGetterAndSetter } from "@/Node/Common";
 
 export function Grid(parent) {
     BaseGrid.call(this, parent);

@@ -46,6 +46,7 @@ export { BoxDAG }         from "./Node/Graph/BoxDAG.js";
 export { GridGraph }      from "./Node/Graph/GridGraph.js";
 export { TinyGraph }      from "./Node/Graph/TinyGraph.js";
 export { BipartiteGraph } from "./Node/Graph/BipartiteGraph.js";
+export { ValueGridGraph } from "./Node/Graph/ValueGridGraph.js";
 
 export { Brace }       from "./Node/Curve/Brace.js";
 export { Curve }       from "./Node/Curve/Curve.js";

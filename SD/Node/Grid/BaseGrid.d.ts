@@ -22,17 +22,60 @@ export class BaseGrid extends SDNode {
 
     pushRow(columns: number): this;
 
+    /**
+     * 获取指定位置元素的 value
+     * @param i 
+     * @param j 
+     */
     value(i: number, j: number): SDNode;
+
+    /**
+     * 设置指定位置元素的 value
+     * @param i 
+     * @param j 
+     * @param value 
+     */
     value(i: number, j: number, value: SDNode): this;
 
+    /**
+     * 获取指定位置元素的 value，并以 int 值返回
+     * @param i 
+     * @param j 
+     */
     intValue(i: number, j: number): number;
 
     opacity(): number;
     opacity(opacity: number): this;
+
+    /**
+     * 获取指定位置元素的透明度
+     * @param i 
+     * @param j 
+     */
     opacity(i: number, j: number): number;
+
+    /**
+     * 设置指定位置元素的透明度
+     * @param i 
+     * @param j 
+     * @param opacity 
+     */
     opacity(i: number, j: number, opacity: number): this;
 
     color(color: Color): this;
+
+    /**
+     * 获取指定位置元素的颜色
+     * @param i 
+     * @param j 
+     */
     color(i: number, j: number): Color;
+
+    /**
+     * 设置指定位置元素的颜色
+     * @param i 
+     * @param j 
+     * @param color 
+     */
     color(i: number, j: number, color: Color): Color;
 }

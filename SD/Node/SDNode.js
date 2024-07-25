@@ -301,3 +301,12 @@ SDNode.prototype.onClick = function(callback) {
         callback(this);
     })
 }
+
+SDNode.prototype.drag = function(type) {
+    if (type) {
+        const nake = d3ToNake(this.d3layer.d3);
+        Snap(nake).drag();
+    }
+    console.log("return this = ", this);
+    return this;
+}

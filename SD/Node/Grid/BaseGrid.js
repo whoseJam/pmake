@@ -1,5 +1,5 @@
-import { naiveGetterAndSetter } from "../Common";
-import { SDNode } from "../SDNode";
+import { SDNode }               from "@/Node/SDNode";
+import { naiveGetterAndSetter } from "@/Node/Common";
 
 export function BaseGrid(parent) {
     SDNode.call(this, parent);
@@ -116,72 +116,89 @@ BaseGrid.prototype.element = function(i, j) {
     return elems[this.idxN(i)][this.idxM(j)];
 }
 
-BaseGrid.prototype.value = function() {
-    if (arguments.length === 2) return value2.apply(this, arguments);
-    if (arguments.length === 3) return value3.apply(this, arguments);
-    console.log(arguments);
-    throw new Error("无效的参数")
-}
-
-BaseGrid.prototype.intValue = function(x, y) {
-    let value = this.value(x, y);
-    if (!value) return 0;
-    return +value.text();
-}
-
-BaseGrid.prototype.opacity = function() {
-    if (arguments.length === 0) return SDNode.prototype.opacity.call(this);
-    if (arguments.length === 1) {
-        SDNode.prototype.opacity.call(this, arguments[0]);
+BaseGrid.prototype.value = function(arg0, arg1, arg2) {
+    if (arguments.length === 2) {
+        const element = this.element(arg0, arg1);
+        if (!element) {
+            throw new Error(`Element ${arg0} ${arg1} Do Not Exists`);
+        }
+        return element.value();
+    }
+    if (arguments.length === 3) {
+        const element = this.element(arg0, arg1);
+        if (!element) {
+            throw new Error(`Element ${arg0} ${arg1} Do Not Exists`);
+        }
+        element.value(arg2);
         return this;
     }
-    if (arguments.length === 2) return opacity2.apply(this, arguments);
-    if (arguments.length === 3) return opacity3.apply(this, arguments);
+    console.log(arguments);
+    throw new Error("Invalid Arguments");
+}
+
+BaseGrid.prototype.intValue = function(i, j) {
+    const value = this.value(i, j);
+    if (!value) {
+        return 0;
+    }
+    if ("text" in value) {
+        return +value.text();
+    }
+    throw new Error(`Element ${i} ${j} Cannot Cast To Int`);
+}
+
+BaseGrid.prototype.opacity = function(arg0, arg1, arg2) {
+    if (arguments.length === 0) {
+        return SDNode.prototype.opacity.call(this);
+    }
+    if (arguments.length === 1) {
+        SDNode.prototype.opacity.call(this, arg0);
+        return this;
+    }
+    if (arguments.length === 2) {
+        const element = this.element(arg0, arg1);
+        if (!element) {
+            throw new Error(`Element ${arg0} ${arg1} Do Not Exists`);
+        }
+        return element.opacity();
+    }
+    if (arguments.length === 2) {
+        const element = this.element(arg0, arg1);
+        if (!element) {
+            throw new Error(`Element ${arg0} ${arg1} Do Not Exists`);
+        }
+        element.opacity(arg2);
+        return this;
+    }
+    console.log(arguments);
+    throw new Error("Invalid Arguments");
+}
+
+BaseGrid.prototype.color = function(arg0, arg1, arg2) {
+    if (arguments.length === 1) {
+        const elements = this.member.get("elements");
+        elements.forEach(row => {
+            row.forEach(col => {
+                col.color(arg0);
+            })
+        });
+        return this;
+    }
+    if (arguments.length === 2) {
+        const element = this.element(arg0, arg1);
+        if (!element) {
+            throw new Error(`Element ${arg0} ${arg1} Do Not Exists`);
+        }
+        return element.color();
+    }
+    if (arguments.length === 3) {
+        const element = this.element(arg0, arg1);
+        if (!element) {
+            throw new Error(`Element ${arg0} ${arg1} Do Not Exists`);
+        }
+        element.color(arg2);
+        return this;
+    }
     console.log(arguments);
     throw new Error("无效的参数");
-}
-
-BaseGrid.prototype.color = function() {
-    if (arguments.length === 1) return color1.apply(this, arguments);
-    if (arguments.length === 2) return color2.apply(this, arguments);
-    if (arguments.length === 3) return color3.apply(this, arguments);
-    console.log(arguments);
-    throw new Error("无效的参数");
-}
-
-function value2(i, j) {
-    let elem = this.element(i, j);
-    return elem.value();
-}
-function value3(i, j, value) {
-    let elem = this.element(i, j);
-    elem.value(value);
-    return this;
-}
-
-function opacity2(i, j) {
-    let elem = this.element(i, j);
-    return elem.opacity();
-}
-function opacity3(i, j, opacity) {
-    let elem = this.element(i, j);
-    elem.opacity(opacity);
-    return this;
-}
-
-function color1(col) {
-    let elems = this.member.get("elements");
-    for (let i = 0; i < elems.length; i++)
-        for (let j = 0; j < elems[i].length; j++)
-            elems[i][j].color(col);
-    return this;
-}
-function color2(i, j) {
-    let elem = this.element(i, j);
-    return elem.color();
-}
-function color3(i, j, col) {
-    let elem = this.element(i, j);
-    elem.color(col);
-    return this;
 }
