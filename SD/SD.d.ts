@@ -59,3 +59,5 @@ export { MathjaxLabel } from "./Component/Label";
 
 export { rule } from "./Rule/Rule";
 export { Rule } from "./Rule/Rule";
+
+export { input } from "./Utility/Reader";
