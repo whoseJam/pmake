@@ -1,5 +1,8 @@
 import { ForeignObject } from "../Nake/ForeignObject";
 import { render } from "react-dom";
+import React from "react";
+
+global.React = React;
 
 export function BaseHTML(parent) {
     ForeignObject.call(this, parent);

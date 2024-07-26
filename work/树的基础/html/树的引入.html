@@ -3,6 +3,54 @@
         <h1>树的引入</h1>
     </section>
     <section>
-        <h2>树的引入</h2>
+        <h2>前言</h2>
+        <p>线性数据结构：每一个数据元素通常只有一个<b>前驱</b>和一个<b>后继</b></p>
+        <picture class="fragment" data-src="./image/线性数据结构.png"></picture>
+        <p class="fragment">例如：栈、队列</p>
+    </section>
+    <section>
+        <h2>前言</h2>
+        <p>非线性数据结构：至少存在一个数据元素，有多余一个<b>前驱</b>或者<b>后继</b>的数据结构</p>
+        <picture class="fragment" data-src="./image/非线性数据结构.png"></picture>
+        <p class="fragment">例如：树、图</p>
+    </section>
+
+    <section>
+        <h2>树</h2>
+        <iframe data-src="./animation/树的概念.html"
+            style="width: 1000px; height: 350px;"></iframe>    
+        <ul>
+            <li class="fragment">有且仅有一个节点没有<b>前驱</b>，该节点称为树的<b>根</b></li>
+            <li class="fragment">除了根以外，其余每个节点都有且仅有一个前驱</li>
+            <li class="fragment">我们把前驱后继关系，类比于家谱树上的父子关系，前驱是后继的父节点，后继是前驱的子节点</li>
+        </ul>
+    </section>
+    <section>
+        <h2>树</h2>
+        <picture data-src="./image/根节点.png"></picture>
+    </section>
+    <section>
+        <h2>树</h2>
+        <picture data-src="./image/叶节点.png"></picture>
+    </section>
+    <section>
+        <h2>节点的度</h2>
+        <p>一个节点的<b>儿子数量</b>，称为该节点的<b>度</b></p>
+        <picture class="fragment" data-src="./image/节点的度.png"></picture>
+        <p class="fragment"><b>树的度/树的宽度</b>：所有节点中最大度<br><del>有点争议，也有其他说法，看题目意思</del></p>
+    </section>
+    <section>
+        <h2>树的深度</h2>
+        <p>树是分层次的</p>
+        <iframe data-src="./animation/树的深度.html"
+            style="width: 1000px; height: 350px;"></iframe>
+        <p class="fragment">节点的层次从根算起，根节点在第一层，根的所有儿子在第二层，以此类推</p>
+        <p class="fragment">树的层数称为<b>树的深度/树的高度</b></p>
+    </section>
+    <section>
+        <h2>森林</h2>
+        <p>森林指若干不互相交的树构成的集合</p>
+        <iframe data-src="./animation/森林.html"
+            style="width: 1000px; height: 350px;"></iframe>
     </section>
 </section>

@@ -44,7 +44,6 @@ ValueArray.prototype.insertFromExistValue = function(index, value) {
 }
 
 ValueArray.prototype.insertFromExistElement = function(index, value) {
-    console.log("insert form exist element(ValueArray)");
     return this.insertFromExistValue(index, value);
 }
 

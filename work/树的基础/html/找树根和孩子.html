@@ -1,0 +1,27 @@
+<section>
+    <section>
+        <h1>找树根和孩子</h1>
+    </section>
+    <problem data-src="http://43.143.204.105/problem/863"></problem>
+    <section>
+        <h2>找树根和孩子</h2>
+        <codeblock>
+            <script type="text/template">
+                cin >> n;
+                for (int i = 1, x, y; i < n; i++) {
+                    cin >> x >> y;
+                    prt[y] = x;
+                    num[x]++;
+                }
+                for (int i = 1; i <= n; i++) {
+                    if (prt[i] == 0) root = i;
+                    if (num[i] >= num[maxx]) maxx = i;
+                }
+                cout << root << '\n';
+                cout << maxx << '\n';
+                for (int i = 1; i <= n; i++)
+                    if (prt[i] == maxx) cout << i << ' ';
+            </script>
+        </codeblock>
+    </section>
+</section>

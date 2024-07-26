@@ -1,0 +1,81 @@
+<section>
+    <section>
+        <h1>树的存储其二</h1>
+        <p>前向星</p>
+    </section>
+    <section>
+        <h2>需求</h2>
+        <p>注意到在父节点表示法中，我们想要获取某个节点的子节点是一件很麻烦的事情</p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                // 找 u 的子节点
+                for (int v = 1; v <= n; v++) {
+                    if (prt[v] == u) {
+                        // v 是 u 的子节点
+                    }
+                }
+            </script>
+        </codeblock>
+        <p class="fragment">单次查询某个节点的子节点是 $O(n)$ 的，那么遍历整棵树复杂度就是 $O(n^2)$ 的</p>
+        <p class="fragment">但是整棵树由 $n$ 个节点和 $n-1$ 条边组成，我们应该只需要 $O(n)$ 的复杂度就能完成遍历</p>
+    </section>
+    <section>
+        <h2>保存子节点</h2>
+        <p>那么一个自然的思路，就是把每个节点的<b>邻接点</b>保存下来</p>
+        <iframe data-src="./animation/普通数组存边.html"
+            style="width: 1000px; height: 300px;"></iframe>
+        <p class="fragment">不过我们很快发现了这样一个问题，由于有些节点可能包含大量连边，而另外一些节点可能只有少数几条边，<b>边的分配不一定均匀</b>：</p>
+        <ul>
+            <li class="fragment">一个节点最坏可能共有 $n-1$ 条边</li>
+            <li class="fragment">一个节点最好可能只有 $1$ 条边</li>
+        </ul>
+        <p class="fragment">造成了极大的空间浪费</p>
+    </section>
+    <section>
+        <h2>前向星</h2>
+        <p>既然如此，我们不妨新建一个专用于存储边的，长度为 $O(n)$ 的数组</p>
+        <p class="fragment">对于每个节点 $u$，把所有属于 $u$ 的边<b>串起来</b></p>
+        <picture class="fragment" data-src="./image/前向星结构.png"></picture>
+        <ul>
+            <li class="fragment">所有节点<b style="color: blueviolet;">共享</b>这个边数组</li>
+            <li class="fragment">每个节点<b style="color: red;">占有</b>这个边数组的<b style="color: red;">一部分</b></li>
+        </ul>
+    </section>
+    <section>
+        <h2>前向星</h2>
+        <picture data-src="./image/前向星结构2.png"></picture>
+    </section>
+    <section>
+        <h2>前向星</h2>
+        <iframe data-src="./animation/前向星.html"
+            style="width: 1000px; height: 500px;"></iframe>
+    </section>
+    <section>
+        <h2>前向星</h2>
+        <codeblock>
+            <script type="text/template">
+                struct line {
+                    int Nxt, to;
+                } l[N];
+                int h[N], cnt;
+                void Link(int u, int v) {
+                    l[++cnt] = (line){h[u], v}; h[u] = cnt;
+                }
+            </script>
+        </codeblock>
+        <iframe data-src="./animation/前向星连边.html"
+            style="width: 1000px; height: 450px;"></iframe>
+    </section>
+    <section>
+        <h2>前向星的遍历</h2>
+        <picture data-src="./image/前向星遍历.png"></picture>
+        <codeblock>
+            <script type="text/template">
+                for (int i = h[u], v; i; i = l[i].Nxt) {
+                    v = l[i].to;
+                    // do something
+                }
+            </script>
+        </codeblock>
+    </section>
+</section>

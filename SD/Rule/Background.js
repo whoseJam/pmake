@@ -16,7 +16,6 @@ export function CircleBackground() {
         const x = parent.x();
         const y = parent.y();
         const r = parent.r();
-        console.log("parent=", parent, "child=", child, "x=", x, "y=", y);
         child.r(r).x(x).y(y);
     }
 }

@@ -1,25 +1,23 @@
 
 import * as sd from "@/sd";
 
-let svg = sd.svg();
-let C = sd.color();
-let R = sd.rule();
-let fw = makeForwardStar();
-global.fw = fw;
+const svg = sd.svg();
+const C = sd.color();
+const R = sd.rule();
+const fw = makeForwardStar();
 
 main();
 
 async function main() {
     await fw.link(1, 2);
     await fw.link(1, 3);
-    await fw.link(2, 4);
-    await fw.link(2, 5);
+    await fw.link(1, 4);
 }
 
 function makeForwardStar() {
     let self = {};
     const W = 60;
-    let n = 5, m = n * 2;
+    let n = 4, m = n * 2;
     let t = new sd.Tree(svg).root(1, 1).x(800).y(100);
     let h = new sd.Array(svg).start(1).resize(n).x(100).y(100);
     let l = new sd.Array(svg).start(1).resize(m).x(100).y(200).elementWidth(W);
@@ -35,7 +33,7 @@ function makeForwardStar() {
         fwstar.push(new sd.Box(svg).value(`h[${i}]`));
         let elem = fwstar.element(i);
         elem.linkList = linkList;
-        elem.childAs("linkList", linkList, R.OnRightSide("center", 10));
+        elem.childAs("linkList", linkList, R.Aside("rc", 10));
         h.value(i, 0);
     }
     for (let i = 1; i <= m; i++)
@@ -77,7 +75,7 @@ function makeForwardStar() {
         fwx.linkOut = tmpl;
         
         await sd.pause();
-        fwstar.element(x).linkList.startAnimate().insertFromExist(1, clone).endAnimate();
+        fwstar.element(x).linkList.startAnimate().insertFromExistElement(1, clone).endAnimate();
         await sd.pause();
 
         t.startAnimate().link(x, y).endAnimate();
@@ -104,13 +102,13 @@ function makeForwardStar() {
 
     function updateCodeTo(box, to) {
         let code = box.value();
-        changeText(code.row(1), `to=${to}`);
+        changeText(code.element(1), `to=${to}`);
         box.startAnimate().update().endAnimate();
     }
 
     function updateCodeNxt(box, to) {
         let code = box.value();
-        changeText(code.row(2), `nxt=${to}`);
+        changeText(code.element(2), `nxt=${to}`);
         box.startAnimate().update().endAnimate();
     }
 

@@ -1,0 +1,23 @@
+<section>
+    <section>
+        <h1>计算权和最大的子树</h1>
+    </section>
+    <problem data-src="http://43.143.204.105/problem/865"></problem>
+    <section>
+        <h2>计算权和最大的子树</h2>
+        <codeblock>
+            <script type="text/template">
+                int sum[N];
+                void Dfs(int u, int f) {
+                    for (int i = h[u], v; i; i = l[i].Nxt) {
+                        v = l[i].to;
+                        if (v == f) continue;
+                        Dfs(v, u);
+                        sum[u] += sum[v];
+                    }
+                    sum[u] += val[u];
+                }
+            </script>
+        </codeblock>
+    </section>
+</section>
