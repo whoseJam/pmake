@@ -83,10 +83,10 @@ function exprTree() {
         await sd.pause();
         first.startAnimate().push(t.text(u)).endAnimate();
         if (t.leftChild(u)) {
-            await dfs(t.leftChild(u));
+            await dfs(t.leftChild(u).nodeId);
         }
         if (t.rightChild(u)) {
-            await dfs(t.rightChild(u));
+            await dfs(t.rightChild(u).nodeId);
         }
         await sd.pause();
         t.startAnimate();
@@ -99,10 +99,10 @@ function exprTree() {
         t.color(u, C.GREEN);
         t.endAnimate();
         if (t.leftChild(u)) {
-            await dfs(t.leftChild(u));
+            await dfs(t.leftChild(u).nodeId);
         }
         if (t.rightChild(u)) {
-            await dfs(t.rightChild(u));
+            await dfs(t.rightChild(u).nodeId);
         }
         await sd.pause();
         last.startAnimate().push(t.text(u)).endAnimate();

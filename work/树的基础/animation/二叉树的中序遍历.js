@@ -32,13 +32,13 @@ function makeBiTree() {
         t.color(u, C.GREEN);
         t.endAnimate();
         if (t.leftChild(u)) {
-            await dfs(t.leftChild(u));
-        }
-        if (t.rightChild(u)) {
-            await dfs(t.rightChild(u));
+            await dfs(t.leftChild(u).nodeId);
         }
         await sd.pause();
         arr.startAnimate().push(u).endAnimate();
+        if (t.rightChild(u)) {
+            await dfs(t.rightChild(u).nodeId);
+        }
         await sd.pause();
         t.startAnimate();
         t.color(u, C.DEFAULT);

@@ -1,0 +1,20 @@
+<section>
+    <section>
+        <h1>二叉查找树</h1>
+    </section>
+    <problem data-src="http://43.143.204.105/problem/886"></problem>
+    <section>
+        <h2>二叉查找树</h2>
+        <codeblock>
+            <script type="text/template">
+                const int N = 100005;
+                int ch[N][2], val[N];
+                int Find(int id, int x) {
+                    if (val[id] == x) return id;
+                    if (val[id] < x) return Find(ch[id][1], x);
+                    return Find(ch[id][0], x);
+                }
+            </script>
+        </codeblock>
+    </section>
+</section>
