@@ -5,5 +5,16 @@
     <problem data-src="http://43.143.204.105/problem/104"></problem>
     <section>
         <h2>与众不同</h2>
+        <p>我们预处理出 $F(i)$ 表示，以 $i$ 这个元素为末尾的<b>最长与众不同的序列的长度</b></p>
+        <iframe data-src="./animation/与众不同.html"
+            style="width: 1000px; height: 300px;"></iframe>
+        <p class="fragment">对于 $st(i)=i-F(i)+1\le L$ 这部分元素来说：</p>
+        <ul>
+            <li class="fragment">找最靠后的那个，可以用二分来找</li>
+        </ul>
+        <p class="fragment">对于 $st(i)=i-F(i)+1\gt L$ 这部分元素来说：</p>
+        <ul>
+            <li class="fragment">找 $F(i)$ 最大的那个，可以用RMQ来找</li>
+        </ul>
     </section>
 </section>

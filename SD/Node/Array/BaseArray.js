@@ -50,7 +50,7 @@ BaseArray.prototype.element = function(idx) {
     const index = this.idx(idx);
     if (0 <= index && index < elements.length)
         return elements[index];
-    throw new Error("Index Out Of Range");
+    throw new Error(`Index ${idx} Out Of Range`);
 }
 
 BaseArray.prototype.firstElement = function() {
