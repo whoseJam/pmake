@@ -13,7 +13,7 @@ function initPointer(pointer, direction, length) {
     pointer.arrow();
 }
 
-export function Pointer(parent, label, direction = "b", gap = 10, length = 50) {
+export function Pointer(parent, label, direction = "b", gap = 10, length = 50, textGap = 10) {
     const pointer = new Line(parent);
     const text    = new Text(pointer, label).fontSize(20);
     let element;
@@ -26,7 +26,12 @@ export function Pointer(parent, label, direction = "b", gap = 10, length = 50) {
         else if (direction === "r") self.cy(target.cy()).mx(target.x() - gap);
     };
 
-    pointer.childAs(`label_${++id}`, text, (parent, child) => move(child, parent));
+    pointer.childAs(`label_${++id}`, text, (parent, child) => {
+        if      (direction === "t") child.cx(parent.cx()).y(parent.my() + textGap);
+        else if (direction === "b") child.cx(parent.cx()).my(parent.y() - textGap);
+        else if (direction === "l") child.cy(parent.cy()).x(parent.mx() + textGap);
+        else if (direction === "r") child.cy(parent.cy()).mx(parent.x() - textGap);
+    });
 
     pointer.moveTo = function(arg0, arg1) {
         if (arguments.length === 1) {

@@ -91,4 +91,64 @@
             </script>
         </codeblock>
     </section>
+    <section>
+        <h2>交换枚举顺序</h2>
+        <p>
+            $$
+            \sum_{i=1}^n\sum_{j=1}^m a_{i,j}
+            $$
+        </p>
+        <iframe data-src="./animation/交换枚举顺序.html"
+            style="width: 1000px; height: 300px;"></iframe>
+        <p class="fragment">
+            $$
+            \sum_{j=1}^m\sum_{i=1}^n a_{i,j}
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>交换枚举顺序</h2>
+        <p>
+            $$
+            \sum_{i=1}^n\sum_{j=1}^i a_{i,j}
+            $$
+        </p>
+        <iframe data-src="./animation/交换枚举顺序其二.html"
+            style="width: 1000px; height: 300px;"></iframe>
+        <p class="fragment">
+            $$
+            \sum_{j=1}^n\sum_{i=j}^n a_{i,j}
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>数学结论</h2>
+        <p>
+            $$
+            \sum_{i=l}^r i
+            $$
+        </p>
+        <p class="fragment">这是一个首项为 $l$，末项为 $r$，公差为 $1$ 的等差数列</p>
+        <p class="fragment">直接套用公式可得：</p>
+        <p class="fragment">
+            $$
+            answer=\frac{(l+r)(r-l+1)}{2}
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>数学结论</h2>
+        <p>
+            $$
+            \sum_{i=1}^n i^2
+            $$
+        </p>
+        <p class="fragment">这是 $[1,n]$ 的自然数的平方之和</p>
+        <p class="fragment">直接套用公式可得：</p>
+        <p class="fragment">
+            $$
+            answer=\frac{n(n+1)(2n+1)}{6}
+            $$
+        </p>
+    </section>
 </section>

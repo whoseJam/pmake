@@ -1,4 +1,4 @@
-import * as sd from "#lib/slide";
+import * as sd from "@/sd";
 
 let naiveMath = `a_n=p\\cdot a_{n-1}+q\\cdot a_{n-2}`
 let matMath1 = `

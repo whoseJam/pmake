@@ -1,4 +1,4 @@
-import * as sd from "#lib/slide";
+import * as sd from "@/sd";
 
 let svg = sd.svg();
 let xdata = [1, 5, 3, 5];

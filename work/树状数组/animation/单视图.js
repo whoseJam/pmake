@@ -1,19 +1,4 @@
-import * as sd from "#lib/slide";
-
-function indexArray(array) {
-    let l = array.length();
-    let start = array.start();
-    for (let i = 0; i < l; i++) {
-        let id = start + i;
-        let txt = sd.Text(array, id).fontSize(10);
-        let element = array.element(id);
-        let update = () => {txt.cx(element.cx()).y(element.y() - 10); };
-        array.listen("onX", update);
-        array.listen("onY", update);
-        array.listen("on_remove", () => { txt.remove(); });
-        update();
-    }
-}
+import * as sd from "@/sd";
 
 let svg = sd.svg();
 let C = sd.color();
@@ -29,7 +14,7 @@ let originArr;
 main();
 
 async function main() {
-    originArr = sd.Array(svg).start(1);
+    originArr = new sd.Array(svg).start(1);
     for (let i = 1; i <= 8; i++) {
         originArr.push(null);
         originArr.element(i)._.valueRule = R.CenterOnly();
@@ -39,6 +24,7 @@ async function main() {
 
     for (let i = 1; i <= 8; i++)
         build(i);
+    await sd.pause();
 }
 
 function lowbit(x) {
@@ -46,7 +32,7 @@ function lowbit(x) {
 }
 
 function mathjax(str) {
-    return sd.Mathjax(svg).math(str).height(15);
+    return new sd.Mathjax(svg).math(str).height(15);
 }
 
 function watch(me, target) {
@@ -55,7 +41,7 @@ function watch(me, target) {
 }
 
 function build(x) {
-    let rct = sd.Box(svg).color(C.BLUE);
+    let rct = new sd.Box(svg).color(C.BLUE);
     rct._.valueRule = R.CenterOnly();
     rct.value(mathjax(`C_${x}`));
     let e = originArr.element(x);
@@ -65,11 +51,11 @@ function build(x) {
         rank[x] = Math.max(rank[x], rank[i]+1);
     rct.dy(-e.height()-2-rank[x]*heightY);
 
-    let lk = sd.Link(svg);
-    lk.from(rct).to(e).arrow().strokeWidth(1.2);
+    let lk = sd.Link(rct, e);
+    lk.arrow().strokeWidth(1.2);
     for (let i = x-1; i > x-lowbit(x); i -= lowbit(i)) {
-        let lk = sd.Link(svg);
-        lk.from(rct).to(objs[i]).arrow().strokeWidth(1.2);
+        let lk = sd.Link(rct, objs[i]);
+        lk.arrow().strokeWidth(1.2);
     }
 }
 

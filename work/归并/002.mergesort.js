@@ -1,4 +1,4 @@
-import { sd } from "#lib/slide";
+import { sd } from "@/sd";
 
 let a = [0, 1, 6, 2, 5, 9, 6, 5, 4, 3];
 let n = a.length - 1;

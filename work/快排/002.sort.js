@@ -1,4 +1,4 @@
-import { sd } from "#lib/slide";
+import { sd } from "@/sd";
 
 let svg = sd.svg();
 let C = sd.Color;

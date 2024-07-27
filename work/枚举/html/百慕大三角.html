@@ -13,10 +13,11 @@
     </section>
     <section>
         <h2>百慕大三角</h2>
-        <p>
+        <p class="math-fragment">
             $$
             \begin{aligned}
-            red&=\sum_{y=1}^n\sum_{l=1}^n\sum_{r=l+1}^n (n^2-n)
+            red&=\sum_{y=1}^n\sum_{l=1}^n\sum_{r=l+1}^n (n^2-n) \\
+            &=\frac{(n^2-n)^2n}{2}
             \end{aligned}
             $$
         </p>
@@ -26,7 +27,8 @@
         <p>
             $$
             \begin{aligned}
-            orange&=\sum_{y=1}^n\sum_{l=1}^n\sum_{r=l+1}^n (n-1)
+            orange&=2\sum_{y=1}^n\sum_{l=1}^n\sum_{r=l+1}^n (n-1) \\
+            &=(n-1)(n^2-n)n
             \end{aligned}
             $$
         </p>

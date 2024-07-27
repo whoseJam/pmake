@@ -56,11 +56,15 @@
     <section>
         <h2>棋盘问题</h2>
         <p class="math-fragment">
-            \sum_{i=1}^n\sum_{j=1}^m\sum_{x=i}^n\sum_{y=j}^m 1
+            $$
+            \begin{aligned}
+            \sum_{i=1}^n\sum_{j=1}^m\sum_{x=i}^n\sum_{y=j}^m 1 
             &=\sum_{i=1}^n\sum_{j=1}^m\sum_{x=i}^n (m-j+1) \\
             &=\sum_{i=1}^n\sum_{j=1}^m(n-i+1)(m-j+1) \\
             &=\sum_{i=1}^n(n-i+1)\sum_{j=1}^m(m-j+1) \\
             &=S_1(1,n)\times S_1(1,m)
+            \end{aligned}
+            $$
         </p>
     </section>
 </section>

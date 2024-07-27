@@ -1,4 +1,4 @@
-import * as sd from "#lib/slide";
+import * as sd from "@/sd";
 let svg = sd.svg();
 let C = sd.color();
 let seq = [1, 4, 2, 5, 1, 2, 4, 1, 5];

@@ -1,4 +1,4 @@
-import { sd } from "#lib/slide";
+import { sd } from "@/sd";
 
 function len(x) {
     return x.length - 1;

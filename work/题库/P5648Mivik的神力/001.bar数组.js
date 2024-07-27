@@ -1,4 +1,4 @@
-import * as sd from "#lib/slide";
+import * as sd from "@/sd";
 
 let svg = sd.svg();
 let arr = sd.BarArray(svg).x(200).y(400);

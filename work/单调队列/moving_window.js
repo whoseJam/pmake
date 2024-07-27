@@ -1,4 +1,4 @@
-import { Util, Anitype, Text, Array, Graph, Color } from "#lib/slide";
+import { Util, Anitype, Text, Array, Graph, Color } from "@/sd";
 
 let svg = Util.svg();
 let pause = Util.pause;

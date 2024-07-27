@@ -1,8 +1,8 @@
-import * as sd from "#lib/slide";
+import * as sd from "@/sd";
 
 let svg = sd.svg();
 let C = sd.color();
-let x = sd.Array(svg).x(200).y(100);
+let x = new sd.Array(svg).x(200).y(100);
 let xdata = "00011010";
 
 for (let i = 0; i < xdata.length; i++)
@@ -13,14 +13,14 @@ main();
 
 async function main() {
     await sd.pause();
-    let x1 = sd.Array(svg).x(200).y(180);
+    let x1 = new sd.Array(svg).x(200).y(180);
     appendName("-x的原码", x1);
     let c1 = "10011010";
     for (let i = 0; i < c1.length; i++)
         x1.startAnimate().push(c1[i]).endAnimate();
 
     await sd.pause();
-    let x2 = sd.Array(svg).x(200).y(260);
+    let x2 = new sd.Array(svg).x(200).y(260);
     appendName("-x的补码", x2);
     let c2 = "11100110";
     for (let i = 0; i < c2.length; i++)
@@ -35,7 +35,7 @@ async function main() {
     x2.startAnimate().color(C.blue).endAnimate();
 
     await sd.pause();
-    let x3 = sd.Array(svg).x(200).y(340);
+    let x3 = new sd.Array(svg).x(200).y(340);
     appendName("计算结果", x3);
     let c3 = "00000010";
     for (let i = 0; i < c3.length; i++)
@@ -44,7 +44,7 @@ async function main() {
 }
 
 function appendName(name, arr) {
-    name = sd.Text(svg, name).fontSize(25);
+    name = new sd.Text(svg, name).fontSize(25);
     arr.children.push(name, function(parent, child) {
         child.mx(parent.x() - 10).cy(parent.cy());
     })
