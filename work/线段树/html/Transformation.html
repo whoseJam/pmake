@@ -5,5 +5,114 @@
     <problem data-src="http://43.143.204.105/problem/935"></problem>
     <section>
         <h2>Transformation</h2>
+        <p>有 $n$ 个整数 $a_1,a_2...a_n$，它们的初始值为 $0$</p>
+        <p class="fragment">
+            有四种操作：
+        </p>
+        <ul>
+            <li class="fragment"><code>1 x y c</code>：把 $[x,y]$ 这个范围内的元素加上 $c$</li>
+            <li class="fragment"><code>2 x y c</code>：把 $[x,y]$ 这个范围内的元素乘以 $c$</li>
+            <li class="fragment"><code>3 x y c</code>：把 $[x,y]$ 这个范围内的元素赋值为 $c$</li>
+            <li class="fragment"><code>4 x y p</code>：查询 $[x,y]$ 这个范围内的元素的 $p$ 次方之和，即 $a_x^p+a_{x+1}^p+...+a_{r}^p$（$1\le p\le 3$）</li>
+        </ul>
+    </section>
+    <section>
+        <h2>Transformation</h2>
+        <p>显然需要维护三种标记：$add$ 标记，$mul$ 标记和 $set$ 标记</p>
+        <p class="fragment">
+            $$
+            set\rightarrow mul\rightarrow add 
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>Transformation</h2>
+        <iframe data-src="./animation/TransformationSet.html"
+            style="width: 1000px; height: 50px;"></iframe>
+        <p class="fragment">
+            $$
+            e\rightarrow set\rightarrow mul\rightarrow add\rightarrow e'
+            $$
+        </p>
+        <ul>
+            <li class="fragment">$set$ 标记会清除以前的 $add$ 和 $mul$ 标记</li>
+            <li class="fragment">所有元素都变得相同了</li>
+        </ul>
+        <codeblock class="fragment">
+            <script type="text/template">
+                void pushSet(int x, int d) {
+                    t[x].add = 0;
+                    t[x].mul = 1;
+                    t[x].set = d;
+                    t[x].sm1 = (t[x].r - t[x].l + 1) * d;
+                    t[x].sm2 = (t[x].r - t[x].l + 1) * d * d;
+                    t[x].sm3 = (t[x].r - t[x].l + 1) * d * d * d;
+                }
+            </script>
+        </codeblock>
+    </section>
+    <section>
+        <h2>Transformation</h2>
+        <iframe data-src="./animation/TransformationMul.html"
+            style="width: 1000px; height: 50px;"></iframe>
+        <p class="fragment">
+            $$
+            e\rightarrow set\rightarrow mul\rightarrow add\rightarrow e'
+            $$
+        </p>
+        <ul>
+            <li class="fragment">所有元素都乘上了 $d$</li>
+            <li class="fragment">$mul$ 标记会让 $add$ 标记乘以 $d$</li>
+            <li class="fragment">$\sum_{i=l}^r a_i\rightarrow \sum_{i=l}^r a_id=d\sum_{i=l}^r a_i$</li>
+            <li class="fragment">$\sum_{i=l}^r a_i^2\rightarrow \sum_{i=l}^r (a_id)^2=d^2\sum_{i=l}^r a_i^3$</li>
+            <li class="fragment">$\sum_{i=l}^r a_i^3\rightarrow \sum_{i=l}^r (a_id)^3=d^3\sum_{i=l}^r a_i^3$</li>
+        </ul>
+        <codeblock class="fragment">
+            <script type="text/template">
+                void pushAdd(int x, int d) {
+                    t[x].add *= d;
+                    t[x].mul *= d;
+                    t[x].sm1 *= d;
+                    t[x].sm2 *= d * d;
+                    t[x].sm3 *= d * d * d;
+                }
+            </script>
+        </codeblock>
+    </section>
+    <section>
+        <h2>Transformation</h2>
+        <iframe data-src="./animation/TransformationAdd.html"
+            style="width: 1000px; height: 50px;"></iframe>
+        <p class="fragment">
+            $$
+            e\rightarrow set\rightarrow mul\rightarrow add\rightarrow e'
+            $$
+        </p>
+        <p class="fragment">
+            $$
+            \sum_{i=l}^ra_i\rightarrow \sum_{i=l}^r(a_i+d)=\sum_{i=l}^ra_i+\sum_{i=l}^rd
+            $$
+        </p>
+        <p class="fragment">
+            $$
+            \sum_{i=l}^ra_i^2\rightarrow \sum_{i=l}^r(a_i+d)^2=\sum_{i=l}^ra_i^2+\sum_{i=l}^r2a_id+\sum_{i=l}^rd^2
+            $$
+        </p>
+        <p class="fragment">
+            $$
+            \sum_{i=l}^ra_i^3\rightarrow \sum_{i=l}^r(a_i+d)^3=\sum_{i=l}^ra_i^3+\sum_{i=l}^r3a_i^2d+\sum_{i=l}^r3a_id^2+\sum_{i=l}^rd^3
+            $$
+        </p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                void pushAdd(int x, int d) {
+                    t[x].add += d;
+                    int len = t[x].r - t[x].l + 1;
+                    t[x].sm3 = t[x].sm3 + 3 * t[x].sm2 * d + 3 * t[x].sm1 * d * d + len * d * d * d;
+                    t[x].sm2 = t[x].sm2 + 2 * t[x].sm1 * d + len * d * d;
+                    t[x].sm1 = t[x].sm1 + len * d;
+                }
+            </script>
+        </codeblock>
     </section>
 </section>
