@@ -17,7 +17,6 @@ function makeDp() {
     let tree = new sd.Array(svg).start(1);
     let brace = new sd.Brace(svg);
     brace.opacity(0);
-    let math = sd.Stress(new sd.Mathjax(svg, "\\max_{1\\le j<i且a_j<a_i}\\{f(j)\\}+1")).height(40).x(600).y(100);
     let data = [1, 2, 4, 1, 3, 5];
     for (let i = 0; i < data.length; i++) arr.push(data[i]);
     dp.resize(data.length).x(arr.x()).y(arr.my() + 100);

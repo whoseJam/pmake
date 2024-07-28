@@ -1,0 +1,31 @@
+<section>
+    <section>
+        <h1>树状数组优化LIS</h1>
+    </section>
+    <section>
+        <h2>树状数组优化LIS</h2>
+        <iframe data-src="./animation/树状数组优化LIS.html"
+            style="width: 1000px; height: 500px;"></iframe>
+        <ul>
+            <li class="fragment">树状数组中第 $i$ 项，存储的是末尾数值为 $i$ 的上升序列中，最长的那条的长度</li>
+        </ul>
+    </section>
+    <problem data-src="https://www.luogu.com.cn/problem/AT_chokudai_S001_h"></problem>
+    <section>
+        <h2>树状数组优化LIS</h2>
+        <codeblock>
+            <script type="text/template">
+                scanf("%d", & n);
+                ll ans = 0;
+                for (int i = 1; i <= n; i++) {
+                    scanf("%d", & x);
+                    f[i] = T.ask(x - 1) + 1;
+                    T.upd(x, f[i]);
+                }
+                for (int i = 1; i <= n; i++)
+                    ans = max(ans, f[i]);
+                printf("%lld", ans);
+            </script>
+        </codeblock>
+    </section>
+</section>

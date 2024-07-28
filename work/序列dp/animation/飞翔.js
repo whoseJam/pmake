@@ -27,3 +27,9 @@ function put(x, y) {
     l.source(e.x(), e.my());
     l.target(e.mx(), e.y());
 }
+
+main();
+
+async function main() {
+    await sd.pause();
+}

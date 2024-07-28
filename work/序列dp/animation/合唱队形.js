@@ -14,3 +14,9 @@ a.color(3, C.green);
 a.color(5, C.green);
 a.color(7, C.green);
 a.color(8, C.green);
+
+main();
+
+async function main() {
+    await sd.pause();
+}

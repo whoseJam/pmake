@@ -14,7 +14,6 @@ function makeDp() {
     let self = {};
     let arr = new sd.BarArray(svg).x(100).y(300);
     let dp = new sd.Array(svg);
-    let math = sd.Stress(new sd.Mathjax(svg, "\\max_{1\\le j<i且a_j<a_i}\\{f(j)\\}+1")).height(40).x(600).y(100);
     let data = [1, 2, 4, 1, 3, 5];
     for (let i = 0; i < data.length; i++) arr.push(data[i]);
     dp.resize(data.length).x(arr.x()).y(arr.my() + 100);
@@ -45,7 +44,6 @@ function makeDp() {
                     await sd.pause();
                     arr.startAnimate().color(j, C.green).endAnimate();
                     dp.startAnimate().color(j, C.green).endAnimate();
-                    math.startAnimate(600).stress().endAnimate();
 
                     await sd.pause()
                     let nw = Math.max(
