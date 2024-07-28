@@ -17,7 +17,7 @@
             \begin{aligned}
             sqr&=\sum_{i=1}^n\sum_{j=1}^m\sum_{x=i}^n\sum_{y=j}^m[x-i=y-j] \\
             &=\sum_{i=1}^n\sum_{j=1}^m\sum_{d=1}^{min(n-i+1,m-j+1)}1 \\
-            &=\sum_{d=1}^{min(n,m)}\sum_{d=1}^{n-d+1}\sum_{j=1}^{m-d+1}1 \\
+            &=\sum_{d=1}^{min(n,m)}\sum_{i=1}^{n-d+1}\sum_{j=1}^{m-d+1}1 \\
             &=\sum_{d=1}^{min(n,m)}\sum_{i=1}^{n-d+1}(m-d+1) \\
             &=\sum_{d=1}^{min(n,m)}(n-d+1)(m-d+1)
             \end{aligned}

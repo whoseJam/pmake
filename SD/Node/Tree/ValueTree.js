@@ -24,7 +24,7 @@ ValueTree.prototype.newNode = function(id, value) {
         element.attachTo(this.layer("nodes"));
         element.opacity(0);
         move();
-        element.freeze().unfreeze();
+        element.update();
         element.startAnimate(this);
         element.opacity(1);
     };

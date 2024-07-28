@@ -37,6 +37,7 @@ Tree.prototype.height = function(height) {
         return this.member.get("height");
     }
     const depth = this.depth();
+    if (!depth) return this;
     this.layerHeight(height / depth);
     return this;
 }
@@ -111,7 +112,7 @@ export function d3TreeLayout(mode, transX, transY, minDistanceRatio, parentSizeI
     }
     const info = tr(hierarchy);
     let limit = Infinity;
-    const descendants = info.descendants(); 
+    const descendants = info.descendants();
     for (let i = 0; i < descendants.length; i++) {
         const vecI = [transX(descendants[i]), transY(descendants[i])];
         for (let j = i + 1; j < descendants.length; j++) {
