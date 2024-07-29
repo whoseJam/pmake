@@ -1,0 +1,47 @@
+<section>
+    <section>
+        <h1>树上数颜色</h1>
+    </section>
+    <problem data-src="http://43.143.204.105/problem/1"></problem>
+    <section>
+        <h2>树上数颜色</h2>
+        <p class="quote">如何暴力统计某子树内的颜色数量？</p>
+        <iframe data-src="./animation/树上数颜色.html" class="fragment"
+            style="width: 1000px; height: 300px;"></iframe>
+        <codeblock class="fragment">
+            <script type="text/template">
+                void AddCol(int c) {
+                    if (!colCount[c])
+                        colNum++;
+                    colCount[c]++;
+                }
+            </script>
+        </codeblock>
+    </section>
+    <section>
+        <h2>树上数颜色</h2>
+        <p>然后改造为树上启发式合并</p>
+        <codeblock>
+            <script type="text/template">
+                void Dsu(int u, int f) {
+                    for (int i = h[u], v; i; i = l[i].Nxt) {
+                        v = l[i].to;
+                        if (v != f && v != son[u]) {
+                            Dsu(v, u);
+                            Remove(v, u);
+                        }
+                    }
+                    if (son[u]) Dsu(son[u], u);
+                    for (int i = h[u], v; i; i = l[i].Nxt) {
+                        v = l[i].to;
+                        if (v != f && v != son[u]) {
+                            Add(v, u);
+                        }
+                    }
+                    AddCol(col[u]);
+                    Ans[u] = colNum;
+                }
+            </script>
+        </codeblock>
+    </section>
+</section>

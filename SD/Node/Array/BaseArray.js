@@ -136,6 +136,8 @@ BaseArray.prototype.text = function(idx) {
 }
 
 BaseArray.prototype.intValue = function(idx) {
+    const value = this.value(idx);
+    if (value === undefined) return 0;
     return +this.value(idx).text();
 }
 

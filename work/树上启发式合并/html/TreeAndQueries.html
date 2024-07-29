@@ -1,0 +1,50 @@
+<section>
+    <section>
+        <h1>Tree And Queries</h1>
+    </section>
+    <problem data-src="http://43.143.204.105/problem/2"></problem>
+    <section>
+        <h2>Tree And Queries</h2>
+        <p class="quote">如何统计某子树内出现次数超过 $k$ 的颜色数量？</p>
+        <iframe data-src="./animation/TreeAndQueries.html" class="fragment"
+            style="width: 1000px; height: 400px;" rate="1.01"></iframe>
+        <codeblock class="fragment">
+            <script type="text/template">
+                void AddCol(int c) {
+                    colCount[c]++;
+                    sum[colCount[c]]++;
+                }
+            </script>
+        </codeblock>
+    </section>
+    <section>
+        <h2>Tree And Queries</h2>
+        <p>然后改造为树上启发式合并</p>
+        <codeblock style="height: 465px;">
+            <script type="text/template">
+                void Dsu(int u, int f) {
+                    for (int i = h[u], v; i; i = l[i].Nxt) {
+                        v = l[i].to;
+                        if (v != f && v != son[u]) {
+                            Dsu(v, u);
+                            Remove(v, u);
+                        }
+                    }
+                    if (son[u]) Dsu(son[u], u);
+                    for (int i = h[u], v; i; i = l[i].Nxt) {
+                        v = l[i].to;
+                        if (v != f && v != son[u]) {
+                            Add(v, u);
+                        }
+                    }
+                    AddCol(col[u]);
+                    for (auto query: queries[u]) {
+                        int id = query.id;
+                        int k = query.k;
+                        Ans[id] = sum[k];
+                    }
+                }
+            </script>
+        </codeblock>
+    </section>
+</section>

@@ -17,15 +17,15 @@
     </section>
     <section>
         <h2>树上启发式合并</h2>
-        <iframe style="min-width: 1000px; min-height: 500px;" data-src="./animation/暴力统计子树.html"></iframe>
+        <iframe style="width: 1000px; height: 500px;" data-src="./animation/暴力统计子树.html"></iframe>
     </section>
 
     <section>
         <h2>树上启发式合并</h2>
         <p>注意到我们在暴力统计子树信息的时候，是存在大量的<b>信息浪费和重复统计</b>的</p>
-        <p class="fragment">例如，对于下图，我们先后<b>独立统计</b>了 $1$ 的子树信息和 $2$ 的子树信息</p>
+        <iframe style="width: 1000px; height: 400px;" data-src="./animation/信息浪费和重复统计.html"></iframe>
+        <p class="fragment">例如上图，我们先后<b>独立统计</b>了 $1$ 的子树信息和 $2$ 的子树信息</p>
         <p class="fragment">但实际上，我们可以先统计 $2$ 的子树信息，统计结束后不立刻将 $2$ 的子树信息从数据结构 $S$ 中删除，而是把 $3$ 的子树信息加入到 $S$ 中，然后接着统计 $1$ 的子树信息</p>
-        <iframe style="min-width: 1000px; min-height: 500px; margin-top: -40px;" data-src="./animation/信息浪费和重复统计.html"></iframe>
     </section>
     <section>
         <h2>树上启发式合并</h2>
@@ -37,7 +37,32 @@
             <li>最后再把轻儿子子树信息添加回来</li>
             <li>统计 $u$ 的子树信息</li>
         </ol>
-        <iframe style="min-width: 1000px; min-height: 400px;" data-src="./animation/树上启发式合并.html">
-        </iframe>
+        <iframe data-src="./animation/树上启发式合并.html" class="fragment"
+            style="width: 1000px; height: 400px;"></iframe>
+    </section>
+    <section>
+        <h2>树上启发式合并</h2>
+        <codeblock>
+            <script type="text/template">
+                void Dsu(int u, int f) {
+                    for (int i = h[u], v; i; i = l[i].Nxt) {
+                        v = l[i].to;
+                        if (v != f && v != son[u]) {
+                            Dsu(v, u);
+                            删除 v 子树内的所有信息
+                        }
+                    }
+                    if (son[u]) Dsu(son[u], u);
+                    for (int i = h[u], v; i; i = l[i].Nxt) {
+                        v = l[i].to;
+                        if (v != f && v != son[u]) {
+                            添加 v 子树内的所有信息
+                        }
+                    }
+                    添加 u 的信息
+                    统计 u 上的答案
+                }
+            </script>
+        </codeblock>
     </section>
 </section>
