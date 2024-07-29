@@ -17,6 +17,7 @@ main();
 function init() {
     grid.color(1, 1, grad(0));
     grid.value(1, 1, 0);
+    grid.cx(600).cy(300);
 }
 
 async function main() {

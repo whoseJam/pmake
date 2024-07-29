@@ -8,7 +8,7 @@ import { D3Layer }  from "@/Node/D3Layer";
 import { Children } from "@/Node/Children";
 import { SDMember } from "@/Node/SDMember";
 
-import { d3ToNake } from "@/Utility/Tool";
+import { d3ToNake, nakeToSnap } from "@/Utility/Tool";
 
 let id = 0;
 
@@ -297,9 +297,11 @@ SDNode.prototype.updateList = [
 
 SDNode.prototype.onClick = function(callback) {
     const nake = d3ToNake(this.d3layer.d3);
-    nake.addEventListener("click", () => {
+    nake.removeEventListener("click", this._.handle);
+    this._.handle = () => {
         callback(this);
-    })
+    };
+    nake.addEventListener("click", this._.handle);
 }
 
 SDNode.prototype.drag = function(type) {

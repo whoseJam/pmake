@@ -21,6 +21,10 @@ function makePermutation(arr) {
         result = array;
     }
     
+    if (arr.length === n) {
+        return result;
+    }
+
     result.onClick(() => {
         result.onClick(() => {});
         const curSet = new Set(arr);

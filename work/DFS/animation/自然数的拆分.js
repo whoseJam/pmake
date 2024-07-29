@@ -1,6 +1,7 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
+const C = sd.color();
 const n = 7;
 const tree = new sd.ValueTree(svg).width(1000);
 tree.cx(600).y(50);
@@ -29,16 +30,20 @@ function makeSplit(arr) {
     }
     
     result.onClick(() => {
+        if (Sum(arr) === n) result.color(C.green);
         result.onClick(() => {});
-        const lim = arr.length ? arr[arr.length - 1] : n;
+        const lim = arr.length ? arr[arr.length - 1] : 1;
+        let childCount = 0;
         tree.freeze();
-        for (let append = 1; append <= lim; append++) {
+        for (let append = lim; append <= n; append++) {
             const arrNew = [...arr, append];
             if (Sum(arrNew) > n) break;
+            childCount++;
             tree.newNode(++tot, makeSplit(arrNew));
             tree.newLink(myId, tot);
         }
         tree.unfreeze();
+        if (Sum(arr) !== n && childCount === 0) result.color(C.red);
     });
     return result;
 }

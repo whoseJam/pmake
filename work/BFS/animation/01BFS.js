@@ -40,6 +40,7 @@ function init() {
         const text = (i === 1) ? "dis=0" : "dis=inf"; 
         const label = sd.Label(graph.element(i), text, disLoc[i-1]);
         graph.element(i).label = label;
+        graph.element(i).dis = Infinity;
     }
     graph.element(1).dis = 0;
 }
@@ -57,7 +58,7 @@ async function main() {
             const v = graph.toNodeId(u, to[i]);
             const w = to[i].intValue();
             const nodeV = graph.element(v);
-            if (nodeV.label.text() == "dis=inf") {
+            if (nodeV.dis > nodeU.dis + w) {
                 await sd.pause();
                 nodeV.label.startAnimate().opacity(0).endAnimate()
                 .text(`dis=${nodeV.dis = nodeU.dis + w}`)

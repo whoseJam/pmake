@@ -23,12 +23,14 @@ function makeSplit(arr) {
         result.onClick(() => {});
         const lim = arr.length ? arr[arr.length - 1] : n;
         tree.freeze();
-        const uset = UNIQUE ? [...new Set(arr)] : arr;
-        for (let i = 0; i < uset.length; i++) {
-            for (let j = i; j < uset.length; j++) {
-                const v = uset[i] + uset[j];
+        const uset = new Set(arr);
+        for (let i = 0; i < arr.length; i++) {
+            for (let j = i; j < arr.length; j++) {
+                const v = arr[i] + arr[j];
                 if (v > n) break;
-                if (v < arr[arr.length - 1] && ASCEND) continue;
+                if (uset.has(v) && UNIQUE) continue;
+                if (v <= arr[arr.length - 1] && ASCEND) continue;
+                uset.add(v);
                 const newArr = [...arr, v];
                 tree.newNode(++tot, makeSplit(newArr));
                 tree.newLink(myId, tot);

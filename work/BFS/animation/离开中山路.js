@@ -26,7 +26,7 @@ function init() {
             if (data[i][j] == "1") grid.color(i, j, C.grey);
         }
     grid.color(1, 1, grad(0));
-    grid.value(1, 1, 0);
+    grid.value(1, 1, 0).cx(600).cy(300);
 }
 
 async function main() {
