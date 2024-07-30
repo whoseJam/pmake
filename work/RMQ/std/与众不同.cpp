@@ -18,13 +18,14 @@ int Find(int ql,int qr){
 	int l=ql,r=qr;
 	while(l<=r){
 		int mid=(l+r)>>1;
-		if(st[mid]<l)l=mid+1;
+		if(st[mid]<=ql)l=mid+1;
 		else r=mid-1;
 	}
 	return r;
 }
 
 int maxF(int l,int r){
+	if(l>r)return 0;
 	int k=log2(r-l+1);
 	return max(mxf[l][k],mxf[r-(1<<k)+1][k]);
 }

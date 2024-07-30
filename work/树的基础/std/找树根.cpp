@@ -26,7 +26,7 @@ int main(){
 	}
 	for(int i=1;i<=n;i++){
 		if(prt[i]==0)root=i;
-		if(num[i]>=num[maxx])maxx=i;
+		if(num[i]>num[maxx])maxx=i;
 	}
 	cout<<root<<endl;
 	cout<<maxx<<endl;
