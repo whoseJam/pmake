@@ -9,33 +9,34 @@ void rotate(int x,int &f){
     ch[x][R]=y;
     pushUp(y);pushUp(x);
 }`
+const root = 2;
+const n = 9;
+const data = [
+    [2, 1, 4],
+    [4, 3, 8],
+    [8, 6, 9],
+    [6, 5, 7]
+];
+const fa = sd.make1d(100);
+const ch = sd.make2d(100, 2);
 
 const svg = sd.svg();
 const C = sd.color();
-const s = makeSplay();
+const tree = new sd.Splay(svg);
+const px = sd.Pointer(tree, "x", "b");
+const py = sd.Pointer(tree, "y", "b");
+const pz = sd.Pointer(tree, "z", "b");
+let isInteracting = false;
 
+init();
 main();
 
 async function main() {
-    await s.rotate(6);
-    await s.rotate(6);
-    await s.rotate(6);
+    await sd.pause();
 }
 
-function makeSplay() {
-    let self = {};
-    let t = new sd.Splay(svg);
-    let rotateCode = new sd.Code(svg).code(rotateCodeStr).opacity(0).cx(600).y(50);
-    let root = 2, n = 9;
-    let data = [
-        [2, 1, 4],
-        [4, 3, 8],
-        [8, 6, 9],
-        [6, 5, 7]
-    ];
-    let fa = sd.make1d(100);
-    let ch = sd.make2d(100, 2);
-    t.width(800).cx(600).y(330).root(root);
+function init() {
+    tree.width(800).cx(600).y(200).root(root);
     for (let i = 0; i < data.length; i++) {
         let cur = data[i][0];
         let lc = data[i][1];
@@ -45,102 +46,63 @@ function makeSplay() {
     }
     function link(x, y, flg) {
         fa[y] = x; ch[x][flg] = y;
-        if (flg === 0) t.leftChild(x, y);
-        else t.rightChild(x, y);
-    }
-    function remove(x, y) {
-        let e = t.element(x, y);
-        e.startAnimate().fadeTtoS().endAnimate();
-        t.after(e).cut(x, y);
-    }
-    function appear(elem) {
-        return elem.opacity(0).startAnimate().opacity(1).endAnimate();
-    }
-    t.update();
-
-    function dfs(u, delta) {
-        t.element(u)._.recordDepth += delta;
-        let children = t.childrenOnTree(u);
-        for (let v of children) {
-            dfs(v.nodeId, delta);
-        }
-    }
-
-    self.rotate = async function rotateAnimate(x) {
-        t.record();
-        await sd.pause();
-        rotateCode.startAnimate().opacity(1).endAnimate();
-        await sd.pause();
-        rotateCode.startAnimate().focus(1).endAnimate();
-        await sd.pause();
-        rotateCode.startAnimate().focus(2).endAnimate();
-        await sd.pause();
-        let y = fa[x], z = fa[y], L = (ch[y][0] === x ? 0 : 1), R = L^1;
-        let pointToX = appear(sd.Pointer(t, "x", "b").moveTo(x));
-        let pointToY = y ? appear(sd.Pointer(t, "y", "b").moveTo(y)) : null;
-        let pointToZ = z ? appear(sd.Pointer(t, "z", "b").moveTo(z)) : null;
-        if (z === 0) {
-            await sd.pause();
-            rotateCode.startAnimate().focus(3).endAnimate();
-        }
-        else if (ch[z][0] === y) {
-            await sd.pause();
-            rotateCode.startAnimate().focus(3).endAnimate();
-            await sd.pause();
-            if (ch[z][0]) remove(z, ch[z][0]);
-            t.startAnimate().leftChild(z, x).endAnimate();
-
-            ch[z][0] = x;
-        } else {
-            await sd.pause();
-            rotateCode.startAnimate().focus(3).endAnimate();
-            await sd.pause();
-            if (ch[z][1]) remove(z, ch[z][1]);
-            t.startAnimate().rightChild(z, x).endAnimate();
-           
-            ch[z][1] = x;
-        }
-
-        await sd.pause();
-        rotateCode.startAnimate().focus(4).endAnimate();
-        await sd.pause();
-        remove(y, x);
-        t.element(x).parentNodeId = z ? z : undefined;
-        dfs(x, -1); dfs(y, +1);
-        t.startAnimate().update().endAnimate();
-        fa[x] = z;
-        fa[y] = x;
-
-        await sd.pause();
-        rotateCode.startAnimate().focus(5).endAnimate();
-
-        if (ch[x][R]) {
-            await sd.pause();
-            remove(x, ch[x][R]);
-            dfs(ch[x][R], +1);
-            t.startAnimate().link(y, ch[x][R], L).endAnimate();
-            fa[ch[x][R]] = y;
-        }
-        ch[y][L] = ch[x][R];
-
-        await sd.pause();
-        rotateCode.startAnimate().focus(6).endAnimate();
-
-        await sd.pause();
-        t.startAnimate().link(x, y, R).endAnimate();
-        ch[x][R] = y;
-
-        await sd.pause();
-        rotateCode.startAnimate().focus(7).endAnimate();
-
-        await sd.pause();
-        pointToX.startAnimate().opacity(0).remove();
-        pointToY?.startAnimate().opacity(0).remove();
-        pointToZ?.startAnimate().opacity(0).remove();
-        t.startAnimate().record(false).update().endAnimate();
-        rotateCode.startAnimate().focus(null).opacity(0).endAnimate();
-        await sd.pause();
+        if (flg === 0) tree.leftChild(x, y);
+        else tree.rightChild(x, y);
     }
     
-    return self;
+    for (let i = 1; i <= n; i++) {
+        tree.element(i).onClick(() => {
+            if (isInteracting) {
+                return;
+            }
+            isInteracting = true;
+            rotate(i);
+        })
+    }
+}
+
+async function rotate(x) {
+    await sd.pause();
+    const y = fa[x], z = fa[y];
+    const L = (ch[y][0] === x) ? 0 : 1;
+    const R = L^1;
+    px.startAnimate().moveTo(x).endAnimate();
+    py.startAnimate().moveTo(y).endAnimate();
+    if (z) pz.startAnimate().moveTo(z).endAnimate();
+    
+    await sd.pause();
+    
+    tree.startAnimate().freeze();
+    if (z) tree.cut(z, y);
+    tree.cut(y, x);
+    if (ch[x][R]) tree.cut(x, ch[x][R]);
+    tree.unfreeze().endAnimate();
+
+    await sd.pause();
+    tree.startAnimate().freeze();
+    if (z) {
+        if (ch[z][0] === y) tree.leftChild(z, x);
+        else tree.rightChild(z, x);
+    }
+    if (R === 0) tree.leftChild(x, y);
+    else tree.rightChild(x, y);
+    if (ch[x][R]) {
+        if (R === 1) tree.leftChild(y, ch[x][R]);
+        else tree.rightChild(y, ch[x][R]);
+    }
+    tree.unfreeze().endAnimate();
+
+    await sd.pause();
+    px.startAnimate().moveTo(null).endAnimate();
+    py.startAnimate().moveTo(null).endAnimate();
+    pz.startAnimate().moveTo(null).endAnimate();
+
+    isInteracting = false;
+
+    if (z) {
+        if (ch[z][0] === y) ch[z][0] = x;
+        else ch[z][1] = x;
+    }
+    fa[x] = z; fa[y] = x; fa[ch[x][R]] = y;
+    ch[y][L] = ch[x][R]; ch[x][R] = y;
 }

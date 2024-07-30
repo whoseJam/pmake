@@ -47,17 +47,19 @@
     <section>
         <h2>Splay</h2>
         <p>在代码实现中，我们会定义一个函数签名为 <code>void rotate(int x, int & f)</code> 的函数，和之前的定义稍有不同，第二个参数是用于传递根/某元素的子元素的<b>引用</b>的，这样定义是为了方便之后的一些操作</p>
-        <pre><code data-trim data-line-numbers class="cpp"><script type="text/template">
-            void rotate(int x, int & f) {
-                int y = fa[x], z = fa[y], L = (ch[y][0] == x ? 0 : 1), R = (L ^ 1);
-                if (y == f) f = x; else if (ch[z][0] == y) ch[z][0] = x; else ch[z][1] = x;
-                fa[x] = z; fa[y] = x; fa[ch[x][R]] = y;
-                ch[y][L] = ch[x][R]; ch[x][R] = y;
-                pushUp(y); pushUp(x);
-            }
-        </script></code></pre>
-    </section>
-    <section data-background-iframe="./animation/rotate.html" data-background-interactive>
+        <codeblock>
+            <script type="text/template">
+                void rotate(int x, int & f) {
+                    int y = fa[x], z = fa[y], L = (ch[y][0] == x ? 0 : 1), R = (L ^ 1);
+                    if (y == f) f = x; else if (ch[z][0] == y) ch[z][0] = x; else ch[z][1] = x;
+                    fa[x] = z; fa[y] = x; fa[ch[x][R]] = y;
+                    ch[y][L] = ch[x][R]; ch[x][R] = y;
+                    pushUp(y); pushUp(x);
+                }
+            </script>
+        </codeblock>
+        <iframe data-src="./animation/rotate.html" class="fragment"
+            style="width: 1000px; height: 400px;"></iframe>
     </section>
     <section>
         <h2>Splay</h2>

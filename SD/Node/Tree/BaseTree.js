@@ -101,10 +101,6 @@ BaseTree.prototype.color = function(arg0, arg1, arg2) {
     throw new Error("Invalid Arguments");
 }
 
-/**
- * 将Tree按层次划分
- * @returns 
- */
 BaseTree.prototype.stratify = function() {
     return stratify(this.member.get("nodes"));
 }
@@ -130,30 +126,32 @@ BaseTree.prototype.father = function(id) {
 
 BaseTree.prototype.depth = function(u) {
     if (u === undefined) {
-        let root = this.stratify();
-        if (!root) return 0;
-        return root.height;
-    } else {
-        let ans = 1;
-        while (this.father(u)) { u = this.father(u).nodeId; ans++; }
-        return ans;
+        const root = this.stratify();
+        return root ? root.height : 0;
+    } 
+    let depth = 0;
+    while (this.father(u)) {
+        u = this.father(u).nodeId;
+        depth++;
     }
+    return depth;
 }
 
 BaseTree.prototype.lca = function(x, y) {
-    let depthx = this.depth(x);
-    let depthy = this.depth(y);
-    while (x != y) {
-        console.log("x=", x, "y=", y);
-        if (depthx < depthy) {
-            x = this.father(x);
-            if (x) x = x.nodeId;
-            depthx--;
+    let dx = this.depth(x);
+    let dy = this.depth(y);
+    let iterCount = 0;
+    while (x !== y && (++iterCount) <= 100) {
+        if (dx < dy) {
+            x = this.father(x).nodeId;
+            dx--;
         } else {
-            y = this.father(y);
-            if (y) y = y.nodeId;
-            depthy--;
+            y = this.father(y).nodeId;
+            dy--;
         }
+    }
+    if (iterCount > 100) {
+        throw new Error(`Unlimit Iteration At lca(${x}, ${y}): Maybe Caused By A Broken Tree`);
     }
     return x;
 }
@@ -165,21 +163,21 @@ BaseTree.prototype.childrenOnTree = function(x) {
     return children; 
 }
 
-BaseTree.prototype.newNodeByBaseTree = function(id, elem) {
-    elem.nodeId = id;
+BaseTree.prototype.newNodeByBaseTree = function(id, node) {
+    node.nodeId = id;
     const nodes = this.member.get("nodes");
-    nodes.push(elem);
-    this.children.push(elem);
+    nodes.push(node);
+    this.children.push(node);
     this.tryUpdate();
     return this;
 }
 
-BaseTree.prototype.newLinkByBaseTree = function(x, y, elem) {
-    elem.parentNodeId = x;
-    elem.childNodeId = y;
-    let node = this.findNodeById(y);
+BaseTree.prototype.newLinkByBaseTree = function(x, y, link) {
+    link.parentNodeId = x;
+    link.childNodeId = y;
+    const node = this.findNodeById(y);
     node.parentNodeId = x;
-    let links = this.member.get("links");
+    const links = this.member.get("links");
     links.push(elem);
     this.children.push(elem);
     this.tryUpdate();
@@ -189,14 +187,14 @@ BaseTree.prototype.newLinkByBaseTree = function(x, y, elem) {
 BaseTree.prototype.eraseLinkByBaseTree = function(x, y) {
     const link = this.findLinkById(x, y);
     const links = this.member.get("links");
-    const idx = links.indexOf(link);
-    links.splice(idx, 1);
+    const index = links.indexOf(link);
+    links.splice(index, 1);
     this.children.erase(link);
     this.tryUpdate();
     return this;
 }
 
-BaseTree.prototype.root = function(id, value = null) {
+BaseTree.prototype.root = function(id, value) {
     if (id === undefined) {
         const nodes = this.member.get("nodes");
         return nodes.find(node => node.parentNodeId === undefined);
@@ -205,7 +203,7 @@ BaseTree.prototype.root = function(id, value = null) {
     return this;
 }
 
-BaseTree.prototype.link = function(x, y, value = null) {
+BaseTree.prototype.link = function(x, y, value) {
     if (!this.findNodeById(y)) this.newNode(y);
     if (!this.findNodeById(x)) this.newNode(x);
     this.newLink(x, y, value);
@@ -213,26 +211,48 @@ BaseTree.prototype.link = function(x, y, value = null) {
 }
 
 BaseTree.prototype.cut = function(x, y) {
-    const link = this.findLinkById(x, y);
+    this.eraseLinkByBaseTree(x, y);
     const node = this.findNodeById(y);
-    const links = this.member.get("links");
-    const idx = links.indexOf(link);
-    links.splice(idx, 1);
-    this.children.erase(link);
-    link.opacity(0).remove();
     node.parentNodeId = undefined;
     return this;
 }
 
-BaseTree.prototype.text = function() {
+BaseTree.prototype.text = function(arg0, arg1) {
+    if (arguments.length !== 1 && arguments.length !== 2) {
+        throw new Error("Invalid Arguments");
+    }
     const value = this.element.apply(this, arguments).value();
-    if (!value || !value.text) return "";
+    if (value === undefined) {
+        return "";
+    }
+    if (!value.text) {
+        if (arguments.length === 1) {
+            throw new Error(`Cannot Get The Text On Element ${arg0}`);
+        }
+        if (arguments.length === 2) {
+            throw new Error(`Cannot Get The Text On Element ${arg0} ${arg1}`);
+        }
+    }
     return value.text();
 }
 
 BaseTree.prototype.intValue = function() {
-    const text = this.text.apply(this, arguments);
-    return +text;
+    if (arguments.length !== 1 && arguments.length !== 2) {
+        throw new Error("Invalid Arguments");
+    }
+    const value = this.element.apply(this, arguments).value();
+    if (value === undefined) {
+        return 0;
+    }
+    if (!value.text) {
+        if (arguments.length === 1) {
+            throw new Error(`Cannot Get The Text On Element ${arg0}`);
+        }
+        if (arguments.length === 2) {
+            throw new Error(`Cannot Get The Text On Element ${arg0} ${arg1}`);
+        }
+    }
+    return +value.text();
 }
 
 function stratify(nodes) {
