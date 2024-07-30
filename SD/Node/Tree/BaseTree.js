@@ -144,11 +144,14 @@ BaseTree.prototype.lca = function(x, y) {
     let depthx = this.depth(x);
     let depthy = this.depth(y);
     while (x != y) {
+        console.log("x=", x, "y=", y);
         if (depthx < depthy) {
             x = this.father(x);
+            if (x) x = x.nodeId;
             depthx--;
         } else {
             y = this.father(y);
+            if (y) y = y.nodeId;
             depthy--;
         }
     }
@@ -198,7 +201,6 @@ BaseTree.prototype.root = function(id, value = null) {
         const nodes = this.member.get("nodes");
         return nodes.find(node => node.parentNodeId === undefined);
     }
-    console.log("new node id=", id, "value=", value);
     this.newNode(id, value);
     return this;
 }

@@ -22,7 +22,7 @@ function init() {
 }
 
 async function main() {
-    const brace = spy.brace(1, 1).opacity(0).label("查询最低辣度");
+    const brace = spy.brace(1, 1).opacity(0).label("查询最大辣度");
     const focus = sd.Focus(arr);
     for (let i = 0; i < tstdata.length; i++) {
         await sd.pause();
