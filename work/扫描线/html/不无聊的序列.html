@@ -1,0 +1,37 @@
+<section>
+    <section>
+        <h1>不无聊的序列</h1>
+    </section>
+    <problem data-src="http://43.143.204.105/problem/1009"></problem>
+    <section>
+        <h2>不无聊的序列</h2>
+        <p>我们不妨把包含某个唯一元素的区间称为<b>独特区间</b></p>
+        <p>某个元素能让一堆区间变得<b>独特</b></p>
+        <iframe data-src="./animation/不无聊的序列单元素贡献.html"
+            style="width: 1000px; height: 100px;"></iframe>
+    </section>
+    <section>
+        <h2>不无聊的序列</h2>
+        <p>设 $L_i$ 表示左边第一个和 $a_i$ 相同的元素位置</p>
+        <p>设 $R_i$ 表示右边第一个和 $a_i$ 相同的元素位置</p>
+        <p class="fragment">
+            容易发现，左端点落在 $[L_i,i]$，右端点落在 $[i,R_i]$ 的子区间，都会因为 $a_i$ 的存在而变得<b>独特</b>
+        </p>
+    </section>
+    <section>
+        <h2>不无聊的序列</h2>
+        <p>如果一个区间 $[l,r]$，满足：
+            $$
+            L_i\le l\le i \\
+            i\le r\le R_i
+            $$
+        </p>
+        <p>那么 $[l,r]$ 就是一个独特的区间</p>
+        <picture data-src="./image/不无聊的序列.png"
+            class="fragment" height="200px"></picture>
+        <p class="fragment">
+            构造出 $n$ 个矩形，第 $i$ 个矩形的信息为：$[i,R_i]\times [L_i,i]$
+        </p>
+        <p class="fragment">求矩形面积并，若面积最终等于 $n(n-1)/2$，那么意味着所有子区间都是独特的区间，整个序列就不无聊</p>
+    </section>
+</section>

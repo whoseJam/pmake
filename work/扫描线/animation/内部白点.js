@@ -50,8 +50,6 @@ async function main() {
         await sd.pause();
         l.startAnimate().y(h[i]).endAnimate();
     }
-
-
 }
 
 function getX(pos) { 

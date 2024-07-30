@@ -34,14 +34,12 @@ export class ActionList {
          * - after : opacity: [50, 50] 1 -> 1
          * 在这种情况下，认为 before 是一个短暂的错误，阻止突变
          */
-        if (before.l === before.r && after.l === after.r && after.l === before.l) {
+        if (before.l === before.r && after.l === after.r && after.l === before.l && before.from === after.to) {
             after.from = before.from;
             if (after.from === after.to) before.hide();
             else                         before.stop();
             return;
         }
-
-
 
         /**
          * before: |----|
@@ -52,7 +50,7 @@ export class ActionList {
          * ===>
          * - after : opacity: [0, 300] 0.5 -> 0.75
          */
-        if (before.l === after.l && before.r === after.r) {
+        if (before.l === after.l && before.r === after.r && before.l !== before.r) {
             after.from = before.from;
             before.hide();
             return;
