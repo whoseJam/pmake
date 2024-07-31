@@ -178,8 +178,8 @@ BaseTree.prototype.newLinkByBaseTree = function(x, y, link) {
     const node = this.findNodeById(y);
     node.parentNodeId = x;
     const links = this.member.get("links");
-    links.push(elem);
-    this.children.push(elem);
+    links.push(link);
+    this.children.push(link);
     this.tryUpdate();
     return this;
 }
