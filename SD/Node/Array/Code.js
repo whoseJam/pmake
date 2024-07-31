@@ -5,7 +5,7 @@ import { BaseArray } from "./BaseArray";
 import { naiveGetterAndSetter } from "../Common";
 import { color } from "@/Utility/Color";
 
-export function Code(parent) {
+export function Code(parent, source = undefined) {
     BaseArray.call(this, parent);
 
     this.g().type("Code");
@@ -34,6 +34,10 @@ export function Code(parent) {
     );
 
     this.newLayer("elements");
+
+    if (source) {
+        this.code(source);
+    }
 
     return this;
 }

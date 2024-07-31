@@ -1,7 +1,7 @@
 import { BaseArray } from "./BaseArray";
 
 export class Code extends BaseArray {
-    constructor(parent: any);
+    constructor(parent: any, source: string);
 
     l(): number;
     r(): number;

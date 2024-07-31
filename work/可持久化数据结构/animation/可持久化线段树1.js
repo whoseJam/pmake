@@ -132,7 +132,7 @@ async function insert(pos, value) {
                          Q ${realX(rank*2+1, gap/2, depth+1)} ${realY(rank*2+1, gap/2, depth+1)} ${lastRightChild.cx()} ${lastRightChild.cy()}`
                     );
                     // await sd.pause();
-                    path.opacity(0).stroke(C.red).startAnimate().opacity(1).endAnimate();
+                    path.opacity(0).stroke(C.red).strokeWidth(3).startAnimate().opacity(1).endAnimate();
                 }
                 await dfsInsert(id, "leftChild", lastVertex.leftChild, l, mid, pos, value, gap/2, rank*2, depth+1);
                 return;
@@ -143,7 +143,7 @@ async function insert(pos, value) {
                 const lastLeftChild = findNodeById(lastVertex.leftChild);
                 if (lastLeftChild) {
                     // await sd.pause();
-                    sd.Link(vertex, lastLeftChild).opacity(0).stroke(C.deepSkyBlue).startAnimate().opacity(1).endAnimate();
+                    sd.Link(vertex, lastLeftChild).opacity(0).stroke(C.deepSkyBlue).strokeWidth(3).startAnimate().opacity(1).endAnimate();
                 }
                 await dfsInsert(id, "rightChild", lastVertex.rightChild, mid + 1, r, pos, value, gap/2, rank*2+1, depth+1);
                 return;

@@ -20,26 +20,6 @@
     </section>
     <section>
         <h2>可持久化线段树2</h2>
-        <p>
-            注意到，如果我们以序列位置为版本，建立出 $n$ 棵权值线段树，第 $i$ 个版本的权值线段树 $S_i$ 满足：
-            $$
-            S_i=S_{i-1}+\{insert(a_i,1)\}
-            $$
-        </p>
-        <p class="fragment">
-            那么：
-            $$
-            \begin{aligned}
-            S&=\{insert(a_L)\}+\{insert(a_{L+1})\}+...+\{insert(a_R)\} \\
-            &=S_{R}-S_{L-1}
-            \end{aligned}
-            $$
-        </p>
-        <iframe style="min-width: 1000px; min-height: 400px;" data-src="./animation/可持久化线段树2.html">
-        </iframe>
-    </section>
-    <section>
-        <h2>可持久化线段树2</h2>
         <pre><code data-trim data-line-numbers class="cpp"><script type="text/template">
             int nodeSize(int xl, int xr) {
                 return t[xr].siz - t[xl].siz;

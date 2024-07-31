@@ -72,6 +72,14 @@ Path.prototype.d = function(d) {
     return this;
 }
 
+Path.prototype.width = function(width) {
+    return this;
+}
+
+Path.prototype.height = function(height) {
+    return this;
+}
+
 function update() {
     if (this.member.hasChanged("d")) {
         const duration = this.duration();

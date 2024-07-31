@@ -103,7 +103,7 @@ async function insert(pos, value) {
                 const lastRightChild = findNodeById(lastVertex.rightChild);
                 if (lastRightChild) {
                     // await sd.pause();
-                    sd.Link(vertex, lastRightChild).opacity(0).stroke(C.red).startAnimate().opacity(1).endAnimate();
+                    sd.Link(vertex, lastRightChild).opacity(0).stroke(C.red).strokeWidth(3).startAnimate().opacity(1).endAnimate();
                 }
                 await dfsInsert(id, "leftChild", lastVertex.leftChild, l, mid, pos, value);
                 return;
@@ -114,7 +114,7 @@ async function insert(pos, value) {
                 const lastLeftChild = findNodeById(lastVertex.leftChild);
                 if (lastLeftChild) {
                     // await sd.pause();
-                    sd.Link(vertex, lastLeftChild).opacity(0).stroke(C.deepSkyBlue).startAnimate().opacity(1).endAnimate();
+                    sd.Link(vertex, lastLeftChild).opacity(0).stroke(C.deepSkyBlue).strokeWidth(3).startAnimate().opacity(1).endAnimate();
                 }
                 await dfsInsert(id, "rightChild", lastVertex.rightChild, mid + 1, r, pos, value);
                 return;

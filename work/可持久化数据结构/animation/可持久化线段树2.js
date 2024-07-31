@@ -13,18 +13,41 @@ function init() {
     data.forEach((item, idx) => {
         arr.push(item);
         const e = arr.lastElement();
-        const math = new sd.Mathjax(e, `insert(${item})`).opacity(0);
-        e.childAs("math", math, R.Aside((idx % 2 === 0) ? "tc" : "bc"));
+        e.childAs("segment", makeSegmentTree(), R.Aside("tc"));
+        e.childAs("math", new sd.Mathjax(svg, `insert(a_${idx})`).width(40), R.Aside("bc"));
     })
 }
 
 async function main() {
-    for (let i = 0; i < arr.length(); i++) {
-        await sd.pause();
-        const math = arr.element(i).child("math");
-        math.startAnimate().opacity(1).endAnimate();
+    await query(1, 3);    
+}
+
+async function query(l, r) {
+    await sd.pause();
+    arr.startAnimate().color(l, r, C.green).endAnimate();
+    await sd.pause();
+    const elementR = arr.element(r);
+    elementR.child("segment").startAnimate().color(C.green).endAnimate();
+    const elementL = arr.element(l - 1);
+    elementL.child("segment").startAnimate().color(C.green).endAnimate();
+    await sd.pause();
+    elementR.startAnimate().color(C.white).endAnimate();
+    elementL.startAnimate().color(C.white).endAnimate();
+}
+
+function makeSegmentTree() {
+    const tree = new sd.ValueTree(svg).layerHeight(7).width(50);
+    function makeArray(length) {
+        return new sd.Array(tree).elementWidth(5).elementHeight(5).resize(length);
     }
-    await sd.pause();
-    arr.startAnimate().color(1, 3, C.green).endAnimate();
-    await sd.pause();
+    tree.freeze();
+    tree.root(1, makeArray(4));
+    tree.newNode(2, makeArray(2)); tree.link(1, 2);
+    tree.newNode(3, makeArray(2)); tree.link(1, 3);
+    tree.newNode(4, makeArray(1)); tree.link(2, 4);
+    tree.newNode(5, makeArray(1)); tree.link(2, 5);
+    tree.newNode(6, makeArray(1)); tree.link(3, 6);
+    tree.newNode(7, makeArray(1)); tree.link(3, 7);
+    tree.unfreeze();
+    return tree;
 }

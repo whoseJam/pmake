@@ -49,10 +49,11 @@ export { TinyGraph }      from "./Node/Graph/TinyGraph.js";
 export { BipartiteGraph } from "./Node/Graph/BipartiteGraph.js";
 export { ValueGridGraph } from "./Node/Graph/ValueGridGraph.js";
 
-export { Brace }       from "./Node/Curve/Brace.js";
-export { Curve }       from "./Node/Curve/Curve.js";
-export { Bezier }      from "./Node/Curve/Bezier.js";
-export { CircleCurve } from "./Node/Curve/CircleCurve.js";
+export { Brace }           from "./Node/Curve/Brace.js";
+export { Curve }           from "./Node/Curve/Curve.js";
+export { Bezier }          from "./Node/Curve/Bezier.js";
+export { CircleCurve }     from "./Node/Curve/CircleCurve.js";
+export { FixedPointCurve } from "./Node/Curve/FixedPointCurve.js";
 
 // export { Axis } from "./Node/Axis/Axis.js";
 

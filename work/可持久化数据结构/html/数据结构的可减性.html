@@ -20,11 +20,9 @@
         $$
         </p>
         <p class="fragment">我们设 $T=S_R-S_{L-1}=M_{L}+M_{L+1}+...+M_{R}$</p>
-        <p class="fragment">我们在让一个空数据结构 $S_0$ 加上 $T$，就能得到只重播 $M_L,M_{L+1}...M_R$ 这个范围内的操作，能得到怎么样的一个数据结构 $S'$了，即：
-            $$
-            S'=S_0+T=S_0+M_{L}+M_{L+1}+...+M_{R}
-            $$
-        </p>
+        <p class="fragment">我们在让一个空数据结构 $S_0$ 加上 $T$，就能<b>重播且只重播 $M_L,M_{L+1}...M_R$ 这个范围内的操作</b></p>
+        <iframe data-src="./animation/数据结构可减性的意义.html" class="fragment"
+            style="width: 1000px; height: 300px;"></iframe>
     </section>
     <section>
         <h2>数据结构的可减性</h2>
@@ -33,88 +31,15 @@
         <p class="fragment quote">如果某个内部元素没有被影响到，我们也可以认为是产生了一个变化量为 $0$ 的影响</p>
         <div class="fragment quote">
             假设 $S$ 是一个数组，包含 $\{e_1,e_2,e_3,e_4\}$ 这 $4$ 个元素， $M$ 是一个区间加法操作
-            <table class="fragment">
-                <thead>
-                    <tr>
-                        <th></th>
-                        <th>$S_t$</th>
-                        <th>$M$</th>
-                        <th>$S_{t+1}$</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>$e_1$</td>
-                        <td>$5$</td>
-                        <td>$+3$</td>
-                        <td>$8$</td>
-                    </tr>
-                    <tr>
-                        <td>$e_2$</td>
-                        <td>$2$</td>
-                        <td>$+3$</td>
-                        <td>$5$</td>
-                    </tr>
-                    <tr>
-                        <td>$e_3$</td>
-                        <td>$6$</td>
-                        <td>$+0$</td>
-                        <td>$6$</td>
-                    </tr>
-                    <tr>
-                        <td>$e_4$</td>
-                        <td>$4$</td>
-                        <td>$+0$</td>
-                        <td>$4$</td>
-                    </tr>
-                </tbody>
-            </table>
+            <iframe data-src="./animation/数组操作.html" class="fragment"
+                style="width: 1000px; height: 300px;"></iframe>
         </div>
     </section>
     <section>
         <h2>数据结构的可减性</h2>
-        <p>我们其实可以把一个操作 $M$ 看作和数据结构 $S$ 拥有相同的结构</p>
+        <p>所以一个<b>操作</b>和一个<b>数据结构</b>是<b>同构</b>的</p>
         <p class="fragment">$S$ 内部有 $k$ 个元素，则 $M$ 内部也有 $k$ 个元素，不过 $S$ 存储的是每个元素的<b>具体数据</b>，而 $M$ 内部存储的是每个元素的<b>变化情况</b></p>
         <p class="fragment">我们把 $S$ 内的第 $i$ 个元素写作 $S(i)$，$M$ 内的第 $i$ 个元素写作 $M(i)$</p>
-        <div class="fragment quote">
-            就比如上表，我们可以重写为这个样子：
-            <table class="fragment">
-                <thead>
-                    <tr>
-                        <th>$i$</th>
-                        <th>$S_t(i)$</th>
-                        <th>$M(i)$</th>
-                        <th>$S_{t+1}(i)$</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>$1$</td>
-                        <td>$5$</td>
-                        <td>$+3$</td>
-                        <td>$8$</td>
-                    </tr>
-                    <tr>
-                        <td>$2$</td>
-                        <td>$2$</td>
-                        <td>$+3$</td>
-                        <td>$5$</td>
-                    </tr>
-                    <tr>
-                        <td>$3$</td>
-                        <td>$6$</td>
-                        <td>$+0$</td>
-                        <td>$6$</td>
-                    </tr>
-                    <tr>
-                        <td>$4$</td>
-                        <td>$4$</td>
-                        <td>$+0$</td>
-                        <td>$4$</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
     </section>
     <section>
         <h2>数据结构的可减性</h2>
@@ -144,6 +69,20 @@
         </div>
         <p class="fragment quote">之所以需要满足交换律，是因为我们需要利用交换律的性质完成一个操作区间内的操作的<b>提取</b>，这个性质在证明过程中会被使用到</p>
     </section>
+
+    <section>
+        <h2>数据结构的可减性</h2>
+        <iframe data-src="./animation/数据结构的可减性其一.html"
+            style="width: 1000px; height: 500px;"></iframe>
+        <p class="fragment">区间加法操作具有可减性</p>
+    </section>
+    <section>
+        <h2>数据结构的可减性</h2>
+        <iframe data-src="./animation/数据结构的可减性其二.html"
+            style="width: 1000px; height: 500px;"></iframe>
+        <p class="fragment">区间赋值操作没有可减性</p>
+    </section>
+
     <section>
         <h2>数据结构的可减性</h2>
         <p>有了操作的可减性，再配合上可持久化的数据结构，我们就能找到任意一个操作区间 $M_L,M_{L+1}...M_R$ 了，我们取 $S_R$ 和 $S_{L-1}$，则：</p>

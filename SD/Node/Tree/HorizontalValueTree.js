@@ -24,7 +24,6 @@ HorizontalValueTree.prototype.updateList = [
 ];
 
 function update() {
-    console.log("start HorizontalValueTree update");
     return d3TreeLayout.call(
         this,
         "horizontal",
