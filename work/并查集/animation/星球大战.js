@@ -17,10 +17,9 @@ const links = I.readIntMatrix(`
 2 7
 6 7
 3 6`, 13, 2, false);
-console.log(links,);
 const attack = [1, 6, 3, 5, 7]
 const n = 8;
-const dag = new sd.DAG(svg);
+const dag = new sd.DAG(svg).cx(600).cy(300);
 
 for (let i = 0; i < n; i++)
     dag.newNode(i);
@@ -35,6 +34,8 @@ slider.value(0);
 slider.onChange(update);
 slider.width(100);
 slider.cx(dag.cx()).y(dag.my() + 20);
+
+main();
 
 function update(value) {
     function isAttacked(x) {
@@ -56,4 +57,9 @@ function update(value) {
             dag.opacity(link[0], link[1], 1);
         }
     })
+}
+
+
+async function main() {
+    await sd.pause();
 }

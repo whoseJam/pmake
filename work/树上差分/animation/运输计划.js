@@ -1,4 +1,3 @@
-import { trim } from "../../lib/Utility/Trim";
 import * as sd from "@/sd";
 
 let svg = sd.svg();
@@ -16,7 +15,7 @@ function makePath(t, a, b) {
     let A = t.element(a);
     let B = t.element(b);
     l.source(A.cx(), A.cy()).target(B.cx(), B.cy()).arrow();
-    trim(l, A, B);
+    sd.trim(l, A, B);
 }
 
 function makeTree() {

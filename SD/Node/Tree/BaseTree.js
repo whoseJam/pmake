@@ -142,7 +142,7 @@ BaseTree.prototype.lca = function(x, y) {
     let dy = this.depth(y);
     let iterCount = 0;
     while (x !== y && (++iterCount) <= 100) {
-        if (dx < dy) {
+        if (dx > dy) {
             x = this.father(x).nodeId;
             dx--;
         } else {
@@ -211,6 +211,8 @@ BaseTree.prototype.link = function(x, y, value) {
 }
 
 BaseTree.prototype.cut = function(x, y) {
+    const link = this.findLinkById(x, y);
+    link.opacity(0).remove();
     this.eraseLinkByBaseTree(x, y);
     const node = this.findNodeById(y);
     node.parentNodeId = undefined;
