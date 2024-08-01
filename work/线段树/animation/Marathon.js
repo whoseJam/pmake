@@ -32,19 +32,4 @@ function init() {
 
 async function main() {
     await sd.pause();
-    tree.startAnimate();
-    for (let i = 0; i < 4; i++) {
-        if (data[i] == "1") tree.element(2).color(i, C.orange);
-    }
-    for (let i = 4; i < 8; i++) {
-        if (data[i] == "1") tree.element(3).color(i - 4, C.orange);
-    }
-    tree.endAnimate();
-    await sd.pause();
-    tree.startAnimate();
-    for (let i = 0; i < 8; i++) {
-        if (data[i] == "1") tree.element(1).color(i, C.orange);
-    }
-    tree.endAnimate();
-    await sd.pause();
 }

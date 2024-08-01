@@ -25,33 +25,19 @@ function init() {
     for (let i = 1; i <= n; i++) {
         const node = tree.element(i);
         node.childAs("token", new sd.Stack(node).elementWidth(10).elementHeight(10), R.Aside("lt"));
+        node.onClick(() => {
+            addCurrentToRoot(i, "push");
+        });
+        node.onDblClick(() => {
+            addCurrentToRoot(i, "pop");
+        })
     }
     tree.cx(600).cy(300);
     tree.unfreeze();
 }
 
 async function main() {
-    await addNodeValueOnPath(9, 10);
-    
-}
-
-async function addNodeValueOnPath(u, v) {
-    const nodeG = tree.lca(u, v);
-    const g = nodeG.nodeId;
-
     await sd.pause();
-    tree.startAnimate().color(u, C.blue).endAnimate();
-    await addCurrentToRoot(u);
-    await sd.pause();
-    tree.startAnimate().color(v, C.blue).endAnimate();
-    await addCurrentToRoot(v);
-    await sd.pause();
-    const grad = C.gradient(C.white, C.red, 1, 10);
-    tree.startAnimate().color(g, grad(5)).endAnimate();
-    await addCurrentToRoot(g, "pop");
-    await sd.pause();
-    tree.startAnimate().color(g, grad(10)).endAnimate();
-    await addCurrentToRoot(g, "pop");
 }
 
 async function addCurrentToRoot(u, type = "push") {

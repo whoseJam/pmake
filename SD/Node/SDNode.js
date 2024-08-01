@@ -9,6 +9,7 @@ import { Children } from "@/Node/Children";
 import { SDMember } from "@/Node/SDMember";
 
 import { d3ToNake, nakeToSnap } from "@/Utility/Tool";
+import { timeout } from "d3";
 
 let id = 0;
 
@@ -29,6 +30,9 @@ export function SDNode(parent) {
     this.member = new SDMember();
 
     this.member.new("global-opacity", 1);
+    this.member.new("clickHandle", undefined);
+    this.member.new("dblClickHandle", undefined);
+    this.member.new("clickTimeoutObject", undefined);
 
     new Action(0, 0, 0, 1, 
         Interp.numberInterp(this.d3layer.nake(), "opacity"),
@@ -297,11 +301,24 @@ SDNode.prototype.updateList = [
 
 SDNode.prototype.onClick = function(callback) {
     const nake = d3ToNake(this.d3layer.d3);
-    nake.removeEventListener("click", this._.handle);
-    this._.handle = () => {
+    nake.removeEventListener("click", this.member.get("clickHandle"));
+    this.member.setAndFlush("clickHandle", () => {
+        clearTimeout(this.member.get("clickTimeoutObject"));
+        this.member.set("clickTimeoutObject", setTimeout(() => {
+            callback(this);
+        }, 200));
+    });
+    nake.addEventListener("click", this.member.get("clickHandle"));
+}
+
+SDNode.prototype.onDblClick = function(callback) {
+    const nake = d3ToNake(this.d3layer.d3);
+    nake.removeEventListener("dblclick", this.member.get("dblClickHandle"));
+    this.member.setAndFlush("dblClickHandle", () => {
+        clearTimeout(this.member.get("clickTimeoutObject"));
         callback(this);
-    };
-    nake.addEventListener("click", this._.handle);
+    });
+    nake.addEventListener("dblclick", this.member.get("dblClickHandle"));
 }
 
 SDNode.prototype.drag = function(type) {
@@ -309,6 +326,5 @@ SDNode.prototype.drag = function(type) {
         const nake = d3ToNake(this.d3layer.d3);
         Snap(nake).drag();
     }
-    console.log("return this = ", this);
     return this;
 }

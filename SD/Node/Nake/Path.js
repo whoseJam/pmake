@@ -73,11 +73,11 @@ Path.prototype.d = function(d) {
 }
 
 Path.prototype.width = function(width) {
-    return this;
+    return this.member.get("width");
 }
 
 Path.prototype.height = function(height) {
-    return this;
+    return this.member.get("height");
 }
 
 function update() {

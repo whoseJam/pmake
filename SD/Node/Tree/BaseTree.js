@@ -153,7 +153,7 @@ BaseTree.prototype.lca = function(x, y) {
     if (iterCount > 100) {
         throw new Error(`Unlimit Iteration At lca(${x}, ${y}): Maybe Caused By A Broken Tree`);
     }
-    return x;
+    return this.findNodeById(x);
 }
 
 BaseTree.prototype.childrenOnTree = function(x) {

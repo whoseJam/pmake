@@ -84,4 +84,7 @@ export class SDNode {
     freeze(): void;
     unfreeze(): void;
     freezing(): boolean;
+
+    onClick(callback: (obj: this) => void): this;
+    onDblClick(callback: (obj: this) => void): this;
 }

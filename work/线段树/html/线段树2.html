@@ -13,20 +13,58 @@
     </section>
     <section>
         <h2>线段树2</h2>
-        <picture data-src="./image/线段树2add_mul.png"></picture>
+        <p>我们先来试试 $e_0 \stackrel{add}{\rightarrow} e_1 \stackrel{mul}{\rightarrow} e_2$ 这种懒标记更新顺序</p>
     </section>
     <section>
         <h2>线段树2</h2>
-        <picture data-src="./image/线段树2add_mul的问题.png"></picture>
+        <p>
+            $$
+            e_0 \stackrel{add}{\rightarrow} e_1 \stackrel{mul}{\rightarrow} e_2
+            $$
+        </p>
+        <p>当它遇上一个新的 $pushMul$ 请求.....</p>
+        <iframe data-src="./animation/线段树2_add_mul(mul).html"
+            style="width: 1000px; height: 300px;"></iframe>
     </section>
     <section>
         <h2>线段树2</h2>
-        <picture data-src="./image/线段树2mul_add1.png"></picture>
+        <p>
+            $$
+            e_0 \stackrel{add}{\rightarrow} e_1 \stackrel{mul}{\rightarrow} e_2
+            $$
+        </p>
+        <p>当它遇上一个新的 $pushAdd$ 请求.....</p>
+        <iframe data-src="./animation/线段树2_add_mul(add).html"
+            style="width: 1000px; height: 300px;"></iframe>
+    </section>
+
+    <section>
+        <h2>线段树2</h2>
+        <p>我们再来试试 $e_0 \stackrel{mul}{\rightarrow} e_1 \stackrel{add}{\rightarrow} e_2$ 这种懒标记更新顺序</p>
     </section>
     <section>
         <h2>线段树2</h2>
-        <picture data-src="./image/线段树2mul_add2.png"></picture>
+        <p>
+            $$
+            e_0 \stackrel{mul}{\rightarrow} e_1 \stackrel{add}{\rightarrow} e_2
+            $$
+        </p>
+        <p>当它遇上一个新的 $pushMul$ 请求.....</p>
+        <iframe data-src="./animation/线段树2_mul_add(mul).html"
+            style="width: 1000px; height: 300px;"></iframe>
     </section>
+    <section>
+        <h2>线段树2</h2>
+        <p>
+            $$
+            e_0 \stackrel{mul}{\rightarrow} e_1 \stackrel{add}{\rightarrow} e_2
+            $$
+        </p>
+        <p>当它遇上一个新的 $pushAdd$ 请求.....</p>
+        <iframe data-src="./animation/线段树2_mul_add(add).html"
+            style="width: 1000px; height: 300px;"></iframe>
+    </section>
+
     <section>
         <h2>线段树2</h2>
         <picture data-src="./image/线段树2.png"></picture>

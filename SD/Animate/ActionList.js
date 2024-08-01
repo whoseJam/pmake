@@ -186,7 +186,8 @@ export class ActionList {
                 action.channel !== "y1" &&
                 action.channel !== "x2" &&
                 action.channel !== "y2" &&
-                action.channel !== "transform") continue;
+                action.channel !== "transform" &&
+                action.channel !== "opacity") continue;
             const owner = action.owner;
             if (!("g" in owner) || !owner._.nake) { // D3Layer
                 continue;
@@ -197,6 +198,8 @@ export class ActionList {
                 const mx = owner.mx();
                 const y = owner.y();
                 const my = owner.my();
+                if (owner.g().type() === "Curve") continue;
+                console.log("nake=", nake, "x=", x, "mx=", mx, "y=", y, "my=", my);
                 window.SVG_MAXX = Math.max(window.SVG_MAXX, mx);
                 window.SVG_MINX = Math.min(window.SVG_MINX, x);
                 window.SVG_MAXY = Math.max(window.SVG_MAXY, my);

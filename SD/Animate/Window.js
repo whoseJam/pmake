@@ -32,6 +32,8 @@ function record() {
     }
 }
 
+let cnt = 0;
+
 export function pause() {
     if ((window.__FLUSH__ || window.__EXPORT__) && !window.__RECORD__) {
         window.__RECORD__ = true;
@@ -39,6 +41,7 @@ export function pause() {
     }
     if (window.__FLUSH__ || 
         window.__EXPORT__) {
+        console.log("currentActionList update window size count = ", ++cnt);
         Animate.currentActionList.updateWindowSize();
         return 0;
     }

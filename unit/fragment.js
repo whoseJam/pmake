@@ -2,7 +2,7 @@ import * as sd from "@/sd";
 
 let svg = sd.svg();
 let C = sd.color();
-let frag = new sd.Fragment(svg);
+let frag = new sd.Fragment(svg).drag(true);
 let rect = new sd.Rect(svg).fillOpacity(0).strokeWidth(3).stroke(C.red);
 
 main();
