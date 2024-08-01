@@ -1,0 +1,43 @@
+<section>
+    <section>
+        <h1>Color the Ball</h1>
+        <p>区间修改，单点查询</p>
+    </section>
+    <problem data-src="http://43.143.204.105/problem/848"></problem>
+    <section>
+        <h2>Color the Ball</h2>
+        <p>数轴上，从下到上依次叠放了一些线段，问每个点上一共叠放了多少条线段</p>
+        <ul>
+            <li class="fragment"><code>1 X Y</code>：表示在区间 $[X,Y]$ 之间叠放了一条线段</li>
+            <li class="fragment"><code>2 X</code>：表示询问点 $X$ 上叠放了多少条线段</li>
+        </ul>
+        <picture data-src="./image/ColorTheBall.png" class="fragment"></picture>
+    </section>
+
+    <section>
+        <h2>Color the Ball</h2>
+        <p>我们可以把原问题看作这么一个问题：</p>
+        <p>给定一个 $n$ 个元素的数组 $A_1,A_2...A_n$，你的任务是设计一种数据结构，支持以下两种操作：</p>
+        <ul>
+            <li class="fragment"><code>Add(l, r, d)</code>：让 $A_l,A_{l+1}...A_r$ 的数值都增加 $d$</li>
+            <li class="fragment"><code>Query(x)</code>：求 $A_x$ 的数值</li>
+        </ul>
+        <p class="fragment">如何才能让 $Add$ 和 $Query$ 都快速完成呢？</p>
+        <p class="fragment quote">remind：树状数组原生支持单点修改，区间查询；而这里是区间修改，单点查询</p>
+    </section>
+    <section>
+        <h2>Color The Ball</h2>
+        <p>我们借助差分数组</p>
+        <p class="fragment">设 $D_i=A_i-A_{i-1}$，特别的，$D_1=A_1$</p>
+        <p class="fragment">若 $Query(x)$，则：
+            $$
+            \begin{aligned}
+            Query(x)&=A_x \\
+            &=D_1+D_2+...+D_x
+            \end{aligned}
+            $$
+        </p>
+        <p class="fragment">若 $Add(l,r,d)$，则可以转化为 $D_l+=d$，$D_{r+1}-=d$</p>
+        <p class="fragment">至此，问题可以用树状数组解决</p>
+    </section>
+</section>

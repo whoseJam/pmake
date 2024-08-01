@@ -3,20 +3,15 @@
 
 统计偏序对：
 #843.夜空星辰：http://poj.org/problem?id=2352
-#844.Cows：http://poj.org/problem?id=2481
-逆序对
-Japan：http://poj.org/problem?id=3067
-五元组问题：http://43.143.204.105/problem/851
-HH的项链：https://www.luogu.com.cn/problem/P1972
-
-树状数组维护树的DFS序：
-Apple Tree：http://poj.org/problem?id=3321
+#845.逆序对：https://www.luogu.com.cn/problem/P1908
+#851.五元组问题：http://43.143.204.105/problem/851
+#470.HH的项链：https://www.luogu.com.cn/problem/P1972
 
 树状数组维护差分数组：
-树状数组2：区间修改，单点查询
-区间操作：http://poj.org/problem?id=3468
-区间操作plus：http://43.143.204.105/problem/904
+#848.Color the Ball：区间修改，单点查询
+#849.区间操作：http://poj.org/problem?id=3468
+#904.区间操作plus：http://43.143.204.105/problem/904
 
 Min/Max/Xor树状数组：
-密码机：http://43.143.204.105/problem/850
+#850.密码机：http://43.143.204.105/problem/850
 
