@@ -19,6 +19,7 @@ Mathjax.prototype = {
 };
 
 Mathjax.prototype.math = function(text) {
+    if (text.startsWith("$")) text = text.slice(1, -1);
     this.member.setAndFlush("text", text);
     const svg = MathJax.tex2svg(text).children[0];
     this.fragment(svg.outerHTML);

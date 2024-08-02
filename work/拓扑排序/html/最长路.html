@@ -7,19 +7,40 @@
     </section>
     <section>
         <h2>最长路</h2>
-        <p>根据这么长时间训练动态规划的直觉，我们可以设 $dis(u)$ 表示，走到节点 $u$ 的最长路</p>
+        <p>设 $dis(u)$ 表示，走到节点 $u$ 的最长路</p>
+        <iframe data-src="./animation/最长路.html" class="fragment"
+            style="width: 1000px; height: 300px;"></iframe>
         <p class="fragment">
             $$
             dis(v)=\mathop{max}_{(u,v)\in E}\{dis(u)+w(u,v)\}
             $$
         </p>
-        <p class="fragment">注意到这张图有特殊性，这张图是DAG</p>
-        <p class="fragment">如果我们按照拓扑序去做动态规划，假设当前点为 $x$，拓扑序能保证：<b>能抵达 $x$ 的点的 $dis$ 值肯定都已经被更新为距离最大值了</b>，所以用拓扑序来做动态规划是有正确性的</p>
     </section>
     <section>
         <h2>最长路</h2>
-        <iframe
-            data-src="./animation/最长路.html"
-            style="min-width: 1000px; min-height: 500px;"></iframe>
+        <p>需要处理的细节：</p>
+        <ul>
+            <li class="fragment">可能有多个入度为 $0$ 的点</li>
+            <li class="fragment">起点入度不一定为 $0$</li>
+        </ul>
+        <codeblock class="fragment">
+            <script type="text/template">
+                void Toposort() {
+                    queue < int > q;
+                    for (int i = 1; i <= n; i++) dis[i] = -inf;
+                    dis[1] = 0;
+                    for (int i = 1; i <= n; i++)
+                        if (!Ind[i]) q.push(i);
+                    while (q.size()) {
+                        int u = q.front(); q.pop();
+                        for (int i = h[u], v; i; i = l[i].Nxt) {
+                            v = l[i].to;
+                            if (dis[u] != -inf) dis[v] = max(dis[v], dis[u] + l[i].val);
+                            if (!(--Ind[v])) q.push(v);
+                        }
+                    }
+                }
+            </script>
+        </codeblock>
     </section>
 </section>

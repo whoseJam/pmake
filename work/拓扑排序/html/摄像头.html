@@ -26,38 +26,34 @@
     </section>
     <section>
         <h2>摄像头</h2>
-        <p>注意到如果摄像头 $a$ 需要先于摄像头 $b$ 摧毁，我们只需要让 $a$ 有连边能间接地抵达 $b$ 就行，而不一定非得 $a$ 和 $b$ 直接相连</p>
-        <p class="fragment">同时，如果 $a$ 能监控到 $b$，我们可以认为是 $a$ 监控到某个地点，而 $b$ 恰好出现在这个地点上</p>
+        <p>注意到如果摄像头 $a$ 需要先于摄像头 $b$ 摧毁，我们只需要<b>让 $a$ 有连边能间接地抵达 $b$</b> 就行，而不一定非得 $a$ 和 $b$ 直接相连</p>
     </section>
     <section>
         <h2>摄像头</h2>
-        <iframe
-            data-src="./animation/摄像头.html"
-            style="min-width: 1000px; min-height: 400px;"></iframe>
-        <p>设摄像机 $i$ 在图中的点为 $C_i$，其所处坐标为 $w_i$；坐标为 $x$ 位置在图上对应的点为 $P_x$，摄像机 $i$ 可以监视到 $a,b,c$ 这三个位置</p>
+        <iframe data-src="./animation/摄像头.html"
+            style="width: 1000px; height: 400px;"></iframe>
     </section>
     <section>
         <h2>摄像头</h2>
         <p>所以可以按照如下方式建图：</p>
         <ul>
-            <li>$P_{w_i}\rightarrow C_i$</li>
-            <li>$C_i\rightarrow P_{x}$，如果 $x$ 在第 $i$ 个摄像机的监控范围内</li>
+            <li>$Pos(w_i)\rightarrow C(i)$（$w_i$ 是第 $i$ 个摄像机的位置）</li>
+            <li>$C(i)\rightarrow Pos(x)$，如果 $x$ 在第 $i$ 个摄像机的监控范围内</li>
         </ul>
-    </section>
-    <section>
-        <h2>摄像头</h2>
-        <p>建图代码如下：</p>
-        <pre><code data-trim data-line-numbers class="cpp"><script type="text/template">
-            n = read();
-            for (int i = 1, x, m; i <= n; i++) {
-                x = read();
-                m = read();
-                Link(idPosition(x), idCamera(i));
-                for (int j = 1, to; j <= m; j++) {
-                    to = read();
-                    Link(idCamera(i), idPosition(to));
+        <p class="fragment">建图代码如下：</p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                n = read();
+                for (int i = 1, x, m; i <= n; i++) {
+                    x = read();
+                    m = read();
+                    Link(idPosition(x), idCamera(i));
+                    for (int j = 1, to; j <= m; j++) {
+                        to = read();
+                        Link(idCamera(i), idPosition(to));
+                    }
                 }
-            }
-        </script></code></pre>
+            </script>
+        </codeblock>
     </section>
 </section>

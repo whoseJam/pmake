@@ -62,3 +62,5 @@ export { rule } from "./Rule/Rule";
 export { Rule } from "./Rule/Rule";
 
 export { input } from "./Utility/Reader";
+
+export { PathPen } from "./Utility/PathPen";

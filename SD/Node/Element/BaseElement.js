@@ -51,6 +51,14 @@ BaseElement.prototype.stroke        = backgroundGetterAndSetter("stroke");
 BaseElement.prototype.strokeOpacity = backgroundGetterAndSetter("strokeOpacity");
 BaseElement.prototype.strokeWidth   = backgroundGetterAndSetter("strokeWidth");
 
+BaseElement.prototype.text = function() {
+    const value = this.child("value");
+    if (!value) {
+        return "";
+    }
+    return value.text();
+}
+
 BaseElement.prototype.drop = function() {
     const value = this.child("value");
     this.children.erase(value);

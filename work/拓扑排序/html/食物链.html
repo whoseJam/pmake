@@ -7,12 +7,30 @@
     </section>
     <section>
         <h2>食物链</h2>
-        <p>显然，我们可以设 $f(u)$ 表示，以 $u$ 号点为末尾的食物链有多少条</p>
+        <p class="quote">如何统计总的食物链数量？</p>
+        <p class="fragment">我们可以设 $f(u)$ 表示，以 $u$ 号点为末尾的食物链有多少条</p>
+        <iframe data-src="./animation/食物链.html" class="fragment"
+            style="width: 1000px; height: 300px;"></iframe>
         <p class="fragment">
             $$
             f(u)=\sum_{(v,u)\in E} f(v)
             $$
         </p>
         <p class="fragment">初始化，所有入度为 $0$ 的点 $x$ 的 $f(x)=1$</p>
+    </section>
+    <section>
+        <h2>食物链</h2>
+        <codeblock>
+            <script type="text/template">
+                while (q.size()) {
+                    int u = q.front(); q.pop();
+                    for (int i = h[u], v; i; i = l[i].Nxt) {
+                        v = l[i].to;
+                        dp[v] += dp[u];
+                        if (!(--In[v])) q.push(v);
+                    }
+                }
+            </script>
+        </codeblock>
     </section>
 </section>

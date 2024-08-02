@@ -73,6 +73,8 @@ export { ValueBoard }   from "./Component/ValueBoard.js";
 export { MathjaxLabel } from "./Component/Label.js";
 export { Link }         from "./Component/Link.js";
 
+export { PathPen } from "./Utility/PathPen.js";
+
 export { pause }  from "./Animate/Window.js";
 export { rand }   from "./Utility/Random.js";
 export { make1d } from "./Utility/Util.js"

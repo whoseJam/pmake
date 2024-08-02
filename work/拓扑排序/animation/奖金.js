@@ -16,13 +16,12 @@ function init() {
     function link(u, v) {
         graph.link(u, v);
         graph.element(u, v).arrow();
-        graph.element(u, v).value(new sd.Mathjax(svg, `w(${u},${v})`))
     }
     link("a", "u");
     link("b", "u");
     link("c", "u");
     for (let i = 0; i < nodes.length; i++) {
-        sd.Label(graph.element(nodes[i]), `$dis(${nodes[i]})=${sd.rand(1, 9)}$`);
+        sd.Label(graph.element(nodes[i]), `$f(${nodes[i]})=${sd.rand(100, 109)}$`);
     }
 }
 
