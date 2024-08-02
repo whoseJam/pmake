@@ -1,121 +1,93 @@
 import { Action } from "@/Animate/Action";
-import { d3ToNake } from "@/Utility/Tool";
-import { equal } from "@/Utility/Math";
 import { Interp } from "@/Animate/Interp";
-import { nakeToSnap } from "@/Utility/Tool";
-import { SDNode } from "@/Node/SDNode";
 
-export class Svg extends SDNode {
-    constructor(node) {
-        super(node);
-        this.g().type("Svg");
-        this.newLayer("svgElement");
-        this._.d3 = this.layer("svgElement").append("svg");
-        this._.nake = d3ToNake(this._.d3);
-        this._.snap = nakeToSnap(this._.nake);
-        this._.x = 0;
-        this._.y = 0;
-        this._.width = 300;
-        this._.height = 300;
-        this._.viewX = 0;
-        this._.viewY = 0;
-        this._.viewWidth = 40;
-        this._.viewHeight = 40;
-        const viewBoxStr = `${this._.viewX} ${this._.viewY} ${this._.viewWidth} ${this._.viewHeight}`;
-        this._.nake.setAttribute("x", this._.x);
-        this._.nake.setAttribute("y", this._.y);
-        this._.nake.setAttribute("width", this._.width);
-        this._.nake.setAttribute("height", this._.height);
-        this._.nake.setAttribute("viewBox", viewBoxStr);
-    }
+import { BaseNake }             from "@/Node/Nake/BaseNake";
+import { naiveUpdate }          from "@/Node/Common"
+import { naiveGetterAndSetter } from "@/Node/Common";
 
-    viewBox(x, y, width, height) {
-        const viewBox = {
-            viewX: this._.viewX,
-            viewY: this._.viewY,
-            viewWidth: this._.viewWidth,
-            viewHeight: this._.viewHeight
-        };
-        if (x === undefined) return viewBox;
-        if (equal(x, this._.viewX) && 
-            equal(y, this._.viewY) &&
-            equal(width, this._.viewWidth) &&
-            equal(height, this._.viewHeight)) return this;
-        new Action(
-            this.delay(),
-            this.delay() + this.duration(),
-            viewBox, { viewX: x, viewY: y, viewWidth: width, viewHeight: height },
-            Interp.viewBoxInterp(this._.d3, "viewBox"),
-            this, "viewBox"
-        );
-        this._.viewX = x;
-        this._.viewY = y;
-        this._.viewWidth = width;
-        this._.viewHeight = height;
-        return this;
-    }
-
-    x(x) {
-        this.dirtyCheck();
-        if (x === undefined) return this._.x;
-        if (equal(x, this._.x)) return this;
-        new Action(
-            this.delay(),
-            this.delay() + this.duration(),
-            this._.x, x,
-            Interp.numberInterp(this._.d3, "x"),
-            this, "x"
-        );
-        this._.x = x;
-        this.dirty(this, "R");
-        return this;
-    }
-
-    y(y) {
-        this.dirtyCheck();
-        if (y === undefined) return this._.y;
-        if (equal(y, this._.y)) return this;
-        new Action(
-            this.delay(),
-            this.delay() + this.duration(),
-            this._.y, y,
-            Interp.numberInterp(this._.d3, "y"),
-            this, "y"
-        );
-        this._.y =  y;
-        this.dirty(this, "R");
-        return this;
-    }
-
-    width(width) {
-        this.dirtyCheck();
-        if (width === undefined) return this._.width;
-        if (equal(width, this._.width)) return this;
-        new Action(
-            this.delay(),
-            this.delay() + this.duration(),
-            this._.width, width,
-            Interp.numberInterp(this._.d3, "width"),
-            this, "width"
-        );
-        this._.width = width;
-        this.dirty(this, "R");
-        return this;
-    }
-
-    height(height) {
-        this.dirtyCheck();
-        if (height === undefined) return this._.height;
-        if (equal(height, this._.height)) return this;
-        new Action(
-            this.delay(),
-            this.delay() + this.duration(),
-            this._.height, height,
-            Interp.numberInterp(this._.d3, "height"),
-            this, "height"
-        );
-        this._.height = height;
-        this.dirty(this, "R");
-        return this;
-    }
+function GetViewBox(svgElement, getter) {
+    const x = svgElement.member[getter]("viewX");
+    const y = svgElement.member[getter]("viewY");
+    const width = svgElement.member[getter]("viewWidth");
+    const height = svgElement.member[getter]("viewHeight");
+    return `${x} ${y} ${width} ${height}`;
 }
+
+export function Svg(parent) {
+    BaseNake.call(this, parent, "svg");
+
+    this.member.new("x", 0);
+    this.member.new("y", 0);
+    this.member.new("width", 300);
+    this.member.new("height", 300);
+    this.member.new("viewX", 0);
+    this.member.new("viewY", 0);
+    this.member.new("viewWidth", 40);
+    this.member.new("viewHeight", 40);
+
+    const nake = this._.nake;
+    nake.setAttribute("x", this.member.get("x"));
+    nake.setAttribute("y", this.member.get("y"));
+    nake.setAttribute("width", this.member.get("width"));
+    nake.setAttribute("height", this.member.get("height"));
+    nake.setAttribute("viewBox", GetViewBox(this, "get"));
+
+    return this;
+}
+
+Svg.prototype = {
+    ...BaseNake.prototype
+};
+
+Svg.prototype.x      = naiveGetterAndSetter("x", "setByEqual");
+Svg.prototype.y      = naiveGetterAndSetter("y", "setByEqual");
+Svg.prototype.width  = naiveGetterAndSetter("width", "setByEqual");
+Svg.prototype.height = naiveGetterAndSetter("height", "setByEqual");
+
+Svg.prototype.viewBox = function(x, y, width, height) {
+    if (arguments.length === 0) {
+        return {
+            x: this.member.get("viewX"),
+            y: this.member.get("viewY"),
+            width: this.member.get("viewWidth"),
+            height: this.member.get("viewHeight")
+        };
+    }
+    if (arguments.length === 1) {
+        const viewBox = arguments[0];
+        return this.viewBox(viewBox.x, viewBox.y, viewBox.width, viewBox.height);
+    }
+    this.member.setByEqual("viewX", x);
+    this.member.setByEqual("viewY", y);
+    this.member.setByEqual("viewWidth", width);
+    this.member.setByEqual("viewHeight", height);
+    this.tryUpdate();
+    return this;
+}
+
+Svg.prototype.updateList = [
+    ...BaseNake.prototype.updateList,
+    naiveUpdate("x", Interp.numberInterp),
+    naiveUpdate("y", Interp.numberInterp),
+    naiveUpdate("width", Interp.numberInterp),
+    naiveUpdate("height", Interp.numberInterp),
+    function() {
+        if (this.member.hasChanged("viewX") || 
+            this.member.hasChanged("viewY") ||
+            this.member.hasChanged("viewWidth") || 
+            this.member.hasChanged("viewHeight")) {
+            new Action(
+                this.delay(),
+                this.delay() + this.duration(),
+                GetViewBox(this, "oldValue"),
+                GetViewBox(this, "get"),
+                Interp.viewBoxInterp,
+                this, "viewBox"
+            );
+            this.member.flush("viewX");
+            this.member.flush("viewY");
+            this.member.flush("viewWidth");
+            this.member.flush("viewHeight");
+        }
+    }
+]

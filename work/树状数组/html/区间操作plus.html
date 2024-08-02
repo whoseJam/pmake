@@ -12,4 +12,20 @@
         </ul>
         <p class="fragment">如何才能让 $Add$ 和 $Query$ 都快速完成呢？</p>
     </section>
+    <section>
+        <h2>区间操作plus</h2>
+        <p class="math-fragment">
+            $$
+            \begin{aligned}
+            Sum(n)
+            &=\sum_{1\le i\le n}S_i \\
+            &=\sum_{1\le i\le n}\sum_{1\le j\le i}A_j \\
+            &=\sum_{1\le i\le n}\sum_{1\le j\le i}\sum_{1\le k\le j}D_k \\
+            &=\sum_{1\le k\le n}D_k \sum_{k\le j\le n}\sum_{j\le i\le n} 1 \\
+            &=\sum_{1\le k\le n}D_k \sum_{k\le j\le n}(n-j+1) \\
+            &=\sum_{1\le k\le n}D_k\times \frac 1 2\big( k^2+(-2n-3)k+(n^2+3n+2) \big)
+            \end{aligned}
+            $$
+        </p>
+    </section>
 </section>

@@ -3,6 +3,7 @@
 export { SDNode }  from "./Node/SDNode";
 export { SDValue } from "./Node/SDValue";
 
+export { Svg }           from "./Node/Nake/Svg";
 export { Line }          from "./Node/Nake/Line";
 export { Path }          from "./Node/Nake/Path";
 export { Rect }          from "./Node/Nake/Rect";

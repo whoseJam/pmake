@@ -9,6 +9,7 @@ import { init } from "./Interact/Init.js";
 
 init();
 
+export { Svg }           from "./Node/Nake/Svg.js";
 export { Line }          from "./Node/Nake/Line.js";           
 export { Path }          from "./Node/Nake/Path.js";
 export { Rect }          from "./Node/Nake/Rect.js";
@@ -18,7 +19,6 @@ export { Circle }        from "./Node/Nake/Circle.js";
 export { Ellipse }       from "./Node/Nake/Ellipse.js";
 export { Fragment }      from "./Node/Nake/Fragment.js";
 export { ForeignObject } from "./Node/Nake/ForeignObject.js";
-// export { Svg } from "./Node/Nake/Svg.js";
 
 export { Box }    from "./Node/Element/Box.js";
 export { Vertex } from "./Node/Element/Vertex.js";
