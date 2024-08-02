@@ -31,7 +31,9 @@ BaseElement.prototype.updateList = [
         if (this.member.hasChanged("rate")) {
             const rule = CenterFixAspect(this.member.get("rate"));
             const value = this.child("value");
-            value._.rule = rule;
+            if (value) {
+                value._.rule = rule;
+            }
             this.member.flush("rate");
         }
     }

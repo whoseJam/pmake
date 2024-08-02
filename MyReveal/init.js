@@ -51,6 +51,7 @@ class IFrameCache {
 
     update(iframe) {
         const dataSource = iframe.getAttribute("data-src");
+        const viewBox = iframe.getAttribute("data-viewBox");
         if (!dataSource) {
             return;
         }
@@ -59,6 +60,19 @@ class IFrameCache {
                 iframe: iframe,
                 bbox: null
             };
+        }
+        if (viewBox) {
+            iframe.onload = () => {
+                const numbers = viewBox.split(" ").map(Number);
+                const bbox = {
+                    x: numbers[0],
+                    y: numbers[1],
+                    width: numbers[2],
+                    height: numbers[3]
+                };
+                this.setAnimationSize(iframe, bbox);
+            }
+            return;
         }
         iframe.onload = () => {
             const bbox = this.cache[dataSource].bbox;

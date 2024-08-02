@@ -1,5 +1,7 @@
 import * as sd from "@/sd";
 
+let isActing = false;
+
 const svg = sd.svg();
 const R = sd.rule();
 const C = sd.color();
@@ -15,7 +17,11 @@ const input = new sd.ValueStack(svg);
 const lInput = new sd.Input(svg).label("l");
 const rInput = new sd.Input(svg).label("r");
 const button = new sd.Button(svg).text("Query").onClick(() => {
-    tree.query(+lInput.value(), +rInput.value(), C.blue);
+    if (isActing) return;
+    isActing = true;
+    tree.query(+lInput.value(), +rInput.value(), C.blue).then(() => {
+        isActing = false;
+    });
 });
 input.push(lInput).push(rInput).push(button);
 input.mx(tree.x() - 60).cy(tree.cy());
@@ -26,7 +32,11 @@ main();
 function init() {
     for (let i = 1; i <= n; i++) {
         array.element(i).onClick(() => {
-            tree.colorOn(i, C.green);
+            if (isActing) return;
+            isActing = true;
+            tree.colorOn(i, C.green).then(() => {
+                isActing = false;
+            });
         })
     }
 }
