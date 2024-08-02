@@ -1,6 +1,8 @@
-import { Vec } from "@/Utility/Math";
-import { BaseCurve } from "./BaseCurve";
-import { naiveGetterAndSetter } from "../Common";
+import { Vec }     from "@/Utility/Math";
+import { PathPen } from "@/Utility/PathPen";
+
+import { BaseCurve }            from "@/Node/Curve/BaseCurve";
+import { naiveGetterAndSetter } from "@/Node/Common";
 
 export function Curve(parent) {
     BaseCurve.call(this, parent);
@@ -28,6 +30,5 @@ Curve.prototype.pathCalculator = function() {
         Vec.add(v1, Vec.numberMul(d, 0.5)),
         Vec.numberMul(left, dis * this.member.get("bending"))
     );
-    const pathString = `M ${v1[0]}, ${v1[1]} Q ${vc[0]}, ${vc[1]}, ${v2[0]}, ${v2[1]}`;
-    return pathString;
+    return new PathPen().MoveTo(v1).Quad(vc, v2).toString();
 }

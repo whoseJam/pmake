@@ -1,6 +1,8 @@
-import { Vec } from "../../Utility/Math";
-import { BaseCurve } from "./BaseCurve";
-import { naiveGetterAndSetter } from "../Common";
+import { Vec } from "@/Utility/Math";
+
+import { BaseCurve }            from "@/Node/Curve/BaseCurve";
+import { naiveGetterAndSetter } from "@/Node/Common";
+import { PathPen } from "@/Utility/PathPen";
 
 export function Brace(parent) {
     BaseCurve.call(this, parent);
@@ -32,7 +34,13 @@ Brace.prototype.pathCalculator = function() {
     const c = Vec.add(c2, dl);
     const p4 = Vec.add(vt, dl);
     const p3 = Vec.sub(p4, d);
-    return `M ${vs[0]}, ${vs[1]} Q ${p1[0]}, ${p1[1]}, ${p2[0]}, ${p2[1]} `
-            + `L ${c1[0]}, ${c1[1]} Q ${c2[0]}, ${c2[1]}, ${c[0]}, ${c[1]} Q ${c2[0]}, ${c2[1]} ${c3[0]}, ${c3[1]} `
-            + `L ${p3[0]}, ${p3[1]} Q ${p4[0]}, ${p4[1]}, ${vt[0]}, ${vt[1]}`;
+    return new PathPen()
+        .MoveTo(vs)
+        .Quad(p1, p2)
+        .LinkTo(c1)
+        .Quad(c2, c)
+        .Quad(c2, c3)
+        .LinkTo(p3)
+        .Quad(p4, vt)
+        .toString();
 }

@@ -177,7 +177,6 @@ function getTotalLength(d) {
     }
 }
 
-
 function move(d, dx, dy) {
     let i = 0;
     function alphabeta(ch) {
