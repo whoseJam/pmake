@@ -1,9 +1,6 @@
 import { Box } from "../Element/Box";
-import { Vec } from "../../Utility/Math";
 import { Vertex } from "../Element/Vertex";
 import { d3TreeLayout, Tree } from "./Tree";
-import { trim } from "../../Utility/Trim";
-import * as d3 from "d3";
 
 /**
  * @class RoundSquareTreee

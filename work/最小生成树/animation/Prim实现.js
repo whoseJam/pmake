@@ -4,9 +4,10 @@ const svg = sd.svg();
 const C = sd.color();
 const R = sd.rule();
 const graph = new sd.GridGraph(svg);
-const fa = sd.make1d(100);
+const dis = sd.make1d(100, Infinity);
+const vis = sd.make1d(100, false);
+const prt = sd.make1d(100, 0);
 let n = 6;
-const board = new sd.Text(svg);
 const links = [
     [1, 2, 4],
     [2, 4, 2],
@@ -27,9 +28,7 @@ function init() {
     graph.at(0, 0).newNode(4);
     graph.at(0.5, 0.5).newNode(5);
     graph.at(0.5, 1).newNode(6)
-    for (let i = 1; i <= n; i++) fa[i] = i;
     graph.cx(600).cy(300);
-    board.fontSize(25).x(graph.kx(0.12)).y(graph.my() + 50);
     for (let i = 0; i < links.length; i++) {
         let x = links[i][0];
         let y = links[i][1];
@@ -39,45 +38,35 @@ function init() {
 }
 
 async function main() {
-    links.sort((a, b) => {
-        return a[2] - b[2];
-    })
-    for (let i = 0; i < links.length; i++) {
-        let x = links[i][0];
-        let y = links[i][1];
+    dis[1] = 0;
+
+    for (let i = 1; i <= n; i++) {
+        let currentDis = Infinity, currentU = 0;
+        for (let u = 1; u <= n; u++) {
+            if (currentDis > dis[u] && !vis[u]) {
+                currentDis = dis[u];
+                currentU = u;
+            }
+        }
         await sd.pause();
-        const str = `检查 x=${x} y=${y} v=${links[i][2]}`;
-        setText(board, str);
-        
-        await sd.pause();
+        vis[currentU] = 1;
         graph.startAnimate();
-        graph.element(x, y).stroke(C.red).strokeWidth(2);
-        graph.element(x).color(C.RED);
-        graph.element(y).color(C.RED);
+        graph.color(currentU, C.red);
+        let link = graph.element(prt[currentU], currentU);
+        if (!link) link = graph.element(currentU, prt[currentU]);
+        if (link) link.stroke(C.red).strokeWidth(3);
         graph.endAnimate();
-        
+
         await sd.pause();
-        graph.startAnimate();
-        let fx = getFa(x);
-        let fy = getFa(y);
-        if (fx !== fy) {
-            fa[fx] = fy;
-            graph.element(x, y).stroke(C.deepSkyBlue);
-        } else graph.element(x, y).stroke(C.grey);
-        graph.element(x).color(C.DEFAULT);
-        graph.element(y).color(C.DEFAULT);
-        graph.endAnimate();
+        graph.startAnimate().color(currentU, C.blue).endAnimate();
+
+        const out = graph.outLinks(currentU, "undirected");
+        for (let i = 0; i < out.length; i++) {
+            const v = graph.toNodeId(currentU, out[i]);
+            if (dis[v] > out[i].intValue()) {
+                dis[v] = out[i].intValue();
+                prt[v] = currentU;
+            }
+        }
     }
-}
-
-function setText(txt, str) {
-    txt.startAnimate(150).opacity(0).endAnimate();
-    txt.text(str);
-    txt.startAnimate(150).opacity(1).endAnimate();
-}
-
-function getFa(x) {
-    if (fa[x] === x) return x;
-    let ans = getFa(fa[x]);
-    return ans;
 }

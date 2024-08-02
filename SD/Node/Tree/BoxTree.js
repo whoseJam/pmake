@@ -1,9 +1,7 @@
-import { Box } from "@/Node/Element/Box";
-import { D3Layer } from "@/Node/D3Layer";
-import { d3TreeLayout } from "@/Node/Tree/Tree";
-import { SDNode } from "@/Node/SDNode";
-import { Tree } from "@/Node/Tree/Tree";
-import { naiveGetterAndSetter } from "../Common";
+import { Box }                  from "@/Node/Element/Box";
+import { Tree }                 from "@/Node/Tree/Tree";
+import { d3TreeLayout }         from "@/Node/Tree/Tree";
+import { naiveGetterAndSetter } from "@/Node/Common";
 
 export function BoxTree(parent) {
     Tree.call(this, parent);

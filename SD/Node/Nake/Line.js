@@ -1,7 +1,10 @@
 import { Interp } from "@/Animate/Interp";
+
+import { BaseLine }             from "@/Node/Nake/BaseLine";
+import { naiveUpdate }          from "@/Node/Common"
+import { naiveGetterAndSetter } from "@/Node/Common";
+
 import { Vec } from "@/Utility/Math";
-import { BaseLine } from "./BaseLine";
-import { naiveGetterAndSetter, naiveUpdate } from "../Common";
 
 export function Line(parent) {
     BaseLine.call(this, parent, "line");
@@ -37,8 +40,8 @@ Line.prototype.updateList = [
 ];
 
 Line.prototype.at = function(k) {
-    const v1 = [this.x1(), this.y1()];
-    const v2 = [this.x2(), this.y2()];
+    const v1 = this.source();
+    const v2 = this.target();
     const d = Vec.sub(v2, v1);
     return Vec.add(v1, Vec.numberMul(d, k));
 }
@@ -50,10 +53,7 @@ Line.prototype.getPointAtLength = function(length) {
 }
 
 Line.prototype.totalLength = function() {
-    const x1 = this.x1(), y1 = this.y1();
-    const x2 = this.x2(), y2 = this.y2();
-    return Math.sqrt(
-        (x1 - x2) * (x1 - x2) +
-        (y1 - y2) * (y1 - y2)
-    );
+    const v1 = this.source();
+    const v2 = this.target();
+    return Vec.length(Vec.sub(v1, v2));
 }

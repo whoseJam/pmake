@@ -1,9 +1,11 @@
-import { Action } from "@/Animate/Action";
-import { BaseNake } from "./BaseNake";
+import { Interp }  from "@/Animate/Interp";
 import { Context } from "@/Animate/Context";
-import { Interp } from "@/Animate/Interp";
-import { naiveUpdate } from "../Common";
+
+import { BaseNake }    from "@/Node/Nake/BaseNake";
+import { naiveUpdate } from "@/Node/Common";
+
 import { PointAtPathByRate } from "@/Rule/Path";
+
 import { toNode } from "@/Utility/Tool";
 
 export function BaseLine(parent, tag) {

@@ -1,7 +1,10 @@
-import { BaseNake } from "@/Node/Nake/BaseNake";
-import { d3ToNake } from "@/Utility/Tool";
 import { Interp } from "@/Animate/Interp";
-import { naiveGetterAndSetter, naiveUpdate } from "../Common";
+
+import { d3ToNake } from "@/Utility/Tool";
+
+import { BaseNake }             from "@/Node/Nake/BaseNake";
+import { naiveUpdate }          from "@/Node/Common";
+import { naiveGetterAndSetter } from "@/Node/Common";
 
 export function Text(parent, text = "") {
     BaseNake.call(this, parent, "text");

@@ -1,6 +1,8 @@
 import { Interp } from "@/Animate/Interp";
-import { naiveGetterAndSetter, naiveUpdate } from "../Common";
-import { BaseNake } from "./BaseNake";
+
+import { BaseNake }             from "@/Node/Nake/BaseNake";
+import { naiveUpdate }          from "@/Node/Common";
+import { naiveGetterAndSetter } from "@/Node/Common";
 
 export function Ellipse(parent) {
     BaseNake.call(this, parent, "ellipse");

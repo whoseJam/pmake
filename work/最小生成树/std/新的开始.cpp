@@ -23,8 +23,8 @@ namespace FastIO{
 using FastIO::read;
 
 const int N=305;
-const int M=8005;
-int fa[N],ans,tot,n,m;
+const int M=100005;
+int fa[N],ans,tot,n;
 
 struct edge{
 	int x,y,v;
@@ -45,23 +45,35 @@ void Merge(int x,int y){
 }
 
 void Kruskal(){
-	sort(e+1,e+1+m,cmp);
-	for(int i=1;i<=n;i++)fa[i]=i;
-	for(int i=1;i<=m;i++){
+	sort(e+1,e+1+tot,cmp);
+	for(int i=1;i<=n+1;i++)fa[i]=i;
+	for(int i=1;i<=tot;i++){
 		if(getFa(e[i].x)==getFa(e[i].y))continue;
 		Merge(e[i].x,e[i].y);
-		ans=max(ans,e[i].v);tot++;
+		ans+=e[i].v;
 	}
 }
 
 int main(){
-	n=read();m=read();
-	for(int i=1;i<=m;i++){
-		e[i].x=read();
-		e[i].y=read();
-		e[i].v=read();
+	n=read();
+	for(int i=1;i<=n;i++){
+		++tot;
+		e[tot].x=i;
+		e[tot].y=n+1;
+		e[tot].v=read();
+	}
+	for(int i=1;i<=n;i++){
+		for(int j=1,x;j<=n;j++){
+			x=read();
+			if(i<j){
+				++tot;
+				e[tot].x=i;
+				e[tot].y=j;
+				e[tot].v=x;
+			}
+		}
 	}
 	Kruskal();
-	cout<<tot<<" "<<ans;
+	cout<<ans<<'\n';
 	return 0;
 }

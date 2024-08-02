@@ -1,5 +1,5 @@
+import { Tree } from         "@/Node/Tree/Tree";
 import { d3TreeLayout } from "@/Node/Tree/Tree";
-import { Tree } from "@/Node/Tree/Tree";
 
 export function ValueTree(parent) {
     Tree.call(this, parent);

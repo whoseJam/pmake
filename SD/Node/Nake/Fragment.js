@@ -1,8 +1,10 @@
-import { Interp } from "@/Animate/Interp";
-import { naiveGetterAndSetter } from "../Common";
-import { BaseNake } from "./BaseNake";
-import { d3ToNake } from "@/Utility/Tool";
 import { Action } from "@/Animate/Action";
+import { Interp } from "@/Animate/Interp";
+
+import { BaseNake }             from "@/Node/Nake/BaseNake";
+import { naiveGetterAndSetter } from "@/Node/Common";
+
+import { d3ToNake } from "@/Utility/Tool";
 
 export function Fragment(parent, html = "") {
     BaseNake.call(this, parent, "g");

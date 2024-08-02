@@ -1,7 +1,9 @@
-
-import { BaseNake } from "./BaseNake";
-import { inRange, naiveGetterAndSetter, naiveUpdate } from "../Common";
 import { Interp } from "@/Animate/Interp";
+
+import { inRange }              from "@/Node/Common";
+import { BaseNake }             from "@/Node/Nake/BaseNake";
+import { naiveUpdate }          from "@/Node/Common";
+import { naiveGetterAndSetter } from "@/Node/Common";
 
 export function Circle(parent) {
     BaseNake.call(this, parent, "circle");

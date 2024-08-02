@@ -1,5 +1,6 @@
-import { trim } from "../../Utility/Trim";
-import { Tree } from "./Tree";
+import { trim } from "@/Utility/Trim";
+
+import { Tree } from "@/Node/Tree/Tree";
 
 export function BinaryTree(parent) {
     Tree.call(this, parent);

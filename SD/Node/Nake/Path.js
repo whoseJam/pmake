@@ -1,7 +1,9 @@
 import { Action } from "@/Animate/Action";
-import { d3ToNake } from "@/Utility/Tool";
+
+import { d3ToNake }   from "@/Utility/Tool";
 import { snapAction } from "@/Utility/Tool";
-import { BaseLine } from "./BaseLine";
+
+import { BaseLine } from "@/Node/Nake/BaseLine";
 
 export function Path(parent) {
     BaseLine.call(this, parent, "path");

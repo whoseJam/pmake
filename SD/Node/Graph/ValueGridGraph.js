@@ -1,4 +1,4 @@
-import { GridGraph } from "./GridGraph";
+import { GridGraph } from "@/Node/Graph/GridGraph";
 
 export function ValueGridGraph(parent) {
     GridGraph.call(this, parent);

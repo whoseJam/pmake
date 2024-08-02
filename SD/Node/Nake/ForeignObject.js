@@ -1,7 +1,9 @@
 import { Action } from "@/Animate/Action";
-import { naiveGetterAndSetter, naiveUpdate } from "../Common";
-import { BaseNake } from "./BaseNake";
 import { Interp } from "@/Animate/Interp";
+
+import { BaseNake }             from "@/Node/Nake/BaseNake";
+import { naiveUpdate }          from "@/Node/Common";
+import { naiveGetterAndSetter } from "@/Node/Common";
 
 export function ForeignObject(parent) {
     BaseNake.call(this, parent, "foreignObject");

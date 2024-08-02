@@ -1,6 +1,8 @@
-import { BaseNake } from "./BaseNake";
-import { naiveGetterAndSetter, naiveUpdate } from "../Common";
 import { Interp } from "@/Animate/Interp";
+
+import { BaseNake }             from "@/Node/Nake/BaseNake";
+import { naiveUpdate }          from "@/Node/Common";
+import { naiveGetterAndSetter } from "@/Node/Common";
 
 export function Rect(parent) {
     BaseNake.call(this, parent, "rect");

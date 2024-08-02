@@ -1,9 +1,12 @@
-import { d3ToNake } from "@/Utility/Tool";
 import { Interp } from "@/Animate/Interp";
+
+import { d3ToNake }   from "@/Utility/Tool";
 import { nakeToSnap } from "@/Utility/Tool";
-import { SDNode } from "@/Node/SDNode";
-import { naiveGetterAndSetter, naiveUpdate } from "../Common";
-import { Text } from "./Text";
+
+import { Text }                 from "@/Node/Nake/Text";
+import { SDNode }               from "@/Node/SDNode";
+import { naiveUpdate }          from "@/Node/Common"
+import { naiveGetterAndSetter } from "@/Node/Common";
 
 export function BaseNake(parent, tag) {
     SDNode.call(this, parent);
