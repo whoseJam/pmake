@@ -1,7 +1,9 @@
+
+#110.乘积最大：https://www.luogu.com.cn/problem/P1018
+
+
 LIS：
 #960.最长上升子序列：https://www.luogu.com.cn/problem/B3637
-#961.合唱队形：https://www.luogu.com.cn/problem/P1091
-#962.飞翔：https://vijos.org/p/1336
 LIS：https://www.luogu.com.cn/problem/AT_chokudai_S001_h
 
 

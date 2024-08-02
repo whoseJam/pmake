@@ -5,5 +5,44 @@
     <problem data-src="http://43.143.204.105/problem/357"></problem>
     <section>
         <h2>涂色</h2>
+        <p class="quote">在最优涂色的情况下，涂色方案<b>大概</b>长什么样？</p>
+        <iframe data-src="./animation/涂色.html" class="fragment"
+            style="width: 1000px; height: 300px;"></iframe>
+        <p class="fragment">两次涂色对应的线段：</p>
+        <ul>
+            <li class="fragment">要么一条涂色线段<b>完全包含</b>另一条涂色线段</li>
+            <li class="fragment">要么一条涂色线段与另一条涂色线段<b>完全不相交</b></li>
+            <li class="fragment">一定不会出现<b>部分重合</b></li>
+        </ul>
+    </section>
+    <section>
+        <h2>涂色</h2>
+        <picture data-src="./image/涂色.png"></picture>
+    </section>
+
+    <section>
+        <h2>涂色</h2>
+        <p>设 $f(l,r)$ 表示把 $[l,r]$ 这个区间全部涂色，匹配上 $result[l...r]$，所需要的最少涂色次数</p>
+        <p class="fragment">显然 $f(i,i)=1$</p>
+    </section>
+    <section>
+        <h2>涂色</h2>
+        <p>若 $result[l]\ne result[r]$......</p>
+        <picture data-src="./image/涂色1.png" class="fragment"></picture>
+        <p class="fragment">
+            $$
+            f(l,r)=\underset{l\le k\lt r}{min}\{f(l,k)+f(k+1,r)\}
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>涂色</h2>
+        <p>若 $result[l]=result[r]$......</p>
+        <picture data-src="./image/涂色2.png" class="fragment"></picture>
+        <p class="fragment">
+            $$
+            f(l,r)=min\{f(l+1,r),f(l,r-1)\}
+            $$
+        </p>
     </section>
 </section>

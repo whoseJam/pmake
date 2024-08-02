@@ -12,3 +12,9 @@ sd.Pointer(a, "T(k)", "b").moveTo(4);
 sd.Pointer(a, "H(k+1)", "b").moveTo(5);
 new sd.Brace(a).source(a.element(10).pos("mx", "my", 0, 10)).target(a.element(1).pos("x", "my", 0, 10))
 sd.Label(a, "H(l)T(k)T(r)", "bc", 20, 20);
+
+main();
+
+async function main() {
+    await sd.pause();
+}
