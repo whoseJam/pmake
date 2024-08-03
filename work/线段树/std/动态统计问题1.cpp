@@ -22,6 +22,7 @@ int read(){
 	return s*f;
 }
 
+const int inf=0x3f3f3f3f;
 const int N=100005;
 int a[N],n,m;
 
@@ -29,13 +30,17 @@ struct seg{
 	int l,r,mn;
 }t[N*4];
 
+void pushUp(int x){
+	t[x].mn=min(t[lc].mn,t[rc].mn); 
+}
+
 void Build(int x,int l,int r){
 	t[x].l=l;t[x].r=r;
 	if(l==r){t[x].mn=a[l];return;}
 	int mid=(l+r)>>1;
 	Build(lc,l,mid);
 	Build(rc,mid+1,r);
-	t[x].mn=min(t[lc].mn,t[rc].mn);
+	pushUp(x);
 }
 
 void Update(int x,int pos,int d){
@@ -43,14 +48,12 @@ void Update(int x,int pos,int d){
 	int mid=(t[x].l+t[x].r)>>1;
 	if(pos<=mid)Update(lc,pos,d);
 	else Update(rc,pos,d);
-	t[x].mn=min(t[lc].mn,t[rc].mn);
+	pushUp(x);
 }
 
 int Query(int x,int l,int r){
+	if(t[x].r<l||t[x].l>r)return inf;
 	if(l<=t[x].l&&t[x].r<=r)return t[x].mn;
-	int mid=(t[x].l+t[x].r)>>1;
-	if(r<=mid)return Query(lc,l,r);
-	else if(l>mid)return Query(rc,l,r);
 	return min(Query(lc,l,r),Query(rc,l,r));
 }
 

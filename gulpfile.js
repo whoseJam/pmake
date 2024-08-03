@@ -2,8 +2,18 @@ const gulp = require("gulp");
 const aniTask = require("./build/aniTask");
 const libTask = require("./build/libTask");
 const pptTask = require("./build/pptTask");
+const colors = require("colors-console");
 
-const defaultConfig = require("./myconfig.json");
+let defaultConfig = undefined;
+try {
+    defaultConfig = require("./myconfig.json");
+} catch(e) {
+    console.log(colors("red", "[error]未找到 myconfig.json 文件，请确保 ./pmake 目录下存在 myconfig.json 文件"));
+    console.log(colors("cyan", "myconfig.json") + " 需要配置如下：")
+    console.log(colors("cyan", "defaultAnimationTargetFilePath") + "：动画默认输出路径（例如 C:/Users/xxx/Desktop/output）");
+    console.log(colors("cyan", "defaultPPTTargetFilePath") + "：ppt默认输出路径（例如 C:/Users/xxx/Desktop/output/animation）");
+    process.exit(1);
+}
 
 const defaultAnimationTargetFilePath = defaultConfig["defaultAnimationTargetFilePath"];
 const defaultPPTTargetFilePath = defaultConfig["defaultPPTTargetFilePath"];

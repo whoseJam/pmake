@@ -66,7 +66,7 @@ export class Action {
     }
 
     log() {
-        return `[${this.l}, ${this.r}] channel=${this.channel} from=${this.from} to=${this.to} id=${this.owner.sdNodeId} frame=${this.frame}`;
+        return `[${this.l}, ${this.r}] channel=${this.channel} from=${this.from} to=${this.to} id=${this.owner.id} frame=${this.frame}`;
     }
 
     clone() {

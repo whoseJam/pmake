@@ -148,14 +148,9 @@
         <codeblock>
             <script type="text/template">
                 int querySum(int x, int l, int r) {
-                    if (l <= t[x].l && t[x].r <= r) {
-                        return t[x].sum;
-                    }
-                    int mid = (t[x].l + t[x].r) >> 1;
-                    int ans = 0;
-                    if (l <= mid) ans += querySum(lc, l, r);
-                    if (r > mid) ans += querySum(rc, l, r);
-                    return ans;
+                    if (t[x].r < l || t[x].l > r) return 0;
+                    if (l <= t[x].l && t[x].r <= r) return t[x].sum;
+                    return querySum(lc, l, r) + querySum(rc, l, r);
                 }
             </script>
         </codeblock>

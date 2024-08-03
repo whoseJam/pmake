@@ -54,8 +54,6 @@ int main(){
 	sort(s+1,s+1+n,cmp);
 	for(int i=1;i<=n;i++){
 		int level=sum(s[i].y);
-		// 求[1,s[i].y]的和，就是统计有多少星星j的yj<=yi 
-		
 		ans[level]++;
 		add(s[i].y,1);
 	}

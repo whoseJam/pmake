@@ -4,6 +4,7 @@ const path              = require("path");
 const webpack           = require("webpack-stream");
 const aniTask           = require("./aniTask");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const colors = require("colors-console");
 
 module.exports = function PPTTask(sourceFileFolder, targetFileFolder) {
     const pptFilePath = `${sourceFileFolder}/ppt.html`;
@@ -12,6 +13,11 @@ module.exports = function PPTTask(sourceFileFolder, targetFileFolder) {
     const mkdFileFolder = `${sourceFileFolder}/markdown`;
     const htmFileFolder = `${sourceFileFolder}/html`;
     const stdFileFolder = `${sourceFileFolder}/std`;
+
+    // if (fs.existsSync(pptFilePath)) {
+    //     // console.log(colors("red", `[error] 请检查`));
+    // }
+
     ifNotExistThenCreateFolder(aniFileFolder);
     ifNotExistThenCreateFolder(imgFileFolder);
     ifNotExistThenCreateFolder(mkdFileFolder);

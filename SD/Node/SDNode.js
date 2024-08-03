@@ -8,8 +8,7 @@ import { D3Layer }  from "@/Node/D3Layer";
 import { Children } from "@/Node/Children";
 import { SDMember } from "@/Node/SDMember";
 
-import { d3ToNake, nakeToSnap } from "@/Utility/Tool";
-import { timeout } from "d3";
+import { d3ToNake } from "@/Utility/Tool";
 
 let id = 0;
 
@@ -23,7 +22,6 @@ export function SDNode(parent) {
     this.d3layer.node = this;
     this.parent = ("g" in parent) ? parent : parent.node;
     this.children = new Children(this);
-    this.sdNodeId = id;
     this.id = id;
     this._ = {};
     this.animate = new Animate(this);

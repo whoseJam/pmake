@@ -87,14 +87,14 @@
         <codeblock>
             <script type="text/template">
                 void add(int x, int l, int r, int d) {
+                    if (t[x].l > r || t[x].r < l) return;
                     if (l <= t[x].l && t[x].r <= r) {
                         pushAdd(x, d);
                         return;
                     }
-                    int mid = (t[x].l + t[x].r) >> 1;
                     pushDown(x);
-                    if (l <= mid) add(lc, l, r, d);
-                    if (r > mid) add(rc, l, r, d);
+                    add(lc, l, r, d);
+                    add(rc, l, r, d);
                     pushUp(x);
                 }
             </script>
@@ -106,15 +106,10 @@
         <codeblock>
             <script type="text/template">
                 int queryMin(int x, int l, int r) {
-                    if (l <= t[x].l && t[x].r <= r) {
-                        return t[x].mn;
-                    }
-                    int mid = (t[x].l + t[x].r) >> 1;
+                    if (t[x].l > r || t[x].r < l) return inf;
+                    if (l <= t[x].l && t[x].r <= r) return t[x].mn;
                     pushDown(x);
-                    int ans = inf;
-                    if (l <= mid) ans = min(ans, queryMin(lc, l, r));
-                    if (r > mid) ans = min(ans, queryMin(rc, l, r));
-                    return ans;
+                    return min(queryMin(lc, l, r), queryMin(rc, l, r));
                 }
             </script>
         </codeblock>

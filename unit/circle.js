@@ -1,37 +1,37 @@
 import * as sd from "@/sd";
 
-let svg = sd.svg();
-let C = sd.color();
-let board = new sd.Text(svg);
-let obj = new sd.Circle(svg).cx(600).cy(300);
+const svg = sd.svg();
+
+// C 是颜色模块，提供了各种各样的颜色
+const C = sd.color();
+const circle = new sd.Rect(svg);
 
 main();
 
-function test(code) {
-    board.text(code);
-    eval(code);
-}
-
 async function main() {
     await sd.pause();
-    obj.startAnimate().r(50).cx(600).cy(300).endAnimate();
+    // 可以通过 x, y 函数来设置元素坐标
+
+    
     await sd.pause();
-    test(`obj.startAnimate().x(100).y(100).endAnimate();`);
+    // 可以通过 fill 来设置填充色
+    
     await sd.pause();
-    test(`obj.startAnimate().r(40).x(100).y(100).endAnimate();`);
+    // 可以通过 stroke 来设置边线颜色
+    
     await sd.pause();
-    test(`obj.startAnimate().color(C.BLUE).endAnimate();`);
+    // 可以通过 strokeWidth 设置边线粗细
+    
     await sd.pause();
-    test(`obj.startAnimate().opacity(0.5).endAnimate();`);
+    // 可以通过 opacity 设置透明度
+    
+
+    // strokeDashArray 和 strokeDashOffset 组合起来可以玩出一些花样
     await sd.pause();
-    test(`obj.startAnimate().opacity(1).endAnimate();`);
+    
     await sd.pause();
-    test(`obj.startAnimate().strokeWidth(3).endAnimate();`);
-    await sd.pause();
-    test(`obj.startAnimate().strokeWidth(1).endAnimate();`);
-    await sd.pause();
-    test(`obj.startAnimate().strokeDashArray([5, 5]).endAnimate();`);
-    await sd.pause();
-    test(`obj.startAnimate().strokeDashArray([5, 0]).endAnimate();`);
+    // 可以通过 width 和 height 设置宽高，当然它们最终都是在调用 r 方法
+    // circle.r(50);
+    
     await sd.pause();
 }
