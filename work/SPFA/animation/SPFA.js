@@ -9,7 +9,7 @@ const data = [
     [1, 2, 12], [1, 3, 14], [1, 4, 16],
     [2, 4, 7], [2, 5, 10],
     [3, 4, 9], [3, 6, 8],
-    [4, 5, 6], [4, 6, 2],
+    [4, 5, 6], [4, 6, -2],
     [5, 6, 5], [5, 7, 3],
     [6, 7, 4]
 ];
@@ -80,6 +80,9 @@ async function SPFA(graph) {
         }
         await sd.pause();
         Q.startAnimate().erase(0).endAnimate();
-        graph.startAnimate().color(u, C.white).endAnimate();
+        graph.startAnimate();
+        graph.color(u, C.white);
+        putInq(u, 0);
+        graph.endAnimate();
     }
 }

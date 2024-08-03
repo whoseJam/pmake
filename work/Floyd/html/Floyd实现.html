@@ -34,7 +34,6 @@
         <p class="fragment">具体来说，就是初始化 $d_{i,j}=w(i,j)$，然后从小到大枚举 $k$，对每对节点 $(i,j)$，检查更新它们的最短路值</p>
         <pre class="fragment"><code data-trim data-line-numbers class="cpp"><script type="text/template">
             int d[N][N], n, m;
-
             void Floyd() {
                 for (int k = 1; k <= n; k++)
                     for (int i = 1; i <= n; i++)
@@ -46,7 +45,7 @@
     <section>
         <h2>Floyd</h2>
         <iframe
-            style="min-width: 1000px; min-height: 500px;"
+            style="width: 1000px; height: 500px;"
             data-src="./animation/Floyd实现.html"></iframe>
     </section>
 </section>

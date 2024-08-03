@@ -38,16 +38,14 @@ async function main() {
  * @param {sd.GraphBase} graph 
  */
 async function Bfs(graph) {
-    const Q = new sd.Array(svg).x(graph.x()).y(graph.my() + 80);
+    const Q = [1];
     const getDis = (x) => graph.element(x).child("varList").get("dis");
     const putDis = (x, dis) => graph.element(x).child("varList").put("dis", dis);
-    sd.Label(Q, "队列Q");
     await sd.pause();
-    Q.startAnimate().push(1).endAnimate();
-    while (Q.length() > 0) {
+    while (Q.length > 0) {
         await sd.pause();
-        const u = Q.firstElement().value().text();
-        Q.startAnimate().color(0, C.blue).endAnimate();
+        const u = Q[0];
+        Q.shift();
         graph.startAnimate().color(u, C.blue).endAnimate();
         const to = graph.outNodes(u, "undirect");
         for (let v of to) {
@@ -58,14 +56,13 @@ async function Bfs(graph) {
                 graph.startAnimate();
                 putDis(v.nodeId, getDis(u) + 1);
                 graph.endAnimate();
-                Q.startAnimate().push(v.nodeId).endAnimate();
+                Q.push(v.nodeId);
                 await sd.pause();
                 graph.startAnimate().color(v.nodeId, C.white).endAnimate();
             }
         }
         await sd.pause();
-        Q.startAnimate().erase(0).endAnimate();
-        graph.startAnimate().color(u, C.white).endAnimate();
+        graph.startAnimate().color(u, C.grey).endAnimate();
     }
     
 }

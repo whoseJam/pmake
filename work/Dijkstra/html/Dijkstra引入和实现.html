@@ -16,44 +16,31 @@
     </section>
     <section>
         <h2>BFS</h2>
-        <iframe
-            style="min-width: 1000px; min-height: 500px;"
-            data-src="./animation/BFS.html"></iframe>
-    </section>
-    <section>
-        <h2>BFS</h2>
-        <p>我们动态地去逐个求解每个点到起点的最短路，并且用<b>最短路已知</b>的点，去更新<b>最短路未知</b>的点</p>
-        <p class="fragment">我们把前者叫做<b>松弛点</b>，把后者叫做<b>被松弛点</b></p>
-        <p class="fragment">在这个过程中，队列 $Q$ 不断为我们提供松弛点，满足：</p>
+        <iframe data-src="./animation/BFS.html"
+            style="width: 1000px; height: 300px;"></iframe>
+        <p class="fragment">我们不断用<b>最短路已知</b>的点，去更新<b>最短路未知</b>的点</p>
         <ul>
-            <li class="fragment">最短路已知且<b>最小</b></li>
-            <li class="fragment">没有参与过更新</li>
+            <li class="fragment">用于更新别人的点叫做<b>松弛点</b></li>
+            <li class="fragment">被别人更新的点叫做<b>被松弛点</b></li>
         </ul>
+        <p class="fragment">由于每条边长度均为 $1$，所以用普通队列来存放松弛点就行了，<b>先入队的点到起点的距离一定小，后入队的点到起点距离一定大</b></p>
     </section>
     <section>
         <h2>BFS</h2>
-        <p>我们之所以能用普通队列 $Q$ 来实现这个目标，是因为每条边的边权都是 $1$，后入队的点最短路肯定不小于先入队的点的最短路，所以每次取队头就能找到<b>最短路最小</b>的松弛点</p>
-        <p class="fragment">那我们能不能稍微改造一下这个BFS算法，让它能适用于<b>边权各异</b>的图呢</p>
+        <p>那我们能不能稍微改造一下BFS算法，让它能适用于<b>边权各异</b>的图呢</p>
+        <p class="fragment">难点在于如何确保每次取出的松弛点到起点的距离，是所有松弛点中最小的那个</p>
+        <p class="fragment quote">现在边权各异了，完全有可能<b>先更新</b>了一个到起点距离 $50$ 的点，<b>后更新</b>了一个距离起点 $20$ 的点</p>
     </section>
     <section>
         <h2>Dijkstra VS BFS</h2>
-        <p>现在我们尝试把BFS算法拓展到<b>边权各异</b>的、<b>无负权边</b>的图上</p>
-        <p class="fragment">我们还是希望每一轮迭代中，我们能找出某个节点，使之：</p>
-        <ul class="fragment">
-            <li>最短路已知且<b>最小</b></li>
-            <li>没有参与过更新</li>
-        </ul>
-    </section>
-    <section>
-        <h2>Dijkstra VS BFS</h2>
-        <p>显然，我们把队列改为以距离值为关键字的优先队列，就可以实现每次取出距离值最小的节点来</p>
+        <p>显然，我们把队列改为<b>以距离值为关键字</b>的优先队列，就可以实现每次取出<b>距离起点最近</b>的松弛点</p>
         <div class="fragment quote">
             <h3>最短路已知</h3>
             <p style="margin-bottom: 0px;">由于图中<b>无负权边</b>，所以这个点的距离值不可能在未来变得更小了，换言之，它的最短路是已知的</p>
         </div>
         <div class="fragment quote">
             <h3>没有参与过更新</h3>
-            <p style="margin-bottom: 0px;">我们只需要对每个节点多加一个标记，标记它是否更新过周围的点，如果它已经更新过周围点了，就跳过它的更新过程即可</p>
+            <p style="margin-bottom: 0px;">我们对每个节点加一个标记，标记它是否更新过周围的点，如果它已经更新过周围点了，就跳过它的更新过程即可</p>
         </div>
     </section>
     <section>
