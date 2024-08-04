@@ -57,20 +57,18 @@ void Build(int x,int l,int r){
 }
 
 void Add(int x,int l,int r,int d){
+	if(t[x].r<l||t[x].l>r)return;
 	if(l<=t[x].l&&t[x].r<=r){pushCol(x,d);return;}
-	int mid=(t[x].l+t[x].r)>>1;
 	pushDown(x);
-	if(l<=mid)Add(lc,l,r,d);
-	if(r>mid)Add(rc,l,r,d);
+	Add(lc,l,r,d);
+	Add(rc,l,r,d);
 	pushUp(x);
 }
 
 int Query(int x,int l,int r){
+	if(t[x].r<l||t[x].l>r)return 0; 
 	if(l<=t[x].l&&t[x].r<=r)return t[x].cnt;
-	int mid=(t[x].l+t[x].r)>>1;
 	pushDown(x);
-	if(r<=mid)return Query(lc,l,r);
-	else if(l>mid)return Query(rc,l,r);
 	return Query(lc,l,r)+Query(rc,l,r);
 }
 

@@ -1,0 +1,40 @@
+<section>
+    <section>
+        <h1>边双连通分量</h1>
+    </section>
+    <section>
+        <h2>边双连通分量</h2>
+        <p>没有割边的图叫做边双连通图，也叫做 $eBCC$，原图 $G$ 中的每一个 $eBCC$ 如果都被缩成一个点，那么就得到了一棵真正的树（没有返祖边），这棵新树上的每一条边都是割边</p>
+    </section>
+    <section>
+        <h2>边双连通分量</h2>
+        <iframe
+            style="width: 1000px; height: 500px;"
+            data-src="./animation/边双连通分量.html"></iframe>
+        <p class="fragment quote">容易发现一个点只能属于一个边双连通分量</p>
+    </section>
+    <section>
+        <h2>边双连通分量</h2>
+        <p>在Tarjan算法中，当节点 $u$ 的所有邻边都被访问过后，如果 $low(u)=dfn(u)$，我们就把 $u$ 下方的整块和 $u$，导出为原图中的一个边双</p>
+        <p class="fragment">这里需要用一个<b style="color: red;">栈</b>来表示哪些元素是 $u$ 代表的块</p>
+        <codeblock>
+            <script type="text/template">
+                void Tarjan(int u) {
+                    // 先 Tarjan 遍历 u 的所有邻接点
+                    // ......
+                    if (low[u] == dfn[u]) {
+                        ans.push_back({});
+                        while (true) {
+                            int cur = stk.top();
+                            ans[eBCC].push_back(cur);
+                            stk.pop();
+                            bel[cur] = eBCC;
+                            if (cur == u) break;
+                        }
+                        eBCC++;
+                    }
+                }
+            </script>
+        </codeblock>
+    </section>
+</section>

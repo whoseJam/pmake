@@ -4,7 +4,7 @@
 using namespace std;
 
 const int N=100005;
-int n,c[N];
+int n,m,c[N];
 
 int lowbit(int x){
 	return x&(-x);
@@ -23,22 +23,17 @@ int sum(int x){
 }
 
 int main(){
-	int a,b;
-	while(true){
-		memset(c,0,sizeof(c));
-		
-		cin>>n;
-		if(n==0)break;
-		
-		for(int i=1;i<=n;i++){
-			cin>>a>>b;
-			add(a,1);
-			add(b+1,-1);
-		}
-		for(int i=1;i<=N;i++){
-			cout<<sum(i)<<" ";
-		}
-		cout<<endl;
-	}
-	return 0;
+    cin>>n>>m;
+    for(int i=1,opt,x,y;i<=m;i++){
+        cin>>opt;
+        if(opt==1){
+            cin>>x>>y;
+            add(x,1);
+            add(y+1,-1);
+        }else{
+            cin>>x;
+            cout<<sum(x)<<"\n";
+        }
+    }
+    return 0;
 }

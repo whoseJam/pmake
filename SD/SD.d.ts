@@ -61,6 +61,7 @@ export { MathjaxLabel } from "./Component/Label";
 export { rule } from "./Rule/Rule";
 export { Rule } from "./Rule/Rule";
 
+export { color } from "./Utility/Color";
 export { input } from "./Utility/Reader";
 
 export { PathPen } from "./Utility/PathPen";

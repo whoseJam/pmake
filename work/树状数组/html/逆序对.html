@@ -2,6 +2,7 @@
     <section>
         <h1>逆序对</h1>
     </section>
+    <problem data-src="http://43.143.204.105/problem/845"></problem>
     <section>
         <h2>逆序对</h2>
         <p>逆序对需要满足：$i\lt j$ 且 $a_i\gt a_j$</p>
@@ -26,6 +27,7 @@
                 sort(Ls + 1, Ls + 1 + Lsn);
                 Lsn = unique(Ls + 1, Ls + 1 + Lsn) - Ls - 1;
                 for (int i = 1; i <= n; i++)
+                    a[i] = lower_bound(Ls + 1, Ls + 1 + Lsn, a[i]) - Ls;
             </script>
         </codeblock>
     </section>

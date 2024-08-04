@@ -54,8 +54,10 @@ async function main() {
         arr.endAnimate();
         data[i].circ.startAnimate().color(C.GREEN).endAnimate();
 
-        await sd.pause();
-        focus.startAnimate().focus(0, data[i].y).endAnimate();
+        if (data[i].y-1 >= 0) {
+            await sd.pause();
+            focus.startAnimate().focus(0, data[i].y-1).endAnimate();
+        }
 
         await sd.pause();
         focus.startAnimate().focus(null).endAnimate();

@@ -10,14 +10,9 @@
     </section>
     <section>
         <h2>Marathon</h2>
-        <p class="quote">如果我依次通过第 $l$ 个地点到第 $r$ 个地点之间的所有地点，行走的总路程应该是多少？</p>
-        <p class="fragment">$$distance=dis(p_l,p_{l+1})+dis(p_{l+1},p_{l+2})+...+dis(p_{r-1},p_r)$$</p>
-        <p class="fragment quote">如果我跳过了中间第 $x$ 个地点 $p_x$，能节约多少路程长度？</p>
-        <p class="fragment">$$\big( dis(p_{x-1},p_x)+dis(p_x,p_{x+1}) \big) - dis(p_{x-1},p_{x+1})$$</p>
-    </section>
-    <section>
-        <h2>Marathon</h2>
         <iframe data-src="./animation/Marathon.html"
-            style="width: 1000px; height: 500px;"></iframe>
+            style="width: 1000px; height: 400px;"></iframe>
+        <p class="quote">我们能否用一条线段维护一段检查点的总路程长度？</p>
+        <p class="fragment quote">如何维护允许跳过恰好一个地点的情况下，节省的最大距离？</p>
     </section>
 </section>

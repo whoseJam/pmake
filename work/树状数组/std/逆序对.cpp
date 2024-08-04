@@ -46,26 +46,20 @@ struct TArray{
 
 int main(){
 	n=read();
-	while(n!=0){
-		T.clear();Lsn=0;
-		for(ll i=1;i<=n;i++){
-			a[i]=read();
-			Ls[++Lsn]=a[i];
-		}
-		sort(Ls+1,Ls+1+Lsn);
-		Lsn=unique(Ls+1,Ls+1+Lsn)-(Ls+1);
-		for(ll i=1;i<=n;i++)
-			a[i]=lower_bound(Ls+1,Ls+1+Lsn,a[i])-Ls;
-		
-		ll ans=0;
-		for(ll i=n;i>=1;i--){
-			ans+=T.sum(a[i]-1);
-			T.add(a[i],1);
-		}
-		cout<<ans<<'\n';
-		
-		n=read();
+	for(ll i=1;i<=n;i++){
+		a[i]=read();
+		Ls[++Lsn]=a[i];
 	}
+	sort(Ls+1,Ls+1+Lsn);
+	Lsn=unique(Ls+1,Ls+1+Lsn)-(Ls+1);
+	for(ll i=1;i<=n;i++)
+		a[i]=lower_bound(Ls+1,Ls+1+Lsn,a[i])-Ls;
+	
+	ll ans=0;
+	for(ll i=1;i<=n;i++){
+		ans+=T.sum(a[i]+1,Lsn);
+		T.add(a[i],1);
+	} 
+	cout<<ans<<'\n';
 	return 0;
 }
-
