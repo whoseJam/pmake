@@ -14,8 +14,7 @@
     "paths": {
       "@/*": [
         "src/*"
-      ],
-      "@/sd": ["SD/sd.d.ts"]
+      ]
     },
     "lib": [
       "esnext",
