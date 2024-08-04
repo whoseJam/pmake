@@ -13,7 +13,7 @@ const links = [
     [9, 10],
     [9, 11]
 ];
-const t = new sd.Tree(svg).width(600);
+const t = new sd.Tree(svg).width(600).cx(600).y(200);
 const fa = sd.make1d(100);
 t.root(1);
 

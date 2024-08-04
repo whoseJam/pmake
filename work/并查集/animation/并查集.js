@@ -3,7 +3,7 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const C = sd.color();
 const n = 8;
-const dag = new sd.DAG(svg).width(800);
+const dag = new sd.DAG(svg).width(800).cx(600).cy(300);
 const fa = sd.make1d(100);
 const data = [
     [1, 2],
