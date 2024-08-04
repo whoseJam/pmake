@@ -1,0 +1,59 @@
+<section>
+    <section>
+        <h1>RKHash预处理</h1>
+    </section>
+    <section>
+        <h2>RKHash预处理</h2>
+        <p>假设我有一个长度为 $n$ 的串，有 $m$ 次询问，每次询问查询其某个子串的Hash值</p>
+        <iframe data-src="./animation/多次询问子串Hash值.html"
+            style="width: 1000px; height: 100px;"></iframe>
+        <p class="fragment">如果每次重新算，时间复杂度为 $O(nm)$</p>
+        <p class="fragment">能否更快速地完成呢？</p>
+    </section>
+    <section>
+        <h2>RKHash预处理</h2>
+        <p>预处理出：</p>
+        <div>
+            <div class="left">
+                <p class="fragment">前缀和数组：
+                    $$
+                    S(n)=\sum_{i=1}^n B^{n-i}s[i]
+                    $$
+                </p>
+            </div>
+            <div class="right">
+                <p class="fragment">幂次数组：
+                    $$
+                    P(n)=B^n
+                    $$
+                </p>
+            </div>
+        </div>
+        <p class="fragment">
+            $$
+            \begin{aligned}
+            Hash(s,l,r)
+            &=\sum_{i=l}^r B^{r-i}s[i] \\
+            &=\sum_{i=l}^r B^{r-i}s[i] - \sum_{i=1}^{l-1}s[i] \\
+            &=S(r)-B^{r-(l-1)}\sum_{i=1}^{l-1}B^{(l-1)-i}s[i] \\
+            &=S(r)-P(r-l+1)S(l-1)
+            \end{aligned}
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>RKHash预处理</h2>
+        <p>
+            $$
+            Hash(s,l,r)=S(r)-P(r-l+1)S(l-1)
+            $$
+        </p>
+        <codeblock>
+            <script type="text/template">
+                ull Hash(int l, int r) {
+                    return S[r] - P[r - l + 1] * S[l - 1];
+                }
+            </script>
+        </codeblock>
+    </section>
+</section>
