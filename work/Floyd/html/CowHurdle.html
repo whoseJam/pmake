@@ -1,0 +1,21 @@
+<section>
+    <section>
+        <h1>Cow Hurdle</h1>
+    </section>
+    <problem data-src="http://43.143.204.105/problem/79"></problem>
+    <section>
+        <h2>Cow Hurdle</h2>
+        <p>把Floyd更新时使用的距离之和，改为高度最大值即可</p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                void Floyd() {
+                    for (int k = 1; k <= n; k++)
+                        for (int i = 1; i <= n; i++)
+                            for (int j = 1; j <= n; j++) {
+                                G[i][j] = min(G[i][j], max(G[i][k], G[k][j]));
+                            }
+                }
+            </script>
+        </codeblock>
+    </section>
+</section>

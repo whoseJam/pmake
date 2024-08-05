@@ -104,8 +104,8 @@ function update5(nodes) {
 }
 
 function update6(nodes) {
-    const w = this._.width / 4;
-    const h = this._.height / 4;
+    const w = this.member.get("width") / 4;
+    const h = this.member.get("height") / 4;
     update.call(this, nodes[0], () => nodes[0].cx(this.cx()).cy(this.y() + h / 2));
     update.call(this, nodes[1], () => nodes[1].cx(this.x() + w / 2).cy(this.y() + h));
     update.call(this, nodes[2], () => nodes[2].cx(this.x() + w / 2).cy(this.my() - h));
