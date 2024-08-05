@@ -9,6 +9,8 @@ export function BaseHTML(parent) {
 
     this.member.new("innerHtml", "");
 
+    this._.BASE_HTML = true;
+
     return this;
 }
 

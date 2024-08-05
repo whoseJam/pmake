@@ -8,7 +8,7 @@ import { D3Layer }  from "@/Node/D3Layer";
 import { Children } from "@/Node/Children";
 import { SDMember } from "@/Node/SDMember";
 
-import { d3ToNake } from "@/Utility/Tool";
+import { D3ToNake } from "@/Utility/Cast";
 
 let id = 0;
 
@@ -298,7 +298,7 @@ SDNode.prototype.updateList = [
 ]
 
 SDNode.prototype.onClick = function(callback) {
-    const nake = d3ToNake(this.d3layer.d3);
+    const nake = D3ToNake(this.d3layer.d3);
     nake.removeEventListener("click", this.member.get("clickHandle"));
     this.member.setAndFlush("clickHandle", () => {
         clearTimeout(this.member.get("clickTimeoutObject"));
@@ -310,7 +310,7 @@ SDNode.prototype.onClick = function(callback) {
 }
 
 SDNode.prototype.onDblClick = function(callback) {
-    const nake = d3ToNake(this.d3layer.d3);
+    const nake = D3ToNake(this.d3layer.d3);
     nake.removeEventListener("dblclick", this.member.get("dblClickHandle"));
     this.member.setAndFlush("dblClickHandle", () => {
         clearTimeout(this.member.get("clickTimeoutObject"));
@@ -321,7 +321,7 @@ SDNode.prototype.onDblClick = function(callback) {
 
 SDNode.prototype.drag = function(type) {
     if (type) {
-        const nake = d3ToNake(this.d3layer.d3);
+        const nake = D3ToNake(this.d3layer.d3);
         Snap(nake).drag();
     }
     return this;

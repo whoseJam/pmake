@@ -1,6 +1,6 @@
 import { Action } from "@/Animate/Action";
 
-import { d3ToNake }   from "@/Utility/Tool";
+import { D3ToNake }   from "@/Utility/Cast";
 import { snapAction } from "@/Utility/Tool";
 
 import { BaseLine } from "@/Node/Nake/BaseLine";
@@ -119,7 +119,7 @@ function update() {
 
 let pathHelper;
 export function initPath(svg) {
-    pathHelper = d3ToNake(svg.append("path"));
+    pathHelper = D3ToNake(svg.append("path"));
     pathHelper.setAttribute("stroke-opacity", 0);
     pathHelper.setAttribute("fill-opacity", 0);
 }

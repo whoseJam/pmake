@@ -1,4 +1,4 @@
-import { isValidNumber } from "@/Utility/Tool";
+import { IsValidNumber } from "@/Utility/Check";
 
 export function PathPen() {
     this.result = "";
@@ -22,7 +22,7 @@ PathPen.prototype.Arc = ArcFunction("A", "Arc");
 PathPen.prototype.arc = ArcFunction("a", "arc");
 
 function CheckNumberIsValid(label, x) {
-    if (!isValidNumber(x)) {
+    if (!IsValidNumber(x)) {
         throw new Error(`Number ${label} = ${x} Is Not Valid`);
     }
 }

@@ -1,19 +1,18 @@
-import { trim }            from "@/Utility/Trim";
-import { mapTo }           from "@/Utility/Math";
-import { evaluateValue }   from "@/Utility/Tool";
-import { dagreGraphToBox } from "@/Utility/Tool";
+import { trim }          from "@/Utility/Trim";
+import { mapTo }         from "@/Utility/Math";
+import { evaluateValue } from "@/Utility/Tool";
 
 import { BaseGraph } from "@/Node/Graph/BaseGraph";
 
-import { layout as dagreLayout }     from "dagre";
-import { graphlib as dagreGraphLib } from "dagre";
+import { graphlib as DAGLib }  from "dagre";
+import { layout as DAGLayout } from "dagre";
 
 export function DAG(parent) {
     BaseGraph.call(this, parent);
 
     this.g().type("DAG");
     this.member.new("r", 20);
-    this.member.new("graph", new dagreGraphLib.Graph());
+    this.member.new("graph", new DAGLib.Graph());
     this.member.new("rankDir", "TB");
     this.member.new("align", undefined);
 
@@ -33,8 +32,8 @@ DAG.prototype = {
     ...BaseGraph.prototype
 };
 
-DAG.prototype.align   = dagreGetterAndSetter("align", "align");
-DAG.prototype.rankDir = dagreGetterAndSetter("rankDir", "rankdir");
+DAG.prototype.align   = DAGGetterAndSetter("align", "align");
+DAG.prototype.rankDir = DAGGetterAndSetter("rankDir", "rankdir");
 
 DAG.prototype.updateList = [
     ...DAG.prototype.updateList,
@@ -75,7 +74,7 @@ DAG.prototype.newLink = function(x, y, value) {
     return this;
 }
 
-function dagreGetterAndSetter(key, keyInDagre) {
+function DAGGetterAndSetter(key, keyInDagre) {
     return function(value) {
         if (value === undefined) {
             return this.member.get(key);
@@ -92,8 +91,8 @@ function dagreGetterAndSetter(key, keyInDagre) {
 
 function update() {
     const graph = this.member.get("graph");
-    dagreLayout(graph);
-    const box = dagreGraphToBox(graph);
+    DAGLayout(graph);
+    const box = GetBoxOfDAG(graph);
 
     const convertXInner = mapTo(
         box.x,
@@ -131,4 +130,28 @@ function update() {
             trim(link, source, target);
         });
     });
+}
+
+function GetBoxOfDAG(graph) {
+    let x, mx, y, my;
+    graph.nodes().forEach(function(info) {
+        const layout = graph.node(info);
+        if (x === undefined) {
+            x = mx = layout.x;
+            y = my = layout.y;
+        } else {
+            x = Math.min(x, layout.x);
+            mx = Math.max(mx, layout.x);
+            y = Math.min(y, layout.y);
+            my = Math.max(my, layout.y);
+        }
+    })
+    if (x === undefined)
+        x = mx = y = my = 0;
+    return {
+        x: x,
+        y: y,
+        width: mx - x,
+        height: my - y
+    };
 }

@@ -6,6 +6,10 @@ export function BaseArray(parent) {
 
     this.member.new("start", 0);
     this.member.new("elements", []);
+    
+    this._.BASE_ARRAY = true;
+
+    return this;
 }
 
 BaseArray.prototype = {

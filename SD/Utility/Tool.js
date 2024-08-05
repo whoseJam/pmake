@@ -43,15 +43,6 @@ export function d3ToNake(d3) {
     return d3._groups[0][0];
 }
 
-/**
- * 将一个原生DOM元素，转为SnapNode
- * @param {SVGElement} nake 
- * @returns {import("../Node/SDNode").SnapNode}
- */
-export function nakeToSnap(nake) {
-    // @ts-ignore
-    return Snap(nake);
-}
 
 /**
  * 将一个SnapNode，转为原生DOM元素
@@ -100,32 +91,4 @@ export function snapAction(conf) {
         if (anim) anim.stop();
     }
     setTimeout(action.start.bind(action), action.startStamp);
-}
-
-/**
- * 获取一个dagreGraph的边界盒
- * @param {any} graph 
- * @returns {{x: number, y: number, width: number, height: number}}
- */
-export function dagreGraphToBox(graph) {
-    let minX, maxX, minY, maxY;
-    graph.nodes().forEach(function(info) {
-        let layout = graph.node(info);
-        if (minX === undefined) {
-            minX = maxX = layout.x;
-            minY = maxY = layout.y;
-        } else {
-            minX = Math.min(minX, layout.x);
-            maxX = Math.max(maxX, layout.x);
-            minY = Math.min(minY, layout.y);
-            maxY = Math.max(maxY, layout.y);
-        }
-    })
-    if (minX === undefined)
-        minX = maxX = minY = maxY = 0;
-    return {
-        x: minX, y: minY,
-        width: maxX - minX,
-        height: maxY - minY
-    };
 }

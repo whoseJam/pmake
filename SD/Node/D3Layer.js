@@ -1,4 +1,5 @@
-import { d3ToNake } from "../Utility/Tool";
+import { D3ToNake } from "@/Utility/Cast";
+
 import { Action } from "@/Animate/Action";
 
 export class D3Layer {
@@ -42,8 +43,8 @@ export class D3Layer {
                     const A = this.from;
                     const B = this.to;
                     const moveTo = ("d3" in B) ? B.d3 : B;
-                    Snap(d3ToNake(moveTo)).append(
-                        Snap(d3ToNake(d3))
+                    Snap(D3ToNake(moveTo)).append(
+                        Snap(D3ToNake(d3))
                     );
                 }
             },
@@ -53,7 +54,7 @@ export class D3Layer {
     }
 
     type(layerName) {
-        const nake = d3ToNake(this.d3);
+        const nake = D3ToNake(this.d3);
         if (layerName === undefined) {
             const type = nake.getAttribute("type");
             return type ? type : "None";
@@ -66,7 +67,7 @@ export class D3Layer {
     }
 
     nake() {
-        return d3ToNake(this.d3);
+        return D3ToNake(this.d3);
     }
 
     self() {

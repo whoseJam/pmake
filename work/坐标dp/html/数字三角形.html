@@ -10,7 +10,7 @@
         <p class="fragment">设 $f(i,j)$ 表示从 $(1,1)$ 走到 $(i,j)$ 能拿到的最大价值</p>
         <p class="fragment">
             $$
-            f(i,j)=max\{f(i-1,j-1),f(i-1,j)\}
+            f(i,j)=max\{f(i-1,j-1),f(i-1,j)\}+a_{i,j}
             $$
         </p>
     </section>
@@ -18,7 +18,7 @@
         <h2>数字三角形</h2>
         <p>
             $$
-            f(i,j)=max\{f(i-1,j-1),f(i-1,j)\}
+            f(i,j)=max\{f(i-1,j-1),f(i-1,j)\}+a_{i,j}
             $$
         </p>
         <p class="fragment">递推：</p>

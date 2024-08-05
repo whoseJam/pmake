@@ -9,6 +9,8 @@ export function BaseCurve(parent) {
     this.member.new("x2", 40);
     this.member.new("y2", 40);
 
+    this._.BASE_CURVE = true;
+
     return this;
 }
 

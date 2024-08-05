@@ -21,7 +21,8 @@ CircleCurve.prototype.r = naiveGetterAndSetter("r", "setByEqual");
 CircleCurve.prototype.pathCalculator = function() {
     const r = this.member.get("r");
     const x1 = this.x1(), y1 = this.y1();
-    const x2 = this.x2(), y2 = this.y2();
+    let x2 = this.x2();
+    const y2 = this.y2();
     if (x1 === x2 && y1 === y2) x2++;
     return `M ${x1} ${y1} A ${r} ${r} 0 1 1 ${x2} ${y2}`;
 }

@@ -1,7 +1,7 @@
 import { Interp } from "@/Animate/Interp";
 
-import { d3ToNake }   from "@/Utility/Tool";
-import { nakeToSnap } from "@/Utility/Tool";
+import { D3ToNake }   from "@/Utility/Cast";
+import { NakeToSnap } from "@/Utility/Cast";
 
 import { Text }                 from "@/Node/Nake/Text";
 import { SDNode }               from "@/Node/SDNode";
@@ -19,8 +19,11 @@ export function BaseNake(parent, tag) {
     this.member.new("stroke-dasharray", [1, 0]);
 
     this._.d3 = this.d3layer.append(tag);
-    this._.nake = d3ToNake(this._.d3);
-    this._.snap = nakeToSnap(this._.nake);
+    this._.nake = D3ToNake(this._.d3);
+    this._.snap = NakeToSnap(this._.nake);
+
+    this._.BASE_NAKE = true;
+
     return this;
 }
 

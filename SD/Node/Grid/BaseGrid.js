@@ -12,6 +12,8 @@ export function BaseGrid(parent) {
     this.member.new("startM", 0);
     this.member.new("elements", []);
 
+    this._.BASE_GRID = true;
+
     return this;
 }
 

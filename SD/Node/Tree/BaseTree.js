@@ -10,6 +10,10 @@ export function BaseTree(parent) {
     this.member.new("y", 0);
     this.member.new("links", []);
     this.member.new("nodes", []);
+
+    this._.BASE_TREE = true;
+
+    return this;
 }
 
 BaseTree.prototype = {

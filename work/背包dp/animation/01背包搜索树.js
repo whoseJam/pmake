@@ -4,7 +4,8 @@ const svg = sd.svg();
 const C = sd.color();
 const n = 4;
 const m = 6;
-const tree = new sd.ValueTree(svg).width(1000);
+const tree = new sd.ValueTree(svg).width(1000).layerHeight(100);
+const stack = new sd.ValueStack(svg).elementHeight(100).y(tree.y());
 const items = [
     { value: 4, volume: 5 },
     { value: 1, volume: 1 },
@@ -12,13 +13,14 @@ const items = [
     { value: 3, volume: 2 }
 ];
 tree.cx(600).y(50);
+stack.mx(tree.x());
 let tot = 1;
 
 init();
 main();
 
 function makeBackpack(capacity, idx) {
-    const result = new sd.Rect(svg).width(60).height(100);
+    const result = new sd.Rect(svg).width(30).height(50);
     result.childAs("content", new sd.Rect(svg).color(C.blue), function(parent, child) {
         child.width(parent.width()).height(parent.height() * capacity / m);
         child.x(parent.x()).my(parent.my());
@@ -42,6 +44,9 @@ function makeBackpack(capacity, idx) {
 
 function init() {
     tree.root(1, makeBackpack(m, 0));
+    items.forEach(item => {
+        stack.push(new sd.Text(stack, `体积=${item.volume} 价值=${item.value}`));
+    });
 }
 
 async function main() {

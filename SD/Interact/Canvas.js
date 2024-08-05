@@ -1,6 +1,7 @@
-import { Storage } from "../Utility/Storage";
-import { d3ToNake } from "../Utility/Tool";
-import { Color } from "../Utility/Color";
+import { Color }    from "@/Utility/Color";
+import { Storage }  from "@/Utility/Storage";
+import { D3ToNake } from "@/Utility/Cast";
+
 import * as d3 from "d3";
 
 let canvas;
@@ -47,8 +48,8 @@ function canvasStore() {
     storage.store(
         context.getImageData(
             0, 0,
-            d3ToNake(canvas).width, 
-            d3ToNake(canvas).height));
+            D3ToNake(canvas).width, 
+            D3ToNake(canvas).height));
 }
 
 export function appendCanvas() {
@@ -61,13 +62,13 @@ export function appendCanvas() {
                .style("position", "absolute")
                .style("left", "0px")
                .style("top", "0px");
-    context = d3ToNake(canvas).getContext("2d");
+    context = D3ToNake(canvas).getContext("2d");
     marquee = d3.select("body")
                 .insert("div", "div");
-    d3ToNake(marquee).style.width = "0px";
-    d3ToNake(marquee).style.height = "0px";
-    d3ToNake(marquee).style.position = "absolute";
-    d3ToNake(marquee).style.border = "1px solid #0976d4";
+    D3ToNake(marquee).style.width = "0px";
+    D3ToNake(marquee).style.height = "0px";
+    D3ToNake(marquee).style.position = "absolute";
+    D3ToNake(marquee).style.border = "1px solid #0976d4";
 
     document.addEventListener("keydown", clickCtrlZ);
     document.addEventListener("keydown", clickCtrlY);
@@ -113,27 +114,27 @@ function clickCtrlY(e) {
 
 function freshCursor(flag) {
     if (flag) {
-        d3ToNake(canvas).onpointerdown = null;
-        d3ToNake(canvas).onpointermove = null;
-        d3ToNake(canvas).onpointerup = null;
+        D3ToNake(canvas).onpointerdown = null;
+        D3ToNake(canvas).onpointermove = null;
+        D3ToNake(canvas).onpointerup = null;
         canvasClickable(false);
     }
 }
 
 function freshPen(flag) {
     if (flag) {
-        d3ToNake(canvas).onpointerdown = PENPointerDown;
-        d3ToNake(canvas).onpointerup = PENPointerUp;
-        d3ToNake(canvas).onpointermove = null;
+        D3ToNake(canvas).onpointerdown = PENPointerDown;
+        D3ToNake(canvas).onpointerup = PENPointerUp;
+        D3ToNake(canvas).onpointermove = null;
         canvasClickable(true);
     }
 }
 
 function freshEraser(flag) {
     if (flag) {
-        d3ToNake(canvas).onpointerdown = ERASERPointerDown;
-        d3ToNake(canvas).onpointerup = ERASERPointerUp;
-        d3ToNake(canvas).onpointermove = null;
+        D3ToNake(canvas).onpointerdown = ERASERPointerDown;
+        D3ToNake(canvas).onpointerup = ERASERPointerUp;
+        D3ToNake(canvas).onpointermove = null;
         canvasClickable(true);
     }
 }
@@ -145,7 +146,7 @@ function PENPointerDown(e) {
     let top = e.offsetY;
     context.beginPath();
     context.moveTo(left, top);
-    d3ToNake(canvas).onpointermove = PENPointerMove;
+    D3ToNake(canvas).onpointermove = PENPointerMove;
 }
 
 function PENPointerMove(e) {
@@ -159,7 +160,7 @@ function PENPointerMove(e) {
 
 function PENPointerUp() {
     canvasStore();
-    d3ToNake(canvas).onpointermove = null;
+    D3ToNake(canvas).onpointermove = null;
 }
 
 function ERASERPointerDown(e) {
@@ -167,7 +168,7 @@ function ERASERPointerDown(e) {
     let top = e.offsetY;
     eraserConfigure.startX = left;
     eraserConfigure.startY = top;
-    d3ToNake(canvas).onpointermove = ERASERPointerMove;
+    D3ToNake(canvas).onpointermove = ERASERPointerMove;
 }
 
 let O = 5;
@@ -180,10 +181,10 @@ function ERASERPointerMove(e) {
     let min_y = Math.min(eraserConfigure.startY, eraserConfigure.endY) + O;
     let max_x = Math.max(eraserConfigure.startX, eraserConfigure.endX) - O;
     let max_y = Math.max(eraserConfigure.startY, eraserConfigure.endY) - O;
-    d3ToNake(marquee).style.top = min_y + "px"
-    d3ToNake(marquee).style.left = min_x + "px"
-    d3ToNake(marquee).style.width = (max_x - min_x) + "px"
-    d3ToNake(marquee).style.height = (max_y - min_y) + "px"
+    D3ToNake(marquee).style.top = min_y + "px"
+    D3ToNake(marquee).style.left = min_x + "px"
+    D3ToNake(marquee).style.width = (max_x - min_x) + "px"
+    D3ToNake(marquee).style.height = (max_y - min_y) + "px"
 }
 
 function ERASERPointerUp(e) {
@@ -197,7 +198,7 @@ function ERASERPointerUp(e) {
     let max_y = Math.max(eraserConfigure.startY, eraserConfigure.endY) - O;
     context.clearRect(min_x, min_y, max_x - min_x, max_y - min_y);
     canvasStore();
-    d3ToNake(canvas).onpointermove = null;
-    d3ToNake(marquee).style.width = "0px";
-    d3ToNake(marquee).style.height = "0px";
+    D3ToNake(canvas).onpointermove = null;
+    D3ToNake(marquee).style.width = "0px";
+    D3ToNake(marquee).style.height = "0px";
 }

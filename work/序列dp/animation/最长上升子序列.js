@@ -1,8 +1,8 @@
 import * as sd from "@/sd";
 
-let svg = sd.svg();
-let C = sd.color();
-let d = makeDp();
+const svg = sd.svg();
+const C = sd.color();
+const d = makeDp();
 
 main();
 
@@ -34,27 +34,15 @@ function makeDp() {
             dp.startAnimate().value(i, 1).endAnimate();
             
             for (let j = 0; j < i; j++) {
+                if (data[j] >= data[i]) continue;
                 await sd.pause();
                 pj.startAnimate().moveTo(j).endAnimate();
-
-                await sd.pause();
-                arr.startAnimate().color(j, C.red).endAnimate();
                 
-                if (data[j] < data[i]) {
-                    await sd.pause();
-                    arr.startAnimate().color(j, C.green).endAnimate();
-                    dp.startAnimate().color(j, C.green).endAnimate();
-
-                    await sd.pause()
-                    let nw = Math.max(
-                        Number(dp.value(j).text()) + 1,
-                        Number(dp.value(i).text()));
-                    dp.startAnimate().value(i, nw).endAnimate();
-                }
-                await sd.pause();
-                arr.startAnimate().color(j, C.blue).endAnimate();
-                dp.startAnimate().color(j, C.white).endAnimate();
-
+                await sd.pause()
+                let nw = Math.max(
+                    Number(dp.value(j).text()) + 1,
+                    Number(dp.value(i).text()));
+                dp.startAnimate().value(i, nw).endAnimate();
             }
             await sd.pause();
             pj.startAnimate().opacity(0).endAnimate();

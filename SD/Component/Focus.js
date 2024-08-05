@@ -1,7 +1,10 @@
-import { Rect } from "../Node/Nake/Rect";
-import { Context } from "../Animate/Context";
-import { BaseArray } from "@/Node/Array/BaseArray";
-import { Color } from "@/Utility/Color";
+import { Rect } from "@/Node/Nake/Rect";
+
+import { Context } from "@/Animate/Context";
+
+import { color } from "@/Utility/Color";
+
+const C = color();
 
 let id = 0;
 
@@ -34,7 +37,7 @@ export function Focus(parent) {
     let element1, element2;
 
     focus.fillOpacity(0);
-    focus.stroke(Color.red);
+    focus.stroke(C.red);
     focus.strokeWidth(3);
     focusOn1Element(focus, parent);
     

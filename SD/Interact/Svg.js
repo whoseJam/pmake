@@ -1,5 +1,7 @@
-import { d3ToNake } from "../Utility/Tool";
-import { Marker } from "../Node/Nake/Marker";
+import { D3ToNake } from "@/Utility/Cast";
+
+import { Marker } from "@/Node/Nake/Marker";
+
 import * as d3 from "d3";
 
 const str0 = "0123456789-";
@@ -22,7 +24,7 @@ function defArrow() {
 }
 
 export function setViewBox(x, y, width, height, pwidth, pheight, rate) {
-    const svg = d3ToNake(svgSel);
+    const svg = D3ToNake(svgSel);
     if (width <= 10 || height <= 10) return;
     const cx = (x + width / 2);
     const cy = (y + height / 2);
@@ -62,7 +64,7 @@ export function initSvg() {
     document.body.append(tempElement);
     svgSel = d3.select("#svg-container").append("svg");
 
-    const svgElement = d3ToNake(svgSel);
+    const svgElement = D3ToNake(svgSel);
     svgElement.id = "svg";
     svgElement.setAttribute("preserveAspectRatio", "xMidYMid meet");
     if (window.self === window.top) {

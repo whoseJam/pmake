@@ -4,7 +4,7 @@ import { Interp } from "@/Animate/Interp";
 import { BaseNake }             from "@/Node/Nake/BaseNake";
 import { naiveGetterAndSetter } from "@/Node/Common";
 
-import { d3ToNake } from "@/Utility/Tool";
+import { D3ToNake } from "@/Utility/Cast";
 
 export function Fragment(parent, html = "") {
     BaseNake.call(this, parent, "g");
@@ -95,7 +95,7 @@ function update() {
 
 let fragmentHelper;
 export function initFragment(svg) {
-    fragmentHelper = d3ToNake(svg.append("g"));
+    fragmentHelper = D3ToNake(svg.append("g"));
     fragmentHelper.setAttribute("opacity", 0);
 }
 

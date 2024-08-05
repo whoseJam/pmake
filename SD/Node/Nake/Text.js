@@ -1,6 +1,6 @@
 import { Interp } from "@/Animate/Interp";
 
-import { d3ToNake } from "@/Utility/Tool";
+import { D3ToNake } from "@/Utility/Cast";
 
 import { BaseNake }             from "@/Node/Nake/BaseNake";
 import { naiveUpdate }          from "@/Node/Common";
@@ -111,7 +111,7 @@ function parseText(text) {
 
 let textHelper;
 export function initText(svg) {
-    textHelper = d3ToNake(svg.append("text"));
+    textHelper = D3ToNake(svg.append("text"));
     textHelper.setAttribute("stroke-opacity", 0);
     textHelper.setAttribute("fill-opacity", 0);
     textHelper.setAttribute("font-family", "consolas");

@@ -19,6 +19,10 @@ export function BaseElement(parent) {
     this.member.new("height", 40);
     this.member.new("rate", 1.2);
     this.member.new("value", undefined);
+
+    this._.BASE_ELEMENT = true;
+
+    return this;
 }
 
 BaseElement.prototype = {

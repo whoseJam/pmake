@@ -16,6 +16,10 @@ export function BaseGraph(parent) {
     this._.linkType = Line;
     this.newLayer("nodes");
     this.newLayer("links");
+
+    this._.BASE_GRAPH = true;
+
+    return this;
 }
 
 BaseGraph.prototype = {
