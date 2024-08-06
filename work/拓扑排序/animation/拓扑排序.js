@@ -20,15 +20,21 @@ export async function toposort(graph, Qgap, callback) {
     const grad = C.gradient(C.white, C.orange, 0, maxIndgree);
     nodes.forEach(node => { 
         node.color(grad(node.ind));
-        if (node.ind === 0) {
-            Q.push(node.nodeId);
-        }
     })
 
     graph.childAs("Q", Q, R.Aside("bl", Qgap));
     sd.Label(Q, "Q队列", "lc");
     Q.childAs("SEQ", SEQ, R.Aside("bl", 10));
     sd.Label(SEQ, "拓扑序", "lc");
+
+    await sd.pause();
+    Q.startAnimate();
+    nodes.forEach(node => {
+        if (node.ind === 0) {
+            Q.push(node.nodeId);
+        } 
+    });
+    Q.endAnimate();
 
     while (Q.length() > 0) {
         await sd.pause();

@@ -4,15 +4,15 @@ import { toposort } from "./拓扑排序";
 const svg = sd.svg();
 const C = sd.color();
 const R = sd.rule();
-const graph = new sd.DAG(svg);   // type: Node
-const nodes = [0, 1, 2, 3, 4, 5, 6, 7];
+const graph = new sd.DAG(svg).width(200).height(200);   // type: Node
+const nodes = [1, 2, 3, 4, 5, 6, 7, 8];
 const links = [
-    [0, 2], [1, 2],
     [1, 3], [2, 3],
-    [3, 4],
-    [3, 5], [7, 5],
-    [0, 6],
-    [6, 7]
+    [2, 4], [3, 4],
+    [4, 5],
+    [4, 6], [8, 6],
+    [1, 7],
+    [7, 8]
 ];
 
 init();
