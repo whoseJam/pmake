@@ -7,40 +7,37 @@
     </section>
     <section>
         <h2>负环</h2>
-        <p>SPFA判断负环特别简单，如果图中不存在负环的话，每一个点 $u$ 最多参与松弛 $n-1$ 次</p>
-        <p class="fragment quote">因为一条到 $u$ 的最短路最多会经过 $n-1$ 条边，每一次调整可能导致 $u$ 参与一次松弛，所以 $u$ 最多参与 $n-1$ 次松弛</p>
-        <p class="fragment">如果图中有负环，那么一个点 $u$ 参与松弛的次数就没有上限了</p>
-        <p class="fragment quote">想象一条负环由 $u_1,u_2...u_k$ 组成，那么这 $k$ 个点可以反复相互松弛，无穷无尽也</p>
+        <p>SPFA判断负环特别简单，如果图中不存在负环的话，从起点到任意点 $u$ 最多经过 $n-1$ 条边</p>
+        <p class="fragment">如果图中有负环，那么从起点到点 $u$ 的最短路经过的边数就没有上限了</p>
+        <p class="fragment quote">想象一条负环由 $u_1,u_2...u_k$ 组成，那么可以在这 $k$ 个点上一直转圈，无穷无尽也</p>
+        <p class="fragment">所以我们在SPFA的过程中，对每一个点，记录一下从起点到它的最短路经过的边数，如果超过 $n-1$ 则认为存在负环</p>
     </section>
     <section>
         <h2>负环</h2>
-        <p>所以我们在SPFA的过程中，对于每一个点来说，记录一下每个点参与松弛的次数就行了</p>
-    </section>
-    <section>
-        <h2>负环</h2>
-        <pre><code style="min-height: 465px;" data-trim data-line-numbers class="cpp"><script type="text/template">
-            bool SPFA(int S) {
-                for (int i = 1; i <= n; i++) dis[i] = inf;
-                dis[S] = 0;
-                Inq[S] = 1;
-                queue < int > q;
-                q.push(S);
-                while (q.size()) {
-                    int u = q.front(); q.pop(); Inq[u] = 0;
-                    for (int i = h[u], v; i; i = l[i].Nxt) {
-                        v = l[i].to;
-                        if (dis[v] > dis[u] + l[i].val) {
-                            dis[v] = dis[u] + l[i].val;
-                            if (!Inq[v]) {
-                                q.push(v);
-                                if ((++tim[v]) >= n) return true;
-                                Inq[v] = 1;
+        <codeblock style="height: 445px;">
+            <script type="text/template">
+                bool SPFA(int S) {
+                    queue < int > q;
+                    for (int i = 1; i <= n; i++) dis[i] = inf;
+                    dis[S] = 0; Inq[S] = 1; q.push(S);
+                    while (q.size()) {
+                        int u = q.front(); q.pop(); Inq[u] = 0;
+                        for (int i = h[u], v; i; i = l[i].Nxt) {
+                            v = l[i].to;
+                            if (dis[v] > dis[u] + l[i].val) {
+                                dis[v] = dis[u] + l[i].val; // 更新 S->v 最短路
+                                tim[v] = tim[u] + 1; // 记录 S->v 最短路经过的边数
+                                if (tim[v] >= n) return true; // 存在负环
+                                if (!Inq[v]) {
+                                    q.push(v);
+                                    Inq[v] = 1;
+                                }
                             }
                         }
                     }
+                    return false; // 不存在负环
                 }
-                return false;
-            }
-        </script></code></pre>
+            </script>
+        </codeblock>
     </section>
 </section>

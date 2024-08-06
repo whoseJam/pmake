@@ -39,9 +39,10 @@ bool SPFA(int S){
 			v=l[i].to;
 			if(dis[v]>dis[u]+l[i].val){
 				dis[v]=dis[u]+l[i].val;
+				tim[v]=tim[u]+1;
+				if(tim[v]>=n)return true; 
 				if(!Inq[v]){
 					q.push(v);
-					if((++tim[v])>=n)return true;
 					Inq[v]=1;
 				}
 			}

@@ -28,26 +28,29 @@
     <section>
         <h2>BFS</h2>
         <p>那我们能不能稍微改造一下BFS算法，让它能适用于<b>边权各异</b>的图呢</p>
-        <p class="fragment">难点在于如何确保每次取出的松弛点到起点的距离，是所有松弛点中最小的那个</p>
-        <p class="fragment quote">现在边权各异了，完全有可能<b>先更新</b>了一个到起点距离 $50$ 的点，<b>后更新</b>了一个距离起点 $20$ 的点</p>
+        <p class="fragment quote">
+            在边权各异的情况下，如何确保每次取出的松弛点到起点的距离，是所有松弛点中最小的那个呢？
+        </p>
+        <p class="fragment quote">
+            现在边权各异了，完全有可能<b>先更新</b>了一个到起点距离 $5$ 的点，<b>后更新</b>了一个距离起点 $2$ 的点，
+            那就不能单纯用一个先进先出的普通队列来维护<b>松弛点</b>了
+        </p>
+        <iframe data-src="./animation/普通队列的不足之处.html"
+            style="width: 1000px; height: 300px;"></iframe>
     </section>
     <section>
         <h2>Dijkstra VS BFS</h2>
         <p>显然，我们把队列改为<b>以距离值为关键字</b>的优先队列，就可以实现每次取出<b>距离起点最近</b>的松弛点</p>
         <div class="fragment quote">
-            <h3>最短路已知</h3>
-            <p style="margin-bottom: 0px;">由于图中<b>无负权边</b>，所以这个点的距离值不可能在未来变得更小了，换言之，它的最短路是已知的</p>
-        </div>
-        <div class="fragment quote">
-            <h3>没有参与过更新</h3>
-            <p style="margin-bottom: 0px;">我们对每个节点加一个标记，标记它是否更新过周围的点，如果它已经更新过周围点了，就跳过它的更新过程即可</p>
+            <h3>正确性证明</h3>
+            <p>我们只需要知道正确性证明依赖于图每条边的<b>边权都是非负数</b>即可</p>
+            <p class="fragment" style="margin-bottom: 0px;">如果你一定要知道证明过程，请访问：<a href="https://oi-wiki.org/graph/shortest-path/#%E6%AD%A3%E7%A1%AE%E6%80%A7%E8%AF%81%E6%98%8E" target="_blank">这个网站</a></p>
         </div>
     </section>
     <section>
         <h2>Dijkstra</h2>
-        <iframe
-            style="min-width: 1000px; min-height: 500px;"
-            data-src="./animation/Dijkstra.html"></iframe>
+        <iframe data-src="./animation/Dijkstra.html"
+            style="width: 1000px; height: 500px;"></iframe>
     </section>
     <section>
         <h2>Dijkstra</h2>

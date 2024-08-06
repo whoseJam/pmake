@@ -52,12 +52,13 @@ async function SPFA(graph) {
     const n = graph.nodes().length;
     sd.Label(Q, "队列Q");
     graph.update();
-    while (Q.length() > 0) {
+    let cnt = 0;
+    while (Q.length() > 0 && ++cnt <= 20) {
         await sd.pause();
         let u = Q.firstElement().value().text();
         Q.startAnimate().color(0, C.blue).endAnimate();
         graph.startAnimate().color(u, C.blue).endAnimate();
-        const outLinks = graph.outLinks(u, "undirect");
+        const outLinks = graph.outLinks(u, "direct");
         for (let link of outLinks) {
             const v = graph.toNodeId(u, link);
             if (getDis(v) > getDis(u) + link.intValue()) {
@@ -72,7 +73,7 @@ async function SPFA(graph) {
                     graph.startAnimate();
                     putInq(v, 1);
                     graph.endAnimate();
-                    Q.after(graph).startAnimate().push(v).endAnimate();
+                    Q.startAnimate().push(v).endAnimate();
                 }
                 await sd.pause();
                 graph.startAnimate().color(v, C.white).endAnimate();
