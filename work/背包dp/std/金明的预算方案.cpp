@@ -30,21 +30,18 @@ void update(int i,int v,int w){
 }
 
 void insert(int id,int a1,int a2){
+	int tmpv1=v[id]+v[a1]+v[a2];
+	int tmpw1=v[id]*w[id]+v[a1]*w[a1]+v[a2]*w[a2];
+	int tmpv2=v[id]+v[a1];
+	int tmpw2=v[id]*w[id]+v[a1]*w[a1];
+	int tmpv3=v[id]+v[a2];
+	int tmpw3=v[id]*w[id]+v[a2]*w[a2];
+	int tmpv4=v[id];
+	int tmpw4=v[id]*w[id];
 	for(int i=n;i>=0;i--){
-		int tmpv1=v[id]+v[a1]+v[a2];
-		int tmpw1=v[id]*w[id]+v[a1]*w[a1]+v[a2]*w[a2];
 		update(i,tmpv1,tmpw1);
-		
-		int tmpv2=v[id]+v[a1];
-		int tmpw2=v[id]*w[id]+v[a1]*w[a1];
 		update(i,tmpv2,tmpw2);
-		
-		int tmpv3=v[id]+v[a2];
-		int tmpw3=v[id]*w[id]+v[a2]*w[a2];
 		update(i,tmpv3,tmpw3);
-		
-		int tmpv4=v[id];
-		int tmpw4=v[id]*w[id];
 		update(i,tmpv4,tmpw4);
 	}
 }
@@ -66,4 +63,3 @@ int main(){
 	cout<<dp[n]<<'\n';
 	return 0;
 }
-

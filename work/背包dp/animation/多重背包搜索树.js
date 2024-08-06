@@ -4,16 +4,16 @@ const svg = sd.svg();
 const C = sd.color();
 const n = 4;
 const m = 6;
-const tree = new sd.ValueTree(svg).width(1000).layerHeight(100);
+const tree = new sd.ValueTree(svg).width(900).layerHeight(100);
 const stack = new sd.ValueStack(svg).elementHeight(100).y(tree.y());
 const items = [
-    { value: 4, volume: 5 },
-    { value: 1, volume: 1 },
-    { value: 2, volume: 4 },
-    { value: 3, volume: 2 }
+    { value: 4, volume: 5, count: 2 },
+    { value: 1, volume: 1, count: 2 },
+    { value: 2, volume: 4, count: 3 },
+    { value: 3, volume: 2, count: 2 }
 ];
-tree.cx(600).y(50);
-stack.mx(tree.x());
+tree.cx(700).y(50);
+stack.mx(tree.x() - 20);
 let tot = 1;
 
 init();
@@ -26,16 +26,15 @@ function makeBackpack(capacity, idx) {
         child.x(parent.x()).my(parent.my());
     });
     const myId = tot;
-    if (idx >= items.length) return;
+    if (idx >= items.length) return result;
 
     result.onClick(() => {
         result.onClick(() => {});
-        if (capacity >= items[idx].volume) {
-            tree.newNode(++tot, makeBackpack(capacity - items[idx].volume, idx + 1));
-            tree.newLink(myId, tot, `+${items[idx].value}`);
+        for (let k = 0; k * items[idx].volume <= capacity && k <= items[idx].count; k++) {
+            tree.newNode(++tot, makeBackpack(capacity - k * items[idx].volume, idx + 1));
+            if (k > 0) tree.newLink(myId, tot, `+${k * items[idx].value}`);
+            else tree.newLink(myId, tot);
         }
-        tree.newNode(++tot, makeBackpack(capacity, idx + 1));
-        tree.newLink(myId, tot);
     });
     return result;
 }
@@ -43,7 +42,7 @@ function makeBackpack(capacity, idx) {
 function init() {
     tree.root(1, makeBackpack(m, 0));
     items.forEach(item => {
-        stack.push(new sd.Text(stack, `体积=${item.volume} 价值=${item.value}`));
+        stack.push(new sd.Text(stack, `体积=${item.volume} 价值=${item.value} 数量=${item.count}`));
     });
 }
 

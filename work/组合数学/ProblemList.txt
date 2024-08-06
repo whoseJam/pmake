@@ -1,0 +1,5 @@
+隔板法：
+#268.方程的解：https://www.luogu.com.cn/problem/P1771
+
+二项式定理：
+#268.计算系数：https://www.luogu.com.cn/problem/P1313
