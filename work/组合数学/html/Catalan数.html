@@ -1,0 +1,47 @@
+<section>
+    <section>
+        <h1>Catalan数</h1>
+    </section>
+    <section>
+        <h2>Catalan数</h2>
+        <p>
+            通项公式：
+            $$
+            h(n)=\frac{C_{2n}^n}{n+1} \\
+            h(n)=C_{2n}^n-C_{2n}^{n-1}
+            $$
+        </p>
+        <p class="fragment">
+            递推公式：
+            $$
+            h(n)=h(0)h(n-1)+h(1)h(n-2)+...+h(n-1)h(0)
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>Catalan数</h2>
+        <p>Catalan数的应用可以归纳为这样一类问题：</p>
+        <ul>
+            <li class="fragment">有两种操作，分别为操作一和操作二</li>
+            <li class="fragment">我需要做 $n$ 次操作一，$n$ 次操作二</li>
+            <li class="fragment">假设我想要执行第 $k$ 次操作二，则在此之前必须先进行至少 $k$ 次操作一</li>
+            <li class="fragment">求有多少种方案</li>
+        </ul>
+        <p class="fragment">此时答案即为 $h(n)$</p>
+    </section>
+    <section>
+        <h2>Catalan数</h2>
+        <p>给定 $n$ 个元素，你需要让它们入栈又出栈，求共有多少种出栈序列</p>
+        <p class="fragment">这里的操作一就是入栈，操作二就是出栈，答案即为 $h(n)$</p>
+    </section>
+    <section>
+        <h2>Catalan数</h2>
+        <p>括号计数问题，假设总共有 $n$ 个左括号，有 $n$ 个右括号，求合法的括号序列数量</p>
+        <p class="fragment">这里添加一个左括号就是操作一，添加一个右括号就是操作二</p>
+    </section>
+    <section>
+        <h2>Catalan数</h2>
+        <p>在 $n\times n$ 的网格中，只能在下三角行走，每次可以横着或者竖着走一格，求有多少种走法</p>
+        <p class="fragment">这里横着走就是操作一，竖着走就是操作二</p>
+    </section>
+</section>

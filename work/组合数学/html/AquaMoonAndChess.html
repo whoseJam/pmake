@@ -1,0 +1,24 @@
+<section>
+    <section>
+        <h1>AquaMoon and Chess</h1>
+    </section>
+    <problem data-src="http://43.143.204.105/problem/1143"></problem>
+    <section>
+        <h2>AquaMoon and Chess</h2>
+        <iframe data-src="./animation/AquaMoonAndChess11.html"
+            style="width: 1000px; height: 100px;"></iframe>
+    </section>
+    <section>
+        <h2>AquaMoon and Chess</h2>
+        <ul>
+            <li>对于一对相邻的 $1$（即 $11$），在棋盘上移动时不可能分开</li>
+            <li>对于棋盘上落单的 $1$，它的移动是被动的</li>
+        </ul>
+        <p class="fragment">所以影响棋盘布局的仅有 $11$ 和 $0$</p>
+        <p class="fragment">设 $11$ 的数量为 $a$，$0$ 的数量为 $b$，则答案即为两者的组合顺序，即：
+            $$
+            C_{a+b}^a
+            $$
+        </p>
+    </section>
+</section>

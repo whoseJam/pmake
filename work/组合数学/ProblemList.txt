@@ -1,5 +1,23 @@
-隔板法：
+组合基本原理：
+#925.饱食：https://www.luogu.com.cn/problem/P7566
+
+计算组合数：
+#924.组合数问题：https://www.luogu.com.cn/problem/P2822
+
+插板法：
 #268.方程的解：https://www.luogu.com.cn/problem/P1771
+#927.青原樱：https://www.luogu.com.cn/problem/P5520
 
 二项式定理：
 #268.计算系数：https://www.luogu.com.cn/problem/P1313
+
+Lucas：
+#1144.Lucas定理：https://www.luogu.com.cn/problem/P3807
+
+Catalan数：
+#270.栈：https://www.luogu.com.cn/problem/P1044
+
+练一练：
+#926.越狱：https://www.luogu.com.cn/problem/P3197
+#861.车的放置：https://www.luogu.com.cn/problem/P1350
+#1143.AquaMoon and Chess：https://www.luogu.com.cn/problem/CF1545B

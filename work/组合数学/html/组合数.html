@@ -27,4 +27,23 @@
             <li class="fragment">根据加法原理，$C_n^m=C_{n-1}^{m-1}+C_{n-1}^m$</li>
         </ul>
     </section>
+    <section>
+        <h2>组合数的递推</h2>
+        <iframe data-src="./animation/组合数的递推.html"
+            style="width: 1000px; height: 300px;"></iframe>
+        <codeblock>
+            <script type="text/template">
+                int C[2005][2005];
+                void Pre(int p) {
+                    C[0][0] = 1;
+                    for (int i = 1; i <= 2000; i++) {
+                        C[i][0] = C[i][i] = 1;
+                        for (int j = 1; j < i; j++) {
+                            C[i][j] = (C[i - 1][j - 1] + C[i - 1][j]) % p;
+                        }
+                    }
+                }
+            </script>
+        </codeblock>
+    </section>
 </section>
