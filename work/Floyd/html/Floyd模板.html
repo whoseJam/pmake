@@ -3,24 +3,35 @@
         <h1>Floyd（模板）</h1>
         <p>板子题，可能需要考虑一下重边</p>
     </section>
-    <section data-background-iframe="http://43.143.204.105/problem/1036" data-background-interactive>
+    <problem data-src="http://43.143.204.105/problem/1036"></problem>
+    <section>
+        <h2>Floyd（模板）</h2>
+        <p>给定一张 $n$ 个点 $m$ 条边的<b>无向图</b></p>
+        <p class="fragment">求任意点对 $(i,j)$ 之间的最短路长度</p>
+        <p class="fragment"><b>数据中可能存在重边</b></p>
     </section>
     <section>
         <h2>Floyd（模板）</h2>
-        <p>如题，读入时处理一下重边即可</p>
-        <pre><code data-trim data-line-numbers class="cpp"><script type="text/template">
-            n = read();
-            m = read();
-            for (int i = 1; i <= n; i++)
-                for (int j = 1; j <= n; j++)
-                    if (i != j) d[i][j] = inf;
-            for (int i = 1, x, y, l; i <= m; i++) {
-                x = read();
-                y = read();
-                l = read();
-                d[x][y] = min(d[x][y], l);
-                d[y][x] = min(d[y][x], l);
-            }
-        </script></code></pre>
+        <p>先把 $d$ 数组初始化为 $+\infty$</p>
+        <codeblock>
+            <script type="text/template">
+                for (int i = 1; i <= n; i++)
+                    for (int j = 1; j <= n; j++)
+                        if (i != j) d[i][j] = inf;
+            </script>
+        </codeblock>
+        <p class="fragment">每读入一条边 $(x,y,w)$，让 $d_{x,y}$ 和 $w$ 取一个最小值，就能正确处理重边了</p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                for (int i = 1, x, y, w; i <= m; i++) {
+                    x = read();
+                    y = read();
+                    w = read();
+                    d[x][y] = min(d[x][y], w);
+                    d[y][x] = min(d[y][x], w);
+                }
+            </script>
+        </codeblock>
+        <p class="fragment">最后跑一个Floyd，求出任意两对点之间的最短路长度</p>
     </section>
 </section>

@@ -30,10 +30,10 @@ int main(){
 	for(int i=1;i<=n;i++)
 		for(int j=1;j<=n;j++)
 			if(i!=j)d[i][j]=inf;
-	for(int i=1,x,y,l;i<=m;i++){
-		x=read();y=read();l=read();
-		d[x][y]=min(d[x][y],l);
-		d[y][x]=min(d[y][x],l);
+	for(int i=1,x,y,w;i<=m;i++){
+		x=read();y=read();w=read();
+		d[x][y]=min(d[x][y],w);
+		d[y][x]=min(d[y][x],w);
 	} 
 	Floyd();
 	for(int i=1;i<=n;i++){

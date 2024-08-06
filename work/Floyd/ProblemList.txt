@@ -4,5 +4,5 @@
 #891.产生数：https://www.luogu.com.cn/problem/P1037
 
 课下练习：
-灾后重建：https://www.luogu.com.cn/problem/P1119
+#78.灾后重建：https://www.luogu.com.cn/problem/P1119
 #890.牛的旅行：https://www.luogu.com.cn/problem/P1522
