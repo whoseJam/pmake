@@ -45,7 +45,6 @@ async function main() {
     for (let i = 1; i <= n * 2; i++) nodesId.push(i);
     有向图Tarjan(graph, nodesId);
     const links = graph.member.get("links");
-    sd.globalUpdate();
     links.forEach(e => e.opacity(0));
     for (let i = 0; i < relationships.length; i++) {
         await sd.pause();

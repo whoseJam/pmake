@@ -16,8 +16,8 @@ function init() {
     graph.at(1, 1).newNode(4, new sd.Mathjax(graph, "N_j"), 1);
     for (let i = 1; i <= 4; i++)
         graph.element(i).rate(2);
-    link(1, 4);
-    text.text("i取Y，则j必须取N").cx(graph.cx());
+    link(2, 3);
+    text.text("i取N，则j必须取Y").cx(graph.cx());
 }
 
 async function main() {

@@ -61,7 +61,7 @@ BaseGraph.prototype.opacity = function(arg0, arg1, arg2) {
         return SDNode.prototype.opacity.call(this);
     } else if (arguments.length === 1) {
         let v = arguments[0];
-        if (0 <= v && v <= 1) SDNode.prototype.opacity.call(this, v);
+        if (0 <= v && v <= 1) return SDNode.prototype.opacity.call(this, v);
         else return this.findNodeById(v).opacity();
     } else if (arguments.length === 2) {
         if (0 <= arg1 && arg1 <= 1) {

@@ -5,43 +5,49 @@
     </section>
     <section>
         <h2>2-SAT</h2>
-        <p>我们用图论的视角来看待2-SAT问题，假设有 $n$ 个变量，每个变量 $a_i$ 有两个取值，那我对每个变量都建立两个节点 $Y_i$ 和 $N_i$，这两个节点的语义分别是：</p>
+        <p>我们用图论的视角来看待2-SAT问题，假设有 $n$ 个变量，每个变量 $a_i$ 有两个取值 $\{Y,N\}$，那我对每个变量都建立两个节点 $Y_i$ 和 $N_i$，这两个节点的语义分别是：</p>
         <ul>
-            <li>$Y_i$：变量 $i$ 取值为真文字</li>
-            <li>$N_i$：变量 $i$ 取值为假文字</li>
+            <li>$Y_i$：变量 $i$ 取到了它的<b>第一种取值</b>，即 $Y$ 这种取值</li>
+            <li>$N_i$：变量 $i$ 取到了它的<b>第二种取值</b>，即 $N$ 这种取值</li>
         </ul>
-        <p class="fragment">子句无非就四种情况：</p>
-        <ul class="fragment">
-            <li>$a_i\lor a_j$</li>
-            <li>$a_i\lor \lnot a_j$</li>
-            <li>$\lnot a_i\lor a_j$</li>
-            <li>$\lnot a_i\lor \lnot a_j$</li>
-        </ul>
-    </section>
-    <section>
-        <h2>2-SAT</h2>
-        <p>$ a_i\lor a_j$</p>
-        <iframe style="width: 1000px; height: 500px;" data-src="./animation/YiYj.html">
-        </iframe>
-    </section>
-    <section>
-        <h2>2-SAT</h2>
-        <p>$a_i\lor \lnot a_j$</p>
-        <p>$\lnot a_i\lor a_j$</p>
-        <iframe style="width: 1000px; height: 500px;" data-src="./animation/YiNj.html">
-        </iframe>
-    </section>
-    <section>
-        <h2>2-SAT</h2>
-        <p>$\lnot a_i\lor \lnot a_j$</p>
-        <iframe style="width: 1000px; height: 500px;" data-src="./animation/NiNj.html">
-        </iframe>
-    </section>
-    <section>
-        <h2>2-SAT</h2>
-        <p>将每个子句的约束，都建立成图中的边之后，我们就可以开始考虑：</p>
+        <p class="fragment">条件无非就四种情况：</p>
         <ul>
-            <li class="fragment">2-SAT问题是否<b>存在解</b></li>
+            <li class="fragment">当变量 $i$ 取 $Y$ 时，变量 $j$ 必须取值为 $Y$</li>
+            <li class="fragment">当变量 $i$ 取 $Y$ 时，变量 $j$ 必须取值为 $N$</li>
+            <li class="fragment">当变量 $i$ 取 $N$ 时，变量 $j$ 必须取值为 $Y$</li>
+            <li class="fragment">当变量 $i$ 取 $N$ 时，变量 $j$ 必须取值为 $N$</li>
+        </ul>
+    </section>
+    <section>
+        <h2>2-SAT</h2>
+        <iframe data-src="./animation/YiYj.html"
+            style="width: 1000px; height: 500px;">
+        </iframe>
+    </section>
+    <section>
+        <h2>2-SAT</h2>
+        <iframe data-src="./animation/YiNj.html"
+            style="width: 1000px; height: 500px;">
+        </iframe>
+    </section>
+    <section>
+        <h2>2-SAT</h2>
+        <iframe data-src="./animation/NiYj.html"
+            style="width: 1000px; height: 500px;">
+        </iframe>
+    </section>
+    <section>
+        <h2>2-SAT</h2>
+        <iframe data-src="./animation/NiNj.html"
+            style="width: 1000px; height: 500px;">
+        </iframe>
+    </section>
+    <section>
+        <h2>2-SAT</h2>
+        <p>将约束问题转化为一张图后，我们讨论如下三个问题：</p>
+        <ul>
+            <li class="fragment">2-SAT问题<b>存在解</b>，在图上意味着什么</li>
+            <li class="fragment">2-SAT问题<b>无解</b>，在图上意味着什么</li>
             <li class="fragment">2-SAT问题的一组<b>可行解</b>是什么</li>
         </ul>
     </section>
@@ -67,7 +73,18 @@
         <iframe data-src="./animation/逻辑链.html" style="min-width: 1000px; max-height: 50px;"></iframe>
         <p>那无解的情况也自然就引出了</p>
         <p class="fragment">如果存在一条路径，使得 $Y_i$ 可以抵达 $N_i$，且 $N_i$ 也可以抵达 $Y_i$， 则无解</p>
+        <p class="fragment quote">因为变量 $i$ 不可能同时为 $Y$ 和 $N$，但当 $i$ 取值为 $Y$ 时能推导出 $i$ 取值为 $N$；当 $i$ 取值为 $N$ 时能推导出 $i$ 取值为 $Y$</p>
         <p class="fragment">换言之，如果 $\exists i \in [1,n]$，满足 $Y_i$ 和 $N_i$ 在<b>同一个强连通分量</b>里面，那么就无解</p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                bool Check() { // 判断是否有解
+                    for (int i = 1; i <= n; i++) {
+                        if (bel[Y(i)] == bel[N(i)]) return false;
+                    }
+                    return true;
+                }
+            </script>
+        </codeblock>
     </section>
     <section>
         <h2>2-SAT解的构造</h2>
@@ -76,15 +93,15 @@
             <li class="fragment">
                 $N_i\rightarrow Y_i$
                 <p class="fragment">
-                    如果第 $i$ 个变量取值为 $N_i$，一定会推导出第 $i$ 个变量取值为 $Y_i$，导致矛盾<br>
-                    所以第 $i$ 个变量取值只能是 $Y_i$
+                    如果第 $i$ 个变量取值为 $N$，一定会推导出第 $i$ 个变量取值为 $Y$，导致矛盾<br>
+                    所以第 $i$ 个变量取值只能是 $Y$
                 </p>
             </li>
             <li class="fragment">
                 $Y_i\rightarrow N_i$
                 <p class="fragment">
-                    如果第 $i$ 个变量取值为 $Y_i$，一定会推导出第 $i$ 个变量取值为 $N_i$，导致矛盾<br>
-                    所以第 $i$ 个变量取值只能是 $N_i$
+                    如果第 $i$ 个变量取值为 $Y$，一定会推导出第 $i$ 个变量取值为 $N$，导致矛盾<br>
+                    所以第 $i$ 个变量取值只能是 $N$
                 </p>
             </li>
             <li class="fragment">
@@ -99,25 +116,33 @@
         <h2>2-SAT解的构造</h2>
         <p>不过我们代码实现上，判断 $u\rightarrow v$ 有点难写</p>
         <p class="fragment">更常见地，我们用Tarjan求出的每个点的 $bel_u$ 来判断2-SAT的解</p>
-        <p class="fragment">假设变量 $i$ 对应的真取值点为 $Y_i$，假取值点为 $N_i$</p>
+        <iframe data-src="./animation/Tarjan的bel.html" class="fragment"
+            style="width: 1000px; height: 300px;"></iframe>
+        <p class="fragment quote">Tarjan中 $bel$ 小的肯定位于有向路径的末端，$bel$ 大的肯定位于有向路径的前端</p>
+    </section>
+    <section>
+        <h2>2-SAT解的构造</h2>
+        <p>假设变量 $i$ 对应的两个取值点为 $Y_i$ 和 $N_i$</p>
         <ul>
-            <li class="fragment">如果 $bel_{Y_i}\gt bel_{N_i}$，则说明DFS树上 $N_i$ 在 $Y_i$ 之后访问，如果它们存在可达性关系，那么也一定是从 $Y_i\rightarrow N_i$，所以此时我们可以把 $N_i$ 当作变量 $i$ 的取值</li>
-            <li class="fragment">如果 $bel_{Y_i}\lt bel_{N_i}$，则说明DFS树上 $Y_i$ 在 $N_i$ 之后访问，如果它们存在可达性关系，那么也一定是从 $N_i\rightarrow Y_i$，所以此时我们可以把 $Y_i$ 当作变量 $i$ 的取值</li>
+            <li class="fragment">如果 $bel_{Y_i}\gt bel_{N_i}$，则说明如果 $Y_i$ 和 $N_i$ 存在可达性关系，那么也一定是从 $Y_i\rightarrow N_i$，所以此时我们可以把 $N_i$ 当作变量 $i$ 的取值</li>
+            <li class="fragment">如果 $bel_{Y_i}\lt bel_{N_i}$，则说明如果 $Y_i$ 和 $N_i$ 存在可达性关系，那么也一定是从 $N_i\rightarrow Y_i$，所以此时我们可以把 $Y_i$ 当作变量 $i$ 的取值</li>
             <li class="fragment">如果 $bel_{Y_i}=bel_{N_i}$，问题无解</li>
         </ul>
     </section>
     <section>
         <h2>2-SAT解的构造</h2>
         <p>代码如下：</p>
-        <pre><code data-trim data-line-numbers><script type="text/template">
-            // 简单来说，取 bel 小的那个节点当作解
-            for (int i = 1; i <= n; i++) {
-                int fir = i * 2;
-                int sec = i * 2 - 1;
-                if (bel[fir] < bel[sec]) {
-                    cout << fir << '\n';
-                } else cout << sec << '\n';
-            }
-        </script></code></pre>
+        <codeblock>
+            <script type="text/template">
+                // 简单来说，取 bel 小的那个节点当作解
+                for (int i = 1; i <= n; i++) {
+                    if (bel[Y(i)] < bel[N(i)]) {
+                        cout << "the value of " << i << " is Y\n";
+                    } else {
+                        cout << "the value of " << i << " is N\n";
+                    }
+                }
+            </script>
+        </codeblock>
     </section>
 </section>
