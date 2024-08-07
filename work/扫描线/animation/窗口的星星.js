@@ -14,7 +14,7 @@ for (let i = 0; i < data.length; i++) {
     data[i][0] += W;
 }
 for (let i = 0; i < data.length; i++) {
-    let star = new sd.Circle(svg).cx(data[i][0]).cy(data[i][1]).color(C.BLUE).r(4);
+    let star = new sd.Circle(svg).cx(data[i][0]).cy(data[i][1]).color(C.deepSkyBlue).r(4);
     stars.push(star);
 }
 let p = new sd.Circle(svg).color(C.RED).r(4).cx(100).cy(400);

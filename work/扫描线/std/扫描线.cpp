@@ -36,38 +36,22 @@ bool cmp(const bound& a,const bound& b){
 	return a.h<b.h;
 }
 
-struct Data{
-	ll sum;
-	ll min;
-};
-
-Data Merge(Data lc,Data rc){
-	Data ans;
-	ans.min=min(lc.min,rc.min);
-	if(lc.min==rc.min){
-		ans.sum=lc.sum+rc.sum;
-	}else if(lc.min<rc.min){
-		ans.sum=lc.sum;
-	}else{
-		ans.sum=rc.sum;
-	}
-	return ans;
-}
-
 #define lc (x<<1)
 #define rc (x<<1|1)
 
 struct seg{
-	ll l,r,add;
-	Data d;
+	ll l,r,mn,cnt,add;
 }t[N*8];
 
 void pushUp(ll x){
-	t[x].d=Merge(t[lc].d,t[rc].d);
+	t[x].mn=min(t[lc].mn,t[rc].mn);
+	t[x].cnt=0;
+	if(t[x].mn==t[lc].mn)t[x].cnt+=t[lc].cnt;
+	if(t[x].mn==t[rc].mn)t[x].cnt+=t[rc].cnt;
 }
 
 void pushAdd(ll x,ll add){
-	t[x].d.min+=add;
+	t[x].mn+=add;
 	t[x].add+=add;
 }
 
@@ -82,8 +66,8 @@ void pushDown(ll x){
 void Build(ll x,ll l,ll r){
 	t[x].l=l;t[x].r=r;
 	if(l==r){
-		t[x].d.sum=Ls[l+1]-Ls[l];
-		t[x].d.min=0;
+		t[x].cnt=Ls[l+1]-Ls[l];
+		t[x].mn=0;
 		return;
 	}
 	ll mid=(l+r)>>1;
@@ -104,13 +88,8 @@ void Add(ll x,ll l,ll r,ll add){
 	pushUp(x);
 }
 
-Data Query(){
-	return t[1].d;
-}
-
 ll Sum(){
-	Data data=Query();
-	if(data.min==0)return Ls[Lsn]-Ls[1]-data.sum;
+	if(t[1].mn==0)return Ls[Lsn]-Ls[1]-t[1].cnt;
 	return Ls[Lsn]-Ls[1];
 }
 

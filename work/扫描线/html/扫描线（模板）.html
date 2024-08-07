@@ -6,6 +6,71 @@
     <section>
         <h2>扫描线</h2>
         <iframe data-src="./animation/扫描线.html"
-            style="width: 1000px; height: 500px;"></iframe>
+            style="width: 1000px; height: 400px;"></iframe>
+        <p class="fragment">我们需要某种序列数据结构支持：</p>
+        <ul>
+            <li class="fragment">添加一条线段</li>
+            <li class="fragment">查询有多长的区间被线段覆盖</li>
+        </ul>
+    </section>
+    <section>
+        <h2>扫描线</h2>
+        <ul>
+            <li>添加一条线段</li>
+            <li>查询有多长的区间被线段覆盖</li>
+        </ul>
+        <p class="fragment">由于被线段覆盖一次或者多次，都算是被线段覆盖，直接统计<b>被线段覆盖的区间的长度</b>有点麻烦，我们从反面考虑</p>
+        <p class="fragment">
+            $$
+            被线段覆盖的区间的长度=总长度-不被线段覆盖的长度
+            $$
+        </p>
+        <p class="fragment">我们维护<b>区间最小值</b>，以及<b>区间最小值的数量</b>，再用 $add$ 懒标记做区间加法</p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                struct seg {
+                    int l, r, mn, cnt, add;
+                }
+            </script>
+        </codeblock>
+    </section>
+    <section>
+        <h2>扫描线</h2>
+        <p>维护一下这两个区间特征：</p>
+        <codeblock>
+            <script type="text/template">
+                void pushUp(ll x) {
+                    t[x].mn = min(t[lc].mn, t[rc].mn);
+                    t[x].cnt = 0;
+                    if (t[x].mn == t[lc].mn) t[x].cnt += t[lc].cnt;
+                    if (t[x].mn == t[rc].mn) t[x].cnt += t[rc].cnt;
+                }
+            </script>
+        </codeblock>
+        <p class="fragment">如果一个区间整体加上一个 $d$，<b>区间最小值的数量</b>并不会改变</p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                void pushAdd(ll x, ll add) {
+                    t[x].mn += add;
+                    t[x].add += add;
+                }
+            </script>
+        </codeblock>
+    </section>
+    <section>
+        <h2>扫描线</h2>
+        <iframe data-src="./animation/扫描线.html"
+            style="width: 1000px; height: 300px;" rate="1.01"></iframe>
+        <p>把一个矩形拆为上下两个边界</p>
+        <codeblock>
+            <script type="text/template">
+                struct rect{
+                    ll x1,y1,x2,y2;
+                }r[N];
+                struct bound{
+                    ll flg,h,l,r;
+                }b[N*2];
+            </script>
+        </codeblock>
     </section>
 </section>
