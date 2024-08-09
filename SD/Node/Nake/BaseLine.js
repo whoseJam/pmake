@@ -130,7 +130,9 @@ BaseLine.prototype.source = function(x, y) {
         const point = arguments[0];
         return this.source(point[0], point[1]);
     }
-    this.x1(x).y1(y);
+    console.log("freeze update x=", x, "y=", y);
+    this.freeze().x1(x).y1(y).unfreeze();
+    console.log("unfreezed");
     return this;
 }
 
@@ -141,7 +143,7 @@ BaseLine.prototype.target = function(x, y) {
         const point = arguments[0];
         return this.target(point[0], point[1]);
     }
-    this.x2(x).y2(y);
+    this.freeze().x2(x).y2(y).unfreeze();
     return this;
 }
 

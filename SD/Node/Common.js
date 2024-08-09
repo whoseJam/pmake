@@ -60,3 +60,18 @@ export function inRange(mode) {
         throw new Error(`Unknown Mode ${mode}`);
     }
 }
+
+export function Forward(componentName, functionName) {
+    return function() {
+        const component = this[componentName];
+        component[functionName].apply(component, arguments);
+        return this;
+    }
+}
+
+export function ForwardWithReturn(componentName, functionName) {
+    return function() {
+        const component = this[componentName];
+        return component[functionName].apply(component, arguments);
+    }
+}

@@ -1,6 +1,7 @@
+import { BaseCurve }            from "@/Node/Curve/BaseCurve";
+import { naiveGetterAndSetter } from "@/Node/Common";
+
 import { Vec } from "@/Utility/Math";
-import { naiveGetterAndSetter } from "../Common";
-import { BaseCurve } from "./BaseCurve";
 
 export function FixedPointCurve(parent) {
     BaseCurve.call(this, parent);

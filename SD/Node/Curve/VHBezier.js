@@ -1,5 +1,6 @@
-import { Vec } from "../../Utility/Math";
-import { BaseCurve } from "./BaseCurve";
+import { BaseCurve } from "@/Node/Curve/BaseCurve";
+
+import { Vec } from "@/Utility/Math";
 
 export function VHBezier(parent) {
     BaseCurve.call(this, parent);

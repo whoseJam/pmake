@@ -53,6 +53,20 @@ export class SDMember {
         this.values[key].flush();
     }
 
+    incBy(key, value) {
+        if (!this.values[key]) {
+            throw new Error(`Unknown Key ${key}`);
+        }
+        this.values[key].set(this.values[key].get() + value);
+    }
+
+    decBy(key, value) {
+        if (!this.values[key]) {
+            throw new Error(`Unknown Key ${key}`);
+        }
+        this.values[key].set(this.values[key].get() - value);
+    }
+
     hasChanged(key) {
         if (!this.values[key]) {
             throw new Error(`Unknown Key ${key}`);

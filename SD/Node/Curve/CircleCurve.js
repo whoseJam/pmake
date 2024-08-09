@@ -1,6 +1,5 @@
-
-import { naiveGetterAndSetter } from "../Common";
-import { BaseCurve } from "./BaseCurve";
+import { BaseCurve }            from "@/Node/Curve/BaseCurve";
+import { naiveGetterAndSetter } from "@/Node/Common";
 
 export function CircleCurve(parent) {
     BaseCurve.call(this, parent);

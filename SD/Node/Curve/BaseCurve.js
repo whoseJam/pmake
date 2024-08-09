@@ -1,5 +1,5 @@
-import { naiveGetterAndSetter } from "../Common";
-import { Path } from "../Nake/Path";
+import { Path }                 from "@/Node/Nake/Path";
+import { naiveGetterAndSetter } from "@/Node/Common";
 
 export function BaseCurve(parent) {
     Path.call(this, parent);
@@ -25,7 +25,11 @@ BaseCurve.prototype.y2 = naiveGetterAndSetter("y2", "setByEqual");
 
 BaseCurve.prototype.updateList = [
     function() {
-        this.member.set("d", this.pathCalculator());
+        const [path, hasChanged] = this.member.get("path-calculator").call(this);
+        if (hasChanged) {
+            console.log("path=", path);
+            this.member.set("d", path);
+        }
     },
     ...Path.prototype.updateList,
 ]

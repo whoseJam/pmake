@@ -3,6 +3,7 @@ import { svg } from "@/Interact/Svg";
 import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
 
+import { Forward, ForwardWithReturn }  from "@/Node/Common";
 import { Animate }  from "@/Node/Animate";
 import { D3Layer }  from "@/Node/D3Layer";
 import { Children } from "@/Node/Children";
@@ -27,7 +28,14 @@ export function SDNode(parent) {
     this.animate = new Animate(this);
     this.member = new SDMember();
 
+    // update
+    this.member.new("freeze", 0);
+    this.member.new("pendUpdate", false);
+
+    // opacity
     this.member.new("global-opacity", 1);
+    
+    // interact
     this.member.new("clickHandle", undefined);
     this.member.new("dblClickHandle", undefined);
     this.member.new("clickTimeoutObject", undefined);
@@ -42,13 +50,8 @@ SDNode.prototype.g = function() {
     return this.d3layer;
 }
 
-SDNode.prototype.newLayer = function(layerName) {
-    return this.d3layer.newLayer(layerName);
-}
-
-SDNode.prototype.layer = function(layerName) {
-    return this.d3layer.layer(layerName);
-}
+SDNode.prototype.newLayer = ForwardWithReturn("d3layer", "newLayer");
+SDNode.prototype.layer = ForwardWithReturn("d3layer", "layer");
 
 SDNode.prototype.attachTo = function(node) {
     const isSDNode = ("g" in node);
@@ -68,41 +71,12 @@ SDNode.prototype.child = function(name) {
     return this.children.child(name);
 }
 
-SDNode.prototype.startAnimate = function() {
-    this.animate.startAnimate.apply(
-        this.animate,
-        arguments
-    );
-    return this;
-}
-
-SDNode.prototype.endAnimate = function() {
-    this.animate.endAnimate.apply(
-        this.animate,
-        arguments
-    );
-    return this;
-}
-
-SDNode.prototype.isAnimating = function() {
-    return this.animate.isAnimating();
-}
-
-SDNode.prototype.delay = function() {
-    return this.animate.delay();
-}
-
-SDNode.prototype.after = function() {
-    this.animate.after.apply(
-        this.animate,
-        arguments
-    );
-    return this;
-}
-
-SDNode.prototype.duration = function() {
-    return this.animate.duration();
-}
+SDNode.prototype.startAnimate = Forward("animate", "startAnimate");
+SDNode.prototype.endAnimate   = Forward("animate", "endAnimate");
+SDNode.prototype.isAnimating  = ForwardWithReturn("animate", "isAnimating");
+SDNode.prototype.delay        = ForwardWithReturn("animate", "delay");
+SDNode.prototype.after        = Forward("animate", "after");
+SDNode.prototype.duration     = ForwardWithReturn("animate", "duration");
 
 SDNode.prototype.opacity = function(opacity) {
     if (opacity === undefined) {
@@ -235,31 +209,34 @@ SDNode.prototype.update = function() {
 }
 
 SDNode.prototype.freeze = function() {
-    this._.freeze++;
+    this.member.incBy("freeze", 1);
     return this;
 }
 
 SDNode.prototype.unfreeze = function() {
-    this._.freeze--;
-    if (this._.freeze > 0) {
+    this.member.decBy("freeze", 1);
+    const freeze = this.member.get("freeze");
+    if (freeze > 0) {
         return this;
     }
-    if (this._.freeze < 0) {
+    if (freeze < 0) {
         throw new Error("Too Many Unfreeze Operation");
     }
-    if (this._.pendUpdate) {
-        this._.pendUpdate = false;
+    const pendUpdate = this.member.get("pendUpdate");
+    if (pendUpdate) {
+        this.member.set("pendUpdate", false);
         this.update();
     }
     return this;
 }
 
 SDNode.prototype.freezing = function() {
-    return this._.freeze > 0;
+    return this.member.get("freeze") > 0;
 }
 
 SDNode.prototype.pendUpdate = function() {
-    this._.pendUpdate = true;
+    this.member.set("pendUpdate", true);
+    return this;
 }
 
 SDNode.prototype.tryUpdate = function() {

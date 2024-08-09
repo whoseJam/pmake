@@ -1,8 +1,8 @@
-import { Vec }     from "@/Utility/Math";
-import { PathPen } from "@/Utility/PathPen";
-
 import { BaseCurve }            from "@/Node/Curve/BaseCurve";
 import { naiveGetterAndSetter } from "@/Node/Common";
+
+import { Vec }     from "@/Utility/Math";
+import { PathPen } from "@/Utility/PathPen";
 
 export function Curve(parent) {
     BaseCurve.call(this, parent);

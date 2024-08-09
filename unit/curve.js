@@ -2,7 +2,7 @@ import * as sd from "@/sd";
 
 let svg = sd.svg();
 let C = sd.color();
-let l = new sd.Curve(svg).opacity(0);
+let l = new sd.Bezier(svg).opacity(0);
 
 main();
 
