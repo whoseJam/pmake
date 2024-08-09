@@ -24,7 +24,7 @@ using FastIO::read;
 
 const int N=1005;
 const int M=5005;
-int n,m,inq[N],dis[N],tim[N];
+int n,m,inq[N],dis[N],len[N];
 
 struct line{
 	int Nxt,to,val;
@@ -48,9 +48,10 @@ bool Spfa(){
 			v=l[i].to;
 			if(dis[v]>dis[u]+l[i].val){
 				dis[v]=dis[u]+l[i].val;
+				len[v]=len[u]+1;
+				if(len[v]>=n)return true;
 				if(!inq[v]){
 					q.push(v);
-					if((++tim[v])>=n)return true;
 					inq[v]=1;
 				}
 			}

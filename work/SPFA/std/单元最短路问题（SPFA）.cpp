@@ -17,7 +17,7 @@ int read(){
 const int inf=0x7fffffff;
 const int N=10005;
 const int M=500005;
-int dis[N],Inq[N],n,m;
+int dis[N],inq[N],n,m;
 
 struct line{
 	int Nxt,to,val;
@@ -29,20 +29,19 @@ void Link(int u,int v,int w){
 }
 
 void SPFA(int S){
+	queue<int>q;
 	for(int i=1;i<=n;i++)
 		dis[i]=inf;
-	dis[S]=0;Inq[S]=1; 
-	queue<int>q;
-	q.push(S);
+	dis[S]=0;inq[S]=1;q.push(S);
 	while(q.size()){
-		int u=q.front();q.pop();Inq[u]=0;
+		int u=q.front();q.pop();inq[u]=0;
 		for(int i=h[u],v;i;i=l[i].Nxt){
 			v=l[i].to;
 			if(dis[v]>dis[u]+l[i].val){
 				dis[v]=dis[u]+l[i].val;
-				if(!Inq[v]){
+				if(!inq[v]){
 					q.push(v);
-					Inq[v]=1;
+					inq[v]=1;
 				}
 			}
 		}

@@ -3,8 +3,7 @@
         <h1>负环</h1>
         <p>这一题说明在部分情况下SPFA有它的不可替代性</p>
     </section>
-    <section data-background-iframe="http://43.143.204.105/problem/1042" data-background-interactive>
-    </section>
+    <problem data-src="http://43.143.204.105/problem/1042"></problem>
     <section>
         <h2>负环</h2>
         <p>SPFA判断负环特别简单，如果图中不存在负环的话，从起点到任意点 $u$ 最多经过 $n-1$ 条边</p>
@@ -19,18 +18,18 @@
                 bool SPFA(int S) {
                     queue < int > q;
                     for (int i = 1; i <= n; i++) dis[i] = inf;
-                    dis[S] = 0; Inq[S] = 1; q.push(S);
+                    dis[S] = 0; inq[S] = 1; q.push(S);
                     while (q.size()) {
-                        int u = q.front(); q.pop(); Inq[u] = 0;
+                        int u = q.front(); q.pop(); inq[u] = 0;
                         for (int i = h[u], v; i; i = l[i].Nxt) {
                             v = l[i].to;
                             if (dis[v] > dis[u] + l[i].val) {
                                 dis[v] = dis[u] + l[i].val; // 更新 S->v 最短路
-                                tim[v] = tim[u] + 1; // 记录 S->v 最短路经过的边数
-                                if (tim[v] >= n) return true; // 存在负环
-                                if (!Inq[v]) {
+                                len[v] = len[u] + 1; // 记录 S->v 最短路经过的边数
+                                if (len[v] >= n) return true; // 存在负环
+                                if (!inq[v]) {
                                     q.push(v);
-                                    Inq[v] = 1;
+                                    inq[v] = 1;
                                 }
                             }
                         }

@@ -5,5 +5,18 @@
     <problem data-src="http://43.143.204.105/problem/1113"></problem>
     <section>
         <h2>道路重建</h2>
+        <p>给你一张无向图</p>
+        <p>你需要给这张图加边，使得原图中不存在割边</p>
+        <p class="fragment">求至少需要加多少条边</p>
+    </section>
+    <section>
+        <h2>道路重建</h2>
+        <p>先把原图用Tarjan收缩成一棵树</p>
+        <p class="fragment">每添加一条边，就选择树中的两个叶子节点，将它们连接起来</p>
+        <p class="fragment">于是最少的加边数目就是：
+            $$
+            \frac{叶子节点数+1}{2}
+            $$
+        </p>
     </section>
 </section>

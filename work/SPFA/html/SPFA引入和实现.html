@@ -6,21 +6,14 @@
     <section>
         <h2>SPFA</h2>
         <p>关于SPFA......</p>
-        <ul class="fragment">
-            <li>它死了<span class="fragment">（划掉）</span></li>
-            <lI class="fragment">它在一定场景下具有其应用价值</lI>
-        </ul>
+        <p class="fragment">SPFA用于求<b>单源最短路</b>，最坏时间复杂度为 $O(nm)$</p>
         <p class="fragment quote">
-            SPFA可以被网格图卡到时间复杂度上限，即 $O(nm)$，所以建议能用Dijkstra就不用SPFA
+            SPFA可以被网格图卡到时间复杂度上限，所以建议能用Dijkstra就不用SPFA
         </p>
-        <p class="fragment quote">
-            但是在有负权的图中，SPFA不可替代
-        </p>
-    </section>
-    <section>
-        <h2>SPFA</h2>
-        <p>SPFA用于求<b>单源最短路</b>，最坏时间复杂度为 $O(nm)$</p>
         <p class="fragment">SPFA适用于任意图，可以是有向图，也可以是无向图，边权可以为正，也可以为负，还能判断图中是否存在负环</p>
+        <p class="fragment quote">
+            在有负权的图中，SPFA不可替代
+        </p>
         <ul class="fragment">
             <li>有负权边不代表有负环</li>
             <li>有负环则一定有负权边</li>
@@ -28,12 +21,12 @@
     </section>
     <section>
         <h2>SPFA</h2>
-        <p>我们用一个普通队列 $Q$，来存放那些<b>可能</b>可以用来松弛其他点的节点</p>
+        <p>我们用一个队列 $Q$ 来存放那些<b>可能</b>可以用来松弛其他点的节点</p>
         <p class="fragment">最初情况下，$Q$ 里面只存放了起点 $s$</p>
         <p class="fragment">每一轮迭代，我们取出队头 $u$，然后尝试用 $u$ 更新其邻接点</p>
         <ul>
             <li class="fragment">如果某个邻接点 $v$ 最短路被更新了，那么 $v$ 的最短路就变小了</li>
-            <li class="fragment">那么<b>$v$ 就有可能可以用来松弛更新周围的点</b></li>
+            <li class="fragment">那么 $v$ <b>就有可能可以用来松弛更新周围的点</b></li>
             <li class="fragment">那么 $v$ 就应该入队</li>
         </ul>
         <p class="fragment">有一个小优化是，如果此时 $v$ 已经在队列中了，就不需要再将其入队了</p>
@@ -46,30 +39,27 @@
     </section>
     <section>
         <h2>SPFA</h2>
-        <pre><code style="min-height: 485px;" data-trim data-line-numbers class="cpp"><script type="text/template">
-            void SPFA(int S) {
-                for (int i = 1; i <= n; i++)
-                    dis[i] = inf;
-                dis[S] = 0;
-                Inq[S] = 1;
-                queue < int > q;
-                q.push(S);
-                while (q.size()) {
-                    int u = q.front();
-                    q.pop();
-                    Inq[u] = 0;
-                    for (int i = h[u], v; i; i = l[i].Nxt) {
-                        v = l[i].to;
-                        if (dis[v] > dis[u] + l[i].val) {
-                            dis[v] = dis[u] + l[i].val;
-                            if (!Inq[v]) {
-                                q.push(v);
-                                Inq[v] = 1;
+        <codeblock>
+            <script type="text/template">
+                void SPFA(int S) {
+                    queue < int > q;
+                    for (int i = 1; i <= n; i++) dis[i] = inf;
+                    dis[S] = 0; inq[S] = 1; q.push(S);
+                    while (q.size()) {
+                        int u = q.front(); q.pop(); inq[u] = 0;
+                        for (int i = h[u], v; i; i = l[i].Nxt) {
+                            v = l[i].to;
+                            if (dis[v] > dis[u] + l[i].val) {
+                                dis[v] = dis[u] + l[i].val;
+                                if (!inq[v]) {
+                                    q.push(v);
+                                    inq[v] = 1;
+                                }
                             }
                         }
                     }
                 }
-            }
-        </script></code></pre>
+            </script>
+        </codeblock>
     </section>
 </section>

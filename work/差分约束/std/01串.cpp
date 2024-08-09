@@ -26,7 +26,7 @@ const int inf=0x3f3f3f3f;
 const int N=1005;
 const int M=5000005;
 int A0,B0,L0,A1,B1,L1;
-int n,inq[N],dis[N],tim[N];
+int n,inq[N],dis[N],len[N];
 
 struct line{
 	int Nxt,to,val;
@@ -47,9 +47,10 @@ bool Spfa(){
 			v=l[i].to;
 			if(dis[v]>dis[u]+l[i].val){
 				dis[v]=dis[u]+l[i].val;
+				len[v]=len[u]+1;
+				if(len[v]>=n)return true;
 				if(!inq[v]){
 					q.push(v);
-					if((++tim[v])==n)return true;
 					inq[v]=1;
 				}
 			}

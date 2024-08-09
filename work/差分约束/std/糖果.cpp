@@ -8,7 +8,7 @@ const int N=100005;
 const int M=1000005;
 const int inf=0x3f3f3f3f;
 typedef long long ll;
-int n,k,dis[N],inq[N],tim[N];;
+int n,k,dis[N],inq[N],len[N];
 
 struct line{
 	int Nxt,to,val;
@@ -33,10 +33,10 @@ int Spfa(){
 			int v=l[i].to;
 			if(dis[v]<dis[u]+l[i].val){
 				dis[v]=dis[u]+l[i].val;
+				len[v]=len[u]+1;
+				if(len[v]>=n)return true;
 				if(!inq[v]){
 					inq[v]=1;q.push(v);
-					tim[v]++;
-					if(tim[v]>=100)return true; // Magic Number For This Problem
 				}
 			}
 		}

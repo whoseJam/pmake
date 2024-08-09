@@ -17,7 +17,7 @@ int read(){
 const int inf=0x3f3f3f3f;
 const int N=2005;
 const int M=3005;
-int dis[N],Inq[N],tim[N],n,m;
+int dis[N],inq[N],len[N],n,m;
 
 struct line{
 	int Nxt,to,val;
@@ -30,20 +30,20 @@ void Link(int u,int v,int w){
 
 bool SPFA(int S){
 	for(int i=1;i<=n;i++)dis[i]=inf;
-	dis[S]=0;Inq[S]=1; 
+	dis[S]=0;inq[S]=1; 
 	queue<int>q;
 	q.push(S);
 	while(q.size()){
-		int u=q.front();q.pop();Inq[u]=0;
+		int u=q.front();q.pop();inq[u]=0;
 		for(int i=h[u],v;i;i=l[i].Nxt){
 			v=l[i].to;
 			if(dis[v]>dis[u]+l[i].val){
 				dis[v]=dis[u]+l[i].val;
-				tim[v]=tim[u]+1;
-				if(tim[v]>=n)return true; 
-				if(!Inq[v]){
+				len[v]=len[u]+1;
+				if(len[v]>=n)return true; 
+				if(!inq[v]){
 					q.push(v);
-					Inq[v]=1;
+					inq[v]=1;
 				}
 			}
 		}
@@ -53,8 +53,8 @@ bool SPFA(int S){
 
 void Clear(){
 	memset(h,0,sizeof(h));
-	memset(tim,0,sizeof(tim));
-	memset(Inq,0,sizeof(Inq));
+	memset(len,0,sizeof(len));
+	memset(inq,0,sizeof(inq));
 	cnt=0;
 }
 
