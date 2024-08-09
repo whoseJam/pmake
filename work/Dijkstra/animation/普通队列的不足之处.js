@@ -28,9 +28,13 @@ async function main() {
     }
     graph.endAnimate();
     await sd.pause();
-    sd.Label(q, "普通队列'");
+    const lb = sd.Label(q, "普通队列'");
     for (let i = 2; i <= 4; i++) {
         q.startAnimate().push(`u=${i} dis=${links[i-2]}`).endAnimate();
     }
+    await sd.pause();
+    lb.startAnimate().opacity(0).endAnimate();
+    lb.text("优先队列"); q.update();
+    lb.startAnimate().opacity(1).endAnimate();
     await sd.pause();
 }
