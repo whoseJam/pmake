@@ -84,9 +84,9 @@
         </p>
         <codeblock class="fragment">
             <script type="text/template">
-                if (order == 1) { // s[x] == s[y]
-                    Link(x, y, 0); // s[x] + 0 <= s[y]
-                    Link(y, x, 0); // s[y] + 0 <= s[x]
+                if (order == 1) { // X[a] == X[b]
+                    Link(a, b, 0); // X[a] + 0 <= X[b]
+                    Link(b, a, 0); // X[b] + 0 <= X[a]
                 }
             </script>
         </codeblock>
@@ -98,9 +98,9 @@
         <p class="fragment">$$X_A+1\le X_B$$</p>
         <codeblock class="fragment">
             <script type="text/template">
-                if (order == 2) { // s[x] < s[y]
-                    if (x == y) flag = 1;
-                    Link(x, y, 1); // s[x] + 1 <= s[y]
+                if (order == 2) { // X[a] < X[b]
+                    if (a == b) flag = 1;
+                    Link(a, b, 1); // X[a] + 1 <= X[b]
                 }
             </script>
         </codeblock>
@@ -112,8 +112,8 @@
         <p class="fragment">$$X_B\le X_A$$</p>
         <codeblock class="fragment">
             <script type="text/template">
-                if (order == 3) { // s[x] >= s[y]
-                    Link(y, x, 0); // s[y] + 0 <= s[x]
+                if (order == 3) { // X[a] >= X[b]
+                    Link(b, a, 0); // X[b] + 0 <= X[a]
                 }
             </script>
         </codeblock>
@@ -125,9 +125,9 @@
         <p class="fragment">$$X_B+1\le X_A$$</p>
         <codeblock class="fragment">
             <script type="text/template">
-                if (order == 4) { // s[x] > s[y]
-                    if (x == y) flag = 1;
-                    Link(y, x, 1); // s[y] + 1 <= s[x]
+                if (order == 4) { // X[a] > X[b]
+                    if (a == b) flag = 1;
+                    Link(b, a, 1); // X[b] + 1 <= X[a]
                 }
             </script>
         </codeblock>
@@ -138,8 +138,8 @@
         <p class="fragment">$$X_A\le X_B$$</p>
         <codeblock class="fragment">
             <script type="text/template">
-                if(order==5){ // s[y] >= s[x]
-                    Link(x,y,0); // s[x] + 0 <= s[y]
+                if (order == 5) { // X[b] >= X[a]
+                    Link(a, b, 0); // X[a] + 0 <= X[b]
                 }
             </script>
         </codeblock>

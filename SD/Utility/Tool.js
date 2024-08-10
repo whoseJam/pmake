@@ -1,18 +1,6 @@
 import { SDNode } from "../Node/SDNode";
 import { Text } from "../Node/Nake/Text";
 
-export function evaluateValue(id, value) {
-    return value === undefined || value === null ? id : value;
-}
-
-export function isNumberOrString(value) {
-    return typeof(value) === "number" || typeof(value) === "string";
-}
-
-export function isValidNumber(value) {
-    return typeof(value) === "number" && value !== Infinity && value !== NaN;
-}
-
 /**
  * 将任意对象，转为一个SDNode
  * @param {SDNode} node 

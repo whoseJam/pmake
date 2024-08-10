@@ -1,5 +1,3 @@
-import { int } from "./Util";
-
 const numberCharacters = "0123456789";
 const lowerCaseAlphabetCharacters = "abcdefghijklmnopqrstuvwxyz";
 const upperCaseAlphabetCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -12,9 +10,9 @@ const allCharacters =
     specialCharacters;
 
 export function rand(l, r) {
-    l = int(l);
-    r = int(r);
-    let ans = Math.floor(Math.random() * (r - l + 2));
+    l = +l;
+    r = +r;
+    const ans = Math.floor(Math.random() * (r - l + 2));
     return Math.min(Math.max(l + ans, l), r);
 }
 

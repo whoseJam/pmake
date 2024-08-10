@@ -1,9 +1,14 @@
+import { Rect }                 from "@/Node/Nake/Rect";
+import { BaseArray }            from "@/Node/Array/BaseArray";
+import { naiveGetterAndSetter } from "@/Node/Common";
+
 import { Context } from "@/Animate/Context";
-import { Rect } from "@/Node/Nake/Rect";
-import { toNode } from "@/Utility/Tool";
-import { BaseArray } from "./BaseArray";
-import { naiveGetterAndSetter } from "../Common";
+
+import { AnythingToSDNode } from "@/Utility/Cast";
+
 import { color } from "@/Utility/Color";
+
+const C = color();
 
 export function Code(parent, source = undefined) {
     BaseArray.call(this, parent);
@@ -21,7 +26,7 @@ export function Code(parent, source = undefined) {
 
     this.children.push(
         "focus",
-        new Rect(this).color(color().BLUE).opacity(0),
+        new Rect(this).color(C.BLUE).opacity(0),
         (parent, child) => {
             if (typeof(parent.l()) !== "number") return;
             const elementL = parent.element(parent.l());
@@ -72,7 +77,7 @@ Code.prototype.height = function(height) {
 }
 
 Code.prototype.insert = function(index, value = "") {
-    const element = toNode(this.layer("elements"), value);
+    const element = AnythingToSDNode(this.layer("elements"), value);
     element._.enter = (element, move) => {
         element.opacity(0);
         move();

@@ -1,4 +1,4 @@
-import { evaluateValue } from "@/Utility/Tool";
+import { SelectValidValue } from "@/Utility/Cast";
 
 import { DAG }                  from "@/Node/Graph/DAG";
 import { Box }                  from "@/Node/Element/Box";
@@ -30,7 +30,7 @@ BoxDAG.prototype.elementHeight = naiveGetterAndSetter("elementHeight", "setByEqu
 
 BoxDAG.prototype.newNode = function(id, value = null) {
     const element = new Box(this.layer("nodes"));
-    element.value(evaluateValue(id, value));
+    element.value(SelectValidValue(value, id));
     element._.enter = (element, move) => {
         element.opacity(0);
         move();

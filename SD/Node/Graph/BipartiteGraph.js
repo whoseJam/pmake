@@ -1,5 +1,5 @@
-import { trim }          from "@/Utility/Trim";
-import { evaluateValue } from "@/Utility/Tool";
+import { trim }             from "@/Utility/Trim";
+import { SelectValidValue } from "@/Utility/Cast";
 
 import { BaseGraph } from "@/Node/Graph/BaseGraph";
 
@@ -28,7 +28,7 @@ BipartiteGraph.prototype.newNode = function(id, value, setNo) {
         return this.newNode(id, undefined, value);
     }
     const element = new this._.nodeType(this.layer("nodes"));
-    element.value(evaluateValue(id, value));
+    element.value(SelectValidValue(value, id));
     element.setNo = setNo;
     element._.enter = (element, move) => {
         element.opacity(0);

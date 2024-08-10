@@ -7,6 +7,8 @@ export function VHBezier(parent) {
 
     this.g().type("VHBezier");
 
+    this.member.new("path-calculator", update);
+
     return this;
 }
 
@@ -14,7 +16,7 @@ VHBezier.prototype = {
     ...BaseCurve.prototype
 }
 
-VHBezier.prototype.pathCalculator = function() {
+function update() {
     const v1 = [this.x1(), this.y1()];
     const v2 = [this.x2(), this.y2()];
     let d = Vec.sub(v2, v1), p1, p2, pm;

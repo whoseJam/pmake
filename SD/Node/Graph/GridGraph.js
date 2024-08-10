@@ -1,5 +1,5 @@
-import { trim }          from "@/Utility/Trim";
-import { evaluateValue } from "@/Utility/Tool";
+import { trim }             from "@/Utility/Trim";
+import { SelectValidValue } from "@/Utility/Cast";
 
 import { BaseGraph }            from "@/Node/Graph/BaseGraph";
 import { naiveGetterAndSetter } from "@/Node/Common";
@@ -38,7 +38,7 @@ GridGraph.prototype.at = function(i, j) {
 
 GridGraph.prototype.newNode = function(id, value) {
     const element = new this._.nodeType(this.layer("nodes"));
-    element.value(evaluateValue(id, value));
+    element.value(SelectValidValue(value, id));
     element.posN = this.member.get("curN");
     element.posM = this.member.get("curM");
     element._.enter = (element, move) => {

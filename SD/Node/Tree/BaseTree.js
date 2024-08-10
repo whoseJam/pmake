@@ -1,7 +1,7 @@
 import { SDNode }               from "@/Node/SDNode";
 import { naiveGetterAndSetter } from "@/Node/Common";
 
-import { isNumberOrString } from "@/Utility/Tool";
+import { IsNumberOrString } from "@/Utility/Check";
 
 export function BaseTree(parent) {
     SDNode.call(this, parent);
@@ -41,7 +41,7 @@ BaseTree.prototype.value = function(arg0, arg1, arg2) {
         return node.value();
     }
     else if (arguments.length === 2) {
-        if (isNumberOrString(arg0) && isNumberOrString(arg1)) {
+        if (IsNumberOrString(arg0) && IsNumberOrString(arg1)) {
             const link = this.findLinkById(arg0, arg1);
             if (link) {
                 return link.value();

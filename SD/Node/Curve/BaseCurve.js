@@ -27,7 +27,6 @@ BaseCurve.prototype.updateList = [
     function() {
         const [path, hasChanged] = this.member.get("path-calculator").call(this);
         if (hasChanged) {
-            console.log("path=", path);
             this.member.set("d", path);
         }
     },

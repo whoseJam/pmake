@@ -1,5 +1,5 @@
-import { trim }          from "@/Utility/Trim";
-import { evaluateValue } from "@/Utility/Tool";
+import { trim }             from "@/Utility/Trim";
+import { SelectValidValue } from "@/Utility/Cast";
 
 import { BaseGraph } from "@/Node/Graph/BaseGraph";
 import { GridGraph } from "@/Node/Graph/GridGraph";
@@ -27,7 +27,7 @@ TinyGraph.prototype.updateList = [
 
 TinyGraph.prototype.newNode = function(id, value) {
     const element = new this._.nodeType(this.layer("nodes"));
-    element.value(evaluateValue(id, value));
+    element.value(SelectValidValue(value, id));
     element._.enter = (element, move) => {
         element.opacity(0);
         move();

@@ -4,9 +4,9 @@ import { BaseTree } from "@/Node/Tree/BaseTree";
 
 import { naiveGetterAndSetter } from "@/Node/Common";
 
-import { Vec }           from "@/Utility/Math";
-import { trim }          from "@/Utility/Trim";
-import { evaluateValue } from "@/Utility/Tool";
+import { Vec }              from "@/Utility/Math";
+import { trim }             from "@/Utility/Trim";
+import { SelectValidValue } from "@/Utility/Cast";
 
 import * as d3 from "d3";
 
@@ -52,7 +52,7 @@ Tree.prototype.updateList = [
 
 Tree.prototype.newNode = function(id, value) {
     const element = new this._.nodeType(this.layer("nodes"));
-    element.value(evaluateValue(id, value));
+    element.value(SelectValidValue(value, id));
     element._.enter = (element, move) => {
         element.opacity(0);
         move();

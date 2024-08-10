@@ -11,6 +11,8 @@ export function FixedPointCurve(parent) {
     this.member.new("fixedPoint", undefined);
     this.member.new("r", 60);
 
+    this.member.new("path-calculator", update);
+
     return this;
 }
 
@@ -20,7 +22,7 @@ FixedPointCurve.prototype = {
 
 FixedPointCurve.prototype.fixedPoint = naiveGetterAndSetter("fixedPoint", "set");
 
-FixedPointCurve.prototype.pathCalculator = function() {
+function update() {
     const v1 = this.source();
     const v2 = this.target();
     const vc = this.member.get("fixedPoint");

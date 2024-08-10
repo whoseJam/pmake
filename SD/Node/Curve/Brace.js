@@ -28,7 +28,6 @@ function update() {
         !this.member.hasChanged("x2") &&
         !this.member.hasChanged("y2") &&
         !this.member.hasChanged("bending")) {
-        console.log("No need to update");
         return ["", false];
     }
     const vs = this.source();
@@ -50,26 +49,12 @@ function update() {
     this.member.flush("x2");
     this.member.flush("y2");
     this.member.flush("bending");
-    console.log("Brace updated", new PathPen()
-    .MoveTo(vs)
-    .Quad(p1, p2)
-    .LinkTo(c1)
-    .Quad(c2, c)
-    .Quad(c2, c3)
-    .LinkTo(p3)
-    .Quad(p4, vt)
-    .toString());
-
+    
     return [
-        new PathPen()
-        .MoveTo(vs)
-        .Quad(p1, p2)
-        .LinkTo(c1)
-        .Quad(c2, c)
-        .Quad(c2, c3)
-        .LinkTo(p3)
-        .Quad(p4, vt)
-        .toString(),
+        new PathPen().MoveTo(vs).Quad(p1, p2)
+                     .LinkTo(c1).Quad(c2, c).Quad(c2, c3)
+                     .LinkTo(p3).Quad(p4, vt)
+                     .toString(),
         true
-    ]
+    ];
 }

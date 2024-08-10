@@ -11,37 +11,38 @@
             <li>横叉边：如果 $(u,v)$ 这条有向边不是父子边，且指向的点 $v$，不再DFS树上 $u$ 到根的路径上（即不是返祖边），那么这条边就是横叉边</li>
         </ul>
         <p class="fragment">我们用一个栈来判断某条边是不是横叉边</p>
-        <iframe class="fragment"
-            style="width: 1000px; height: 400px;"
-            data-src="./animation/有向图边分类.html">
+        <iframe data-src="./animation/有向图边分类.html" class="fragment"
+            style="width: 1000px; height: 400px;">
         </iframe>
     </section>
     <section>
         <h2>Tarjan</h2>
-        <pre><code data-trim data-line-numbers class="cpp" style="min-height: 465px;"><script type="text/template">
-        void Tarjan(int u) {
-            dfn[u] = low[u] = ++tot;
-            s.push(u);
-            ins[u] = 1;
-            for (int i = h[u]; i; i = l[i].Nxt) {
-                int v = l[i].to;
-                if (dfn[v] == 0) {
-                    Tarjan(v);
-                    low[u] = min(low[u], low[v]);
-                } else if (ins[v]) low[u] = min(low[u], dfn[v]);
-            }
-            if (dfn[u] == low[u]) {
-                SCC++;
-                while (true) {
-                    int t = s.top();
-                    s.pop();
-                    bel[t] = SCC;
-                    ins[t] = 0;
-                    if (t == u) break;
+        <codeblock style="height: 465px;">
+            <script type="text/template">
+                void Tarjan(int u) {
+                    dfn[u] = low[u] = ++tot;
+                    s.push(u); ins[u] = 1; // 将 u 入栈
+                    for (int i = h[u]; i; i = l[i].Nxt) {
+                        int v = l[i].to;
+                        if (dfn[v] == 0) { // (u, v) 是父子边
+                            Tarjan(v);
+                            low[u] = min(low[u], low[v]);
+                        }
+                        else if (ins[v]) low[u] = min(low[u], dfn[v]); // (u, v) 是返祖边
+                    }
+                    if (dfn[u] == low[u]) { // u 是一个强连通分量的顶端
+                        SCC++;
+                        while (true) { // 把栈中属于该强连通分量的点全部弹出
+                            int t = s.top();
+                            s.pop();
+                            bel[t] = SCC;
+                            ins[t] = 0;
+                            if (t == u) break;
+                        }
+                    }
                 }
-            }
-        }
-        </script></code></pre>
+            </script>
+        </codeblock>
     </section>
     <section>
         <h2>Tarjan</h2>

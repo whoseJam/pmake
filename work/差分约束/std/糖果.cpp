@@ -45,27 +45,27 @@ int Spfa(){
 }
 
 int main(){
-	int order,x,y,flag=0;
+	int flag=0;
 	scanf("%d%d",&n,&k);
-	for(int i=1;i<=k;i++){
-		scanf("%d%d%d",&order,&x,&y);
-		if(order==1){ // s[x]==s[y]
-			Link(x,y,0); // s[x]+0<=s[y]
-			Link(y,x,0); // s[y]+0<=s[x]
+	for(int i=1,order,a,b;i<=k;i++){
+		scanf("%d%d%d",&order,&a,&b);
+		if(order==1){ // X[a]==X[b]
+			Link(a,b,0); // X[a]+0<=X[b]
+			Link(b,a,0); // X[b]+0<=X[a]
 		}
-		if(order==2){ // s[x]<s[y]
-			if(x==y)flag=1;
-			Link(x,y,1); // s[x]+1<=s[y]
+		if(order==2){ // X[a]<X[b]
+			if(a==b)flag=1;
+			Link(a,b,1); // X[a]+1<=X[b]
 		}
-		if(order==3){ // s[x]>=s[y]
-			Link(y,x,0); // s[y]+0<=s[x]
+		if(order==3){ // X[a]>=X[b]
+			Link(b,a,0); // X[b]+0<=X[a]
 		}
-		if(order==4){ // s[x]>s[y]
-			if(x==y)flag=1;
-			Link(y,x,1); // s[y]+1<=s[x]
+		if(order==4){ // X[a]>X[b]
+			if(a==b)flag=1;
+			Link(b,a,1); // X[b]+1<=X[a]
 		}
-		if(order==5){ // s[y]>=s[x]
-			Link(x,y,0); // s[x]+0<=s[y]
+		if(order==5){ // X[b]>=X[a]
+			Link(a,b,0); // X[a]+0<=X[b]
 		}
 	}
 	if(flag){printf("-1");return 0;}
@@ -82,4 +82,3 @@ int main(){
 	}else printf("-1");
 	return 0;
 }
-

@@ -17,7 +17,7 @@
         <h2>边双连通分量</h2>
         <p>在Tarjan算法中，当节点 $u$ 的所有邻边都被访问过后，如果 $low(u)=dfn(u)$，我们就把 $u$ 下方的整块和 $u$，导出为原图中的一个边双</p>
         <p class="fragment">这里需要用一个<b style="color: red;">栈</b>来表示哪些元素是 $u$ 代表的块</p>
-        <codeblock>
+        <codeblock class="fragment">
             <script type="text/template">
                 void Tarjan(int u) {
                     // 先 Tarjan 遍历 u 的所有邻接点

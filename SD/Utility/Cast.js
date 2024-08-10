@@ -14,3 +14,7 @@ export function D3ToNake(d3) {
 export function NakeToSnap(nake) {
     return Snap(nake);
 }
+
+export function SelectValidValue(value1, value2) {
+    return value1 === undefined || value1 === null? value2 : value1;
+}

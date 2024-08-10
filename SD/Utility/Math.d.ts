@@ -1,8 +1,5 @@
 
 export type Vector = [number, number];
-export function ddcmp(x: number): number;
-export function dcmp(x: number): number;
-
 
 /**
  * 判断两个数在浮点表示下是否相等，精度为1

@@ -14,12 +14,12 @@ PathPen.prototype.MoveTo = MoveToFunction("M", "MoveTo");
 PathPen.prototype.moveTo = MoveToFunction("m", "moveTo");
 PathPen.prototype.LinkTo = LinkToFunction("L", "LinkTo");
 PathPen.prototype.linkTo = LinkToFunction("l", "linkTo");
-PathPen.prototype.Cubic = CubicFunction("C", "Cubic");
-PathPen.prototype.cubic = CubicFunction("c", "cubic");
-PathPen.prototype.Quad = QuadFunction("Q", "Quad");
-PathPen.prototype.quad = QuadFunction("q", "quad");
-PathPen.prototype.Arc = ArcFunction("A", "Arc");
-PathPen.prototype.arc = ArcFunction("a", "arc");
+PathPen.prototype.Cubic  = CubicFunction("C", "Cubic");
+PathPen.prototype.cubic  = CubicFunction("c", "cubic");
+PathPen.prototype.Quad   = QuadFunction("Q", "Quad");
+PathPen.prototype.quad   = QuadFunction("q", "quad");
+PathPen.prototype.Arc    = ArcFunction("A", "Arc");
+PathPen.prototype.arc    = ArcFunction("a", "arc");
 
 function CheckNumberIsValid(label, x) {
     if (!IsValidNumber(x)) {

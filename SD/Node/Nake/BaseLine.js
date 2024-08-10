@@ -130,9 +130,7 @@ BaseLine.prototype.source = function(x, y) {
         const point = arguments[0];
         return this.source(point[0], point[1]);
     }
-    console.log("freeze update x=", x, "y=", y);
     this.freeze().x1(x).y1(y).unfreeze();
-    console.log("unfreezed");
     return this;
 }
 

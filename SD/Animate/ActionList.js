@@ -195,8 +195,6 @@ ActionList.prototype.updateWindowSize = function() {
             const mx = owner.mx();
             const y = owner.y();
             const my = owner.my();
-            if (owner.g().type() === "Curve") continue;
-            // console.log("nake=", nake, "x=", x, "mx=", mx, "y=", y, "my=", my);
             window.SVG_MAXX = Math.max(window.SVG_MAXX, mx);
             window.SVG_MINX = Math.min(window.SVG_MINX, x);
             window.SVG_MAXY = Math.max(window.SVG_MAXY, my);

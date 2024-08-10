@@ -37,16 +37,15 @@ void Tarjan(int u){
 	low[u]=dfn[u]=++tot;
 	for(int i=h[u],v;i;i=l[i].Nxt){
 		v=l[i].to;
-		if(prt[u]!=v){
-			if(dfn[v]==0){
-				prt[v]=u;
-				Tarjan(v);
-				low[u]=min(low[u],low[v]);
-				if(low[v]>=dfn[v]){
-					ans.push_back(make_pair(min(u,v),max(u,v)));
-				}
-			}else low[u]=min(low[u],dfn[v]);
-		}
+		if(prt[u]==v)continue;
+		if(dfn[v]==0){
+			prt[v]=u;
+			Tarjan(v);
+			low[u]=min(low[u],low[v]);
+			if(low[v]>=dfn[v]){
+				ans.push_back(make_pair(min(u,v),max(u,v)));
+			}
+		}else low[u]=min(low[u],dfn[v]);
 	}
 } 
 

@@ -86,8 +86,6 @@ function update() {
     if (this.member.hasChanged("d")) {
         const duration = this.duration();
         const snap = this._.snap;
-        console.log("oldValue=", this.member.oldValue("d"));
-        console.log("newValue=", this.member.get("d"));
         new Action(
             this.delay(),
             this.delay() + this.duration(),
