@@ -5,10 +5,18 @@
     </section>
     <section>
         <h2>2-SAT</h2>
-        <p>我们用图论的视角来看待2-SAT问题，假设有 $n$ 个变量，每个变量 $a_i$ 有两个取值 $\{Y,N\}$，那我对每个变量都建立两个节点 $Y_i$ 和 $N_i$，这两个节点的语义分别是：</p>
+        <p>
+            我们用图论的视角来看待2-SAT问题
+            <span class="fragment">，假设有 $n$ 个变量</span>
+            <span class="fragment">，每个变量 $a_i$ 有两个取值</span>
+            <span class="fragment">$\{Y,N\}$</span>
+        </p>
+        <p class="fragment">
+            对每个变量而言，我们都在图中为其建立两个节点 $Y_i$ 和 $N_i$：
+        </p>
         <ul>
-            <li>$Y_i$：变量 $i$ 取到了它的<b>第一种取值</b>，即 $Y$ 这种取值</li>
-            <li>$N_i$：变量 $i$ 取到了它的<b>第二种取值</b>，即 $N$ 这种取值</li>
+            <li class="fragment">$Y_i$：变量 $i$ 取到了它的<b>第一种取值</b>，即 $Y$ 这种取值</li>
+            <li class="fragment">$N_i$：变量 $i$ 取到了它的<b>第二种取值</b>，即 $N$ 这种取值</li>
         </ul>
         <p class="fragment">条件无非就四种情况：</p>
         <ul>
@@ -54,9 +62,10 @@
     <section>
         <h2>2-SAT解的存在性</h2>
         <p>我们可以把建立好的连边构成的<b>链</b>，视作一条逻辑链，如果存在这样一条路径：</p>
-        <iframe data-src="./animation/逻辑链.html" style="min-width: 1000px; max-height: 50px;"></iframe>
+        <iframe data-src="./animation/逻辑链.html"
+            style="width: 1000px; height: 50px;"></iframe>
         <p class="fragment">
-            那么实际上，我们可以认为，如果 $V_1$ 这个取值成立：
+            如果 $V_1$ 这个取值成立：
             <ul>
                 <li class="fragment">一定会导致 $V_2$ 这个取值成立</li>
                 <li class="fragment">随后，一定会导致 $V_3$ 这个取值成立</li>
@@ -70,9 +79,12 @@
     </section>
     <section>
         <h2>2-SAT解的存在性</h2>
-        <iframe data-src="./animation/逻辑链.html" style="min-width: 1000px; max-height: 50px;"></iframe>
-        <p>那无解的情况也自然就引出了</p>
-        <p class="fragment">如果存在一条路径，使得 $Y_i$ 可以抵达 $N_i$，且 $N_i$ 也可以抵达 $Y_i$， 则无解</p>
+        <p>
+            无解的情况自然就引出了：
+            <span class="fragment"><b>如果存在一条路径，使得 $Y_i$ 可以抵达 $N_i$，且 $N_i$ 也可以抵达 $Y_i$， 则无解</b></span>
+        </p>
+        <iframe data-src="./animation/无解的情况.html" class="fragment"
+            style="width: 1000px; height: 180px;" rate="1.01"></iframe>
         <p class="fragment quote">因为变量 $i$ 不可能同时为 $Y$ 和 $N$，但当 $i$ 取值为 $Y$ 时能推导出 $i$ 取值为 $N$；当 $i$ 取值为 $N$ 时能推导出 $i$ 取值为 $Y$</p>
         <p class="fragment">换言之，如果 $\exists i \in [1,n]$，满足 $Y_i$ 和 $N_i$ 在<b>同一个强连通分量</b>里面，那么就无解</p>
         <codeblock class="fragment">
@@ -94,14 +106,14 @@
                 $N_i\rightarrow Y_i$
                 <p class="fragment">
                     如果第 $i$ 个变量取值为 $N$，一定会推导出第 $i$ 个变量取值为 $Y$，导致矛盾<br>
-                    所以第 $i$ 个变量取值只能是 $Y$
+                    <span class="fragment">所以第 $i$ 个变量取值只能是 $Y$</span>
                 </p>
             </li>
             <li class="fragment">
                 $Y_i\rightarrow N_i$
                 <p class="fragment">
                     如果第 $i$ 个变量取值为 $Y$，一定会推导出第 $i$ 个变量取值为 $N$，导致矛盾<br>
-                    所以第 $i$ 个变量取值只能是 $N$
+                    <span class="fragment">所以第 $i$ 个变量取值只能是 $N$</span>
                 </p>
             </li>
             <li class="fragment">
@@ -124,25 +136,29 @@
         <h2>2-SAT解的构造</h2>
         <p>假设变量 $i$ 对应的两个取值点为 $Y_i$ 和 $N_i$</p>
         <ul>
-            <li class="fragment">如果 $bel_{Y_i}\gt bel_{N_i}$，则说明如果 $Y_i$ 和 $N_i$ 存在可达性关系，那么也一定是从 $Y_i\rightarrow N_i$，所以此时我们可以把 $N_i$ 当作变量 $i$ 的取值</li>
-            <li class="fragment">如果 $bel_{Y_i}\lt bel_{N_i}$，则说明如果 $Y_i$ 和 $N_i$ 存在可达性关系，那么也一定是从 $N_i\rightarrow Y_i$，所以此时我们可以把 $Y_i$ 当作变量 $i$ 的取值</li>
+            <li class="fragment">
+                如果 $bel_{Y_i}\gt bel_{N_i}$
+                <span class="fragment">，则说明<b>即使</b> $Y_i$ 和 $N_i$ 存在可达性关系，也一定是从 $Y_i\rightarrow N_i$</span>
+                <span class="fragment">，所以此时我们可以把 $N_i$ 当作变量 $i$ 的取值</span>
+            </li>
+            <li class="fragment">
+                如果 $bel_{Y_i}\lt bel_{N_i}$
+                <span class="fragment">，则说明<b>即使</b> $Y_i$ 和 $N_i$ 存在可达性关系，也一定是从 $N_i\rightarrow Y_i$</span>
+                <span class="fragment">，所以此时我们可以把 $Y_i$ 当作变量 $i$ 的取值</span>
+            </li>
             <li class="fragment">如果 $bel_{Y_i}=bel_{N_i}$，问题无解</li>
-        </ul>
-    </section>
-    <section>
-        <h2>2-SAT解的构造</h2>
-        <p>代码如下：</p>
-        <codeblock>
-            <script type="text/template">
-                // 简单来说，取 bel 小的那个节点当作解
-                for (int i = 1; i <= n; i++) {
-                    if (bel[Y(i)] < bel[N(i)]) {
-                        cout << "the value of " << i << " is Y\n";
-                    } else {
-                        cout << "the value of " << i << " is N\n";
+            <codeblock class="fragment">
+                <script type="text/template">
+                    // 简单来说，取 bel 小的那个节点当作解
+                    for (int i = 1; i <= n; i++) {
+                        if (bel[Y(i)] < bel[N(i)]) {
+                            cout << "the value of " << i << " is Y\n";
+                        } else {
+                            cout << "the value of " << i << " is N\n";
+                        }
                     }
-                }
-            </script>
-        </codeblock>
+                </script>
+            </codeblock>
+        </ul>
     </section>
 </section>

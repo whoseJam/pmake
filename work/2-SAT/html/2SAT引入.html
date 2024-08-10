@@ -1,7 +1,7 @@
 <section>
     <section>
         <h1>2-SAT</h1>
-        <p>所以什么是2-SAT，这名字稀奇古怪的</p>
+        <p>SAT，Satisfiability，适定性</p>
     </section>
     <section>
         <h2>2-SAT</h2>
@@ -9,7 +9,7 @@
             给定 $n$ 个<b>变量</b> $x_1,x_2...x_n$，每个变量有两种取值</b>
         </p>
         <p class="fragment">给出若干条件，形如：</p>
-        <p class="fragment" style="text-align: center;"><b>如果变量 $x_i$ 取值为 $A$，那么变量 $j$ 必须取值为 $B$</b></p>
+        <p class="fragment" style="text-align: center;"><b>如果变量 $x_i$ 取值为 $A$，那么变量 $x_j$ 必须取值为 $B$</b></p>
         <p class="fragment">让你判断这些条件是否<b>都能满足</b></p>
         <div class="fragment quote">
             <h3>团队</h3>
@@ -22,10 +22,13 @@
     </section>
     <section>
         <h2>2-SAT</h2>
-        <p>研究表明，2-SAT问题有多项式解法</p>
-        <p class="fragment">我们可以借助Tarjan，对有 $n$ 个变量和 $m$ 个条件的2-SAT问题，以 $O(n+m)$ 的时间复杂度求解</p>
+        <p>
+            我们可以把2-SAT问题转化为一个图论问题
+            <span class="fragment">，然后通过Tarjan求解</span>
+        </p>
+        <p class="fragment">时间复杂度 $O(n+m)$，其中 $n$ 是变量的个数，$m$ 是条件的个数</p>
         <p class="fragment quote">
-            实际上还有k-SAT问题，不过当 $k\ge 3$ 的时候就只能暴力了，感兴趣的同学可以访问<a href="https://www.cnblogs.com/chesium/p/15982285.html" target="_blank">这个网站</a>
+            实际上还有k-SAT问题，不过当 $k\ge 3$ 的时候就没有多项式复杂度解法，只能暴力了，感兴趣的同学可以访问<a href="https://www.cnblogs.com/chesium/p/15982285.html" target="_blank">这个网站</a>
         </p>
     </section>
 </section>
