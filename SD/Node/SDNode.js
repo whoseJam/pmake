@@ -3,13 +3,15 @@ import { svg } from "@/Interact/Svg";
 import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
 
-import { Forward, ForwardWithReturn }  from "@/Node/Common";
+import { InRange }           from "@/Node/Common";
+import { Forward }           from "@/Node/Common";
+import { GetterAndSetter }   from "@/Node/Common";
+import { ForwardWithReturn } from "@/Node/Common";
+
 import { Animate }  from "@/Node/Animate";
 import { D3Layer }  from "@/Node/D3Layer";
 import { Children } from "@/Node/Children";
 import { SDMember } from "@/Node/SDMember";
-
-import { D3ToNake } from "@/Utility/Cast";
 
 let id = 0;
 
@@ -51,7 +53,7 @@ SDNode.prototype.g = function() {
 }
 
 SDNode.prototype.newLayer = ForwardWithReturn("d3layer", "newLayer");
-SDNode.prototype.layer = ForwardWithReturn("d3layer", "layer");
+SDNode.prototype.layer    = ForwardWithReturn("d3layer", "layer");
 
 SDNode.prototype.attachTo = function(node) {
     const isSDNode = ("g" in node);
@@ -67,9 +69,7 @@ SDNode.prototype.childAs = function(childName, child, rule) {
     return this;
 }
 
-SDNode.prototype.child = function(name) {
-    return this.children.child(name);
-}
+SDNode.prototype.child = ForwardWithReturn("children", "child");
 
 SDNode.prototype.startAnimate = Forward("animate", "startAnimate");
 SDNode.prototype.endAnimate   = Forward("animate", "endAnimate");
@@ -78,174 +78,47 @@ SDNode.prototype.delay        = ForwardWithReturn("animate", "delay");
 SDNode.prototype.after        = Forward("animate", "after");
 SDNode.prototype.duration     = ForwardWithReturn("animate", "duration");
 
-SDNode.prototype.opacity = function(opacity) {
-    if (opacity === undefined) {
-        return this.member.get("global-opacity");
-    }
-    this.member.setByDqual("global-opacity", opacity);
-    this.tryUpdate();
-    return this;
-}
+SDNode.prototype.opacity = GetterAndSetter("global-opacity", "setByDqual");
+SDNode.prototype.inRange = InRange("rect");
+SDNode.prototype.remove = function() { this.opacity(0); }
 
-SDNode.prototype.inRange = function(vec) {
-    return this.x() <= vec[0] && vec[0] <= this.mx() &&
-           this.y() <= vec[1] && vec[1] <= this.my();
-}
+import { Scale }             from "@/Node/SDNode/Location";
+import { Center }            from "@/Node/SDNode/Location";
+import { Position }          from "@/Node/SDNode/Location";
+import { CenterLocation }    from "@/Node/SDNode/Location";
+import { MaxiumLocation }    from "@/Node/SDNode/Location";
+import { MoveTheLocation }   from "@/Node/SDNode/Location";
+import { KQuantileLocation } from "@/Node/SDNode/Location";
+SDNode.prototype.scale = Scale;
+SDNode.prototype.pos = Position;
+SDNode.prototype.center = Center;
+SDNode.prototype.kx = KQuantileLocation("x", "width");
+SDNode.prototype.ky = KQuantileLocation("y", "height");
+SDNode.prototype.cx = CenterLocation("x", "width");
+SDNode.prototype.cy = CenterLocation("y", "height");
+SDNode.prototype.mx = MaxiumLocation("x", "width");
+SDNode.prototype.my = MaxiumLocation("y", "height");
+SDNode.prototype.dx = MoveTheLocation("x");
+SDNode.prototype.dy = MoveTheLocation("y");
 
-SDNode.prototype.remove = function() {
-    this.opacity(0);
-}
-
-SDNode.prototype.scale = function(scale) {
-    const width = this.width();
-    const height = this.height();
-    this.width(width * scale);
-    this.height(height * scale);
-    return this;
-}
-
-SDNode.prototype.pos = function(xloc, yloc, dx = 0, dy = 0) {
-    return [
-        this[xloc]() + dx,
-        this[yloc]() + dy
-    ];
-}
-
-SDNode.prototype.center = function(cx, cy) {
-    if (cx === undefined) {
-        return [this.cx(), this.cy()];
-    } else if (arguments.length === 1) {
-        const center = arguments[0];
-        return this.center(center[0], center[1]);
-    }
-    this.cx(cx);
-    this.cy(cy);
-    return this;
-}
-
-SDNode.prototype.kx = function(k) {
-    return this.x() + k * this.width();
-}
-
-SDNode.prototype.ky = function(k) {
-    return this.y() + k * this.height();
-}
-
-SDNode.prototype.cx = function(cx) {
-    if (cx === undefined) {
-        return this.x() + this.width() / 2;
-    }
-    this.x(cx - this.width() / 2);
-    return this;
-}
-
-SDNode.prototype.cy = function(cy) {
-    if (cy === undefined) {
-        return this.y() + this.height() / 2;
-    }
-    this.y(cy - this.height() / 2);
-    return this;
-}
-
-SDNode.prototype.dx = function(d) {
-    this.x(this.x() + d);
-    return this;
-}
-
-SDNode.prototype.dy = function(d) {
-    this.y(this.y() + d);
-    return this;
-}
-
-SDNode.prototype.mx = function(mx) {
-    if (mx === undefined) return this.x() + this.width();
-    this.x(mx - this.width());
-    return this;
-}
-
-SDNode.prototype.my = function(my) {
-    if (my === undefined) return this.y() + this.height();
-    this.y(my - this.height());
-    return this;
-}
-
-SDNode.prototype.preUpdate = function() {
-    this.children.forEach(child => {
-        child.freeze();
-    })
-}
-
-SDNode.prototype.postUpdate = function() {
-    this.children.forEach(child => {
-        const rule = child._.rule;
-        if (!rule) {
-            return;
-        }
-        this.tryMove(child, () => {
-            rule(this, child);
-        });
-    });
-    this.children.forEach(child => {
-        child.unfreeze();
-    })
-}
-
-SDNode.prototype.tryMove = function(element, move) {
-    if (element._.enter) {
-        element._.enter(element, move);
-        element._.enter = undefined;
-    } else {
-        move();
-    }
-}
-
-SDNode.prototype.update = function() {
-    this.preUpdate();
-    this.updateList.forEach(updateCallback => {
-        updateCallback.call(this);
-    });
-    this.postUpdate();
-    return this;
-}
-
-SDNode.prototype.freeze = function() {
-    this.member.incBy("freeze", 1);
-    return this;
-}
-
-SDNode.prototype.unfreeze = function() {
-    this.member.decBy("freeze", 1);
-    const freeze = this.member.get("freeze");
-    if (freeze > 0) {
-        return this;
-    }
-    if (freeze < 0) {
-        throw new Error("Too Many Unfreeze Operation");
-    }
-    const pendUpdate = this.member.get("pendUpdate");
-    if (pendUpdate) {
-        this.member.set("pendUpdate", false);
-        this.update();
-    }
-    return this;
-}
-
-SDNode.prototype.freezing = function() {
-    return this.member.get("freeze") > 0;
-}
-
-SDNode.prototype.pendUpdate = function() {
-    this.member.set("pendUpdate", true);
-    return this;
-}
-
-SDNode.prototype.tryUpdate = function() {
-    if (this.freezing()) {
-        this.pendUpdate();
-    } else {
-        this.update();
-    }
-}
+import { Freeze }     from "@/Node/SDNode/Update";
+import { Update }     from "@/Node/SDNode/Update";
+import { TryMove }    from "@/Node/SDNode/Update";
+import { Freezing }   from "@/Node/SDNode/Update";
+import { Unfreeze }   from "@/Node/SDNode/Update";
+import { TryUpdate }  from "@/Node/SDNode/Update";
+import { PreUpdate }  from "@/Node/SDNode/Update";
+import { PostUpdate } from "@/Node/SDNode/Update";
+import { PendUpdate } from "@/Node/SDNode/Update";
+SDNode.prototype.preUpdate  = PreUpdate;
+SDNode.prototype.postUpdate = PostUpdate;
+SDNode.prototype.tryMove    = TryMove;
+SDNode.prototype.update     = Update;
+SDNode.prototype.freeze     = Freeze;
+SDNode.prototype.unfreeze   = Unfreeze;
+SDNode.prototype.freezing   = Freezing;
+SDNode.prototype.pendUpdate = PendUpdate;
+SDNode.prototype.tryUpdate  = TryUpdate;
 
 SDNode.prototype.updateList = [
     function() {
@@ -274,32 +147,10 @@ SDNode.prototype.updateList = [
     }
 ]
 
-SDNode.prototype.onClick = function(callback) {
-    const nake = D3ToNake(this.d3layer.d3);
-    nake.removeEventListener("click", this.member.get("clickHandle"));
-    this.member.setAndFlush("clickHandle", () => {
-        clearTimeout(this.member.get("clickTimeoutObject"));
-        this.member.set("clickTimeoutObject", setTimeout(() => {
-            callback(this);
-        }, 200));
-    });
-    nake.addEventListener("click", this.member.get("clickHandle"));
-}
+import { Drag }       from "@/Node/SDNode/Interact";
+import { OnClick }    from "@/Node/SDNode/Interact";
+import { OnDblClick } from "@/Node/SDNode/Interact";
 
-SDNode.prototype.onDblClick = function(callback) {
-    const nake = D3ToNake(this.d3layer.d3);
-    nake.removeEventListener("dblclick", this.member.get("dblClickHandle"));
-    this.member.setAndFlush("dblClickHandle", () => {
-        clearTimeout(this.member.get("clickTimeoutObject"));
-        callback(this);
-    });
-    nake.addEventListener("dblclick", this.member.get("dblClickHandle"));
-}
-
-SDNode.prototype.drag = function(type) {
-    if (type) {
-        const nake = D3ToNake(this.d3layer.d3);
-        Snap(nake).drag();
-    }
-    return this;
-}
+SDNode.prototype.drag       = Drag;
+SDNode.prototype.onClick    = OnClick;
+SDNode.prototype.onDblClick = OnDblClick;

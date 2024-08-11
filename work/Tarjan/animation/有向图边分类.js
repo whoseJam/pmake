@@ -87,7 +87,7 @@ async function 边分类Tarjan(graph) {
             v = graph.findNodeById(graph.toNodeId(u.nodeId, link));
             if (!v.dfn) {
                 await sd.pause();
-                linkTo(u, v, link);
+                linkTo(u, v, link, C.green);
                 await tarjan(v);
                 await sd.pause();
                 focus.startAnimate().focus(u.nodeId).endAnimate();

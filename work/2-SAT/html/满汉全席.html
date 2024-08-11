@@ -50,11 +50,11 @@
                 int Han(int x) { // 某个材料 x 对应的汉式点
                     return x + n;
                 }
-                int This(int x, char c) { // 某个材料 x 对应的 c 式点，c = 'm' 或 'h'
+                int Obey(int x, char c) { // 某个材料 x 对应的 c 式点，c = 'm' 或 'h'
                     if (c == 'm') return Man(x);
                     return Han(x);
                 }
-                int Another(int x, char c) { // 某个材料 x 对应的 c^1 式点，c = 'm' 或 'h'
+                int Disobey(int x, char c) { // 某个材料 x 对应的 !c 式点，c = 'm' 或 'h'
                     if (c == 'm') return Han(x);
                     return Man(x);
                 }
@@ -66,8 +66,8 @@
                 for (int i = 1, x, y; i <= m; i++) {
                     char tx, ty;
                     cin >> tx >> x >> ty >> y;
-                    Link(Another(x, tx), This(y, ty));
-                    Link(Another(y, ty), This(x, tx));
+                    Link(Disobey(x, tx), Obey(y, ty));
+                    Link(Disobey(y, ty), Obey(x, tx));
                 }
             </script>
         </codeblock>

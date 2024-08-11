@@ -12,6 +12,17 @@ export function naiveGetterAndSetter(key, mode) {
     }
 }
 
+export function GetterAndSetter(key, mode) {
+    return function(value) {
+        if (value === undefined) {
+            return this.member.get(key);
+        }
+        this.member[mode](key, value);
+        this.tryUpdate();
+        return this;
+    }
+}
+
 export function naiveUpdate(key, interp) {
     return function() {
         if (this.member.hasChanged(key)) {
@@ -59,6 +70,10 @@ export function inRange(mode) {
     } else {
         throw new Error(`Unknown Mode ${mode}`);
     }
+}
+
+export function InRange(mode) {
+    return inRange(mode);
 }
 
 export function Forward(componentName, functionName) {

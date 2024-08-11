@@ -34,12 +34,12 @@ int Han(int x){
 	return x+n;
 }
 
-int This(int x,char c){
+int Obey(int x,char c){
 	if(c=='m')return Man(x);
 	return Han(x);
 }
 
-int Another(int x,char c){
+int Disobey(int x,char c){
 	if(c=='m')return Han(x);
 	return Man(x);
 }
@@ -78,8 +78,8 @@ void Solve(){
 	for(int i=1,x,y;i<=m;i++){
 		char tx,ty;
 		cin>>tx>>x>>ty>>y;
-		Link(Another(x,tx),This(y,ty));
-		Link(Another(y,ty),This(x,tx));
+		Link(Disobey(x,tx),Obey(y,ty));
+		Link(Disobey(y,ty),Obey(x,tx));
 	}
 	for(int i=1;i<=n*2;i++)
 		if(!dfn[i])Tarjan(i);

@@ -39,6 +39,14 @@ int another(int x){
 	return x-1;
 }
 
+int First(int x){
+	return x*2-1;
+} 
+
+int Second(int x){
+	return x*2;
+}
+
 void Tarjan(int u){
 	dfn[u]=low[u]=++tot;
 	stk.push(u);ins[u]=true;
@@ -54,7 +62,6 @@ void Tarjan(int u){
 		while(stk.size()){
 			int t=stk.top();stk.pop();
 			bel[t]=SCC;
-			blk[SCC].push_back(t);
 			ins[t]=false;
 			if(t==u)break;
 		}
@@ -71,20 +78,15 @@ int main(){
 	for(int i=1;i<=n*2;i++)
 		if(!dfn[i])Tarjan(i);
 	for(int i=1;i<=n;i++){
-		int fir=i*2;
-		int sec=i*2-1;
-		if(bel[fir]==bel[sec]){
+		if(bel[First(i)]==bel[Second(i)]){
 			cout<<"NIE";
 			return 0;
 		}
 	}
 	for(int i=1;i<=n;i++){
-		int fir=i*2;
-		int sec=i*2-1;
-		if(bel[fir]<bel[sec]){
-			cout<<fir<<'\n';
-		}else cout<<sec<<'\n';
+		if(bel[First(i)]<bel[Second(i)]){
+			cout<<First(i)<<'\n';
+		}else cout<<Second(i)<<'\n';
 	}
 	return 0;
 }
-
