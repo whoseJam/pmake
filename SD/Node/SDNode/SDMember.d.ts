@@ -11,6 +11,9 @@ export class SDMember {
     setByEqual(key: number|string, value: any): void;
     setByDqual(key: number|string, value: any): void;
 
+    incBy(key: number|string, value: number): void;
+    decBy(key: number|string, value: number): void;
+
     hasChanged(key: number|string): boolean;
 
     oldValue(key: number|string): any;

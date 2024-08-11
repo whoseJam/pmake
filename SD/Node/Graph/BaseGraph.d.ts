@@ -1,7 +1,7 @@
 import { Color } from "SD/Utility/Color";
 
 import { SDNode }  from "SD/Node/SDNode";
-import { D3Layer } from "SD/Node/D3Layer";
+import { D3Layer } from "SD/Node/SDNode/D3Layer";
 
 type GraphMode = "direct"|"undirect";
 

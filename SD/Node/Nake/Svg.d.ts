@@ -1,5 +1,5 @@
 import { SDNode }  from "SD/Node/SDNode";
-import { D3Layer } from "SD/Node/D3Layer";
+import { D3Layer } from "SD/Node/SDNode/D3Layer";
 
 type viewBox = {
     x: number,

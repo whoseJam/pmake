@@ -1,5 +1,5 @@
 import { SDNode }      from "SD/Node/SDNode";
-import { D3Selection } from "SD/Node/D3Layer";
+import { D3Selection } from "SD/Node/SDNode/D3Layer";
 
 export function AnythingToSDNode(node: SDNode, anything: any): SDNode;
 

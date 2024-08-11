@@ -8,10 +8,10 @@ import { Forward }           from "@/Node/Common";
 import { GetterAndSetter }   from "@/Node/Common";
 import { ForwardWithReturn } from "@/Node/Common";
 
-import { Animate }  from "@/Node/Animate";
-import { D3Layer }  from "@/Node/D3Layer";
-import { Children } from "@/Node/Children";
-import { SDMember } from "@/Node/SDMember";
+import { Animate }  from "@/Node/SDNode/Animate";
+import { D3Layer }  from "@/Node/SDNode/D3Layer";
+import { Children } from "@/Node/SDNode/Children";
+import { SDMember } from "@/Node/SDNode/SDMember";
 
 let id = 0;
 

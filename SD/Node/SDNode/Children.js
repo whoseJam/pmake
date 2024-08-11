@@ -1,4 +1,4 @@
-import { SDNode } from "./SDNode";
+import { SDNode } from "../SDNode";
 
 let id = 0;
 

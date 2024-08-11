@@ -1,4 +1,4 @@
-import { SDValue } from "./SDValue";
+import { SDValue } from "@/Node/SDNode/SDValue";
 
 export class SDMember {
     constructor() {

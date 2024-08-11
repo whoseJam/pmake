@@ -1,7 +1,7 @@
 
 
 export { SDNode }  from "./Node/SDNode";
-export { SDValue } from "./Node/SDValue";
+export { SDValue } from "./Node/SDNode/SDValue";
 
 export { Svg }           from "./Node/Nake/Svg";
 export { Line }          from "./Node/Nake/Line";
@@ -39,10 +39,12 @@ export { GridGraph }      from "./Node/Graph/GridGraph";
 export { TinyGraph }      from "./Node/Graph/TinyGraph";
 export { BipartiteGraph } from "./Node/Graph/BipartiteGraph";
 
-export { Brace }       from "./Node/Curve/Brace";
-export { Curve }       from "./Node/Curve/Curve";
-export { Bezier }      from "./Node/Curve/Bezier";
-export { CircleCurve } from "./Node/Curve/CircleCurve";
+export { Brace }           from "./Node/Curve/Brace";
+export { Curve }           from "./Node/Curve/Curve";
+export { Bezier }          from "./Node/Curve/Bezier";
+export { VHBezier }        from "./Node/Curve/VHBezier";
+export { CircleCurve }     from "./Node/Curve/CircleCurve";
+export { FixedPointCurve } from "./Node/Curve/FixedPointCurve";
 
 export { Mathjax } from "./Node/Text/Mathjax";
 

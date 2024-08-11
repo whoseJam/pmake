@@ -1,4 +1,4 @@
-import { D3Layer } from "SD/Node/D3Layer";
+import { D3Layer } from "SD/Node/SDNode/D3Layer";
 
 import { Vector } from "SD/Utility/Math";
 

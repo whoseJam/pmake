@@ -1,8 +1,11 @@
-import { Color } from "SD/Utility/Color";
-import { SDNode } from "../SDNode";
+import { Color }   from "SD/Utility/Color";
+import { SDNode }  from "SD/Node/SDNode";
+import { D3Layer } from "SD/Node/SDNode/D3Layer";
+
+
 
 export class BaseTree {
-    constructor(parent: any);
+    constructor(parent: SDNode|D3Layer);
 
     /**
      * 获取某个节点
