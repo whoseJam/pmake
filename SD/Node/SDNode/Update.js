@@ -14,7 +14,7 @@ Updater.prototype.preUpdate = function() {
 
 Updater.prototype.postUpdate = function() {
     this.parent.children.forEach(child => {
-        const rule = child.rule();
+        const rule = child._.rule;
         if (!rule) return;
         this.tryMove(child, () => {
             rule(this.parent, child);

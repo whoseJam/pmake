@@ -4,6 +4,8 @@ import { Marker } from "@/Node/Nake/Marker";
 
 import * as d3 from "d3";
 
+window.RATE = 1;
+
 const str0 = "0123456789-";
 
 let svgSel;
@@ -46,6 +48,15 @@ export function setViewBox(x, y, width, height, pwidth, pheight, rate) {
     }
     svg.setAttribute("width", `${widthRate - 2}%`);
     svg.setAttribute("height", `${heightRate - 2}%`);
+
+
+    const svgWidth = svg.getBoundingClientRect().width;
+    const svgHeight = svg.getBoundingClientRect().height;
+    if (svgWidth / W > svgHeight / H) {
+        window.RATE = svgHeight / H;
+    } else {
+        window.RATE = svgWidth / W;
+    }
 }
 
 export function initSvg() {

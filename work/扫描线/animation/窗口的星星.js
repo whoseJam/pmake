@@ -23,9 +23,7 @@ p.childAs("dot", r, function(parent, child) {
     child.x(parent.cx());
     child.my(parent.cy());
 })
-p._.snap.drag(function(dx, dy, x, y, e) {
-    p.x(x).y(y);
-}) 
+p.drag(true);
 
 main();
 

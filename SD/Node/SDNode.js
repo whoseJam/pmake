@@ -12,6 +12,7 @@ import { ForwardWithReturn } from "@/Node/Common";
 import { Updater }  from "@/Node/SDNode/Update";
 import { Animate }  from "@/Node/SDNode/Animate";
 import { D3Layer }  from "@/Node/SDNode/D3Layer";
+import { Interact } from "@/Node/SDNode/Interact";
 import { Children } from "@/Node/SDNode/Children";
 import { SDMember } from "@/Node/SDNode/SDMember";
 
@@ -32,10 +33,7 @@ export function SDNode(parent) {
     this.animate = new Animate(this);
     this.member = new SDMember();
     this.updater = new Updater(this);
-
-    // update
-    this.member.new("freeze", 0);
-    this.member.new("pendUpdate", false);
+    this.interact = new Interact(this);
 
     // opacity
     this.member.new("global-opacity", 1);
@@ -143,9 +141,9 @@ import { Drag }       from "@/Node/SDNode/Interact";
 import { OnClick }    from "@/Node/SDNode/Interact";
 import { OnDblClick } from "@/Node/SDNode/Interact";
 
-SDNode.prototype.drag       = Drag;
-SDNode.prototype.onClick    = OnClick;
-SDNode.prototype.onDblClick = OnDblClick;
+SDNode.prototype.drag       = Forward("interact", "drag");
+SDNode.prototype.onClick    = Forward("interact", "onClick");
+SDNode.prototype.onDblClick = Forward("interact", "onDblClick");
 
 SDNode.prototype.rule = function(rule) {
     if (rule === undefined) {
