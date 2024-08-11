@@ -102,34 +102,15 @@ SDNode.prototype.my = MaxiumLocation("y", "height");
 SDNode.prototype.dx = MoveTheLocation("x");
 SDNode.prototype.dy = MoveTheLocation("y");
 
-import { Freeze }     from "@/Node/SDNode/Update";
-import { Update }     from "@/Node/SDNode/Update";
-import { TryMove }    from "@/Node/SDNode/Update";
-import { Freezing }   from "@/Node/SDNode/Update";
-import { Unfreeze }   from "@/Node/SDNode/Update";
-import { TryUpdate }  from "@/Node/SDNode/Update";
-import { PreUpdate }  from "@/Node/SDNode/Update";
-import { PostUpdate } from "@/Node/SDNode/Update";
-import { PendUpdate } from "@/Node/SDNode/Update";
-// SDNode.prototype.preUpdate = Forward("updater", "preUpdate");
-// SDNode.prototype.postUpdate = Forward("updater", "postUpdate");
-// SDNode.prototype.tryMove = Forward("updater", "tryMove");
-// SDNode.prototype.update = Forward("updater", "update");
-// SDNode.prototype.freeze = Forward("updater", "freeze");
-// SDNode.prototype.unfreeze = Forward("updater", "unfreeze");
-// SDNode.prototype.freezing = Forward("updater", "freezing");
-// SDNode.prototype.pendUpdate = Forward("updater", "pendUpdate");
-// SDNode.prototype.tryUpdate = Forward("updater", "tryUpdate");
-
-SDNode.prototype.preUpdate  = PreUpdate;
-SDNode.prototype.postUpdate = PostUpdate;
-SDNode.prototype.tryMove    = TryMove;
-SDNode.prototype.update     = Update;
-SDNode.prototype.freeze     = Freeze;
-SDNode.prototype.unfreeze   = Unfreeze;
-SDNode.prototype.freezing   = Freezing;
-SDNode.prototype.pendUpdate = PendUpdate;
-SDNode.prototype.tryUpdate  = TryUpdate;
+SDNode.prototype.preUpdate  = Forward("updater", "preUpdate");
+SDNode.prototype.postUpdate = Forward("updater", "postUpdate");
+SDNode.prototype.tryMove    = Forward("updater", "tryMove");
+SDNode.prototype.update     = Forward("updater", "update");
+SDNode.prototype.freeze     = Forward("updater", "freeze");
+SDNode.prototype.unfreeze   = Forward("updater", "unfreeze");
+SDNode.prototype.freezing   = Forward("updater", "freezing");
+SDNode.prototype.pendUpdate = Forward("updater", "pendUpdate");
+SDNode.prototype.tryUpdate  = Forward("updater", "tryUpdate");
 
 SDNode.prototype.updateList = [
     function() {
@@ -166,10 +147,10 @@ SDNode.prototype.drag       = Drag;
 SDNode.prototype.onClick    = OnClick;
 SDNode.prototype.onDblClick = OnDblClick;
 
-// SDNode.prototype.rule = function(rule) {
-//     if (rule === undefined) {
-//         return this._.rule;
-//     }
-//     this._.rule = rule;
-//     return this;
-// }
+SDNode.prototype.rule = function(rule) {
+    if (rule === undefined) {
+        return this._.rule;
+    }
+    this._.rule = rule;
+    return this;
+}

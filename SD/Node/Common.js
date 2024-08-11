@@ -69,8 +69,6 @@ export function InRange(mode) {
 export function Forward(componentName, functionName) {
     return function() {
         const component = this[componentName];
-        console.log("comp=", component, "name=", componentName);
-        console.log("func=", functionName);
         component[functionName].apply(component, arguments);
         return this;
     }

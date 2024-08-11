@@ -121,7 +121,7 @@ BaseElement.prototype.valueFromExist = function(value, rule) {
     return this;
 }
 
-BaseElement.prototype.rule = function(rule) {
+BaseElement.prototype.valueRule = function(rule) {
     this.member.set("rule", rule);
     const value = this.member.get("value");
     if (value) {
