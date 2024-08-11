@@ -1,5 +1,5 @@
 import { Action } from "@/Animate/Action";
-import { naiveGetterAndSetter } from "../Common";
+import { GetterAndSetter } from "../Common";
 import { BaseHTML } from "./BaseHTML";
 import { Interp } from "@/Animate/Interp";
 
@@ -41,7 +41,7 @@ Button.prototype = {
     ...BaseHTML.prototype
 };
 
-Button.prototype.text = naiveGetterAndSetter("text", "set");
+Button.prototype.text = GetterAndSetter("text", "set");
 
 Button.prototype.onClick = function(callback) {
     this.member.setAndFlush("onClick", callback);

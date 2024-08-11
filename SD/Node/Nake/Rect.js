@@ -2,7 +2,7 @@ import { Interp } from "@/Animate/Interp";
 
 import { BaseNake }             from "@/Node/Nake/BaseNake";
 import { naiveUpdate }          from "@/Node/Common";
-import { naiveGetterAndSetter } from "@/Node/Common";
+import { GetterAndSetter } from "@/Node/Common";
 
 export function Rect(parent) {
     BaseNake.call(this, parent, "rect");
@@ -29,10 +29,10 @@ Rect.prototype = {
     ...BaseNake.prototype
 }
 
-Rect.prototype.x      = naiveGetterAndSetter("x", "setByEqual");
-Rect.prototype.y      = naiveGetterAndSetter("y", "setByEqual");
-Rect.prototype.width  = naiveGetterAndSetter("width", "setByEqual");
-Rect.prototype.height = naiveGetterAndSetter("height", "setByEqual");
+Rect.prototype.x      = GetterAndSetter("x", "setByEqual");
+Rect.prototype.y      = GetterAndSetter("y", "setByEqual");
+Rect.prototype.width  = GetterAndSetter("width", "setByEqual");
+Rect.prototype.height = GetterAndSetter("height", "setByEqual");
 
 Rect.prototype.updateList = [
     ...Rect.prototype.updateList,

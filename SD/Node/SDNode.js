@@ -5,9 +5,11 @@ import { Interp } from "@/Animate/Interp";
 
 import { InRange }           from "@/Node/Common";
 import { Forward }           from "@/Node/Common";
+import { GetComponent }      from "@/Node/Common";
 import { GetterAndSetter }   from "@/Node/Common";
 import { ForwardWithReturn } from "@/Node/Common";
 
+import { Updater }  from "@/Node/SDNode/Update";
 import { Animate }  from "@/Node/SDNode/Animate";
 import { D3Layer }  from "@/Node/SDNode/D3Layer";
 import { Children } from "@/Node/SDNode/Children";
@@ -29,6 +31,7 @@ export function SDNode(parent) {
     this._ = {};
     this.animate = new Animate(this);
     this.member = new SDMember();
+    this.updater = new Updater(this);
 
     // update
     this.member.new("freeze", 0);
@@ -48,9 +51,7 @@ export function SDNode(parent) {
     return this;
 }
 
-SDNode.prototype.g = function() {
-    return this.d3layer;
-}
+SDNode.prototype.g = GetComponent("d3layer");
 
 SDNode.prototype.newLayer = ForwardWithReturn("d3layer", "newLayer");
 SDNode.prototype.layer    = ForwardWithReturn("d3layer", "layer");
@@ -110,6 +111,16 @@ import { TryUpdate }  from "@/Node/SDNode/Update";
 import { PreUpdate }  from "@/Node/SDNode/Update";
 import { PostUpdate } from "@/Node/SDNode/Update";
 import { PendUpdate } from "@/Node/SDNode/Update";
+// SDNode.prototype.preUpdate = Forward("updater", "preUpdate");
+// SDNode.prototype.postUpdate = Forward("updater", "postUpdate");
+// SDNode.prototype.tryMove = Forward("updater", "tryMove");
+// SDNode.prototype.update = Forward("updater", "update");
+// SDNode.prototype.freeze = Forward("updater", "freeze");
+// SDNode.prototype.unfreeze = Forward("updater", "unfreeze");
+// SDNode.prototype.freezing = Forward("updater", "freezing");
+// SDNode.prototype.pendUpdate = Forward("updater", "pendUpdate");
+// SDNode.prototype.tryUpdate = Forward("updater", "tryUpdate");
+
 SDNode.prototype.preUpdate  = PreUpdate;
 SDNode.prototype.postUpdate = PostUpdate;
 SDNode.prototype.tryMove    = TryMove;
@@ -154,3 +165,11 @@ import { OnDblClick } from "@/Node/SDNode/Interact";
 SDNode.prototype.drag       = Drag;
 SDNode.prototype.onClick    = OnClick;
 SDNode.prototype.onDblClick = OnDblClick;
+
+// SDNode.prototype.rule = function(rule) {
+//     if (rule === undefined) {
+//         return this._.rule;
+//     }
+//     this._.rule = rule;
+//     return this;
+// }

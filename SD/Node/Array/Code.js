@@ -1,6 +1,6 @@
 import { Rect }                 from "@/Node/Nake/Rect";
 import { BaseArray }            from "@/Node/Array/BaseArray";
-import { naiveGetterAndSetter } from "@/Node/Common";
+import { GetterAndSetter } from "@/Node/Common";
 
 import { Context } from "@/Animate/Context";
 
@@ -51,7 +51,7 @@ Code.prototype = {
     ...BaseArray.prototype
 };
 
-Code.prototype.fontSize = naiveGetterAndSetter("font-size", "setByEqual");
+Code.prototype.fontSize = GetterAndSetter("font-size", "setByEqual");
 
 Code.prototype.updateList = [
     ...Code.prototype.updateList,

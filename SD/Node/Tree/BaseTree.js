@@ -1,5 +1,5 @@
 import { SDNode }               from "@/Node/SDNode";
-import { naiveGetterAndSetter } from "@/Node/Common";
+import { GetterAndSetter } from "@/Node/Common";
 
 import { IsNumberOrString } from "@/Utility/Check";
 
@@ -20,8 +20,8 @@ BaseTree.prototype = {
     ...SDNode.prototype
 };
 
-BaseTree.prototype.x = naiveGetterAndSetter("x", "setByEqual");
-BaseTree.prototype.y = naiveGetterAndSetter("y", "setByEqual");
+BaseTree.prototype.x = GetterAndSetter("x", "setByEqual");
+BaseTree.prototype.y = GetterAndSetter("y", "setByEqual");
 
 BaseTree.prototype.element = function(arg0, arg1) {
     if (arguments.length === 1)

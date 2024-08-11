@@ -17,12 +17,18 @@ init();
 main();
 
 function init() {
-    for (let i = 1; i <= 5; i++) 
-        graph.newNode(`${i}`, `${i}`, 0);
-    for (let i = 1; i <= 3; i++) 
-        graph.newNode(`${i}'`, `${i}'`, 1);
+    for (let i = 1; i <= 5; i++) {
+        graph.newNode(`${i}`, new sd.Mathjax(graph, `${i}`), 0);
+        graph.element(`${i}`).rate(2);
+    }
+    for (let i = 1; i <= 3; i++) {
+        graph.newNode(`${i}'`, new sd.Mathjax(graph, `${i}'`), 1);
+        graph.element(`${i}'`).rate(2);
+    }
     for (let i = 0; i < edges.length; i++)
-        graph.newLink(edges[i][0], edges[i][1])
+        graph.newLink(edges[i][0], edges[i][1]);
+    sd.Label(graph, "属性点", "tc");
+    sd.Label(graph, "武器点", "bc");
 }
 
 async function main() {

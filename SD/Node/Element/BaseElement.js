@@ -1,7 +1,7 @@
 import { svg } from "@/Interact/Svg";
 
 import { SDNode }               from "@/Node/SDNode";
-import { naiveGetterAndSetter } from "@/Node/Common";
+import { GetterAndSetter } from "@/Node/Common";
 
 import { toNode } from "@/Utility/Tool";
 
@@ -43,11 +43,11 @@ BaseElement.prototype.updateList = [
     }
 ]
 
-BaseElement.prototype.x             = naiveGetterAndSetter("x", "setByEqual");
-BaseElement.prototype.y             = naiveGetterAndSetter("y", "setByEqual");
-BaseElement.prototype.width         = naiveGetterAndSetter("width", "setByEqual");
-BaseElement.prototype.height        = naiveGetterAndSetter("height", "setByEqual");
-BaseElement.prototype.rate          = naiveGetterAndSetter("rate", "setByDqual");
+BaseElement.prototype.x             = GetterAndSetter("x", "setByEqual");
+BaseElement.prototype.y             = GetterAndSetter("y", "setByEqual");
+BaseElement.prototype.width         = GetterAndSetter("width", "setByEqual");
+BaseElement.prototype.height        = GetterAndSetter("height", "setByEqual");
+BaseElement.prototype.rate          = GetterAndSetter("rate", "setByDqual");
 BaseElement.prototype.color         = backgroundGetterAndSetter("color");
 BaseElement.prototype.fill          = backgroundGetterAndSetter("fill");
 BaseElement.prototype.fillOpacity   = backgroundGetterAndSetter("fillOpacity");

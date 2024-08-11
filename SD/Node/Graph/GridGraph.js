@@ -2,7 +2,7 @@ import { trim }             from "@/Utility/Trim";
 import { SelectValidValue } from "@/Utility/Cast";
 
 import { BaseGraph }            from "@/Node/Graph/BaseGraph";
-import { naiveGetterAndSetter } from "@/Node/Common";
+import { GetterAndSetter } from "@/Node/Common";
 
 export function GridGraph(parent) {
     BaseGraph.call(this, parent);
@@ -22,8 +22,8 @@ GridGraph.prototype = {
     ...BaseGraph.prototype
 };
 
-GridGraph.prototype.n = naiveGetterAndSetter("n", "set");
-GridGraph.prototype.m = naiveGetterAndSetter("m", "set");
+GridGraph.prototype.n = GetterAndSetter("n", "set");
+GridGraph.prototype.m = GetterAndSetter("m", "set");
 
 GridGraph.prototype.updateList = [
     ...GridGraph.prototype.updateList,

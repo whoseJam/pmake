@@ -26,8 +26,8 @@ function init() {
         return 1/(n-1)*(pos-1);
     }
     for (let i = 1; i <= n; i++) {
-        graph.at(0, P(i)).newNode(i*2-1, new sd.Mathjax(graph, `Y_${i}`));
-        graph.at(1, P(i)).newNode(i*2, new sd.Mathjax(graph, `N_${i}`));
+        graph.at(0, P(i)).newNode(i*2-1, new sd.Mathjax(graph, `T_${i}`));
+        graph.at(1, P(i)).newNode(i*2, new sd.Mathjax(graph, `F_${i}`));
         graph.at(0.33, P(i)).newNode(Pre(i), new sd.Mathjax(graph, `P_${i}`));
         graph.at(0.66, P(i)).newNode(Suf(i), new sd.Mathjax(graph, `S_${i}`));
         graph.element(i*2-1).rate(2.0);

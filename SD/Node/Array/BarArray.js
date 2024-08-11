@@ -1,6 +1,6 @@
 import { Rect } from "@/Node/Nake/Rect";
 import { BaseArray } from "./BaseArray";
-import { naiveGetterAndSetter } from "../Common";
+import { GetterAndSetter } from "../Common";
 
 export function BarArray(parent) {
     BaseArray.call(this, parent);
@@ -19,8 +19,8 @@ BarArray.prototype = {
     ...BaseArray.prototype
 };
 
-BarArray.prototype.elementWidth  = naiveGetterAndSetter("elementWidth", "setByEqual");
-BarArray.prototype.elementHeight = naiveGetterAndSetter("elementHeight", "setByEqual");
+BarArray.prototype.elementWidth  = GetterAndSetter("elementWidth", "setByEqual");
+BarArray.prototype.elementHeight = GetterAndSetter("elementHeight", "setByEqual");
 BarArray.prototype.updateList = [
     ...BarArray.prototype.updateList,
     update

@@ -2,7 +2,7 @@ import { SelectValidValue } from "@/Utility/Cast";
 
 import { DAG }                  from "@/Node/Graph/DAG";
 import { Box }                  from "@/Node/Element/Box";
-import { naiveGetterAndSetter } from "@/Node/Common";
+import { GetterAndSetter } from "@/Node/Common";
 
 export function BoxDAG(parent) {
     DAG.call(this, parent);
@@ -25,8 +25,8 @@ BoxDAG.prototype = {
     ...DAG.prototype
 };
 
-BoxDAG.prototype.elementWidth  = naiveGetterAndSetter("elementWidth", "setByEqual");
-BoxDAG.prototype.elementHeight = naiveGetterAndSetter("elementHeight", "setByEqual");
+BoxDAG.prototype.elementWidth  = GetterAndSetter("elementWidth", "setByEqual");
+BoxDAG.prototype.elementHeight = GetterAndSetter("elementHeight", "setByEqual");
 
 BoxDAG.prototype.newNode = function(id, value = null) {
     const element = new Box(this.layer("nodes"));

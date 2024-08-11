@@ -2,7 +2,7 @@ import { Interp } from "@/Animate/Interp";
 
 import { BaseNake }             from "@/Node/Nake/BaseNake";
 import { naiveUpdate }          from "@/Node/Common";
-import { naiveGetterAndSetter } from "@/Node/Common";
+import { GetterAndSetter } from "@/Node/Common";
 
 export function Image(parent) {
     BaseNake.call(this, parent, "image");
@@ -28,12 +28,12 @@ Image.prototype = {
     ...BaseNake.prototype
 }
 
-Image.prototype.href        = naiveGetterAndSetter("href", "set");
-Image.prototype.x           = naiveGetterAndSetter("x", "setByEqual");
-Image.prototype.y           = naiveGetterAndSetter("y", "setByEqual");
-Image.prototype.width       = naiveGetterAndSetter("width", "setByEqual");
-Image.prototype.height      = naiveGetterAndSetter("height", "setByEqual");
-Image.prototype.aspectRatio = naiveGetterAndSetter("preserveAspectRatio", "set");
+Image.prototype.href        = GetterAndSetter("href", "set");
+Image.prototype.x           = GetterAndSetter("x", "setByEqual");
+Image.prototype.y           = GetterAndSetter("y", "setByEqual");
+Image.prototype.width       = GetterAndSetter("width", "setByEqual");
+Image.prototype.height      = GetterAndSetter("height", "setByEqual");
+Image.prototype.aspectRatio = GetterAndSetter("preserveAspectRatio", "set");
 
 Image.prototype.updateList = [
     ...Image.prototype.updateList,

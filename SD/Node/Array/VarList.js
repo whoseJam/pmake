@@ -1,7 +1,7 @@
 import { Context } from "@/Animate/Context";
 import { Text } from "@/Node/Nake/Text";
 import { BaseArray } from "./BaseArray";
-import { naiveGetterAndSetter } from "../Common";
+import { GetterAndSetter } from "../Common";
 import { Code } from "./Code";
 
 export function VarList(parent) {
@@ -23,7 +23,7 @@ VarList.prototype = {
     ...BaseArray.prototype
 };
 
-VarList.prototype.fontSize = naiveGetterAndSetter("font-size", "setByEqual"); 
+VarList.prototype.fontSize = GetterAndSetter("font-size", "setByEqual"); 
 
 VarList.prototype.width  = Code.prototype.width;
 VarList.prototype.height = Code.prototype.height;

@@ -1,5 +1,5 @@
 import { Interp } from "@/Animate/Interp";
-import { naiveGetterAndSetter, normalUpdate } from "../Common";
+import { GetterAndSetter, normalUpdate } from "../Common";
 import { BaseHTML } from "./BaseHTML";
 
 export function Input(parent) {
@@ -40,7 +40,7 @@ Input.prototype = {
     ...BaseHTML.prototype
 }
 
-Input.prototype.label = naiveGetterAndSetter("label", "set");
+Input.prototype.label = GetterAndSetter("label", "set");
 
 Input.prototype.value = function() {
     return this._.input.value;

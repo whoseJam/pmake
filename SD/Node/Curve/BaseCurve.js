@@ -1,5 +1,5 @@
 import { Path }                 from "@/Node/Nake/Path";
-import { naiveGetterAndSetter } from "@/Node/Common";
+import { GetterAndSetter } from "@/Node/Common";
 
 export function BaseCurve(parent) {
     Path.call(this, parent);
@@ -18,10 +18,10 @@ BaseCurve.prototype = {
     ...Path.prototype
 };
 
-BaseCurve.prototype.x1 = naiveGetterAndSetter("x1", "setByEqual");
-BaseCurve.prototype.y1 = naiveGetterAndSetter("y1", "setByEqual");
-BaseCurve.prototype.x2 = naiveGetterAndSetter("x2", "setByEqual");
-BaseCurve.prototype.y2 = naiveGetterAndSetter("y2", "setByEqual");
+BaseCurve.prototype.x1 = GetterAndSetter("x1", "setByEqual");
+BaseCurve.prototype.y1 = GetterAndSetter("y1", "setByEqual");
+BaseCurve.prototype.x2 = GetterAndSetter("x2", "setByEqual");
+BaseCurve.prototype.y2 = GetterAndSetter("y2", "setByEqual");
 
 BaseCurve.prototype.updateList = [
     function() {

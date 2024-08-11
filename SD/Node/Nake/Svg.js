@@ -3,7 +3,7 @@ import { Interp } from "@/Animate/Interp";
 
 import { BaseNake }             from "@/Node/Nake/BaseNake";
 import { naiveUpdate }          from "@/Node/Common"
-import { naiveGetterAndSetter } from "@/Node/Common";
+import { GetterAndSetter } from "@/Node/Common";
 
 function GetViewBox(svgElement, getter) {
     const x = svgElement.member[getter]("viewX");
@@ -39,10 +39,10 @@ Svg.prototype = {
     ...BaseNake.prototype
 };
 
-Svg.prototype.x      = naiveGetterAndSetter("x", "setByEqual");
-Svg.prototype.y      = naiveGetterAndSetter("y", "setByEqual");
-Svg.prototype.width  = naiveGetterAndSetter("width", "setByEqual");
-Svg.prototype.height = naiveGetterAndSetter("height", "setByEqual");
+Svg.prototype.x      = GetterAndSetter("x", "setByEqual");
+Svg.prototype.y      = GetterAndSetter("y", "setByEqual");
+Svg.prototype.width  = GetterAndSetter("width", "setByEqual");
+Svg.prototype.height = GetterAndSetter("height", "setByEqual");
 
 Svg.prototype.viewBox = function(x, y, width, height) {
     if (arguments.length === 0) {

@@ -3,7 +3,7 @@ import { Interp } from "@/Animate/Interp";
 
 import { BaseNake }             from "@/Node/Nake/BaseNake";
 import { naiveUpdate }          from "@/Node/Common";
-import { naiveGetterAndSetter } from "@/Node/Common";
+import { GetterAndSetter } from "@/Node/Common";
 
 export function ForeignObject(parent) {
     BaseNake.call(this, parent, "foreignObject");
@@ -28,12 +28,12 @@ ForeignObject.prototype = {
     ...BaseNake.prototype
 };
 
-ForeignObject.prototype.x      = naiveGetterAndSetter("x", "setByEqual");
-ForeignObject.prototype.y      = naiveGetterAndSetter("y", "setByEqual");
-ForeignObject.prototype.width  = naiveGetterAndSetter("width", "setByEqual");
-ForeignObject.prototype.height = naiveGetterAndSetter("height", "setByEqual");
-ForeignObject.prototype.html   = naiveGetterAndSetter("html", "set");
-ForeignObject.prototype.dom    = naiveGetterAndSetter("dom", "set");
+ForeignObject.prototype.x      = GetterAndSetter("x", "setByEqual");
+ForeignObject.prototype.y      = GetterAndSetter("y", "setByEqual");
+ForeignObject.prototype.width  = GetterAndSetter("width", "setByEqual");
+ForeignObject.prototype.height = GetterAndSetter("height", "setByEqual");
+ForeignObject.prototype.html   = GetterAndSetter("html", "set");
+ForeignObject.prototype.dom    = GetterAndSetter("dom", "set");
 
 ForeignObject.prototype.updateList = [
     ...ForeignObject.prototype.updateList,

@@ -1,16 +1,6 @@
 import { Vec } from "@/Utility/Math";
-import { Action } from "@/Animate/Action";
 
-export function naiveGetterAndSetter(key, mode) {
-    return function(value) {
-        if (value === undefined) {
-            return this.member.get(key);
-        }
-        this.member[mode](key, value);
-        this.tryUpdate();
-        return this;
-    }
-}
+import { Action } from "@/Animate/Action";
 
 export function GetterAndSetter(key, mode) {
     return function(value) {
@@ -79,6 +69,8 @@ export function InRange(mode) {
 export function Forward(componentName, functionName) {
     return function() {
         const component = this[componentName];
+        console.log("comp=", component, "name=", componentName);
+        console.log("func=", functionName);
         component[functionName].apply(component, arguments);
         return this;
     }
@@ -88,5 +80,12 @@ export function ForwardWithReturn(componentName, functionName) {
     return function() {
         const component = this[componentName];
         return component[functionName].apply(component, arguments);
+    }
+}
+
+export function GetComponent(componentName) {
+    return function() {
+        const component = this[componentName];
+        return component;
     }
 }

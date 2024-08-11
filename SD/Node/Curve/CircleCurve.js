@@ -1,5 +1,5 @@
 import { BaseCurve }            from "@/Node/Curve/BaseCurve";
-import { naiveGetterAndSetter } from "@/Node/Common";
+import { GetterAndSetter } from "@/Node/Common";
 
 import { PathPen } from "@/Utility/PathPen";
 
@@ -19,7 +19,7 @@ CircleCurve.prototype = {
     ...BaseCurve.prototype
 };
 
-CircleCurve.prototype.r = naiveGetterAndSetter("r", "setByEqual");
+CircleCurve.prototype.r = GetterAndSetter("r", "setByEqual");
 
 function update() {
     if (!this.member.hasChanged("r") &&

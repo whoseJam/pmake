@@ -1,5 +1,5 @@
 import { BaseCurve }            from "@/Node/Curve/BaseCurve";
-import { naiveGetterAndSetter } from "@/Node/Common";
+import { GetterAndSetter } from "@/Node/Common";
 
 import { Vec }     from "@/Utility/Math";
 import { PathPen } from "@/Utility/PathPen";
@@ -20,7 +20,7 @@ Curve.prototype = {
     ...BaseCurve.prototype
 };
 
-Curve.prototype.bending = naiveGetterAndSetter("bending", "setByDqual");
+Curve.prototype.bending = GetterAndSetter("bending", "setByDqual");
 
 function update() {
     if (!this.member.hasChanged("x1") &&

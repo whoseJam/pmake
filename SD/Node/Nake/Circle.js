@@ -3,7 +3,7 @@ import { Interp } from "@/Animate/Interp";
 import { inRange }              from "@/Node/Common";
 import { BaseNake }             from "@/Node/Nake/BaseNake";
 import { naiveUpdate }          from "@/Node/Common";
-import { naiveGetterAndSetter } from "@/Node/Common";
+import { GetterAndSetter } from "@/Node/Common";
 
 export function Circle(parent) {
     BaseNake.call(this, parent, "circle");
@@ -28,9 +28,9 @@ Circle.prototype = {
     ...BaseNake.prototype
 };
 
-Circle.prototype.cx = naiveGetterAndSetter("cx", "setByEqual");
-Circle.prototype.cy = naiveGetterAndSetter("cy", "setByEqual");
-Circle.prototype.r  = naiveGetterAndSetter("r", "setByEqual");
+Circle.prototype.cx = GetterAndSetter("cx", "setByEqual");
+Circle.prototype.cy = GetterAndSetter("cy", "setByEqual");
+Circle.prototype.r  = GetterAndSetter("r", "setByEqual");
 Circle.prototype.updateList = [
     ...Circle.prototype.updateList,
     naiveUpdate("cx", Interp.numberInterp),

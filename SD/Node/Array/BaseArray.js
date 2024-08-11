@@ -1,5 +1,5 @@
 import { SDNode }               from "@/Node/SDNode";
-import { naiveGetterAndSetter } from "@/Node/Common";
+import { GetterAndSetter } from "@/Node/Common";
 
 export function BaseArray(parent) {
     SDNode.call(this, parent);
@@ -17,9 +17,9 @@ BaseArray.prototype = {
 };
 BaseArray.prototype.baseArray = true;
 
-BaseArray.prototype.x     = naiveGetterAndSetter("x", "setByEqual");
-BaseArray.prototype.y     = naiveGetterAndSetter("y", "setByEqual");
-BaseArray.prototype.start = naiveGetterAndSetter("start", "set");
+BaseArray.prototype.x     = GetterAndSetter("x", "setByEqual");
+BaseArray.prototype.y     = GetterAndSetter("y", "setByEqual");
+BaseArray.prototype.start = GetterAndSetter("start", "set");
 BaseArray.prototype.updateList = [...BaseArray.prototype.updateList];
 
 BaseArray.prototype.length = function(size) {

@@ -1,7 +1,7 @@
 import { Box }                  from "@/Node/Element/Box";
 import { Tree }                 from "@/Node/Tree/Tree";
 import { d3TreeLayout }         from "@/Node/Tree/Tree";
-import { naiveGetterAndSetter } from "@/Node/Common";
+import { GetterAndSetter } from "@/Node/Common";
 
 export function BoxTree(parent) {
     Tree.call(this, parent);
@@ -19,8 +19,8 @@ BoxTree.prototype = {
     ...Tree.prototype
 };
 
-BoxTree.prototype.elementWidth  = naiveGetterAndSetter("elementWidth", "setByEqual");
-BoxTree.prototype.elementHeight = naiveGetterAndSetter("elementHeight", "setByEqual");
+BoxTree.prototype.elementWidth  = GetterAndSetter("elementWidth", "setByEqual");
+BoxTree.prototype.elementHeight = GetterAndSetter("elementHeight", "setByEqual");
 
 BoxTree.prototype.updateList = [
     ...BoxTree.prototype.updateList.slice(0, -1),

@@ -2,7 +2,7 @@ import { Interp } from "@/Animate/Interp";
 
 import { BaseLine }             from "@/Node/Nake/BaseLine";
 import { naiveUpdate }          from "@/Node/Common"
-import { naiveGetterAndSetter } from "@/Node/Common";
+import { GetterAndSetter } from "@/Node/Common";
 
 import { Vec } from "@/Utility/Math";
 
@@ -27,10 +27,10 @@ Line.prototype = {
     ...BaseLine.prototype
 };
 
-Line.prototype.x1 = naiveGetterAndSetter("x1", "setByEqual");
-Line.prototype.y1 = naiveGetterAndSetter("y1", "setByEqual");
-Line.prototype.x2 = naiveGetterAndSetter("x2", "setByEqual");
-Line.prototype.y2 = naiveGetterAndSetter("y2", "setByEqual");
+Line.prototype.x1 = GetterAndSetter("x1", "setByEqual");
+Line.prototype.y1 = GetterAndSetter("y1", "setByEqual");
+Line.prototype.x2 = GetterAndSetter("x2", "setByEqual");
+Line.prototype.y2 = GetterAndSetter("y2", "setByEqual");
 Line.prototype.updateList = [
     ...Line.prototype.updateList,
     naiveUpdate("x1", Interp.numberInterp),

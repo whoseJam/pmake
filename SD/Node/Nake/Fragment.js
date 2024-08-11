@@ -2,7 +2,7 @@ import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
 
 import { BaseNake }             from "@/Node/Nake/BaseNake";
-import { naiveGetterAndSetter } from "@/Node/Common";
+import { GetterAndSetter } from "@/Node/Common";
 
 import { D3ToNake } from "@/Utility/Cast";
 
@@ -26,12 +26,12 @@ Fragment.prototype = {
     ...BaseNake.prototype
 };
 
-Fragment.prototype.x        = naiveGetterAndSetter("x", "setByEqual");
-Fragment.prototype.y        = naiveGetterAndSetter("y", "setByEqual");
-Fragment.prototype.width    = naiveGetterAndSetter("width", "setByEqual");
-Fragment.prototype.height   = naiveGetterAndSetter("height", "setByEqual");
-Fragment.prototype.fragment = naiveGetterAndSetter("html", "set");
-Fragment.prototype.html     = naiveGetterAndSetter("html", "set");
+Fragment.prototype.x        = GetterAndSetter("x", "setByEqual");
+Fragment.prototype.y        = GetterAndSetter("y", "setByEqual");
+Fragment.prototype.width    = GetterAndSetter("width", "setByEqual");
+Fragment.prototype.height   = GetterAndSetter("height", "setByEqual");
+Fragment.prototype.fragment = GetterAndSetter("html", "set");
+Fragment.prototype.html     = GetterAndSetter("html", "set");
 Fragment.prototype.updateList = [
     ...Fragment.prototype.updateList,
     update

@@ -2,7 +2,7 @@ import { Interp } from "@/Animate/Interp";
 
 import { BaseNake }             from "@/Node/Nake/BaseNake";
 import { naiveUpdate }          from "@/Node/Common";
-import { naiveGetterAndSetter } from "@/Node/Common";
+import { GetterAndSetter } from "@/Node/Common";
 
 export function Ellipse(parent) {
     BaseNake.call(this, parent, "ellipse");
@@ -29,10 +29,10 @@ Ellipse.prototype = {
     ...BaseNake.prototype
 };
 
-Ellipse.prototype.cx = naiveGetterAndSetter("cx", "setByEqual");
-Ellipse.prototype.cy = naiveGetterAndSetter("cy", "setByEqual");
-Ellipse.prototype.rx = naiveGetterAndSetter("rx", "setByEqual");
-Ellipse.prototype.ry = naiveGetterAndSetter("ry", "setByEqual");
+Ellipse.prototype.cx = GetterAndSetter("cx", "setByEqual");
+Ellipse.prototype.cy = GetterAndSetter("cy", "setByEqual");
+Ellipse.prototype.rx = GetterAndSetter("rx", "setByEqual");
+Ellipse.prototype.ry = GetterAndSetter("ry", "setByEqual");
 
 Ellipse.prototype.updateList = [
     ...Ellipse.prototype.updateList,

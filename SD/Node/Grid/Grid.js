@@ -1,6 +1,6 @@
 import { Box }                  from "@/Node/Element/Box";
 import { BaseGrid }             from "@/Node/Grid/BaseGrid";
-import { naiveGetterAndSetter } from "@/Node/Common";
+import { GetterAndSetter } from "@/Node/Common";
 
 export function Grid(parent) {
     BaseGrid.call(this, parent);
@@ -22,10 +22,10 @@ Grid.prototype = {
     ...BaseGrid.prototype
 };
 
-Grid.prototype.x             = naiveGetterAndSetter("x", "setByEqual");
-Grid.prototype.y             = naiveGetterAndSetter("y", "setByEqual");
-Grid.prototype.elementWidth  = naiveGetterAndSetter("elementWidth", "setByEqual");
-Grid.prototype.elementHeight = naiveGetterAndSetter("elementHeight", "setByEqual");
+Grid.prototype.x             = GetterAndSetter("x", "setByEqual");
+Grid.prototype.y             = GetterAndSetter("y", "setByEqual");
+Grid.prototype.elementWidth  = GetterAndSetter("elementWidth", "setByEqual");
+Grid.prototype.elementHeight = GetterAndSetter("elementHeight", "setByEqual");
 Grid.prototype.updateList = [
     ...Grid.prototype.updateList,
     update

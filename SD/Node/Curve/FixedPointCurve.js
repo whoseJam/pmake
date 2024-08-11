@@ -1,5 +1,5 @@
 import { BaseCurve }            from "@/Node/Curve/BaseCurve";
-import { naiveGetterAndSetter } from "@/Node/Common";
+import { GetterAndSetter } from "@/Node/Common";
 
 import { Vec } from "@/Utility/Math";
 
@@ -20,7 +20,7 @@ FixedPointCurve.prototype = {
     ...BaseCurve.prototype
 };
 
-FixedPointCurve.prototype.fixedPoint = naiveGetterAndSetter("fixedPoint", "set");
+FixedPointCurve.prototype.fixedPoint = GetterAndSetter("fixedPoint", "set");
 
 function update() {
     const v1 = this.source();

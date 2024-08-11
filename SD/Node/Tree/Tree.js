@@ -2,7 +2,7 @@ import { Line }     from "@/Node/Nake/Line";
 import { Vertex }   from "@/Node/Element/Vertex";
 import { BaseTree } from "@/Node/Tree/BaseTree";
 
-import { naiveGetterAndSetter } from "@/Node/Common";
+import { GetterAndSetter } from "@/Node/Common";
 
 import { Vec }              from "@/Utility/Math";
 import { trim }             from "@/Utility/Trim";
@@ -32,9 +32,9 @@ Tree.prototype = {
     ...BaseTree.prototype
 };
 
-Tree.prototype.width       = naiveGetterAndSetter("width", "setByEqual");
-Tree.prototype.r           = naiveGetterAndSetter("r", "setByEqual");
-Tree.prototype.layerHeight = naiveGetterAndSetter("layerHeight", "setByEqual");
+Tree.prototype.width       = GetterAndSetter("width", "setByEqual");
+Tree.prototype.r           = GetterAndSetter("r", "setByEqual");
+Tree.prototype.layerHeight = GetterAndSetter("layerHeight", "setByEqual");
 Tree.prototype.height = function(height) {
     if (height === undefined) {
         return this.member.get("height");

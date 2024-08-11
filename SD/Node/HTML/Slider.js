@@ -1,5 +1,5 @@
 import { BaseHTML } from "./BaseHTML";
-import { naiveGetterAndSetter, normalUpdate } from "../Common";
+import { GetterAndSetter, normalUpdate } from "../Common";
 import { Interp } from "@/Animate/Interp";
 
 export function Slider(parent) {
@@ -47,8 +47,8 @@ Slider.prototype.onChange = function(callback) {
     return this;
 }
 
-Slider.prototype.max = naiveGetterAndSetter("max", "set");
-Slider.prototype.min = naiveGetterAndSetter("min", "set");
+Slider.prototype.max = GetterAndSetter("max", "set");
+Slider.prototype.min = GetterAndSetter("min", "set");
 Slider.prototype.value = function(value) {
     if (value === undefined) {
         return this._.slider.value;

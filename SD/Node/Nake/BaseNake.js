@@ -6,7 +6,7 @@ import { NakeToSnap } from "@/Utility/Cast";
 import { Text }                 from "@/Node/Nake/Text";
 import { SDNode }               from "@/Node/SDNode";
 import { naiveUpdate }          from "@/Node/Common"
-import { naiveGetterAndSetter } from "@/Node/Common";
+import { GetterAndSetter } from "@/Node/Common";
 
 export function BaseNake(parent, tag) {
     SDNode.call(this, parent);
@@ -31,13 +31,13 @@ BaseNake.prototype = {
     ...SDNode.prototype
 }
 
-BaseNake.prototype.fill             = naiveGetterAndSetter("fill", "set");
-BaseNake.prototype.fillOpacity      = naiveGetterAndSetter("fill-opacity", "setByDqual");
-BaseNake.prototype.stroke           = naiveGetterAndSetter("stroke", "set");
-BaseNake.prototype.strokeOpacity    = naiveGetterAndSetter("stroke-opacity", "setByDqual");
-BaseNake.prototype.strokeWidth      = naiveGetterAndSetter("stroke-width", "setByDqual");
-BaseNake.prototype.strokeDashOffset = naiveGetterAndSetter("stroke-dashoffset", "setByEqual");
-BaseNake.prototype.strokeDashArray  = naiveGetterAndSetter("stroke-dasharray", "set");
+BaseNake.prototype.fill             = GetterAndSetter("fill", "set");
+BaseNake.prototype.fillOpacity      = GetterAndSetter("fill-opacity", "setByDqual");
+BaseNake.prototype.stroke           = GetterAndSetter("stroke", "set");
+BaseNake.prototype.strokeOpacity    = GetterAndSetter("stroke-opacity", "setByDqual");
+BaseNake.prototype.strokeWidth      = GetterAndSetter("stroke-width", "setByDqual");
+BaseNake.prototype.strokeDashOffset = GetterAndSetter("stroke-dashoffset", "setByEqual");
+BaseNake.prototype.strokeDashArray  = GetterAndSetter("stroke-dasharray", "set");
 
 BaseNake.prototype.color = function(color) {
     if (color === undefined) {

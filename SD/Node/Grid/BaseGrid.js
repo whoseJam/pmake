@@ -1,5 +1,5 @@
 import { SDNode }               from "@/Node/SDNode";
-import { naiveGetterAndSetter } from "@/Node/Common";
+import { GetterAndSetter } from "@/Node/Common";
 
 export function BaseGrid(parent) {
     SDNode.call(this, parent);
@@ -21,8 +21,8 @@ BaseGrid.prototype = {
     ...SDNode.prototype
 };
 
-BaseGrid.prototype.startN = naiveGetterAndSetter("startN", "set");
-BaseGrid.prototype.startM = naiveGetterAndSetter("startM", "set");
+BaseGrid.prototype.startN = GetterAndSetter("startN", "set");
+BaseGrid.prototype.startM = GetterAndSetter("startM", "set");
 
 BaseGrid.prototype.endN = function() {
     return this.startN() + this.n() - 1;

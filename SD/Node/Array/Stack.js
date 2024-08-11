@@ -1,6 +1,6 @@
 import { Array } from "@/Node/Array/Array";
 import { BaseArray } from "./BaseArray";
-import { naiveGetterAndSetter } from "../Common";
+import { GetterAndSetter } from "../Common";
 
 export function Stack(parent) {
     BaseArray.call(this, parent);
@@ -18,8 +18,8 @@ Stack.prototype = {
     ...BaseArray.prototype
 };
 
-Stack.prototype.elementWidth  = naiveGetterAndSetter("elementWidth", "setByEqual");
-Stack.prototype.elementHeight = naiveGetterAndSetter("elementHeight", "setByEqual");
+Stack.prototype.elementWidth  = GetterAndSetter("elementWidth", "setByEqual");
+Stack.prototype.elementHeight = GetterAndSetter("elementHeight", "setByEqual");
 Stack.prototype.insert                 = Array.prototype.insert;
 Stack.prototype.insertFromExistValue   = Array.prototype.insertFromExistValue;
 Stack.prototype.insertFromExistElement = Array.prototype.insertFromExistElement;

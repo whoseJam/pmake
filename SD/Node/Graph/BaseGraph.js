@@ -1,7 +1,7 @@
 import { Line }                 from "@/Node/Nake/Line";
 import { SDNode }               from "@/Node/SDNode";
 import { Vertex }               from "@/Node/Element/Vertex";
-import { naiveGetterAndSetter } from "@/Node/Common";
+import { GetterAndSetter } from "@/Node/Common";
 
 export function BaseGraph(parent) {
     SDNode.call(this, parent);
@@ -26,10 +26,10 @@ BaseGraph.prototype = {
     ...SDNode.prototype
 };
 
-BaseGraph.prototype.x      = naiveGetterAndSetter("x", "setByEqual");
-BaseGraph.prototype.y      = naiveGetterAndSetter("y", "setByEqual");
-BaseGraph.prototype.width  = naiveGetterAndSetter("width", "setByEqual");
-BaseGraph.prototype.height = naiveGetterAndSetter("height", "setByEqual");
+BaseGraph.prototype.x      = GetterAndSetter("x", "setByEqual");
+BaseGraph.prototype.y      = GetterAndSetter("y", "setByEqual");
+BaseGraph.prototype.width  = GetterAndSetter("width", "setByEqual");
+BaseGraph.prototype.height = GetterAndSetter("height", "setByEqual");
 
 BaseGraph.prototype.element = function(arg0, arg1) {
     if (arguments.length === 1)

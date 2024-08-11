@@ -1,82 +1,86 @@
 #include<iostream>
-#include<cstdio>
 #include<cstring>
-#include<queue>
+#include<cstdio>
 using namespace std;
-int N,M,color[60005],Max;
-int vis[60005],ans;
 
-struct line
-{
-	int nextLine,to,val;
-}l[200005];
-int cnt=0,h[60005];
+namespace FastIO{
+	const int L=(1<<20);
+	char buf[L],*S,*T;
+	#ifdef ONLINE_JUDGE
+	inline char getchar(){
+		if(S==T){T=(S=buf)+fread(buf,1,L,stdin);if(S==T)return EOF;}
+		return *S++;
+	}
+	#endif
+	inline int read(){
+		int s=0,f=1;char t=getchar();
+		while('0'>t||t>'9'){if(t=='-')f=-1;t=getchar();}
+		while('0'<=t&&t<='9'){s=(s<<1)+(s<<3)+t-'0';t=getchar();}
+		return s*f;
+	}
+}
+using FastIO::read;
 
-void addEdge(int fa,int kid,int v)
-{
-	cnt++;
-	l[cnt].nextLine=h[fa];
-	l[cnt].to=kid;
-	l[cnt].val=v;
-	h[fa]=cnt;
+const int N=200005;
+const int M=1000005;
+int n,m,vis[N];
+
+struct edge{
+	int x,y,c;
+}e[M];
+
+struct line{
+	int Nxt,to;
+}l[M*2];
+int h[N],cnt;
+
+void Link(int u,int v){
+	l[++cnt]=(line){h[u],v};h[u]=cnt;
+	l[++cnt]=(line){h[v],u};h[v]=cnt;
 }
 
-int flag;	//ÊÇ·ñ´æÔÚ³åÍ» 
-void DFS(int C,int u,int maxC)
-{
-	color[u]=C;
-	for(int i=h[u];i;i=l[i].nextLine)
-	{
-		int v=l[i].to;
-		if(!vis[v]&&l[i].val>maxC)
-		{
-			vis[v]=1;
-			DFS(3-C,v,maxC);
-		}
-		if(color[v]!=3-color[u]&&vis[v]==1&&l[i].val>maxC)
-		{
-			flag=1;
-		}
+bool flag;
+void Dfs(int u,int col){
+	vis[u]=col;
+	for(int i=h[u],v;i;i=l[i].Nxt){
+		v=l[i].to;
+		if(!vis[v])Dfs(v,3-col);
+		else if(vis[v]==col)flag=false;
 	}
 }
 
-bool Check(int maxC)
-{
-	flag=0;
+bool Check(int k){
+	cnt=0;
+	memset(h,0,sizeof(h));
 	memset(vis,0,sizeof(vis));
-	memset(color,0,sizeof(color));
-	for(int i=1;i<=N;i++)
-	{
-		if(!vis[i])
-		{
-			vis[i]=1;
-			DFS(1,i,maxC);
+	for(int i=1;i<=m;i++){
+		if(e[i].c>k){
+			Link(e[i].x,e[i].y);
 		}
 	}
-	if(flag)return false;
-	return true;
+	flag=true;
+	for(int i=1;i<=n;i++){
+		if(!vis[i])Dfs(i,1);
+	} 
+	return flag;
 }
 
-int main()
-{
-	scanf("%d%d",&N,&M);
-	int x,y,z;
-	for(int i=1;i<=M;i++)
-	{
-		scanf("%d%d%d",&x,&y,&z);
-		addEdge(x,y,z);
-		addEdge(y,x,z);
-		Max=max(Max,z);
-	}
-	int l=0,r=Max,mid;
-	ans=Max;
-	while(l<=r)
-	{
-		mid=(l+r)/2;
-		if(Check(mid)){ans=mid;r=mid-1;}
-		else l=mid+1;
-	}
+int main(){
+	n=read();m=read();
 	
-	printf("%d",ans);
+	int mxc=0;
+	for(int i=1;i<=m;i++){
+		e[i].x=read();
+		e[i].y=read();
+		e[i].c=read();
+		mxc=max(mxc,e[i].c);
+	}
+	int l=0,r=mxc;
+	while(l<=r){
+		int mid=(l+r)>>1;
+		if(Check(mid))r=mid-1;
+		else l=mid+1; 
+	}
+	cout<<l<<'\n';
 	return 0;
 }

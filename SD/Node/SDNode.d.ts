@@ -19,14 +19,14 @@ export class SDNode {
     child(name: number|string): SDNode;
 
     /**
-     * 开启一段时长为duration的动画
+     * 开启一段动画
      * @param duration 动画持续时长
      */
     startAnimate(duration: number): this;
 
     /**
-     * 以other为参考开启一段动画
-     * @param other 
+     * 根据另一个节点，开启一段动画
+     * @param other 参考节点
      */
     startAnimate(other: SDNode): this;
     
@@ -52,9 +52,26 @@ export class SDNode {
      */
     isAnimating(): boolean;
 
+    /**
+     * 获取当前动画延迟时间
+     */
     delay(): number;
+
+    /**
+     * 获取当前动画持续时长
+     */
     duration(): number;
+
+    /**
+     * 设置延迟时间
+     * @param delay 延迟时间
+     */
     after(delay: number): this;
+
+    /**
+     * 根据另一个节点，设置延迟时间
+     * @param other 参考节点
+     */
     after(other: SDNode): this;
 
     /**

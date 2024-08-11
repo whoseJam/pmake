@@ -4,7 +4,7 @@ import { D3ToNake } from "@/Utility/Cast";
 
 import { BaseNake }             from "@/Node/Nake/BaseNake";
 import { naiveUpdate }          from "@/Node/Common";
-import { naiveGetterAndSetter } from "@/Node/Common";
+import { GetterAndSetter } from "@/Node/Common";
 
 export function Text(parent, text = "") {
     BaseNake.call(this, parent, "text");
@@ -39,9 +39,9 @@ Text.prototype = {
     ...BaseNake.prototype
 };
 
-Text.prototype.x        = naiveGetterAndSetter("x", "setByEqual");
-Text.prototype.y        = naiveGetterAndSetter("y", "setByEqual");
-Text.prototype.fontSize = naiveGetterAndSetter("font-size", "setByEqual");
+Text.prototype.x        = GetterAndSetter("x", "setByEqual");
+Text.prototype.y        = GetterAndSetter("y", "setByEqual");
+Text.prototype.fontSize = GetterAndSetter("font-size", "setByEqual");
 Text.prototype.updateList = [
     ...Text.prototype.updateList,
     naiveUpdate("x", Interp.numberInterp),

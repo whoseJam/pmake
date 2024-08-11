@@ -1,5 +1,5 @@
 import { BaseCurve }            from "@/Node/Curve/BaseCurve";
-import { naiveGetterAndSetter } from "@/Node/Common";
+import { GetterAndSetter } from "@/Node/Common";
 
 import { Vec }     from "@/Utility/Math";
 import { PathPen } from "@/Utility/PathPen";
@@ -20,7 +20,7 @@ Brace.prototype = {
     ...BaseCurve.prototype
 };
 
-Brace.prototype.bending = naiveGetterAndSetter("bending", "setByEqual");
+Brace.prototype.bending = GetterAndSetter("bending", "setByEqual");
 
 function update() {
     if (!this.member.hasChanged("x1") &&

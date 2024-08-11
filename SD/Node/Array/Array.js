@@ -1,6 +1,6 @@
-import { BaseArray } from "@/Node/Array/BaseArray";
-import { Box } from "@/Node/Element/Box";
-import { naiveGetterAndSetter } from "../Common";
+import { Box }             from "@/Node/Element/Box";
+import { BaseArray }       from "@/Node/Array/BaseArray";
+import { GetterAndSetter } from "@/Node/Common";
 
 export function Array(parent) {
     BaseArray.call(this, parent);
@@ -18,8 +18,8 @@ Array.prototype = {
     ...BaseArray.prototype
 }
 
-Array.prototype.elementWidth  = naiveGetterAndSetter("elementWidth", "setByEqual");
-Array.prototype.elementHeight = naiveGetterAndSetter("elementHeight", "setByEqual");
+Array.prototype.elementWidth  = GetterAndSetter("elementWidth", "setByEqual");
+Array.prototype.elementHeight = GetterAndSetter("elementHeight", "setByEqual");
 Array.prototype.updateList = [
     ...Array.prototype.updateList,
     update
