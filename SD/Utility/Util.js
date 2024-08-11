@@ -6,7 +6,9 @@ export function int(x) {
 export function make1d(length, defaultValue = 0) {
     const result = [];
     for (let i = 0; i < length; i++) {
-        result.push(defaultValue);
+        if (typeof(defaultValue) === "object") {
+            result.push(Object.assign({}, defaultValue));
+        } else result.push(defaultValue);
     } 
     return result;
 }
