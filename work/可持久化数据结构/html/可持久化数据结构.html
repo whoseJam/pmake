@@ -7,14 +7,25 @@
         <p>数据结构可以被认为是一个元素的集合，和定义在这个元素集合上的一堆操作</p>
         <div class="fragment quote" style="margin-bottom: 20px;">
             <h3>数组</h3>
-            一个长度为 $n$ 的数组包含 $n$ 个元素，我们可以对这里面任意一个元素执行修改操作，包括加法操作、赋值操作等等
+            <span class="fragment">一个长度为 $n$ 的数组包含 $n$ 个元素</span>
+            <span class="fragment">，我们可以对这里面任意一个元素执行<b style="color: purple;">各种修改操作</b></span>
+            <span class="fragment">，包括<b>加法操作</b>、<b>赋值操作</b>等等</span>
         </div>
         <div class="fragment quote">
             <h3>求和线段树</h3>
-            一个用于维护单点修改区间查询的求和线段树，如果维护的区间总长为 $n$，那么它大约包含 $2n$ 个元素，我们可以对这种数据结构执行：
+            <p style="margin-bottom: 0px;">
+                一个用于<b>维护长为 $n$ 的区间</b>的求和线段树大约包含 $2n$ 个元素
+                <span class="fragment">我们可以对求和线段树执行：</span>
+            </p>
             <ul>
-                <li>单点修改，涉及大约 $logn$ 的元素的修改</li>
-                <li>区间查询，这种操作涉及到 $0$ 个元素的修改，我们把这种操作叫做<b>只读操作</b></li>
+                <li class="fragment">
+                    单点修改
+                    <span class="fragment">，涉及大约 $logn$ 的元素的修改</span></li>
+                <li class="fragment">
+                    区间查询
+                    <span class="fragment">，这种操作涉及到 $0$ 个元素的修改</span>
+                    <span class="fragment">，我们把这种操作叫做<b style="color: red;">只读操作</b></span>
+                </li>
             </ul>
         </div>
     </section>
@@ -49,10 +60,15 @@
     <section>
         <h2>数据结构的操作视角</h2>
         <p>元素视角没什么好讲的，我们接下来主要关注<b>操作视角</b>这种全新的视角，为了书写和理解的便利，我们来约定一套书写系统，去更好地描述<b>操作视角</b></p>
-        <p class="fragment">假设数据结构 $a$，经过了某个操作 $m$，演变为了数据系统 $b$，我们记为：
-            $$
-            a=b+m
-            $$
+        <p class="fragment">
+            假设我有一个数据结构 $a$
+            <span class="fragment">，经过了某个操作 $m$</span>
+            <span class="fragment">，演变为了数据系统 $b$......</span>
+            <span class="fragment">
+                $$
+                b=a+m
+                $$
+            </span>
         </p>
         <div class="fragment quote">
             <h3>栈</h3>
@@ -86,18 +102,17 @@
     </section>
     <section>
         <h2>可持久化</h2>
-        <p>有了前面这么多铺垫，可持久化的概念就可以相对自然地引出了</p>
         <p>假设我有一个数据结构 $S$，其初始状态为 $S_0$，我对 $S$ 执行了 $k$ 次操作，即：
             $$
             S_0\stackrel {M_1}{\rightarrow} S_1 \stackrel{M_2}{\rightarrow} S_2 \stackrel{M_3}{\rightarrow}...\stackrel{M_k}{\rightarrow} S_k
             $$
         </p>
-        <p class="fragment">如果我能通过某种技术手段，将 $S_0,S_1...S_k$ 这 $k$ 个中间状态，都在<b>时空复杂度可接受的情况下</b>保存下来，那么我们就成功将 $S$ 持久化了，我们就称 $S$ 所对应的这一类数据结构是可持久化的</p>
+        <p class="fragment">如果我能通过某种技术手段，将 $S_0,S_1...S_k$ 这 $k$ 个中间状态，都在<b>时空复杂度可接受的情况下</b>保存下来，那么我们就成功将 $S$ 持久化了</p>
         <p class="fragment">而持久化一个数据结构最重要的思想，就是站在<b>操作视角</b>下去看待这个数据结构</p>
         <p class="fragment">我们不可能对每个中间状态做全量保存，我们只能保存两个状态之间的<b>增量修改</b>，才有可能在保存所有中间状态的同时保持高效</p>
     </section>
     <section>
         <h2>持久化的应用场景</h2>
-        <p>持久化相当于把一个数据结构的历史版本都存储了下来，并且可以在任意时刻访问任意历史版本</p>
+        <p>持久化相当于把一个数据结构的历史版本都存储了下来，并且可以在<b style="color: purple;">任意时刻</b>访问<b style="color: purple;">任意历史版本</b></p>
     </section>
 </section>

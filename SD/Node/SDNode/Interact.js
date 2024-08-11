@@ -34,9 +34,12 @@ Interact.prototype.onDblClick = function(callback) {
 Interact.prototype.drag = function(type) {
     if (type) {
         const nake = D3ToNake(this.parent.d3layer.self());
-        let startX = 0, startY = 0;
+        let startX = 0;
+        let startY = 0;
         Snap(nake).drag(function(dx, dy) {
-            const transform = `matrix(1,0,0,1,${dx/window.RATE + startX},${dy/window.RATE + startY})`;
+            const x = dx / window.RATE + startX;
+            const y = dy / window.RATE + startY;
+            const transform = `matrix(1,0,0,1,${x},${y})`;
             nake.setAttribute("transform", transform);
         }, function() {
             startX = nake.transform.baseVal.getItem(0).matrix.e;

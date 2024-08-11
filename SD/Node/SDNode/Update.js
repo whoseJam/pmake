@@ -66,9 +66,6 @@ Updater.prototype.pendUpdate = function() {
 }
 
 Updater.prototype.tryUpdate = function() {
-    if (this.freezing()) {
-        this.pendUpdate();
-    } else {
-        this.update();
-    }
+    if (this.freezing()) this.pendUpdate();
+    else this.update();
 }

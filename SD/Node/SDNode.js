@@ -137,10 +137,6 @@ SDNode.prototype.updateList = [
     }
 ]
 
-import { Drag }       from "@/Node/SDNode/Interact";
-import { OnClick }    from "@/Node/SDNode/Interact";
-import { OnDblClick } from "@/Node/SDNode/Interact";
-
 SDNode.prototype.drag       = Forward("interact", "drag");
 SDNode.prototype.onClick    = Forward("interact", "onClick");
 SDNode.prototype.onDblClick = Forward("interact", "onDblClick");

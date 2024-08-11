@@ -1,4 +1,4 @@
-
+import { Text } from "@/Node/Nake/Text";
 
 export function AnythingToSDNode(node, anything) {
     if (anything === null || anything === undefined) return null;
