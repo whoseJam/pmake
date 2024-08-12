@@ -102,5 +102,4 @@ export function Equiv(parent, l1, l2, l3) {
         l3.x(x).y(cy + vertical * 0.5);
         last.midX = last.supX = last.subX = l1.mx();
     }
-
 }

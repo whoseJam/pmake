@@ -207,12 +207,3 @@ const ToolboxCode = `
         <div style="background-color: rgb(200, 191, 231); width: 20px; height: 20px; border: 1px solid white;"></div>
     </div>
 </div>`;
-
-const TerminalCode = `
-<div id="terminal" style="position: absolute; top: 540px; opacity: 0.5;">
-    <div id="input-line">
-        <span id="prompt">></span>
-        <input id="input" type="text" />
-    </div>
-    <div id="output" style="height: 80%; overflow-y: auto;"></div>
-</div>`;
