@@ -1,8 +1,9 @@
-import { SDNode } from "../SDNode";
-import { BaseArray } from "./BaseArray";
+import { SDNode }    from "SD/Node/SDNode";
+import { D3Layer }   from "SD/Node/SDNode/D3Layer";
+import { BaseArray } from "SD/Node/Array/BaseArray";
 
 export class VarList extends BaseArray {
-    constructor(parent: any);
+    constructor(parent: SDNode|D3Layer);
 
     fontSize(): number;
     fontSize(fontSize: number): this;
@@ -15,5 +16,4 @@ export class VarList extends BaseArray {
     inc(key: number|string): this;
     dec(key: number|string): this;
     incBy(key: number|string, delta: number): this;
-
 }

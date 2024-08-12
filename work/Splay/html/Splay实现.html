@@ -4,19 +4,23 @@
     </section>
     <section>
         <h2>Splay</h2>
-        <p>Splay是一种基于<b>均摊时间复杂度</b>的平衡树</p>
-        <p class="fragment">也就是说，Splay并不能保证任何时刻，这棵二叉查找树都长得非常均衡，但是能保证，如果进行 $m$ 次操作，当 $m\rightarrow +\infty$ 的时候，这 $m$ 次操作的总时间复杂度是 $O(mlogn)$ 的，均摊到单次操作的时间复杂度为 $O(logn)$</p>
-        <p class="fragment">Splay的核心思想是通过旋转操作进行<b>自我调整</b>，从而获得均摊较低的时间复杂度</p>
-        <p class="fragment"><del>由于Splay的时间复杂度的证明过于复杂且没有什么参考价值，所以本篇不会涉及到Splay的时间复杂度的证明</del></p>
+        <p>Splay是一种基于<b style="color: purple;">均摊时间复杂度</b>的平衡树</p>
+        <ul>
+            <li class="fragment">不能保证任何时刻这棵二叉查找树都长得非常均衡</li>
+            <li class="fragment">能保证如果进行 $m(m\rightarrow +\infty)$ 次操作<b>总时间复杂度</b>趋近于 $O(mlogn)$，均摊到单次操作的时间复杂度为 $O(logn)$</li>
+        </ul>
+        <p class="fragment">Splay的核心思想是通过<b>旋转操作</b>进行<b>自我调整</b>，从而获得均摊较低的时间复杂度</p>
+        <div class="fragment quote">
+            <h3>关于Splay的时间复杂度......</h3>
+            由于Splay的时间复杂度的证明过于复杂且没有什么参考价值，所以我们不证明，感兴趣的同学自行查阅<a href="https://oi-wiki.org/ds/splay/#splay-%E6%93%8D%E4%BD%9C%E7%9A%84%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6" target="_blank">相关资料</a>
+        </div>
     </section>
     <section>
-        <h2>Splay</h2>
+        <h2>Splay的旋转</h2>
         <p>一次旋转操作，改变Splay的一个<b>局部</b>的结构，但不影响Splay作为二叉查找树的性质</p>
         <p class="fragment">我们可以把一次旋转视作一个函数 <code>void rotate(int x)</code>，该函数尝试将 $x$ 和其父节点 $fa(x)$ 进行倒反天罡，即让 $x$ 变成 $fa(x)$ 的父节点</p>
-        <iframe
-            style="min-width: 1000px; min-height: 500px;"
-            data-src="./animation/rotate效果.html">
-        </iframe>
+        <iframe data-src="./animation/rotate效果.html"
+            style="width: 1000px; height: 500px;"></iframe>
     </section>
     <section>
         <h2>Splay</h2>
@@ -46,12 +50,14 @@
     </section>
     <section>
         <h2>Splay</h2>
-        <p>在代码实现中，我们会定义一个函数签名为 <code>void rotate(int x, int & f)</code> 的函数，和之前的定义稍有不同，第二个参数是用于传递根/某元素的子元素的<b>引用</b>的，这样定义是为了方便之后的一些操作</p>
         <codeblock>
             <script type="text/template">
+                // x 是当前待旋转的点，f 是对根节点的引用
                 void rotate(int x, int & f) {
                     int y = fa[x], z = fa[y], L = (ch[y][0] == x ? 0 : 1), R = (L ^ 1);
-                    if (y == f) f = x; else if (ch[z][0] == y) ch[z][0] = x; else ch[z][1] = x;
+                    if (y == f) f = x;
+                    else if (ch[z][0] == y) ch[z][0] = x;
+                    else ch[z][1] = x;
                     fa[x] = z; fa[y] = x; fa[ch[x][R]] = y;
                     ch[y][L] = ch[x][R]; ch[x][R] = y;
                     pushUp(y); pushUp(x);
@@ -59,36 +65,46 @@
             </script>
         </codeblock>
         <iframe data-src="./animation/rotate.html" class="fragment"
+            data-viewBox="200 100 800 400"
             style="width: 1000px; height: 400px;"></iframe>
     </section>
     <section>
         <h2>Splay</h2>
-        <p>最终，我们得到了 <code>void rotate(int x, int & f)</code> 这么一个非常有用的小工具，它可以帮我们改变二叉查找树的形态，但不改变二叉查找树的性质，我们就用它来实现Splay</p>
-        <p class="fragment">在Splay中，还有一个重要函数就叫 <code>void Splay(int x, int & f)</code>，其作用是把 $x$ 这个点旋转到 $f$ 这个地方上去，当 $f=rt$ 时，就是把 $x$ 旋转到树根上去。在 <code>void Splay(int x, int & f)</code> 内部，就是通过不断调用 <code>void rotate(int x, int & f)</code> 来实现的</p>
-        <pre class="fragment"><code data-trim data-line-numbers class="cpp"><script type="text/template">
-            void Splay(int x, int & f) { // 单旋Splay
-                while (x != f) {
-                    rotate(x, f);
-                }
-            }
-        </script></code></pre>
-        <p class="fragment">不过像上述代码这么写时间复杂度是没有保障的<del>（但只要题目没有用心出数据似乎还都能过而且还挺快？）</del>，我们还是来看看正经的写法：</p>
-        <pre class="fragment"><code data-trim data-line-numbers class="cpp"><script type="text/template">
-            void Splay(int x, int & f) { // 双旋Splay，正经写法
-                while (x != f) {
-                    int y = fa[x], z = fa[y];
-                    if (y != f) {
-                        if ((ch[y][0] == x) ^ (ch[z][0] == y)) rotate(x, f);
-                        else rotate(y, f);
+        <p>最终，我们得到了 $rotate$ 这么一个非常有用的小工具，它可以<b>帮我们改变二叉查找树的形态，但不改变二叉查找树的性质</b></p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                // 借助 rotate 实现 Splay，可将一个节点旋转到任意指定位置
+                // 需要确保 f 是 x 的某个祖先
+                void Splay(int x, int & f) { // 单旋Splay
+                    while (x != f) {
+                        rotate(x, f);
                     }
-                    rotate(x, f);
                 }
-            }
-        </script></code></pre>
+            </script>
+        </codeblock>
+        <p class="fragment">
+            不过像上述代码这么写时间复杂度是没有保障的
+            <span class="fragment"><del>（但只要题目没有用心出数据似乎都能过）</del></span>
+        </p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                // 双旋 Splay，时间复杂度正确
+                void Splay(int x, int & f) {
+                    while (x != f) {
+                        int y = fa[x], z = fa[y];
+                        if (y != f) {
+                            if ((ch[y][0] == x) ^ (ch[z][0] == y)) rotate(x, f);
+                            else rotate(y, f);
+                        }
+                        rotate(x, f);
+                    }
+                }
+            </script>
+        </codeblock>
     </section>
     <section>
         <h2>Splay</h2>
-        <p>研究发现，对于一棵大小为 $m$ 的二叉查找树，使用 $m$ 次 <code>void Splay(int x, int & f)</code> 函数，无论输入的数据 $x$ 是什么，以什么样的顺序出现，它的均摊复杂度都是 $O(mlogn)$</p>
+        <p>研究发现，对于一棵大小为 $m$ 的二叉查找树，使用 $m$ 次 $Splay$ 函数，无论输入的数据 $x$ 是什么，以什么样的顺序出现，它的均摊复杂度都是 $O(mlogn)$</p>
     </section>
     <section>
         <h2>Splay</h2>

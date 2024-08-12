@@ -1,4 +1,4 @@
-import { SDNode }               from "@/Node/SDNode";
+import { SDNode }          from "@/Node/SDNode";
 import { GetterAndSetter } from "@/Node/Common";
 
 import { IsNumberOrString } from "@/Utility/Check";

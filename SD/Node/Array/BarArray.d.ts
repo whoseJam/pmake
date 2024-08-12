@@ -1,7 +1,9 @@
-import { BaseArray } from "./BaseArray";
+import { SDNode }    from "SD/Node/SDNode";
+import { D3Layer }   from "SD/Node/SDNode/D3Layer";
+import { BaseArray } from "SD/Node/Array/BaseArray";
 
 export class BarArray extends BaseArray {
-    constructor(parent: any);
+    constructor(parent: SDNode|D3Layer);
 
     elementWidth(): number;
     elementWidth(width: number): this;

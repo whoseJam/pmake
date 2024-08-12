@@ -1,6 +1,8 @@
-import { Line } from "../Node/Nake/Line";
-import { svg } from "../Interact/Svg";
-import { trim } from "../Utility/Trim";
+import { Line } from "@/Node/Nake/Line";
+
+import { svg } from "@/Interact/Svg";
+
+import { trim } from "@/Utility/Trim";
 
 let id = 0;
 

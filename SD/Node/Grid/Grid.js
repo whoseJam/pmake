@@ -1,5 +1,5 @@
-import { Box }                  from "@/Node/Element/Box";
-import { BaseGrid }             from "@/Node/Grid/BaseGrid";
+import { Box }             from "@/Node/Element/Box";
+import { BaseGrid }        from "@/Node/Grid/BaseGrid";
 import { GetterAndSetter } from "@/Node/Common";
 
 export function Grid(parent) {
@@ -93,5 +93,10 @@ function update() {
                 });
             }
         }
+        this.member.flush("x");
+        this.member.flush("y");
+        this.member.flush("elementWidth");
+        this.member.flush("elementHeight");
+        this.member.flush("elements");
     }
 }

@@ -1,5 +1,7 @@
-import { Array } from "./Array";
+import { Array }   from "SD/Node/Array/Array";
+import { SDNode }  from "SD/Node/SDNode";
+import { D3Layer } from "SD/Node/SDNode/D3Layer";
 
 export class ValueArray extends Array {
-    constructor(parent: any);
+    constructor(parent: SDNode|D3Layer);
 }

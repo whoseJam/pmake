@@ -1,8 +1,9 @@
-import { Color } from "SD/Utility/Color";
-import { SDNode } from "../SDNode";
+import { Color }   from "SD/Utility/Color";
+import { SDNode }  from "SD/Node/SDNode";
+import { D3Layer } from "SD/Node/SDNode/D3Layer";
 
 export class BaseArray extends SDNode {
-    constructor(parent: any);
+    constructor(parent: SDNode|D3Layer);
 
     start(): number;
     start(start: number): this;

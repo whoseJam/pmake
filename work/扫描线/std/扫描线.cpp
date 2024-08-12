@@ -24,15 +24,15 @@ using FastIO::read;
 const ll N=100005;
 ll Ls[N*2],Lsn,n,tot;
 
-struct rect{
+struct Rect{
 	ll x1,y1,x2,y2;
-}r[N];
+}R[N];
 
-struct bound{
+struct Bound{
 	ll flg,h,l,r;
-}b[N*2];
+}B[N*2];
 
-bool cmp(const bound& a,const bound& b){
+bool cmp(const Bound& a,const Bound& b){
 	return a.h<b.h;
 }
 
@@ -96,36 +96,29 @@ ll Sum(){
 int main(){
 	n=read();
 	for(ll i=1;i<=n;i++){
-		r[i].x1=read();
-		r[i].y1=read();
-		r[i].x2=read();
-		r[i].y2=read();
-		Ls[++Lsn]=r[i].x1;
-		Ls[++Lsn]=r[i].x2;
+		R[i].x1=read();
+		R[i].y1=read();
+		R[i].x2=read();
+		R[i].y2=read();
+		Ls[++Lsn]=R[i].x1;
+		Ls[++Lsn]=R[i].x2;
 	}
 	sort(Ls+1,Ls+1+Lsn);
 	Lsn=unique(Ls+1,Ls+1+Lsn)-Ls-1;
 	for(ll i=1;i<=n;i++){
-		r[i].x1=lower_bound(Ls+1,Ls+1+Lsn,r[i].x1)-Ls;
-		r[i].x2=lower_bound(Ls+1,Ls+1+Lsn,r[i].x2)-Ls;
-		b[++tot]=(bound){1,r[i].y1,r[i].x1,r[i].x2};
-		b[++tot]=(bound){-1,r[i].y2,r[i].x1,r[i].x2};
+		R[i].x1=lower_bound(Ls+1,Ls+1+Lsn,R[i].x1)-Ls;
+		R[i].x2=lower_bound(Ls+1,Ls+1+Lsn,R[i].x2)-Ls;
+		B[++tot]=(Bound){1,R[i].y1,R[i].x1,R[i].x2};
+		B[++tot]=(Bound){-1,R[i].y2,R[i].x1,R[i].x2};
 	}
-	sort(b+1,b+1+tot,cmp);
+	sort(B+1,B+1+tot,cmp);
 	Build(1,1,Lsn-1);
 	
 	ll Ans=0;
 	for(ll i=1;i<=tot;i++){
-		if(i>1){
-			Ans+=(b[i].h-b[i-1].h)*Sum();
-		}
-		if(b[i].flg==1){
-			Add(1,b[i].l,b[i].r-1,1);
-		}else{
-			Add(1,b[i].l,b[i].r-1,-1);
-		}
+		if(i>1)Ans+=(B[i].h-B[i-1].h)*Sum();
+		Add(1,B[i].l,B[i].r-1,B[i].flg);
 	}
 	cout<<Ans<<'\n';
 	return 0;
 }
-

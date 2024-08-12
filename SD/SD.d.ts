@@ -25,9 +25,11 @@ export { BarArray }   from "./Node/Array/BarArray";
 export { ValueArray } from "./Node/Array/ValueArray";
 export { ValueStack } from "./Node/Array/ValueStack";
 
-export { Grid } from "./Node/Grid/Grid";
+export { Grid }      from "./Node/Grid/Grid";
+export { ValueGrid } from "./Node/Grid/ValueGrid";
 
 export { Tree }                from "./Node/Tree/Tree";
+export { Splay }               from "./Node/Tree/Splay";
 export { BoxTree }             from "./Node/Tree/BoxTree";
 export { ValueTree }           from "./Node/Tree/ValueTree";
 export { BinaryTree }          from "./Node/Tree/BinaryTree";
@@ -52,6 +54,8 @@ export { Input }  from "./Node/HTML/Input";
 export { Button } from "./Node/HTML/Button";
 export { Slider } from "./Node/HTML/Slider";
 
+export { Link }         from "./Component/Link";
+export { Index }        from "./Component/Index";
 export { Focus }        from "./Component/Focus";
 export { Label }        from "./Component/Label";
 export { Stress }       from "./Component/Stress";
@@ -59,6 +63,8 @@ export { Pointer }      from "./Component/Pointer";
 export { WithBrace }    from "./Component/WithBrace";
 export { ValueBoard }   from "./Component/ValueBoard";
 export { MathjaxLabel } from "./Component/Label";
+
+export { svg } from "./Interact/Svg";
 
 export { rule } from "./Rule/Rule";
 export { Rule } from "./Rule/Rule";

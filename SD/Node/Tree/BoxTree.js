@@ -1,6 +1,6 @@
-import { Box }                  from "@/Node/Element/Box";
-import { Tree }                 from "@/Node/Tree/Tree";
-import { d3TreeLayout }         from "@/Node/Tree/Tree";
+import { Box }             from "@/Node/Element/Box";
+import { Tree }            from "@/Node/Tree/Tree";
+import { d3TreeLayout }    from "@/Node/Tree/Tree";
 import { GetterAndSetter } from "@/Node/Common";
 
 export function BoxTree(parent) {

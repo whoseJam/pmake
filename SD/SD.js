@@ -31,7 +31,8 @@ export { BarArray }   from "./Node/Array/BarArray.js";
 export { ValueArray } from "./Node/Array/ValueArray.js";
 export { ValueStack } from "./Node/Array/ValueStack.js";
 
-export { Grid } from "./Node/Grid/Grid.js";
+export { Grid }      from "./Node/Grid/Grid.js";
+export { ValueGrid } from "./Node/Grid/ValueGrid.js";
 
 export { Tree }                from "./Node/Tree/Tree.js";
 export { Splay }               from "./Node/Tree/Splay.js";

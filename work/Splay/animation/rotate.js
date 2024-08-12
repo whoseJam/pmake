@@ -1,14 +1,5 @@
 import * as sd from "@/sd";
 
-const rotateCodeStr = `
-void rotate(int x,int &f){
-    int y=fa[x],z=fa[y],L=(ch[y][0]==x?0:1),R=(L^1);
-    if(y==f)f=x;else if(ch[z][0]==y)ch[z][0]=x;else ch[z][1]=x;fa[x]=z;
-    fa[y]=x;
-    fa[ch[x][R]]=y;ch[y][L]=ch[x][R];
-    ch[x][R]=y;
-    pushUp(y);pushUp(x);
-}`
 const root = 2;
 const n = 9;
 const data = [
@@ -76,10 +67,10 @@ async function rotate(x) {
     if (z) tree.cut(z, y);
     tree.cut(y, x);
     if (ch[x][R]) tree.cut(x, ch[x][R]);
-    tree.unfreeze().endAnimate();
+    tree.endAnimate();
 
     await sd.pause();
-    tree.startAnimate().freeze();
+    tree.startAnimate();
     if (z) {
         if (ch[z][0] === y) tree.leftChild(z, x);
         else tree.rightChild(z, x);

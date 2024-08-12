@@ -37,9 +37,9 @@ export async function rotate(tree, x, fa, ch) {
     await sd.pause();
     tree.startAnimate().freeze();
     cutAnimations.forEach(animation => animation());
-    tree.unfreeze().endAnimate();
+    tree.endAnimate();
     await sd.pause();
-    tree.startAnimate().freeze();
+    tree.startAnimate();
     linkAnimations.forEach(animation => animation());
     tree.unfreeze().endAnimate();
 }

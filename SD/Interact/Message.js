@@ -1,5 +1,6 @@
 import { Animate } from "@/Animate/Animate";
-import { setViewBox } from "./Svg";
+
+import { setViewBox } from "@/Interact/Svg";
 
 export function initMessage() {
     window.Flush = function(name, width, height, rate, asPdf) {

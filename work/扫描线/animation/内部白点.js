@@ -1,8 +1,8 @@
 import * as sd from "@/sd";
 
-let svg = sd.svg();
-let C = sd.color();
-let data = [
+const svg = sd.svg();
+const C = sd.color();
+const data = [
     { x: 2, y: 1 },
     { x: 7, y: 2 },
     { x: 1, y: 3 },
@@ -21,38 +21,79 @@ for (let i = 0; i < data.length; i++)
 main();
 
 async function main() {
-    let histX = {}, histY = {}, ys = [];
+    const nodes = [];
 
     await sd.pause();
-    data.sort(function(a, b) { return a.x - b.x; });
-    for (let i = 0; i < data.length; i++) {
-        let last = histX[data[i].y];
-        if (last) sd.Link(last, data[i].dot, sd.Line).startAnimate().pointStoT().endAnimate();
-        histX[data[i].y] = data[i].dot;
-        ys.push(getY(data[i]));
+    data.sort(function(a, b) { 
+        if (a.y !== b.y) return a.y - b.y;
+        return a.x - b.x;
+    });
+    for (let l = 0, r; l < data.length; l = r + 1) {
+        r = l;
+        while (r + 1 < data.length && data[r + 1].y === data[l].y) r++;
+        if (l < r) sd.Link(data[l].dot, data[r].dot).startAnimate().pointStoT().endAnimate();
+        nodes.push({
+            y: data[l].y,
+            l: data[l].x,
+            r: data[r].x,
+            type: "query"
+        });
     }
 
     await sd.pause();
-    data.sort(function(a, b) { return a.y - b.y; });
-    for (let i = 0; i < data.length; i++) {
-        let last = histY[data[i].x];
-        if (last) sd.Link(last, data[i].dot, sd.Line).startAnimate().pointStoT().endAnimate();
-        histY[data[i].x] = data[i].dot;
+    data.sort(function(a, b) { 
+        if (a.x !== b.x) return a.x - b.x;
+        return a.y - b.y;
+    });
+    for (let l = 0, r; l < data.length; l = r + 1) {
+        r = l;
+        while (r + 1 < data.length && data[r + 1].x === data[l].x) r++;
+        if (l < r) sd.Link(data[l].dot, data[r].dot).startAnimate().pointStoT().endAnimate();
+        if (l < r) {
+            const handle = {};
+            nodes.push({
+                y: data[l].y,
+                x: data[l].x,
+                type: "add",
+                handle: handle
+            });
+            nodes.push({
+                y: data[r].y,
+                x: data[r].x,
+                type: "delete",
+                handle: handle
+            });
+        }
     }
 
     await sd.pause();
-    let l = new sd.Line(svg).stroke(C.red);
-    let h = [...new Set(ys)];
-    h.sort(function(a, b) { return b - a; });
-    l.source(100, h[0]).target(750, h[0]).opacity(0);
+    nodes.sort(function(a, b) {
+        return a.y - b.y;
+    });
+    const l = new sd.Line(svg);
+    l.source(100, getY(nodes[0]));
+    l.target(750, getY(nodes[0]));
+    l.opacity(0);
     l.startAnimate().opacity(1).endAnimate();
-    for (let i = 1; i < h.length; i++) {
+    for (let i = 1; i < nodes.length; i++) {
         await sd.pause();
-        l.startAnimate().y(h[i]).endAnimate();
+        l.startAnimate().y(getY(nodes[i])).endAnimate();
+        if (nodes[i].type === "add") {
+            const dot = new sd.Circle(svg).r(3).color(C.deepSkyBlue);
+            nodes[i].handle.dot = dot;
+            l.childAs(`dot_${i}`, dot, function(parent, child) {
+                child.cx(getX(nodes[i]));
+                child.cy(parent.cy());
+            })
+            dot.opacity(0).startAnimate().opacity(1).endAnimate();
+        } else if (nodes[i].type === "delete") {
+            const dot = nodes[i].handle.dot;
+            dot.startAnimate().opacity(0).remove();
+        }
     }
 }
 
-function getX(pos) { 
+function getX(pos) {
     let x = 200 + pos.x * 50;
     return x;
 }
