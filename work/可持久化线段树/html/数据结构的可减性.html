@@ -19,18 +19,23 @@
         S_0\stackrel {M_1}{\rightarrow} S_1 \stackrel{M_2}{\rightarrow} S_2 \stackrel{M_3}{\rightarrow}...\stackrel{M_k}{\rightarrow} S_k
         $$
         </p>
-        <p class="fragment">我们设 $T=S_R-S_{L-1}=M_{L}+M_{L+1}+...+M_{R}$</p>
-        <p class="fragment">我们在让一个空数据结构 $S_0$ 加上 $T$，就能<b>重播且只重播 $M_L,M_{L+1}...M_R$ 这个范围内的操作</b></p>
+        <p class="fragment">$$T=S_R-S_{L-1}=M_{L}+M_{L+1}+...+M_{R}$$</p>
+        <p class="fragment">
+            $$
+            S'=S_0+T
+            $$
+        </p>
+        <p class="fragment">让一个空数据结构 $S_0$ 加上 $T$，就能<b>重播 $M_L,M_{L+1}...M_R$ 这个范围内的操作</b></p>
         <iframe data-src="./animation/数据结构可减性的意义.html" class="fragment"
             style="width: 1000px; height: 300px;"></iframe>
     </section>
     <section>
         <h2>数据结构的可减性</h2>
-        <p>为了分析数据结构的可减性，我们先得看看一个操作的本质是什么</p>
-        <p>我们认为一个操作 $M$ 可能会对数据结构 $S$ 的每个内部元素都产生一个<b>影响</b></p>
+        <p class="quote">一个操作的本质是什么？</p>
+        <p class="fragment">一个操作 $M$ 可能会对数据结构 $S$ 的每个内部元素都产生一个<b>影响</b></p>
         <p class="fragment quote">如果某个内部元素没有被影响到，我们也可以认为是产生了一个变化量为 $0$ 的影响</p>
         <div class="fragment quote">
-            假设 $S$ 是一个数组，包含 $\{e_1,e_2,e_3,e_4\}$ 这 $4$ 个元素， $M$ 是一个区间加法操作
+            假设 $S$ 是一个数组，包含 $\{e_1,e_2,e_3,e_4,e_5,e_6\}$ 这 $6$ 个元素， $M$ 是一个区间加法操作
             <iframe data-src="./animation/数组操作.html" class="fragment"
                 style="width: 1000px; height: 300px;"></iframe>
         </div>
