@@ -2,6 +2,7 @@ const gulp                 = require("gulp");
 const path                 = require("path");
 const webpack              = require("webpack-stream");
 const JavaScriptObfuscator = require('webpack-obfuscator');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = function libraryTask(targetFilePath) {
     const webpackConfiguration = libraryConfiguration();
@@ -60,6 +61,10 @@ function libraryConfiguration() {
         },
         externals: {
             "dagre": "dagre",
+            "d3": "d3",
+            "react": "React",
+            "react-dom": "ReactDOM",
+            "react-redux": "ReactRedux",
         }
     };
 }
