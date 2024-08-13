@@ -22,11 +22,12 @@ namespace FastIO{
 using FastIO::read;
 
 const int N=1000005;
-int rt[N],n,m,a[N],tot;
+int n,m,a[N]; 
 
 struct seg{
 	int lc,rc,v;
 }t[N*30];
+int tot,rt[N];
 
 void build(int& x,int l,int r){
 	x=++tot;
@@ -44,29 +45,30 @@ void insert(int& x,int lastx,int l,int r,int p,int v){
 	else insert(t[x].rc,t[lastx].rc,mid+1,r,p,v);
 }
 
-int query(int x,int l,int r,int p){
-	if(!x)return 0;
+int query(int x,int l,int r,int pos){
 	if(l==r)return t[x].v;
 	int mid=(l+r)>>1;
-	if(p<=mid)return query(t[x].lc,l,mid,p);
-	else return query(t[x].rc,mid+1,r,p);
+	if(pos<=mid)return query(t[x].lc,l,mid,pos);
+	else return query(t[x].rc,mid+1,r,pos);
 }
 
 int main(){
 	n=read();m=read();
-	for(int i=1;i<=n;i++)a[i]=read();
+	for(int i=1;i<=n;i++){
+		a[i]=read();
+	}
 	build(rt[0],1,n);
-	for(int i=1,v,op;i<=m;i++){
-		v=read();op=read();
-		if(op==1){
-			int pos=read(),value=read();
-			insert(rt[i],rt[v],1,n,pos,value);
+	for(int i=1,ver,opt;i<=m;i++){
+		ver=read();
+		opt=read();
+		if(opt==1){
+			int p=read(),v=read();
+			insert(rt[i],rt[ver],1,n,p,v);
 		}else{
-			int pos=read();
-			cout<<query(rt[v],1,n,pos)<<'\n';
-			rt[i]=rt[v];
+			int p=read();
+			cout<<query(rt[ver],1,n,p)<<'\n';
+			rt[i]=rt[ver];
 		}
 	}
 	return 0;
 }
-

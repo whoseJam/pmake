@@ -3,6 +3,24 @@
 #include<cstdio>
 using namespace std;
 
+namespace FastIO{
+	const int L=(1<<20);
+	char buf[L],*S,*T;
+	#ifdef ONLINE_JUDGE
+	inline char getchar(){
+		if(S==T){T=(S=buf)+fread(buf,1,L,stdin);if(S==T)return EOF;}
+		return *S++;
+	}
+	#endif
+	inline int read(){
+		int s=0,f=1;char t=getchar();
+		while('0'>t||t>'9'){if(t=='-')f=-1;t=getchar();}
+		while('0'<=t&&t<='9'){s=(s<<1)+(s<<3)+t-'0';t=getchar();}
+		return s*f;
+	}
+}
+using FastIO::read;
+
 const int N=100005;
 const int inf=0x3f3f3f3f;
 int ch[N][2],fa[N],val[N],siz[N],num[N];
@@ -10,8 +28,14 @@ int cnt,rt,n;
 
 void visitVal(int x){
 	if(ch[x][0])visitVal(ch[x][0]);
-	if(val[x]!=inf&&val[x]!=-inf)cout<<val[x]<<" ";
-	else cout<<"# ";
+	if(val[x]!=inf&&val[x]!=-inf){
+		cout<<val[x];
+		if(num[x]>1){
+			cout<<"("<<num[x]<<") ";
+		}else cout<<" ";
+	}
+	else if(val[x]==-inf)cout<<"-inf ";
+	else cout<<"+inf\n";
 	if(ch[x][1])visitVal(ch[x][1]);
 }
 
@@ -44,12 +68,25 @@ void Splay(int x,int &f){
 	}
 }
 
-void init(){
-	fa[2]=1;ch[1][1]=2;
-	val[1]=-inf;val[2]=inf;
-	num[1]=1;num[2]=1;
-	siz[1]=2;siz[2]=1;
+void Init(){
 	rt=1;cnt=2;
+	fa[2]=1;ch[1][1]=2;
+	val[1]=-inf;
+	val[2]=+inf;
+	siz[2]=1;num[1]=1;
+	siz[1]=2;num[2]=1;
+}
+
+int insert(int& x,int f,int v){
+	if(!x){x=++cnt;val[x]=v;siz[x]=num[x]=1;fa[x]=f;return x;}
+	if(val[x]==v){num[x]++;return x;}
+	else if(val[x]<v)return insert(ch[x][1],x,v);
+	else return insert(ch[x][0],x,v);
+}
+
+void insert(int v){
+	int x=insert(rt,0,v);
+	Splay(x,rt);
 }
 
 int findPrev(){
@@ -65,109 +102,71 @@ int findNext(){
 }
 
 int find(int x,int v){
-	if(!x)return 0;
+	if(val[x]==v)return x;
 	if(val[x]>v)return find(ch[x][0],v);
-	else if(val[x]<v)return find(ch[x][1],v);
-	return x;
+	return find(ch[x][1],v);
 }
 
-int findGE(int x,int v){
-	if(!x)return 0;
-	if(val[x]<v)return findGE(ch[x][1],v);
-	else if(val[x]>v){
-		int tmp=findGE(ch[x][0],v);
-		if(!tmp)return x;
-		return tmp;
+void remove(int v){
+	int x=find(rt,v);
+	Splay(x,rt);
+	if(num[x]>1){
+		num[x]--;
+		return;
 	}
-	return x;
+	int prev=findPrev();
+	int next=findNext();
+	Splay(prev,rt);
+	Splay(next,ch[rt][1]);
+	ch[next][0]=fa[x]=0;
+	pushUp(next);pushUp(prev);
 }
 
-int findLT(int x,int v){
-	if(!x)return 0;
-	if(val[x]>=v)return findLT(ch[x][0],v);
-	int tmp=findLT(ch[x][1],v);
-	if(!tmp)return x;
-	return tmp;
-}
-
-int findGT(int x,int v){
-	if(!x)return 0;
-	if(val[x]<=v)return findGT(ch[x][1],v);
-	int tmp=findGT(ch[x][0],v);
-	if(!tmp)return x;
-	return tmp;
+int queryRank(int v){
+	insert(v);
+	int x=find(rt,v);
+	Splay(x,rt);
+	int ans=siz[ch[x][0]];
+	remove(v);
+	return ans;
 }
 
 int findKth(int x,int k){
-	if(!x)return 0;
-	if(siz[ch[x][0]]+num[x]>=k&&siz[ch[x][0]]<k)return x;
-	else if(siz[ch[x][0]]>=k)return findKth(ch[x][0],k);
-	else return findKth(ch[x][1],k-siz[ch[x][0]]-num[x]);
+	if(siz[ch[x][0]]>=k)return findKth(ch[x][0],k);
+	if(siz[ch[x][0]]+num[x]>=k)return x;
+	return findKth(ch[x][1],k-siz[ch[x][0]]-num[x]);
 }
-
-int insert(int& x,int f,int v){
-	if(!x){x=++cnt;num[x]++;val[x]=v;fa[x]=f;return x;}
-	if(val[x]>v)return insert(ch[x][0],x,v);
-	else if(val[x]<v)return insert(ch[x][1],x,v);
-	num[x]++;
-	return x;
-}
-
-void insert(int v){
-	int x=insert(rt,0,v);
-	Splay(x,rt);
-}
-
-void erase(int v){
-	int x=find(rt,v);
-	if(!x)return;
-	num[x]--;
-	if(num[x]==0){
-		Splay(x,rt);
-		int prev=findPrev();
-		int next=findNext();
-		Splay(prev,rt);
-		Splay(next,ch[rt][1]);
-		fa[x]=0;ch[next][0]=0;
-		pushUp(next);pushUp(prev);
-	}else Splay(x,rt);
-}
-
-int getRank(int v){
-	int x=findGE(rt,v);
-	Splay(x,rt);
-	return siz[ch[rt][0]];
-}
-
-int findKth(int k){
-	int x=findKth(rt,k);
-	return val[x];
+int queryNodeRankEqualK(int k){
+	return val[findKth(rt,k+1)];
 }
 
 int findPrev(int v){
-	int x=findLT(rt,v);
-	Splay(x,rt);
-	return val[x];
+	insert(v);
+	int prev=findPrev();
+	int ans=val[prev];
+	remove(v);
+	return ans;
 }
 
 int findNext(int v){
-	int x=findGT(rt,v);
-	Splay(x,rt);
-	return val[x];
+	insert(v);
+	int next=findNext();
+	int ans=val[next];
+	remove(v);
+	return ans;
 }
 
 int main(){
-	int opt,x;
-	init();
-	scanf("%d",&n);
-	for(int i=1;i<=n;i++){
-		scanf("%d%d",&opt,&x);
+	Init();
+	n=read();
+	for(int i=1,opt,x;i<=n;i++){
+		opt=read();x=read();
 		if(opt==1)insert(x);
-		if(opt==2)erase(x);
-		if(opt==3)printf("%d\n",getRank(x));
-		if(opt==4)printf("%d\n",findKth(x+1));
-		if(opt==5)printf("%d\n",findPrev(x));
-		if(opt==6)printf("%d\n",findNext(x));
+		if(opt==2)remove(x);
+		if(opt==3)cout<<queryRank(x)<<'\n';
+		if(opt==4)cout<<queryNodeRankEqualK(x)<<'\n';
+		if(opt==5)cout<<findPrev(x)<<'\n';
+		if(opt==6)cout<<findNext(x)<<'\n';
 	}
 	return 0;
 }

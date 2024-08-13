@@ -30,9 +30,9 @@ async function query(l, r) {
     elementR.child("segment").startAnimate().color(C.green).endAnimate();
     const elementL = arr.element(l - 1);
     elementL.child("segment").startAnimate().color(C.green).endAnimate();
-    await sd.pause();
-    elementR.startAnimate().color(C.white).endAnimate();
-    elementL.startAnimate().color(C.white).endAnimate();
+    // await sd.pause();
+    // elementR.startAnimate().color(C.white).endAnimate();
+    // elementL.startAnimate().color(C.white).endAnimate();
 }
 
 function makeSegmentTree() {
