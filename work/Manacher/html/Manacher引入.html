@@ -10,10 +10,22 @@
     <section>
         <h2>Manacher</h2>
         <iframe data-src="./animation/Manacher.html"
-            style="width: 1000px; height: 400px;"></iframe>
+            style="width: 1000px; height: 200px;"></iframe>
         <codeblock>
             <script type="text/template">
-                
+                // s = { # a # b # a # }
+                void Manacher(const string & s) {
+                    int Max = 0, pos = 0;
+                    for (int i = 1; i < s.length(); i++) {
+                        if (Max > i) p[i] = min(p[pos * 2 - i], Max - i);
+                        else p[i] = 1;
+                        while (s[i + p[i]] == s[i - p[i]]) p[i]++;
+                        if (Max < i + p[i]) {
+                            Max = i + p[i];
+                            pos = i;
+                        }
+                    }
+                }
             </script>
         </codeblock>
     </section>

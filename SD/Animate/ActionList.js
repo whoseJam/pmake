@@ -184,7 +184,8 @@ ActionList.prototype.updateWindowSize = function() {
             action.channel !== "x2" &&
             action.channel !== "y2" &&
             action.channel !== "transform" &&
-            action.channel !== "opacity") continue;
+            action.channel !== "opacity" &&
+            action.channel !== "global-opacity") continue;
         const owner = action.owner;
         if (!("g" in owner) || !owner._.nake) { // D3Layer
             continue;

@@ -18,11 +18,13 @@ function init() {
 async function main() {
     await sd.pause();
     str.startAnimate();
+    str.freeze();
     str.insert(0, "{");
     for (let i = 1; i < data.length; i++) {
         str.insert(i * 2, "#");
     }
-    str.push("}").cx(600).endAnimate();
+    str.push("}").cx(600)
+    str.unfreeze().endAnimate();
     await sd.pause();
 
     let Max = 0, pos = 0;
