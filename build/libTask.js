@@ -61,10 +61,10 @@ function libraryConfiguration() {
         },
         externals: {
             "dagre": "dagre",
-            "d3": "d3",
-            "react": "React",
-            "react-dom": "ReactDOM",
-            "react-redux": "ReactRedux",
+            // "d3": "d3",
+            // "react": "React",
+            // "react-dom": "ReactDOM",
+            // "react-redux": "ReactRedux",
         }
     };
 }

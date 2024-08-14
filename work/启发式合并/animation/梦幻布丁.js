@@ -48,9 +48,11 @@ async function insertInto(fromCol, toCol) {
     const fromArray = pairArray[fromCol];
     const toArray = pairArray[toCol];
     toArray.startAnimate();
+    fromArray.freeze();
     for (let i = fromArray.length() - 1; i >= 0; i--) {
         const e = fromArray.dropElement(0);
         toArray.pushFromExistElement(e);
     }
+    fromArray.unfreeze();
     toArray.endAnimate();
 }

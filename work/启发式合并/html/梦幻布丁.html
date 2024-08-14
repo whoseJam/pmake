@@ -26,4 +26,24 @@
             }
         </script></code></pre>
     </section>
+    <section>
+        <h2>梦幻布丁</h2>
+        <codeblock>
+            <script type="text/template">
+                for (int i = 1, opt, x, y; i <= m; i++) {
+                    scanf("%d", & opt);
+                    if (opt == 2) printf("%d\n", ans);
+                    else {
+                        scanf("%d%d", & x, & y);
+                        if (x == y) continue;
+                        if (pos[now[x]].size() > pos[now[y]].size())
+                            swap(now[x], now[y]);
+                        Merge(now[x], now[y]);
+                    }
+                }
+            </script>
+        </codeblock>
+        <iframe data-src="./animation/梦幻布丁映射.html"
+            style="width: 1000px; height: 300px;"></iframe>
+    </section>
 </section>

@@ -7,7 +7,6 @@ import { initMessage } from "./Message";
 
 export function init(permit) {
     initToolbox(permit);
-    initTerminal(permit);
     initAdjust(permit);
     const svg = initSvg(permit);
     initText(svg);

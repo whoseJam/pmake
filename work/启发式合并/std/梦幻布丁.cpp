@@ -26,7 +26,7 @@ int main(){
 		scanf("%d",&col[i]);
 		if(col[i]!=col[i-1])ans++;
 		pos[col[i]].push_back(i);
-		now[col[i]]=col[i];
+		now[col[i]]=col[i]; // now[x]：原始颜色为 x 的布丁当前的颜色
 	}
 	
 	int opt,x,y;
@@ -38,9 +38,7 @@ int main(){
 			if(x==y)continue;
 			if(pos[now[x]].size()>pos[now[y]].size())
 				swap(now[x],now[y]);
-			x=now[x];
-			y=now[y];
-			Merge(x,y);
+			Merge(now[x],now[y]);
 		} 
 	}
 	return 0;

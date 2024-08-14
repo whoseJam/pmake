@@ -3,9 +3,19 @@
 #include<cstdio>
 using namespace std;
 
-const int MAXN=100005;
-int fa[MAXN],ch[MAXN][2],siz[MAXN],val[MAXN];
-int N,M,Q,Im[MAXN];
+namespace FastIO{
+	inline int read(){
+		int s=0,f=1;char t=getchar();
+		while('0'>t||t>'9'){if(t=='-')f=-1;t=getchar();}
+		while('0'<=t&&t<='9'){s=(s<<1)+(s<<3)+t-'0';t=getchar();}
+		return s*f;
+	}
+}
+using FastIO::read;
+
+const int N=100005;
+int fa[N],ch[N][2],siz[N],val[N];
+int n,m,q;
 
 void pushUp(int x){
 	siz[x]=siz[ch[x][0]]+siz[ch[x][1]]+1;
@@ -30,21 +40,17 @@ void Splay(int x,int &f){
 	}
 }
 
-void Insert(int x,int value,int newPos){
-	if(val[x]>value&&ch[x][0])Insert(ch[x][0],value,newPos);
-	else if(val[x]<=value&&ch[x][1])Insert(ch[x][1],value,newPos);
-	else{
-		if(val[x]>value)ch[x][0]=newPos;
-		else ch[x][1]=newPos;
-		val[newPos]=value;fa[newPos]=x;siz[newPos]=1;
-	}
+void insert(int& x,int f,int id){
+	if(!x){x=id;fa[id]=f;siz[id]=1;return;}
+	if(val[x]>val[id])insert(ch[x][0],x,id);
+	else insert(ch[x][1],x,id);
 	pushUp(x);
 }
 
-void Add(int x,int newPos){
-	if(x==newPos)return;
-	Insert(x,val[newPos],newPos);
-	Splay(newPos,x);
+void insert(int rt,int x){
+	if(rt==x)return;
+	insert(rt,0,x);
+	Splay(x,rt);
 }
 
 int getRoot(int k){
@@ -52,45 +58,50 @@ int getRoot(int k){
 	return getRoot(fa[k]);
 }
 
-int FindK(int x,int k){
+int findKth(int x,int k){
 	if(siz[ch[x][0]]+1==k)return x;
-	else if(siz[ch[x][0]]>=k)return FindK(ch[x][0],k);
-	else return FindK(ch[x][1],k-siz[ch[x][0]]-1);
+	else if(siz[ch[x][0]]>=k)return findKth(ch[x][0],k);
+	else return findKth(ch[x][1],k-siz[ch[x][0]]-1);
 }
 
-void DFS(int now,int Root){
-	if(ch[now][0])DFS(ch[now][0],Root);
-	if(ch[now][1])DFS(ch[now][1],Root);
-	Add(Root,now);
+void Dfs(int u,int rt){
+	if(ch[u][0])Dfs(ch[u][0],rt);
+	if(ch[u][1])Dfs(ch[u][1],rt);
+	insert(rt,u);
+}
+
+void Merge(int x,int y){
+	int fx=getRoot(x);
+	int fy=getRoot(y);
+	if(fx==fy)return;
+	if(siz[fx]>siz[fy])swap(fx,fy);
+	Dfs(fx,fy);
+}
+
+int Query(int x,int k){
+	int f=getRoot(x);
+	if(siz[f]<k)return -1;
+	return findKth(f,k);
 }
 
 int main(){
-	int x,y;
-	scanf("%d%d",&N,&M);
-	for(int i=1;i<=N;i++)scanf("%d",&val[i]),siz[i]=1;
-	for(int i=1;i<=M;i++){
-		scanf("%d%d",&x,&y);
-		int p1=getRoot(x),p2=getRoot(y);
-		if(p1!=p2){
-			if(siz[p1]>siz[p2])swap(p1,p2);
-			DFS(p1,p2);
-		}
+	n=read();m=read();
+	for(int i=1;i<=n;i++){
+		val[i]=read();
+		siz[i]=1;
+	}
+	for(int i=1,x,y;i<=m;i++){
+		x=read();y=read();
+		Merge(x,y);
 	}
 	
-	scanf("%d",&Q);char opt[3];
-	for(int i=1;i<=Q;i++){
-		scanf("%s%d%d",&opt,&x,&y);
-		if(opt[0]=='Q'){
-			int p=getRoot(x);
-			if(siz[p]<y){printf("-1\n");continue;}
-			printf("%d\n",FindK(p,y));
-		}
-		if(opt[0]=='B'){
-			int p1=getRoot(x),p2=getRoot(y);
-			if(p1==p2)continue;
-			if(siz[p1]>siz[p2])swap(p1,p2);
-			DFS(p1,p2);
-		}
+	q=read();char opt[3];
+	for(int i=1,x,y;i<=q;i++){
+		scanf("%s",&opt);
+		x=read();
+		y=read();
+		if(opt[0]=='Q')cout<<Query(x,y)<<'\n';
+		if(opt[0]=='B')Merge(x,y);
 	}
 	return 0;
 }
