@@ -29,14 +29,16 @@ async function main() {
 
     let Max = 0, pos = 0;
 
-    const pI = sd.Pointer(str, "i");
-    const pPos = sd.Pointer(str, "pos");
+    const pPos = sd.Pointer(str, "pos", "b", 10, 30);
+    const pI = sd.Pointer(str, "i", "b", 10, 60);
     let posBound = drawBound(0, 40);
 
     pPos.startAnimate().moveTo(0).endAnimate();
     for (let i = 1; i < str.length(); i++) {
         await sd.pause();
-        pI.startAnimate().moveTo(i).endAnimate();
+        str.startAnimate();
+        pI.moveTo(i);
+        str.update().endAnimate();
         await sd.pause();
         
         let lastBound = null;
@@ -65,6 +67,7 @@ async function main() {
             pos = i;
             await sd.pause();
             pPos.startAnimate().moveTo(i).endAnimate();
+            str.startAnimate().update().endAnimate();
             expand(i, posBound, 40);
         }
         

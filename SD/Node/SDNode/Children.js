@@ -24,7 +24,7 @@ export class Children {
      */
     forEach(callback) {
         for (let id in this.children)
-            callback(this.children[id]);
+            callback(this.children[id], id);
     }
 
     /**

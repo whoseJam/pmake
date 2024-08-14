@@ -3,6 +3,7 @@ import { Line } from "@/Node/Nake/Line";
 import { Text } from "@/Node/Nake/Text";
 
 let id = 0;
+let priority = 0;
 
 function initPointer(pointer, direction, length) {
     if (direction === "t")      pointer.source(0, 0).target(0, -length);
@@ -20,10 +21,24 @@ export function Pointer(parent, label, direction = "b", gap = 10, length = 50, t
     initPointer(pointer, direction, length);
 
     const move = (self, target) => {
-        if      (direction === "t") self.cx(target.cx()).y(target.my() + gap);
-        else if (direction === "b") self.cx(target.cx()).my(target.y() - gap);
-        else if (direction === "l") self.cy(target.cy()).x(target.mx() + gap);
-        else if (direction === "r") self.cy(target.cy()).mx(target.x() - gap);
+        let count = 0, front = 0;
+        parent.children.forEach((child, name) => {
+            if (String(name).startsWith("pointer_")) {
+                if (child.pointAt === pointer.pointAt) {
+                    count++;
+                    if (child.priority < pointer.priority || (child.priority === pointer.priority && child.id < pointer.id)) {
+                        front++;
+                    }
+                }
+            }
+        });
+        const k = 1.0 * (front + 1) / (count + 1);
+        console.log("k=", k, "label=", label, "front=", front, "count=", count);
+
+        if      (direction === "t") self.cx(target.kx(k)).y(target.my() + gap);
+        else if (direction === "b") self.cx(target.kx(k)).my(target.y() - gap);
+        else if (direction === "l") self.cy(target.ky(k)).x(target.mx() + gap);
+        else if (direction === "r") self.cy(target.ky(k)).mx(target.x() - gap);
     };
 
     pointer.childAs(`label_${++id}`, text, (parent, child) => {
@@ -43,13 +58,17 @@ export function Pointer(parent, label, direction = "b", gap = 10, length = 50, t
 
         const context = new Context(this);
         if (element) {
+            pointer.pointAt = element.id;
             if (!this.opacity()) {
                 context.till(0, 0);
                 move(this, element);
                 context.till(0, 1);
                 this.opacity(1);
             } else move(this, element);
-        } else this.opacity(0);
+        } else {
+            pointer.pointAt = 0;
+            this.opacity(0);
+        }
         context.recover();
         return this;
     }
@@ -60,6 +79,7 @@ export function Pointer(parent, label, direction = "b", gap = 10, length = 50, t
         });
     }
 
+    pointer.priority = 1;
     pointer.opacity(0);
     return pointer;
 }
