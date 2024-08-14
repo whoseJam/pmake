@@ -18,12 +18,10 @@ export function CenterFixAspect(rate = 1.2) {
         const cheight = child.height();
         if (cwidth === 0 || cheight === 0) throw new Error("Can't Guess The Aspect Ratio Of The Child");
         const k = Math.min(width / cwidth / rate, height / cheight / rate);
-        child.freeze();
         child.width(cwidth * k);
         child.height(cheight * k);
         child.cx(cx);
         child.cy(cy);
-        child.unfreeze();
     }
 }
 

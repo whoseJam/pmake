@@ -8,12 +8,21 @@
         <p class="quote">如何暴力统计某子树内的颜色数量？</p>
         <iframe data-src="./animation/树上数颜色.html" class="fragment"
             style="width: 1000px; height: 300px;"></iframe>
-        <codeblock class="fragment">
+        <codeblock class="fragment" style="margin-top: -10px;">
             <script type="text/template">
                 void AddCol(int c) {
                     if (!colCount[c])
                         colNum++;
                     colCount[c]++;
+                }
+            </script>
+        </codeblock>
+        <codeblock class="fragment">
+            <script type="text/template">
+                void RemoveCol(int c) {
+                    if (colCount[c] == 1)
+                        colNum--;
+                    colCount[c]--;
                 }
             </script>
         </codeblock>

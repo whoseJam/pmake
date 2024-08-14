@@ -3,7 +3,7 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const C = sd.color();
 const R = sd.rule();
-const cols = [C.green, C.blue, C.cyan];
+const cols = [C.green, C.blue, C.cyan, C.orange, C.purple];
 const tree = new sd.Tree(svg);
 const colArray = new sd.Array(svg).resize(cols.length);
 const focus = sd.Focus(tree);
@@ -28,7 +28,7 @@ function init() {
         tree.link(link[0], link[1]);
     });
     for (let i = 1; i <= n; i++) {
-        tree.color(i, cols[colOfNode[i] = sd.rand(0, 2)])
+        tree.color(i, cols[colOfNode[i] = sd.rand(0, cols.length - 1)]);
     }
     tree.width(400).cx(600).y(100);
     colArray.addColor = function(idx) {
@@ -41,7 +41,7 @@ function init() {
         const stk = new sd.Stack(colArray).elementWidth(20).elementHeight(20);
         colArray.element(i).childAs("stk", stk, R.Aside("bc"));
     }
-    colArray.cx(tree.cx()).y(tree.my() + 50);
+    colArray.x(tree.mx() + 50).y(tree.y());
 }
 
 async function dfs(u) {
@@ -58,5 +58,5 @@ async function dfs(u) {
 }
 
 async function main() {
-    await dfs(1);
+    await dfs(2);
 }

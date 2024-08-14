@@ -38,12 +38,11 @@ function init() {
         const stk = new sd.Stack(depArray).elementWidth(20).elementHeight(20);
         depArray.element(i).childAs("stk", stk, R.Aside("bc"));
     }
-    depArray.cx(tree.cx()).y(tree.my() + 50);
+    depArray.x(tree.mx() + 50).y(tree.y());
 }
 
 async function dfs(u, f) {
     dep[u] = dep[f] + 1;
-    console.log("dep=", dep[u]);
 
     await sd.pause();
     focus.startAnimate().focus(u).endAnimate();
