@@ -49,8 +49,8 @@
         <p class="fragment">KMP算法分为两步：</p>
         <ol>
             <li class="fragment">对字符串 $A$ 进行<b>自我匹配</b>：求出一个数组 $nxt$，其中 $nxt[i]$ 表示考虑 $A[1...i]$ 这个子串，
-                <span style="color: red;">除自身外的</span>，
-                <span style="color: deepskyblue;">最长的</span>的前缀和后缀能匹配的长度</li>
+                <b style="color: red;">除自身外的</b>，
+                <b style="color: deepskyblue;">最长的</b>的前缀和后缀能匹配的长度</li>
             <image class="fragment" data-src="./image/nxt数组.png"></image>
             <li class="fragment">对字符串 $A$ 和 $B$ 进行匹配：利用 $nxt$ 进行匹配</li>
         </ol>
@@ -58,11 +58,36 @@
     <section>
         <h2>KMP</h2>
         <iframe data-src="./animation/求解nxt数组.html"
-            style="width: 1000px; height: 500px;"></iframe>
+            style="width: 1000px; height: 300px;"></iframe>
+        <codeblock>
+            <script type="text/template">
+                void Prepare() {
+                    nxt[1] = 0;
+                    for (int i = 2; i <= n; i++) {
+                        int cur = nxt[i - 1];
+                        while (cur && A[cur + 1] != A[i])
+                            cur = nxt[cur];
+                        if (A[cur + 1] == A[i]) nxt[i] = cur + 1;
+                        else nxt[i] = 0;
+                    }
+                }
+            </script>
+        </codeblock>
     </section>
     <section>
         <h2>KMP</h2>
         <iframe data-src="./animation/A和B匹配.html"
-            style="width: 1000px; height: 500px;"></iframe>
+            style="width: 1000px; height: 400px;"></iframe>
+        <codeblock>
+            <script type="text/template">
+                int cur = 0;
+                for (int i = 1; i <= m; i++) {
+                    while (cur > 0 && A[cur + 1] != B[i])
+                        cur = nxt[cur];
+                    if (A[cur + 1] == B[i]) cur++;
+                    if (cur == n) cout << i - n + 1 << '\n';
+                }
+            </script>
+        </codeblock>
     </section>
 </section>

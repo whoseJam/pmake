@@ -24,12 +24,12 @@ int main(){
 	m=strlen(B+1);
 	Prepare();
 	
-	int l=0;
+	int cur=0;
 	for(int i=1;i<=m;i++){
-		while(l>0&&A[l+1]!=B[i])
-			l=nxt[l];
-		if(A[l+1]==B[i])l++;
-		if(l==n)cout<<i-n+1<<'\n';
+		while(cur>0&&A[cur+1]!=B[i])
+			cur=nxt[cur];
+		if(A[cur+1]==B[i])cur++;
+		if(cur==n)cout<<i-n+1<<'\n';
 	}
 	for(int i=1;i<=n;i++)
 		cout<<nxt[i]<<' ';

@@ -1,21 +1,27 @@
 import * as sd from "@/sd";
 
-let svg = sd.svg();
-let C = sd.color();
+const svg = sd.svg();
+const C = sd.color();
 let str = " ababab";
-let text = " abababaabababab";
-let n = str.length - 1;
-let m = text.length - 1;
-let A = new sd.Array(svg).x(100).y(150);
-let B = new sd.Array(svg).x(100).y(400);
-let nxt = sd.make1d(100, 0);
-let rctHead = new sd.Rect(svg).strokeOpacity(0).fillOpacity(0);
-let rctTail = new sd.Rect(svg).strokeOpacity(0).fillOpacity(0);
-let pntCur = sd.Pointer(A, "cur");
-let pntI = sd.Pointer(B, "i");
+const text = " abababaabababab";
+const n = str.length - 1;
+const m = text.length - 1;
+const A = sd.WithBrace(new sd.Array(svg).x(100).y(150).resize(n + 1));
+const B = new sd.Array(svg).x(100).y(280);
+const nxt = sd.make1d(100, 0);
+const rangeF = A.brace(1, 1, "b", 10).opacity(0);
+const rangeB = A.brace(1, 1, "b", 20).opacity(0);
+const pntCur = sd.Pointer(A, "cur", "b", 10, 20);
+const pntI = sd.Pointer(B, "i", "b", 10, 20);
 
-for (let i = 0; i <= n; i++) A.push(str[i]); A.push(); str = str + "#";
-for (let i = 0; i <= m; i++) B.push(text[i]);
+init();
+main();
+
+function init() {
+    for (let i = 0; i <= n; i++) A.value(i, str[i]); A.push(); str = str + "#";
+    for (let i = 0; i <= m; i++) B.push(text[i]);
+    prepare();
+}
 
 function prepare() {
     nxt[1] = 0; let cur = 0;
@@ -24,21 +30,14 @@ function prepare() {
             cur = nxt[cur];
         if (str[cur + 1] === str[i]) nxt[i] = ++cur;
     }
-    for (let i = 1; i <= n; i++) {
-        console.log("i=", i, "nxt=", nxt[i]);
-    }
 }
 
-prepare();
-main();
-
 async function main() {
-
     let cur = 0;
-    movePointer(pntI, B, 1);
-    movePointer(pntCur, A, 0);
+    pntCur.moveTo(0);
     for (let i = 1; i <= m; i++) {
-        movePointer(pntI, B, i);
+        await sd.pause();
+        pntI.startAnimate().moveTo(i).endAnimate();
         await sd.pause();
         B.startAnimate().color(i, C.orange).endAnimate();
         while (true) {
@@ -49,24 +48,24 @@ async function main() {
                 A.startAnimate().color(cur + 1, C.green).endAnimate();
                 B.startAnimate().color(i, C.green).endAnimate();
                 await sd.pause();
-                movePointer(pntCur, A, ++cur);
+                pntCur.startAnimate().moveTo(++cur).endAnimate();
                 await sd.pause();
-                A.startAnimate().color(cur, C.white).endAnimate();
-                B.startAnimate().color(i, C.white).endAnimate();
+                A.startAnimate().color(C.white).endAnimate();
+                B.startAnimate().color(C.white).endAnimate();
                 break;
             } else {
                 await sd.pause();
                 A.startAnimate().color(cur + 1, C.white).endAnimate();
-                focus(rctHead, A, 1, nxt[cur]);
-                focus(rctTail, A, cur - nxt[cur] + 1, cur, 50);
+                rangeF.brace(1, nxt[cur]).startAnimate().opacity(1).endAnimate();
+                rangeB.brace(cur - nxt[cur] + 1, cur).startAnimate().opacity(1).endAnimate();
                 await sd.pause();
-                movePointer(pntCur, A, cur = nxt[cur]);
+                pntCur.startAnimate().moveTo(cur = nxt[cur]).endAnimate();
                 await sd.pause();
-                defocus(rctHead);
-                defocus(rctTail);
+                rangeF.startAnimate().opacity(0).endAnimate();
+                rangeB.startAnimate().opacity(0).endAnimate();
                 if (cur === 0 && str[cur + 1] !== text[i]) {
                     await sd.pause();
-                    B.startAnimate().color(i, C.white).endAnimate();
+                    B.startAnimate().color(C.white).endAnimate();
                     break;
                 }
             }
@@ -87,20 +86,4 @@ function focus(rct, arr, l, r, dy = 0) {
 
 function defocus(rct) {
     rct.startAnimate().strokeOpacity(0).endAnimate();
-}
-
-function movePointer(pointer, arr, to) {
-    let e = arr.element(to);
-    pointer.startAnimate();
-    pointer.moveTo(to);
-    pointer.endAnimate();
-}
-
-function makePointer(label) {
-    let ans = new sd.Line(svg).source(0, 0).target(0, 50).arrow();
-    let tmp = new sd.Text(svg, label).fontSize(20);
-    ans.children.push(tmp, function(parent, child) {
-        tmp.cx(ans.cx()).my(ans.y() - 10).opacity(1);
-    });
-    return ans;
 }

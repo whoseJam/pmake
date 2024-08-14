@@ -2,28 +2,32 @@ import * as sd from "@/sd";
 
 const svg = sd.svg();
 const C = sd.color();
-let str = " abababaabaababba";
-let n = str.length - 1;
-let arr = new sd.Array(svg).x(100).y(200);
-let nxt = sd.make1d(100, 0);
-let rctHead = new sd.Rect(svg).strokeOpacity(0).fillOpacity(0);
-let rctTail = new sd.Rect(svg).strokeOpacity(0).fillOpacity(0);
-let pntCur = sd.Pointer(arr, "cur");
-let pntI = sd.Pointer(arr, "i");
+const str = " abbabaabbabb";
+const n = str.length - 1;
+const arr = sd.WithBrace(new sd.Array(svg).x(100).y(200).resize(str.length));
+const nxt = sd.make1d(100, 0);
+const rangeF = arr.brace(1, 1, "b", 10).opacity(0);
+const rangeB = arr.brace(1, 1, "b", 20).opacity(0);
+const rangeBF = arr.brace(1, 1, "b", 60).opacity(0);
+const rangeBB = arr.brace(1, 1, "b", 70).opacity(0);
+const pntCur = sd.Pointer(arr, "cur");
+const pntI = sd.Pointer(arr, "i");
 
-for (let i = 0; i <= n; i++) {
-    arr.push(str[i]);
-}
-
+init();
 main();
+
+function init() {
+    for (let i = 0; i <= n; i++) {
+        arr.value(i, str[i]);
+    }
+}
 
 async function main() {
     let cur = 0;
-    movePointer(pntI, 2);
-    movePointer(pntCur, 0);
+    pntCur.moveTo(0);
     for (let i = 2; i <= n; i++) {
         await sd.pause();
-        movePointer(pntI, i);
+        pntI.startAnimate().moveTo(i).endAnimate();
         await sd.pause();
         arr.startAnimate().color(i, C.orange).endAnimate();
         while (true) {
@@ -36,54 +40,56 @@ async function main() {
                 arr.color(i, C.green);
                 arr.endAnimate();
                 await sd.pause();
-                movePointer(pntCur, nxt[i] = ++cur);
+                pntCur.startAnimate().moveTo(nxt[i] = ++cur).endAnimate();
+                updateBFAndBB(i, cur);
                 await sd.pause();
-                arr.startAnimate();
-                arr.color(cur, C.white);
-                arr.color(i, C.white);
-                arr.endAnimate();
+                arr.startAnimate().color(C.white).endAnimate();
                 break;
-            } else {
+            } else if (nxt[cur] >= 1){ 
                 await sd.pause();
-                arr.startAnimate();
-                arr.color(cur + 1, C.white);
-                arr.endAnimate();
-                focus(rctHead, 1, nxt[cur]);
-                focus(rctTail, cur - nxt[cur] + 1, cur, 50);
+                arr.startAnimate().color(cur + 1, C.grey).endAnimate();
                 await sd.pause();
-                movePointer(pntCur, cur = nxt[cur]);
+                rangeF.brace(1, nxt[cur]).startAnimate().opacity(1).endAnimate();
+                rangeB.brace(cur - nxt[cur] + 1, cur).startAnimate().opacity(1).endAnimate();
                 await sd.pause();
-                defocus(rctHead);
-                defocus(rctTail);
+                pntCur.startAnimate().moveTo(cur = nxt[cur]).endAnimate();
+                updateBFAndBB(i - 1, cur);
+                await sd.pause();
+                rangeF.startAnimate().opacity(0).endAnimate();
+                rangeB.startAnimate().opacity(0).endAnimate();
                 if (cur === 0 && str[cur + 1] !== str[i]) {
                     await sd.pause();
-                    arr.startAnimate();
-                    arr.color(i, C.white);
-                    arr.endAnimate();
+                    arr.startAnimate().color(C.white).endAnimate();
                     break;
                 }
+            } else {
+                await sd.pause();
+                arr.startAnimate().color(cur + 1, C.grey).endAnimate();
+                if (cur === 0 && str[cur + 1] !== str[i]) {
+                    await sd.pause();
+                    arr.startAnimate().color(C.white).endAnimate();
+                    break;
+                }
+                await sd.pause();
+                pntCur.startAnimate().moveTo(cur = nxt[cur]).endAnimate();
+                updateBFAndBB(i - 1, cur);
             }
         }
 
     }
 }
 
-function focus(rct, l, r, dy = 0) {
-    let el = arr.element(l);
-    let er = arr.element(r);
-    rct.x(el.x()).y(el.y() + dy);
-    rct.width(er.mx() - el.x());
-    rct.height(el.height());
-    rct.stroke(C.red).strokeWidth(3);
-    rct.startAnimate().strokeOpacity(1).endAnimate();
-}
-
-function defocus(rct) {
-    rct.startAnimate().strokeOpacity(0).endAnimate();
-}
-
-function movePointer(pointer, to) {
-    pointer.startAnimate();
-    pointer.moveTo(to);
-    pointer.endAnimate();
+function updateBFAndBB(i, cur) {
+    if (rangeBF.opacity() > 0) {
+        if (cur > 0) {
+            rangeBF.startAnimate().brace(1, cur).endAnimate();
+            rangeBB.startAnimate().brace(i - cur + 1, i).endAnimate();
+        } else {
+            rangeBF.startAnimate().opacity(0).endAnimate();
+            rangeBB.startAnimate().opacity(0).endAnimate();
+        }
+    } else {
+        rangeBF.brace(1, cur).startAnimate().opacity(1).endAnimate();
+        rangeBB.brace(i - cur + 1, i).startAnimate().opacity(1).endAnimate();
+    }
 }
