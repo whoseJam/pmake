@@ -25,6 +25,8 @@
                     if (flg[u]) Ans = true;
                 }
                 if (u != tot) Ans = true;
+                // 如果最后一个节点不是新建出来的
+                // 那么一定有某个已存在的字符串，以它为前缀
                 flg[u] = true;
             }
         </script></code></pre>

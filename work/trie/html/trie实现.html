@@ -16,27 +16,29 @@
     </section>
     <section>
         <h2>Trie 插入</h2>
-        <div class="left">
-            <p>Trie 的插入比较简单，顺次遍历字符串中的每一个字符 $c$，并让一个指针 $u$ 在 Trie 上行走</p>
+        <div style="display: inline-block; width: 70%;">
+            <p>顺次遍历字符串中的每一个字符并插入</p>
             <ul class="fragment">
-                <li>如果 $u$ 不存在，则新建一个节点，并设置为 $u$ 的 $c$ 号儿子</li>
-                <li>如果 $u$ 本身存在 $c$ 号儿子，则忽略</li>
+                <li>如果 $u$ <b>没有</b> $c$ 号儿子，则新建一个节点作为 $c$ 号儿子</li>
+                <li>如果 $u$ <b>已有</b> $c$ 号儿子，则直接走上去</li>
             </ul>
-            <pre class="fragment"><code data-trim data-line-numbers class="cpp" style="min-width: 510px;"><script type="text/template">
-                void insert(const string & s) {
-                    int u = 1;
-                    for (int i = 0, dir; i < s.length(); i++) {
-                        dir = s[i] - 'A';
-                        if (!ch[u][dir])
-                            ch[u][dir] = ++tot;
-                        u = ch[u][dir];
+            <codeblock class="fragment" style="min-width: 510px;">
+                <script type="text/template">
+                    void insert(const string & s) {
+                        int u = 1;
+                        for (int i = 0, dir; i < s.length(); i++) {
+                            dir = s[i] - 'A';
+                            if (!ch[u][dir])
+                                ch[u][dir] = ++tot;
+                            u = ch[u][dir];
+                        }
+                        flg[u] = 1;
                     }
-                    flg[u] = 1;
-                }
-            </script></code></pre>
+                </script>
+            </codeblock>
         </div>
-        <div class="right">
-            <iframe style="min-width: 500px; min-height: 500px;" data-src="./animation/Trie插入.html" rate="1.05"></iframe>
+        <div style="float: right; width: 30%;">
+            <iframe style="width: 400px; height: 500px;" data-src="./animation/Trie插入.html" rate="1.05"></iframe>
         </div>
     </section>
     <section>

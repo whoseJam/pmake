@@ -50,7 +50,7 @@ async function query(i) {
     await  sd.pause();
     valueTables.startAnimate().color(i, C.deepSkyBlue).endAnimate();
     const str = numberToString(values[i - 1]);
-    const ans = new sd.Array(svg).resize(maxl).cx(tree.cx()).y(tree.my() + 50);
+    const ans = new sd.Array(svg).resize(maxl).mx(tree.x() + 30).my(tree.my());
     ans.opacity(0).startAnimate().opacity(1).endAnimate();
     await sd.pause();
     let u = 1;

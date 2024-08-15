@@ -20,8 +20,9 @@ const int N=10005;
 char s[N];
 int n;
 
-ull Hash(int l){
+ull Hash(char* s){
 	ull ans=0;
+	int l=strlen(s+1);
 	for(int i=1;i<=l;i++)
 		ans=ans*base+s[i];
 	return ans;
@@ -32,7 +33,7 @@ int main(){
 	set<ull>S;
 	for(int i=1;i<=n;i++){
 		scanf("%s",s+1);
-		ull code=Hash(strlen(s+1));
+		ull code=Hash(s);
 		S.insert(code);
 	}
 //	set<string>S;
@@ -44,4 +45,3 @@ int main(){
 	cout<<S.size()<<'\n';
 	return 0;
 }
-

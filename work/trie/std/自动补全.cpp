@@ -38,14 +38,11 @@ int find(int u,int k){
 	if(siz[u]<k)return -1;
 	if(flg[u]&&k==1)return flg[u];
 	if(flg[u])k--;
-	int tmp=0;
 	for(int i=0,v;i<26;i++){
 		v=ch[u][i];
 		if(!v)continue;
-		if(tmp+siz[v]>=k){
-			return find(v,k-tmp);
-		}
-		tmp+=siz[v];
+		if(k>siz[v])k-=siz[v];
+		else return find(v,k);
 	}
 	return -1;
 }
@@ -74,4 +71,3 @@ int main(){
 	}
 	return 0;
 }
-

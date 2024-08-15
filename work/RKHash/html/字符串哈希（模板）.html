@@ -26,7 +26,7 @@
                 set < ull > S;
                 for (int i = 1; i <= n; i++) {
                     scanf("%s", s + 1);
-                    ull code = Hash(strlen(s + 1));
+                    ull code = Hash(s);
                     S.insert(code);
                 }
                 cout << S.size() << '\n';

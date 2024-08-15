@@ -11,9 +11,24 @@
     <section>
         <h2>The Xor Largest Pair</h2>
         <p>如果我们把这 $n$ 个数字插入到 01Trie 中.....</p>
-        <iframe
-            style="min-width: 1000px; min-height: 500px;"
-            data-src="./animation/TheXorLargestPair.html"></iframe>
+        <iframe data-src="./animation/TheXorLargestPair.html"
+            style="width: 1000px; height: 280px;"></iframe>
+        <codeblock class="fragment">
+            <script type="text/template">
+                uint query(uint v) {
+                    int u = 1;
+                    uint ans = 0;
+                    for (int i = 31; i >= 0; i--) {
+                        int dir = (v >> i) & 1;
+                        if (ch[u][dir ^ 1]) {
+                            u = ch[u][dir ^ 1];
+                            ans |= (1u << i);
+                        } else u = ch[u][dir];
+                    }
+                    return ans;
+                }
+            </script>
+        </codeblock>
     </section>
     <section>
         <h2>The Xor Largest Pair</h2>

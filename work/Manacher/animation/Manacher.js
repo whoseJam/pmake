@@ -1,7 +1,8 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-const data = "abbabbabaaaba";
+// const data = "abbabbabaaaba";
+const data = "aaaaabaa";
 const str = new sd.Array(svg);
 const p = sd.make1d(100, 1);
 
@@ -20,10 +21,11 @@ async function main() {
     str.startAnimate();
     str.freeze();
     str.insert(0, "{");
+    str.insert(1, "#");
     for (let i = 1; i < data.length; i++) {
-        str.insert(i * 2, "#");
+        str.insert(i * 2 + 1, "#");
     }
-    str.push("}").cx(600)
+    str.push("#").push("}").cx(600)
     str.unfreeze().endAnimate();
     await sd.pause();
 
