@@ -8,11 +8,11 @@ char B[N];
 
 void Prepare(){
 	nxt[1]=0;
+	int cur=0; 
 	for(int i=2;i<=n;i++){
-		int cur=nxt[i-1];
 		while(cur&&A[cur+1]!=A[i])
 			cur=nxt[cur];
-		if(A[cur+1]==A[i])nxt[i]=cur+1;
+		if(A[cur+1]==A[i])nxt[i]=++cur;
 		else nxt[i]=0;
 	}
 } 

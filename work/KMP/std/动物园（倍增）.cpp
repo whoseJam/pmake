@@ -15,7 +15,8 @@ using FastIO::read;
 
 const int Mod=1e9+7;
 const int N=1000005;
-int nxt[N],dep[N],n;
+const int lim=19;
+int nxt[N],fa[N][20],dep[N],n;
 char A[N];
 
 void Prepare(){
@@ -29,16 +30,23 @@ void Prepare(){
 		else nxt[i]=0;
 		dep[i]=dep[nxt[i]]+1;
 	}
+	for(int u=1;u<=n;u++){
+		fa[u][0]=nxt[u];
+		for(int i=1;i<=lim;i++)
+			fa[u][i]=fa[fa[u][i-1]][i-1];
+	}
 } 
 
 void Solve(){
 	scanf("%s",A+1);n=strlen(A+1);
 	Prepare();
-	int ans=1,cur=1;
+	int ans=1;
 	for(int i=1;i<=n;i++){
-		while(cur&&A[cur+1]!=A[i])cur=nxt[cur];
-		if(A[cur+1]==A[i])cur++;
-		while(cur>(i/2))cur=nxt[cur];
+		int cur=i;
+		for(int j=lim;j>=0;j--)
+			if(fa[cur][j]>(i/2))cur=fa[cur][j];
+		cur=fa[cur][0];
+		
 		ans=(ll)ans*(dep[cur]+1)%Mod;
 	}
 	cout<<ans<<'\n';
@@ -49,4 +57,5 @@ int main(){
 	while(Case--)Solve();
 	return 0;
 }
+
 

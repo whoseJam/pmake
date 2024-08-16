@@ -2,7 +2,8 @@ import * as sd from "@/sd";
 
 const svg = sd.svg();
 const C = sd.color();
-const str = " abbabaabbabb";
+// const str = " abbabaabbabb";
+const str = " axabaaxayaxabaaxax";
 const n = str.length - 1;
 const arr = sd.WithBrace(new sd.Array(svg).x(100).y(200).resize(str.length));
 const nxt = sd.make1d(100, 0);

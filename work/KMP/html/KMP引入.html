@@ -44,13 +44,17 @@
         </codeblock>
     </section>
     <section>
+        <h2>$border$</h2>
+        <p>定义一个字符串 $s$ 的 $border$，是该字符串中非本身的子串，满足该子串既是 $s$ 的前缀，又是 $s$ 的后缀</p>
+        <iframe data-src="./animation/Border.html"
+            style="width: 1000px; height: 150px;"></iframe>
+    </section>
+    <section>
         <h2>KMP</h2>
         <p>KMP算法以 $O(n+m)$ 的复杂度解决这个问题，并且相比于Hash算法，为我们提供了更多的<b>额外辅助信息</b></p>
         <p class="fragment">KMP算法分为两步：</p>
         <ol>
-            <li class="fragment">对字符串 $A$ 进行<b>自我匹配</b>：求出一个数组 $nxt$，其中 $nxt[i]$ 表示考虑 $A[1...i]$ 这个子串，
-                <b style="color: red;">除自身外的</b>，
-                <b style="color: deepskyblue;">最长的</b>的前缀和后缀能匹配的长度</li>
+            <li class="fragment">对字符串 $A$ 进行<b>自我匹配</b>：求出一个 $nxt$ 数组，其中 $nxt[i]$ 表示 $A[1...i]$ 的<b style="color: red;">最长 $border$ 的长度</b></li>
             <image class="fragment" data-src="./image/nxt数组.png"></image>
             <li class="fragment">对字符串 $A$ 和 $B$ 进行匹配：利用 $nxt$ 进行匹配</li>
         </ol>
@@ -63,11 +67,11 @@
             <script type="text/template">
                 void Prepare() {
                     nxt[1] = 0;
+                    int cur = 0;
                     for (int i = 2; i <= n; i++) {
-                        int cur = nxt[i - 1];
                         while (cur && A[cur + 1] != A[i])
                             cur = nxt[cur];
-                        if (A[cur + 1] == A[i]) nxt[i] = cur + 1;
+                        if (A[cur + 1] == A[i]) nxt[i] = ++cur;
                         else nxt[i] = 0;
                     }
                 }
