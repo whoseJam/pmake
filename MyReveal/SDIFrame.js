@@ -23,8 +23,9 @@ SDIFrame.prototype.getViewBox = function() {
 }
 
 SDIFrame.prototype.getURL = function() {
-    const url = this.iframe.getAttribute("data-animation");
+    let url = this.iframe.getAttribute("data-animation");
     if (!url) return undefined;
+    if (url.endsWith(".js")) url = url.replace(".js", ".html");
     if (url.startsWith("./animation") || url.startsWith("http") || url.startsWith("animation")) return url;
     const location = GetLocationFromAncestor(this.iframe);
     if (location) return location + "/" + url;
