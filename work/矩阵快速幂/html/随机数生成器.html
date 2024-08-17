@@ -15,13 +15,25 @@
         <p class="fragment">
             尝试构造转移矩阵：
             $$
-            \begin{pmatrix}?&?\\?&?\end{pmatrix}\begin{pmatrix}X_{n}\\ c\end{pmatrix}=\begin{pmatrix}X_{n+1}\\c\end{pmatrix}
+            \begin{pmatrix}?&?\\?&?\end{pmatrix}
+            \begin{pmatrix}X_{n}\\ c\end{pmatrix}
+            =\begin{pmatrix}X_{n+1}\\c\end{pmatrix}
             $$
         </p>
         <p class="fragment">
             易知：
             $$
-            \begin{pmatrix}a&1\\0&1\end{pmatrix}\begin{pmatrix}X_{n}\\ c\end{pmatrix}=\begin{pmatrix}X_{n+1}\\c\end{pmatrix}
+            \begin{pmatrix}a&1\\0&1\end{pmatrix}
+            \begin{pmatrix}X_{n}\\ c\end{pmatrix}
+            =\begin{pmatrix}X_{n+1}\\c\end{pmatrix}
+            $$
+        </p>
+        <p class="fragment">
+            所以：
+            $$
+            \begin{pmatrix}a&1\\0&1\end{pmatrix}^n
+            \begin{pmatrix}X_{0}\\ c\end{pmatrix}
+            =\begin{pmatrix}X_{n}\\c\end{pmatrix}
             $$
         </p>
     </section>
