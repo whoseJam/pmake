@@ -2,6 +2,7 @@ const revealPlugins = [];
 
 import Reveal from "reveal.js";
 import { MathJax2 } from "./plugin/MathJax2";      revealPlugins.push(MathJax2);
+// import { MathJax3 } from "./plugin/MathJax3";      revealPlugins.push(MathJax3);
 import RevealZoom from "./plugin/zoom";            revealPlugins.push(RevealZoom);
 import RevealNotes from "./plugin/notes";          revealPlugins.push(RevealNotes);
 import RevealSearch from "./plugin/search";        revealPlugins.push(RevealSearch);

@@ -18,27 +18,30 @@ inline int read(){
 int sum[2005][2005];
 int C[2005][2005];
 
-void Pre(int p){
+void Pre(int k){
 	C[0][0]=1;
 	for(int i=1;i<=2000;i++){
 		C[i][0]=1;C[i][i]=1;
 		for(int j=1;j<i;j++)
-			C[i][j]=(C[i-1][j]+C[i-1][j-1])%p;
+			C[i][j]=(C[i-1][j]+C[i-1][j-1])%k;
 	}
 }
 
 void PreSum(){
-	for(int i=1;i<=2000;i++){
-		for(int j=1;j<i;j++)
-			sum[i][j]=(C[i][j]==0)+sum[i][j-1]+sum[i-1][j]-sum[i-1][j-1];
-		sum[i][0]=sum[i-1][0];sum[i][i]=sum[i][i-1];
+	for(int i=0;i<=2000;i++){
+		for(int j=0;j<=2000;j++){
+			sum[i][j]=(C[i][j]==0&&j<=i);
+			if(i-1>=0)sum[i][j]+=sum[i-1][j];
+			if(j-1>=0)sum[i][j]+=sum[i][j-1];
+			if(i-1>=0&&j-1>=0)sum[i][j]-=sum[i-1][j-1];
+		}
 	}
 }
 
 int main(){
-	int Case=read(),p=read();Pre(p);PreSum();
+	int Case=read(),k=read();Pre(k);PreSum();
 	while(Case--){
-		int n=read(),m=read();m=min(m,n);
+		int n=read(),m=read();
 		printf("%d\n",sum[n][m]);
 	}
 	return 0;

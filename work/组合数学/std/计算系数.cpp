@@ -4,34 +4,30 @@
 using namespace std;
 
 typedef long long ll;
-const ll mod=10007;
-ll fac[1005],finv[1005],inv[1005];
+const ll Mod=10007;
+ll C[1005][1005];
 ll A,B,K,N,M;
 
 void Pre(ll n=1000){
-	inv[1]=finv[1]=fac[1]=finv[0]=fac[0]=1;
-	for(ll i=2;i<=n;i++){
-		fac[i]=fac[i-1]*i%mod;
-		inv[i]=((-inv[mod%i]*(mod/i)%mod)+mod)%mod;
-		finv[i]=finv[i-1]*inv[i]%mod;
+	C[0][0]=1;
+	for(ll i=1;i<=n;i++){
+		C[i][0]=C[i][i]=1;
+		for(ll j=1;j<i;j++)
+			C[i][j]=(C[i-1][j-1]+C[i-1][j])%Mod;
 	}
-}
-
-ll C(ll n,ll m){
-	return fac[n]*finv[m]%mod*finv[n-m]%mod;
 }
 
 ll Fastpow(ll a,ll b){
 	ll ans=1;
 	while(b){
-		if(b&1)ans=(ans*a)%mod;
-		b>>=1;a=(a*a)%mod;
+		if(b&1)ans=(ans*a)%Mod;
+		b>>=1;a=(a*a)%Mod;
 	}
 	return ans;
 }
 
 int main(){
 	cin>>A>>B>>K>>N>>M;Pre();
-	cout<<(C(K,N)*Fastpow(A,N)*Fastpow(B,M))%mod;
+	cout<<(C[K][N]*Fastpow(A,N)*Fastpow(B,M))%Mod;
 	return 0;
 }

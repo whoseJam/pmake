@@ -13,8 +13,10 @@
         <p class="fragment">一个最朴素的想法是，把字符串的所有字符的ASCII值直接相加，得到一个Hash值</p>
         <p class="fragment quote">
             $$
+            \begin{aligned}
             Hash(ab)=97+98=195 \\
             Hash(bc)=98+99=197
+            \end{aligned}
             $$
         </p>
         <p class="fragment">不过由于我们只保留了字符串的<b>构成信息</b>，损失了字符的<b>位置信息</b>，所以会存在大量冲突</p>
