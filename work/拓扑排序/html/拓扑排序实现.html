@@ -8,7 +8,7 @@
         <p class="fragment">
             在有向图中，节点 $u$ 的<b>入度</b>，就是指向 $u$ 的边的数量；节点 $u$ 的<b>出度</b>，就是起点在 $u$ 点的边的数量
         </p>
-        <iframe data-src="./animation/入度和出度.html" class="fragment"
+        <iframe data-animation="./animation/入度和出度.html" class="fragment"
             style="width: 1000px; height: 300px;"></iframe>
         <p class="fragment" style="text-align: center;">
             $inDegree(4)=3$，$outDegree(4)=2$
@@ -28,7 +28,7 @@
     <section>
         <h2>拓扑排序</h2>
         <p>在代码中，我们用一个队列来存放所有入度为 $0$ 的节点</p>
-        <iframe data-src="./animation/拓扑排序演示.html"
+        <iframe data-animation="./animation/拓扑排序演示.html"
             style="width: 1000px; height: 500px;"></iframe>
         <p class="fragment">每次取队头，并将其从图中删掉</p>
     </section>

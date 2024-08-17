@@ -9,7 +9,7 @@
         <ul>
             <li><code>Add(l, r, d)</code>：把 $[l,r]$ 这个区间内的元素整体加上 $d$（$d$ 可正可负）</li>
         </ul>
-        <iframe data-src="./animation/线段树区间修改面临的困境.html"
+        <iframe data-animation="./animation/线段树区间修改面临的困境.html"
             style="width: 1000px; height: 400px;" rate="1.01"></iframe>
         <p class="fragment">最坏情况下，有 $2n$ 个线段的特征都被改变了</p>
         <p class="fragment">我们可以引入<b>懒标记</b>来解决这个问题</p>
@@ -33,7 +33,7 @@
     </section>
     <section>
         <h2>懒标记</h2>
-        <iframe data-src="./animation/线段树懒标记.html"
+        <iframe data-animation="./animation/线段树懒标记.html"
             style="width: 1000px; height: 400px;" rate="1.01"></iframe>
         <ul>
             <li class="fragment">在区间修改时，只修改区间最上层的线段特征，只对它们的祖先做更新，它们的后代的<b>延迟更新</b></li>

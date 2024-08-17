@@ -36,7 +36,8 @@ function animationConfiguration(animationName) {
                 inject: "body",
                 inlineSource: ".(js)$",
                 minify: false,
-                filename: `${animationName}.html`
+                filename: `${animationName}.html`,
+                scriptLoading: "blocking"
             })
         ],
         module: {

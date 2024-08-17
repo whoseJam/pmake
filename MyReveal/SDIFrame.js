@@ -1,4 +1,6 @@
 
+import { GetLocationFromAncestor} from "./inject";
+
 function inDecktapeEnvironment() {
     const userAgent = navigator.userAgent.toLowerCase();
     return userAgent.includes("headlesschrome");
@@ -21,11 +23,20 @@ SDIFrame.prototype.getViewBox = function() {
 }
 
 SDIFrame.prototype.getURL = function() {
-    return this.iframe.getAttribute("data-src");
+    const url = this.iframe.getAttribute("data-animation");
+    if (!url) return undefined;
+    if (url.startsWith("./animation") || url.startsWith("http") || url.startsWith("animation")) return url;
+    const location = GetLocationFromAncestor(this.iframe);
+    if (location) return location + "/" + url;
+    return url;
+}
+
+SDIFrame.prototype.setSrc = function(url) {
+    this.iframe.setAttribute("src", url);
 }
 
 SDIFrame.prototype.isValid = function() {
-    return this.iframe.getAttribute("data-src") !== undefined;
+    return this.iframe.getAttribute("data-animation") !== undefined;
 }
 
 SDIFrame.prototype.getRate = function() {

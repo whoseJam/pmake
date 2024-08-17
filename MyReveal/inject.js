@@ -6,7 +6,7 @@ function GetLocation(path) {
     return folders.join("/");
 }
 
-function GetLocationFromAncestor(element) {
+export function GetLocationFromAncestor(element) {
     while (element.parentNode && element.parentNode.getAttribute) {
         const parent = element.parentNode;
         if (parent.id === "slide-host") return undefined;

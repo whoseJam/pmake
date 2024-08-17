@@ -22,7 +22,7 @@
         <h2>树状数组</h2>
         <p>树状数组首先是一个<b style="color: red;">数组</b></p>
         <p class="fragment">其次，具有一些<b style="color: red;">树的影子</b></p>
-        <iframe data-src="./animation/具体数字.html" class="fragment"
+        <iframe data-animation="./animation/具体数字.html" class="fragment"
             style="width: 1000px; height: 400px;"></iframe>
         <p class="fragment">增加了一个辅助数组 $C$，满足 $C_i=Sum(A,i-lowbit(i)+1,i)$</p>
     </section>
@@ -53,7 +53,7 @@
                 }
             </script>
         </codeblock>
-        <iframe data-src="./animation/lowbit.html"
+        <iframe data-animation="./animation/lowbit.html"
             style="width: 1000px; height: 500px;" rate="1.01"></iframe>
     </section>
 
@@ -61,7 +61,7 @@
         <h2>树状数组结构</h2>
         <div>
             <div class="left">
-                <iframe data-src="./animation/单视图.html"
+                <iframe data-animation="./animation/单视图.html"
                     style="width: 500px; height: 400px;"></iframe>
             </div>
             <div class="right">
@@ -89,7 +89,7 @@
     </section>
     <section>
         <h2>Add(x, d)</h2>
-        <iframe data-src="./animation/单视图.html"
+        <iframe data-animation="./animation/单视图.html"
             style="width: 1000px; height: 400px;"></iframe>
         <p>考虑修改 $A_i$ 后，有哪些 $C_i$ 需要被修改</p>
         <codeblock class="fragment">

@@ -8,14 +8,14 @@
         <p>树上启发式合并是一种思想，而不是某种具体的数据结构</p>
         <p class="fragment">有一棵 $n$ 个节点的树，我们需要统计其上<b>每个点</b>的某种<b>子树信息</b></p>
         <p class="fragment">如果这种子树信息需要用到<b>某个数据结构</b>去统计，且<b>插入信息</b>和<b>删除信息</b>的时间复杂度为 $O(K)$......</p>
-        <iframe data-src="./animation/暴力统计子树.html" class="fragment"
+        <iframe data-animation="./animation/暴力统计子树.html" class="fragment"
             style="width: 1000px; height: 300px;"></iframe>
         <p class="fragment">这么做时间复杂度显然是 $O(n^2K)$</p>
     </section>
     <section>
         <h2>树上启发式合并</h2>
         <p>我们在暴力统计子树信息的时候，存在大量的<b>信息浪费和重复统计</b></p>
-        <iframe data-src="./animation/信息浪费和重复统计.html"
+        <iframe data-animation="./animation/信息浪费和重复统计.html"
             style="width: 1000px; height: 400px;"></iframe>
         <ul>
             <li class="fragment">
@@ -42,7 +42,7 @@
                 <span class="fragment">（需要把轻儿子的信息<b>暴力加回来</b>）</span>
             </li>
         </ul>
-        <iframe data-src="./animation/树上启发式合并.html" class="fragment"
+        <iframe data-animation="./animation/树上启发式合并.html" class="fragment"
             style="width: 1000px; height: 400px;"></iframe>
     </section>
     <section>

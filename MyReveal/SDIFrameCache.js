@@ -8,12 +8,11 @@ export function SDIFrameCache(Reveal) {
         const currentSlide = event.currentSlide;
         const iframes = currentSlide.getElementsByTagName("iframe");
         for (let i = 0; i < iframes.length; i++) {
-            const iframe = iframes[i];
-            const dataSource = iframe.getAttribute("data-src");
-            const src = iframe.getAttribute("src");
-            if (dataSource && (!src || src == "")) {
-                iframe.setAttribute("src", dataSource);
-                this.update(new SDIFrame(iframe, this));
+            const iframe = new SDIFrame(iframes[i], this);
+            const url = iframe.getURL();
+            if (url) {
+                iframe.setSrc(url);
+                this.update(iframe);
             }
         }
     });
@@ -21,12 +20,11 @@ export function SDIFrameCache(Reveal) {
     Reveal.on("fragmentshown", (event) => {
         const fragmentElement = event.fragment;
         if (fragmentElement.tagName == "iframe") {
-            const iframe = fragmentElement;
-            const dataSource = iframe.getAttribute("data-src");
-            const src = iframe.getAttribute("src");
-            if (dataSource && (!src || src == "")) {
-                iframe.setAttribute("src", dataSource);
-                this.update(new SDIFrame(iframe, this));
+            const iframe = new SDIFrame(fragmentElement, this);
+            const url = iframe.getURL();
+            if (url) {
+                iframe.setSrc(url);
+                this.update(iframe);
             }
         }
     });
@@ -44,9 +42,6 @@ export function SDIFrameCache(Reveal) {
 }
 
 SDIFrameCache.prototype.update = function(iframe) {
-    console.log("update iframe=", iframe);
-    console.log("is valid=", iframe.isValid());
-    console.log("url=", iframe.getURL());
     if (!iframe.isValid()) return;
     const url = iframe.getURL();
     if (!url) return;

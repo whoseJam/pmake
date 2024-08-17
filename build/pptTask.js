@@ -55,7 +55,8 @@ module.exports = function PPTTask(sourceFileFolder, targetFileFolder) {
     global.targetFileFolder = targetFileFolder;
     const watcher = gulp.watch(`${sourceFileFolder}/**`);
 
-    cleanFilesInFolder(targetFileFolder);
+    cleanAllFiles(targetFileFolder);
+    cleanAllEmptyDirectories(targetFileFolder);
     walk(sourceFileFolder, path => {
         const suffix = path.split(".").slice(-1)[0];
         if (!eventListener[suffix] || !eventListener[suffix].onAdd) {
@@ -144,6 +145,35 @@ function copyImage(srcPath, destFolderPath) {
 function cleanFile(path) {
     const stats = fs.statSync(path);
     if (stats.isFile()) fs.unlinkSync(path);
+}
+
+function cleanAllFiles(path) {
+    const files = fs.readdirSync(path);
+    files.forEach(file => {
+        const filePath = `${path}/${file}`;
+        const stats = fs.statSync(filePath);
+        if (stats.isDirectory()) {
+            cleanAllFiles(filePath);
+        } else {
+            fs.unlinkSync(filePath);
+        }
+    });
+}
+
+function cleanAllEmptyDirectories(path, level = 0) {
+    const files = fs.readdirSync(path);
+    if (files.length > 0) {
+        let tempFile = 0;
+        files.forEach(file => {
+            tempFile++;
+            cleanAllEmptyDirectories(`${path}/${file}`, 1);
+        });
+        if (tempFile === files.length && level !== 0) {
+            fs.rmdirSync(path);
+        }
+    } else {
+        level !==0 && fs.rmdirSync(path);
+    }
 }
 
 function cleanFilesInFolder(directoryPath) {
