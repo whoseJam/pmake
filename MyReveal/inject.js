@@ -69,7 +69,7 @@ function FindIncludeHTMLRequest() {
     }
 }
 
-export function includeHTML(callback) {
+export default function includeHTML(callback) {
     global.callback = callback;
     FindIncludeHTMLRequest();
 }

@@ -1,32 +1,53 @@
-const revealPlugins = [];
+const plugins = [];
 
+import includeHTML from "./inject";
 import Reveal from "reveal.js";
-import { MathJax2 } from "./plugin/MathJax2";      revealPlugins.push(MathJax2);
-// import { MathJax3 } from "./plugin/MathJax3";      revealPlugins.push(MathJax3);
-import RevealHighlight from "./plugin/highlight";  revealPlugins.push(RevealHighlight);
+
+import { Picture } from "./plugin/Picture";
+import { Codeblock } from "./plugin/Codeblock";
+import { Problem } from "./plugin/Problem";
+import { Image } from "./plugin/Image";
+import { SDAnimation } from "./plugin/SDAnimation";
+import { MathJax2 } from "./plugin/MathJax2";
+
+import Highlight from "./plugin/HighlightEngine";
 import "./plugin/Chalkboard";
-const RevealChalkboard = window.RevealChalkboard;  revealPlugins.push(RevealChalkboard);
+
+plugins.push(Picture);
+plugins.push(Codeblock);
+plugins.push(Problem);
+plugins.push(Image);
+plugins.push(SDAnimation);
+plugins.push(MathJax2);
+plugins.push(Highlight);
+plugins.push(window.RevealChalkboard);
 window.Reveal = Reveal
 
-import chalkboardConfig from "./initChalkboard";
-
-import { includeHTML } from "./inject";
-import { initComponent } from "./initComponent";
-
-import { SDIFrameCache } from "./SDIFrameCache";
-import { Image } from "./Image";
-
-const cache = new SDIFrameCache(Reveal);
-Image(Reveal);
-
 includeHTML(function() {
-    initComponent();
     Reveal.initialize({
         controls: true,
         progress: true,
         center: true,
         hash: true,
-        chalkboard: chalkboardConfig,
-        plugins: revealPlugins
+        chalkboard: {
+            boardmarkerWidth: 5,
+            chalkEffect: 0,
+            storage: null,
+            src: null,
+            readOnly: undefined,
+            transition: 800,
+            theme: "whiteboard",
+            eraser: { src: "https://cdn.jsdelivr.net/npm/reveal.js-plugins@latest/chalkboard/img/sponge.png", radius: 20 },
+            boardmarkers : [
+                { color: "rgba(100,100,100,1)", cursor: "url(https://cdn.jsdelivr.net/npm/reveal.js-plugins@latest/chalkboard/img/boardmarker-black.png), auto" },
+                { color: "rgba(30,144,255, 1)", cursor: "url(https://cdn.jsdelivr.net/npm/reveal.js-plugins@latest/chalkboard/img/boardmarker-blue.png), auto" },
+                { color: "rgba(220,20,60,1)",   cursor: "url(https://cdn.jsdelivr.net/npm/reveal.js-plugins@latest/chalkboard/img/boardmarker-red.png), auto" },
+                { color: "rgba(50,205,50,1)",   cursor: "url(https://cdn.jsdelivr.net/npm/reveal.js-plugins@latest/chalkboard/img/boardmarker-green.png), auto" },
+                { color: "rgba(255,140,0,1)",   cursor: "url(https://cdn.jsdelivr.net/npm/reveal.js-plugins@latest/chalkboard/img/boardmarker-orange.png), auto" },
+                { color: "rgba(150,0,20150,1)", cursor: "url(https://cdn.jsdelivr.net/npm/reveal.js-plugins@latest/chalkboard/img/boardmarker-purple.png), auto" },
+                { color: "rgba(255,220,0,1)",   cursor: "url(https://cdn.jsdelivr.net/npm/reveal.js-plugins@latest/chalkboard/img/boardmarker-yellow.png), auto" }
+            ]
+        },
+        plugins: plugins
     });
 });
