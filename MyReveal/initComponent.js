@@ -35,13 +35,13 @@ function initPicture() {
     const element = elements[0];
     const parent = element.parentNode;
     let src = element.getAttribute("src");
-    if (!src) src = element.getAttribute("data-src");
+    if (!src) src = element.getAttribute("data-source");
     const width = element.getAttribute("width");
     const height = element.getAttribute("height");
 
     const div = document.createElement("div");
     const image = document.createElement("img");
-    image.setAttribute("data-src", src);
+    image.setAttribute("data-source", src);
     if (width) image.setAttribute("width", width);
     if (height) image.setAttribute("height", height);
     div.className = element.className;

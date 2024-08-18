@@ -8,7 +8,12 @@ const colors = require("colors-console");
 
 const eventListener = {};
 
-defineEventListener("html|cpp|md|txt", {
+defineEventListener("cpp", {
+    onAdd: copyCPPFile,
+    onChange: copyCPPFile,
+    onUnlink: cleanCPPFile
+})
+defineEventListener("html|md|txt", {
     onAdd: copyFile,
     onChange: copyFile,
     onUnlink: cleanFile
@@ -137,6 +142,10 @@ function copyFile(srcPath, destFolderPath) {
                .pipe(gulp.dest(destFolderPath));
 }
 
+function copyCPPFile(srcPath, destFolderPath) {
+    return copyFile(srcPath, `${targetFileFolder}/std`);
+}
+
 function copyImage(srcPath, destFolderPath) {
     return gulp.src(srcPath, { encoding: false })
                .pipe(gulp.dest(destFolderPath));
@@ -145,6 +154,11 @@ function copyImage(srcPath, destFolderPath) {
 function cleanFile(path) {
     const stats = fs.statSync(path);
     if (stats.isFile()) fs.unlinkSync(path);
+}
+
+function cleanCPPFile(path) {
+    const fileName = path.split("/").slice(-1)[0];
+    cleanFile(`${targetFileFolder}/std/${fileName}`);
 }
 
 function cleanAllFiles(path) {
