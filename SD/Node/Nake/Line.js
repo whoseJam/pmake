@@ -1,7 +1,7 @@
 import { Interp } from "@/Animate/Interp";
 
-import { BaseLine }             from "@/Node/Nake/BaseLine";
-import { naiveUpdate }          from "@/Node/Common"
+import { BaseLine }        from "@/Node/Nake/BaseLine";
+import { naiveUpdate }     from "@/Node/Common"
 import { GetterAndSetter } from "@/Node/Common";
 
 import { Vec } from "@/Utility/Math";

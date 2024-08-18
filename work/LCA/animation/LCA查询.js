@@ -3,7 +3,7 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const C = sd.color();
 const tree = new sd.Tree(svg).width(600).layerHeight(50);
-const n = 16;
+const n = 17;
 const m = 4;
 const fa = sd.make2d(20, 10, 0);
 const dep = sd.make1d(20);
@@ -11,9 +11,9 @@ const links = [
     [1, 2], [1, 3],
     [2, 4], [2, 5],
     [3, 6], [5, 7],
-    [7, 8], [7, 9], [9, 10],
-    [10, 11], [11, 12], [12, 13],
-    [13, 14], [14, 15], [15, 16]
+    [7, 8], [7, 9], [8, 10],
+    [9, 11], [11, 12], [12, 13],
+    [13, 14], [14, 15], [15, 16], [16, 17]
 ];
 
 init();
@@ -35,8 +35,8 @@ function init() {
 }
 
 async function main() {
-    await LCA(2, 16);
-    await LCA(8, 9);
+    await LCA(2, 17);
+    await LCA(10, 11);
     await LCA(6, 16);
     await sd.pause();
 }

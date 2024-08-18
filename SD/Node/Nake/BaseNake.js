@@ -3,9 +3,9 @@ import { Interp } from "@/Animate/Interp";
 import { D3ToNake }   from "@/Utility/Cast";
 import { NakeToSnap } from "@/Utility/Cast";
 
-import { Text }                 from "@/Node/Nake/Text";
-import { SDNode }               from "@/Node/SDNode";
-import { naiveUpdate }          from "@/Node/Common"
+import { Text }            from "@/Node/Nake/Text";
+import { SDNode }          from "@/Node/SDNode";
+import { naiveUpdate }     from "@/Node/Common"
 import { GetterAndSetter } from "@/Node/Common";
 
 export function BaseNake(parent, tag) {

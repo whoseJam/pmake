@@ -24,7 +24,7 @@ function MoveToFunction() {
         }
 
         const context = new Context(this);
-        const rule = this._.rule; //this.rule();
+        const rule = this.rule();
         if (this.targetElement) {
             this.pointAt = this.targetElement.id;
             if (!this.opacity()) {
@@ -50,7 +50,7 @@ function PointerMoveFunction(direction, gap) {
             if (!name.startsWith("pointer_")) return;
             if (other.pointAt === child.pointAt &&
                 other.direction === child.direction &&
-                other.opacity() !== 0) {
+                (other.opacity() !== 0 || other.id === child.id)) {
                 count++;
                 if (other.id < child.id) front++;
             }
@@ -75,19 +75,24 @@ function LabelMoveFunction(direction, gap) {
 }
 
 export function Pointer(parent, label, direction = "b", pointerGap = 10, length = 50, textGap = 10) {
-    const pointer = new Line(parent);
-    const text    = new Text(pointer, label).fontSize(20);
-    MakePointer(pointer, direction, length);
+    const child = new Line(parent);
+    MakePointer(child, direction, length);
 
-    pointer.childAs("label", text, LabelMoveFunction(direction, textGap));
+    child.childAs(
+        "label",
+        new Text(child, label).fontSize(20),
+        LabelMoveFunction(direction, textGap)
+    );
 
-    pointer.moveTo = MoveToFunction();
+    child.priority = 1;
+    child.direction = direction;
+    child.pointAt = 0;
+    child.moveTo = MoveToFunction();
 
     if (parent.childAs) {
-        parent.childAs(`pointer_${++id}`, pointer, PointerMoveFunction(direction, pointerGap));
+        parent.childAs(`pointer_${++id}`, child, PointerMoveFunction(direction, pointerGap));
     }
 
-    pointer.priority = 1;
-    pointer.opacity(0);
-    return pointer;
+    child.opacity(0);
+    return child;
 }

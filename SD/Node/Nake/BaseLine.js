@@ -226,7 +226,7 @@ BaseLine.prototype.value = function(value, rule) {
     return this;
 }
 
-BaseLine.prototype.rule = function(rule) {
+BaseLine.prototype.valueRule = function(rule) {
     const value = this.child("value");
     this.member.setAndFlush("rule", rule);
     if (value) {

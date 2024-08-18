@@ -142,6 +142,7 @@ SDNode.prototype.onClick    = Forward("interact", "onClick");
 SDNode.prototype.onDblClick = Forward("interact", "onDblClick");
 
 SDNode.prototype.rule = function(rule) {
+    console.log("get my rule=", rule, "this.rule=", this._.rule);
     if (rule === undefined) {
         return this._.rule;
     }
