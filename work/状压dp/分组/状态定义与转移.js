@@ -3,9 +3,9 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const C = sd.color();
 const n = 6;
-const graph = new sd.TinyGraph(svg).width(200).height(200).cx(600).cy(300);
-const text = new sd.Text(svg, "S = 111111").fontSize(25).cx(graph.cx()).y(graph.my());
-const nextText = new sd.Text(svg).fontSize(25).x(text.x()).y(graph.my() + 50);
+const graph = new sd.TinyGraph(svg).width(200).height(180).cx(600).cy(300);
+const text = new sd.Text(svg, "S = 111111").fontSize(25).x(graph.mx() + 20).cy(graph.ky(0.33));
+const nextText = new sd.Text(svg).fontSize(25).x(graph.mx() + 20).cy(graph.ky(0.66));
 
 init();
 main();

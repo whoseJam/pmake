@@ -1,4 +1,4 @@
-import { SDNode } from "SD/sd";
+import { SDNode } from "SD/Node/SDNode";
 
 /**
  * 创建一个索引

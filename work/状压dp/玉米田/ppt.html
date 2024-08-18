@@ -7,7 +7,7 @@
         <h2>玉米田</h2>
         <iframe data-animation="./样例解释.js"
             style="width: 1000px; height: 250px;"></iframe>
-        <p>有一块 $n\times m$ 的玉米田，你需要在这片田地上种植玉米，遵循以下规则：</p>
+        <p>有一块 $m\times n$ 的玉米田，你需要在这片田地上种植玉米，遵循以下规则：</p>
         <ul>
             <li>$1$ 代表土地肥沃可以种植玉米</li>
             <li>$0$ 代表土地贫瘠不能种植玉米</li>
@@ -17,7 +17,7 @@
     </section>
     <section>
         <h2>玉米田</h2>
-        <p>注意到 $n,m\le 12$</p>
+        <p>注意到 $m,n\le 12$</p>
         <p>我们可以把<b>某一行种玉米的情况</b>压缩为<b>一个状态</b>，再逐行考虑如何种玉米</p>
         <iframe data-animation="./状态定义.js"
             style="width: 1000px; height: 120px;"></iframe>
@@ -40,8 +40,9 @@
     </section>
     <section>
         <h2>玉米田</h2>
-        <p>第一行玉米只要合法就能种</p>
-        <codeblock>
+        <p>设 $f(i,S)$ 表示种完前 $i$ 行的玉米，第 $i$ 行<b>种植状态</b>为 $S$ 的方案数</p>
+        <p class="fragment">第 $1$ 行，只要合法就能种</p>
+        <codeblock class="fragment">
             <script type="text/template">
                 for (int S: validS[1]) f[1][S] = 1;
             </script>

@@ -51,13 +51,11 @@ int main(){
 		}
 	}
 	for(ll S=0;S<=All;S++){
-		ll Rev=(~S)&All;
+		ll Rev=All-S;
 		for(ll T=Rev;T;T=(T-1)&Rev){
 			f[S|T]=max(f[S|T],f[S]+v[T]);
 		}
-		ans=max(ans,f[S]);
 	}
-	cout<<ans<<'\n';
+	cout<<f[All]<<'\n';
 	return 0;
 }
-

@@ -1,4 +1,4 @@
-import { SDNode } from "SD/sd";
+import { SDNode } from "SD/Node/SDNode";
 
 type XLocator = "x"|"cx"|"mx";
 type YLocator = "y"|"cy"|"my";

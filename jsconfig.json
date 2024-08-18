@@ -3,9 +3,9 @@
         "target": "ES6",
         "module": "CommonJS",
         "allowSyntheticDefaultImports": true,
-        "baseUrl": "./",
+        "baseUrl": ".",
         "paths": {
-            "@/*": ["SD/*"]
+            "@/*": ["./SD/*"]
         }
     },
 }
