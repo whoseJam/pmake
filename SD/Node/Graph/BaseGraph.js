@@ -139,6 +139,17 @@ BaseGraph.prototype.outNodes = function(x, mode = "direct") {
     return [...new Set(outs)].map(nodeId => this.findNodeById(nodeId));
 }
 
+BaseGraph.prototype.forEachOutNodes = function(x, callback, mode = "direct") {
+    this.outNodes(x, mode).forEach(callback);
+    return this;
+}
+
+BaseGraph.prototype.forEachOutNodesSync = async function(x, callback, mode = "direct") {
+    const nodes = this.outNodes(x, mode);
+    for (let node of nodes) await callback(node);
+    return this;
+}
+
 BaseGraph.prototype.outLinks = function(x, mode = "direct") {
     const targetFromNodeId = String(x);
     const links = this.member.get("links");
@@ -147,6 +158,17 @@ BaseGraph.prototype.outLinks = function(x, mode = "direct") {
         link => String(link.fromNodeId) === targetFromNodeId || String(link.toNodeId) === targetFromNodeId;
     const outs = links.filter(filter);
     return outs;
+}
+
+BaseGraph.prototype.forEachOutLinks = function(x, callback, mode = "direct") {
+    this.outLinks(x, mode).forEach(callback);
+    return this;
+}
+
+BaseGraph.prototype.forEachOutLinksSync = async function(x, callback, mode = "direct") {
+    const links = this.outLinks(x, mode);
+    for (let link of links) await callback(link);
+    return this;
 }
 
 BaseGraph.prototype.newNodeByBaseGraph = function(id, elem) {

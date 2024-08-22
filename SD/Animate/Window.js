@@ -1,6 +1,7 @@
-import { setViewBox } from "@/Interact/Svg";
+import { Animate } from "@/Animate/Animate";
+
+import { setViewBox }       from "@/Interact/Svg";
 import { setAnimationSize } from "@/Interact/Message";
-import { Animate } from "./Animate";
 
 window.__FRAME__ = 0;
 window.__MAXFRAME__ = 0;
@@ -40,7 +41,12 @@ export function pause() {
     if (window.__FLUSH__ || 
         window.__EXPORT__) {
         Animate.currentActionList.updateWindowSize();
-        return 0;
+        if (window.__FRAME__ <= window.IFRAME_MAX_FRAME) {
+            window.__FRAME__++;
+            return 0;
+        } else {
+            record();
+        }
     }
     return new Promise(function(resolve) {
         const fn = function() {

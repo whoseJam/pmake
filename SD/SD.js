@@ -78,6 +78,8 @@ export { PathPen } from "./Utility/PathPen.js";
 
 export { pause }  from "./Animate/Window.js";
 export { rand }   from "./Utility/Random.js";
+export { trim }   from "./Utility/Trim.js";
+export { init }   from "./Utility/Util.js";
+export { main }   from "./Utility/Util.js";
 export { make1d } from "./Utility/Util.js"
 export { make2d } from "./Utility/Util.js";
-export { trim }   from "./Utility/Trim.js";

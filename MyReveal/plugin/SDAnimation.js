@@ -36,6 +36,7 @@ function SDIFrameCache(Reveal) {
     });
 
     window.SetAnimationSize = (id, url, x, y, width, height) => {
+        console.log("id=", id, "url=", url, "x=", x, "y=", y, "width=", width, "height=", height);
         this.createCacheItem(url);
         const box = new DOMRect(x, y, width, height)
         this.cache[url].box = box;
@@ -90,14 +91,25 @@ class SDIFrame {
     
         return this;
     }
-}
 
-SDIFrame.prototype.getViewBox = function() {
-    return this.iframe.getAttribute("data-viewBox");
+    getViewBox() {
+        return this.iframe.getAttribute("data-viewBox");
+    }
+
+    getMaxFrame() {
+        const maxFrame = this.iframe.getAttribute("data-maxFrame");
+        if (maxFrame) return maxFrame;
+        return Infinity;
+    }
+
+    onload(callback) {
+        this.iframe.onload = callback;
+    }
 }
 
 SDIFrame.prototype.getURL = function() {
     let url = this.iframe.getAttribute("data-animation");
+    if (!url) url = this.iframe.getAttribute("data-src");
     if (!url) return undefined;
     if (url.endsWith(".js")) url = url.replace(".js", ".html");
     if (url.startsWith("./animation") || url.startsWith("http") || url.startsWith("animation")) return url;
@@ -150,10 +162,6 @@ SDIFrame.prototype.setAnimationSize = function(innerBox) {
     );
 }
 
-SDIFrame.prototype.onload = function(callback) {
-    this.iframe.onload = callback;
-}
-
 SDIFrame.prototype.update = function() {
     const url = this.getURL();
     if (!url) return;
@@ -177,13 +185,15 @@ SDIFrame.prototype.update = function() {
             } else {
                 const message = this.getMessage();
                 const outerBox = this.getBoundingBox();
+                const maxFrame = this.getMaxFrame();
                 message.Flush(
                     this.iframe.id,
                     url,
                     outerBox.width,
                     outerBox.height,
                     this.getRate(),
-                    needToExportAsPdf
+                    needToExportAsPdf,
+                    maxFrame
                 );
                 this.iframe.onload = undefined;
             }

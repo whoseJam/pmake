@@ -1,3 +1,4 @@
+import { pause } from "@/Animate/Window";
 
 export function int(x) {
     return ~~x;
@@ -19,4 +20,13 @@ export function make2d(rows, columns, defaultValue = 0) {
         result.push(make1d(columns, defaultValue));
     }
     return result;
+}
+
+export function init(callback) {
+    callback();
+}
+
+export async function main(callback) {
+    await callback();
+    await pause();
 }

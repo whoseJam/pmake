@@ -3,7 +3,7 @@ import { Animate } from "@/Animate/Animate";
 import { setViewBox } from "@/Interact/Svg";
 
 export function initMessage() {
-    window.Flush = function(id, url, width, height, rate, asPdf) {
+    window.Flush = function(id, url, width, height, rate, asPdf, maxFrame = Infinity) {
         window.__FLUSH__ = true;
         window.__EXPORT__ = asPdf
         window.IFRAME_ID = id;
@@ -11,6 +11,8 @@ export function initMessage() {
         window.IFRAME_RATE = rate;
         window.IFRAME_WIDTH = width;
         window.IFRAME_HEIGHT = height;
+        window.IFRAME_MAX_FRAME = maxFrame;
+        console.log("Flush Message Get", id, url, width, height, rate, asPdf, maxFrame);
         Animate.currentActionList.updateWindowSize();
     }
     window.SetViewBox = function(x, y, width, height, pwidth, pheight, rate) {
