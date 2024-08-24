@@ -60,9 +60,10 @@ export { FixedPointCurve } from "./Node/Curve/FixedPointCurve.js";
 
 export { Mathjax } from "./Node/Text/Mathjax.js";
 
-export { Input } from  "./Node/HTML/Input.js";
-export { Button } from "./Node/HTML/Button.js";
-export { Slider } from "./Node/HTML/Slider.js";
+export { Input }    from  "./Node/HTML/Input.js";
+export { Button }   from "./Node/HTML/Button.js";
+export { Slider }   from "./Node/HTML/Slider.js";
+export { TextArea } from "./Node/HTML/TextArea.js"
 
 export { Focus }        from "./Component/Focus.js";
 export { Index }        from "./Component/Index.js";

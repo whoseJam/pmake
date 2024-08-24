@@ -1,9 +1,10 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
+const C = sd.color();
 const n = 4;
 const tree = new sd.ValueTree(svg).width(1000);
-tree.cx(600).y(50);
+tree.dy(22);
 let tot = 1;
 
 init();
@@ -22,6 +23,9 @@ function makePermutation(arr) {
     }
     
     if (arr.length === n) {
+        result.onClick(() => {
+            result.color(C.orange);
+        });
         return result;
     }
 

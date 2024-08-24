@@ -2,7 +2,29 @@
     <section>
         <h1>全排列问题</h1>
     </section>
+    <problem data-src="http://43.143.204.105/problem/1153"></problem>
     <section>
         <h2>全排列问题</h2>
+        <iframe data-animation="./全排列问题.js"
+            data-viewBox="0 0 1000 280"
+            style="width: 1000px; height: 280px;"></iframe>
+        <codeblock class="fragment">
+            <script type="text/template">
+                void Dfs(int dep) { // 搜到第 dep 层，决定 p[dep] 放哪个数字
+                    if (dep == n) {
+                        for (int i = 0; i < n; i++) cout << setw(5) << p[i];
+                        cout << '\n';
+                        return;
+                    }
+                    for (int i = 1; i <= n; i++) { // 按照字典序走分支
+                        if (!used[i]) {
+                            p[dep] = i; used[i] = 1; // 分支
+                            Dfs(dep + 1);
+                            p[dep] = 0; used[i] = 0; // 回溯
+                        }
+                    }
+                }
+            </script>
+        </codeblock>
     </section>
 </section>

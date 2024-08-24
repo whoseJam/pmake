@@ -1,0 +1,33 @@
+<section>
+    <section>
+        <h1>自然数的拆分</h1>
+    </section>
+    <problem data-src="http://43.143.204.105/problem/1154"></problem>
+    <section>
+        <h2>自然数的拆分</h2>
+        <iframe data-animation="./自然数的拆分.js"
+            data-viewBox="0 0 1000 220"
+            style="width: 1000px; height: 220px;"></iframe>
+        <codeblock class="fragment">
+            <script type="text/template">
+                void Dfs(int dep) {
+                    int sum = 0;
+                    for (int i = 1; i <= dep - 1; i++) sum += p[i]; // 统计和
+                    if (sum == n && dep > 2) { // 正好凑出 n
+                        for (int i = 1; i <= dep - 1; i++)
+                            cout << p[i] << ("+\n" [i == dep - 1]);
+                        return;
+                    }
+                    int mn = (dep == 1) ? 1 : p[dep - 1]; // mn：前一个数字大小
+                    for (int i = mn; i <= n; i++) { // 要求当前数字比前一个数字更大
+                        if (sum + i <= n) {
+                            p[dep] = i; // 分支
+                            Dfs(dep + 1);
+                            p[dep] = 0; // 回溯
+                        }
+                    }
+                }
+            </script>
+        </codeblock>
+    </section>
+</section>

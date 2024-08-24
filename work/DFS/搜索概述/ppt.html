@@ -1,0 +1,52 @@
+<section>
+    <section>
+        <h1>搜索</h1>
+        <p>以剧情游戏为例</p>
+    </section>
+    <section>
+        <h2>搜索</h2>
+        <p>在剧情游戏中，我们时常面临着剧情选择......</p>
+        <iframe data-animation="./剧情选择.js"
+            data-viewBox="-2 -2 300 210"
+            style="width: 1000px; height: 300px;"></iframe>
+        <p class="fragment">
+            所有玩家都在一棵选择树上玩游戏
+            <span class="fragment">，不同的玩家有不同的需求</span>
+        </p>
+        <ul>
+            <li class="fragment"><b>全收集玩家</b>希望了解每一种可能的剧情</li>
+            <li class="fragment"><b>速通玩家</b>希望最快走到剧情结尾</li>
+        </ul>
+    </section>
+    <section>
+        <h2>图结构</h2>
+        <p>有些时候剧情分支会构成<b>图结构</b></p>
+        <iframe data-animation="./图结构剧情.js"
+            style="width: 1000px; height: 300px;"></iframe>
+    </section>
+    <section>
+        <h2>环结构</h2>
+        <p>还有的时候剧情分支会构成<b>环结构</b></p>
+        <iframe data-animation="./环结构剧情.js"
+            style="width: 1000px; height: 300px;"></iframe>
+    </section>
+    <section>
+        <h2>搜索</h2>
+        <p>所谓搜索，就是在<b>搜索图</b>上做路径遍历</p>
+        <div style="display: flex; align-items: center;" class="fragment">
+            <div class="quote" style="width: 50%;">
+                <h3>搜索图</h3>
+                <p>就我们刚刚画的那些节点和分支构成的图</p>
+                <ul>
+                    <li class="fragment">可能有环路</li>
+                    <li class="fragment">可能有多个前驱</li>
+                    <li class="fragment">可能有多个后继</li>
+                    <li class="fragment">只有一个起始节点</li>
+                    <li class="fragment">可能有多个终止节点</li>
+                </ul>
+            </div>
+            <iframe data-animation="./一般搜索图.js"
+                style="width: 40%; height: 300px;"></iframe>
+        </div>
+    </section>
+</section>

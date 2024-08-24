@@ -5,7 +5,7 @@ const n = 7;
 const tree = new sd.ValueTree(svg).width(1000);
 const UNIQUE = true;
 const ASCEND = true;
-tree.cx(600).y(50);
+tree.dy(22);
 let tot = 1;
 
 init();
