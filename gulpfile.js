@@ -18,7 +18,7 @@ try {
 const defaultAnimationTargetFilePath = defaultConfig["defaultAnimationTargetFilePath"];
 const defaultPPTTargetFilePath = defaultConfig["defaultPPTTargetFilePath"];
 
-global["projectRoot"] = __dirname.replaceAll("\\", "/");
+global["projectRoot"] = __dirname.replace(/\\g/, "/");
 
 function parseInput() {
     const length = process.argv.length;

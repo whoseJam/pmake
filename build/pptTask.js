@@ -72,7 +72,7 @@ module.exports = function PPTTask(sourceFileFolder, targetFileFolder) {
     })
 
     watcher.on("change", function(path) {
-        path = path.replaceAll("\\", "/");
+        path = path.replace(/\\g/, "/");
         const suffix = path.split(".").slice(-1)[0];
         if (!eventListener[suffix] || !eventListener[suffix].onChange) {
             console.log(`文件 ${path} 的后缀名未定义 onChange 处理函数`);
@@ -81,7 +81,7 @@ module.exports = function PPTTask(sourceFileFolder, targetFileFolder) {
         eventListener[suffix].onChange(pathToOriginFile(path), pathToTargetFolder(path));
     });
     watcher.on("add", function(path) {
-        path = path.replaceAll("\\", "/");
+        path = path.replace(/\\g/, "/");
         const suffix = path.split(".").slice(-1)[0];
         if (!eventListener[suffix] || !eventListener[suffix].onAdd) {
             console.log(`文件 ${path} 的后缀名未定义 onAdd 处理函数`);
@@ -90,7 +90,7 @@ module.exports = function PPTTask(sourceFileFolder, targetFileFolder) {
         eventListener[suffix].onAdd(pathToOriginFile(path), pathToTargetFolder(path));
     });
     watcher.on("unlink", function(path) {
-        path = path.replaceAll("\\", "/");
+        path = path.replace(/\\g/, "/");
         const suffix = path.split(".").slice(-1)[0];
         if (!eventListener[suffix] || !eventListener[suffix].onUnlink) {
             console.log(`文件 ${path} 的后缀名未定义 onUnlink 处理函数`);
@@ -133,7 +133,7 @@ function pathToTargetFolder(path) {
 }
 
 function pathToFile(path) {
-    path = path.replaceAll("\\", "/");
+    path = path.replace(/\\g/, "/");
     return path.split("/").slice(-1)[0];
 }
 
