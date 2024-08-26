@@ -13,6 +13,7 @@ module.exports = function libraryTask(targetFilePath) {
 
 function libraryConfiguration() {
     const mode = global["d"] ? "development" : "production";
+    const watch = global["w"] ? true : false;
     return {
         mode: mode,
         output: {
@@ -22,7 +23,7 @@ function libraryConfiguration() {
             umdNamedDefine: true,
             globalObject: 'this',
         },
-        watch: true,
+        watch: watch,
         plugins: [
             // new JavaScriptObfuscator({
             //     stringArray: true,

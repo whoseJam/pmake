@@ -47,7 +47,7 @@ gulp.task("ani", () => {
 
 gulp.task("animation", gulp.parallel("lib", "ani"));
 
-gulp.task("ppt", () => {
+gulp.task("ppt", (done) => {
     parseInput();
-    return pptTask(global["i"], global["o"] ? global["o"] : defaultPPTTargetFilePath);
+    pptTask(global["i"], global["o"] ? global["o"] : defaultPPTTargetFilePath, done);
 })

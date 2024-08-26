@@ -38,7 +38,7 @@ defineEventListener("js", {
     }
 });
 
-module.exports = function PPTTask(sourceFileFolder, targetFileFolder) {
+module.exports = function PPTTask(sourceFileFolder, targetFileFolder, done) {
     const pptFilePath = `${sourceFileFolder}/ppt.html`;
 
     // if (fs.existsSync(pptFilePath)) {
@@ -58,7 +58,6 @@ module.exports = function PPTTask(sourceFileFolder, targetFileFolder) {
 
     global.sourceFileFolder = sourceFileFolder;
     global.targetFileFolder = targetFileFolder;
-    const watcher = gulp.watch(`${sourceFileFolder}/**`);
 
     cleanAllFiles(targetFileFolder);
     cleanAllEmptyDirectories(targetFileFolder);
@@ -69,34 +68,38 @@ module.exports = function PPTTask(sourceFileFolder, targetFileFolder) {
             return;
         }
         eventListener[suffix].onAdd(pathToOriginFile(path), pathToTargetFolder(path));
-    })
+    });
+    done();
 
-    watcher.on("change", function(path) {
-        path = path.replaceAll("\\", "/");
-        const suffix = path.split(".").slice(-1)[0];
-        if (!eventListener[suffix] || !eventListener[suffix].onChange) {
-            console.log(`文件 ${path} 的后缀名未定义 onChange 处理函数`);
-            return;
-        }
-        eventListener[suffix].onChange(pathToOriginFile(path), pathToTargetFolder(path));
-    });
-    watcher.on("add", function(path) {
-        path = path.replaceAll("\\", "/");
-        const suffix = path.split(".").slice(-1)[0];
-        if (!eventListener[suffix] || !eventListener[suffix].onAdd) {
-            console.log(`文件 ${path} 的后缀名未定义 onAdd 处理函数`);
-            return;
-        }
-        eventListener[suffix].onAdd(pathToOriginFile(path), pathToTargetFolder(path));
-    });
-    watcher.on("unlink", function(path) {
-        path = path.replaceAll("\\", "/");
-        const suffix = path.split(".").slice(-1)[0];
-        if (!eventListener[suffix] || !eventListener[suffix].onUnlink) {
-            console.log(`文件 ${path} 的后缀名未定义 onUnlink 处理函数`);
-        }
-        eventListener[suffix].onUnlink(pathToTargetFile(path));
-    });
+    if (global["w"]) {
+        const watcher = gulp.watch(`${sourceFileFolder}/**`);
+        watcher.on("change", function(path) {
+            path = path.replaceAll("\\", "/");
+            const suffix = path.split(".").slice(-1)[0];
+            if (!eventListener[suffix] || !eventListener[suffix].onChange) {
+                console.log(`文件 ${path} 的后缀名未定义 onChange 处理函数`);
+                return;
+            }
+            eventListener[suffix].onChange(pathToOriginFile(path), pathToTargetFolder(path));
+        });
+        watcher.on("add", function(path) {
+            path = path.replaceAll("\\", "/");
+            const suffix = path.split(".").slice(-1)[0];
+            if (!eventListener[suffix] || !eventListener[suffix].onAdd) {
+                console.log(`文件 ${path} 的后缀名未定义 onAdd 处理函数`);
+                return;
+            }
+            eventListener[suffix].onAdd(pathToOriginFile(path), pathToTargetFolder(path));
+        });
+        watcher.on("unlink", function(path) {
+            path = path.replaceAll("\\", "/");
+            const suffix = path.split(".").slice(-1)[0];
+            if (!eventListener[suffix] || !eventListener[suffix].onUnlink) {
+                console.log(`文件 ${path} 的后缀名未定义 onUnlink 处理函数`);
+            }
+            eventListener[suffix].onUnlink(pathToTargetFile(path));
+        });
+    }
 
     project();
 }
@@ -231,10 +234,11 @@ function PPTConfiguration(pptFilePath) {
     // pptFilePath: ./work/xxx/ppt.html
     const mode = global["d"] ? "development" : "production";
     const pptFilePathAbsolute = global["projectRoot"] + pptFilePath.slice(1);
+    const watch = global["w"] ? true : false;
     return {
         mode: mode,
         entry: `${global["projectRoot"]}/build/pptMain.js`,
-        watch: true,
+        watch: watch,
         plugins: [
             new HtmlWebpackPlugin({
                 template: `${global["projectRoot"]}/build/pptIndex.html`,

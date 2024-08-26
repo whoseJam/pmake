@@ -24,12 +24,13 @@ module.exports = function animationTask(sourceFilePath, targetFilePath) {
 
 function animationConfiguration(animationName) {
     const mode = global["d"] ? "development" : "production";
+    const watch = global["w"] ? true : false;
     return {
         mode: mode,
         output: {
             filename: `${animationName}.js`
         },
-        watch: true,
+        watch: watch,
         plugins: [
             new HtmlWebpackPlugin({
                 template: `${global["projectRoot"]}/build/aniIndex.html`,
