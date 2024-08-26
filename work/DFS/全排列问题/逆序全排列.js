@@ -2,22 +2,19 @@ import * as sd from "@/sd";
 
 const svg = sd.svg();
 const C = sd.color();
-const n = 7;
+const n = 3;
 const tree = new sd.ValueTree(svg).width(1000);
 tree.dy(22);
 let tot = 1;
 
-init();
-main();
+sd.init(() => {
+    tree.root(1, makePermutation([]));
+})
 
-function Sum(arr) {
-    let sum = 0;
-    for (let i = 0; i < arr.length; i++)
-        sum += arr[i];
-    return sum;
-}
+sd.main(async() => {
+})
 
-function makeSplit(arr) {
+function makePermutation(arr) {
     let result;
     const myId = tot;
     if (arr.length == 0) {
@@ -29,29 +26,25 @@ function makeSplit(arr) {
         result = array;
     }
     
+    if (arr.length === n) {
+        result.onClick(() => {
+            result.color(C.orange);
+        });
+        return result;
+    }
+
     result.onClick(() => {
-        if (Sum(arr) === n) result.color(C.orange);
         result.onClick(() => {});
-        const lim = arr.length ? arr[arr.length - 1] : 1;
-        let childCount = 0;
+        const curSet = new Set(arr);
         tree.freeze();
-        for (let append = lim; append <= n; append++) {
+        for (let append = n; append >= 1; append--) {
+            if (curSet.has(append)) continue;
             const arrNew = [...arr, append];
-            if (Sum(arrNew) > n) break;
-            childCount++;
-            tree.newNode(++tot, makeSplit(arrNew));
+            tree.newNode(++tot, makePermutation(arrNew));
             tree.newLink(myId, tot);
+            tree.element(myId, tot).arrow();
         }
         tree.unfreeze();
-        if (Sum(arr) !== n && childCount === 0) result.color(C.red);
     });
     return result;
-}
-
-function init() {
-    tree.root(1, makeSplit([]));
-}
-
-async function main() {
-    await sd.pause();
 }

@@ -7,8 +7,12 @@ const tree = new sd.ValueTree(svg).width(1000);
 tree.dy(22);
 let tot = 1;
 
-init();
-main();
+sd.init(() => {
+    tree.root(1, makePermutation([]));
+})
+
+sd.main(async() => {
+})
 
 function makePermutation(arr) {
     let result;
@@ -38,16 +42,9 @@ function makePermutation(arr) {
             const arrNew = [...arr, append];
             tree.newNode(++tot, makePermutation(arrNew));
             tree.newLink(myId, tot);
+            tree.element(myId, tot).arrow();
         }
         tree.unfreeze();
     });
     return result;
-}
-
-function init() {
-    tree.root(1, makePermutation([]));
-}
-
-async function main() {
-    await sd.pause();
 }

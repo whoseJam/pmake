@@ -82,7 +82,7 @@ module.exports = function PPTTask(sourceFileFolder, targetFileFolder) {
 }
 
 function pathToFile(path) {
-    path = path.replace(/\\g/, "/");
+    path = path.replaceAll("\\", "/");
     return path.split("/").slice(-1)[0];
 }
 

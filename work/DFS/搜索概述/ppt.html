@@ -49,4 +49,35 @@
                 style="width: 40%; height: 300px;"></iframe>
         </div>
     </section>
+    <section>
+        <h2>搜索图 vs 搜索树</h2>
+        <iframe data-animation="./搜索图和搜索树.js"
+            data-viewBox="-26.750000000000007 -23.625000000000004 800 297.25"
+            style="width: 1000px; height: 400px;"></iframe>
+        <p>一张搜索图一定有一棵搜索树与之对应</p>
+        <ul>
+            <li class="fragment">树上每个节点，对应图中的<b>一个场景</b></li>
+            <li class="fragment">树上每个节点的子节点，对应图中某个场景的<b>所有分支场景</b></li>
+            <li class="fragment"><b>树上相同编号的节点可能重复出现</b></li>
+            <li class="fragment"><b>有限大小的搜索图</b>，可能对应<b>大小无限大的搜索树</b></li>
+        </ul>
+    </section>
+    <section>
+        <h2>搜索</h2>
+        <p>在我们做搜索的时候，就要考虑这么几个问题：</p>
+        <ol>
+            <li class="fragment">如何把原问题转化为一个搜索问题？<span class="fragment"><b>如何提取出搜索图？</b></span></li>
+            <li class="fragment">搜索图对应的搜索树是不是无限大？<span class="fragment"><b>搜索图中是否有环？</b></span></li>
+            <li class="fragment">
+                题目要求什么？
+                <ul>
+                    <li class="fragment">打印出搜索起点到终点的所有路径？</li>
+                    <li class="fragment">求搜索起点到终点的路径数量？</li>
+                    <li class="fragment">求搜索起点到终点的最短路径？</li>
+                    <li class="fragment">求搜索起点到终点的路径最大权值？</li>
+                    <li class="fragment">......</li>
+                </ul>
+            </li>
+        </ol>
+    </section>
 </section>
