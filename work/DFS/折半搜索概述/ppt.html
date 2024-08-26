@@ -1,0 +1,21 @@
+<section>
+    <section>
+        <h1>折半搜索</h1>
+        <p>搜索树太大，剪枝也无能为力</p>
+    </section>
+    <section>
+        <h2>折半搜索</h2>
+        <p>剪枝能优化搜索的效率，但优化的效果不太好定量描述</p>
+        <p class="fragment">折半搜索也是一种优化搜索效率的方法，而且<b>方便定量分析</b></p>
+    </section>
+    <section>
+        <h2>折半搜索</h2>
+        <p>假设我们要搜索的<b>场景</b>由 $n$ 个参数构成</p>
+        <iframe data-animation="./折半搜索优化效率.js"
+            style="width: 1000px; height: 60px;"></iframe>
+        <p class="fragment">我们可以把这 $n$ 个参数<b>折半</b></p>
+        <p class="fragment quote">相当于把一个<b>大场景</b>拆为了两个<b>小场景</b></p>
+        <p class="fragment">用两个并列（而非嵌套）的搜索去分别处理两个小场景</p>
+        <p class="fragment">最后再把搜到的小场景拼成一个大场景</p>
+    </section>
+</section>
