@@ -3,29 +3,26 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const C = sd.color();
 
-const graph = new sd.GridGraph(svg).width(500).height(200).cx(600).cy(300);
+const graph = new sd.GridGraph(svg).width(250).height(100);
 const Q = new sd.Array(svg);
 const disLoc = ["lc", "tc", "bc", "bc", "tc", "rc"];
 const links = [
     [1, 2, 0],
     [1, 3, 1],
-    [2, 3, 0],
+    [2, 3, 1],
     [2, 5, 0],
     [3, 4, 1],
     [4, 5, 1],
-    [5, 6, 1],
+    [5, 6, 0],
     [4, 6, 0]
 ];
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     graph.at(0.5, 0).newNode(1);
-    graph.at(0, 0.33).newNode(2);
-    graph.at(1, 0.33).newNode(3);
-    graph.at(1, 0.66).newNode(4);
-    graph.at(0, 0.66).newNode(5);
+    graph.at(0, 0.3).newNode(2);
+    graph.at(1, 0.3).newNode(3);
+    graph.at(1, 0.7).newNode(4);
+    graph.at(0, 0.7).newNode(5);
     graph.at(0.5, 1).newNode(6);
     function addLink(u, v, w) {
         graph.newLink(u, v);
@@ -43,9 +40,8 @@ function init() {
         graph.element(i).dis = Infinity;
     }
     graph.element(1).dis = 0;
-}
-
-async function main() {
+})
+sd.main(async () => {
     while (Q.length()) {
         await sd.pause();
         const u = Q.intValue(0);
@@ -76,4 +72,4 @@ async function main() {
         Q.startAnimate().erase(0).endAnimate();
         graph.startAnimate().color(u, C.white).endAnimate();
     }
-}
+});
