@@ -193,23 +193,6 @@ function cleanAllEmptyDirectories(path, level = 0) {
     }
 }
 
-function cleanFilesInFolder(directoryPath) {
-    ifNotExistThenCreateFolder(directoryPath);
-    const files = fs.readdirSync(directoryPath);
-    files.forEach((file) => {
-        const filePath = path.join(directoryPath, file);
-        const stats = fs.statSync(filePath);
-        if (stats.isFile()) {
-            fs.unlinkSync(filePath);
-        }
-    });
-}
-
-function ifNotExistThenCreateFolder(folderPath) {
-    if (fs.existsSync(folderPath)) return;
-    fs.mkdirSync(folderPath);
-}
-
 function walk(directoryPath, callback) {
     const files = fs.readdirSync(directoryPath);
     files.forEach(file => {
@@ -230,14 +213,12 @@ function defineEventListener(suffix, listener) {
     });
 }
 
-function PPTConfiguration(pptFilePath) {
+function PPTConfiguration() {
     // pptFilePath: ./work/xxx/ppt.html
     const mode = global["d"] ? "development" : "production";
-    const pptFilePathAbsolute = global["projectRoot"] + pptFilePath.slice(1);
     const watch = global["w"] ? true : false;
     return {
         mode: mode,
-        entry: `${global["projectRoot"]}/build/pptMain.js`,
         watch: watch,
         plugins: [
             new HtmlWebpackPlugin({

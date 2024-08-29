@@ -17,11 +17,11 @@ function libraryConfiguration() {
     return {
         mode: mode,
         output: {
-            filename: 'sd.js',
-            library: 'sd',
-            libraryTarget: 'umd',
+            filename: "sd.js",
+            library: "sd",
+            libraryTarget: "umd",
             umdNamedDefine: true,
-            globalObject: 'this',
+            globalObject: "this"
         },
         watch: watch,
         plugins: [

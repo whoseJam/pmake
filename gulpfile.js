@@ -1,6 +1,7 @@
 const gulp = require("gulp");
 const aniTask = require("./build/aniTask");
 const libTask = require("./build/libTask");
+const myrTask = require("./build/myrTask");
 const pptTask = require("./build/pptTask");
 const colors = require("colors-console");
 
@@ -39,6 +40,11 @@ gulp.task("lib", () => {
     parseInput();
     return libTask(defaultAnimationTargetFilePath);
 });
+
+gulp.task("myr", () => {
+    parseInput();
+    return myrTask(defaultPPTTargetFilePath);
+})
 
 gulp.task("ani", () => {
     parseInput();
