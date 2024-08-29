@@ -1,6 +1,5 @@
 const plugins = [];
 
-import includeHTML from "./inject";
 import Reveal from "reveal.js";
 
 import { Picture } from "./plugin/Picture";
@@ -22,8 +21,7 @@ plugins.push(MathJax2);
 plugins.push(Highlight);
 plugins.push(window.RevealChalkboard);
 window.Reveal = Reveal
-
-includeHTML(function() {
+window.initMyReveal = function() {
     Reveal.initialize({
         controls: true,
         progress: true,
@@ -50,4 +48,4 @@ includeHTML(function() {
         },
         plugins: plugins
     });
-});
+}

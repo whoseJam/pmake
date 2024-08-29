@@ -1,11 +1,9 @@
 const gulp              = require("gulp");
 const webpack           = require("webpack-stream");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { library } = require("webpack");
 
 module.exports = function MyRevealTask(targetFileFolder) {
     const webpackConfiguration = MyRevealConfiguration();
-    return gulp.src("./build/pptMain.js")
+    return gulp.src("./build/pptRemote.js")
                .pipe(webpack(webpackConfiguration))
                .pipe(gulp.dest(targetFileFolder));
 }
@@ -15,7 +13,7 @@ function MyRevealConfiguration() {
     const watch = global["w"] ? true : false;
     return {
         mode: mode,
-        entry: `${global["projectRoot"]}/build/pptMain.js`,
+        entry: `${global["projectRoot"]}/build/pptRemote.js`,
         output: {
             filename: "myreveal.js",
             library: "myreveal",

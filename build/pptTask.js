@@ -219,6 +219,7 @@ function PPTConfiguration() {
     const watch = global["w"] ? true : false;
     return {
         mode: mode,
+        entry: `${global["projectRoot"]}/build/pptLocal.js`,
         watch: watch,
         plugins: [
             new HtmlWebpackPlugin({
