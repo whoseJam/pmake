@@ -2,39 +2,42 @@ import * as sd from "@/sd";
 
 const svg = sd.svg();
 const C = sd.color();
-const tree = new sd.Tree(svg).width(600);
-const n = 16;
+const tree = new sd.Tree(svg).width(200);
+const n = 9;
 const links = [
-    [1, 2], [1, 3],
-    [2, 4], [2, 5], [3, 6], [4, 7], [5, 8], [6, 9], [7, 10],
-    [8, 11], [8, 12], [9, 13], [10, 14], [11, 15], [12, 16]
+    [1, 2],
+    [2, 3],
+    [3, 4],
+    [4, 5],
+    [1, 6],
+    [6, 7],
+    [7, 8],
+    [8, 9]
 ];
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     tree.root(1);
     links.forEach(link => {
         tree.link(link[0], link[1]);
     });
-    tree.cx(600).cy(300);
-}
+})
 
-async function main() {
-    await bruteForceLCA(4, 7);
-    await bruteForceLCA(4, 12);
-    await bruteForceLCA(10, 16);
-    await sd.pause();
-}
+sd.main(async () => {
+    await bruteForceLCA(4, 9);
+    await bruteForceLCA(8, 5);
+})
 
 async function bruteForceLCA(x, y) {
     await sd.pause();
     if (tree.depth(x) > tree.depth(y)) {
         let tmp = x; x = y; y = tmp;
     }
-    const px = sd.Pointer(tree, "x", "r").startAnimate().moveTo(x).endAnimate();
-    const py = sd.Pointer(tree, "y", "l").startAnimate().moveTo(y).endAnimate();
+    let dx;
+    let dy;
+    if (tree.element(x).cx() < tree.element(y).cx()) dx = "r", dy = "l";
+    else dx = "l", dy = "r";
+    const px = sd.Pointer(tree, "x", dx, 10, 20).startAnimate().moveTo(x).endAnimate();
+    const py = sd.Pointer(tree, "y", dy, 10, 20).startAnimate().moveTo(y).endAnimate();
     while (tree.depth(y) > tree.depth(x)) {
         const fa = tree.father(y).nodeId;
         await sd.pause();

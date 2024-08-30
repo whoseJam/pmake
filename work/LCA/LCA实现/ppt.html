@@ -1,0 +1,122 @@
+<section>
+    <section>
+        <h1>LCA实现</h1>
+        <p>跳得更快</p>
+    </section>
+    <section>
+        <h2>LCA实现</h2>
+        <p>最简单暴力的实现方式，可以把每个点的<b>深度</b>预处理出来，假设想要求解 $x$ 和 $y$ 的LCA，那么就先跳深度深的节点，再一起跳</p>
+        <div style="display: flex; align-items: center;" class="fragment">
+            <codeblock style="width: 55%;">
+                <script type="text/template">
+                    int LCA(int x, int y) {
+                        if (dep[x] < dep[y]) swap(x, y);
+                        // 保证 x 的深度更大
+                        // 先让 x 和 y 跳到同一深度
+                        while (dep[x] > dep[y]) x = fa[x];
+                        // 再让 x 和 y 跳到同一节点
+                        while (x != y) {
+                            x = fa[x];
+                            y = fa[y];
+                        }
+                        return x;
+                    }
+                </script>
+            </codeblock>
+            <iframe data-animation="./暴力LCA.js"
+                style="width: 50%; height: 280px;"></iframe>
+        </div>
+    </section>
+    <section>
+        <h2>LCA实现</h2>
+        <p>容易发现，当树退化成一条链的时候，这么做时间复杂度会达到 $O(n)$</p>
+        <iframe data-animation="./暴力LCA不足之处.js"
+            style="width: 1000px; height: 300px;"></iframe>
+        <p class="fragment quote">一次跳一个父亲实在是太慢了</p>
+        <p class="fragment">我们很自然能想到一个优化，能不能让跳的过程加速——比如一次跳<b>很多很多个</b>父亲</p>
+        <p class="fragment quote">我们把一次性跳多个父节点称为一次<b>大跳</b></p>
+    </section>
+    <section>
+        <h2>LCA预处理</h2>
+        <p>我们把每个点的 $1,2,4,8,16,32......$ 级祖先先保存下来，方便之后在树上做<b>大跳</b></p>
+        <p class="fragment">预处理出来每个节点的 $2^j$ 倍祖先，设 $u$ 的 $i$ 级祖先为 $fa_{u,i}$</p>
+        <iframe data-animation="./LCA预处理.js" class="fragment"
+            style="width: 1000px; height: 300px;"></iframe>
+    </section>
+    <section>
+        <h2>LCA预处理</h2>
+        <p>一个节点的 $2^i$ 级祖先，应该等于其 $2^{i-1}$ 级祖先的 $2^{i-1}$ 级祖先</p>
+        <div class="fragment quote">
+            <h3>解释</h3>
+            <div style="display: flex;">
+                <div style="width: 70%;">
+                    <ul>
+                        <li class="fragment">$u$ 的二级祖先等于 $u$ 一级祖先的一级祖先</li>
+                        <li class="fragment">$u$ 的四级祖先等于 $u$ 二级祖先的二级祖先</li>
+                        <li class="fragment">$u$ 的八级祖先等于 $u$ 四级祖先的四级祖先</li>
+                        <li class="fragment">......</li>
+                    </ul>
+                    <codeblock class="fragment">
+                        <script type="text/template">
+                            // u：当前遍历的节点
+                            // f：当前节点的直接父节点
+                            // d：当前节点的深度
+                            void Dfs(int u, int f, int d) {
+                                fa[u][0] = f; dep[u] = d;
+                                for (int i = 1; i <= lim; i++)
+                                    fa[u][i] = fa[fa[u][i-1]][i-1];
+                                for (u 的所有子节点 v) {
+                                    Dfs(v, u, d + 1);
+                                }
+                            }
+                        </script>
+                    </codeblock>
+                </div>
+                <iframe data-animation="./LCA预处理递推.js"
+                    style="width: 40%; height: 350px;"></iframe>
+            </div>
+        </div>
+    </section>
+    <section>
+        <h2>倍增</h2>
+        <p>现在我们能从任意一个节点以 $O(1)$ 的时间复杂度向上跳 $2^k$ 步</p>
+        <p class="fragment">其实就能从任意一个节点以 $O(logn)$ 的时间复杂度向上跳任意 $d$ 步了</p>
+        <iframe data-animation="./二进制拆分.js" class="fragment"
+            data-viewBox="0 -5 500 150"
+            style="width: 1000px; height: 200px;"></iframe>
+        <p class="fragment"><b>任何一个数字 $d$ 总有其二进制表示，</b><b style="color: red;">所以我们总能把 $d$ 拆为不超过 $logd$ 个 $2^k$ 的和</b></p>
+    </section>
+    <section>
+        <h2>LCA查询</h2>
+        <div style="display: flex;">
+            <div style="width: 50%;">
+                <p>假设要查询 $x$ 和 $y$ 的<b>最近公共祖先</b>，且 $x$ 的深度大于等于 $y$ 的深度</p>
+                <ol>
+                    <li class="fragment">先让 $x$ <b style="color: red;">倍增地</b>跳到和 $y$ 深度相同</li>
+                    <li class="fragment">如果此时 $x=y$，那么公共祖先就是 $x$</li>
+                    <li class="fragment">否则，再让 $x$ 和 $y$ 同时<b style="color: red;">倍增地</b>向上跳至<b>最近公共祖先的子节点处</b></li>
+                </ol>
+                <codeblock class="fragment" style="width: 125%;">
+                    <script type="text/template">
+                        int LCA(int x, int y) {
+                            if (dep[x] < dep[y]) swap(x, y);
+                            // 第一轮大跳 x 不能跳过 y
+                            for (int i = lim; i >= 0; i--)
+                                if (dep[fa[x][i]] >= dep[y]) x = fa[x][i];
+                            if (x == y) return x;
+                            // 第二轮大跳 x 和 y 不能跳过最近公共祖先
+                            for (int i = lim; i >= 0; i--)
+                                if (fa[x][i] != fa[y][i]) {
+                                    x = fa[x][i];
+                                    y = fa[y][i];
+                                }
+                            return fa[x][0];
+                        }
+                    </script>
+                </codeblock>
+            </div>
+            <iframe data-animation="./LCA查询.js"
+                style="width: 50%; height: 600px; margin-top: -100px;"></iframe>
+        </div>
+    </section>
+</section>

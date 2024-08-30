@@ -8,16 +8,18 @@ const m = 3;
 const st = new sd.Grid(svg).n(m).m(n).startM(1);
 const fa = sd.make2d(20, 10, 0);
 const links = [
-    [1, 2], [1, 3],
-    [2, 4], [2, 5],
-    [3, 6], [5, 7],
-    [7, 8], [7, 9], [9, 10]
+    [1, 2],
+    [1, 3],
+    [2, 4],
+    [2, 5],
+    [3, 6],
+    [5, 7],
+    [7, 8],
+    [7, 9],
+    [9, 10]
 ];
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     tree.root(1);
     links.forEach(link => {
         tree.link(link[0], link[1]);
@@ -37,14 +39,15 @@ function init() {
             child.cy(elem.cy());
         })
     }
-    st.cx(600).y(tree.my() + 40);
-}
+    st.cy(tree.cy()).x(tree.mx() + 40);
+    sd.MathjaxLabel(st, "fa[u][i]：表示 u 的第 2^i 级祖先", "tc", 30);
+})
 
-async function main() {
+sd.main(async () => {
     for (let i = 2; i <= n; i++)
         await prepare(i);
     await sd.pause();
-}
+})
 
 async function prepare(u) {
     await sd.pause();

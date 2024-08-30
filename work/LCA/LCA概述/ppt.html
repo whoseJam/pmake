@@ -5,19 +5,27 @@
     </section>
     <section>
         <h2>祖先</h2>
-        <div style="display: flex; align-items: center;">
-            <div style="width: 60%;">
-                <p>在一棵有根树上，定义某个节点 $u$ 的<b>一级祖先</b>为 $u$ 的<b>父节点</b></p>
-                <p class="fragment">点 $u$ 的 $k$ 级祖先被定义为点 $u$ 的 $k-1$ 级祖先的父节点</p>
+        <div style="display: flex;">
+            <div style="width: 70%;">
+                <p>在一棵有根树上，除根节点以外的所有点都有自己的父节点</p>
+                <ul>
+                    <li class="fragment">$u$ 的<b>父节点</b>为 $u$ 的<b style="color: red;">一级祖先</b></li>
+                    <li class="fragment">$u$ 的<b>一级祖先的父节点</b>为 $u$ 的<b style="color: red;">二级祖先</b></li>
+                    <li class="fragment">$u$ 的<b>二级祖先的父节点</b>为 $u$ 的<b style="color: red;">三级祖先</b></li>
+                    <li class="fragment">......</li>
+                    <li class="fragment">$u$ 的 <b>$k-1$ 级祖先的父节点</b>为 $u$ 的 <b style="color: red;">$k$ 级祖先</b></p>
+                </ul>
+                <p class="fragment quote">特别的，我们认为 $u$ 是自己的<b>零级祖先</b></p>
             </div>
             <iframe data-animation="./k级祖先.js"
-                style="width: 20%; height: 400px;"></iframe>
+                style="width: 20%; height: 400px; margin-left: 30px;"></iframe>
         </div>
     </section>
     <section>
-        <h2>LCA</h2>
-        <p>给定一棵有根树，若节点 $z$ 既是节点 $x$ 的祖先，又是节点 $y$ 的祖先，那么 $z$ 是 $x$ 和 $y$ 的公共祖先</p>
+        <h2>公共祖先</h2>
+        <p>给定一棵有根树，若节点 $z$ 既是节点 $x$ 的祖先，又是节点 $y$ 的祖先，那么 $z$ 是 $x$ 和 $y$ 的<b style="color: red;">公共祖先</b></p>
+        <iframe data-animation="./LCA概念.js"
+            style="width: 1000px; height: 300px;"></iframe>
         <p class="fragment">在 $x$ 和 $y$ 的所有公共祖先中，<b>深度最大</b>的那一个称为 $x$ 和 $y$ 的最近公共祖先，记为 $LCA(x,y)$</p>
-        <iframe style="width: 1000px; height: 300px;" data-src="./animation/LCA概念.html"></iframe>
     </section>
 </section>
