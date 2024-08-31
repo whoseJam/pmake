@@ -69,7 +69,8 @@ function FindIncludeHTMLRequest() {
     }
 }
 
-export default function includeHTML(callback) {
-    global.callback = callback;
+export default function includeHTML() {
+    global.callback = window.initMyReveal;
+    console.log("callback=", global.callback);
     FindIncludeHTMLRequest();
 }

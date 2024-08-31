@@ -18,6 +18,14 @@
 
 接下来就能愉快地使用这个框架啦
 
+#### 更好的体验
+
+在 vscode 上可以下载这么几个插件：
+
+1. JavaScript and TypeScript Nightly
+2. js snippets
+3. fitten code：一个AI补全代码的插件
+
 ### 使用教程
 
 所有命令都在项目根目录下执行

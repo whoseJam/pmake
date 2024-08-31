@@ -42,15 +42,16 @@ async function main() {
 }
 
 async function LCA(x, y) {
-    if (dep[x] > dep[y]) { let tmp = x; x = y; y = tmp; }
+    let swapFlag = false;
+    if (dep[x] > dep[y]) { let tmp = x; x = y; y = tmp; swapFlag = true; }
     await sd.pause();
     tree.startAnimate();
     const oldX = x, oldY = y;
     tree.element(x).strokeWidth(3).stroke(C.red).endAnimate();
     tree.element(y).strokeWidth(3).stroke(C.red).endAnimate();
     tree.endAnimate();
-    const px = sd.Pointer(tree, "x", "r");
-    const py = sd.Pointer(tree, "y", "l");
+    const px = sd.Pointer(tree, swapFlag ? "x" : "y", "r");
+    const py = sd.Pointer(tree, swapFlag ? "y" : "x", "l");
     px.startAnimate().moveTo(x).endAnimate();
     py.startAnimate().moveTo(y).endAnimate();
     const linkTo = (a, b) => {

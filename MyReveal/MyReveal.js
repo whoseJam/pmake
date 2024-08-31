@@ -50,4 +50,4 @@ window.MyRevealCallback = function() {
         },
         plugins: plugins
     });
-});
+}

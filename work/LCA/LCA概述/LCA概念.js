@@ -11,37 +11,35 @@ const links = [
     [5, 7]
 ];
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     tree.root(1);
     links.forEach(link => {
         tree.link(link[0], link[1]);
     });
     tree.cx(600).cy(300);
-}
+})
 
-async function main() {
+sd.main(async () => {
     await showAncestorAndLCA(4, 7);
     await showAncestorAndLCA(2, 6);
     await showAncestorAndLCA(2, 7);
-    await sd.pause();
-}
+})
 
 async function showAncestorAndLCA(x, y) {
-    for (let i = 1; i <= n; i++)
-        tree.element(i).mark = 0;
     await sd.pause();
+    for (let i = 1; i <= n; i++) {
+        tree.element(i).fillOpacity(0);
+        tree.element(i).fill(C.white);
+        tree.element(i).mark = 0;
+    }
     const px = sd.Pointer(tree, "x", "r").startAnimate().moveTo(x).endAnimate();
     const py = sd.Pointer(tree, "y", "l").startAnimate().moveTo(y).endAnimate();
-    await sd.pause();
-    climb(x); climb(y);
+    await climb(x);
+    await climb(y);
     let lca = undefined;
     for (let i = 1; i <= n; i++) {
         const e = tree.element(i);
         if (e.mark === 2) {
-            e.startAnimate().color(C.blue).endAnimate();
             if (!lca || tree.depth(lca) < tree.depth(i))
                 lca = i;
         }
@@ -54,12 +52,17 @@ async function showAncestorAndLCA(x, y) {
     tree.startAnimate().color(C.white).endAnimate();
 }
 
-function climb(x) {
+async function climb(x) {
+    await sd.pause();
+    tree.startAnimate();
     let cnt = 0;
     while (x && cnt <= 10) {
         tree.element(x).mark++;
+        tree.element(x).fillOpacity(tree.element(x).fillOpacity() + 0.5);
+        tree.element(x).color(C.deepSkyBlue);
         x = tree.father(x);
         if (!x) break; x = x.nodeId;
         cnt++;
     }
+    tree.endAnimate();
 }
