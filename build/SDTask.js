@@ -6,7 +6,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPl
 
 module.exports = function SDTask(targetFilePath) {
     const webpackConfiguration = SDConfiguration();
-    return gulp.src("./SD/SD.js")
+    return gulp.src("./SD/sd.js")
                .pipe(webpack(webpackConfiguration))
                .pipe(gulp.dest(targetFilePath));
 }
