@@ -1,6 +1,5 @@
 const plugins = [];
 
-import includeHTML from "./Inject";
 import Reveal from "reveal.js";
 
 import { Picture } from "./plugin/Picture";
