@@ -12,6 +12,7 @@ sd.init(() => {
     arr.pushArray(data.slice(1));
     st.x(arr.mx() + 60).cy(arr.cy());
     sd.Index(arr, "t");
+    sd.Label(st, "F数组", "tc");
     for (let i = 1; i <= n; i++) {
         sd.Label(st.element(m - 1, i), i, "bc", 20, 3);
     }
