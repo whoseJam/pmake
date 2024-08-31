@@ -46,6 +46,9 @@ export function SDNode(parent) {
     new Action(0, 0, 0, 1, 
         Interp.numberInterp(this.d3layer.nake(), "opacity"),
         this, "global-opacity");
+    
+    this._.BASE_SDNODE = true;
+
     return this;
 }
 

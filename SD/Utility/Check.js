@@ -2,10 +2,12 @@
 function IsTypeOf(type) {
     const str = `BASE_${type}`;
     return function(node) {
-        return node._[str];
+        if (node && node._) return node._[str];
+        return false;
     }
 }
 
+export const IsTypeOfSDNode = IsTypeOf("SDNODE");
 export const IsTypeOfArray = IsTypeOf("ARRAY");
 export const IsTypeOfElement = IsTypeOf("ELEMENT");
 export const IsTypeOfCurve = IsTypeOf("CURVE");

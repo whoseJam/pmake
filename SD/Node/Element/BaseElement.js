@@ -6,6 +6,7 @@ import { GetterAndSetter } from "@/Node/Common";
 import { toNode } from "@/Utility/Tool";
 
 import { CenterFixAspect } from "@/Rule/Center";
+import { IsTypeOfSDNode } from "@/Utility/Check";
 
 export function BaseElement(parent) {
     SDNode.call(this, parent);
@@ -75,6 +76,7 @@ BaseElement.prototype.value = function(value, rule) {
         return this.member.get("value");
     }
     rule = rule ? rule : CenterFixAspect(this.member.get("rate"));
+    const valueIsSDNode = IsTypeOfSDNode(value);
     value = toNode(this, value);
     const oldValue = this.member.get("value");
     if (oldValue) {
@@ -85,8 +87,14 @@ BaseElement.prototype.value = function(value, rule) {
         return this;
     }
     value._.enter = (element, move) => {
-        element.attachTo(this).after(this);
-        element.opacity(0);
+        if (!valueIsSDNode) {
+            element.attachTo(this)
+            element.opacity(0);
+        } else {
+            element.attachTo(this)
+            element.after(this);
+            element.opacity(0);
+        }
         move();
         element.update();
         element.startAnimate(this);

@@ -58,3 +58,5 @@ gulp.task("ppt", (done) => {
     parseInput();
     pptTask(global["i"], global["o"] ? global["o"] : defaultPPTTargetFilePath, done);
 })
+
+gulp.task("local-ppt", gulp.parallel("MyReveal", "SD", "ppt"));

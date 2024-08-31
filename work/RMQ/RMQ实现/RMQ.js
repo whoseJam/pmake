@@ -1,32 +1,26 @@
 import * as sd from "@/sd";
 
-let svg = sd.svg();
-let C = sd.color();
-let n = 10;
-let m = Math.floor(Math.log2(n)) + 1;
-let data = [0, 2, 4, 3, 7, 4, 6, 8, 3, 1, 5];
-let arr = new sd.Array(svg).start(1).x(100).y(100);
-for (let i = 1; i <= n; i++) arr.push(data[i]);
-sd.Index(arr, "t");
-let st = new sd.Grid(svg).n(m).m(n).startM(1).x(100).y(300);
-for (let i = 1; i <= n; i++) {
-    st.children.push(new sd.Text(st, i).fontSize(20), function(parent, child) {
-        let elem = st.element(m - 1, i);
-        child.cx(elem.cx());
-        child.y(elem.my() + 3);
-    })
-}
-for (let i = 0; i < m; i++) {
-    st.children.push(new sd.Mathjax(st).math(`2^${i}`).height(20), function(parent, child) {
-        let elem = st.element(m - 1 - i, 1);
-        child.mx(elem.x() - 5);
-        child.cy(elem.cy());
-    })
-}
+const svg = sd.svg();
+const C = sd.color();
+const n = 10;
+const m = Math.floor(Math.log2(n)) + 1;
+const data = [0, 2, 4, 3, 7, 4, 6, 8, 3, 1, 5];
+const arr = new sd.Array(svg).start(1);
+const st = new sd.Grid(svg).n(m).m(n).startM(1);
 
-main();
+sd.init(() => {
+    arr.pushArray(data.slice(1));
+    st.x(arr.mx() + 60).cy(arr.cy());
+    sd.Index(arr, "t");
+    for (let i = 1; i <= n; i++) {
+        sd.Label(st.element(m - 1, i), i, "bc", 20, 3);
+    }
+    for (let i = 0; i < m; i++) {
+        sd.Label(st.element(m - 1 - i, 1), new sd.Mathjax(svg, `2^${i}`).height(20), "lc", 20);
+    }
+})
 
-async function main() {
+sd.main(async () => {
     st.opacity(0);
     await sd.pause();
     st.startAnimate().opacity(1).endAnimate();
@@ -36,8 +30,7 @@ async function main() {
 
     await query(2, 7);
     await query(3, 10);
-
-}
+})
 
 async function query(l, r) {
     await sd.pause();
@@ -115,7 +108,6 @@ async function show(pos, i) {
         st.startAnimate();
         st.color(m - i - 1, pos, C.orange);
         st.endAnimate();
-        await sd.pause();
         let mx = -Infinity;
         for (let j = l; j <= r; j++)
             mx = Math.max(mx, data[j]);
