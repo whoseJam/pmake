@@ -1,6 +1,6 @@
 const plugins = [];
 
-import includeHTML from "./inject";
+import includeHTML from "./Inject";
 import Reveal from "reveal.js";
 
 import { Picture } from "./plugin/Picture";
@@ -23,7 +23,7 @@ plugins.push(Highlight);
 plugins.push(window.RevealChalkboard);
 window.Reveal = Reveal
 
-includeHTML(function() {
+window.MyRevealCallback = function() {
     Reveal.initialize({
         controls: true,
         progress: true,

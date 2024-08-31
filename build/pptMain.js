@@ -1,6 +1,3 @@
-import "../MyReveal/plugin/reset.css";
-import "../MyReveal/plugin/reveal.css";
-import "../MyReveal/css/theme/source/beige.scss";
+import "../MyReveal/Inject";
 
-import "../MyReveal/plugin/Chalkboard.css";
-import "../MyReveal/init";
+includeHTML(window.MyRevealCallback);

@@ -1,4 +1,4 @@
-import { GetLocationFromAncestor } from "../inject";
+import { GetLocationFromAncestor } from "../Inject";
 
 export function Image() {
     return { id: "image", init: Init };

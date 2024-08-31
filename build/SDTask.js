@@ -4,26 +4,24 @@ const webpack              = require("webpack-stream");
 const JavaScriptObfuscator = require('webpack-obfuscator');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-module.exports = function libraryTask(targetFilePath) {
-    const webpackConfiguration = libraryConfiguration();
+module.exports = function SDTask(targetFilePath) {
+    const webpackConfiguration = SDConfiguration();
     return gulp.src("./SD/SD.js")
                .pipe(webpack(webpackConfiguration))
                .pipe(gulp.dest(targetFilePath));
 }
 
-function libraryConfiguration() {
-    const mode = global["d"] ? "development" : "production";
-    const watch = global["w"] ? true : false;
+function SDConfiguration() {
     return {
-        mode: mode,
+        mode:  global["d"] ? "development" : "production",
+        watch: global["w"] ? true : false,
         output: {
-            filename: 'sd.js',
-            library: 'sd',
-            libraryTarget: 'umd',
+            filename: "sd.js",
+            library: "sd",
+            libraryTarget: "umd",
             umdNamedDefine: true,
-            globalObject: 'this',
+            globalObject: "this",
         },
-        watch: watch,
         plugins: [
             // new JavaScriptObfuscator({
             //     stringArray: true,

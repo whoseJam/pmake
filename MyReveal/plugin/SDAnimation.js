@@ -72,7 +72,7 @@ SDIFrameCache.prototype.lookUp = function(url) {
 }
 
 
-import { GetLocationFromAncestor} from "../inject";
+import { GetLocationFromAncestor} from "../Inject";
 
 function inDecktapeEnvironment() {
     const userAgent = navigator.userAgent.toLowerCase();
