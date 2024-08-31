@@ -51,3 +51,5 @@ window.MyRevealCallback = function() {
         plugins: plugins
     });
 }
+
+console.log("set MyRevealCallback = ", window.MyRevealCallback);

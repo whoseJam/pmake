@@ -51,10 +51,7 @@ module.exports = function PPTTask(sourceFileFolder, targetFileFolder, done) {
                    .pipe(gulp.dest(targetFileFolder));
     });
     
-    const project = gulp.parallel(
-        gulp.task("ppt-task"),
-        gulp.task("lib")
-    );
+    const project = gulp.task("ppt-task");
 
     global.sourceFileFolder = sourceFileFolder;
     global.targetFileFolder = targetFileFolder;
@@ -215,15 +212,15 @@ function defineEventListener(suffix, listener) {
 
 function PPTConfiguration() {
     // pptFilePath: ./work/xxx/ppt.html
-    const mode = global["d"] ? "development" : "production";
-    const watch = global["w"] ? true : false;
     return {
-        mode: mode,
-        entry: `${global["projectRoot"]}/build/pptLocal.js`,
-        watch: watch,
+        mode:  global["d"] ? "development" : "production",
+        entry: `${global["projectRoot"]}/build/pptMain.js`,
+        watch: global["w"] ? true : false,
         plugins: [
             new HtmlWebpackPlugin({
                 template: `${global["projectRoot"]}/build/pptIndex.html`,
+                inject: "body",
+                scriptLoading: "blocking"
             })
         ],
         module: {
