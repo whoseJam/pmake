@@ -135,8 +135,8 @@ BaseArray.prototype.dropValue = function(idx) {
     return value;
 }
 
-BaseArray.prototype.text = function(idx) {
-    return this.value(idx).text();
+BaseArray.prototype.text = function(idx, text) {
+    return this.value(idx).text(text);
 }
 
 BaseArray.prototype.intValue = function(idx) {
