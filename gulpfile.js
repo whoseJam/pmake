@@ -56,7 +56,10 @@ gulp.task("animation", gulp.parallel("SD", "ani"));
 
 gulp.task("ppt", (done) => {
     parseInput();
+    if (global["l"]) {
+        gulp.task("SD")();
+        gulp.task("MyReveal")();
+    }
     pptTask(global["i"], global["o"] ? global["o"] : defaultPPTTargetFilePath, done);
 })
 
-gulp.task("local-ppt", gulp.parallel("MyReveal", "SD", "ppt"));

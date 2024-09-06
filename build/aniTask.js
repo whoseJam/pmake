@@ -25,6 +25,7 @@ module.exports = function animationTask(sourceFilePath, targetFilePath) {
 function animationConfiguration(animationName) {
     const mode = global["d"] ? "development" : "production";
     const watch = global["w"] ? true : false;
+    const suffix = global["l"] ? "Local" : "Remote";
     return {
         mode: mode,
         output: {
@@ -33,7 +34,7 @@ function animationConfiguration(animationName) {
         watch: watch,
         plugins: [
             new HtmlWebpackPlugin({
-                template: `${global["projectRoot"]}/build/aniIndex.html`,
+                template: `${global["projectRoot"]}/build/aniIndex${suffix}.html`,
                 inject: "body",
                 inlineSource: ".(js)$",
                 minify: false,

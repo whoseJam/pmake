@@ -212,13 +212,14 @@ function defineEventListener(suffix, listener) {
 
 function PPTConfiguration() {
     // pptFilePath: ./work/xxx/ppt.html
+    const suffix = global["l"] ? "Local" : "Remote";
     return {
         mode:  global["d"] ? "development" : "production",
         entry: `${global["projectRoot"]}/build/pptMain.js`,
         watch: global["w"] ? true : false,
         plugins: [
             new HtmlWebpackPlugin({
-                template: `${global["projectRoot"]}/build/pptIndex.html`,
+                template: `${global["projectRoot"]}/build/pptIndex${suffix}.html`,
                 inject: "body",
                 scriptLoading: "blocking"
             })
