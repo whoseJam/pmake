@@ -20,6 +20,7 @@ function init() {
     link(2, 4);
     link(2, 5);
     link(3, 6);
+    graph.unfreeze();
 }
 
 async function main() {

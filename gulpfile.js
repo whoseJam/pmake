@@ -1,8 +1,9 @@
-const gulp = require("gulp");
-const aniTask = require("./build/aniTask");
-const libTask = require("./build/libTask");
-const myrTask = require("./build/myrTask");
-const pptTask = require("./build/pptTask");
+const gulp         = require("gulp");
+const aniTask      = require("./build/aniTask");
+const pptTask      = require("./build/pptTask");
+
+const SDTask       = require("./build/SDTask");
+const MyRevealTask = require("./build/MyRevealTask");
 const colors = require("colors-console");
 
 let defaultConfig = undefined;
@@ -36,14 +37,14 @@ function parseInput() {
     }
 }
 
-gulp.task("lib", () => {
+gulp.task("SD", () => {
     parseInput();
-    return libTask(defaultAnimationTargetFilePath);
+    return SDTask(defaultPPTTargetFilePath);
 });
 
-gulp.task("myr", () => {
+gulp.task("MyReveal", () => {
     parseInput();
-    return myrTask(defaultPPTTargetFilePath);
+    return MyRevealTask(defaultPPTTargetFilePath);
 })
 
 gulp.task("ani", () => {
@@ -51,9 +52,14 @@ gulp.task("ani", () => {
     return aniTask(global["i"], defaultAnimationTargetFilePath);
 });
 
-gulp.task("animation", gulp.parallel("lib", "ani"));
+gulp.task("animation", gulp.parallel("SD", "ani"));
 
 gulp.task("ppt", (done) => {
     parseInput();
+    if (global["l"]) {
+        gulp.task("SD")();
+        gulp.task("MyReveal")();
+    }
     pptTask(global["i"], global["o"] ? global["o"] : defaultPPTTargetFilePath, done);
 })
+

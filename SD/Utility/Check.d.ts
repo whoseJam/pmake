@@ -1,4 +1,5 @@
 
+export function IsTypeOfSDNode(object: any): boolean;
 export function IsTypeOfArray(object: any): boolean;
 export function IsTypeOfElement(object: any): boolean;
 export function IsTypeOfCurve(object: any): boolean;

@@ -1,0 +1,58 @@
+<section>
+    <section>
+        <h1>路边的水沟</h1>
+    </section>
+    <problem data-src="https://www.luogu.com.cn/problem/P2265"></problem>
+    <section>
+        <h2>路边的水沟</h2>
+        <p>一条水流，从 $(1,1)$ 流到 $(n,m)$，每次只能向上或者向右流动一个单位，求有多少种流动方式</p>
+    </section>
+    <section>
+        <h2>路边的水沟</h2>
+        <p>对于 $30\%$ 的数据，$n,m\le 10$</p>
+        <p class="fragment">暴力搜出从 $(1,1)$ 到 $(n,m)$ 的所有路径</p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                void Dfs(int x, int y) {
+                    if (x == n && y == m) ans++;
+                    if (x < n) Dfs(x + 1, y);
+                    if (y < m) Dfs(x, y + 1);
+                }
+            </script>
+        </codeblock>
+    </section>
+    <section>
+        <h2>路边的水沟</h2>
+        <p>对于 $50\%$ 的数据，$n,m\le 1000$</p>
+        <p class="fragment">设 $f(x,y)$ 表示水流流动到 $(x,y)$ 有多少种方案</p>
+        <p class="fragment">
+            $$
+            f(x,y)=f(x-1,y)+f(x,y-1)
+            $$
+        </p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                int f[N][N];
+                int Solve() {
+                    f[1][1] = 1;
+                    for (int i = 1; i <= n; i++) {
+                        for (int j = 1; j <= m; j++) {
+                            if (i == 1 && j == 1) continue;
+                            f[i][j] = f[i - 1][j] + f[i][j - 1];
+                        }
+                    }
+                    return f[n][m];
+                }
+            </script>
+        </codeblock>
+    </section>
+    <section>
+        <h2>路边的水沟</h2>
+        <p>对于 $100\%$ 的数据，$n,m\le 10^6$</p>
+        <p class="fragment">我们把水流流到终点看作一个操作序列</p>
+        <iframe data-animation="./水流操作.js" class="fragment"
+            style="width: 1000px; height: 350px;"></iframe>
+        <p class="fragment quote">这个长度 $n+m$ 的操作序列中，应该恰好有 $n$ 个 ↑，$m$ 个 →</p>
+        <p class="fragment">答案即为 $C_{n+m}^n$</p>
+    </section>
+</section>

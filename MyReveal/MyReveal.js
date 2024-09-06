@@ -21,7 +21,8 @@ plugins.push(MathJax2);
 plugins.push(Highlight);
 plugins.push(window.RevealChalkboard);
 window.Reveal = Reveal
-window.initMyReveal = function() {
+
+window.MyRevealCallback = function() {
     Reveal.initialize({
         controls: true,
         progress: true,
@@ -49,3 +50,5 @@ window.initMyReveal = function() {
         plugins: plugins
     });
 }
+
+console.log("set MyRevealCallback = ", window.MyRevealCallback);
