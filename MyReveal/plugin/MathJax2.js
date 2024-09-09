@@ -63,7 +63,6 @@ export const MathJax2 = () => {
 				// Reprocess equations in slides when they turn visible
 				deck.on("slidechanged", function( event ) {
 					MathJax.Hub.Queue(['Typeset', MathJax.Hub, event.currentSlide]);
-					MathJax.Hub.Queue(deck.layout);
 				});
 			});
 		}
