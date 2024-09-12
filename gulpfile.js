@@ -56,10 +56,17 @@ gulp.task("animation", gulp.parallel("SD", "ani"));
 
 gulp.task("ppt", (done) => {
     parseInput();
+    const inputPath = global["i"];
+    const outputPath = global["o"] ? global["o"] : defaultPPTTargetFilePath;
+    gulp.task("ppt-inner", function(done) {
+        pptTask(inputPath, outputPath);
+        done();
+    });
     if (global["l"]) {
-        gulp.task("SD")();
-        gulp.task("MyReveal")();
+        const result = gulp[global["w"] ? "parallel" : "series"]("ppt-inner", "SD", "MyReveal")();
+        done();
+        return result;
     }
-    pptTask(global["i"], global["o"] ? global["o"] : defaultPPTTargetFilePath, done);
+    return gulp.task("ppt-inner")(done);
 })
 
