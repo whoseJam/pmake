@@ -2,7 +2,7 @@ import * as sd from "@/sd";
 
 const svg = sd.svg();
 const C = sd.color();
-const colors = [C.blue, C.red, C.red, C.red, C.red, C.blue, C.blue, C.blue, C.blue, C.red, C.red, C.red];
+const colors = [C.red, C.red, C.blue, C.green, C.green, C.red, C.green, C.green, C.red, C.red, C.red, C.red];
 const arr = new sd.Array(svg).resize(colors.length);
 
 sd.init(() => {
