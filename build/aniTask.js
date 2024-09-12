@@ -17,6 +17,15 @@ module.exports = function animationTask(sourceFilePath, targetFilePath) {
         process.exit(1);
     }
 
+    if (global["w"]) {
+        const watcher = gulp.watch(sourceFilePath);
+        watcher.on("change", function(path) {
+            gulp.src(sourceFilePath)
+                .pipe(webpack(webpackConfiguration))
+                .pipe(gulp.dest(targetFilePath));
+        })
+    }
+
     return gulp.src(sourceFilePath)
                .pipe(webpack(webpackConfiguration))
                .pipe(gulp.dest(targetFilePath));
@@ -24,14 +33,12 @@ module.exports = function animationTask(sourceFilePath, targetFilePath) {
 
 function animationConfiguration(animationName) {
     const mode = global["d"] ? "development" : "production";
-    const watch = global["w"] ? true : false;
     const suffix = global["l"] ? "Local" : "Remote";
     return {
         mode: mode,
         output: {
             filename: `${animationName}.js`
         },
-        watch: watch,
         plugins: [
             new HtmlWebpackPlugin({
                 template: `${global["projectRoot"]}/build/aniIndex${suffix}.html`,

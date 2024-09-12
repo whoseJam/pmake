@@ -8,6 +8,9 @@ const colors = require("colors-console");
 
 const eventListener = {};
 
+let shouldPutInAnimationList = true;
+const animationList = [];
+
 defineEventListener("cpp", {
     onAdd: copyCPPFile,
     onChange: copyCPPFile,
@@ -26,19 +29,20 @@ defineEventListener("png|jpg|jpeg", {
 defineEventListener("js", {
     onAdd: function(path, destFolderPath) {
         const animation = pathToFile(path);
-        const animationName = animation.split(".")[0];
         gulp.task(animation, (done) => {
-            return aniTask(path, destFolderPath, animationName);
+            return aniTask(path, destFolderPath, true);
         });
-        gulp.task(animation)();
+        if (shouldPutInAnimationList) {
+            animationList.push(animation);
+        } else {
+            gulp.task(animation)();
+        }
     },
     onChange: function() {},
-    onUnlink: function(path) {
-        console.log("unlink path=", path);
-    }
+    onUnlink: function() {}
 });
 
-module.exports = function PPTTask(sourceFileFolder, targetFileFolder, done) {
+module.exports = function PPTTask(sourceFileFolder, targetFileFolder) {
     const pptFilePath = `${sourceFileFolder}/ppt.html`;
 
     // if (fs.existsSync(pptFilePath)) {
@@ -51,7 +55,7 @@ module.exports = function PPTTask(sourceFileFolder, targetFileFolder, done) {
                    .pipe(gulp.dest(targetFileFolder));
     });
     
-    const project = gulp.task("ppt-task");
+    let project = gulp.task("ppt-task");
 
     global.sourceFileFolder = sourceFileFolder;
     global.targetFileFolder = targetFileFolder;
@@ -66,7 +70,10 @@ module.exports = function PPTTask(sourceFileFolder, targetFileFolder, done) {
         }
         eventListener[suffix].onAdd(pathToOriginFile(path), pathToTargetFolder(path));
     });
-    done();
+    animationList.forEach(task => {
+        project = gulp[global["w"] ? "parallel" : "series"](project, gulp.task(task));
+    });
+    shouldPutInAnimationList = false;
 
     if (global["w"]) {
         const watcher = gulp.watch(`${sourceFileFolder}/**`);
