@@ -72,4 +72,7 @@ export { Rule } from "./Rule/Rule";
 export { color } from "./Utility/Color";
 export { input } from "./Utility/Reader";
 
+export { init } from "./Utility/Util";
+export { main } from "./Utility/Util";
+
 export { PathPen } from "./Utility/PathPen";
