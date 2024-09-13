@@ -12,6 +12,8 @@ export function Array(parent) {
     this.member.new("y", 0);
     this.member.new("elementWidth", 40);
     this.member.new("elementHeight", 40);
+
+    return this;
 }
 
 Array.prototype = {
