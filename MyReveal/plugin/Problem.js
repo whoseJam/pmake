@@ -13,6 +13,11 @@ function Init(reveal) {
     let src = element.getAttribute("src");
     if (!src) src = element.getAttribute("data-src");
     if (!src) src = element.getAttribute("data-source");
+    if (!src) {
+        const problemset = element.getAttribute("data-problemset");
+        const problemid = element.getAttribute("data-problemid");
+        src = `http://43.143.204.105:8000/#/problem/${problemset}/${problemid}`;
+    }
 
     const section = document.createElement("section");
     section.setAttribute("data-background-iframe", src);

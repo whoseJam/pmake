@@ -4,19 +4,15 @@ const svg = sd.svg();
 const C = sd.color();
 const I = sd.input();
 const R = sd.rule();
-const n = 5;
+const n = 6;
 const W = 20;
-const data = I.readIntArray("7 5 4 18 1", n, false);
+const data = I.readIntArray("7 5 4 10 1 2", n, false);
 const maxW = new sd.Text(svg, `W = ${W}`);
-console.log("data=", data);
 
 const arr1 = new sd.Array(svg);
 const arr2 = new sd.Array(svg);
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     const mid = Math.floor(n / 2);
     for (let i = 0; i < mid; i++)
         arr1.push(data[i]);
@@ -26,9 +22,9 @@ function init() {
     arr1.x(100).y(100);
     arr2.x(arr1.mx()).y(arr1.y());
     maxW.cx((arr1.x() + arr2.mx())/2).my(arr1.y() - 20);
-}
+})
 
-async function main() {
+sd.main(async () => {
     await sd.pause();
     arr1.startAnimate().dx(-50).endAnimate();
     arr2.startAnimate().dx(50).endAnimate();
@@ -41,27 +37,31 @@ async function main() {
 
     arr1.startAnimate(); dfs(arr1, 0, 0); arr1.endAnimate();
     arr2.startAnimate(); dfs(arr2, 0, 0); arr2.endAnimate();
+    sd.Label(stk1, "L", "tc", 20, 3).opacity(0).startAnimate().opacity(1).endAnimate();
+    sd.Label(stk2, "R", "tc", 20, 3).opacity(0).startAnimate().opacity(1).endAnimate();
     await sd.pause();
     stk1.startAnimate().sort().endAnimate();
     stk2.startAnimate().sort().endAnimate();
     
+    const focus = sd.Focus(stk2);
     for (let i = 0; i < stk1.length(); i++) {
         await sd.pause();
+        let flag = 0;
         stk1.startAnimate().color(i, C.orange).endAnimate();
         for (let j = stk2.length() - 1; j >= 0; j--) {
             if (stk2.intValue(j) + stk1.intValue(i) <= W) {
                 await sd.pause();
-                stk2.startAnimate().color(j, C.orange).endAnimate();
-                await sd.pause();
-                stk2.startAnimate().color(j, C.white).endAnimate();
+                flag = stk2.intValue(j) + stk1.intValue(i);
+                focus.startAnimate().focus(j).endAnimate();
                 break;
             }
         }
+        if (!flag) focus.startAnimate().focus(null).endAnimate();
+        else sd.Label(stk1.element(i), flag, "lc", "10").opacity(0).startAnimate().opacity(1).endAnimate();
         await sd.pause();
         stk1.startAnimate().color(i, C.white).endAnimate();
     }
-    await sd.pause();
-}
+})
 
 function dfs(arr, dep, cur) {
     if (dep === arr.length()) {
