@@ -36,175 +36,110 @@
     <section>
         <h2>记忆</h2>
         <p>对于 $20\%$ 的数据，$m\le 500$</p>
-        <p>考虑把所有线段按照一定顺序排序后，设 $f_i$ 表示选第 $i$ 条线段和在其之前的某些线段，权值和最大是多少</p>
-        <p class="fragment quote">由于要求不同种类的线段不相交，所以肯定按右端点递增排序会比较好，这样在线段 $i$ 之前，与 $i$ 不交的线段会构成一个前缀，便于维护</p>
-        <div style="display: flex; align-items: center; justify-content: space-between;">
-            <div style="width: 45%;" class="fragment">
-                <iframe data-animation="./一类转移.js"
-                    style="width: 1000px; height: 100px;"></iframe>
-                <p>在这种情况下不需要关心前一条被选中的线段的颜色</p>
-                <p class="fragment">
-                    $$
-                    f_i=\mathop{max}_{r_j\lt l_i}\{f_j+w_i\}
-                    $$
-                </p>
-            </div>
-            <div style="width: 45%;" class="fragment">
-                <iframe data-animation="./二类转移.js"
-                    style="width: 1000px; height: 150px;"></iframe>
-                <p>假设线段 $k$ 是与线段 $i$ 直接或间接连在一起的<b>左端点最靠前</b>的同色线段</p>
-                <p class="fragment">
-                    $$
-                    f_i=\mathop{max}_{j}\{f_j+[l_k,r_i]的绿色线段权值和\}
-                    $$
-                    其中线段 $j$ 满足 $r_j\lt l_k$
-                </p>
-            </div>
+        <p>设 $f_{i,c}$ 表示从左往右选线段，选出的线段最右端在 $i$ 这个位置，颜色为 $c$ 的最大价值</p>
+        <p class="fragment">为了后续动态规划的无后效性，我们必须将线段按照<b style="color: purple;">左端点从小到大</b>的顺序做决策</p>
+        <iframe data-animation="./排序原因.js" class="fragment"
+            style="width: 1000px; height: 250px;"></iframe>
+        <p class="fragment quote">如果按右端点从小到大的顺序做决策，当从 $f_{j,绿}$ 转移到 $f_{i,绿}$ （$j\lt i$）时，可能出现上图所示情况</p>
+    </section>
+    <section>
+        <h2>记忆</h2>
+        <p>考虑第 $k$ 条线段 $(l_k,r_k,c_k,w_k)$ 能带来哪些转移</p>
+        <p class="fragment">如果上一条被选中的线段和第 $k$ 条线段的颜色相同，则无所谓重合与否</p>
+        <div style="display: flex; justify-content: space-around; align-items: center;">
+            <p class="fragment">
+                $$
+                f_{r_k,c}\leftarrow w_k + \mathop{max}\limits_{j\le r_k}\{f_{j,c}\}
+                $$
+            </p>
+            <iframe data-animation="./一类转移.js" class="fragment"
+                style="width: 50%; height: 150px;"></iframe>
         </div>
+        <p class="fragment quote">转移范围写的 $j\le r_k$，是为了保证当多条同色线段的右端点相同时，它们的收益可以重复取到</p>
+        <div style="display: flex; justify-content: space-around; align-items: center;">
+            <p class="fragment">
+                $$
+                f_{j,c} += w_k,j\gt r_k
+                $$
+            </p>
+            <iframe data-animation="./二类转移.js" class="fragment"
+                style="width: 60%; height: 150px;"></iframe>
+        </div>
+        <p class="fragment quote">这是为了把遗漏的贡献加上</p>
     </section>
     <section>
         <h2>记忆</h2>
-        <iframe data-animation="./一类转移.js"
-            style="width: 1000px; height: 50px;"></iframe>
-        <p>
+        <p>如果上一条线段和该线段 $(l_k,r_k,c_k,w_k)$（其中 $r_k=i$） 不同色，则应该保证它们<b>不相交</b></p>
+        <p class="fragment">
             $$
-            f_i=\mathop{max}_{r_j\lt l_i}\{f_j+w_i\}
+            f_{r_k,c}\leftarrow w_k+\mathop{max}\limits_{j\lt l_k}\{f_{j,任意颜色}\}
             $$
         </p>
-        <codeblock class="fragment">
-            <script type="text/template">
-                for (ll j = 1; j < i; j++) {
-                    if (s[j].r < s[i].l) { // 第 j 条线段和第 i 条线段不相交
-                        f[i] = max(f[i], f[j] + s[i].w);
-                    }
-                }
-            </script>
-        </codeblock>
-    </section>
-    <section>
-        <h2>记忆</h2>
-        <iframe data-animation="./二类转移.js"
-            style="width: 1000px; height: 150px;"></iframe>
-        <p>假设线段 $k$ 是与线段 $i$ 直接或间接连在一起的<b>左端点最靠前</b>的同色线段</p>
-        <p>
-            $$
-            f_i=\mathop{max}_{j}\{f_j+[l_k,r_i]的绿色线段权值和\}
-            $$
-            其中线段 $j$ 满足 $r_j\lt l_k$
-        </p>
-        <codeblock class="fragment">
-            <script type="text/template">
-                for (ll k = 1; k <= i; k++) {
-                    if (s[k].c == s[i].c) {
-                        ll ff = 0;
-                        for (ll j = 1; j < i; j++) // 取 f[j] 的最大值
-                            if (s[j].r < s[k].l) ff = max(ff, f[j]);
-                        for (ll j = 1; j <= i; j++) // 加上 [lk, ri] 的绿色线段权值和
-                            if (s[j].c == s[i].c && s[j].l >= s[k].l) ff += s[j].w;
-                        f[i] = max(f[i], ff);
-                    }
-                }
-            </script>
-        </codeblock>
-    </section>
-    <section>
-        <h2>记忆</h2>
-        <p>至此可以在 $O(m^3)$ 的时间复杂度内完成 $m\le 500$ 这部分得分</p>
-        <p class="fragment quote">写完之后会发现第一类转移其实是第二类转移的一个特殊形式，故以下代码省略了第一类转移</p>
-        <codeblock class="fragment">
-            <script type="text/template">
-                for (ll i = 1; i <= m; i++) {
-                    for (ll k = 1; k <= i; k++) {
-                        if (s[k].c == s[i].c) {
-                            ll ff = 0;
-                            for (ll j = 1; j < i; j++)
-                                if (s[j].r < s[k].l) ff = max(ff, f[j]);
-                            for (ll j = 1; j <= i; j++)
-                                if (s[j].c == s[i].c && s[j].l >= s[k].l) ff += s[j].w;
-                            f[i] = max(f[i], ff);
-                        }
-                    }
-                    ans = max(ans, f[i]);
-                }
-            </script>
-        </codeblock>
-    </section>
-    <section>
-        <h2>记忆</h2>
-        <p>对于另外 $20\%$ 的数据，$m\le 2000$，考虑如何优化以下代码：</p>
-        <codeblock>
-            <script type="text/template">
-                for (ll i = 1; i <= m; i++) {
-                    for (ll k = 1; k <= i; k++) {
-                        if (s[k].c == s[i].c) {
-                            ll ff = 0;
-                            for (ll j = 1; j < i; j++)
-                                if (s[j].r < s[k].l) ff = max(ff, f[j]);
-                            for (ll j = 1; j <= i; j++)
-                                if (s[j].c == s[i].c && s[j].l >= s[k].l) ff += s[j].w;
-                            f[i] = max(f[i], ff);
-                        }
-                    }
-                    ans = max(ans, f[i]);
-                }
-            </script>
-        </codeblock>
-        <p class="fragment">设 $add(k)$ 表示 $k\rightarrow i$ 的贡献（前提是 $i$ 和 $k$ 的颜色相同）</p>
-        <codeblock class="fragment">
-            <script type="text/template">
-                // 如果 add 数组能求出来，那么就能把代码改写为如下形式
-                for (ll i = 1; i <= m; i++) {
-                    for (ll k = 1; k <= i; k++) {
-                        if (s[k].c == s[i].c) {
-                            f[i] = max(f[i], add[k]);
-                        }
-                    }
-                    ans = max(ans, f[i]);
-                }
-            </script>
-        </codeblock>
+        <p class="fragment quote">这里有一个取巧的技巧，就是我约束完上一条线段和当前线段不相交后，就不需要再约束颜色和当前线段不同了，想想为什么？</p>
     </section>
     <section>
         <h2>记忆</h2>
         <p>
             $$
-            f_i=\mathop{max}_{j}\{f_j+[l_k,r_i]的绿色线段权值和\}
+            \begin{cases}
+            f_{r_k,c}\leftarrow w_k + \mathop{max}\limits_{j\le r_k}\{f_{j,c}\} \\
+            f_{j,c} += w_k,j\gt r_k \\
+            f_{r_k,c}\leftarrow w_k+\mathop{max}\limits_{j\lt l_k}\{f_{j,任意颜色}\}
+            \end{cases}
             $$
         </p>
         <codeblock>
             <script type="text/template">
-                // tmp 记录的是 f[j] 的最大值
-                ll tmp = 0;
-                for (ll j = 1; j <= i; j++) {
-                    if (s[j].r < s[i].l) {
-                        tmp = max(tmp, f[j]);
-                    }
-                }
-                add[i] += tmp;
-                // 讨论第 i 条线段会对哪些线段的贡献产生贡献
-                for (ll k = 1; k <= m; k++) {
-                    if (s[i].c == s[k].c && s[i].l >= s[k].l) {
-                        add[k] += s[i].w;
+                for (int i = 1; i <= maxPos; i++) {
+                    for (每一个左端点在 i 上的线段 k) {
+                        计算 f[j][c[k]] 的最大值，其中 1 <= j <= r[k]
+                        计算 f[j][任意颜色] 的最大值，其中 1 <= j <= i - 1
+                        综合两者得到 maxF
+                        f[r][c] = maxF + w[k];
+                        for (int j = r[k] + 1; j <= maxPos; j++) {
+                            f[j][c] += w[k]; // 加上遗漏的贡献
+                        }
                     }
                 }
             </script>
         </codeblock>
-        <iframe data-animation="./贡献讨论.js"
-            style="width: 1000px; height: 200px;"></iframe>
+        <p class="fragment">以上伪代码做到 $O(m^3)$ 还是比较容易的</p>
     </section>
     <section>
         <h2>记忆</h2>
-        <p>对于全部数据，$m\le 10^5$</p>
-        <p class="fragment">我们用线段树来维护 $add$ 数组</p>
-        <p class="fragment">把同种颜色的线段在 $add$ 数组中连续排列，并按照<b>左端点递增</b>排序</p>
-        <iframe data-animation="./线段树.js" class="fragment"
-            style="width: 1000px; height: 200px;"></iframe>
-        <ul style="margin-top: 20px;">
-            <li class="fragment">第 $i$ 条绿色线段，会对第 $1,2,3...i$ 条绿色线段的 $add$ 都有一个 $+w_i$ 的贡献</li>
-            <li class="fragment">第 $i$ 条线段对后续线段的贡献还包括 $max_{j}\{f_j\}(r_j\lt l_i)$</li>
-            <ul>
-                <li class="fragment">这个可以对 $f$ 做一个前缀最大值，然后通过二分找到</li>
-            </ul>
-        </ul>
+        <p>对于另外 $20\%$ 的数据，$m\le 2000$</p>
+        <p class="fragment">对 $f$ 数组每一种颜色做一个前缀最大值即可优化为 $O(m^2)$ 的</p>
+        <p class="fragment">
+            $$
+            preMax(i,c)=\mathop{max}\limits_{k\le i} \{f_{k,c}\}
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>记忆</h2>
+        <p>对于另外 $20\%$ 的数据，$c_i\le 2$</p>
+        <p class="fragment">容易发现做完前缀最大值后，时间瓶颈出现在这个区间加法上：</p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                for (int i = 1; i <= maxPos; i++) {
+                    for (每一个左端点在 i 上的线段 k) {
+                        计算 f[j][c[k]] 的最大值，其中 1 <= j <= r[k] // O(1)
+                        计算 f[j][任意颜色] 的最大值，其中 1 <= j <= i - 1 // 用一个全局 ans 也能 O(1)
+                        综合两者得到 maxF
+                        f[r][c] = maxF + w[k];
+                        for (int j = r[k] + 1; j <= maxPos; j++) { // O(n)
+                            f[j][c] += w[k]; // 加上遗漏的贡献
+                        }
+                    }
+                }
+            </script>
+        </codeblock>
+        <p class="fragment">由于只有两种颜色，自然想到用两棵线段树去维护</p>
+    </section>
+    <section>
+        <h2>记忆</h2>
+        <p>对于 $100\%$ 的数据</p>
+        <p>把两棵线段树的做法推广到 $n$ 棵线段树即可</p>
+        <p class="fragment">需要动态开点</p>
     </section>
 </section>

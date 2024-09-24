@@ -4,9 +4,10 @@ const svg = sd.svg();
 const I = sd.input();
 const C = sd.color();
 const data = I.readIntMatrix(`
-5 9 1 2
-9 14 1 1`, 2, 4, false);
-const mark = sd.make1d(20);
+6 8 1 
+4 11 1`, 2, 3, false);
+const label = ["f(j,c)", "f(i,c)"]
+const mark = sd.make2d(20, 20);
 const colorList = [C.grey, C.green, C.coral, C.blue];
 
 function Max(arr, l, r) {
@@ -18,9 +19,9 @@ function Max(arr, l, r) {
 
 function find(l, r) {
     for (let i = 0; i <= 20; i++) {
-        const mx = Max(mark[i], l, r);
-        for (let j = l; j <= r; j++) mark[j] = mx + 1;
-        return mx;
+        if (Max(mark[i], l, r) > 0) continue;
+        for (let j = l; j <= r; j++) mark[i][j] = 1;
+        return i;
     }
 }
 
@@ -36,8 +37,6 @@ function canSelect(i) {
 }
 
 sd.init(() => {
-    new sd.Box(svg).x(0).y(0).width(4 * 40).value("......");
-    new sd.Box(svg).x(16 * 40).y(0).width(4 * 40).value("......");
     for (let i = 0; i < data.length; i++) {
         const l = data[i][0];
         const r = data[i][1];
@@ -45,12 +44,7 @@ sd.init(() => {
         const c = data[i][2];
         const w = data[i][3];
         data[i].push(0);
-        const box = new sd.Box(svg).x(l * 40).y(i * 60).width((r - l + 1) * 40).value(`+${w}`).color(colorList[c]);
-        if (i === 0) {
-            sd.Label(box, "add[j]", "tc");
-        } else {
-            sd.Label(box, "add[i]", "bc")
-        }
+        const box = new sd.Box(svg).x(l * 40).y(mx * 60).width((r - l + 1) * 40).value(label[i]).color(colorList[c]);
         box.onClick(() => {
             if (!data[i][4] && !canSelect(i)) return;
             data[i][4] ^= 1;
@@ -60,9 +54,11 @@ sd.init(() => {
                 box.strokeWidth(1).stroke(C.black);
             }
         })
+        sd.Label(box, i === 0 ? "j" : "i", "tr");
     }
 })
 
 sd.main(async () => {
-
+    await sd.pause();
+    new sd.Box(svg).x(0).y(0).width(5 * 40).color(colorList[0]).opacity(0).startAnimate().opacity(1).endAnimate();
 })

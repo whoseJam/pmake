@@ -3,62 +3,29 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const I = sd.input();
 const C = sd.color();
-const data = I.readIntMatrix(`
-5 9 1 2
-6 9 1 3
-8 13 1 7
-9 14 1 1`, 4, 4, false);
-const mark = sd.make1d(20);
-const colorList = [C.grey, C.green, C.coral, C.blue];
-
-function Max(arr, l, r) {
-    let ans = 0;
-    for (let i = l; i <= r; i++)
-        ans = Math.max(ans, arr[i]);
-    return ans;
-}
-
-function find(l, r) {
-    for (let i = 0; i <= 20; i++) {
-        const mx = Max(mark[i], l, r);
-        for (let j = l; j <= r; j++) mark[j] = mx + 1;
-        return mx;
-    }
-}
-
-function canSelect(i) {
-    for (let j = 0; j < data.length; j++) {
-        if (j === i) continue;
-        if (!data[j][4]) continue; // not selected
-        if (data[i][2] === data[j][2]) continue;
-        if (data[i][1] < data[j][0] || data[j][1] < data[i][0]) continue;
-        return false;
-    }
-    return true;
-}
+const R = sd.rule();
+const arr = new sd.Array(svg).resize(11).start(1);
 
 sd.init(() => {
-    new sd.Box(svg).x(0).y(0).width(4 * 40).value("......");
-    for (let i = 0; i < data.length; i++) {
-        const l = data[i][0];
-        const r = data[i][1];
-        const mx = find(l, r);
-        const c = data[i][2];
-        const w = data[i][3];
-        data[i].push(0);
-        const box = new sd.Box(svg).x(l * 40).y(i * 60).width((r - l + 1) * 40).value(`+${w}`).color(colorList[c]);
-        box.onClick(() => {
-            if (!data[i][4] && !canSelect(i)) return;
-            data[i][4] ^= 1;
-            if (data[i][4]) {
-                box.strokeWidth(3).stroke(C.red);
-            } else {
-                box.strokeWidth(1).stroke(C.black);
-            }
-        })
-    }
+    brace(new sd.Brace(svg), arr, 2, 10, false).value(new sd.Mathjax(svg, "第k条线段(l_k,r_k,绿,w_k)"), R.PointAtPathByRate(0.5, "cx", "y"));
 })
 
 sd.main(async () => {
-
+    await sd.pause();
+    arr.startAnimate().color(2, 10, C.green).endAnimate();
+    await sd.pause();
+    brace(new sd.Brace(svg), arr, 3, 8).startAnimate().pointStoT().endAnimate();
+    await sd.pause();
+    brace(new sd.Brace(svg), arr, 5, 7, true, 15).startAnimate().pointStoT().endAnimate();
 })
+
+function brace(b, arr, l, r, flag = true, gap = 5) {
+    if (flag) {
+        b.source(arr.element(l).x(), arr.y() - gap);
+        b.target(arr.element(r).mx(), arr.y() - gap);
+    } else {
+        b.target(arr.element(l).x(), arr.my() + gap);
+        b.source(arr.element(r).mx(), arr.my() + gap);
+    }
+    return b;
+}
