@@ -26,6 +26,10 @@ BarArray.prototype.updateList = [
     update
 ];
 
+BarArray.prototype.intValue = function(idx) {
+    return this.value(idx);
+}
+
 BarArray.prototype.width = function(width) {
     if (width === undefined) {
         return this.elementWidth() * this.length();

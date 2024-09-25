@@ -10,6 +10,7 @@ export function Link(elem1, elem2, linkClass = Line, xloc1 = "cx", yloc1 = "cy",
     const link = new linkClass(svg());
     callback(link);
     const move = function() {
+        console.log(xloc1, yloc1, xloc2, yloc2);
         const x1 = elem1[xloc1](), y1 = elem1[yloc1]();
         const x2 = elem2[xloc2](), y2 = elem2[yloc2]();
         link.source(x1, y1);
