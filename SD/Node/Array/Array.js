@@ -1,4 +1,5 @@
 import { Box }             from "@/Node/Element/Box";
+import { Enter }           from "@/Node/SDNode/Enter";
 import { BaseArray }       from "@/Node/Array/BaseArray";
 import { GetterAndSetter } from "@/Node/Common";
 
@@ -28,18 +29,14 @@ Array.prototype.updateList = [
 ];
 
 Array.prototype.width = function(width) {
-    if (width === undefined) {
-        return this.elementWidth() * this.length();
-    }
+    if (width === undefined) return this.elementWidth() * this.length();
     const length = this.length() ? this.length() : 1;
     this.elementWidth(width / length);
     return this;
 }
 
 Array.prototype.height = function(height) {
-    if (height === undefined) {
-        return this.elementHeight();
-    }
+    if (height === undefined) return this.elementHeight();
     this.elementHeight(height);
     return this;
 }
@@ -47,38 +44,22 @@ Array.prototype.height = function(height) {
 Array.prototype.insert = function(index, value) {
     const element = new Box(this.layer("elements"));
     element.value(value);
-    element._.enter = (element, move) => {
-        element.opacity(0);
-        move();
-        element.update();
-        element.startAnimate(this);
-        element.opacity(1);
-    };
+    element.onEnter(Enter.Ordinary(this, "elements"));
     this.insertByBaseArray(index, element);
     return this;
 }
 
 Array.prototype.insertFromExistValue = function(index, value) {
     const element = new Box(this.layer("elements"));
-    element._.enter = (element, move) => {
-        element.opacity(0);
-        move();
-        element.startAnimate(this);
-        element.opacity(1);
-        element.valueFromExist(value);
-    };
+    element.onEnter(Enter.FromExistValue(this, value, "elements"));
     this.insertByBaseArray(index, element);
     return this;
 }
 
 Array.prototype.insertFromExistElement = function(index, value) {
     if (!(value instanceof Box)) throw new Error("Invalid Arguments");
-    value._.enter = (element, move) => {
-        element.attachTo(this.layer("elements"));
-        element.startAnimate(this);
-        move();
-        element.opacity(1);
-    };
+    const element = value;
+    element.onEnter(Enter.FromExist(this, "elements"));
     this.insertByBaseArray(index, value);
     return this;
 }

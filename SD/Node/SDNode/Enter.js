@@ -1,8 +1,8 @@
 
 export const Enter = {
-    Ordinary(parent) {
+    Ordinary(parent, layer = undefined) {
         return function(element, move) {
-            element.attachTo(parent);
+            element.attachTo(layer ? parent.layer(layer) : parent);
             element.after(parent);
             element.opacity(0);
             move();
@@ -11,7 +11,24 @@ export const Enter = {
             element.opacity(1);
         };
     },
-    FromExist(parent) {
-
+    FromExist(parent, layer = undefined) {
+        return function(element, move) {
+            element.attachTo(layer ? parent.layer(layer) : parent);
+            element.after(parent);
+            element.startAnimate(parent);
+            move();
+            element.opacity(1);
+        }
+    },
+    FromExistValue(parent, value, layer = undefined) {
+        return function(element, move) {
+            element.attachTo(layer ? parent.layer(layer) : parent);
+            element.opacity(0);
+            move();
+            element.update();
+            element.startAnimate(parent);
+            element.opacity(1);
+            element.valueFromExist(value);
+        }
     }
 }
