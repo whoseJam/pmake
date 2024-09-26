@@ -1,4 +1,5 @@
-import { ActionList } from "@/Animate/ActionList";
+import { ActionList }        from "@/Animate/ActionList";
+import { updateFrameStatus } from "@/Animate/FrameStatus";
 
 /**
  * @class ActionPool
@@ -51,22 +52,36 @@ class ActionPool {
         this.currentActionList = new ActionList();
     }
 
-    rollback() {
-        const nextframe = window.CURRENT_FRAME;
-        if (nextframe === window.MAXIMUM_FRAME)
-            this.historyActionList[nextframe] = this.currentActionList;
-        if (nextframe < 0) return;
-        window.CURRENT_FRAME--;
-        if (!this.historyActionList[nextframe])
-            this.historyActionList[nextframe] = this.currentActionList;
-        this.currentActionList = this.historyActionList[nextframe].rollback();
-        this.currentActionList.restart();
+    startNewFrame() {
+        const frame = ++window.CURRENT_FRAME;
+        window.MAXIMUM_FRAME = Math.max(window.CURRENT_FRAME, window.MAXIMUM_FRAME);
+        const lastFrame = frame - 1;
+        if (!this.historyActionList[lastFrame]) {
+            this.historyActionList[lastFrame] = this.currentActionList;
+        }
+        this.currentActionList = new ActionList();
+        updateFrameStatus();
     }
 
-    replay() {
+    rollbackFrame() {
+        const nextFrame = window.CURRENT_FRAME;
+        if (nextFrame === window.MAXIMUM_FRAME)
+            this.historyActionList[nextFrame] = this.currentActionList;
+        if (nextFrame < 0) return; // no frame to rollback
+        window.CURRENT_FRAME--;
+        if (!this.historyActionList[nextFrame]) {
+            this.historyActionList[nextFrame] = this.currentActionList;
+        }
+        this.currentActionList = this.historyActionList[nextFrame].rollback();
+        this.currentActionList.restart();
+        updateFrameStatus();
+    }
+
+    replayFrame() {
         let frame = ++window.CURRENT_FRAME;
         this.currentActionList = this.historyActionList[frame].replay();
         this.currentActionList.restart();
+        updateFrameStatus();
     }
 
     currentFinished() {

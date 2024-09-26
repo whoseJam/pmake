@@ -7,13 +7,8 @@ const data = [2, 4, 1, 3, 6, 5, 4, 2, 5, 3, 1];
 const arr1 = new sd.BarArray(svg).elementHeight(20);
 const arr2 = new sd.Array(svg).y(20);
 const popButton = new sd.Button(svg).text("删除");
-let interacting = false;
 
-popButton.onClick(() => {
-    if (interacting) return;
-    interacting = true;
-    pop();
-})
+popButton.onClick(() => { sd.inter(pop); })
 
 sd.init(() => {
     data.forEach(d => arr2.push(d));
@@ -38,10 +33,5 @@ sd.main(async () => {
 })
 
 async function pop() {
-    console.log("pop length=", arr1.length());
-    if (arr1.length() > 0) {
-        await sd.pause(sd.FIRST_INTER_FRAME);
-        arr1.startAnimate().erase(0).endAnimate();
-    }
-    interacting = false;
+    if (arr1.length() > 0) arr1.startAnimate().erase(0).endAnimate();
 }

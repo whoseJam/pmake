@@ -20,21 +20,21 @@ declare class ActionPool {
      * 
      * 调用该函数之后，会新建一个ActionList，之后生成的acion会被放入该ActionList中
      */
-    play(): void;
+    startNewFrame(): void;
 
     /**
      * 将撤销当前帧所有的动画行为
      * 
      * 效果上等同于回退到上一帧
      */
-    rollback(): void;
+    rollbackFrame(): void;
 
     /**
      * 重播下一帧的动画行为
      * 
      * 效果上等同于前进到下一帧
      */
-    replay(): void;
+    replayFrame(): void;
 
     /**
      * 检验当前帧的所有动画行为是否都已经结束了

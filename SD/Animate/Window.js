@@ -2,6 +2,7 @@ import { Animate } from "@/Animate/Animate";
 
 import { setViewBox }       from "@/Interact/Svg";
 import { setAnimationSize } from "@/Interact/Message";
+import { updateFrameStatus } from "./FrameStatus";
 
 window.CURRENT_FRAME = 0;
 window.MAXIMUM_FRAME = 0;
@@ -22,13 +23,11 @@ function lastMainFrame() {
     if (window.SHOULD_EXPORT) {
         Animate.reset();
     }
-    console.log("last main frame");
     if (window.SHOULD_FLUSH) {
         setAnimationSize(); // set the animation size of parent window
         if (window.SHOULD_EXPORT) {
             setViewBox(window.SVG_MINX, window.SVG_MINY, window.SVG_MAXX - window.SVG_MINX, window.SVG_MAXY - window.SVG_MINY, window.IFRAME_RATE);
         } else {
-            console.log("reload the window");
             window.location.reload();
         }
     }
@@ -41,14 +40,16 @@ export const FIRST_INTER_FRAME = 3;
 export const CONTINUE_FRAME = 4;
 
 function promiseOfFirstInterFrame() {
-    console.log("first_inter_frame");
+    if (window.IS_CONTINUING) throw new Error;
     if (window.IS_INTERACTING) throw new Error;
+    if (window.MAXIMUM_FRAME !== window.CURRENT_FRAME) throw new Error;
     window.IS_INTERACTING = true;
+    updateFrameStatus();
     return new Promise(function(resolve) {
         const fn = function() {
             if (window.IS_CONTINUING) return setTimeout(fn, 10);       // 主流程的动画不可被打断
             if (!Animate.currentFinished()) return setTimeout(fn, 10); // 当前 inter frame 过去已经生成，现在触发，需要等待上一帧动画完全结束
-            Animate.play();
+            Animate.startNewFrame();
             resolve(0);
         }
         fn();
@@ -57,13 +58,18 @@ function promiseOfFirstInterFrame() {
 
 function promiseOfLastInterFrame() {
     window.IS_INTERACTING = false;
+    updateFrameStatus();
     return 0;
 }
 
 function promiseOfNormalFrame() {
     return new Promise(function(resolve) {
         const fn = function() {
-            if (window.SHOULD_FLUSH) return resolve(0); // 在 flush 被设置之前就来到这里等待了，flush 被设置之后需要有能力跳出
+            if (window.SHOULD_FLUSH) {
+                console.log("update window size");
+                Animate.currentActionList.updateWindowSize();
+                return resolve(0);
+            }
             if (window.IS_CONTINUING) return setTimeout(fn, 10);
             if (window.WHOSEJAM === 0) return setTimeout(fn, 10);
             window.WHOSEJAM--;
@@ -75,12 +81,33 @@ function promiseOfNormalFrame() {
 
 function promiseOfContinueFrame() {
     window.IS_CONTINUING = true;
+    updateFrameStatus();
     return new Promise(function(resolve) {
         const fn = function() {
-            if (window.SHOULD_FLUSH) return resolve(0);
+            if (window.SHOULD_FLUSH) {
+                Animate.currentActionList.updateWindowSize();
+                return resolve(0);
+            }
             if (window.WHOSEJAM === 0) return setTimeout(fn, 10);
             window.IS_CONTINUING = false;
-            resolve(0);
+            updateFrameStatus();
+            window.WHOSEJAM--;
+            return resolve(0);
+        }
+        fn();
+    })
+}
+
+function promiseOfLastMainFrame() {
+    return new Promise(function(resolve) {
+        const fn = function() {
+            if (window.SHOULD_FLUSH) {
+                console.log("should flush");
+                Animate.currentActionList.updateWindowSize();
+                lastMainFrame();
+                return resolve(0);
+            }
+            setTimeout(fn, 10);
         }
         fn();
     })
@@ -108,7 +135,7 @@ export function pause(frameType = 0) {
         case NORMAL_FRAME:
             return promiseOfNormalFrame();
         case LAST_MAIN_FRAME:
-            return 0;
+            return promiseOfLastMainFrame();
     }
     throw new Error(`Unknown Frame Type ${frameType}`);
 }
@@ -119,7 +146,7 @@ function prevFrame() {
         Animate.reset();
         return;
     }
-    Animate.rollback();
+    Animate.rollbackFrame();
 }
 
 function nextFrame() {
@@ -128,13 +155,13 @@ function nextFrame() {
             Animate.reset();
         } else if (window.WHOSEJAM === 0) {
             window.WHOSEJAM++;
-            Animate.play();
+            Animate.startNewFrame();
         }
     } else {
         if (!Animate.currentFinished()) {
             Animate.reset();
         } else {
-            Animate.replay();
+            Animate.replayFrame();
         }
     }
 }
