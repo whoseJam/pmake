@@ -94,6 +94,10 @@ Text.prototype.text = function(text) {
     return this;
 }
 
+Text.prototype.intValue = function() {
+    return +this.text();
+}
+
 /**
  * @param {string} text 
  * @returns {string}

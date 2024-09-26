@@ -3,6 +3,6 @@ import { SDNode } from "SD/Node/SDNode";
 /**
  * 创建一个索引
  * @param parent 
- * @param position 
+ * @param location 
  */
-export function Index(parent: SDNode, position: "t"|"b"|"l"|"r"): SDNode;
+export function Index(parent: SDNode, location: "t"|"b"|"l"|"r"): SDNode;
