@@ -1,6 +1,6 @@
-import { Array } from "@/Node/Array/Array";
-import { BaseArray } from "./BaseArray";
-import { GetterAndSetter } from "../Common";
+import { Array }           from "@/Node/Array/Array";
+import { BaseArray }       from "@/Node/Array/BaseArray";
+import { GetterAndSetter } from "@/Node/Common";
 
 export function Stack(parent) {
     BaseArray.call(this, parent);
@@ -12,6 +12,8 @@ export function Stack(parent) {
     this.member.new("y", 0);
     this.member.new("elementWidth", 40);
     this.member.new("elementHeight", 40);
+
+    return this;
 }
 
 Stack.prototype = {
@@ -29,17 +31,13 @@ Stack.prototype.updateList = [
 ];
 
 Stack.prototype.width = function(width) {
-    if (width === undefined) {
-        return this.elementWidth();
-    }
+    if (width === undefined) return this.elementWidth();
     this.elementWidth(width);
     return this;
 }
 
 Stack.prototype.height = function(height) {
-    if (height === undefined) {
-        return this.elementHeight() * this.length();
-    }
+    if (height === undefined) return this.elementHeight() * this.length();
     const length = this.length() ? this.length() : 1;
     this.elementHeight(height / length);
     return this;
