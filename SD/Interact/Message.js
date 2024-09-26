@@ -4,8 +4,8 @@ import { setViewBox } from "@/Interact/Svg";
 
 export function initMessage() {
     window.Flush = function(id, url, width, height, rate, asPdf, maxFrame = Infinity) {
-        window.__FLUSH__ = true;
-        window.__EXPORT__ = asPdf
+        window.SHOULD_FLUSH = true;
+        window.SHOULD_EXPORT = asPdf
         window.IFRAME_ID = id;
         window.IFRAME_NAME = url;
         window.IFRAME_RATE = rate;

@@ -12,7 +12,7 @@ export function Action(l, r, from, to, callback, owner = window, channel = "defa
     this.callback = callback;
     this.owner = owner;
     this.channel = channel;
-    this.frame = window.__FRAME__;
+    this.frame = window.CURRENT_FRAME;
     this.next = null;
     this.isStopped = false;
     this.hidden = false;

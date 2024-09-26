@@ -1,4 +1,7 @@
-import { pause } from "@/Animate/Window";
+import { pause }             from "@/Animate/Window";
+import { LAST_MAIN_FRAME }   from "@/Animate/Window";
+import { LAST_INTER_FRAME }  from "@/Animate/Window";
+import { FIRST_INTER_FRAME } from "@/Animate/Window";
 
 export function int(x) {
     return ~~x;
@@ -28,5 +31,12 @@ export function init(callback) {
 
 export async function main(callback) {
     await callback();
-    await pause();
+    await pause(LAST_MAIN_FRAME);
+}
+
+export async function inter(callback) {
+    await pause(FIRST_INTER_FRAME);
+    await callback();
+    console.log("meet last inter frame");
+    await pause(LAST_INTER_FRAME);
 }

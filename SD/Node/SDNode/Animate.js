@@ -8,8 +8,8 @@ export class Animate {
     }
 
     animateCheck() {
-        if (this.frame !== window.__FRAME__) {
-            this.frame = window.__FRAME__;
+        if (this.frame !== window.CURRENT_FRAME) {
+            this.frame = window.CURRENT_FRAME;
             this.startTimestamp = 0;
             this.endTimestamp = 0;
             this.animating = false;

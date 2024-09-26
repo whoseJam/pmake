@@ -16,22 +16,14 @@ class ActionPool {
         if (timestamp !== undefined) {
             this.currentTimestamp = timestamp;
             let currentActionList = this.currentActionList;
-            if (window.__FLUSH__ || window.__EXPORT__) return;
+            if (window.SHOULD_FLUSH) return;
             currentActionList.tick(timestamp);
-            // if (window.__WHOSEJAM__ === 0) {
-            //     if (!this.lastTickFlag) currentActionList.restart(timestamp);
-            //     this.lastTickFlag = true;
-            //     currentActionList.tick(timestamp);
-            // }
             requestAnimationFrame(this.tick.bind(this));
         } else {
             this.currentActionList.tick();
         }
     }
 
-    /**
-     * 终结现在actionList中所有正在调度的动画，经过该函数后actionList应为空
-     */
     reset() {
         let currentActionList = this.currentActionList;
         currentActionList.finish();
@@ -51,20 +43,20 @@ class ActionPool {
     }
 
     play() {
-        let frame = ++window.__FRAME__;
-        window.__MAXFRAME__ = window.__FRAME__;
-        let lastframe = frame - 1;
+        const frame = ++window.CURRENT_FRAME;
+        window.MAXIMUM_FRAME = window.CURRENT_FRAME;
+        const lastframe = frame - 1;
         if (!this.historyActionList[lastframe])
             this.historyActionList[lastframe] = this.currentActionList;
         this.currentActionList = new ActionList();
     }
 
     rollback() {
-        let nextframe = window.__FRAME__;
-        if (nextframe === window.__MAXFRAME__)
+        const nextframe = window.CURRENT_FRAME;
+        if (nextframe === window.MAXIMUM_FRAME)
             this.historyActionList[nextframe] = this.currentActionList;
         if (nextframe < 0) return;
-        window.__FRAME__--;
+        window.CURRENT_FRAME--;
         if (!this.historyActionList[nextframe])
             this.historyActionList[nextframe] = this.currentActionList;
         this.currentActionList = this.historyActionList[nextframe].rollback();
@@ -72,7 +64,7 @@ class ActionPool {
     }
 
     replay() {
-        let frame = ++window.__FRAME__;
+        let frame = ++window.CURRENT_FRAME;
         this.currentActionList = this.historyActionList[frame].replay();
         this.currentActionList.restart();
     }

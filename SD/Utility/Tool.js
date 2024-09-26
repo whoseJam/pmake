@@ -66,7 +66,7 @@ export function snapAction(conf) {
     action.startStamp = conf.start;
     action.endStamp = conf.end;
     action.channel = conf.key;
-    action.frame = window.__frame__;
+    action.frame = window.CURRENT_FRAME;
     action.value = conf.value;
     let duration = conf.end - conf.start;
     let args = {}, anim = null;

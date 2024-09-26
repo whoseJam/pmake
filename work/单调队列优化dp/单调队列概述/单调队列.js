@@ -3,22 +3,11 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const C = sd.color();
 const R = sd.rule();
-const data = [2, 4, 1, 3, 6, 5];
-const arr = new sd.BarArray(svg);
-
-const addButton = new sd.Button(svg).text("添加一个元素");
-const addInput = new sd.Input(svg);
-addButton.childAs("input", addInput, R.Aside("rc"));
-const popButton = new sd.Button(svg).text("删除一个元素");
-
+const data = [2, 4, 1, 3, 6, 5, 4, 2, 5, 3, 1];
+const arr1 = new sd.BarArray(svg).elementHeight(20);
+const arr2 = new sd.Array(svg).y(20);
+const popButton = new sd.Button(svg).text("删除");
 let interacting = false;
-
-addButton.onClick(() => {
-    if (interacting) return;
-    interacting = true;
-    const value = +addInput.text();
-    add(value);
-})
 
 popButton.onClick(() => {
     if (interacting) return;
@@ -27,29 +16,32 @@ popButton.onClick(() => {
 })
 
 sd.init(() => {
+    data.forEach(d => arr2.push(d));
+    popButton.cy(arr2.cy()).mx(arr2.x() - 20);
 })
 
 sd.main(async () => {
+    const p = sd.Pointer(arr2, "cur", "t", 10, 30);
+    for (let i = 0; i < arr2.length(); i++) {
+        await sd.pause();
+        p.startAnimate().moveTo(i).endAnimate();
+        await sd.pause(sd.CONTINUE_FRAME);
+        arr1.startAnimate().push(data[i]).color(arr1.end(), C.blue).endAnimate();
+        arr1.element(arr1.end()).idx = i;
+        while (arr1.length() >= 2 && arr1.intValue(arr1.end()) >= arr1.intValue(arr1.end() - 1)) {
+            await sd.pause(sd.CONTINUE_FRAME);
+            arr1.startAnimate().erase(arr1.end() - 1).endAnimate();
+        }
+        await sd.pause(sd.CONTINUE_FRAME);
+        arr1.startAnimate().color(arr1.end(), C.white).endAnimate();
+    }
 })
 
-async function add(x) {
-    await sd.pause();
-    arr.startAnimate().push(x).color(arr.end(), C.blue).endAnimate();
-    
-    while (arr.length() >= 2 && arr.intValue(arr.end() - 1) <= arr.intValue(arr.end())) {
-        await sd.pause();
-        arr.startAnimate().erase(arr.end() - 1).endAnimate();
-    }
-
-    await sd.pause();
-    arr.startAnimate().color(C.white).endAnimate();
-    interacting = false;
-}
-
-async function pop(x) {
-    if (arr.length() > 0) {
-        await sd.pause();
-        arr.startAnimate().erase(0).endAnimate();
+async function pop() {
+    console.log("pop length=", arr1.length());
+    if (arr1.length() > 0) {
+        await sd.pause(sd.FIRST_INTER_FRAME);
+        arr1.startAnimate().erase(0).endAnimate();
     }
     interacting = false;
 }

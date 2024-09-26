@@ -3,12 +3,13 @@ import { Animate } from "@/Animate/Animate";
 import { setViewBox }       from "@/Interact/Svg";
 import { setAnimationSize } from "@/Interact/Message";
 
-window.__FRAME__ = 0;
-window.__MAXFRAME__ = 0;
-window.__WHOSEJAM__ = 0;
-window.__EXPORT__ = false;
-window.__FLUSH__ = false;
-window.__RECORD__ = false;
+window.CURRENT_FRAME = 0;
+window.MAXIMUM_FRAME = 0;
+window.WHOSEJAM = 0;
+window.SHOULD_EXPORT = false;
+window.SHOULD_FLUSH = false;
+window.IS_CONTINUING = false;
+window.IS_INTERACTING = false;
 window.SVG_MINX = 1200;
 window.SVG_MINY = 600;
 window.SVG_MAXX = 0;
@@ -17,57 +18,103 @@ window.SVG_MAXY = 0;
 window.next = nextFrame;
 window.prev = prevFrame;
 
-function record() {
-    if (window.__EXPORT__) Animate.reset();
-    if (window.__FLUSH__) {
-        setAnimationSize();
-        if (!window.__EXPORT__) window.location.reload();
-        else {
-            setViewBox(
-                window.SVG_MINX,
-                window.SVG_MINY,
-                window.SVG_MAXX - window.SVG_MINX,
-                window.SVG_MAXY - window.SVG_MINY,
-                window.IFRAME_RATE);
+function lastMainFrame() {
+    if (window.SHOULD_EXPORT) {
+        Animate.reset();
+    }
+    console.log("last main frame");
+    if (window.SHOULD_FLUSH) {
+        setAnimationSize(); // set the animation size of parent window
+        if (window.SHOULD_EXPORT) {
+            setViewBox(window.SVG_MINX, window.SVG_MINY, window.SVG_MAXX - window.SVG_MINX, window.SVG_MAXY - window.SVG_MINY, window.IFRAME_RATE);
+        } else {
+            console.log("reload the window");
+            window.location.reload();
         }
     }
 }
 
-export function pause() {
-    if ((window.__FLUSH__ || window.__EXPORT__) && !window.__RECORD__) {
-        window.__RECORD__ = true;
-        setTimeout(record, 0);
-    }
-    if (window.__FLUSH__ || 
-        window.__EXPORT__) {
-        Animate.currentActionList.updateWindowSize();
-        if (window.__FRAME__ <= window.IFRAME_MAX_FRAME) {
-            window.__FRAME__++;
-            return 0;
-        } else {
-            record();
-        }
-    }
+export const NORMAL_FRAME = 0;
+export const LAST_MAIN_FRAME = 1;
+export const LAST_INTER_FRAME = 2;
+export const FIRST_INTER_FRAME = 3;
+export const CONTINUE_FRAME = 4;
+
+function promiseOfFirstInterFrame() {
+    console.log("first_inter_frame");
+    if (window.IS_INTERACTING) throw new Error;
+    window.IS_INTERACTING = true;
     return new Promise(function(resolve) {
         const fn = function() {
-            if (window.__WHOSEJAM__ > 0 ||
-                window.__FLUSH__ ||
-                window.__EXPORT__) {
-                if (window.__WHOSEJAM__ > 0) window.__WHOSEJAM__--;
-                resolve(0);
-                if ((window.__FLUSH__ || window.__EXPORT__) && !window.__RECORD__) {
-                    window.__RECORD__ = true;
-                    setTimeout(record, 0);
-                }
-            }
-            else setTimeout(fn, 10);
+            if (window.IS_CONTINUING) return setTimeout(fn, 10);       // 主流程的动画不可被打断
+            if (!Animate.currentFinished()) return setTimeout(fn, 10); // 当前 inter frame 过去已经生成，现在触发，需要等待上一帧动画完全结束
+            Animate.play();
+            resolve(0);
         }
         fn();
     });
 }
 
+function promiseOfLastInterFrame() {
+    window.IS_INTERACTING = false;
+    return 0;
+}
+
+function promiseOfNormalFrame() {
+    return new Promise(function(resolve) {
+        const fn = function() {
+            if (window.SHOULD_FLUSH) return resolve(0); // 在 flush 被设置之前就来到这里等待了，flush 被设置之后需要有能力跳出
+            if (window.IS_CONTINUING) return setTimeout(fn, 10);
+            if (window.WHOSEJAM === 0) return setTimeout(fn, 10);
+            window.WHOSEJAM--;
+            return resolve(0);
+        }
+        fn();
+    })
+}
+
+function promiseOfContinueFrame() {
+    window.IS_CONTINUING = true;
+    return new Promise(function(resolve) {
+        const fn = function() {
+            if (window.SHOULD_FLUSH) return resolve(0);
+            if (window.WHOSEJAM === 0) return setTimeout(fn, 10);
+            window.IS_CONTINUING = false;
+            resolve(0);
+        }
+        fn();
+    })
+}
+
+export function pause(frameType = 0) {
+    if (window.SHOULD_FLUSH) {
+        Animate.currentActionList.updateWindowSize();
+        // limit frame count, to handle the infinite animation
+        if (window.CURRENT_FRAME <= window.IFRAME_MAX_FRAME && frameType !== LAST_MAIN_FRAME) {
+            window.CURRENT_FRAME++;
+            return 0; // no block
+        } else {
+            lastMainFrame();
+            return 0;
+        }
+    }
+    switch(frameType) {
+        case FIRST_INTER_FRAME:
+            return promiseOfFirstInterFrame();
+        case LAST_INTER_FRAME:
+            return promiseOfLastInterFrame();
+        case CONTINUE_FRAME:
+            return promiseOfContinueFrame();
+        case NORMAL_FRAME:
+            return promiseOfNormalFrame();
+        case LAST_MAIN_FRAME:
+            return 0;
+    }
+    throw new Error(`Unknown Frame Type ${frameType}`);
+}
+
 function prevFrame() {
-    if (window.__FRAME__ < 0) return;
+    if (window.CURRENT_FRAME < 0) return;
     if (!Animate.currentFinished()) {
         Animate.reset();
         return;
@@ -76,11 +123,11 @@ function prevFrame() {
 }
 
 function nextFrame() {
-    if (window.__FRAME__ + 1 > window.__MAXFRAME__) {
+    if (window.CURRENT_FRAME + 1 > window.MAXIMUM_FRAME) {
         if (!Animate.currentFinished()) {
             Animate.reset();
-        } else if (window.__WHOSEJAM__ === 0) {
-            window.__WHOSEJAM__++;
+        } else if (window.WHOSEJAM === 0) {
+            window.WHOSEJAM++;
             Animate.play();
         }
     } else {

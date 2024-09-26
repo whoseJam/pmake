@@ -77,10 +77,14 @@ export { Link }         from "./Component/Link.js";
 
 export { PathPen } from "./Utility/PathPen.js";
 
+export { CONTINUE_FRAME }    from "./Animate/Window";
+export { FIRST_INTER_FRAME } from "./Animate/Window";
+
 export { pause }  from "./Animate/Window.js";
 export { rand }   from "./Utility/Random.js";
 export { trim }   from "./Utility/Trim.js";
 export { init }   from "./Utility/Util.js";
 export { main }   from "./Utility/Util.js";
+export { inter }  from "./Utility/Util.js";
 export { make1d } from "./Utility/Util.js"
 export { make2d } from "./Utility/Util.js";

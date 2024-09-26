@@ -40,6 +40,11 @@ declare class ActionPool {
      * 检验当前帧的所有动画行为是否都已经结束了
      */
     currentFinished(): boolean;
+
+    /**
+     * 终结现在actionList中所有正在调度的动画，经过该函数后actionList应为空
+     */
+    reset();
 }
 
 export const Animate: ActionPool;

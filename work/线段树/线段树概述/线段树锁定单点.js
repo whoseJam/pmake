@@ -17,33 +17,22 @@ const input = new sd.ValueStack(svg);
 const lInput = new sd.Input(svg).label("l");
 const rInput = new sd.Input(svg).label("r");
 const button = new sd.Button(svg).text("Query").onClick(() => {
-    if (isActing) return;
-    isActing = true;
-    tree.query(+lInput.value(), +rInput.value(), C.blue).then(() => {
-        isActing = false;
-    });
+    sd.inter(tree.query.bind(tree, +lInput.value(), +rInput.value(), C.blue));
 });
 input.push(lInput).push(rInput).push(button);
 input.mx(tree.x() - 60).cy(tree.cy());
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     for (let i = 1; i <= n; i++) {
         array.element(i).onClick(() => {
-            if (isActing) return;
-            isActing = true;
-            tree.colorOn(i, C.green).then(() => {
-                isActing = false;
-            });
+            sd.inter(tree.colorOn.bind(tree, i, C.green));
         })
     }
-}
+})
 
-async function main() {
-    await sd.pause();
-}
+sd.main(async () => {
+
+})
 
 function initSegmentTree(parent, l, r) {
     const tree = new sd.ValueTree(parent);
@@ -70,7 +59,6 @@ function initSegmentTree(parent, l, r) {
     tree.unfreeze();
 
     tree.query = async function(ql, qr, color) {
-        await sd.pause();
         lPointer.startAnimate().moveTo(ql).endAnimate();
         rPointer.startAnimate().moveTo(qr).endAnimate();
         async function colorOn(x, l, r) {
@@ -97,10 +85,9 @@ function initSegmentTree(parent, l, r) {
         return this;
     }
     tree.colorOn = async function(pos, color) {
-        if (pos < l || pos > r) throw new Error("Invalid Range");
-        await sd.pause();
         target.startAnimate().moveTo(pos).endAnimate();
         async function colorOn(x, l, r) {
+            console.log("x=", x, "l=", l, "r=", r);
             await sd.pause();
             focus.startAnimate().focus(l, r).endAnimate();
             tree.startAnimate().color(x, color).endAnimate();
