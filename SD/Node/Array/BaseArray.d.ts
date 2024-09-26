@@ -47,4 +47,11 @@ export class BaseArray extends SDNode {
     color(index: number): Color;
     color(index: number, color: Color): this;
     color(l: number, r: number, color: Color): this;
+
+    /**
+     * 对数组内部元素做排序
+     * 
+     * @param comparator 自定义比较器
+     */
+    sort(comparator: (a: SDNode, b: SDNode) => boolean): this;
 }

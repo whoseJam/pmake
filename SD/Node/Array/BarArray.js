@@ -1,6 +1,8 @@
-import { Rect } from "@/Node/Nake/Rect";
-import { BaseArray } from "./BaseArray";
-import { GetterAndSetter } from "../Common";
+import { Rect }            from "@/Node/Nake/Rect";
+import { Array }           from "@/Node/Array/Array";
+import { Enter }           from "@/Node/SDNode/Enter";
+import { BaseArray }       from "@/Node/Array/BaseArray";
+import { GetterAndSetter } from "@/Node/Common";
 
 export function BarArray(parent) {
     BaseArray.call(this, parent);
@@ -13,6 +15,8 @@ export function BarArray(parent) {
     this.member.new("elementWidth", 40);
     this.member.new("elementHeight", 40);
     this.member.new("height", 0);
+
+    return this;
 }
     
 BarArray.prototype = {
@@ -30,15 +34,7 @@ BarArray.prototype.intValue = function(idx) {
     return this.value(idx);
 }
 
-BarArray.prototype.width = function(width) {
-    if (width === undefined) {
-        return this.elementWidth() * this.length();
-    }
-    const length = this.length() ? 1 : this.length();
-    this.elementWidth(width / length);
-    return this;
-}
-
+BarArray.prototype.width = Array.prototype.width;
 BarArray.prototype.height = function(height) {
     if (height === undefined) {
         return this.member.get("height");
@@ -46,7 +42,7 @@ BarArray.prototype.height = function(height) {
     const elements = this.member.get("elements");
     let maxValue = 1;
     for (let element of elements) {
-        maxValue = Math.max(maxValue, element._.value);
+        maxValue = Math.max(maxValue, element.value());
     }
     this.elementHeight(height / maxValue);
     return this;
@@ -55,24 +51,21 @@ BarArray.prototype.height = function(height) {
 BarArray.prototype.insert = function(index, value) {
     value = +value;
     if (typeof(value) !== "number") throw new Error("Invalid Arguments");
-    const parent = this;
     const element = new Rect(this.layer("elements"));
-    element._.value = value;
+    element.member.new("barArrayValue", value);
     element.value = function(value) {
-        if (value === undefined) return this._.value;
-        this._.value = value;
-        let baseline = this.my();
-        this.height(value * parent.elementHeight());
+        if (value === undefined) return this.member.get("barArrayValue");
+        this.member.setAndFlush("barArrayValue", value);
+        const baseline = this.my();
+        this.height(value * this.parent.elementHeight());
         this.my(baseline);
         return this;
     }
-    element._.enter = (element, move) => {
-        element.opacity(0);
-        move();
-        element.update();
-        element.startAnimate(this);
-        element.opacity(1);
-    };
+    element.intValue = function() {
+        return this.value();
+    }
+
+    element.onEnter(Enter.Ordinary(this, "elements"));
     this.insertByBaseArray(index, element);
     return this;
 }

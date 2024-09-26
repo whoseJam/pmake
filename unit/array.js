@@ -31,7 +31,7 @@ async function main() {
     const a4 = new sd.Array(svg).x(100).y(270).push(4).push(5).push(6);
     await sd.pause();
     const e3 = a3.dropValue(2);
-    a4.startAnimate(1000).pushFromExistValue(e3).endAnimate();
+    a4.startAnimate().pushFromExistValue(e3).endAnimate();
     await sd.pause();
 
     const a5 = new sd.Array(svg).x(400).y(100).push(1).push(2).push(3);
@@ -40,5 +40,6 @@ async function main() {
     const e5 = a5.startAnimate().dropValue(2).endAnimate();
     a6.startAnimate().pushFromExistValue(e5).endAnimate();
     await sd.pause();
+    a6.startAnimate().sort().endAnimate();
 
 }

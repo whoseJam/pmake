@@ -205,9 +205,9 @@ BaseArray.prototype.color = function() {
     throw new Error("Invalid Arguments");
 }
 
-BaseArray.prototype.sort = function() {
+BaseArray.prototype.sort = function(comparator = (a, b) => a.intValue() - b.intValue()) {
     const elements = this.member.get("elements");
-    elements.sort((a, b) => a.intValue() - b.intValue());
+    elements.sort(comparator);
     this.member.dirty("elements");
     this.tryUpdate();
     return this;
