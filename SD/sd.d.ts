@@ -55,6 +55,7 @@ export { Button } from "./Node/HTML/Button";
 export { Slider } from "./Node/HTML/Slider";
 
 export { Link }         from "./Component/Link";
+export { Brace }        from "./Component/Brace";
 export { Index }        from "./Component/Index";
 export { Focus }        from "./Component/Focus";
 export { Label }        from "./Component/Label";

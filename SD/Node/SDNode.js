@@ -112,6 +112,7 @@ SDNode.prototype.unfreeze   = Forward("updater", "unfreeze");
 SDNode.prototype.freezing   = Forward("updater", "freezing");
 SDNode.prototype.pendUpdate = Forward("updater", "pendUpdate");
 SDNode.prototype.tryUpdate  = Forward("updater", "tryUpdate");
+SDNode.prototype.attachUpdate = Forward("updater", "attachUpdate");
 
 SDNode.prototype.updateList = [
     function() {
@@ -150,4 +151,11 @@ SDNode.prototype.rule = function(rule) {
     }
     this._.rule = rule;
     return this;
+}
+SDNode.prototype.triggerRule = function() {
+    this._.rule(this.parent, this);
+    return this;
+}
+SDNode.prototype.onEnter = function(callback) {
+    this._.enter = callback;
 }

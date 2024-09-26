@@ -3,6 +3,7 @@ export function Updater(parent) {
     this.parent = parent;
     this.freezeCount = 0;
     this.isPending = false;
+    this.attachUpdateList = [];
     return this;
 }
 
@@ -39,6 +40,9 @@ Updater.prototype.update = function() {
     this.parent.updateList.forEach(callback => {
         callback.call(this.parent);
     });
+    this.attachUpdateList.forEach(callback => {
+        callback.call(this.parent);
+    });
     this.postUpdate();
     return this;
 }
@@ -68,4 +72,8 @@ Updater.prototype.pendUpdate = function() {
 Updater.prototype.tryUpdate = function() {
     if (this.freezing()) this.pendUpdate();
     else this.update();
+}
+
+Updater.prototype.attachUpdate = function(callback) {
+    this.attachUpdateList.push(callback);
 }

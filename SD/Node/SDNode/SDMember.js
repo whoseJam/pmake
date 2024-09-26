@@ -17,6 +17,15 @@ export class SDMember {
         return this.values[key].get();
     }
 
+    getAndFlush(key) {
+        if (!this.values[key]) {
+            throw new Error(`Unknown Key ${key}`);
+        }
+        this.values[key].isDirty = false;
+        this.values[key].oldValue = this.values[key].value;
+        return this.values[key].get();
+    }
+
     dirty(key) {
         if (!this.values[key]) {
             throw new Error(`Unknown Key ${key}`);
