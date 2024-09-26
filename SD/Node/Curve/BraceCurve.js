@@ -1,13 +1,13 @@
-import { BaseCurve }            from "@/Node/Curve/BaseCurve";
+import { BaseCurve }       from "@/Node/Curve/BaseCurve";
 import { GetterAndSetter } from "@/Node/Common";
 
 import { Vec }     from "@/Utility/Math";
 import { PathPen } from "@/Utility/PathPen";
 
-export function Brace(parent) {
+export function BraceCurve(parent) {
     BaseCurve.call(this, parent);
 
-    this.g().type("Brace");
+    this.g().type("BraceCurve");
 
     this.member.new("bending", 5);
 
@@ -16,11 +16,11 @@ export function Brace(parent) {
     return this;
 }
 
-Brace.prototype = {
+BraceCurve.prototype = {
     ...BaseCurve.prototype
 };
 
-Brace.prototype.bending = GetterAndSetter("bending", "setByEqual");
+BraceCurve.prototype.bending = GetterAndSetter("bending", "setByEqual");
 
 function update() {
     if (!this.member.hasChanged("x1") &&

@@ -32,8 +32,8 @@ sd.init(() => {
 
 sd.main(async () => {
     await sd.pause();
-    const bj = new sd.Brace(graph).target(graph.x(), graph.my() + 30).source(graph.element(n + B).cx(), graph.my() + 30).value("j", R.PointAtPathByRate(0.5, "cx", "y"));
-    const bi = new sd.Brace(graph).source(graph.x() - 30, graph.my()).target(graph.x() - 30, graph.element(A).cy()).value("i", R.PointAtPathByRate(0.5, "mx", "cy"));
+    const bj = new sd.BraceCurve(graph).target(graph.x(), graph.my() + 30).source(graph.element(n + B).cx(), graph.my() + 30).value("j", R.PointAtPathByRate(0.5, "cx", "y"));
+    const bi = new sd.BraceCurve(graph).source(graph.x() - 30, graph.my()).target(graph.x() - 30, graph.element(A).cy()).value("i", R.PointAtPathByRate(0.5, "mx", "cy"));
     function appear(obj) {
         obj.opacity(0).startAnimate().opacity(1).endAnimate();
     }

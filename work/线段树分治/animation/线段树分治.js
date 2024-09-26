@@ -90,7 +90,7 @@ async function addImpact(l, r, color) {
 function initTimeline(parent) {
     const timeline = new sd.Array(parent).resize(n).start(1).cx(tree.cx()).y(tree.my() + 80);
     timeline.brace = function(l, r, color, gap) {
-        const brace = new sd.Brace(timeline);
+        const brace = new sd.BraceCurve(timeline);
         const el = this.element(l);
         const er = this.element(r);
         brace.freeze().target(el.x(), el.my() + gap)

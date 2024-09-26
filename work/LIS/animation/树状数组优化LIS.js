@@ -15,7 +15,7 @@ function makeDp() {
     let arr = new sd.BarArray(svg).x(100).y(300);
     let dp = new sd.Array(svg);
     let tree = new sd.Array(svg).start(1);
-    let brace = new sd.Brace(svg);
+    let brace = new sd.BraceCurve(svg);
     brace.opacity(0);
     let data = [1, 2, 4, 1, 3, 5];
     for (let i = 0; i < data.length; i++) arr.push(data[i]);

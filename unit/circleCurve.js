@@ -3,7 +3,7 @@ import * as sd from "@/sd";
 let svg = sd.svg();
 let c = new sd.CircleCurve(svg);
 c.target(100, 100).source(120, 100);
-let b = new sd.Brace(svg);
+let b = new sd.BraceCurve(svg);
 b.target(100, 200).source(120, 200);
 
 main();

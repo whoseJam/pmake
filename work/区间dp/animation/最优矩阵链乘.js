@@ -84,7 +84,7 @@ function makeDp() {
     }
     function makeBrace(el, er) {
         let y = Math.max(el.my(), er.my());
-        let b = new sd.Brace(svg).source(er.mx()-1, y + 10).target(el.x()+1, y + 10);
+        let b = new sd.BraceCurve(svg).source(er.mx()-1, y + 10).target(el.x()+1, y + 10);
         b.opacity(0).startAnimate().opacity(1).endAnimate();
         return b;
     }

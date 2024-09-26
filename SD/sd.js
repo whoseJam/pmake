@@ -50,9 +50,9 @@ export { TinyGraph }      from "./Node/Graph/TinyGraph.js";
 export { BipartiteGraph } from "./Node/Graph/BipartiteGraph.js";
 export { ValueGridGraph } from "./Node/Graph/ValueGridGraph.js";
 
-export { Brace }           from "./Node/Curve/Brace.js";
 export { Curve }           from "./Node/Curve/Curve.js";
 export { Bezier }          from "./Node/Curve/Bezier.js";
+export { BraceCurve }      from "./Node/Curve/BraceCurve.js";
 export { CircleCurve }     from "./Node/Curve/CircleCurve.js";
 export { FixedPointCurve } from "./Node/Curve/FixedPointCurve.js";
 
@@ -68,6 +68,7 @@ export { TextArea } from "./Node/HTML/TextArea.js"
 export { Focus }        from "./Component/Focus.js";
 export { Index }        from "./Component/Index.js";
 export { Label }        from "./Component/Label.js";
+export { Brace }        from "./Component/Brace.js";
 export { Stress }       from "./Component/Stress.js";
 export { Pointer }      from "./Component/Pointer.js";
 export { WithBrace }    from "./Component/WithBrace.js";

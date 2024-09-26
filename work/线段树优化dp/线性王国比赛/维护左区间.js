@@ -22,7 +22,7 @@ sd.main(async () => {
         if (i === 6) arr.startAnimate().color(i, C.red).endAnimate();
         if (i === 6) {
             await sd.pause();
-            const b = new sd.Brace(svg);
+            const b = new sd.BraceCurve(svg);
             function brace(arr, l, r) {
                 b.source(arr.element(l).x(), arr.y() - 5);
                 b.target(arr.element(r).mx(), arr.y() - 5);

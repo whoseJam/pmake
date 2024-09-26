@@ -1,4 +1,4 @@
-import { Brace } from "@/Node/Curve/Brace";
+import { BraceCurve } from "@/Node/Curve/BraceCurve";
 import { PointAtPathByRate } from "@/Rule/Path";
 import { toNode } from "@/Utility/Tool";
 
@@ -6,7 +6,7 @@ let id = 0;
 
 export function WithBrace(parent) {
     parent.brace = function(l, r, location = "b", gap = 5) {
-        const brace = new Brace(this);
+        const brace = new BraceCurve(this);
         brace.member.new("l", l);
         brace.member.new("r", r);
         brace.member.new("gap", gap);

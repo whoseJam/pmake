@@ -71,14 +71,14 @@ function makeDp() {
     function braceTop(l, r) {
         let el = stone.element(l);
         let er = stone.element(r);
-        let b = new sd.Brace(svg).source(el.x()+1, el.y() - 10).target(er.mx()-1, er.y() - 10);
+        let b = new sd.BraceCurve(svg).source(el.x()+1, el.y() - 10).target(er.mx()-1, er.y() - 10);
         b.opacity(0).startAnimate().opacity(1).endAnimate();
         return b;
     }
     function braceBottom(l, r) {
         let el = stone.element(l);
         let er = stone.element(r);
-        let b = new sd.Brace(svg).source(er.mx()-1, er.my() + 10).target(el.x()+1, el.my() + 10);
+        let b = new sd.BraceCurve(svg).source(er.mx()-1, er.my() + 10).target(el.x()+1, el.my() + 10);
         b.opacity(0).startAnimate().opacity(1).endAnimate();
         return b;
     }

@@ -15,8 +15,8 @@ sd.main(async () => {
     arr1.startAnimate().dx(-20).endAnimate();
     arr2.startAnimate().dx(20).endAnimate();
     await sd.pause();
-    const b1 = new sd.Brace(svg);
-    const b2 = new sd.Brace(svg);
+    const b1 = new sd.BraceCurve(svg);
+    const b2 = new sd.BraceCurve(svg);
     function brace(b, arr, text) {
         b.source(arr.mx(), arr.my() + 5).target(arr.x(), arr.my() + 5).value(text, R.PointAtPathByRate(0.5, "cx", "y"))
         b.opacity(0).startAnimate().opacity(1).endAnimate();

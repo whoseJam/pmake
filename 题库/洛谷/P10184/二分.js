@@ -28,8 +28,8 @@ sd.main(async () => {
 
 async function erfen(mid) {
     const grid = new sd.Grid(svg).n(mid).m(T).x(arr.mx() + 60).y(arr.y());
-    const bT = new sd.Brace(grid).source(grid.x(), grid.y() - 5).target(grid.mx(), grid.y() - 5).value("T", R.PointAtPathByRate(0.5, "cx", "my"));
-    const bMid = new sd.Brace(grid).target(grid.x() - 5, grid.y()).source(grid.x() - 5, grid.my()).value("mid", R.PointAtPathByRate(0.5, "mx", "cy", -5));
+    const bT = new sd.BraceCurve(grid).source(grid.x(), grid.y() - 5).target(grid.mx(), grid.y() - 5).value("T", R.PointAtPathByRate(0.5, "cx", "my"));
+    const bMid = new sd.BraceCurve(grid).target(grid.x() - 5, grid.y()).source(grid.x() - 5, grid.my()).value("mid", R.PointAtPathByRate(0.5, "mx", "cy", -5));
     function createAndMove(i, j, ti, tj) {
         const x = arr.element(i - 1).element(j - 1).x();
         const y = arr.element(i - 1).element(j - 1).y();

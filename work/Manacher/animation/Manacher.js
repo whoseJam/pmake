@@ -83,7 +83,7 @@ function drawBound(i, gap) {
     const r = str.element(i + p[i] - 1);
     const minX = l.x();
     const maxX = r.mx();
-    return new sd.Brace(svg)
+    return new sd.BraceCurve(svg)
         .target(minX, str.my() + gap)
         .source(maxX, str.my() + gap)
         .opacity(0)

@@ -41,10 +41,10 @@ export { GridGraph }      from "./Node/Graph/GridGraph";
 export { TinyGraph }      from "./Node/Graph/TinyGraph";
 export { BipartiteGraph } from "./Node/Graph/BipartiteGraph";
 
-export { Brace }           from "./Node/Curve/Brace";
 export { Curve }           from "./Node/Curve/Curve";
 export { Bezier }          from "./Node/Curve/Bezier";
 export { VHBezier }        from "./Node/Curve/VHBezier";
+export { BraceCurve }      from "./Node/Curve/BraceCurve";
 export { CircleCurve }     from "./Node/Curve/CircleCurve";
 export { FixedPointCurve } from "./Node/Curve/FixedPointCurve";
 

@@ -9,7 +9,7 @@ sd.Label(oarr, "决策可能性");
 sd.Label(narr, "决策序列");
 
 sd.init(() => {
-    const b = new sd.Brace(svg);
+    const b = new sd.BraceCurve(svg);
     b.source(oarr.x(), oarr.y() - 5).target(oarr.mx(), oarr.y() - 5).value("n", R.PointAtPathByRate(0.5, "cx", "my"))
     for (let i = 0; i < n; i++) {
         narr.value(i, "0");

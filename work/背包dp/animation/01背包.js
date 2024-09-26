@@ -84,7 +84,7 @@ function makeDp() {
         let k = size / m;
         let r = new classType(svg).height(k * L).width(W - 2).strokeOpacity(0).fill(c);
         if (size > 0) {
-            r.childAs("bbb", new sd.Brace(svg), function(parent, child) {
+            r.childAs("bbb", new sd.BraceCurve(svg), function(parent, child) {
                 child.target(parent.x() - 5, parent.y());
                 child.source(parent.x() - 5, parent.my());
             });

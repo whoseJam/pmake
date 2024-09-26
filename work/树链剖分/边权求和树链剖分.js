@@ -132,7 +132,7 @@ function makeTree() {
         tr.color(x, col);
         tr.endAnimate();
     }
-    let brace = new sd.Brace(svg).opacity(0);
+    let brace = new sd.BraceCurve(svg).opacity(0);
     let text = new sd.Text(svg).opacity(0);
     function markOnSeq(l, r, col, label) {
         let el = arr.element(l);

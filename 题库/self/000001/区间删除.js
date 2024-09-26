@@ -21,8 +21,8 @@ sd.main(async () => {
         }
     }
 
-    const b1 = new sd.Brace(svg).opacity(0);
-    const b2 = new sd.Brace(svg).opacity(0);
+    const b1 = new sd.BraceCurve(svg).opacity(0);
+    const b2 = new sd.BraceCurve(svg).opacity(0);
     
     await sd.pause();
     brace(arr, 1, n, b2, true); b2.value(new sd.Mathjax(b2, "tot_2,tot_5"), R.PointAtPathByRate(0.5, "cx", "y"));

@@ -78,7 +78,7 @@ async function CDQ(l, r) {
     await sd.pause();
     const boxL = tables[data[l].id].x();
     const boxR = tables[data[r].id].mx();
-    const brace = new sd.Brace(svg)
+    const brace = new sd.BraceCurve(svg)
         .target(boxL, arr.y() - 20)
         .source(boxR, arr.y() - 20)
         .opacity(0)
