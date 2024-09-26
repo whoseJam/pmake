@@ -21,12 +21,17 @@ sd.init(() => {
         const stk = new sd.Stack(arr);
         for (let j = 1; j <= A[i]; j++) {
             stk.push(" ");
+            let colored = false;
             stk.element(j - 1).onClick(() => {
-                for (let k = 0; k < A[i]; k++) {
-                    if (stk.color(k).main == nextColor()) return;
-                }
-                if (++cur > T) ccur++, cur = 1;
-                stk.color(j - 1, colorList[ccur]);
+                if (colored) return;
+                colored = true;
+                sd.inter(async () => {
+                    for (let k = 0; k < A[i]; k++) {
+                        if (stk.color(k).main == nextColor()) return;
+                    }
+                    if (++cur > T) ccur++, cur = 1;
+                    stk.startAnimate().color(j - 1, colorList[ccur]).endAnimate();
+                })
             })
         }
         arr.push(stk);
