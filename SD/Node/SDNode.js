@@ -82,7 +82,7 @@ SDNode.prototype.duration     = ForwardWithReturn("animate", "duration");
 
 SDNode.prototype.opacity = GetterAndSetter("global-opacity", "setByDqual");
 SDNode.prototype.inRange = InRange("rect");
-SDNode.prototype.remove = function() { this.opacity(0); }
+SDNode.prototype.remove = function() { this.opacity(0).update(); }
 
 import { Scale }             from "@/Node/SDNode/Location";
 import { Center }            from "@/Node/SDNode/Location";
