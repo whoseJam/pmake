@@ -1,3 +1,4 @@
+import { obj } from "through2";
 
 export function IsTypeOfSDNode(object: any): boolean;
 export function IsTypeOfArray(object: any): boolean;
@@ -23,3 +24,18 @@ export function IsNumberOrString(object: any): boolean;
  * @param value 
  */
 export function IsValidNumber(object: any): boolean;
+
+function IsFalseType(object: any): boolean;
+
+export const Check = {
+    isTypeOfSDNode: IsTypeOfSDNode,
+    isTypeOfArray: IsTypeOfArray,
+    isTypeOfElement: IsTypeOfElement,
+    isTypeOfCurve: IsTypeOfCurve,
+    isTypeOfGraph: IsTypeOfGraph,
+    isTypeOfGrid: IsTypeOfGrid,
+    isTypeOfHTML: IsTypeOfHTML,
+    isTypeOfNake: IsTypeOfNake,
+    isTypeOfTree: IsTypeOfTree,
+    isFalseType: IsFalseType
+}

@@ -24,3 +24,18 @@ export function IsNumberOrString(any) {
 export function IsValidNumber(num) {
     return typeof(num) === "number" && num !== NaN && num !== Infinity && num !== -Infinity;
 }
+
+export const Check = {
+    isTypeOfSDNode: IsTypeOf("SDNODE"),
+    isTypeOfArray: IsTypeOf("ARRAY"),
+    isTypeOfElement: IsTypeOf("ELEMENT"),
+    isTypeOfCurve: IsTypeOf("CURVE"),
+    isTypeOfGraph: IsTypeOf("GRAPH"),
+    isTypeOfGrid: IsTypeOf("GRID"),
+    isTypeOfHTML: IsTypeOf("HTML"),
+    isTypeOfNake: IsTypeOf("NAKE"),
+    isTypeOfTree: IsTypeOf("TREE"),
+    isFalseType: (object) => {
+        return object === null || object === undefined || object === false;
+    }
+};
