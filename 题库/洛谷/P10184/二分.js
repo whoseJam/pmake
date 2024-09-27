@@ -9,6 +9,12 @@ const T = 4;
 const colorList = [C.blue, C.green, C.red, C.orange, C.purple];
 
 const arr = new sd.ValueArray(svg).elementWidth(60).align("y");
+const slider = new sd.Slider(svg).min(2).max(4).value(2).x(-60);
+let midValue = 2;
+
+slider.onChange((value) => {
+    midValue = +value;
+})
 
 sd.init(() => {
     for (let i = 1; i <= n; i++) {
@@ -23,13 +29,15 @@ sd.init(() => {
 })
 
 sd.main(async () => {
-    await erfen(2);
+    await sd.pause();
+    await erfen(midValue);
 })
 
 async function erfen(mid) {
-    const grid = new sd.Grid(svg).n(mid).m(T).x(arr.mx() + 60).y(arr.y());
-    const bT = new sd.BraceCurve(grid).source(grid.x(), grid.y() - 5).target(grid.mx(), grid.y() - 5).value("T", R.PointAtPathByRate(0.5, "cx", "my"));
-    const bMid = new sd.BraceCurve(grid).target(grid.x() - 5, grid.y()).source(grid.x() - 5, grid.my()).value("mid", R.PointAtPathByRate(0.5, "mx", "cy", -5));
+    const grid = new sd.Grid(svg).n(mid).m(T).x(arr.mx() + 60).y(arr.y()).opacity(0);
+    grid.startAnimate().opacity(1).endAnimate();
+    new sd.BraceCurve(grid).source(grid.x(), grid.y() - 5).target(grid.mx(), grid.y() - 5).value("T", R.PointAtPathByRate(0.5, "cx", "my"));
+    new sd.BraceCurve(grid).target(grid.x() - 5, grid.y()).source(grid.x() - 5, grid.my()).value("mid", R.PointAtPathByRate(0.5, "mx", "cy", -5));
     function createAndMove(i, j, ti, tj) {
         const x = arr.element(i - 1).element(j - 1).x();
         const y = arr.element(i - 1).element(j - 1).y();

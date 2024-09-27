@@ -2,7 +2,7 @@
     <section>
         <h1>记忆</h1>
     </section>
-    <problem data-src="https://www.luogu.com.cn/problem/P9594"></problem>
+    <problem data-problemset="luogu" data-problemid="P9594"></problem>
     <section>
         <h2>记忆</h2>
         <p>你有 $m$ 条线段，第 $i$ 条线段被描述为 $(l_i,r_i,c_i,w_i)$，其中：</p>
@@ -37,10 +37,8 @@
         <h2>记忆</h2>
         <p>对于 $20\%$ 的数据，$m\le 500$</p>
         <p>设 $f_{i,c}$ 表示从左往右选线段，选出的线段最右端在 $i$ 这个位置，颜色为 $c$ 的最大价值</p>
-        <p class="fragment">为了后续动态规划的无后效性，我们必须将线段按照<b style="color: purple;">左端点从小到大</b>的顺序做决策</p>
-        <iframe data-animation="./排序原因.js" class="fragment"
-            style="width: 1000px; height: 250px;"></iframe>
-        <p class="fragment quote">如果按右端点从小到大的顺序做决策，当从 $f_{j,绿}$ 转移到 $f_{i,绿}$ （$j\lt i$）时，可能出现上图所示情况</p>
+        <p class="fragment">为了后续动态规划的正确性，我们必须将线段按照<b style="color: purple;">左端点从小到大</b>的顺序做决策</p>
+        <p class="fragment quote">原因等会解释，先记住这个结论</p>
     </section>
     <section>
         <h2>记忆</h2>
@@ -104,6 +102,13 @@
             </script>
         </codeblock>
         <p class="fragment">以上伪代码做到 $O(m^3)$ 还是比较容易的</p>
+    </section>
+    <section>
+        <h2>记忆</h2>
+        <p class="quote">如果按右端点从小到大做决策，会出现怎样的问题呢？</p>
+        <iframe data-animation="./排序原因.js"
+            style="width: 1000px; height: 250px;"></iframe>
+        <p>如果按右端点从小到大的顺序做决策，当从 $f_{j,绿}$ 转移到 $f_{i,绿}$ （$j\lt i$）时，可能出现上图所示情况</p>
     </section>
     <section>
         <h2>记忆</h2>
