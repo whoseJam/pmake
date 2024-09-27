@@ -8,7 +8,7 @@ sd.init(() => {
 })
 
 sd.main(async () => {
-    const rect = new sd.Rect(svg);
+    const rect = new sd.Rect(svg).x(100).y(100);
     const label = sd.Label(rect, "label", "tc");
     for (let i = 0; i < locations.length; i++) {
         await sd.pause();
