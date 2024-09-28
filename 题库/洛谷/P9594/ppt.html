@@ -26,7 +26,7 @@
                         if (Check()) ans = max(ans, sum);
                         return;
                     }
-                    mark[dep] = 1; Dfs(dep + 1, sum + w[i]);
+                    mark[dep] = 1; Dfs(dep + 1, sum + w[dep]);
                     mark[dep] = 0; Dfs(dep + 1, sum);
                 }
             </script>

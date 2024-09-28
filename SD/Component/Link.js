@@ -19,7 +19,7 @@ function LinkRule(parent, child) {
 }
 
 export function Link(sourceElement, targetElement, linkType = Line, sourceXLocation = "cx", sourceYLocation = "cy", targetXLocation = "cx", targetYLocation = "cy", callback = () => {}) {
-    const link = new linkClass(svg());
+    const link = new linkType(svg());
     callback(link);
 
     link.member.new("linkElement1", sourceElement);
