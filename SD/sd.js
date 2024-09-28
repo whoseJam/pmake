@@ -65,6 +65,7 @@ export { Button }   from "./Node/HTML/Button.js";
 export { Slider }   from "./Node/HTML/Slider.js";
 export { TextArea } from "./Node/HTML/TextArea.js"
 
+export { Aside }        from "./Component/Aside.js";
 export { Focus }        from "./Component/Focus.js";
 export { Index }        from "./Component/Index.js";
 export { Label }        from "./Component/Label.js";

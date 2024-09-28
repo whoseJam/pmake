@@ -16,7 +16,6 @@ export const Enter = {
     FromExist(parent, layer = undefined) {
         return function(element, move) {
             element.attachTo(layer ? parent.layer(layer) : parent);
-            element.after(parent);
             element.startAnimate(parent);
             move();
             element.opacity(1);

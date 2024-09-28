@@ -69,7 +69,12 @@ export function Focus(parent) {
                 this.member.set("focusCount", 1);
             }
         } else if (arguments.length === 2) {
-            if (Check.isTypeOfGrid(parent)) {
+            console.log("arg0=", arg0, "arg1=", arg1);
+            if (Check.isTypeOfSDNode(arg0) && Check.isTypeOfSDNode(arg1)) {
+                this.member.set("focusElement1", arg0);
+                this.member.set("focusElement2", arg1);
+                this.member.set("focusCount", 2);
+            } else if (Check.isTypeOfGrid(parent)) {
                 this.member.set("focusElement1", parent.element(arg0, arg1));
                 this.member.set("focusElement2", undefined);
                 this.member.set("focusCount", 1);
@@ -96,6 +101,7 @@ export function Focus(parent) {
         return this;
     }
 
-    parent.childAs(`focus_${++focusID}`, focus, FocusRule);
+    if (parent.childAs) parent.childAs(`focus_${++focusID}`, focus, FocusRule);
+    else focus.rule(FocusRule);
     return focus;
 }

@@ -1,6 +1,9 @@
 import { Array }           from "@/Node/Array/Array";
 import { GetterAndSetter } from "@/Node/Common";
 
+import { toNode } from "@/Utility/Tool";
+import { Enter } from "../SDNode/Enter";
+
 export function ValueArray(parent) {
     Array.call(this, parent);
 
@@ -23,27 +26,15 @@ ValueArray.prototype.updateList = [
 ];
 
 ValueArray.prototype.insert = function(index, value) {
-    const element = value;
-    element._.enter = (element, move) => {
-        element.attachTo(this.layer("elements"));
-        element.opacity(0);
-        move();
-        element.update();
-        element.startAnimate(this);
-        element.opacity(1);
-    };
+    const element = toNode(this.layer("elements"), value);
+    element.onEnter(Enter.Ordinary(this, "elements"))
     this.insertByBaseArray(index, element);
     return this;
 }
 
 ValueArray.prototype.insertFromExistValue = function(index, value) {
     const element = value;
-    element._.enter = (element, move) => {
-        element.attachTo(this.layer("elements"));
-        element.startAnimate(this);
-        move();
-        element.opacity(1);
-    };
+    element.onEnter(Enter.FromExist(this, "elements"));
     this.insertByBaseArray(index, element);
     return this;
 }
