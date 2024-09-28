@@ -39,9 +39,9 @@ sd.main(async () => {
                 await sd.pause();
                 brace.startAnimate().brace(links[j].l, links[j].r, "b").endAnimate();
                 await sd.pause();
-                focus.startAnimate().focus(stk.element(0).element(1), stk.element(stk.end()).element(i - 1)).endAnimate();
-                await sd.pause();
                 focus.startAnimate().focus(arr.element(1), arr.element(links[j].r)).endAnimate();
+                await sd.pause();
+                focus.startAnimate().focus(stk.element(0).element(1), stk.element(stk.end()).element(i - 1)).endAnimate();
                 await sd.pause();
                 focus.startAnimate().focus(arr.element(links[j].r + 1), arr.element(10)).endAnimate();
                 await sd.pause();
