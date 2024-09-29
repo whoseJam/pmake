@@ -48,4 +48,7 @@ export class BaseGraph extends SDNode {
 
     nodesId(): Array<number|string>;
     toNodeId(sourceId: number|string, link: SDNode): number|string;
+
+    links(): Array<SDNode>;
+    nodes(): Array<SDNode>;
 }

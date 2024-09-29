@@ -56,6 +56,10 @@ BaseGraph.prototype.value = function(arg0, arg1, arg2) {
     throw new Error("Invalid Arguments");
 }
 
+BaseGraph.prototype.text = function() {
+    return this.value.apply(this, arguments).text();
+}
+
 BaseGraph.prototype.opacity = function(arg0, arg1, arg2) {
     if (arguments.length === 0) {
         return SDNode.prototype.opacity.call(this);
