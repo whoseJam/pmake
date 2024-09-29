@@ -58,14 +58,14 @@ sd.init(() => {
 
 sd.main(async () => {
     await sd.pause();
+    arr.startAnimate().push("c").color(arr.end(), C.blue).endAnimate();
+
+    await sd.pause();
     const lst = 6;
     const cur = 7;
     const last = sd.Pointer(graph, "last", "t", 5, 20, 5);
     last.startAnimate().moveTo(lst).endAnimate();
     graph.startAnimate().color(lst, C.green);
-
-    await sd.pause();
-    arr.startAnimate().push("c").color(arr.end(), C.blue).endAnimate();
 
     await sd.pause();
     graph.startAnimate().at(0.5, 2).newNode(cur).endAnimate();

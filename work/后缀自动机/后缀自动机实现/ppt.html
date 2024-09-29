@@ -17,6 +17,12 @@
         </codeblock>
     </section>
     <section>
+        <h2>后缀自动机</h2>
+        <p>在构建后缀自动机时，我们会存一个 $len$ 信息，其中 $len(u)$ 代表 <b style="color: purple;">$u$ 节点表示的所有字符串中最长字符串的长度</b></p>
+        <iframe data-animation="./len.js"
+            style="width: 1000px; height: 400px;"></iframe>
+    </section>
+    <section>
         <h2>实现</h2>
         <iframe data-animation="./path1.js"
             style="width: 1000px; height: 350px;"></iframe>
@@ -24,7 +30,7 @@
         <codeblock class="fragment">
             <script type="text/template">
                 void insert(int c) {
-                    int p = last, u = ++tot; len[u] = len[p] + 1
+                    int p = last, u = ++tot; len[u] = len[p] + 1;
                     for (; p && !ch[p][c]; p = fa[p]) ch[p][c] = u;
                     if (!p) fa[u] = 1;
                     // ......
@@ -55,16 +61,16 @@
     </section>
     <section>
         <h2>实现</h2>
-        <div style="display: flex;" class="quote">
+        <div style="display: flex; align-items: center;" class="quote">
             <div>
                 最后一种情况是 $q$ 对应的字符串不完全是 $u$ 对应的字符串的后缀<br>
                 在这种情况下，我们需要新建一个辅助节点
             </div>
             <iframe data-animation="./复杂讨论.js"
-                style="width: 60%; height: 100px;"></iframe>
+                style="width: 60%; height: 120px;"></iframe>
         </div>
         <iframe data-animation="./path3.js"
-            style="width: 1000px; height: 350px;"></iframe>
+            style="width: 1000px; height: 300px;"></iframe>
         <codeblock>
             <script type="text/template">
                 // ......
