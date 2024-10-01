@@ -1,4 +1,5 @@
 import { Box }             from "@/Node/Element/Box";
+import { Enter }           from "@/Node/SDNode/Enter";
 import { BaseGrid }        from "@/Node/Grid/BaseGrid";
 import { GetterAndSetter } from "@/Node/Common";
 
@@ -14,6 +15,8 @@ export function Grid(parent) {
     this.member.new("elementHeight", 40);
     this.member.new("width", 0);
     this.member.new("height", 0);
+    this.member.new("main", "row");
+    this.member.new("align", "x");
 
     return this;
 }
@@ -26,42 +29,35 @@ Grid.prototype.x             = GetterAndSetter("x", "setByEqual");
 Grid.prototype.y             = GetterAndSetter("y", "setByEqual");
 Grid.prototype.elementWidth  = GetterAndSetter("elementWidth", "setByEqual");
 Grid.prototype.elementHeight = GetterAndSetter("elementHeight", "setByEqual");
+Grid.prototype.axis          = GetterAndSetter("main", "set");
+Grid.prototype.align         = GetterAndSetter("align", "set");
 Grid.prototype.updateList = [
     ...Grid.prototype.updateList,
     update
 ]
 
 Grid.prototype.width = function(width) {
-    if (width === undefined) {
-        return this.m() * this.elementWidth();
-    }
-    const n = this.n() ? this.n() : 1;
-    this.elementWidth(width / n);
+    const label = this.member.get("main") === "row" ? "m" : "n";
+    if (width === undefined) return this[label]() * this.elementWidth();
+    const length = this[label]() ? this[label]() : 1;
+    this.elementWidth(width / length);
     return this;
 }
 
 Grid.prototype.height = function(height) {
-    if (height === undefined) {
-        return this.n() * this.elementHeight();
-    }
-    const m = this.m() ? this.m() : 1;
-    this.elementHeight(height / m);
+    const label = this.member.get("main") === "row" ? "n" : "m";
+    if (height === undefined) return this[label]() * this.elementHeight();
+    const length = this[label]() ? this[label]() : 1;
+    this.elementHeight(height / length);
     return this;
 }
 
 Grid.prototype.insert = function(i, j, value) {
     const element = new Box(this.layer("elements"), value);
-    element._.enter = (element, move) => {
-        element.opacity(0);
-        move();
-        element.update();
-        element.startAnimate(this)
-        element.opacity(1);
-    };
+    element.onEnter(Enter.Ordinary(this, "elements"));
     this.insertByBaseGrid(i, j, element);
     return this;
 }
-
 
 Grid.prototype.erase = function(i, j) {
     const element = this.element(i, j);
@@ -75,21 +71,33 @@ function update() {
         this.member.hasChanged("y") ||
         this.member.hasChanged("elementWidth") ||
         this.member.hasChanged("elementHeight") ||
-        this.member.hasChanged("elements")) {
-        const x = this.x();
-        const y = this.y();
-        const elementWidth = this.elementWidth();
-        const elementHeight = this.elementHeight();
+        this.member.hasChanged("elements") ||
+        this.member.hasChanged("main") ||
+        this.member.hasChanged("align")) {
+        const dict = {
+            "x": this.x(),
+            "y": this.y(),
+            "mx": this.mx(),
+            "my": this.my(),
+            "lx": this.elementWidth(),
+            "ly": this.elementHeight()
+        };
         const elements = this.member.get("elements");
+        const main = this.member.getAndFlush("main");
+        const align = this.member.getAndFlush("align");
+        const mainAxis = main === "row" ? "y" : "x";
+        const auxiAxis = main === "row" ? "x" : "y";
+        const auxiFlag = align === "x" || align === "y" ? 1 : -1;
+        const auxiLabel = align === "x" || align === "y" ? auxiAxis : `m${auxiAxis}`;
         for (let i = 0; i < elements.length; i++) {
             if (!elements[i]) continue;
             for (let j = 0; j < elements[i].length; j++) {
                 const element = elements[i][j];
                 this.tryMove(element, () => {
-                    element.width(elementWidth);
-                    element.height(elementHeight);
-                    element.x(x + j * elementWidth)
-                    element.y(y + i * elementHeight);
+                    element.width(dict["lx"]);
+                    element.height(dict["ly"]);    
+                    element[mainAxis](dict[mainAxis] + i * dict[`l${mainAxis}`]);
+                    element[auxiLabel](dict[auxiLabel] + auxiFlag * j * dict[`l${auxiAxis}`]);
                 });
             }
         }

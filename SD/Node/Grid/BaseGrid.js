@@ -66,13 +66,11 @@ BaseGrid.prototype.insertByBaseGrid = function(i, j, element) {
     const ri = this.idxN(i);
     const rj = this.idxM(j);
     const elements = this.member.get("elements");
-    while (elements.length <= ri) {
-        elements.push([]);
-    }
+    while (elements.length <= ri) elements.push([]);
     elements[ri].splice(rj, 0, element);
     this.children.push(element);
-    this.member.set("n", Math.max(ri + 1, this.member.get("n")));
-    this.member.set("m", Math.max(rj + 1, this.member.get("m")));
+    this.member.set("n", elements.length);
+    this.member.set("m", Math.max(elements[ri].length, this.member.get("m")));
     this.member.dirty("elements");
     this.tryUpdate();
     return this;
@@ -85,6 +83,10 @@ BaseGrid.prototype.eraseByBaseGrid = function(i, j) {
     const elements = this.member.get("elements");
     elements[ri].splice(rj, 1);
     this.children.erase(element);
+    let m = 0;
+    for (let i = 0; i < elements.length; i++) m = Math.max(m, elements[i].length);
+    this.member.set("n", elements.length);
+    this.member.set("m", m);
     this.member.dirty("elements");
     this.tryUpdate();
     return this;

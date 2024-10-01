@@ -1,33 +1,31 @@
 import * as sd from "@/sd";
 
-let svg = sd.svg();
-let C = sd.color();
-let g = new sd.Grid(svg).x(100).y(100).n(6).m(5);
-console.log("start test grid");
+const svg = sd.svg();
+const C = sd.color();
+const grid = new sd.Grid(svg).x(100).y(100).startN(1).startM(1);
 
-main();
+sd.init(() => {
+    let code = 97;
+    for (let i = 1; i <= 5; i++) {
+        for (let j = 1; j <= i; j++) {
+            grid.insert(i, j, String.fromCharCode(code));
+            code++;
+        }
+    }
+    sd.Focus(grid).focus();
+})
 
-async function main() {
-    console.log(g.height(), "height of g");
+sd.main(async () => {
     await sd.pause();
-    g.insert(0, 0, 5);
+    grid.startAnimate().align("mx").endAnimate();
     await sd.pause();
-    g.insert(1, 0, "(1,0)");
+    grid.startAnimate().align("y").axis("col").endAnimate();
     await sd.pause();
-    g.pushCol();
+    grid.startAnimate().align("my").endAnimate();
     await sd.pause();
-    g.pushRow();
-    console.log("x=", g.x());
-    console.log("y=", g.y());
-    console.log("mx=", g.mx());
-    console.log("my=", g.my());
+    grid.startAnimate().width(500).endAnimate();
     await sd.pause();
-    // sd.Index(g, "l");
-    // await sd.pause();
-    // sd.Index(g, "t");
-    // await sd.pause();
-    // sd.Index(g, "r");
-    // await sd.pause();
-    sd.Index(g, "b");
+    grid.startAnimate().insert(4, 5, "A").endAnimate();
     await sd.pause();
-}
+    grid.startAnimate().insert(4, 6, "B").endAnimate();
+})
