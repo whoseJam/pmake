@@ -9,7 +9,7 @@ export function HorizontalTree(parent) {
 
     this.member.set("width", 0);
     this.member.set("height", 300);
-    this.member.new("layerHeight", 60);
+    this.member.new("layerWidth", 60);
 }
 
 HorizontalTree.prototype = {

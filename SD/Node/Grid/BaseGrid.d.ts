@@ -22,6 +22,8 @@ export class BaseGrid extends SDNode {
 
     pushRow(columns: number): this;
 
+    element(i: number, j: number): SDNode;
+
     /**
      * 获取指定位置元素的 value
      * @param i 

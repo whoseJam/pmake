@@ -9,27 +9,35 @@ import { toNode } from "@/Utility/Tool";
 import { Enter }           from "@/Node/SDNode/Enter";
 import { Exist }           from "@/Node/SDNode/Exist";
 import { GetterAndSetter } from "@/Node/Common";
+import { Check } from "@/Utility/Check";
 
 function BraceRule(parent, child) {
     const l = child.member.getAndFlush("l");
     const r = child.member.getAndFlush("r");
     const location = child.member.getAndFlush("location");
     const gap = child.member.getAndFlush("braceGap");
-    const leftElement = parent.element(l);
-    const rightElement = parent.element(r);
+    let element1, element2;
+
+    if (Check.isTypeOfArray(parent)) {
+        element1 = parent.element(l);
+        element2 = parent.element(r);
+    } else {
+        element1 = l;
+        element2 = r;
+    }
     
     if (location === "b") {
-        child.source(rightElement.mx(), rightElement.my() + gap)
-        child.target(leftElement.x(), leftElement.my() + gap);
+        child.source(element2.mx(), element2.my() + gap)
+        child.target(element1.x(), element1.my() + gap);
     } else if (location === "t") {
-        child.source(leftElement.x(), leftElement.y() - gap);
-        child.target(rightElement.mx(), rightElement.y() - gap);
+        child.source(element1.x(), element1.y() - gap);
+        child.target(element2.mx(), element2.y() - gap);
     } else if (location === "l") {
-        child.source(rightElement.x() - gap, rightElement.my())
-        child.target(leftElement.x() - gap, leftElement.y());
+        child.source(element2.x() - gap, element2.my())
+        child.target(element1.x() - gap, element1.y());
     } else if (location === "r") {
-        child.source(leftElement.mx() + gap, leftElement.y())
-        child.target(rightElement.mx() + gap, rightElement.my());
+        child.source(element1.mx() + gap, element1.y())
+        child.target(element2.mx() + gap, element2.my());
     }
 }
 

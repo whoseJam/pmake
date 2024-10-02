@@ -7,8 +7,47 @@
         <h2>花式围栏</h2>
         <p>对于 $10\%$ 的数据，$N\le 50$ 且 $h_i\le 50$ 且 $w_i=1$</p>
         <p class="fragment">枚举左边界，右边界和上边界的位置，然后下边界直接推算出来</p>
-        <iframe data-animation="./暴力.js"
+        <iframe data-animation="./暴力.js" class="fragment"
             style="width: 1000px; height: 400px;"></iframe>
         <p class="fragment">时间复杂度 $O(n^3)$</p>
+    </section>
+    <section>
+        <h2>花式围栏</h2>
+        <p>对于另外 $10\%$ 的数据，$h_i=1$ 或者 $h_i=2$</p>
+        <iframe data-animation="./h12.js"
+            style="width: 1000px; height: 200px;"></iframe>
+        <ul>
+            <li class="fragment">对于下面这一排方格，形成的矩形数量显然为 $C_{n}^2$</li>
+            <li class="fragment">对于上面的一坨坨连续的冒尖，假设这段冒尖的长度为 $L$，形成的矩形数量显然为 $2C_{L}^2$</li>
+        </ul>
+    </section>
+    <section>
+        <h2>花式围栏</h2>
+        <p>对于另外 $20\%$ 的数据，所有的 $h_i$ 均相等</p>
+        <p>详见普及组题目<a href="https://www.luogu.com.cn/problem/P2241" target="_blank">统计方形</a></p>
+    </section>
+    <section>
+        <h2>花式围栏</h2>
+        <iframe data-animation="./增量统计.js"
+            style="width: 1000px; height: 300px;"></iframe>
+        <p>我们讨论最后增量的这一小块区域，能和前面已存在的区域组合出多少新的矩形来</p>
+        <p class="fragment">假设前面的区域高度为 $h_j$，宽度为 $w_j$，则显然能组合出 $w_iw_jC_{min(h_i,h_j)+1}^2$ 个矩形</p>
+        <p class="fragment">对于任务 $5$ 和任务 $6$，它们都有一些特殊性质能让这个快速算出来，在此略过这两种数据范围</p>
+    </section>
+    <section>
+        <h2>花式围栏</h2>
+        <p>对于 $100\%$ 的数据，$1\le n\le 10^5$，$1\le h_i,w_i\le 10^9$</p>
+        <iframe data-animation="./单调栈.js"
+            style="width: 1000px; height: 250px;"></iframe>
+        <p class="fragment">考虑用单调栈维护出前面的区域</p>
+        <p class="fragment math-fragment">
+            $$
+            \begin{aligned}
+            \sum_{j}w_iw_jC_{min(h_i,h_j)+1}^2&=\sum_{j}w_iw_jC_{h_j+1}^2 \\
+            &=w_i\sum_{j}w_jC_{h_j+1}^2
+            \end{aligned}
+            $$
+        </p>
+        <p class="fragment">发现后面和式内的东西只和 $j$ 有关，和 $i$ 无关，可以维护</p>
     </section>
 </section>
