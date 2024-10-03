@@ -3,6 +3,8 @@ import { render } from "react-dom";
 let frameStatus = undefined;
 
 function ReloadTheWindow() {
+    console.log("window-data-animation=", window.IFRAME_NAME, window.IFRAME_ID);
+    window.parent.ResetAnimationSize(window.IFRAME_ID, window.IFRAME_NAME);
     window.location.reload();
 }
 
@@ -15,7 +17,7 @@ export function UpdateFrameStatus() {
 }
 
 export function initStatus() {
-    const element = <div id="wrapper" style={{ position: "fixed", left: "10px", top: "10px", width: "60px", height: "20px", display: "flex", opacity: 0 }}>
+    const element = <div id="wrapper" style={{ position: "fixed", left: "10px", top: "10px", width: "60px", height: "20px", display: "flex", opacity: 1 }}>
         <div style={{ width: "20px", height: "20px" }}>
             <div id="frameStatus" style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: "green", translate: "5px 5px" }}></div>
         </div>
