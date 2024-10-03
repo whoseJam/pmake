@@ -4,6 +4,7 @@ import { initText } from "../Node/Nake/Text";
 import { initPath } from "../Node/Nake/Path";
 import { initFragment } from "../Node/Nake/Fragment";
 import { initMessage } from "./Message";
+import { initStatus } from "@/Interact/Status";
 
 export function init(permit) {
     initToolbox(permit);
@@ -14,6 +15,7 @@ export function init(permit) {
     initFragment(svg);
     appendCanvas(permit)
     initMessage(permit);
+    initStatus();
 }
 
 function initToolbox() {
