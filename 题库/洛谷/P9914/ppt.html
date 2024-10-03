@@ -16,16 +16,18 @@
     </section>
     <section>
         <h2>匀速相遇</h2>
-        <p>对于 $10\%$ 的数据，$n,m\le 10$</p>
-        <p class="fragment">
+        <p>对于 $10\%$ 的数据，$n,m\le 100$</p>
+        <iframe data-animation="./整点相遇.js"
+            style="width: 1000px; height: 250px;"></iframe>
+        <p class="fragment" style="margin-top: -20px;">
             考虑 $A_i$ 能否和 $B_j$ 相遇
-            <span class="fragment">，由于它们如果能相遇，则一定是在 $(i,j)$ 这个整点上相遇</span>
+            <span class="fragment">，由于它们如果能相遇，则一定是在 $(j,i)$ 这个整点上相遇</span>
             <span class="fragment">，所以它们<b style="color: purple;">相遇所用的时间一定是整数</b></span>
         </p>
         <codeblock class="fragment">
             <script type="text/template">
                 bool Check(int i, int j) {
-                    for (int t = 1; t <= 10; t++) {
+                    for (int t = 1; t <= 100; t++) {
                         移动 Ai
                         移动 Bj
                         if (Ai 和 Bj 相遇了) {
@@ -36,7 +38,6 @@
                 }
             </script>
         </codeblock>
-        <p class="fragment">总时间复杂度 $O(n^3)$（这里认为 $n$ 和 $m$ 同阶）</p>
     </section>
     <section>
         <h2>匀速相遇</h2>
