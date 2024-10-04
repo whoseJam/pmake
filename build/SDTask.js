@@ -12,6 +12,18 @@ module.exports = function SDTask(targetFilePath) {
 }
 
 function SDConfiguration() {
+    const plugins = [];
+    if (!global["d"]) {
+        plugins.push(new JavaScriptObfuscator({
+            // stringArray: true,
+            // rotateUnicodeArray: true,
+            // debugProtection: true,
+            // deadCodeInjection: true,
+            // deadCodeInjectionThreshold: 1,
+            // controlFlowFlattening: true,
+            // selfDefending: true,
+        }));
+    }
     return {
         mode:  global["d"] ? "development" : "production",
         watch: global["w"] ? true : false,
@@ -25,17 +37,7 @@ function SDConfiguration() {
             umdNamedDefine: true,
             globalObject: "this",
         },
-        plugins: [
-            // new JavaScriptObfuscator({
-            //     stringArray: true,
-            //     rotateUnicodeArray: true,
-            //     // debugProtection: true,
-            //     deadCodeInjection: true,
-            //     deadCodeInjectionThreshold: 1,
-            //     controlFlowFlattening: true,
-            //     selfDefending: true,
-            // })
-        ],
+        plugins: plugins,
         module: {
             rules: [
                 {   test: /.js$/,

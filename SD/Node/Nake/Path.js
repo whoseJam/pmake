@@ -5,6 +5,8 @@ import { snapAction } from "@/Utility/Tool";
 
 import { BaseLine } from "@/Node/Nake/BaseLine";
 
+import { select } from "d3";
+
 export function Path(parent) {
     BaseLine.call(this, parent, "path");
 
@@ -30,15 +32,15 @@ Path.prototype.updateList = [
 ];
 
 Path.prototype.at = function(k) {
-    return getPointByRate(this.member.get("d"), k);
+    return Path.getPointByRate(this.member.get("d"), k);
 }
 
 Path.prototype.getPointAtLength = function(length) {
-    return getPointAtLength(this.member.get("d"), length);
+    return Path.getPointAtLength(this.member.get("d"), length);
 }
 
 Path.prototype.totalLength = function() {
-    return getTotalLength(this.member.get("d"));
+    return Path.getTotalLength(this.member.get("d"));
 }
 
 Path.prototype.x = function(x) {
@@ -117,20 +119,20 @@ function update() {
     }
 }
 
-let pathHelper;
-export function initPath(svg) {
-    pathHelper = D3ToNake(svg.append("path"));
-    pathHelper.setAttribute("stroke-opacity", 0);
-    pathHelper.setAttribute("fill-opacity", 0);
+Path.init = function() {
+    const svg = select("#svg");
+    Path.pathHelper = D3ToNake(svg.append("path"));
+    Path.pathHelper.setAttribute("stroke-opacity", 0);
+    Path.pathHelper.setAttribute("fill-opacity", 0);
 }
 
 /**
  * @param {string} d 
  * @returns {{x: number, y: number, width: number, height: number}}
  */
-function pathToBox(d) {
-    pathHelper.setAttribute("d", d);
-    return pathHelper.getBBox();
+Path.pathToBox = function(d) {
+    Path.pathHelper.setAttribute("d", d);
+    return Path.pathHelper.getBBox();
 }
 
 /**
@@ -138,10 +140,10 @@ function pathToBox(d) {
  * @param {number} length 
  * @returns {[number, number]}
  */
-function getPointAtLength(d, length) {
+Path.getPointAtLength = function(d, length) {
     try {
-        pathHelper.setAttribute("d", d);
-        const point = pathHelper.getPointAtLength(length);
+        Path.pathHelper.setAttribute("d", d);
+        const point = Path.pathHelper.getPointAtLength(length);
         return [point.x, point.y];
     } catch(e) {
         return [0, 0];
@@ -153,11 +155,11 @@ function getPointAtLength(d, length) {
  * @param {number} k 
  * @returns {[number, number]}
  */
-function getPointByRate(d, k) {
+Path.getPointByRate = function(d, k) {
     try {
-        pathHelper.setAttribute("d", d);
-        const length = pathHelper.getTotalLength() * k;
-        const point = pathHelper.getPointAtLength(length);
+        Path.pathHelper.setAttribute("d", d);
+        const length = Path.pathHelper.getTotalLength() * k;
+        const point = Path.pathHelper.getPointAtLength(length);
         return [point.x, point.y];
     } catch(e) {
         return [0, 0];
@@ -168,10 +170,10 @@ function getPointByRate(d, k) {
  * @param {string} d 
  * @returns {number}
  */
-function getTotalLength(d) {
+Path.getTotalLength = function(d) {
     try {
-        pathHelper.setAttribute("d", d);
-        return pathHelper.getTotalLength();
+        Path.pathHelper.setAttribute("d", d);
+        return Path.pathHelper.getTotalLength();
     } catch(e) {
         return 0;
     }

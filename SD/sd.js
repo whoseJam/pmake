@@ -1,6 +1,6 @@
 import "../MyReveal/slide.css";
 
-export { svg } from "./Interact/Svg.js";
+export { svg } from "./Interact/RootSvg.js";
 export { color } from "./Utility/Color.js";
 export { rule } from "./Rule/Rule.js";
 export { input } from "./Utility/Reader.js";

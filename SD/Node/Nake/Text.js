@@ -2,9 +2,11 @@ import { Interp } from "@/Animate/Interp";
 
 import { D3ToNake } from "@/Utility/Cast";
 
-import { BaseNake }             from "@/Node/Nake/BaseNake";
-import { naiveUpdate }          from "@/Node/Common";
+import { BaseNake }        from "@/Node/Nake/BaseNake";
+import { naiveUpdate }     from "@/Node/Common";
 import { GetterAndSetter } from "@/Node/Common";
+
+import { select } from "d3";
 
 export function Text(parent, text = "") {
     BaseNake.call(this, parent, "text");
@@ -48,7 +50,7 @@ Text.prototype.updateList = [
     naiveUpdate("y", Interp.numberInterp),
     function() {
         if (this.member.hasChanged("text") || this.member.hasChanged("font-size")) {
-            const box = fontSizeToBox(
+            const box = Text.fontSizeToBox(
                 this.member.get("text"),
                 this.member.get("font-size")
             );
@@ -64,7 +66,7 @@ Text.prototype.width = function(width) {
     if (width === undefined) {
         return this.member.get("width");
     }
-    const fontSize = widthToFontSize(this.member.get("text"), width);
+    const fontSize = Text.widthToFontSize(this.member.get("text"), width);
     this.fontSize(fontSize);
     const k = width / this.member.get("width");
     this.member.set("width", k * this.member.get("width"));
@@ -76,7 +78,7 @@ Text.prototype.height = function(height) {
     if (height === undefined) {
         return this.member.get("height");
     }
-    const fontSize = heightToFontSize(this.member.get("text"), height);
+    const fontSize = Text.heightToFontSize(this.member.get("text"), height);
     this.fontSize(fontSize);
     const k = height / this.member.get("height");
     this.member.set("width", k * this.member.get("width"));
@@ -88,7 +90,7 @@ Text.prototype.text = function(text) {
     if (text === undefined) {
         return this.member.get("text");
     }
-    text = parseText(String(text));
+    text = Text.parseText(String(text));
     this.member.set("text", text);
     this.tryUpdate();
     return this;
@@ -102,7 +104,7 @@ Text.prototype.intValue = function() {
  * @param {string} text 
  * @returns {string}
  */
-function parseText(text) {
+Text.parseText = function(text) {
     let ans = ""; text = String(text);
     for (let i = 0; i < text.length; i++) {
         if (text[i] === " ") ans += "\&emsp;";
@@ -113,45 +115,30 @@ function parseText(text) {
     return ans;
 }
 
-let textHelper;
-export function initText(svg) {
-    textHelper = D3ToNake(svg.append("text"));
-    textHelper.setAttribute("stroke-opacity", 0);
-    textHelper.setAttribute("fill-opacity", 0);
-    textHelper.setAttribute("font-family", "consolas");
+Text.init = function() {
+    const svg = select("#svg");
+    Text.textHelper =  D3ToNake(svg.append("text"));
+    Text.textHelper.setAttribute("stroke-opacity", 0);
+    Text.textHelper.setAttribute("fill-opacity", 0);
+    Text.textHelper.setAttribute("font-family", "consolas");
 }
 
-/**
- * @param {string} text 
- * @param {number} fontSize 
- * @returns {{x: number, y: number, width: number, height: number}}
- */
-function fontSizeToBox(text, fontSize) {
-    textHelper.innerHTML = text;
-    textHelper.setAttribute("font-size", fontSize);
-    return textHelper.getBBox();
+Text.fontSizeToBox = function(text, fontSize) {
+    Text.textHelper.innerHTML = text;
+    Text.textHelper.setAttribute("font-size", fontSize);
+    return Text.textHelper.getBBox();
 }
 
-/**
- * @param {string} text 
- * @param {number} width 
- * @returns {number}
- */
-function widthToFontSize(text, width) {
-    textHelper.innerHTML = text;
-    textHelper.setAttribute("font-size", 20);
-    const box = textHelper.getBBox();
+Text.widthToFontSize = function(text, width) {
+    Text.textHelper.innerHTML = text;
+    Text.textHelper.setAttribute("font-size", 20);
+    const box = Text.textHelper.getBBox();
     return width / box.width * 20;
 }
 
-/**
- * @param {string} text 
- * @param {number} height 
- * @returns {number}
- */
-function heightToFontSize(text, height) {
-    textHelper.innerHTML = text;
-    textHelper.setAttribute("font-size", 20);
-    const box = textHelper.getBBox();
+Text.heightToFontSize = function(text, height) {
+    Text.textHelper.innerHTML = text;
+    Text.textHelper.setAttribute("font-size", 20);
+    const box = Text.textHelper.getBBox();
     return height / box.height * 20;
 }

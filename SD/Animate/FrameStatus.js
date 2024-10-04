@@ -1,5 +1,5 @@
-import { UpdateFrameStatus } from "@/Interact/Status";
+import { Status } from "@/Interact/Status";
 
 export function updateFrameStatus() {
-    UpdateFrameStatus();
+    Status.updateFrameStatus();
 }

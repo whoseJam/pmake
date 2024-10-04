@@ -6,6 +6,8 @@ import { GetterAndSetter } from "@/Node/Common";
 
 import { D3ToNake } from "@/Utility/Cast";
 
+import { select } from "d3";
+
 export function Fragment(parent, html = "") {
     BaseNake.call(this, parent, "g");
     this.g().type("Fragment");
@@ -15,7 +17,7 @@ export function Fragment(parent, html = "") {
     this.member.new("width", 0);
     this.member.new("height", 0);
     this.member.new("html", "");
-    this.member.new("transform", getMatrix(0, 0, 0, 0, 0, 0));
+    this.member.new("transform", Fragment.getMatrix(0, 0, 0, 0, 0, 0));
     this.member.new("snapshot", undefined);
     if (html) {
         this.fragment(html);
@@ -48,13 +50,13 @@ function update() {
             this, "fragment"
         );
         this.member.flush("html");
-        const box = getBox(this.member.get("html"));
+        const box = Fragment.getBox(this.member.get("html"));
         this.member.setByEqual("x", box.x);
         this.member.setByEqual("y", box.y);
         this.member.setByEqual("width", box.width);
         this.member.setByEqual("height", box.height);
         this.member.set("snapshot", box);
-        this.member.set("transform", getMatrix(1, 1, 1, 1, box.x, box.y));
+        this.member.set("transform", Fragment.getMatrix(1, 1, 1, 1, box.x, box.y));
         this.member.flush("x");
         this.member.flush("y");
         this.member.flush("width");
@@ -75,7 +77,7 @@ function update() {
         const sy = height / snapshot.height;
         const dx = x - snapshot.x;
         const dy = y - snapshot.y;
-        const transform = getMatrix(sx, sy, dx, dy, snapshot.x, snapshot.y);
+        const transform = Fragment.getMatrix(sx, sy, dx, dy, snapshot.x, snapshot.y);
         this.member.set("transform", transform);
         new Action(
             this.delay(),
@@ -93,19 +95,19 @@ function update() {
     }
 }
 
-let fragmentHelper;
-export function initFragment(svg) {
-    fragmentHelper = D3ToNake(svg.append("g"));
-    fragmentHelper.setAttribute("opacity", 0);
+Fragment.init = function() {
+    const svg = select("#svg");
+    Fragment.helper = D3ToNake(svg.append("g"));
+    Fragment.helper.setAttribute("opacity", 0);
 }
 
 /**
  * @param {string} html 
  * @returns {{x: number, y: number, width: number, height: number}}
  */
-function getBox(html) {
-    fragmentHelper.innerHTML = html;
-    return fragmentHelper.getBBox();
+Fragment.getBox = function(html) {
+    Fragment.helper.innerHTML = html;
+    return Fragment.helper.getBBox();
 }
 
 /**
@@ -124,7 +126,7 @@ function getBox(html) {
  *  by: number
  * }}
  */
-function getMatrix(sx, sy, dx, dy, bx, by) {
+Fragment.getMatrix = function(sx, sy, dx, dy, bx, by) {
     return {
         a: sx, b: 0, c: 0, d: sy,
         e: sx * dx + (1 - sx) * (bx + dx),

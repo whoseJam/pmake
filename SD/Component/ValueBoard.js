@@ -1,6 +1,6 @@
 import { Context } from "@/Animate/Context";
 import { Text } from "@/Node/Nake/Text";
-import { svg } from "@/Interact/Svg";
+import { svg } from "@/Interact/RootSvg";
 
 export function ValueBoard(name, init = 0) {
     const board = new Text(svg());

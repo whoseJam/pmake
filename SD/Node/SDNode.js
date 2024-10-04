@@ -1,4 +1,4 @@
-import { svg } from "@/Interact/Svg";
+import { svg } from "@/Interact/RootSvg";
 
 import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";

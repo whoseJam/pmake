@@ -1,4 +1,4 @@
-import { svg } from "@/Interact/Svg";
+import { svg } from "@/Interact/RootSvg";
 
 import { SDNode }               from "@/Node/SDNode";
 import { GetterAndSetter } from "@/Node/Common";

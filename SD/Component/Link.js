@@ -1,6 +1,6 @@
 import { Line } from "@/Node/Nake/Line";
 
-import { svg } from "@/Interact/Svg";
+import { svg } from "@/Interact/RootSvg";
 
 import { trim } from "@/Utility/Trim";
 

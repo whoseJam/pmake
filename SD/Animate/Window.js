@@ -1,8 +1,9 @@
 import { Animate } from "@/Animate/Animate";
 
-import { setViewBox }       from "@/Interact/Svg";
-import { setAnimationSize } from "@/Interact/Message";
+import { Message } from "@/Interact/Message";
+import { RootSvg } from "@/Interact/RootSvg";
 import { updateFrameStatus } from "./FrameStatus";
+import { Device } from "@/Interact/Device";
 
 window.CURRENT_FRAME = 0;
 window.MAXIMUM_FRAME = 0;
@@ -16,17 +17,23 @@ window.SVG_MINY = 600;
 window.SVG_MAXX = 0;
 window.SVG_MAXY = 0;
 
-window.next = nextFrame;
-window.prev = prevFrame;
+Device.onKeyDown("n", nextFrame);
+Device.onKeyDown("p", prevFrame);
 
 function lastMainFrame() {
     if (window.SHOULD_EXPORT) {
         Animate.reset();
     }
     if (window.SHOULD_FLUSH) {
-        setAnimationSize(); // set the animation size of parent window
+        Message.notifyParent(); // set the animation size of parent window
         if (window.SHOULD_EXPORT) {
-            setViewBox(window.SVG_MINX, window.SVG_MINY, window.SVG_MAXX - window.SVG_MINX, window.SVG_MAXY - window.SVG_MINY, window.IFRAME_RATE);
+            RootSvg.setViewBox(
+                window.SVG_MINX,
+                window.SVG_MINY,
+                window.SVG_MAXX - window.SVG_MINX,
+                window.SVG_MAXY - window.SVG_MINY,
+                window.IFRAME_RATE
+            );
         } else {
             window.location.reload();
         }

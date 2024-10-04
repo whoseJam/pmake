@@ -66,7 +66,7 @@ export { WithBrace }    from "./Component/WithBrace";
 export { ValueBoard }   from "./Component/ValueBoard";
 export { MathjaxLabel } from "./Component/Label";
 
-export { svg } from "./Interact/Svg";
+export { svg } from "./Interact/RootSvg";
 
 export { rule } from "./Rule/Rule";
 export { Rule } from "./Rule/Rule";

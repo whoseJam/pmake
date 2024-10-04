@@ -1,35 +1,41 @@
 import { Animate } from "@/Animate/Animate";
 
-import { setViewBox } from "@/Interact/Svg";
+import { RootSvg } from "@/Interact/RootSvg";
 
-export function initMessage() {
-    window.Message = function(key, value) {
-        window[key] = value;
-    }
-    window.Flush = function(id, url, width, height, rate, asPdf, maxFrame = Infinity) {
-        window.SHOULD_FLUSH = true;
-        window.SHOULD_EXPORT = asPdf
-        window.IFRAME_ID = id;
-        window.IFRAME_NAME = url;
-        window.IFRAME_RATE = rate;
-        window.IFRAME_WIDTH = width;
-        window.IFRAME_HEIGHT = height;
-        window.IFRAME_MAX_FRAME = maxFrame;
-        console.log("Flush Message Get", id, url, width, height, rate, asPdf, maxFrame);
-        Animate.currentActionList.updateWindowSize();
-    }
-    window.SetViewBox = function(x, y, width, height, pwidth, pheight, rate) {
-        setViewBox(x, y, width, height, pwidth, pheight, rate);
-    }
-    window["SDAnimation"] = true;
-}
+export class Message {
+    static init() {
+        
+        window.Message = function(key, value) {
+            window[key] = value;
+        }
 
-export function setAnimationSize() {
-    window.parent.SetAnimationSize(
-        window.IFRAME_ID,
-        window.IFRAME_NAME,
-        window.SVG_MINX,
-        window.SVG_MINY,
-        window.SVG_MAXX - window.SVG_MINX,
-        window.SVG_MAXY - window.SVG_MINY);
+        window.Flush = function(id, url, width, height, rate, pdf, maxFrame = Infinity) {
+            window.SHOULD_FLUSH = true;
+            window.SHOULD_EXPORT = pdf;
+            window.IFRAME_ID = id;
+            window.IFRAME_NAME = url;
+            window.IFRAME_RATE = rate;
+            window.IFRAME_WIDTH = width;
+            window.IFRAME_HEIGHT = height;
+            window.IFRAME_MAX_FRAME = maxFrame;
+            Animate.currentActionList.updateWindowSize();
+        }
+
+        window.SetViewBox = function(x, y, width, height, parentWidth, parentHeight, rate) {
+            RootSvg.setViewBox(x, y, width, height, parentWidth, parentHeight, rate);
+        }
+
+        window["SDAnimation"] = true;
+    }
+
+    static notifyParent() {
+        window.parent.SetAnimationSize(
+            window.IFRAME_ID,
+            window.IFRAME_NAME,
+            window.SVG_MINX,
+            window.SVG_MINY,
+            window.SVG_MAXX - window.SVG_MINX,
+            window.SVG_MAXY - window.SVG_MINY
+        )
+    }
 }
