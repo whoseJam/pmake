@@ -1,4 +1,4 @@
-import { BaseHTML } from "./BaseHTML";
+import { BaseHTML } from "SD/Node/HTML/BaseHTML";
 
 export class Slider extends BaseHTML {
     constructor(parent: any);
@@ -8,6 +8,7 @@ export class Slider extends BaseHTML {
     min(): number;
     min(min: number): this;
     value(): number;
+    value(value: number): this;
 
     onChange(callback: (value: number) => void): this;
 }

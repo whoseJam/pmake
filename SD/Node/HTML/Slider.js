@@ -26,7 +26,7 @@ export function Slider(parent) {
                         if (callback) {
                             const nativeEvent = event.nativeEvent;
                             const sourceElement = nativeEvent.srcElement;
-                            callback(sourceElement.value);
+                            callback(+sourceElement.value);
                         }
                     }
                 } />
@@ -51,7 +51,7 @@ Slider.prototype.max = GetterAndSetter("max", "set");
 Slider.prototype.min = GetterAndSetter("min", "set");
 Slider.prototype.value = function(value) {
     if (value === undefined) {
-        return this._.slider.value;
+        return +this._.slider.value;
     }
     this._.slider.value = value;
     return this;

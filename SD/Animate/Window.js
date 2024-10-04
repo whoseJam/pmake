@@ -73,7 +73,6 @@ function promiseOfNormalFrame() {
     return new Promise(function(resolve) {
         const fn = function() {
             if (window.SHOULD_FLUSH) {
-                console.log("update window size");
                 Animate.currentActionList.updateWindowSize();
                 return resolve(0);
             }
@@ -109,7 +108,6 @@ function promiseOfLastMainFrame() {
     return new Promise(function(resolve) {
         const fn = function() {
             if (window.SHOULD_FLUSH) {
-                console.log("should flush");
                 Animate.currentActionList.updateWindowSize();
                 lastMainFrame();
                 return resolve(0);

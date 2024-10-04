@@ -106,7 +106,7 @@ function update() {
             },
             this, "d"
         );
-        const box = pathToBox(this.member.get("d"));
+        const box = Path.pathToBox(this.member.get("d"));
         this.member.set("x", box.x);
         this.member.set("y", box.y);
         this.member.set("width", box.width);

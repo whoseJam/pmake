@@ -37,6 +37,5 @@ export async function main(callback) {
 export async function inter(callback) {
     await pause(FIRST_INTER_FRAME);
     await callback();
-    console.log("meet last inter frame");
     await pause(LAST_INTER_FRAME);
 }
