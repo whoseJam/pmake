@@ -5,11 +5,11 @@ import { PointAtPathByRate } from "@/Rule/Path";
 import { BraceCurve } from "@/Node/Curve/BraceCurve"
 
 import { toNode } from "@/Utility/Tool";
+import { Check } from "@/Utility/Check";
 
 import { Enter }           from "@/Node/SDNode/Enter";
 import { Exist }           from "@/Node/SDNode/Exist";
 import { GetterAndSetter } from "@/Node/Common";
-import { Check } from "@/Utility/Check";
 
 function BraceRule(parent, child) {
     const l = child.member.getAndFlush("l");

@@ -3,7 +3,10 @@ import { Context } from "@/Animate/Context";
 import { Line } from "@/Node/Nake/Line";
 import { Text } from "@/Node/Nake/Text";
 
-let id = 0;
+import { Check } from "@/Utility/Check";
+
+let pointerID = 0;
+const pointerMap = {};
 
 function MakePointer(pointer, direction, length) {
     if (direction === "t") pointer.source(0, 0).target(0, -length);
@@ -13,59 +16,27 @@ function MakePointer(pointer, direction, length) {
     pointer.arrow();
 }
 
-function MoveToFunction() {
-    return function(arg0, arg1) {
-        if (arguments.length === 1) {
-            if (typeof(arg0) === "object") this.targetElement = arg0;
-            else if (arg0 === null || arg0 === undefined) this.targetElement = undefined;
-            else this.targetElement = this.parent.element(arg0);
-        } else if (arguments.length === 2) {
-            this.targetElement = this.parent.element(arg0, arg1);
-        }
-
-        const context = new Context(this);
-        const rule = this.rule();
-        if (this.targetElement) {
-            this.pointAt = this.targetElement.id;
-            if (!this.opacity()) {
-                context.till(0, 0);
-                rule(this.parent, this);
-                context.till(0, 1);
-                this.opacity(1);
-            } else rule(this.parent, this);
-        } else {
-            this.pointAt = 0;
-            this.opacity(0);
-        }
-        context.recover();
-        return this;
+function PointerRule(parent, child) {
+    const direction = child.member.getAndFlush("direction");
+    const element = child.member.getAndFlush("pointAt");
+    const gap = child.member.getAndFlush("pointerGap");
+    if (!element) return;
+    const pointers = pointerMap[element.id].filter((pointer) => {
+        return pointer.direction === child.direction && (pointer.opacity() !== 0 || pointer === child);
+    });
+    pointers.sort((a, b) => a.id - b.id);
+    for (let i = 0; i < pointers.length; i++) {
+        const k = (i + 1) / (pointers.length + 1);
+        if (pointers[i] !== child) pointers[i].startAnimate(child);
+        if (direction === "t") pointers[i].cx(element.kx(k)).y(element.my() + gap);
+        if (direction === "b") pointers[i].cx(element.kx(k)).my(element.y() - gap);
+        if (direction === "l") pointers[i].cy(element.ky(k)).x(element.mx() + gap);
+        if (direction === "r") pointers[i].cy(element.ky(k)).mx(element.x() - gap);
+        if (pointers[i] !== child) pointers[i].endAnimate();
     }
 }
 
-function PointerMoveFunction(direction, gap) {
-    return function(parent, child) {
-        let count = 0;
-        let front = 0;
-        parent.children.forEach((other, name) => {
-            if (!name.startsWith("pointer_")) return;
-            if (other.pointAt === child.pointAt &&
-                other.direction === child.direction &&
-                (other.opacity() !== 0 || other.id === child.id)) {
-                count++;
-                if (other.id < child.id) front++;
-            }
-        });
-        const k = (front + 1) / (count + 1);
-        const element = child.targetElement;
-        if (!element) return;
-        if (direction === "t") child.cx(element.kx(k)).y(element.my() + gap);
-        if (direction === "b") child.cx(element.kx(k)).my(element.y() - gap);
-        if (direction === "l") child.cy(element.ky(k)).x(element.mx() + gap);
-        if (direction === "r") child.cy(element.ky(k)).mx(element.x() - gap);
-    }
-}
-
-function LabelMoveFunction(direction, gap) {
+function LabelRule(direction, gap) {
     return function(parent, child) {
         if (direction === "t") child.cx(parent.cx()).y(parent.my() + gap);
         if (direction === "b") child.cx(parent.cx()).my(parent.y() - gap);
@@ -74,25 +45,64 @@ function LabelMoveFunction(direction, gap) {
     }
 }
 
-export function Pointer(parent, label, direction = "b", pointerGap = 10, length = 50, textGap = 10) {
-    const child = new Line(parent);
-    MakePointer(child, direction, length);
+export function Pointer(parent, label, direction = "b", pointerGap = 10, length = 50, labelGap = 10) {
+    const pointer = new Line(parent).opacity(0);
+    MakePointer(pointer, direction, length);
 
-    child.childAs(
+    pointer.member.new("pointAt", undefined);
+    pointer.member.new("priority", 1);
+    pointer.member.new("direction", direction);
+    pointer.member.new("pointerGap", pointerGap);
+    pointer.member.new("labelGap", labelGap);
+
+    pointer.childAs(
         "label",
-        new Text(child, label).fontSize(20),
-        LabelMoveFunction(direction, textGap)
+        new Text(pointer, label).fontSize(20),
+        LabelRule(direction, labelGap)
     );
 
-    child.priority = 1;
-    child.direction = direction;
-    child.pointAt = 0;
-    child.moveTo = MoveToFunction();
+    pointer.attachUpdate(() => {
+        if (pointer.member.hasChanged("pointAt")) {
+            pointer.triggerRule();
+        }
+    })
 
-    if (parent.childAs) {
-        parent.childAs(`pointer_${++id}`, child, PointerMoveFunction(direction, pointerGap));
+    pointer.moveTo = function(arg0, arg1) {
+        const oldElement = this.member.get("pointAt");
+        if (oldElement) pointerMap[oldElement.id] = pointerMap[oldElement.id].filter(p => p !== pointer);
+        if (arguments.length === 1) {
+            if (Check.isFalseType(arg0)) {
+                this.member.set("pointAt", undefined);
+            } else {
+                this.member.set("pointAt", typeof(arg0) === "object" ? arg0 : parent.element(arg0));
+            }
+        } else {
+            this.member.set("pointAt", parent.element(arg0, arg1));
+        }
+        const newElement = this.member.get("pointAt");
+        if (newElement) {
+            if (!pointerMap[newElement.id]) pointerMap[newElement.id] = [];
+            pointerMap[newElement.id].push(this);
+        }
+
+        if (oldElement && oldElement !== newElement && pointerMap[oldElement.id].length > 0) {
+            pointerMap[oldElement.id].forEach(pointer => pointer.startAnimate(this));
+            pointerMap[oldElement.id][0].triggerRule();
+            pointerMap[oldElement.id].forEach(pointer => pointer.endAnimate());
+        }
+        if (this.opacity() === 0) {
+            const context = new Context(this);
+            this.startAnimate(context.tillc(0, 0));
+            this.update();
+            this.startAnimate(context.tillc(0, 1));
+            this.opacity(1);
+        } else {
+            this.update();
+        }
+        return this;
     }
-
-    child.opacity(0);
-    return child;
+    
+    if (parent.childAs) parent.childAs(`pointer_${++pointerID}`, pointer, PointerRule);
+    else pointer.rule(PointerRule);
+    return pointer;
 }
