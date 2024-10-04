@@ -4,6 +4,7 @@ import { Context } from "@/Animate/Context";
 
 import { color } from "@/Utility/Color";
 import { Check } from "@/Utility/Check";
+import { GetterAndSetter } from "@/Node/Common";
 
 const C = color();
 
@@ -11,10 +12,26 @@ let focusID = 0;
 
 function FocusRule(parent, child) {
     const focusCount = child.member.getAndFlush("focusCount");
-    function focus(x, y, width, height) {
-        child.width(width);
-        child.height(height);
-        child.x(x).y(y);
+    const focusRate = child.member.getAndFlush("focusRate");
+    const focusGap = child.member.getAndFlush("focusGap");
+    function focus(x, y, width, height, rate) {
+        if (focusRate !== undefined) {
+            const w = width * rate;
+            const h = height * rate;
+            child.width(w);
+            child.height(h);
+            child.x(x - (w - width) / 2);
+            child.y(y - (h - height) / 2);
+        } else if (focusGap !== undefined) {
+            child.width(width + focusGap * 2);
+            child.height(height + focusGap * 2);
+            child.x(x - focusGap);
+            child.y(y - focusGap);
+        } else {
+            child.width(width);
+            child.height(height);
+            child.x(x).y(y);
+        }
     }
     if (focusCount === 0) {
         child.member.flush("focusElement1");
@@ -23,7 +40,7 @@ function FocusRule(parent, child) {
     } else if (focusCount === 1) {
         const element = child.member.getAndFlush("focusElement1");
         child.member.flush("focusElement2");
-        focus(element.x(), element.y(), element.width(), element.height());
+        focus(element.x(), element.y(), element.width(), element.height(), focusRate);
     } else {
         const element1 = child.member.getAndFlush("focusElement1");
         const element2 = child.member.getAndFlush("focusElement2");
@@ -31,7 +48,7 @@ function FocusRule(parent, child) {
         const mx = Math.max(element1.mx(), element2.mx());
         const y  = Math.min(element1. y(), element2. y());
         const my = Math.max(element1.my(), element2.my());
-        focus(x, y, mx - x, my - y);
+        focus(x, y, mx - x, my - y, focusRate);
     }
 }
 
@@ -43,6 +60,8 @@ export function Focus(parent) {
 
     focus.member.new("focusElement1", undefined);
     focus.member.new("focusElement2", undefined);
+    focus.member.new("focusRate", undefined);
+    focus.member.new("focusGap", undefined);
     focus.member.new("focusCount", 0);
 
     focus.attachUpdate(() => {
@@ -69,7 +88,6 @@ export function Focus(parent) {
                 this.member.set("focusCount", 1);
             }
         } else if (arguments.length === 2) {
-            console.log("arg0=", arg0, "arg1=", arg1);
             if (Check.isTypeOfSDNode(arg0) && Check.isTypeOfSDNode(arg1)) {
                 this.member.set("focusElement1", arg0);
                 this.member.set("focusElement2", arg1);
@@ -100,6 +118,9 @@ export function Focus(parent) {
         }
         return this;
     }
+
+    focus.gap = GetterAndSetter("focusGap", "setByDqual");
+    focus.rate = GetterAndSetter("focusRate", "setByDqual");
 
     if (parent.childAs) parent.childAs(`focus_${++focusID}`, focus, FocusRule);
     else focus.rule(FocusRule);

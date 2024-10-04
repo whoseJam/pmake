@@ -28,14 +28,13 @@ defineEventListener("png|jpg|jpeg", {
 });
 defineEventListener("js", {
     onAdd: function(path, destFolderPath) {
-        const animation = pathToFile(path);
-        gulp.task(animation, (done) => {
+        gulp.task(path, (done) => {
             return aniTask(path, destFolderPath, true);
         });
         if (shouldPutInAnimationList) {
-            animationList.push(animation);
+            animationList.push(path);
         } else {
-            gulp.task(animation)();
+            gulp.task(path)();
         }
     },
     onChange: function() {},
