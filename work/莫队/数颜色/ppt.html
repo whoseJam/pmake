@@ -1,0 +1,66 @@
+<section>
+    <section>
+        <h1>数颜色</h1>
+    </section>
+    <problem data-problemset="luogu" data-problemid="P1903"></problem>
+    <section>
+        <h2>数颜色</h2>
+        <codeblock style="height: 445px;">
+            <script type="text/template">
+                struct Query {
+                    int l, r, t;
+                    // 还有一些别的信息
+                }Q[N];
+                struct Modify {
+                    int x, t;
+                    // 还有一些别的信息
+                }M[N];
+                void input() {
+                    B = pow(n, 1.5);
+                    for (int i = 1; i <= m; i++) {
+                        读入第 i 个操作
+                        if (是查询操作) {
+                            Q[++qtot] = (Query){...};
+                        } else {
+                            M[++mtot] = (Modify){...};
+                        }
+                    }
+                    sort(Q + 1, Q + 1 + qtot, cmp);
+                    // M 数组不需要排序，因为它已经按照 t 从小到大的顺序放好了
+                }
+            </script>
+        </codeblock>
+    </section>
+    <section>
+        <h2>数颜色</h2>
+        <codeblock>
+            <script type="text/template">
+                void Solve() {
+                    int l = 1, r = 0, t = 0;
+                    for (int i = 1; i <= qtot; i++) {
+                        while (Q[i].l < l) l--, Add(a[l]);
+                        while (r < Q[i].r) r++, Add(a[r]);
+                        while (l < Q[i].l) Del(a[l]), l++;
+                        while (Q[i].r < r) Del(a[r]), r--;
+                        while (t < Q[i].t) Upd(++t, l, r, 1);  // 应用修改
+                        while (Q[i].t < t) Upd(t--, l, r, -1); // 撤销修改
+                        计算第 i 个询问的答案为 ans
+                    }
+                }
+            </script>
+        </codeblock>
+        <codeblock class="fragment">
+            <script type="text/template">
+                void Upd(int t, int l, int r, int f) {
+                    if (f == 1) { // 应用修改
+                        if (l <= M[t].x && M[t].x <= r) {
+                            M[t].pre = a[M[t].x]; // 记录一下该修改是把 a[x] 从 pre 变为 nxt
+                            Del(a[M[t].x]);
+                            Add(a[M[t].x] = M[t].nxt);
+                        }
+                    } // 撤销修改类似
+                }
+            </script>
+        </codeblock>
+    </section>
+</section>

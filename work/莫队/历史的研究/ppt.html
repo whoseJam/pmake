@@ -1,0 +1,38 @@
+<section>
+    <section>
+        <h1>历史的研究</h1>
+    </section>
+    <problem data-source="https://www.luogu.com.cn/problem/AT_joisc2014_c"></problem>
+    <section>
+        <h2>历史的研究</h2>
+        <p>区间延长的时候很好维护</p>
+        <p>但区间变短的时候，如果最大值发生了改变，我们并不方便 $O(1)$ 维护次大值是多少</p>
+        <p class="fragment">此时就能用回滚莫队</p>
+    </section>
+    <section>
+        <h2>历史的研究</h2>
+        <codeblock>
+            <script type="text/template">
+                void Add(int x) {
+                    cnt[a[x]]++;
+                    ans = max(ans, cnt[a[x]] * b[a[x]]);
+                }
+            </script>
+        </codeblock>
+        <codeblock>
+            <script type="text/template">
+                for (左端点落在 blockId 块内的询问 Q[i]) {
+                    if (右端点也落在 blockId 块内) 暴力计算答案
+                    else {
+                        while (r <= Q[i].r) r++, Add(r);
+                        int last = ans;
+                        for (int i = blockId 块内的最后一个元素; i >= Q[i].l; i--) Add(l);
+                        计算 Q[i] 的答案为 ans
+                        for (int i = blockId 块内的最后一个元素; i >= Q[i].l; i--) cnt[a[i]]--;
+                        ans = last;
+                    }
+                }
+            </script>
+        </codeblock>
+    </section>
+</section>

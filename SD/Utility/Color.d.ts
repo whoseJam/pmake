@@ -112,7 +112,7 @@ interface ColorManager {
      * @param r 右端点
      * @returns 梯度颜色生成器
      */
-    grandient: (start: HexColor, end: HexColor, l: number, r: number) => (grad: number) => HexColor, 
+    gradient: (start: HexColor, end: HexColor, l: number, r: number) => (grad: number) => HexColor, 
 }
 
 export function color(): ColorManager;
