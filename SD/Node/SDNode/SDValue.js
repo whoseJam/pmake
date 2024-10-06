@@ -1,5 +1,5 @@
-import { dqual } from "@/Utility/Math";
-import { equal } from "@/Utility/Math";
+import { dqual } from "@/Math/Math";
+import { equal } from "@/Math/Math";
 
 export class SDValue {
     constructor(value) {
@@ -9,6 +9,11 @@ export class SDValue {
     }
 
     get() {
+        return this.value;
+    }
+
+    getAndFlush() {
+        this.isDirty = false;
         return this.value;
     }
 

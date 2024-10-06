@@ -1,11 +1,11 @@
 import { Stack } from "@/Node/Array/Stack";
 import { ValueArray } from "@/Node/Array/ValueArray";
-import { GetterAndSetter } from "@/Node/Common";
+import { SDNode } from "@/Node/SDNode";
 
 export function ValueStack(parent) {
     Stack.call(this, parent);
 
-    this.g().type("ValueStack");
+    this.type("ValueStack");
 
     this.member.new("align", "cx");
 
@@ -21,7 +21,7 @@ ValueStack.prototype.updateList = [
     update
 ];
 
-ValueStack.prototype.align                  = GetterAndSetter("align", "set");
+ValueStack.prototype.align                  = SDNode.OrdinaryGSet("align", "set");
 ValueStack.prototype.insert                 = ValueArray.prototype.insert;
 ValueStack.prototype.insertFromExistValue   = ValueArray.prototype.insertFromExistValue;
 ValueStack.prototype.insertFromExistElement = ValueArray.prototype.insertFromExistElement;

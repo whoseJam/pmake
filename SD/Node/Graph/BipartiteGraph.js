@@ -84,7 +84,7 @@ function update() {
     }
     for (let link of links) {
         const sourceId = link.fromNodeId;
-        const targetId = link.toNodeId;
+        const targetId = link.Cast.castToSDNodeId;
         const source = this.findNodeById(sourceId);
         const target = this.findNodeById(targetId);
         this.tryMove(link, () => {

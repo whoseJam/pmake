@@ -3,7 +3,7 @@ import { Fragment } from "@/Node/Nake/Fragment";
 export function Mathjax(parent, text) {
     Fragment.call(this, parent);
 
-    this.g().type("Mathjax");
+    this.type("Mathjax");
 
     this.member.new("text", "");
 

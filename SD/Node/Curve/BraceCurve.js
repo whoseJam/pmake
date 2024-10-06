@@ -1,13 +1,14 @@
-import { BaseCurve }       from "@/Node/Curve/BaseCurve";
-import { GetterAndSetter } from "@/Node/Common";
+import { SDNode }    from "@/Node/SDNode";
+import { BaseCurve } from "@/Node/Curve/BaseCurve";
 
-import { Vec }     from "@/Utility/Math";
+import { Vector } from "@/Math/Vector";
+
 import { PathPen } from "@/Utility/PathPen";
 
 export function BraceCurve(parent) {
     BaseCurve.call(this, parent);
 
-    this.g().type("BraceCurve");
+    this.type("BraceCurve");
 
     this.member.new("bending", 5);
 
@@ -20,7 +21,7 @@ BraceCurve.prototype = {
     ...BaseCurve.prototype
 };
 
-BraceCurve.prototype.bending = GetterAndSetter("bending", "setByEqual");
+BraceCurve.prototype.bending = SDNode.OrdinaryGSet("bending", "setByEqual");
 
 function update() {
     if (!this.member.hasChanged("x1") &&
@@ -32,17 +33,17 @@ function update() {
     }
     const vs = this.source();
     const vt = this.target();
-    const vc = Vec.numberMul(Vec.add(vs, vt), 0.5)
-    const d = Vec.numberMul(Vec.norm(Vec.sub(vt, vs)), this.member.get("bending"));
-    const dl = Vec.rotate(d, -Math.PI/2);
-    const p1 = Vec.add(vs, dl);
-    const p2 = Vec.add(p1, d);
-    const c2 = Vec.add(vc, dl);
-    const c1 = Vec.sub(c2, d);
-    const c3 = Vec.add(c2, d);
-    const c = Vec.add(c2, dl);
-    const p4 = Vec.add(vt, dl);
-    const p3 = Vec.sub(p4, d);
+    const vc = Vector.numberMul(Vector.add(vs, vt), 0.5)
+    const d = Vector.numberMul(Vector.norm(Vector.sub(vt, vs)), this.member.get("bending"));
+    const dl = Vector.rotate(d, -Math.PI/2);
+    const p1 = Vector.add(vs, dl);
+    const p2 = Vector.add(p1, d);
+    const c2 = Vector.add(vc, dl);
+    const c1 = Vector.sub(c2, d);
+    const c3 = Vector.add(c2, d);
+    const c = Vector.add(c2, dl);
+    const p4 = Vector.add(vt, dl);
+    const p3 = Vector.sub(p4, d);
 
     this.member.flush("x1");
     this.member.flush("y1");

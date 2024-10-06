@@ -5,7 +5,7 @@ import { trim } from "@/Utility/Trim";
 export function Splay(parent) {
     BinaryTree.call(this, parent);
 
-    this.g().type("Splay");
+    this.type("Splay");
 
     return this;
 }

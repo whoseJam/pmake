@@ -6,7 +6,7 @@ import { BaseElement } from "@/Node/Element/BaseElement";
 export function EllipseElement(parent, value) {
     BaseElement.call(this, parent);
 
-    this.g().type("EllipseElement");
+    this.type("EllipseElement");
 
     this.childAs(
         "background",

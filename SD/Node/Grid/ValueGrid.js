@@ -3,7 +3,7 @@ import { Grid } from "./Grid";
 export function ValueGrid(parent) {
     Grid.call(this, parent);
 
-    this.g().type("ValueGrid");
+    this.type("ValueGrid");
 
     return this;
 }

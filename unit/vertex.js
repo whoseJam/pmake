@@ -1,11 +1,9 @@
 import * as sd from "@/sd";
 
-let svg = sd.svg();
-let vertex = new sd.Vertex(svg).x(100).y(100);
+const svg = sd.svg();
+const vertex = new sd.Vertex(svg).x(100).y(100);
 
-main();
-
-async function main() {
+sd.main(async () => {
     await sd.pause();
     vertex.value(1);
     await sd.pause();   
@@ -16,5 +14,4 @@ async function main() {
     await sd.pause();
     vertex.startAnimate().r(40).endAnimate();
     console.log(vertex.r(), vertex.x(), vertex.y());
-    await sd.pause();
-}
+})

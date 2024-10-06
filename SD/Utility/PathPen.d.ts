@@ -1,4 +1,4 @@
-import { Vector } from "SD/Utility/Math";
+import { Vector } from "@/Math/Math";
 
 export class PathPen {
     MoveTo(v: Vector): this;

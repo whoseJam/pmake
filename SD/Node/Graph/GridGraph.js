@@ -2,12 +2,12 @@ import { trim }             from "@/Utility/Trim";
 import { SelectValidValue } from "@/Utility/Cast";
 
 import { BaseGraph }            from "@/Node/Graph/BaseGraph";
-import { GetterAndSetter } from "@/Node/Common";
+import { SDNode } from "@/Node/SDNode";
 
 export function GridGraph(parent) {
     BaseGraph.call(this, parent);
 
-    this.g().type("GridGraph");
+    this.type("GridGraph");
 
     this.member.new("r", 20);
     this.member.new("n", 1);
@@ -22,8 +22,8 @@ GridGraph.prototype = {
     ...BaseGraph.prototype
 };
 
-GridGraph.prototype.n = GetterAndSetter("n", "set");
-GridGraph.prototype.m = GetterAndSetter("m", "set");
+GridGraph.prototype.n = SDNode.OrdinaryGSet("n", "set");
+GridGraph.prototype.m = SDNode.OrdinaryGSet("m", "set");
 
 GridGraph.prototype.updateList = [
     ...GridGraph.prototype.updateList,
@@ -79,7 +79,7 @@ function update() {
     }
     for (let link of links) {
         const sourceId = link.fromNodeId;
-        const targetId = link.toNodeId;
+        const targetId = link.Cast.castToSDNodeId;
         const source = this.findNodeById(sourceId);
         const target = this.findNodeById(targetId);
         this.tryMove(link, () => {

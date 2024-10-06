@@ -1,12 +1,12 @@
 import { BaseCurve }            from "@/Node/Curve/BaseCurve";
-import { GetterAndSetter } from "@/Node/Common";
+import { SDNode } from "@/Node/SDNode";
 
 import { PathPen } from "@/Utility/PathPen";
 
 export function CircleCurve(parent) {
     BaseCurve.call(this, parent);
 
-    this.g().type("CircleCurve");
+    this.type("CircleCurve");
 
     this.member.new("r", 20);
     
@@ -19,7 +19,7 @@ CircleCurve.prototype = {
     ...BaseCurve.prototype
 };
 
-CircleCurve.prototype.r = GetterAndSetter("r", "setByEqual");
+CircleCurve.prototype.r = SDNode.OrdinaryGSet("r", "setByEqual");
 
 function update() {
     if (!this.member.hasChanged("r") &&

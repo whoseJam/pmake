@@ -1,13 +1,13 @@
-import { Array }           from "@/Node/Array/Array";
-import { GetterAndSetter } from "@/Node/Common";
+import { Array }  from "@/Node/Array/Array";
+import { Enter }  from "@/Node/SDNode/Enter";
+import { SDNode } from "@/Node/SDNode";
 
-import { toNode } from "@/Utility/Tool";
-import { Enter } from "../SDNode/Enter";
+import { Cast } from "@/Utility/Cast";
 
 export function ValueArray(parent) {
     Array.call(this, parent);
 
-    this.g().type("ValueArray");
+    this.type("ValueArray");
 
     this.member.new("align", "cy");
 
@@ -18,7 +18,7 @@ ValueArray.prototype = {
     ...Array.prototype
 };
 
-ValueArray.prototype.align = GetterAndSetter("align", "set");
+ValueArray.prototype.align = SDNode.OrdinaryGSet("align", "set");
 
 ValueArray.prototype.updateList = [
     ...Array.prototype.updateList.slice(0, -1),
@@ -26,7 +26,7 @@ ValueArray.prototype.updateList = [
 ];
 
 ValueArray.prototype.insert = function(index, value) {
-    const element = toNode(this.layer("elements"), value);
+    const element = Cast.castToSDNode(this.layer("elements"), value);
     element.onEnter(Enter.Ordinary(this, "elements"))
     this.insertByBaseArray(index, element);
     return this;

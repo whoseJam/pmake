@@ -9,7 +9,7 @@ import { d3TreeLayout, Tree } from "./Tree";
 export class RoundSquareTree extends Tree {
     constructor(node) {
         super(node);
-        this.g().type("RoundSquareTree");
+        this.type("RoundSquareTree");
         this._.elementWidth = 40;
         this._.elementHeight = 40;
     }

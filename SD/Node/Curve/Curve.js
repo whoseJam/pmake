@@ -1,13 +1,13 @@
-import { BaseCurve }            from "@/Node/Curve/BaseCurve";
-import { GetterAndSetter } from "@/Node/Common";
+import { SDNode }    from "@/Node/SDNode";
+import { BaseCurve } from "@/Node/Curve/BaseCurve";
 
-import { Vec }     from "@/Utility/Math";
+import { Vector } from "@/Math/Vector";
 import { PathPen } from "@/Utility/PathPen";
 
 export function Curve(parent) {
     BaseCurve.call(this, parent);
 
-    this.g().type("Curve");
+    this.type("Curve");
 
     this.member.new("bending", 0.25);
 
@@ -20,7 +20,7 @@ Curve.prototype = {
     ...BaseCurve.prototype
 };
 
-Curve.prototype.bending = GetterAndSetter("bending", "setByDqual");
+Curve.prototype.bending = SDNode.OrdinaryGSet("bending", "setByDqual");
 
 function update() {
     if (!this.member.hasChanged("x1") &&
@@ -32,12 +32,12 @@ function update() {
     }
     const v1 = this.source();
     const v2 = this.target();
-    const d = Vec.sub(v2, v1);
-    const dis = Vec.length(d);
-    const left = Vec.norm(Vec.rotate(d, Math.PI / 2));
-    const vc = Vec.add(
-        Vec.add(v1, Vec.numberMul(d, 0.5)),
-        Vec.numberMul(left, dis * this.member.get("bending"))
+    const d = Vector.sub(v2, v1);
+    const dis = Vector.length(d);
+    const left = Vector.norm(Vector.rotate(d, Math.PI / 2));
+    const vc = Vector.add(
+        Vector.add(v1, Vector.numberMul(d, 0.5)),
+        Vector.numberMul(left, dis * this.member.get("bending"))
     );
     return [
         new PathPen().MoveTo(v1).Quad(vc, v2).toString(),

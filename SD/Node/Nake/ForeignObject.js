@@ -1,9 +1,8 @@
 import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
 
-import { BaseNake }             from "@/Node/Nake/BaseNake";
-import { naiveUpdate }          from "@/Node/Common";
-import { GetterAndSetter } from "@/Node/Common";
+import { SDNode }   from "@/Node/SDNode";
+import { BaseNake } from "@/Node/Nake/BaseNake";
 
 export function ForeignObject(parent) {
     BaseNake.call(this, parent, "foreignObject");
@@ -20,27 +19,25 @@ export function ForeignObject(parent) {
     nake.setAttribute("y", this.member.get("y"));
     nake.setAttribute("width", this.member.get("width"));
     nake.setAttribute("height", this.member.get("height"));
-
-    return this;
 }
 
 ForeignObject.prototype = {
     ...BaseNake.prototype
 };
 
-ForeignObject.prototype.x      = GetterAndSetter("x", "setByEqual");
-ForeignObject.prototype.y      = GetterAndSetter("y", "setByEqual");
-ForeignObject.prototype.width  = GetterAndSetter("width", "setByEqual");
-ForeignObject.prototype.height = GetterAndSetter("height", "setByEqual");
-ForeignObject.prototype.html   = GetterAndSetter("html", "set");
-ForeignObject.prototype.dom    = GetterAndSetter("dom", "set");
+ForeignObject.prototype.x      = SDNode.OrdinaryGSet("x", "setByEqual");
+ForeignObject.prototype.y      = SDNode.OrdinaryGSet("y", "setByEqual");
+ForeignObject.prototype.width  = SDNode.OrdinaryGSet("width", "setByEqual");
+ForeignObject.prototype.height = SDNode.OrdinaryGSet("height", "setByEqual");
+ForeignObject.prototype.html   = SDNode.OrdinaryGSet("html", "set");
+ForeignObject.prototype.dom    = SDNode.OrdinaryGSet("dom", "set");
 
 ForeignObject.prototype.updateList = [
     ...ForeignObject.prototype.updateList,
-    naiveUpdate("x", Interp.numberInterp),
-    naiveUpdate("y", Interp.numberInterp),
-    naiveUpdate("width", Interp.numberInterp),
-    naiveUpdate("height", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("x", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("y", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("width", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("height", Interp.numberInterp),
     update
 ];
 

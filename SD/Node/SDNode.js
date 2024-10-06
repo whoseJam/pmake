@@ -1,32 +1,24 @@
-import { svg } from "@/Interact/RootSvg";
-
 import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
 
 import { InRange }           from "@/Node/Common";
 import { Forward }           from "@/Node/Common";
-import { GetComponent }      from "@/Node/Common";
-import { GetterAndSetter }   from "@/Node/Common";
 import { ForwardWithReturn } from "@/Node/Common";
 
 import { Updater }  from "@/Node/SDNode/Update";
 import { Animate }  from "@/Node/SDNode/Animate";
-import { D3Layer }  from "@/Node/SDNode/D3Layer";
 import { Interact } from "@/Node/SDNode/Interact";
 import { Children } from "@/Node/SDNode/Children";
 import { SDMember } from "@/Node/SDNode/SDMember";
 
+import { SVGNode } from "@/Renderer/SVG/SVGNode";
+
+import { Vector } from "@/Math/Vector";
+
 let id = 0;
 
 export function SDNode(parent) {
-    if (parent === svg()) {
-        svg().children.push(this);
-    }
     id++;
-    this.d3layer = new D3Layer(parent);
-    this.d3layer.nake().setAttribute("id", id);
-    this.d3layer.node = this;
-    this.parent = ("g" in parent) ? parent : parent.node;
     this.children = new Children(this);
     this.id = id;
     this._ = {};
@@ -35,32 +27,87 @@ export function SDNode(parent) {
     this.updater = new Updater(this);
     this.interact = new Interact(this);
 
-    // opacity
-    this.member.new("global-opacity", 1);
-    
-    // interact
-    this.member.new("clickHandle", undefined);
-    this.member.new("dblClickHandle", undefined);
-    this.member.new("clickTimeoutObject", undefined);
+    // 1. SDNode
+    // 2. SVGNode
+    this._.parent = parent instanceof SVGNode ? parent.parent : parent; // 指向上一个 SDNode
 
-    new Action(0, 0, 0, 1, 
-        Interp.numberInterp(this.d3layer.nake(), "opacity"),
-        this, "global-opacity");
+    // layer
+    this._.layer = new SVGNode(this, parent instanceof SVGNode ? parent : parent.layer(), "g");
+    this._.layers = {};
+
+    // opacity
+    this.member.new("opacity", 1);
     
     this._.BASE_SDNODE = true;
-
-    return this;
 }
 
-SDNode.prototype.g = GetComponent("d3layer");
+SDNode.OrdinaryGSet = function(key, mode) {
+    return function(value) {
+        if (value === undefined) {
+            return this.member.get(key);
+        }
+        this.member[mode](key, value);
+        this.tryUpdate();
+        return this;
+    }
+}
 
-SDNode.prototype.newLayer = ForwardWithReturn("d3layer", "newLayer");
-SDNode.prototype.layer    = ForwardWithReturn("d3layer", "layer");
+SDNode.OrdinaryUpdate = function(key, interp, target) {
+    const targetKey = target ? target : "nake";
+    return function() {
+        if (this.member.hasChanged(key)) {
+            new Action(
+                this.delay(),
+                this.delay() + this.duration(),
+                this.member.oldValue(key),
+                this.member.get(key),
+                interp(this._[targetKey], key),
+                this, key
+            );
+            this.member.flush(key);
+        }
+    }
+}
 
-SDNode.prototype.attachTo = function(node) {
-    const isSDNode = ("g" in node);
-    const otherLayer = isSDNode ? node.g() : node;
-    this.d3layer.attachTo(otherLayer);
+SDNode.InRange = function(mode) {
+    if (mode === "circle") {
+        return function(vec) {
+            const center = [this.cx(), this.cy()];
+            const length = Vector.length(Vector.sub(vec, center));
+            return length <= this.r();
+        }
+    } else if (mode === "rect") {
+        return function(vec) {
+            return (this.x() <= vec[0] && vec[0] <= this.mx() &&
+                    this.y() <= vec[1] && vec[1] <= this.my());
+        }
+    } else {
+        throw new Error(`Unknown Mode ${mode}`);
+    }
+}
+
+SDNode.prototype.type = function(type) {
+    this._.layer.setAttribute("type", type);
+}
+
+SDNode.prototype.layer = function(name) {
+    if (name === undefined) {
+        return this._.layer;
+    } else {
+        return this._.layers[name];
+    }
+}
+
+SDNode.prototype.newLayer = function(name) {
+    const layer = new SVGNode(this, this._.layer, "g");
+    this._.layers[name] = layer;
+    layer.setAttribute("layer", name);
+}
+
+SDNode.prototype.attachTo = function(parent) {
+    // 1. parent = SDNode -> parent.layer
+    // 2. parent = SVGNode -> parent
+    this._.layer.moveTo(typeof(parent.layer) === "function" ? parent.layer() : parent);
     return this;
 }
 
@@ -80,9 +127,9 @@ SDNode.prototype.delay        = ForwardWithReturn("animate", "delay");
 SDNode.prototype.after        = Forward("animate", "after");
 SDNode.prototype.duration     = ForwardWithReturn("animate", "duration");
 
-SDNode.prototype.opacity = GetterAndSetter("global-opacity", "setByDqual");
+SDNode.prototype.opacity = SDNode.OrdinaryGSet("opacity", "setByDqual");
 SDNode.prototype.inRange = InRange("rect");
-SDNode.prototype.remove = function() { this.opacity(0).update(); }
+SDNode.prototype.remove = function() { this._.layer.remove(); }
 
 import { Scale }             from "@/Node/SDNode/Location";
 import { Center }            from "@/Node/SDNode/Location";
@@ -115,30 +162,7 @@ SDNode.prototype.tryUpdate  = Forward("updater", "tryUpdate");
 SDNode.prototype.attachUpdate = Forward("updater", "attachUpdate");
 
 SDNode.prototype.updateList = [
-    function() {
-        if (this.member.hasChanged("global-opacity")) {
-            const d3layer = this.d3layer;
-            new Action(
-                this.delay(),
-                this.delay() + this.duration(),
-                this.member.oldValue("global-opacity"),
-                this.member.get("global-opacity"),
-                function(t) {
-                    const A = this.from;
-                    const B = this.to;
-                    const current = (A * (1 - t) + B * t);
-                    d3layer.nake().setAttribute("opacity", current);
-                    if (t === 1) {
-                        const isVisible = (current !== 0);
-                        const choose = isVisible ? "allowPointerEvents" : "disablePointerEvents";
-                        d3layer[choose]();
-                    }
-                },
-                this, "global-opacity"
-            );
-            this.member.flush("global-opacity");
-        }
-    }
+    SDNode.OrdinaryUpdate("opacity", Interp.numberInterp, "layer")
 ]
 
 SDNode.prototype.drag       = Forward("interact", "drag");
@@ -153,7 +177,7 @@ SDNode.prototype.rule = function(rule) {
     return this;
 }
 SDNode.prototype.triggerRule = function() {
-    this._.rule(this.parent, this);
+    this._.rule(this._.parent, this);
     return this;
 }
 SDNode.prototype.onEnter = function(callback) {

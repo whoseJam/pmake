@@ -1,11 +1,11 @@
 import { Array }           from "@/Node/Array/Array";
 import { BaseArray }       from "@/Node/Array/BaseArray";
-import { GetterAndSetter } from "@/Node/Common";
+import { SDNode } from "@/Node/SDNode";
 
 export function Stack(parent) {
     BaseArray.call(this, parent);
 
-    this.g().type("Stack");
+    this.type("Stack");
     this.newLayer("elements");
 
     this.member.new("x", 0);
@@ -20,8 +20,8 @@ Stack.prototype = {
     ...BaseArray.prototype
 };
 
-Stack.prototype.elementWidth  = GetterAndSetter("elementWidth", "setByEqual");
-Stack.prototype.elementHeight = GetterAndSetter("elementHeight", "setByEqual");
+Stack.prototype.elementWidth  = SDNode.OrdinaryGSet("elementWidth", "setByEqual");
+Stack.prototype.elementHeight = SDNode.OrdinaryGSet("elementHeight", "setByEqual");
 Stack.prototype.insert                 = Array.prototype.insert;
 Stack.prototype.insertFromExistValue   = Array.prototype.insertFromExistValue;
 Stack.prototype.insertFromExistElement = Array.prototype.insertFromExistElement;

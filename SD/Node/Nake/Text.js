@@ -1,17 +1,14 @@
 import { Interp } from "@/Animate/Interp";
 
-import { D3ToNake } from "@/Utility/Cast";
+import { Dom } from "@/Dom/Dom";
 
-import { BaseNake }        from "@/Node/Nake/BaseNake";
-import { naiveUpdate }     from "@/Node/Common";
-import { GetterAndSetter } from "@/Node/Common";
-
-import { select } from "d3";
+import { SDNode }   from "@/Node/SDNode";
+import { BaseNake } from "@/Node/Nake/BaseNake";
 
 export function Text(parent, text = "") {
     BaseNake.call(this, parent, "text");
 
-    this.g().type("Text");
+    this.type("Text");
 
     this.member.setAndFlush("fill", "#000000");
     this.member.setAndFlush("stroke-width", 0);
@@ -33,21 +30,19 @@ export function Text(parent, text = "") {
     nake.setAttribute("stroke-width", this.member.get("stroke-width"));
 
     if (text !== undefined && text !== null) this.text(text);
-
-    return this;
 }
 
 Text.prototype = {
     ...BaseNake.prototype
 };
 
-Text.prototype.x        = GetterAndSetter("x", "setByEqual");
-Text.prototype.y        = GetterAndSetter("y", "setByEqual");
-Text.prototype.fontSize = GetterAndSetter("font-size", "setByEqual");
+Text.prototype.x        = SDNode.OrdinaryGSet("x", "setByEqual");
+Text.prototype.y        = SDNode.OrdinaryGSet("y", "setByEqual");
+Text.prototype.fontSize = SDNode.OrdinaryGSet("font-size", "setByEqual");
 Text.prototype.updateList = [
     ...Text.prototype.updateList,
-    naiveUpdate("x", Interp.numberInterp),
-    naiveUpdate("y", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("x", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("y", Interp.numberInterp),
     function() {
         if (this.member.hasChanged("text") || this.member.hasChanged("font-size")) {
             const box = Text.fontSizeToBox(
@@ -58,8 +53,8 @@ Text.prototype.updateList = [
             this.member.set("height", box.height);
         }
     },
-    naiveUpdate("text", Interp.innerHTMLInterp),
-    naiveUpdate("font-size", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("text", Interp.innerHTMLInterp),
+    SDNode.OrdinaryUpdate("font-size", Interp.numberInterp),
 ]
 
 Text.prototype.width = function(width) {
@@ -100,10 +95,6 @@ Text.prototype.intValue = function() {
     return +this.text();
 }
 
-/**
- * @param {string} text 
- * @returns {string}
- */
 Text.parseText = function(text) {
     let ans = ""; text = String(text);
     for (let i = 0; i < text.length; i++) {
@@ -116,29 +107,29 @@ Text.parseText = function(text) {
 }
 
 Text.init = function() {
-    const svg = select("#svg");
-    Text.textHelper =  D3ToNake(svg.append("text"));
-    Text.textHelper.setAttribute("stroke-opacity", 0);
-    Text.textHelper.setAttribute("fill-opacity", 0);
-    Text.textHelper.setAttribute("font-family", "consolas");
+    Text.helper = Dom.createSVGElement("text");
+    Dom.getByID("1").append(Text.helper);
+    Text.helper.setAttribute("stroke-opacity", 0);
+    Text.helper.setAttribute("fill-opacity", 0);
+    Text.helper.setAttribute("font-family", "consolas");
 }
 
 Text.fontSizeToBox = function(text, fontSize) {
-    Text.textHelper.innerHTML = text;
-    Text.textHelper.setAttribute("font-size", fontSize);
-    return Text.textHelper.getBBox();
+    Text.helper.innerHTML = text;
+    Text.helper.setAttribute("font-size", fontSize);
+    return Text.helper.getBBox();
 }
 
 Text.widthToFontSize = function(text, width) {
-    Text.textHelper.innerHTML = text;
-    Text.textHelper.setAttribute("font-size", 20);
-    const box = Text.textHelper.getBBox();
+    Text.helper.innerHTML = text;
+    Text.helper.setAttribute("font-size", 20);
+    const box = Text.helper.getBBox();
     return width / box.width * 20;
 }
 
 Text.heightToFontSize = function(text, height) {
-    Text.textHelper.innerHTML = text;
-    Text.textHelper.setAttribute("font-size", 20);
-    const box = Text.textHelper.getBBox();
+    Text.helper.innerHTML = text;
+    Text.helper.setAttribute("font-size", 20);
+    const box = Text.helper.getBBox();
     return height / box.height * 20;
 }

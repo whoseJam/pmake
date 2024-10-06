@@ -1,6 +1,6 @@
 import { Mathjax } from "@/Node/Text/Mathjax";
 import { Text } from "@/Node/Nake/Text";
-import { GetterAndSetter } from "@/Node/Common";
+import { SDNode } from "@/Node/SDNode";
 
 function isMathjax(str) {
     const label = String(str).trim();
@@ -39,8 +39,8 @@ export function Label(parent, text, location = "lc", fontSize = 20, gap = 10) {
     label.member.new("location", location);
     label.member.new("labelGap", gap);
 
-    label.location = GetterAndSetter("location", "set");
-    label.gap = GetterAndSetter("labelGap", "setByDqual");
+    label.location = SDNode.OrdinaryGSet("location", "set");
+    label.gap = SDNode.OrdinaryGSet("labelGap", "setByDqual");
 
     parent.childAs(`label_${label.text()}`, label, LabelRule);
 

@@ -1,15 +1,14 @@
 import { Interp } from "@/Animate/Interp";
 
-import { BaseLine }        from "@/Node/Nake/BaseLine";
-import { naiveUpdate }     from "@/Node/Common"
-import { GetterAndSetter } from "@/Node/Common";
+import { SDNode }   from "@/Node/SDNode";
+import { BaseLine } from "@/Node/Nake/BaseLine";
 
-import { Vec } from "@/Utility/Math";
+import { Vector } from "@/Math/Vector";
 
 export function Line(parent) {
     BaseLine.call(this, parent, "line");
 
-    this.g().type("Line");
+    this.type("Line");
 
     this.member.new("x1", 0);
     this.member.new("y1", 0);
@@ -27,23 +26,23 @@ Line.prototype = {
     ...BaseLine.prototype
 };
 
-Line.prototype.x1 = GetterAndSetter("x1", "setByEqual");
-Line.prototype.y1 = GetterAndSetter("y1", "setByEqual");
-Line.prototype.x2 = GetterAndSetter("x2", "setByEqual");
-Line.prototype.y2 = GetterAndSetter("y2", "setByEqual");
+Line.prototype.x1 = SDNode.OrdinaryGSet("x1", "setByEqual");
+Line.prototype.y1 = SDNode.OrdinaryGSet("y1", "setByEqual");
+Line.prototype.x2 = SDNode.OrdinaryGSet("x2", "setByEqual");
+Line.prototype.y2 = SDNode.OrdinaryGSet("y2", "setByEqual");
 Line.prototype.updateList = [
     ...Line.prototype.updateList,
-    naiveUpdate("x1", Interp.numberInterp),
-    naiveUpdate("y1", Interp.numberInterp),
-    naiveUpdate("x2", Interp.numberInterp),
-    naiveUpdate("y2", Interp.numberInterp)
+    SDNode.OrdinaryUpdate("x1", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("y1", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("x2", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("y2", Interp.numberInterp)
 ];
 
 Line.prototype.at = function(k) {
     const v1 = this.source();
     const v2 = this.target();
-    const d = Vec.sub(v2, v1);
-    return Vec.add(v1, Vec.numberMul(d, k));
+    const d = Vector.sub(v2, v1);
+    return Vector.add(v1, Vector.numberMul(d, k));
 }
 
 Line.prototype.getPointAtLength = function(length) {
@@ -55,5 +54,5 @@ Line.prototype.getPointAtLength = function(length) {
 Line.prototype.totalLength = function() {
     const v1 = this.source();
     const v2 = this.target();
-    return Vec.length(Vec.sub(v1, v2));
+    return Vector.length(Vector.sub(v1, v2));
 }

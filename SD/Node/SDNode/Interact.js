@@ -1,5 +1,3 @@
-import { D3ToNake } from "@/Utility/Cast";
-
 export function Interact(parent) {
     this.parent = parent;
     this.onClickCallback = undefined;
@@ -10,7 +8,7 @@ export function Interact(parent) {
 }
 
 Interact.prototype.onClick = function(callback) {
-    const nake = D3ToNake(this.parent.d3layer.self());
+    const nake = this.parent._.layer.element;
     nake.removeEventListener("click", this.onClickCallback);
     this.onClickCallback = () => {
         clearTimeout(this.clickTimeout);
@@ -22,7 +20,7 @@ Interact.prototype.onClick = function(callback) {
 }
 
 Interact.prototype.onDblClick = function(callback) {
-    const nake = D3ToNake(this.parent.d3layer.self());
+    const nake = this.parent._.layer.element;
     nake.removeEventListener("dblclick", this.onDblClickCallback);
     this.onDblClickCallback = () => {
         clearTimeout(this.clickTimeout);
@@ -33,15 +31,16 @@ Interact.prototype.onDblClick = function(callback) {
 
 Interact.prototype.drag = function(type) {
     if (type) {
-        const nake = D3ToNake(this.parent.d3layer.self());
+        const nake = this.parent._.layer.element;
         let startX = 0;
         let startY = 0;
         Snap(nake).drag(function(dx, dy) {
             const x = dx / window.RATE + startX;
             const y = dy / window.RATE + startY;
-            const transform = `matrix(1,0,0,1,${x},${y})`;
+            const transform = `matrix(1,0,0,1,${x},${y})`
             nake.setAttribute("transform", transform);
         }, function() {
+            console.log(nake.transform);
             startX = nake.transform.baseVal.getItem(0).matrix.e;
             startY = nake.transform.baseVal.getItem(0).matrix.f;
         });

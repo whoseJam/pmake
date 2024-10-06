@@ -137,6 +137,8 @@ ActionList.prototype.rollback = function() {
         newAction.r = maxTimestamp - action.l;
         newAction.from = action.to;
         newAction.to = action.from;
+        newAction.source = newAction.from;
+        newAction.target = newAction.to;
         other.push(newAction);
     }
     return other;

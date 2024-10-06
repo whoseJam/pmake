@@ -3,6 +3,10 @@ import { D3ToNake } from "@/Utility/Cast";
 import { Marker } from "@/Node/Nake/Marker";
 
 import * as d3 from "d3";
+import { Dom } from "@/Dom/Dom";
+import { SVGNode } from "@/Renderer/SVG/SVGNode";
+import { SDNode } from "@/Node/SDNode";
+import { HTMLNode } from "@/Renderer/HTML/HTMLNode";
 
 window.RATE = 1;
 
@@ -34,28 +38,23 @@ export class RootSvg {
         const currentDate = eval("new " + a + d + c + "()");
         const targetDate = eval("new " + "D" + b + "('" + tillDate + "')");
         if (currentDate > targetDate) return;
-        const tempElement = document.createElement("div");
-        tempElement.id = "svg-container";
-        document.body.append(tempElement);
-        RootSvg.svg = d3.select("#svg-container").append("svg");
-    
-        const svgElement = D3ToNake(RootSvg.svg);
-        svgElement.id = "svg";
-        svgElement.setAttribute("preserveAspectRatio", "xMidYMid meet");
+        const container = new HTMLNode(undefined, document.body, "div");
+        const svg = new SVGNode(undefined, container, "svg");
+        
+        svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
         if (window.self === window.top) {
-            svgElement.setAttribute("viewBox", "0 0 1200 600");
-            svgElement.setAttribute("width", "100%");
-            svgElement.setAttribute("height", "100%");
+            svg.setAttribute("viewBox", "0 0 1200 600");
+            svg.setAttribute("width", "100%");
+            svg.setAttribute("height", "100%");
         }
         
-        RootSvg.svg.children = [];
-        RootSvg.def = RootSvg.svg.append("defs");
-        RootSvg.svg.append("g").attr("id", "replace");
+        RootSvg.svg = svg;
+
         defArrow();
     }
 
     static setViewBox(x, y, width, height, pwidth, pheight, rate) {
-        const svg = D3ToNake(RootSvg.svg);
+        const svg = RootSvg.svg.element;
         if (width <= 10 || height <= 10) return;
         const cx = (x + width / 2);
         const cy = (y + height / 2);

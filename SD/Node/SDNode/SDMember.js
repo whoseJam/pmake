@@ -1,5 +1,7 @@
 import { SDValue } from "@/Node/SDNode/SDValue";
 
+import { ErrorLauncher } from "@/Utility/ErrorLauncher";
+
 export class SDMember {
     constructor() {
         this.values = {};
@@ -11,90 +13,69 @@ export class SDMember {
     }
 
     get(key) {
-        if (!this.values[key]) {
-            throw new Error(`Unknown Key ${key}`);
-        }
+        this.check(key);
         return this.values[key].get();
     }
 
     getAndFlush(key) {
-        if (!this.values[key]) {
-            throw new Error(`Unknown Key ${key}`);
-        }
-        this.values[key].isDirty = false;
-        this.values[key].oldValue = this.values[key].value;
-        return this.values[key].get();
+        this.check(key);
+        return this.values[key].getAndFlush();
     }
 
     dirty(key) {
-        if (!this.values[key]) {
-            throw new Error(`Unknown Key ${key}`);
-        }
+        this.check(key);
         this.values[key].dirty();
     }
 
     set(key, value) {
-        if (!this.values[key]) {
-            throw new Error(`Unknown Key ${key}`);
-        }
+        this.check(key);
         this.values[key].set(value);
     }
 
     setByEqual(key, value) {
-        if (!this.values[key]) {
-            throw new Error(`Unknown Key ${key}`);
-        }
+        this.check(key);
         this.values[key].setByEqual(value);
     }
 
     setByDqual(key, value) {
-        if (!this.values[key]) {
-            throw new Error(`Unknown Key ${key}`);
-        }
+        this.check(key);
         this.values[key].setByDqual(value);
     }
 
     setAndFlush(key, value) {
-        if (!this.values[key]) {
-            throw new Error(`Unknown Key ${key}`);
-        }
+        this.check(key);
         this.values[key].set(value);
         this.values[key].flush();
     }
 
     incBy(key, value) {
-        if (!this.values[key]) {
-            throw new Error(`Unknown Key ${key}`);
-        }
+        this.check(key);
         this.values[key].set(this.values[key].get() + value);
     }
 
     decBy(key, value) {
-        if (!this.values[key]) {
-            throw new Error(`Unknown Key ${key}`);
-        }
+        this.check(key);
         this.values[key].set(this.values[key].get() - value);
     }
 
     hasChanged(key) {
-        if (!this.values[key]) {
-            throw new Error(`Unknown Key ${key}`);
-        }
+        this.check(key);
         return this.values[key].hasChanged();
     }
 
     oldValue(key) {
-        if (!this.values[key]) {
-            throw new Error(`Unknown Key ${key}`);
-        }
+        this.check(key);
         return this.values[key].oldValue;
     }
 
     flush(key) {
+        this.check(key);
+        this.values[key].flush();
+    }
+
+    check(key) {
         if (!this.values[key]) {
-            throw new Error(`Unknown Key ${key}`);
+            ErrorLauncher.unknownKeyError(key);
         }
-        this.values[key].isDirty = false;
-        this.values[key].oldValue = this.values[key].value;
     }
 }

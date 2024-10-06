@@ -1,16 +1,15 @@
 import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
 
-import { BaseNake }             from "@/Node/Nake/BaseNake";
-import { GetterAndSetter } from "@/Node/Common";
+import { Dom } from "@/Dom/Dom";
 
-import { D3ToNake } from "@/Utility/Cast";
-
-import { select } from "d3";
+import { SDNode }   from "@/Node/SDNode";
+import { BaseNake } from "@/Node/Nake/BaseNake";
 
 export function Fragment(parent, html = "") {
     BaseNake.call(this, parent, "g");
-    this.g().type("Fragment");
+
+    this.type("Fragment");
 
     this.member.new("x", 0);
     this.member.new("y", 0);
@@ -19,21 +18,20 @@ export function Fragment(parent, html = "") {
     this.member.new("html", "");
     this.member.new("transform", Fragment.getMatrix(0, 0, 0, 0, 0, 0));
     this.member.new("snapshot", undefined);
-    if (html) {
-        this.fragment(html);
-    }
+
+    if (html) this.fragment(html);
 }
 
 Fragment.prototype = {
     ...BaseNake.prototype
 };
 
-Fragment.prototype.x        = GetterAndSetter("x", "setByEqual");
-Fragment.prototype.y        = GetterAndSetter("y", "setByEqual");
-Fragment.prototype.width    = GetterAndSetter("width", "setByEqual");
-Fragment.prototype.height   = GetterAndSetter("height", "setByEqual");
-Fragment.prototype.fragment = GetterAndSetter("html", "set");
-Fragment.prototype.html     = GetterAndSetter("html", "set");
+Fragment.prototype.x        = SDNode.OrdinaryGSet("x", "setByEqual");
+Fragment.prototype.y        = SDNode.OrdinaryGSet("y", "setByEqual");
+Fragment.prototype.width    = SDNode.OrdinaryGSet("width", "setByEqual");
+Fragment.prototype.height   = SDNode.OrdinaryGSet("height", "setByEqual");
+Fragment.prototype.fragment = SDNode.OrdinaryGSet("html", "set");
+Fragment.prototype.html     = SDNode.OrdinaryGSet("html", "set");
 Fragment.prototype.updateList = [
     ...Fragment.prototype.updateList,
     update
@@ -96,8 +94,8 @@ function update() {
 }
 
 Fragment.init = function() {
-    const svg = select("#svg");
-    Fragment.helper = D3ToNake(svg.append("g"));
+    Fragment.helper = Dom.createSVGElement("g");
+    Dom.getByID("1").append(Fragment.helper);
     Fragment.helper.setAttribute("opacity", 0);
 }
 

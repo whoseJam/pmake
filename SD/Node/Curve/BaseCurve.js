@@ -1,5 +1,5 @@
 import { Path }                 from "@/Node/Nake/Path";
-import { GetterAndSetter } from "@/Node/Common";
+import { SDNode } from "@/Node/SDNode";
 
 export function BaseCurve(parent) {
     Path.call(this, parent);
@@ -18,10 +18,10 @@ BaseCurve.prototype = {
     ...Path.prototype
 };
 
-BaseCurve.prototype.x1 = GetterAndSetter("x1", "setByEqual");
-BaseCurve.prototype.y1 = GetterAndSetter("y1", "setByEqual");
-BaseCurve.prototype.x2 = GetterAndSetter("x2", "setByEqual");
-BaseCurve.prototype.y2 = GetterAndSetter("y2", "setByEqual");
+BaseCurve.prototype.x1 = SDNode.OrdinaryGSet("x1", "setByEqual");
+BaseCurve.prototype.y1 = SDNode.OrdinaryGSet("y1", "setByEqual");
+BaseCurve.prototype.x2 = SDNode.OrdinaryGSet("x2", "setByEqual");
+BaseCurve.prototype.y2 = SDNode.OrdinaryGSet("y2", "setByEqual");
 
 BaseCurve.prototype.updateList = [
     function() {

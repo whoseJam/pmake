@@ -1,17 +1,6 @@
-import { Vec } from "@/Utility/Math";
+import { Vector } from "@/Math/Vector";
 
 import { Action } from "@/Animate/Action";
-
-export function GetterAndSetter(key, mode) {
-    return function(value) {
-        if (value === undefined) {
-            return this.member.get(key);
-        }
-        this.member[mode](key, value);
-        this.tryUpdate();
-        return this;
-    }
-}
 
 export function naiveUpdate(key, interp) {
     return function() {
@@ -49,7 +38,7 @@ export function inRange(mode) {
     if (mode === "circle") {
         return function(vec) {
             const center = [this.cx(), this.cy()];
-            const length = Vec.length(Vec.sub(vec, center));
+            const length = Vector.length(Vector.sub(vec, center));
             return length <= this.r();
         }
     } else if (mode === "rect") {

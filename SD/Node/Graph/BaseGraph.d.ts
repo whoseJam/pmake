@@ -47,7 +47,7 @@ export class BaseGraph extends SDNode {
     cut(sourceId: number|string, targetId: number|string): this;
 
     nodesId(): Array<number|string>;
-    toNodeId(sourceId: number|string, link: SDNode): number|string;
+    Cast.castToSDNodeId(sourceId: number|string, link: SDNode): number|string;
 
     links(): Array<SDNode>;
     nodes(): Array<SDNode>;

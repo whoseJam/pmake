@@ -1,16 +1,13 @@
 import { Action } from "@/Animate/Action";
 
-import { D3ToNake }   from "@/Utility/Cast";
-import { snapAction } from "@/Utility/Tool";
-
 import { BaseLine } from "@/Node/Nake/BaseLine";
 
-import { select } from "d3";
+import { Dom } from "@/Dom/Dom";
 
 export function Path(parent) {
     BaseLine.call(this, parent, "path");
 
-    this.g().type("Path");
+    this.type("Path");
 
     this.member.new("x", 0);
     this.member.new("y", 0);
@@ -87,7 +84,7 @@ Path.prototype.height = function(height) {
 function update() {
     if (this.member.hasChanged("d")) {
         const duration = this.duration();
-        const snap = this._.snap;
+        const snap = Snap(this._.nake.element);
         new Action(
             this.delay(),
             this.delay() + this.duration(),
@@ -95,13 +92,11 @@ function update() {
             this.member.get("d"),
             function(t) {
                 if (t === 0) {
-                    snapAction({
-                        elem: snap,
-                        start: 0,
-                        end: duration,
-                        key: "d",
-                        value: this.to
-                    });
+                    if (duration === 0) {
+                        snap.attr({ d: this.to });
+                    } else {
+                        snap.animate({ d: this.to }, duration, mina.easeinout);
+                    }
                 }
             },
             this, "d"
@@ -120,10 +115,10 @@ function update() {
 }
 
 Path.init = function() {
-    const svg = select("#svg");
-    Path.pathHelper = D3ToNake(svg.append("path"));
-    Path.pathHelper.setAttribute("stroke-opacity", 0);
-    Path.pathHelper.setAttribute("fill-opacity", 0);
+    Path.helper = Dom.createSVGElement("path");
+    Dom.getByID("1").append(Path.helper);
+    Path.helper.setAttribute("stroke-opacity", 0);
+    Path.helper.setAttribute("fill-opacity", 0);
 }
 
 /**
@@ -131,8 +126,8 @@ Path.init = function() {
  * @returns {{x: number, y: number, width: number, height: number}}
  */
 Path.pathToBox = function(d) {
-    Path.pathHelper.setAttribute("d", d);
-    return Path.pathHelper.getBBox();
+    Path.helper.setAttribute("d", d);
+    return Path.helper.getBBox();
 }
 
 /**
@@ -142,8 +137,8 @@ Path.pathToBox = function(d) {
  */
 Path.getPointAtLength = function(d, length) {
     try {
-        Path.pathHelper.setAttribute("d", d);
-        const point = Path.pathHelper.getPointAtLength(length);
+        Path.helper.setAttribute("d", d);
+        const point = Path.helper.getPointAtLength(length);
         return [point.x, point.y];
     } catch(e) {
         return [0, 0];
@@ -157,9 +152,9 @@ Path.getPointAtLength = function(d, length) {
  */
 Path.getPointByRate = function(d, k) {
     try {
-        Path.pathHelper.setAttribute("d", d);
-        const length = Path.pathHelper.getTotalLength() * k;
-        const point = Path.pathHelper.getPointAtLength(length);
+        Path.helper.setAttribute("d", d);
+        const length = Path.helper.getTotalLength() * k;
+        const point = Path.helper.getPointAtLength(length);
         return [point.x, point.y];
     } catch(e) {
         return [0, 0];
@@ -172,8 +167,8 @@ Path.getPointByRate = function(d, k) {
  */
 Path.getTotalLength = function(d) {
     try {
-        Path.pathHelper.setAttribute("d", d);
-        return Path.pathHelper.getTotalLength();
+        Path.helper.setAttribute("d", d);
+        return Path.helper.getTotalLength();
     } catch(e) {
         return 0;
     }

@@ -2,8 +2,7 @@ import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
 
 import { BaseNake }             from "@/Node/Nake/BaseNake";
-import { naiveUpdate }          from "@/Node/Common"
-import { GetterAndSetter } from "@/Node/Common";
+import { SDNode } from "../SDNode";
 
 function GetViewBox(svgElement, getter) {
     const x = svgElement.member[getter]("viewX");
@@ -31,18 +30,16 @@ export function Svg(parent) {
     nake.setAttribute("width", this.member.get("width"));
     nake.setAttribute("height", this.member.get("height"));
     nake.setAttribute("viewBox", GetViewBox(this, "get"));
-
-    return this;
 }
 
 Svg.prototype = {
     ...BaseNake.prototype
 };
 
-Svg.prototype.x      = GetterAndSetter("x", "setByEqual");
-Svg.prototype.y      = GetterAndSetter("y", "setByEqual");
-Svg.prototype.width  = GetterAndSetter("width", "setByEqual");
-Svg.prototype.height = GetterAndSetter("height", "setByEqual");
+Svg.prototype.x      = SDNode.OrdinaryGSet("x", "setByEqual");
+Svg.prototype.y      = SDNode.OrdinaryGSet("y", "setByEqual");
+Svg.prototype.width  = SDNode.OrdinaryGSet("width", "setByEqual");
+Svg.prototype.height = SDNode.OrdinaryGSet("height", "setByEqual");
 
 Svg.prototype.viewBox = function(x, y, width, height) {
     if (arguments.length === 0) {
@@ -67,10 +64,10 @@ Svg.prototype.viewBox = function(x, y, width, height) {
 
 Svg.prototype.updateList = [
     ...BaseNake.prototype.updateList,
-    naiveUpdate("x", Interp.numberInterp),
-    naiveUpdate("y", Interp.numberInterp),
-    naiveUpdate("width", Interp.numberInterp),
-    naiveUpdate("height", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("x", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("y", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("width", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("height", Interp.numberInterp),
     function() {
         if (this.member.hasChanged("viewX") || 
             this.member.hasChanged("viewY") ||

@@ -1,15 +1,12 @@
 import { Interp } from "@/Animate/Interp";
 
-import { D3ToNake }   from "@/Utility/Cast";
-import { NakeToSnap } from "@/Utility/Cast";
-
-import { Text }            from "@/Node/Nake/Text";
-import { SDNode }          from "@/Node/SDNode";
-import { naiveUpdate }     from "@/Node/Common"
-import { GetterAndSetter } from "@/Node/Common";
+import { Text }    from "@/Node/Nake/Text";
+import { SDNode }  from "@/Node/SDNode";
+import { SVGNode } from "@/Renderer/SVG/SVGNode";
 
 export function BaseNake(parent, tag) {
     SDNode.call(this, parent);
+    
     this.member.new("fill", "#000000");
     this.member.new("fill-opacity", 1);
     this.member.new("stroke", "#ffffff");
@@ -18,26 +15,21 @@ export function BaseNake(parent, tag) {
     this.member.new("stroke-dashoffset", 0);
     this.member.new("stroke-dasharray", [1, 0]);
 
-    this._.d3 = this.d3layer.append(tag);
-    this._.nake = D3ToNake(this._.d3);
-    this._.snap = NakeToSnap(this._.nake);
-
+    this._.nake = new SVGNode(this, this._.layer, tag);
     this._.BASE_NAKE = true;
-
-    return this;
 }
 
 BaseNake.prototype = {
     ...SDNode.prototype
 }
 
-BaseNake.prototype.fill             = GetterAndSetter("fill", "set");
-BaseNake.prototype.fillOpacity      = GetterAndSetter("fill-opacity", "setByDqual");
-BaseNake.prototype.stroke           = GetterAndSetter("stroke", "set");
-BaseNake.prototype.strokeOpacity    = GetterAndSetter("stroke-opacity", "setByDqual");
-BaseNake.prototype.strokeWidth      = GetterAndSetter("stroke-width", "setByDqual");
-BaseNake.prototype.strokeDashOffset = GetterAndSetter("stroke-dashoffset", "setByEqual");
-BaseNake.prototype.strokeDashArray  = GetterAndSetter("stroke-dasharray", "set");
+BaseNake.prototype.fill             = SDNode.OrdinaryGSet("fill", "set");
+BaseNake.prototype.fillOpacity      = SDNode.OrdinaryGSet("fill-opacity", "setByDqual");
+BaseNake.prototype.stroke           = SDNode.OrdinaryGSet("stroke", "set");
+BaseNake.prototype.strokeOpacity    = SDNode.OrdinaryGSet("stroke-opacity", "setByDqual");
+BaseNake.prototype.strokeWidth      = SDNode.OrdinaryGSet("stroke-width", "setByDqual");
+BaseNake.prototype.strokeDashOffset = SDNode.OrdinaryGSet("stroke-dashoffset", "setByEqual");
+BaseNake.prototype.strokeDashArray  = SDNode.OrdinaryGSet("stroke-dasharray", "set");
 
 BaseNake.prototype.color = function(color) {
     if (color === undefined) {
@@ -60,11 +52,11 @@ BaseNake.prototype.color = function(color) {
 
 BaseNake.prototype.updateList = [
     ...BaseNake.prototype.updateList,
-    naiveUpdate("fill", Interp.colorInterp),
-    naiveUpdate("fill-opacity", Interp.numberInterp),
-    naiveUpdate("stroke", Interp.colorInterp),
-    naiveUpdate("stroke-opacity", Interp.numberInterp),
-    naiveUpdate("stroke-width", Interp.numberInterp),
-    naiveUpdate("stroke-dashoffset", Interp.numberInterp),
-    naiveUpdate("stroke-dasharray", Interp.arrayInterp)
+    SDNode.OrdinaryUpdate("fill", Interp.colorInterp),
+    SDNode.OrdinaryUpdate("fill-opacity", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("stroke", Interp.colorInterp),
+    SDNode.OrdinaryUpdate("stroke-opacity", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("stroke-width", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("stroke-dashoffset", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("stroke-dasharray", Interp.arrayInterp)
 ];

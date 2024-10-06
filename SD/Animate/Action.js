@@ -9,6 +9,8 @@ export function Action(l, r, from, to, callback, owner = window, channel = "defa
     this.r = r;
     this.from = from;
     this.to = to;
+    this.source = from;
+    this.target = to;
     this.callback = callback;
     this.owner = owner;
     this.channel = channel;

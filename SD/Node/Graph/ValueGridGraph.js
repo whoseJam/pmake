@@ -3,7 +3,7 @@ import { GridGraph } from "@/Node/Graph/GridGraph";
 export function ValueGridGraph(parent) {
     GridGraph.call(this, parent);
 
-    this.g().type("ValueGridGraph");
+    this.type("ValueGridGraph");
 
     return this;
 }

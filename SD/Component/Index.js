@@ -2,7 +2,7 @@ import { Text }            from "@/Node/Nake/Text";
 import { Enter }           from "@/Node/SDNode/Enter";
 import { Aside }           from "@/Rule/Aside";
 import { BaseArray }       from "@/Node/Array/BaseArray";
-import { GetterAndSetter } from "@/Node/Common";
+import { SDNode } from "@/Node/SDNode";
 
 import { Check } from "@/Utility/Check";
 
@@ -102,9 +102,9 @@ export function Index(parent, location = "t", fontSize = 15, gap = 3) {
     index.member.new("fontSize", fontSize);
     index.member.new("indexGap", gap);
 
-    index.location = GetterAndSetter("location", "set");
-    index.fontSize = GetterAndSetter("fontSize", "setByDqual");
-    index.gap = GetterAndSetter("indexGap", "setByDqual");
+    index.location = SDNode.OrdinaryGSet("location", "set");
+    index.fontSize = SDNode.OrdinaryGSet("fontSize", "setByDqual");
+    index.gap = SDNode.OrdinaryGSet("indexGap", "setByDqual");
 
     parent.childAs(`index_${++indexID}`, index, IndexRule);
 

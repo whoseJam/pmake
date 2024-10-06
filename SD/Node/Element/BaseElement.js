@@ -1,12 +1,11 @@
 import { svg } from "@/Interact/RootSvg";
 
-import { SDNode }               from "@/Node/SDNode";
-import { GetterAndSetter } from "@/Node/Common";
-
-import { toNode } from "@/Utility/Tool";
+import { SDNode } from "@/Node/SDNode";
 
 import { CenterFixAspect } from "@/Rule/Center";
-import { IsTypeOfSDNode } from "@/Utility/Check";
+
+import { Cast }  from "@/Utility/Cast";
+import { Check } from "@/Utility/Check";
 
 export function BaseElement(parent) {
     SDNode.call(this, parent);
@@ -22,8 +21,6 @@ export function BaseElement(parent) {
     this.member.new("value", undefined);
 
     this._.BASE_ELEMENT = true;
-
-    return this;
 }
 
 BaseElement.prototype = {
@@ -44,17 +41,17 @@ BaseElement.prototype.updateList = [
     }
 ]
 
-BaseElement.prototype.x             = GetterAndSetter("x", "setByEqual");
-BaseElement.prototype.y             = GetterAndSetter("y", "setByEqual");
-BaseElement.prototype.width         = GetterAndSetter("width", "setByEqual");
-BaseElement.prototype.height        = GetterAndSetter("height", "setByEqual");
-BaseElement.prototype.rate          = GetterAndSetter("rate", "setByDqual");
-BaseElement.prototype.color         = backgroundGetterAndSetter("color");
-BaseElement.prototype.fill          = backgroundGetterAndSetter("fill");
-BaseElement.prototype.fillOpacity   = backgroundGetterAndSetter("fillOpacity");
-BaseElement.prototype.stroke        = backgroundGetterAndSetter("stroke");
-BaseElement.prototype.strokeOpacity = backgroundGetterAndSetter("strokeOpacity");
-BaseElement.prototype.strokeWidth   = backgroundGetterAndSetter("strokeWidth");
+BaseElement.prototype.x             = SDNode.OrdinaryGSet("x", "setByEqual");
+BaseElement.prototype.y             = SDNode.OrdinaryGSet("y", "setByEqual");
+BaseElement.prototype.width         = SDNode.OrdinaryGSet("width", "setByEqual");
+BaseElement.prototype.height        = SDNode.OrdinaryGSet("height", "setByEqual");
+BaseElement.prototype.rate          = SDNode.OrdinaryGSet("rate", "setByDqual");
+BaseElement.prototype.color         = BackgroundGSet("color");
+BaseElement.prototype.fill          = BackgroundGSet("fill");
+BaseElement.prototype.fillOpacity   = BackgroundGSet("fillOpacity");
+BaseElement.prototype.stroke        = BackgroundGSet("stroke");
+BaseElement.prototype.strokeOpacity = BackgroundGSet("strokeOpacity");
+BaseElement.prototype.strokeWidth   = BackgroundGSet("strokeWidth");
 
 BaseElement.prototype.text = function() {
     const value = this.child("value");
@@ -76,8 +73,8 @@ BaseElement.prototype.value = function(value, rule) {
         return this.member.get("value");
     }
     rule = rule ? rule : CenterFixAspect(this.member.get("rate"));
-    const valueIsSDNode = IsTypeOfSDNode(value);
-    value = toNode(this, value);
+    const valueIsSDNode = Check.isTypeOfSDNode(value);
+    value = Cast.castToSDNode(this, value);
     const oldValue = this.member.get("value");
     if (oldValue) {
         this.children.erase(oldValue);
@@ -137,7 +134,7 @@ BaseElement.prototype.valueRule = function(rule) {
     }
 }
 
-function backgroundGetterAndSetter(key) {
+function BackgroundGSet(key) {
     return function(value) {
         const background = this.child("background");
         if (value === undefined) {

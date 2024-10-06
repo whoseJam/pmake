@@ -2,12 +2,12 @@ import { Rect }            from "@/Node/Nake/Rect";
 import { Array }           from "@/Node/Array/Array";
 import { Enter }           from "@/Node/SDNode/Enter";
 import { BaseArray }       from "@/Node/Array/BaseArray";
-import { GetterAndSetter } from "@/Node/Common";
+import { SDNode } from "@/Node/SDNode";
 
 export function BarArray(parent) {
     BaseArray.call(this, parent);
 
-    this.g().type("BarArray");
+    this.type("BarArray");
     this.newLayer("elements");
 
     this.member.new("x", 0);
@@ -23,8 +23,8 @@ BarArray.prototype = {
     ...BaseArray.prototype
 };
 
-BarArray.prototype.elementWidth  = GetterAndSetter("elementWidth", "setByEqual");
-BarArray.prototype.elementHeight = GetterAndSetter("elementHeight", "setByEqual");
+BarArray.prototype.elementWidth  = SDNode.OrdinaryGSet("elementWidth", "setByEqual");
+BarArray.prototype.elementHeight = SDNode.OrdinaryGSet("elementHeight", "setByEqual");
 BarArray.prototype.updateList = [
     ...BarArray.prototype.updateList,
     update

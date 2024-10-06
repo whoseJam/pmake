@@ -4,12 +4,12 @@ import { PointAtPathByRate } from "@/Rule/Path";
 
 import { BraceCurve } from "@/Node/Curve/BraceCurve"
 
-import { toNode } from "@/Utility/Tool";
+import { Cast }  from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
 
-import { Enter }           from "@/Node/SDNode/Enter";
-import { Exist }           from "@/Node/SDNode/Exist";
-import { GetterAndSetter } from "@/Node/Common";
+import { Enter }  from "@/Node/SDNode/Enter";
+import { Exist }  from "@/Node/SDNode/Exist";
+import { SDNode } from "@/Node/SDNode";
 
 function BraceRule(parent, child) {
     const l = child.member.getAndFlush("l");
@@ -94,16 +94,16 @@ export function Brace(parent) {
         return this;
     }
 
-    brace.l = GetterAndSetter("l", "setByEqual");
-    brace.r = GetterAndSetter("r", "setByEqual");
-    brace.location = GetterAndSetter("location", "set");
-    brace.braceGap = GetterAndSetter("braceGap", "setByEqual");
-    brace.valueGap = GetterAndSetter("valueGap", "setByEqual");
+    brace.l = SDNode.OrdinaryGSet("l", "setByEqual");
+    brace.r = SDNode.OrdinaryGSet("r", "setByEqual");
+    brace.location = SDNode.OrdinaryGSet("location", "set");
+    brace.braceGap = SDNode.OrdinaryGSet("braceGap", "setByEqual");
+    brace.valueGap = SDNode.OrdinaryGSet("valueGap", "setByEqual");
 
     brace.value = function(value, gap = 5) {
         this.member.set("valueGap", gap);
         Exist.Ordinary(this, "value");
-        const element = toNode(this, value);
+        const element = Cast.castToSDNode(this, value);
         element.member.new("location", undefined);
         element.onEnter(Enter.Ordinary(this));
         this.childAs("value", element, (parent, child) => {

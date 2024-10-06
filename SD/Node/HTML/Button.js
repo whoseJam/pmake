@@ -1,7 +1,9 @@
 import { Action } from "@/Animate/Action";
-import { GetterAndSetter } from "../Common";
-import { BaseHTML } from "./BaseHTML";
 import { Interp } from "@/Animate/Interp";
+
+import { SDNode }   from "@/Node/SDNode";
+import { BaseHTML } from "@/Node/HTML/BaseHTML";
+
 
 export function Button(parent) {
     BaseHTML.call(this, parent);
@@ -41,7 +43,7 @@ Button.prototype = {
     ...BaseHTML.prototype
 };
 
-Button.prototype.text = GetterAndSetter("text", "set");
+Button.prototype.text = SDNode.OrdinaryGSet("text", "set");
 
 Button.prototype.onClick = function(callback) {
     this.member.setAndFlush("onClick", callback);

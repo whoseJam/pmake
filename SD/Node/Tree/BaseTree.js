@@ -1,5 +1,4 @@
-import { SDNode }          from "@/Node/SDNode";
-import { GetterAndSetter } from "@/Node/Common";
+import { SDNode } from "@/Node/SDNode";
 
 import { IsNumberOrString } from "@/Utility/Check";
 
@@ -20,8 +19,8 @@ BaseTree.prototype = {
     ...SDNode.prototype
 };
 
-BaseTree.prototype.x = GetterAndSetter("x", "setByEqual");
-BaseTree.prototype.y = GetterAndSetter("y", "setByEqual");
+BaseTree.prototype.x = SDNode.OrdinaryGSet("x", "setByEqual");
+BaseTree.prototype.y = SDNode.OrdinaryGSet("y", "setByEqual");
 
 BaseTree.prototype.element = function(arg0, arg1) {
     if (arguments.length === 1)

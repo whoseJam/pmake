@@ -4,7 +4,7 @@ import { Context } from "@/Animate/Context";
 
 import { color } from "@/Utility/Color";
 import { Check } from "@/Utility/Check";
-import { GetterAndSetter } from "@/Node/Common";
+import { SDNode } from "@/Node/SDNode";
 
 const C = color();
 
@@ -119,8 +119,8 @@ export function Focus(parent) {
         return this;
     }
 
-    focus.gap = GetterAndSetter("focusGap", "setByDqual");
-    focus.rate = GetterAndSetter("focusRate", "setByDqual");
+    focus.gap = SDNode.OrdinaryGSet("focusGap", "setByDqual");
+    focus.rate = SDNode.OrdinaryGSet("focusRate", "setByDqual");
 
     if (parent.childAs) parent.childAs(`focus_${++focusID}`, focus, FocusRule);
     else focus.rule(FocusRule);

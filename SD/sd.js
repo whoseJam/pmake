@@ -4,7 +4,7 @@ export { svg } from "./Interact/RootSvg.js";
 export { color } from "./Utility/Color.js";
 export { rule } from "./Rule/Rule.js";
 export { input } from "./Utility/Reader.js";
-export { vec } from "./Utility/Math.js";
+export { vec } from "./Math/Vector.js";
 import { init } from "./Interact/Init.js";
 
 init();
@@ -72,8 +72,6 @@ export { Label }        from "./Component/Label.js";
 export { Brace }        from "./Component/Brace.js";
 export { Stress }       from "./Component/Stress.js";
 export { Pointer }      from "./Component/Pointer.js";
-export { WithBrace }    from "./Component/WithBrace.js";
-export { ValueBoard }   from "./Component/ValueBoard.js";
 export { MathjaxLabel } from "./Component/Label.js";
 export { Link }         from "./Component/Link.js";
 

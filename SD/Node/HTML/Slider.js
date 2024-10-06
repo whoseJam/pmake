@@ -1,6 +1,7 @@
-import { BaseHTML } from "./BaseHTML";
-import { GetterAndSetter, normalUpdate } from "../Common";
 import { Interp } from "@/Animate/Interp";
+
+import { SDNode }   from "@/Node/SDNode";
+import { BaseHTML } from "@/Node/HTML/BaseHTML";
 
 export function Slider(parent) {
     BaseHTML.call(this, parent);
@@ -47,8 +48,8 @@ Slider.prototype.onChange = function(callback) {
     return this;
 }
 
-Slider.prototype.max = GetterAndSetter("max", "set");
-Slider.prototype.min = GetterAndSetter("min", "set");
+Slider.prototype.max = SDNode.OrdinaryGSet("max", "set");
+Slider.prototype.min = SDNode.OrdinaryGSet("min", "set");
 Slider.prototype.value = function(value) {
     if (value === undefined) {
         return +this._.slider.value;
@@ -59,6 +60,6 @@ Slider.prototype.value = function(value) {
 
 Slider.prototype.updateList = [
     ...Slider.prototype.updateList,
-    normalUpdate("max", Interp.numberInterp, "slider"),
-    normalUpdate("min", Interp.numberInterp, "slider")
+    SDNode.OrdinaryUpdate("max", Interp.numberInterp, "slider"),
+    SDNode.OrdinaryUpdate("min", Interp.numberInterp, "slider")
 ]

@@ -5,7 +5,7 @@ import { Tree } from "@/Node/Tree/Tree";
 export function BinaryTree(parent) {
     Tree.call(this, parent);
 
-    this.g().type("BinaryTree");
+    this.type("BinaryTree");
 
     return this;
 }

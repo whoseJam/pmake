@@ -4,14 +4,14 @@ const svg = sd.svg();
 
 // C 是颜色模块，提供了各种各样的颜色
 const C = sd.color();
-const circle = new sd.Rect(svg);
+const circle = new sd.Circle(svg);
 
 main();
 
 async function main() {
     await sd.pause();
     // 可以通过 x, y 函数来设置元素坐标
-
+    circle.startAnimate().x(100).y(100).endAnimate();
     
     await sd.pause();
     // 可以通过 fill 来设置填充色

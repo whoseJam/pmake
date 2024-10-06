@@ -1,6 +1,6 @@
 import { D3Layer } from "SD/Node/SDNode/D3Layer";
 
-import { Vector } from "SD/Utility/Math";
+import { Vector } from "@/Math/Math";
 
 type Rule = (parent: SDNode, child: SDNode) => void;
 

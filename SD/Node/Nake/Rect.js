@@ -1,13 +1,12 @@
 import { Interp } from "@/Animate/Interp";
 
-import { BaseNake }             from "@/Node/Nake/BaseNake";
-import { naiveUpdate }          from "@/Node/Common";
-import { GetterAndSetter } from "@/Node/Common";
+import { SDNode }   from "@/Node/SDNode";
+import { BaseNake } from "@/Node/Nake/BaseNake";
 
 export function Rect(parent) {
     BaseNake.call(this, parent, "rect");
 
-    this.g().type("Rect");
+    this.type("Rect");
     this.member.new("x", 0);
     this.member.new("y", 0);
     this.member.new("width", 40);
@@ -22,22 +21,21 @@ export function Rect(parent) {
     nake.setAttribute("y", this.member.get("y"));
     nake.setAttribute("width", this.member.get("width"));
     nake.setAttribute("height", this.member.get("height"));
-    return this;
 }
 
 Rect.prototype = {
     ...BaseNake.prototype
 }
 
-Rect.prototype.x      = GetterAndSetter("x", "setByEqual");
-Rect.prototype.y      = GetterAndSetter("y", "setByEqual");
-Rect.prototype.width  = GetterAndSetter("width", "setByEqual");
-Rect.prototype.height = GetterAndSetter("height", "setByEqual");
+Rect.prototype.x      = SDNode.OrdinaryGSet("x", "setByEqual");
+Rect.prototype.y      = SDNode.OrdinaryGSet("y", "setByEqual");
+Rect.prototype.width  = SDNode.OrdinaryGSet("width", "setByEqual");
+Rect.prototype.height = SDNode.OrdinaryGSet("height", "setByEqual");
 
 Rect.prototype.updateList = [
     ...Rect.prototype.updateList,
-    naiveUpdate("x", Interp.numberInterp),
-    naiveUpdate("y", Interp.numberInterp),
-    naiveUpdate("width", Interp.numberInterp),
-    naiveUpdate("height", Interp.numberInterp)
+    SDNode.OrdinaryUpdate("x", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("y", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("width", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("height", Interp.numberInterp)
 ];

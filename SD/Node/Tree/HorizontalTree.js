@@ -1,11 +1,12 @@
 import { d3TreeLayout } from "@/Node/Tree/Tree";
-import { Tree } from "@/Node/Tree/Tree";
-import { GetterAndSetter } from "../Common";
+
+import { Tree }   from "@/Node/Tree/Tree";
+import { SDNode } from "@/Node/SDNode";
 
 export function HorizontalTree(parent) {
     Tree.call(this, parent);
 
-    this.g().type("HorizontalTree");
+    this.type("HorizontalTree");
 
     this.member.set("width", 0);
     this.member.set("height", 300);
@@ -16,8 +17,8 @@ HorizontalTree.prototype = {
     ...Tree.prototype
 };
 
-HorizontalTree.prototype.height     = GetterAndSetter("height", "setByEqual");
-HorizontalTree.prototype.layerWidth = GetterAndSetter("layerWidth", "setByEqual");
+HorizontalTree.prototype.height     = SDNode.OrdinaryGSet("height", "setByEqual");
+HorizontalTree.prototype.layerWidth = SDNode.OrdinaryGSet("layerWidth", "setByEqual");
 HorizontalTree.prototype.width = function(width) {
     if (width === undefined) {
         return this.member.get("width");

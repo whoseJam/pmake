@@ -1,12 +1,12 @@
 import { Box }             from "@/Node/Element/Box";
 import { Enter }           from "@/Node/SDNode/Enter";
 import { BaseArray }       from "@/Node/Array/BaseArray";
-import { GetterAndSetter } from "@/Node/Common";
+import { SDNode } from "@/Node/SDNode";
 
 export function Array(parent) {
     BaseArray.call(this, parent);
     
-    this.g().type("Array");
+    this.type("Array");
     this.newLayer("elements");
     
     this.member.new("x", 0);
@@ -21,8 +21,8 @@ Array.prototype = {
     ...BaseArray.prototype
 }
 
-Array.prototype.elementWidth  = GetterAndSetter("elementWidth", "setByEqual");
-Array.prototype.elementHeight = GetterAndSetter("elementHeight", "setByEqual");
+Array.prototype.elementWidth  = SDNode.OrdinaryGSet("elementWidth", "setByEqual");
+Array.prototype.elementHeight = SDNode.OrdinaryGSet("elementHeight", "setByEqual");
 Array.prototype.updateList = [
     ...Array.prototype.updateList,
     update

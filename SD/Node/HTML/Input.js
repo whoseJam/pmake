@@ -1,6 +1,7 @@
 import { Interp } from "@/Animate/Interp";
-import { GetterAndSetter, normalUpdate } from "../Common";
-import { BaseHTML } from "./BaseHTML";
+
+import { SDNode }   from "@/Node/SDNode";
+import { BaseHTML } from "@/Node/HTML/BaseHTML";
 
 export function Input(parent) {
     BaseHTML.call(this, parent);
@@ -40,7 +41,7 @@ Input.prototype = {
     ...BaseHTML.prototype
 }
 
-Input.prototype.label = GetterAndSetter("label", "set");
+Input.prototype.label = SDNode.OrdinaryGSet("label", "set");
 
 Input.prototype.value = function() {
     return this._.input.value;
@@ -48,5 +49,5 @@ Input.prototype.value = function() {
 
 Input.prototype.updateList = [
     ...Input.prototype.updateList,
-    normalUpdate("label", Interp.innerHTMLInterp, "label")
+    SDNode.OrdinaryUpdate("label", Interp.innerHTMLInterp, "label")
 ];

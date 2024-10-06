@@ -4,7 +4,7 @@ import { d3TreeLayout } from "@/Node/Tree/Tree";
 export function ValueTree(parent) {
     Tree.call(this, parent);
 
-    this.g().type("ValueTree");
+    this.type("ValueTree");
 
     return this;
 }

@@ -1,12 +1,12 @@
 import { Interp }  from "@/Animate/Interp";
 import { Context } from "@/Animate/Context";
 
-import { BaseNake }    from "@/Node/Nake/BaseNake";
-import { naiveUpdate } from "@/Node/Common";
+import { SDNode }   from "@/Node/SDNode";
+import { BaseNake } from "@/Node/Nake/BaseNake";
 
 import { PointAtPathByRate } from "@/Rule/Path";
 
-import { toNode } from "@/Utility/Tool";
+import { Cast } from "@/Utility/Cast";
 
 export function BaseLine(parent, tag) {
     BaseNake.call(this, parent, tag);
@@ -32,17 +32,17 @@ BaseLine.prototype = {
     ...BaseNake.prototype
 };
 
-BaseLine.prototype.markerStart = markerGetterAndSetter("marker-start");
-BaseLine.prototype.markerMid   = markerGetterAndSetter("marker-mid");
-BaseLine.prototype.markerEnd   = markerGetterAndSetter("marker-end");
+BaseLine.prototype.markerStart = MarkerGSet("marker-start");
+BaseLine.prototype.markerMid   = MarkerGSet("marker-mid");
+BaseLine.prototype.markerEnd   = MarkerGSet("marker-end");
 BaseLine.prototype.updateList = [
     ...BaseLine.prototype.updateList,
-    naiveUpdate("marker-start", Interp.stringInterp),
-    naiveUpdate("marker-mid", Interp.stringInterp),
-    naiveUpdate("marker-end", Interp.stringInterp)
+    SDNode.OrdinaryUpdate("marker-start", Interp.stringInterp),
+    SDNode.OrdinaryUpdate("marker-mid", Interp.stringInterp),
+    SDNode.OrdinaryUpdate("marker-end", Interp.stringInterp)
 ];
 
-function markerGetterAndSetter(key) {
+function MarkerGSet(key) {
     return function(marker) {
         if (marker === undefined) {
             return this.member.get(key);
@@ -204,7 +204,7 @@ BaseLine.prototype.value = function(value, rule) {
     }
     rule = rule ? rule : 
            this.member.get("rule") ? this.member.get("rule") : PointAtPathByRate(0.5, "cx", "cy");
-    value = toNode(this, value);
+    value = Cast.castToSDNode(this, value);
 
     if (oldValue) {
         oldValue.opacity(0).remove();

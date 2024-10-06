@@ -1,4 +1,4 @@
-import { GetterAndSetter } from "@/Node/Common";
+import { SDNode } from "@/Node/SDNode";
 import { Aside as AsideRuleFactory } from "@/Rule/Aside";
 
 let asideID = 0;
@@ -22,8 +22,8 @@ export function Aside(parent, aside, location = "lc", gap = 5) {
         }
     });
 
-    aside.location = GetterAndSetter("location", "set");
-    aside.gap = GetterAndSetter("asideGap", "setByDqual");
+    aside.location = SDNode.OrdinaryGSet("location", "set");
+    aside.gap = SDNode.OrdinaryGSet("asideGap", "setByDqual");
 
     parent.childAs(`aside_${++asideID}`, aside, AsideRule);
 

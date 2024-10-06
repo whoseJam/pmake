@@ -1,10 +1,10 @@
 import { Rect }                 from "@/Node/Nake/Rect";
 import { BaseArray }            from "@/Node/Array/BaseArray";
-import { GetterAndSetter } from "@/Node/Common";
+import { SDNode } from "@/Node/SDNode";
 
 import { Context } from "@/Animate/Context";
 
-import { AnythingToSDNode } from "@/Utility/Cast";
+import { Cast } from "@/Utility/Cast";
 
 import { color } from "@/Utility/Color";
 
@@ -13,7 +13,7 @@ const C = color();
 export function Code(parent, source = undefined) {
     BaseArray.call(this, parent);
 
-    this.g().type("Code");
+    this.type("Code");
 
     this.member.new("l", null);
     this.member.new("r", null);
@@ -21,7 +21,7 @@ export function Code(parent, source = undefined) {
     this.member.new("y", 0);
     this.member.new("width", 0);
     this.member.new("height", 0);
-    this.member.new("font-size", 20);
+    this.member.new("fontSize", 20);
     this.member.set("start", 1);
 
     this.children.push(
@@ -51,7 +51,7 @@ Code.prototype = {
     ...BaseArray.prototype
 };
 
-Code.prototype.fontSize = GetterAndSetter("font-size", "setByEqual");
+Code.prototype.fontSize = SDNode.OrdinaryGSet("fontSize", "setByEqual");
 
 Code.prototype.updateList = [
     ...Code.prototype.updateList,
@@ -77,7 +77,7 @@ Code.prototype.height = function(height) {
 }
 
 Code.prototype.insert = function(index, value = "") {
-    const element = AnythingToSDNode(this.layer("elements"), value);
+    const element = Cast.castToSDNode(this.layer("elements"), value);
     element._.enter = (element, move) => {
         element.opacity(0);
         move();
@@ -144,7 +144,7 @@ Code.prototype.value = function() {
 function update() {
     if (this.member.hasChanged("x") ||
         this.member.hasChanged("y") ||
-        this.member.hasChanged("font-size") ||
+        this.member.hasChanged("fontSize") ||
         this.member.hasChanged("elements")) {
         const x = this.x();
         let y = this.y();

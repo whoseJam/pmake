@@ -1,5 +1,4 @@
-import { SDNode }               from "@/Node/SDNode";
-import { GetterAndSetter } from "@/Node/Common";
+import { SDNode } from "@/Node/SDNode";
 
 export function BaseGrid(parent) {
     SDNode.call(this, parent);
@@ -13,16 +12,14 @@ export function BaseGrid(parent) {
     this.member.new("elements", []);
 
     this._.BASE_GRID = true;
-
-    return this;
 }
 
 BaseGrid.prototype = {
     ...SDNode.prototype
 };
 
-BaseGrid.prototype.startN = GetterAndSetter("startN", "set");
-BaseGrid.prototype.startM = GetterAndSetter("startM", "set");
+BaseGrid.prototype.startN = SDNode.OrdinaryGSet("startN", "set");
+BaseGrid.prototype.startM = SDNode.OrdinaryGSet("startM", "set");
 
 BaseGrid.prototype.endN = function() {
     return this.startN() + this.n() - 1;

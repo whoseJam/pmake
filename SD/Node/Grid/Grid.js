@@ -1,12 +1,12 @@
 import { Box }             from "@/Node/Element/Box";
 import { Enter }           from "@/Node/SDNode/Enter";
 import { BaseGrid }        from "@/Node/Grid/BaseGrid";
-import { GetterAndSetter } from "@/Node/Common";
+import { SDNode } from "@/Node/SDNode";
 
 export function Grid(parent) {
     BaseGrid.call(this, parent);
 
-    this.g().type("Grid");
+    this.type("Grid");
     this.newLayer("elements");
 
     this.member.new("x", 0);
@@ -25,12 +25,12 @@ Grid.prototype = {
     ...BaseGrid.prototype
 };
 
-Grid.prototype.x             = GetterAndSetter("x", "setByEqual");
-Grid.prototype.y             = GetterAndSetter("y", "setByEqual");
-Grid.prototype.elementWidth  = GetterAndSetter("elementWidth", "setByEqual");
-Grid.prototype.elementHeight = GetterAndSetter("elementHeight", "setByEqual");
-Grid.prototype.axis          = GetterAndSetter("main", "set");
-Grid.prototype.align         = GetterAndSetter("align", "set");
+Grid.prototype.x             = SDNode.OrdinaryGSet("x", "setByEqual");
+Grid.prototype.y             = SDNode.OrdinaryGSet("y", "setByEqual");
+Grid.prototype.elementWidth  = SDNode.OrdinaryGSet("elementWidth", "setByEqual");
+Grid.prototype.elementHeight = SDNode.OrdinaryGSet("elementHeight", "setByEqual");
+Grid.prototype.axis          = SDNode.OrdinaryGSet("main", "set");
+Grid.prototype.align         = SDNode.OrdinaryGSet("align", "set");
 Grid.prototype.updateList = [
     ...Grid.prototype.updateList,
     update

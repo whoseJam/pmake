@@ -1,4 +1,4 @@
-import { equal } from "@/Utility/Math";
+import { equal } from "@/Math/Math";
 
 export function CenterOnly() {
     return function(parent, child) {

@@ -1,13 +1,14 @@
 import { Context } from "@/Animate/Context";
-import { Text } from "@/Node/Nake/Text";
-import { BaseArray } from "./BaseArray";
-import { GetterAndSetter } from "../Common";
-import { Code } from "./Code";
+
+import { Text }      from "@/Node/Nake/Text";
+import { Code }      from "@/Node/Array/Code";
+import { SDNode }    from "@/Node/SDNode";
+import { BaseArray } from "@/Node/Array/BaseArray";
 
 export function VarList(parent) {
     BaseArray.call(this, parent);
 
-    this.g().type("VarList");
+    this.type("VarList");
 
     this.member.new("x", 0);
     this.member.new("y", 0);
@@ -23,7 +24,7 @@ VarList.prototype = {
     ...BaseArray.prototype
 };
 
-VarList.prototype.fontSize = GetterAndSetter("font-size", "setByEqual"); 
+VarList.prototype.fontSize = SDNode.OrdinaryGSet("font-size", "setByEqual"); 
 
 VarList.prototype.width  = Code.prototype.width;
 VarList.prototype.height = Code.prototype.height;

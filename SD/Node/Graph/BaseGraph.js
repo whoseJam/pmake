@@ -1,7 +1,6 @@
-import { Line }                 from "@/Node/Nake/Line";
-import { SDNode }               from "@/Node/SDNode";
-import { Vertex }               from "@/Node/Element/Vertex";
-import { GetterAndSetter } from "@/Node/Common";
+import { Line }   from "@/Node/Nake/Line";
+import { SDNode } from "@/Node/SDNode";
+import { Vertex } from "@/Node/Element/Vertex";
 
 export function BaseGraph(parent) {
     SDNode.call(this, parent);
@@ -26,10 +25,10 @@ BaseGraph.prototype = {
     ...SDNode.prototype
 };
 
-BaseGraph.prototype.x      = GetterAndSetter("x", "setByEqual");
-BaseGraph.prototype.y      = GetterAndSetter("y", "setByEqual");
-BaseGraph.prototype.width  = GetterAndSetter("width", "setByEqual");
-BaseGraph.prototype.height = GetterAndSetter("height", "setByEqual");
+BaseGraph.prototype.x      = SDNode.OrdinaryGSet("x", "setByEqual");
+BaseGraph.prototype.y      = SDNode.OrdinaryGSet("y", "setByEqual");
+BaseGraph.prototype.width  = SDNode.OrdinaryGSet("width", "setByEqual");
+BaseGraph.prototype.height = SDNode.OrdinaryGSet("height", "setByEqual");
 
 BaseGraph.prototype.element = function(arg0, arg1) {
     if (arguments.length === 1)
@@ -106,29 +105,29 @@ BaseGraph.prototype.findNodeById = function(nodeId) {
     return nodes.find(node => String(node.nodeId) === targetNodeId);
 }
 
-BaseGraph.prototype.findLinkById = function(fromNodeId, toNodeId) {
+BaseGraph.prototype.findLinkById = function(fromNodeId, toNode) {
     const targetFromNodeId = String(fromNodeId);
-    const targetToNodeId = String(toNodeId);
+    const targettoNode = String(toNode);
     const links = this.member.get("links");
-    return links.find(link => String(link.fromNodeId) === targetFromNodeId && String(link.toNodeId) === targetToNodeId);
+    return links.find(link => String(link.fromNodeId) === targetFromNodeId && String(link.toNode) === targettoNode);
 }
 
 BaseGraph.prototype.inNodes = function(x, mode = "direct") {
-    const targetToNodeId = String(x);
+    const targettoNode = String(x);
     const links = this.inLinks(x, mode);
     const mapper = (mode === "direct") ?
         link => String(link.fromNodeId) :
-        link => String(link.toNodeId) === targetToNodeId ? String(link.fromNodeId) : String(link.toNodeId);
+        link => String(link.toNode) === targettoNode ? String(link.fromNodeId) : String(link.toNode);
     const ins = links.map(mapper);
     return [...new Set(ins)].map(nodeId => this.findNodeById(nodeId));
 }
 
 BaseGraph.prototype.inLinks = function(x, mode = "direct") {
-    const targetToNodeId = String(x);
+    const targettoNode = String(x);
     const links = this.member.get("links");
     const filter = (mode === "direct") ? 
-        link => String(link.toNodeId) === targetToNodeId :
-        link => String(link.toNodeId) === targetToNodeId || String(link.fromNodeId) === targetToNodeId;
+        link => String(link.toNode) === targettoNode :
+        link => String(link.toNode) === targettoNode || String(link.fromNodeId) === targettoNode;
     const ins = links.filter(filter);
     return ins;
 }
@@ -137,8 +136,8 @@ BaseGraph.prototype.outNodes = function(x, mode = "direct") {
     const targetFromNodeId = String(x);
     const links = this.outLinks(x, mode);
     const mapper = (mode === "direct") ?
-        link => String(link.toNodeId) :
-        link => String(link.fromNodeId) === targetFromNodeId ? String(link.toNodeId) : String(link.fromNodeId);
+        link => String(link.toNode) :
+        link => String(link.fromNodeId) === targetFromNodeId ? String(link.toNode) : String(link.fromNodeId);
     const outs = links.map(mapper)
     return [...new Set(outs)].map(nodeId => this.findNodeById(nodeId));
 }
@@ -159,7 +158,7 @@ BaseGraph.prototype.outLinks = function(x, mode = "direct") {
     const links = this.member.get("links");
     const filter = (mode === "direct") ? 
         link => String(link.fromNodeId) === targetFromNodeId :
-        link => String(link.fromNodeId) === targetFromNodeId || String(link.toNodeId) === targetFromNodeId;
+        link => String(link.fromNodeId) === targetFromNodeId || String(link.toNode) === targetFromNodeId;
     const outs = links.filter(filter);
     return outs;
 }
@@ -185,7 +184,7 @@ BaseGraph.prototype.newNodeByBaseGraph = function(id, elem) {
 
 BaseGraph.prototype.newLinkByBaseGraph = function(x, y, elem) {
     elem.fromNodeId = x;
-    elem.toNodeId = y;
+    elem.toNode = y;
     this.member.get("links").push(elem);
     this.children.push(elem);
     this.tryUpdate();
@@ -223,8 +222,8 @@ BaseGraph.prototype.nodesId = function() {
     return [...new Set(nodesId)];
 }
 
-BaseGraph.prototype.toNodeId = function(fromNodeId, link) {
+BaseGraph.prototype.toNode = function(fromNodeId, link) {
     const targetFromNodeId = String(fromNodeId);
-    if (String(link.fromNodeId) === targetFromNodeId) return link.toNodeId;
+    if (String(link.fromNodeId) === targetFromNodeId) return link.toNode;
     return link.fromNodeId;
 }

@@ -1,11 +1,12 @@
 import { Interp } from "@/Animate/Interp";
 
-import { BaseNake }             from "@/Node/Nake/BaseNake";
-import { naiveUpdate }          from "@/Node/Common";
-import { GetterAndSetter } from "@/Node/Common";
+import { SDNode }   from "@/Node/SDNode";
+import { BaseNake } from "@/Node/Nake/BaseNake";
 
 export function Image(parent) {
     BaseNake.call(this, parent, "image");
+
+    this.type("Image");
 
     this.member.new("href", "");
     this.member.new("x", 0);
@@ -20,27 +21,25 @@ export function Image(parent) {
     nake.setAttribute("width", this.member.get("width"));
     nake.setAttribute("height", this.member.get("height"));
     nake.setAttribute("preserveAspectRatio", this.member.get("preserveAspectRatio"));
-
-    return this;
 }
 
 Image.prototype = {
     ...BaseNake.prototype
 }
 
-Image.prototype.href        = GetterAndSetter("href", "set");
-Image.prototype.x           = GetterAndSetter("x", "setByEqual");
-Image.prototype.y           = GetterAndSetter("y", "setByEqual");
-Image.prototype.width       = GetterAndSetter("width", "setByEqual");
-Image.prototype.height      = GetterAndSetter("height", "setByEqual");
-Image.prototype.aspectRatio = GetterAndSetter("preserveAspectRatio", "set");
+Image.prototype.href        = SDNode.OrdinaryGSet("href", "set");
+Image.prototype.x           = SDNode.OrdinaryGSet("x", "setByEqual");
+Image.prototype.y           = SDNode.OrdinaryGSet("y", "setByEqual");
+Image.prototype.width       = SDNode.OrdinaryGSet("width", "setByEqual");
+Image.prototype.height      = SDNode.OrdinaryGSet("height", "setByEqual");
+Image.prototype.aspectRatio = SDNode.OrdinaryGSet("preserveAspectRatio", "set");
 
 Image.prototype.updateList = [
     ...Image.prototype.updateList,
-    naiveUpdate("x", Interp.numberInterp),
-    naiveUpdate("y", Interp.numberInterp),
-    naiveUpdate("width", Interp.numberInterp),
-    naiveUpdate("height", Interp.numberInterp),
-    naiveUpdate("href", Interp.stringInterp),
-    naiveUpdate("preserveAspectRatio", Interp.stringInterp)
+    SDNode.OrdinaryUpdate("x", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("y", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("width", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("height", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("href", Interp.stringInterp),
+    SDNode.OrdinaryUpdate("preserveAspectRatio", Interp.stringInterp)
 ];

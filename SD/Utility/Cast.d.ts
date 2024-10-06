@@ -1,8 +1,6 @@
-import { SDNode }      from "SD/Node/SDNode";
-import { D3Selection } from "SD/Node/SDNode/D3Layer";
+import { SDNode } from "SD/Node/SDNode";
 
-export function AnythingToSDNode(node: SDNode, anything: any): SDNode;
-
-export function D3ToNake(d3: D3Selection): Element;
-
-export function NakeToSnap(nake: Element): any;
+export class Cast {
+    static castToSDNode(parent: SDNode, any: any);
+    static castD3ToNake(d3: any);
+}

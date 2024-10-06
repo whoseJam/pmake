@@ -1,14 +1,9 @@
-import * as sd from "../SD/sd";
+import * as sd from "@/sd";
 
-let svg = sd.svg();
-let C = sd.color();
-let R = sd.rule();
-let box = new sd.Box(svg).cx(600).cy(300).value(new sd.Circle(svg));
-let r = new sd.Rect(svg).fillOpacity(0);
-
-function trace(obj) {
-    r.x(obj.x()).y(obj.y()).width(obj.width()).height(obj.height());
-}
+const svg = sd.svg();
+const C = sd.color();
+const R = sd.rule();
+const box = new sd.Box(svg).cx(600).cy(300).value(new sd.Circle(svg));
 
 main();
 
@@ -18,17 +13,14 @@ async function main() {
     for (let i = 0; i < txt.length; i++) {
         str.push(new sd.Text(svg, txt[i]).x(Math.random() * 1200).y(Math.random() * 600));
     }
-    
-    for (let i = 0; i < str.length; i++) {
-        await sd.pause();
-        let t = str[i];
-        trace(t);
-        await sd.pause();
-        box.startAnimate().value(t).endAnimate();
-        trace(t);
-    }
-    await sd.pause();
 
+    await sd.pause();
+    for (let i = 0; i < str.length; i++) {
+        let t = str[i];
+        box.startAnimate().valueFromExist(t).endAnimate();
+    }
+
+    await sd.pause();
     const b1 = new sd.Box(svg, "V").x(100).y(100);
     const b2 = new sd.Box(svg).x(200).y(100);
     await sd.pause();

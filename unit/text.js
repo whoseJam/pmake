@@ -7,15 +7,11 @@ let r = new sd.Rect(svg).fillOpacity(0);
 let obj = new sd.Text(svg, "Hello").cx(600).cy(300).fontSize(40);
 r.x(obj.x()).y(obj.y()).width(obj.width()).height(obj.height());
 
-main();
+sd.init(() => {
 
-function test(code) {
-    board.text(code);
-    eval(code);
-    r.x(obj.x()).y(obj.y()).width(obj.width()).height(obj.height());
-}
+})
 
-async function main() {
+sd.main(async () => {
     await sd.pause();
     test(`obj.startAnimate().x(100).y(100).endAnimate();`);
     await sd.pause();
@@ -35,4 +31,12 @@ async function main() {
     await sd.pause();
     test(`obj.startAnimate().strokeDashArray([5, 0]).endAnimate();`);
     await sd.pause();
+})
+
+function test(code) {
+    board.text(code);
+    eval(code);
+    r.x(obj.x()).y(obj.y());
+    r.width(obj.width());
+    r.height(obj.height());
 }

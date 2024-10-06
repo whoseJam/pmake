@@ -5,7 +5,7 @@ import { ValueTree } from "@/Node/Tree/ValueTree";
 export function HorizontalValueTree(parent) {
     HorizontalTree.call(this, parent);
 
-    this.g().type("HorizontalValueTree");
+    this.type("HorizontalValueTree");
 
     this.member.new("layerWidth", 60);
 

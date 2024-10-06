@@ -1,14 +1,12 @@
 import { Interp } from "@/Animate/Interp";
 
-import { inRange }              from "@/Node/Common";
-import { BaseNake }             from "@/Node/Nake/BaseNake";
-import { naiveUpdate }          from "@/Node/Common";
-import { GetterAndSetter } from "@/Node/Common";
+import { SDNode } from   "@/Node/SDNode";
+import { BaseNake } from "@/Node/Nake/BaseNake";
 
 export function Circle(parent) {
     BaseNake.call(this, parent, "circle");
 
-    this.g().type("Circle");
+    this.type("Circle");
     this.member.new("cx", 20);
     this.member.new("cy", 20);
     this.member.new("r", 20);
@@ -21,23 +19,22 @@ export function Circle(parent) {
     nake.setAttribute("cx", this.member.get("cx"));
     nake.setAttribute("cy", this.member.get("cy"));
     nake.setAttribute("r", this.member.get("r"));
-    return this;
 }
 
 Circle.prototype = {
     ...BaseNake.prototype
 };
 
-Circle.prototype.cx = GetterAndSetter("cx", "setByEqual");
-Circle.prototype.cy = GetterAndSetter("cy", "setByEqual");
-Circle.prototype.r  = GetterAndSetter("r", "setByEqual");
+Circle.prototype.cx = SDNode.OrdinaryGSet("cx", "setByEqual");
+Circle.prototype.cy = SDNode.OrdinaryGSet("cy", "setByEqual");
+Circle.prototype.r  = SDNode.OrdinaryGSet("r", "setByEqual");
 Circle.prototype.updateList = [
     ...Circle.prototype.updateList,
-    naiveUpdate("cx", Interp.numberInterp),
-    naiveUpdate("cy", Interp.numberInterp),
-    naiveUpdate("r", Interp.numberInterp)
+    SDNode.OrdinaryUpdate("cx", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("cy", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("r", Interp.numberInterp)
 ];
-Circle.prototype.inRange = inRange("circle");
+Circle.prototype.inRange = SDNode.InRange("circle");
 
 Circle.prototype.x = function(x) {
     if (x === undefined) {

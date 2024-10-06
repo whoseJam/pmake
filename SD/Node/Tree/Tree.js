@@ -1,10 +1,10 @@
 import { Line }     from "@/Node/Nake/Line";
+import { SDNode }   from "@/Node/SDNode";
 import { Vertex }   from "@/Node/Element/Vertex";
 import { BaseTree } from "@/Node/Tree/BaseTree";
 
-import { GetterAndSetter } from "@/Node/Common";
+import { Vector } from "@/Math/Vector";
 
-import { Vec }              from "@/Utility/Math";
 import { trim }             from "@/Utility/Trim";
 import { SelectValidValue } from "@/Utility/Cast";
 
@@ -13,7 +13,7 @@ import * as d3 from "d3";
 export function Tree(parent) {
     BaseTree.call(this, parent);
 
-    this.g().type("Tree");
+    this.type("Tree");
     this.newLayer("links");
     this.newLayer("nodes");
 
@@ -32,9 +32,9 @@ Tree.prototype = {
     ...BaseTree.prototype
 };
 
-Tree.prototype.width       = GetterAndSetter("width", "setByEqual");
-Tree.prototype.r           = GetterAndSetter("r", "setByEqual");
-Tree.prototype.layerHeight = GetterAndSetter("layerHeight", "setByEqual");
+Tree.prototype.width       = SDNode.OrdinaryGSet("width", "setByEqual");
+Tree.prototype.r           = SDNode.OrdinaryGSet("r", "setByEqual");
+Tree.prototype.layerHeight = SDNode.OrdinaryGSet("layerHeight", "setByEqual");
 Tree.prototype.height = function(height) {
     if (height === undefined) {
         return this.member.get("height");
@@ -120,7 +120,7 @@ export function d3TreeLayout(mode, transX, transY, minDistanceRatio, parentSizeI
         const vecI = [transX(descendants[i]), transY(descendants[i])];
         for (let j = i + 1; j < descendants.length; j++) {
             const vecJ = [transX(descendants[j]), transY(descendants[j])];
-            limit = Math.min(limit, Vec.length(Vec.sub(vecI, vecJ)));
+            limit = Math.min(limit, Vector.length(Vector.sub(vecI, vecJ)));
         }
     }
 

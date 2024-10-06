@@ -7,7 +7,7 @@ import { GridGraph } from "@/Node/Graph/GridGraph";
 export function TinyGraph(parent) {
     BaseGraph.call(this, parent);
 
-    this.g().type("TinyGraph");
+    this.type("TinyGraph");
 
     this.member.new("r", 20);
 
@@ -50,7 +50,7 @@ function update_update() {
     if (nodes.length >= 7) throw new Error("Cannot Process Graph With count(Nodes) >= 7");
     for (let link of links) {
         const sourceId = link.fromNodeId;
-        const targetId = link.toNodeId;
+        const targetId = link.Cast.castToSDNodeId;
         const source = this.findNodeById(sourceId);
         const target = this.findNodeById(targetId);
         this.tryMove(link, () => {

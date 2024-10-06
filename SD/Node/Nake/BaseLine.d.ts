@@ -1,8 +1,10 @@
-import { Vector } from "SD/Utility/Math";
-import { BaseNake } from "./BaseNake";
+import { Vector } from "@/Math/Math";
+
+import { SDNode }   from "SD/Node/SDNode";
+import { BaseNake } from "SD/Node/BaseNake";
 
 export class BaseLine extends BaseNake {
-    constructor(parent: any, tag: string);
+    constructor(parent: SDNode, tag: string);
 
     markerStart(): string;
     markerStart(marker: string): this;

@@ -1,5 +1,5 @@
 import { trim }             from "@/Utility/Trim";
-import { mapTo }            from "@/Utility/Math";
+import { mapTo }            from "@/Math/Math";
 import { SelectValidValue } from "@/Utility/Cast";
 
 import { BaseGraph } from "@/Node/Graph/BaseGraph";
@@ -10,7 +10,7 @@ import { layout as DAGLayout } from "dagre";
 export function DAG(parent) {
     BaseGraph.call(this, parent);
 
-    this.g().type("DAG");
+    this.type("DAG");
     this.member.new("r", 20);
     this.member.new("graph", new DAGLib.Graph());
     this.member.new("rankDir", "TB");
@@ -32,8 +32,8 @@ DAG.prototype = {
     ...BaseGraph.prototype
 };
 
-DAG.prototype.align   = DAGGetterAndSetter("align", "align");
-DAG.prototype.rankDir = DAGGetterAndSetter("rankDir", "rankdir");
+DAG.prototype.align   = DAGGSet("align", "align");
+DAG.prototype.rankDir = DAGGSet("rankDir", "rankdir");
 
 DAG.prototype.updateList = [
     ...DAG.prototype.updateList,
@@ -74,7 +74,7 @@ DAG.prototype.newLink = function(x, y, value) {
     return this;
 }
 
-function DAGGetterAndSetter(key, keyInDagre) {
+function DAGGSet(key, keyInDagre) {
     return function(value) {
         if (value === undefined) {
             return this.member.get(key);

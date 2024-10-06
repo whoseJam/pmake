@@ -1,13 +1,13 @@
 import { Interp } from "@/Animate/Interp";
 
-import { BaseNake }             from "@/Node/Nake/BaseNake";
-import { naiveUpdate }          from "@/Node/Common";
-import { GetterAndSetter } from "@/Node/Common";
+import { SDNode }   from "@/Node/SDNode";
+import { BaseNake } from "@/Node/Nake/BaseNake";
 
 export function Ellipse(parent) {
     BaseNake.call(this, parent, "ellipse");
 
-    this.g().type("Ellipse");
+    this.type("Ellipse");
+
     this.member.new("cx", 20);
     this.member.new("cy", 20);
     this.member.new("rx", 20);
@@ -22,24 +22,23 @@ export function Ellipse(parent) {
     nake.setAttribute("ry", this.member.get("ry"));
     nake.setAttribute("fill", this.member.get("fill"));
     nake.setAttribute("stroke", this.member.get("stroke"));
-    return this;
 }
 
 Ellipse.prototype = {
     ...BaseNake.prototype
 };
 
-Ellipse.prototype.cx = GetterAndSetter("cx", "setByEqual");
-Ellipse.prototype.cy = GetterAndSetter("cy", "setByEqual");
-Ellipse.prototype.rx = GetterAndSetter("rx", "setByEqual");
-Ellipse.prototype.ry = GetterAndSetter("ry", "setByEqual");
+Ellipse.prototype.cx = SDNode.OrdinaryGSet("cx", "setByEqual");
+Ellipse.prototype.cy = SDNode.OrdinaryGSet("cy", "setByEqual");
+Ellipse.prototype.rx = SDNode.OrdinaryGSet("rx", "setByEqual");
+Ellipse.prototype.ry = SDNode.OrdinaryGSet("ry", "setByEqual");
 
 Ellipse.prototype.updateList = [
     ...Ellipse.prototype.updateList,
-    naiveUpdate("cx", Interp.numberInterp),
-    naiveUpdate("cy", Interp.numberInterp),
-    naiveUpdate("rx", Interp.numberInterp),
-    naiveUpdate("ry", Interp.numberInterp)
+    SDNode.OrdinaryUpdate("cx", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("cy", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("rx", Interp.numberInterp),
+    SDNode.OrdinaryUpdate("ry", Interp.numberInterp)
 ];
 
 Ellipse.prototype.x = function(x) {
