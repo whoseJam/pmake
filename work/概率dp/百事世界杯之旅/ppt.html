@@ -1,0 +1,54 @@
+<section>
+    <section>
+        <h1>百事世界杯之旅</h1>
+    </section>
+    <problem data-problemset="luogu" data-problemid="P1291"></problem>
+    <section>
+        <h2>百事世界杯之旅</h2>
+        <p>总共有 $n$ 个球星需要收集，每一瓶饮料开奖出来每位球星的概率是相同的，求期望需要开多少瓶饮料，才能开出所有球星</p>
+        <p class="fragment">设 $f(k)$ 表示已经开奖了 $k$ 位球星，还需要期望开多少瓶饮料，才能开出所有球星</p>
+        <p class="fragment">显然 $f(n)=0$</p>
+        <table class="fragment">
+            <tbody>
+                <tr>
+                    <th>开奖新球星成功与否</th>
+                    <th>开奖成功</th>
+                    <th>开奖失败</th>
+                </tr>
+                <tr class="fragment">
+                    <td>概率</td>
+                    <td>$\frac{n-k}{n}$</td>
+                    <td>$\frac{k}{n}$</td>
+                </tr>
+                <tr class="fragment">
+                    <td>开奖次数</td>
+                    <td>$f(k+1)+1$</td>
+                    <td>$f(k)+1$</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="fragment">
+            $$
+            f(k)=\frac{n-k}{n}\big(f(k+1)+1\big)+\frac{k}{n}\big(f(k)+1\big)
+            $$
+        </p>
+        <p class="fragment">
+            $$
+            f(k)=f(k+1)+\frac{n}{n-k}
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>百事世界杯之旅</h2>
+        <p>
+            $$
+            \begin{aligned}
+            f(0)&=f(1)+\frac{n}{n} \\
+            &=f(2)+\frac{n}{n-1}+\frac{n}{n} \\
+            &=......\\
+            &=\frac{n}{1}+\frac{n}{2}+...+\frac{n}{n}
+            \end{aligned}
+            $$
+        </p>
+    </section>
+</section>

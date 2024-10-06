@@ -1,0 +1,71 @@
+<section>
+    <section>
+        <h1>AC自动机</h1>
+    </section>
+    <section>
+        <h2>AC自动机</h2>
+        <p>AC自动机=Trie+KMP</p>
+        <p class="fragment">
+            AC自动机在Trie树上添加 $fail$ 指针，$fail$ 指针的功能和结构与KMP的 $nxt$ 数组类似
+        </p>
+    </section>
+    <section>
+        <h2>AC自动机</h2>
+        <p>以下是一个包含 $\{aba,bab\}$ 两个串的Trie树，什么是每个节点的 $fail$ 指针呢？</p>
+        <iframe data-animation="./AC自动机1.html"
+            style="width: 1000px; height: 300px;"></iframe>
+        <p class="quote">让我们从树根往下顺次标出每个节点的子节点的 $fail$ 指针</p>
+    </section>
+    <section>
+        <h2>AC自动机</h2>
+        <div style="display: flex; align-items: center;">
+            <iframe data-animation="./AC自动机2.js"
+                style="width: 1000px; height: 500px;">
+            </iframe>
+            <codeblock style="width: 600px; height: 445px;">
+                <script type="text/template">
+                    void build() {
+                        queue < int > q;
+                        q.push(1);
+                        while (q.size()) {
+                            int u = q.front(); q.pop();
+                            for (int i = 0, v, f; i < 26; i++) {
+                                if (!ch[u][i]) continue;
+                                // 计算 u 的第 i 个儿子的 fail 指针
+                                // 参考 u 的 fail 链计算
+                                q.push(v = ch[u][i]);
+                                // 设 f 是 u 的 fail 链上的点
+                                // v = [uuuuuu]i
+                                // f =     [uu]?
+                                f = fa[u];
+                                while (f && ch[f][i] == 0) f = fa[f];
+                                // f =     [uu]i
+                                if (ch[f][i]) fa[v] = ch[f][i];
+                                else fa[v] = 1;
+                            }
+                        }
+                    }
+                </script>
+            </codeblock>
+        </div>
+    </section>
+    <section>
+        <h2>AC自动机</h2>
+        <div style="display: flex; align-items: center;">
+            <div>
+                <p>AC自动机实际上由两棵树构成，一棵Trie树，一棵 $fail$ 树</p>
+                <p class="fragment">沿着Trie树往下走，本质上是字符串的延拓的过程</p>
+                <p class="fragment quote">
+                    $$1\rightarrow 2\rightarrow 3\rightarrow 4$$
+                    $$空串\rightarrow a\rightarrow ab\rightarrow aba$$
+                </p>
+                <p class="fragment">沿着 $fail$ 树往上走，本质上是在切削字符串，留下字符串的某个后缀部分</p>
+                <p class="fragment quote">
+                    当然这个切削不是随便切削的，我们需要保证切削后的字符串仍然是 $n$ 个模式串中的某个模式串的前缀
+                </p>
+            </div>
+            <iframe data-animation="./双视图.js"
+                style="width: 1000px; height: 500px;"></iframe>
+        </div>
+    </section>
+</section>

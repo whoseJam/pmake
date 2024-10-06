@@ -69,6 +69,10 @@ export class BaseTree {
     father(nodeId: number|string): SDNode|undefined;
 
     depth(): number;
+    /**
+     * 根的深度被认为是 0
+     * @param nodeId 
+     */
     depth(nodeId: number|string): number;
 
     lca(nodeId1: number|string, nodeId2: number|string): SDNode;
@@ -89,4 +93,6 @@ export class BaseTree {
 
     intValue(nodeId: number|string): number;
     intValue(parentId: number|string, childId: number|string): number;
+
+    forEachNodes(callback: (node: SDNode, nodeId: number) => void): this;
 }

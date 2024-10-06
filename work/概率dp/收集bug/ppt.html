@@ -1,0 +1,54 @@
+<section>
+    <section>
+        <h1>收集bug</h1>
+    </section>
+    <section>
+        <h2>收集bug</h2>
+        <p>设 $f(i,j)$ 表示找到了 $i$ 个分类的bug，并且已经找到了 $j$ 个子系统的bug，还需要期望多少天才能找全</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>局面</th>
+                    <th>概率</th>
+                    <th>期望需要的天数</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>和以前找的子系统和分类重合</td>
+                    <td>$\frac i n\frac j s$</td>
+                    <td>$f(i,j)+1$</td>
+                </tr>
+                <tr>
+                    <td>和以前找到的子系统重合，分类不重合</td>
+                    <td>$(1-\frac i n)\frac j s$</td>
+                    <td>$f(i+1,j)+1$</td>
+                </tr>
+                <tr>
+                    <td>和以前找到的子系统不重合，分类重合</td>
+                    <td>$\frac i n(1-\frac j s)$</td>
+                    <td>$f(i,j+1)+1$</td>
+                </tr>
+                <tr>
+                    <td>和以前找到的子系统和分类都不重合</td>
+                    <td>$(1-\frac i n)(1-\frac j s)$</td>
+                    <td>$f(i+1,j+1)+1$</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="fragment" style="font-size: 20px;">
+            $$
+            \begin{aligned}
+            f(i,j)=&\frac i n\frac j s(f(i,j)+1)+\\
+            &(1-\frac i n)\frac j s(f(i+1,j)+1)+\\
+            &\frac i n(1-\frac j s)(f(i,j+1)+1)+\\
+            &(1-\frac i n)(1-\frac j s)(f(i+1,j+1)+1)
+            \end{aligned}
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>收集bug</h2>
+        <p>显然 $f(n,s)=0$，把 $f(0,0)$ 递推出来即为答案</p>
+    </section>
+</section>

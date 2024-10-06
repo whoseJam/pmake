@@ -303,3 +303,10 @@ function stratify(nodes) {
     dfs(pool[root]);
     return pool[root];
 }
+
+BaseTree.prototype.forEachNodes = function(callback) {
+    const nodes = this.member.get("nodes");
+    nodes.forEach(node => {
+        callback(node, node.nodeId);
+    });
+}

@@ -1,0 +1,79 @@
+<section>
+    <section>
+        <h1>概率与期望</h1>
+    </section>
+    <section>
+        <h2>随机变量</h2>
+        <codeblock>
+            <script type="text/template">
+                int a;
+                a = 1;
+                cout << a << '\n';
+                a = 2;
+                cout << a << '\n';
+            </script>
+        </codeblock>
+        <p class="fragment">此时 $a$ 是一个确定变量，每次打印的 $a$ 的值是可推算出来的</p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                int a;
+                cout << a << '\n'; // 打印出来的值是不确定的
+            </script>
+        </codeblock>
+        <p class="fragment">此时 $a$ 就是一个随机变量</p>
+    </section>
+    <section>
+        <h2>随机变量</h2>
+        <p>为了更好地刻画一个随机变量 $X$，我们可以用列表的方法去写出这个随机变量的取值，以及该取值的可能性</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>$X=$</th>
+                    <th>$1$</th>
+                    <th>$2$</th>
+                    <th>$3$</th>
+                    <th>$4$</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>$P(X=i)=$</td>
+                    <td>$20\%$</td>
+                    <td>$40\%$</td>
+                    <td>$10\%$</td>
+                    <td>$30\%$</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="fragment">我们定义 $X$ 的期望 $E(X)=\sum_iP(X=i)i$</p>
+        <div class="fragment quote">
+            上表中的随机变量的期望即为：$1\times 0.2+2\times 0.4+3\times 0.1+4\times 0.3=2.5$
+        </div>
+        <div class="fragment quote">
+            <h3>期望</h3>
+            <p style="margin-bottom: 0px;">我们把观测随机变量看作一次开箱，观测到的随机变量的具体值看作这次开箱的收益，那么期望其实就是在问你，如果你能看很多很多次箱，你的平均收益会是多少</p>
+        </div>
+    </section>
+    <section>
+        <h2>期望的线性性</h2>
+        <p>假设有两个<b style="color: red;">独立的</b>随机变量 $X$ 和 $Y$，则：
+            $$
+            E(X+Y)=E(X)+E(Y)
+            $$
+        </p>
+        <p class="fragment quote">这个很好理解，$E(X+Y)$ 就相当于每次开箱其实都是在开两个箱子，那么你的收益自然也是单独开这两个箱子的收益之和（即 $E(X)+E(Y)$）</p>
+        <div class="fragment quote math-fragment">
+            <h3>更严格的证明</h3>
+            <p style="margin-bottom: 0px;">
+                $$
+                \begin{aligned}
+                E(X+Y)&=\sum_iP(X+Y=i)i \\
+                &=\sum_x\sum_yP(X=x)P(Y=y)(x+y) \\
+                &=\sum_x\sum_yP(X=x)P(Y=y)x+\sum_x\sum_yP(X=x)P(Y=y)y \\
+                &=\sum_xP(X=x)x+\sum_yP(Y=y)y=E(X)+E(Y)
+                \end{aligned}
+                $$
+            </p>
+        </div>
+    </section>
+</section>
