@@ -243,7 +243,7 @@ const initChalkboard = function(Reveal) {
         if (config.theme) theme = config.theme;
         switch (theme) {
             case 'whiteboard':
-                background = ['rgba(127,127,127,.1)', path + 'img/whiteboard.png'];
+                background = ['rgba(127,127,127,.1)', ''];
                 draw = [drawWithBoardmarker, drawWithBoardmarker];
                 pens = [boardmarkers, boardmarkers];
                 grid = {
@@ -254,7 +254,7 @@ const initChalkboard = function(Reveal) {
                 break;
             case 'chalkboard':
             default:
-                background = ['rgba(127,127,127,.1)', path + 'img/blackboard.png'];
+                background = ['rgba(127,127,127,.1)', ''];
                 draw = [drawWithBoardmarker, drawWithChalk];
                 pens = [boardmarkers, chalks];
                 grid = {
