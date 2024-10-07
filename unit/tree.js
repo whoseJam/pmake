@@ -3,10 +3,9 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const C = sd.color();
 const t = new sd.Tree(svg);
+global.t = t;
 
-main();
-
-async function main() {
+sd.main(async () => {
     t.cx(600).y(100).root(1);
     await sd.pause();
     t.startAnimate().freeze();
@@ -21,4 +20,4 @@ async function main() {
     await sd.pause();
     t.startAnimate().width(100).endAnimate();
     await sd.pause();
-}
+})

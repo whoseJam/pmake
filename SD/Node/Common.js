@@ -57,7 +57,7 @@ export function InRange(mode) {
 
 export function Forward(componentName, functionName) {
     return function() {
-        const component = this[componentName];
+        const component = this._[componentName];
         component[functionName].apply(component, arguments);
         return this;
     }
@@ -65,14 +65,14 @@ export function Forward(componentName, functionName) {
 
 export function ForwardWithReturn(componentName, functionName) {
     return function() {
-        const component = this[componentName];
+        const component = this._[componentName];
         return component[functionName].apply(component, arguments);
     }
 }
 
 export function GetComponent(componentName) {
     return function() {
-        const component = this[componentName];
+        const component = this._[componentName];
         return component;
     }
 }

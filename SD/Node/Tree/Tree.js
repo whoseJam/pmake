@@ -100,11 +100,15 @@ function update() {
 export function d3TreeLayout(mode, transX, transY, minDistanceRatio, parentSizeIndex, childSizeIndex) {
     let rt, tr;
     try {
-        rt = d3.stratify()
-        rt.id(d => d["nodeId"])
-        rt.parentId(d => d["parentNodeId"])
+        rt = d3.stratify();
+        rt.id(d => this.nodeId(d));
+        rt.parentId(d => {
+            const father = this.father(d);
+            if (father === undefined) return undefined;
+            return this.nodeId(father);
+        });
         rt = rt(this.member.get("nodes"));
-    } catch(error) { console.log(error); return this; }
+    } catch(error) { return this; }
     const hierarchy = d3.hierarchy(rt);
     if (mode === "vertical") {
         this.member.set("height", hierarchy.height * this.layerHeight());

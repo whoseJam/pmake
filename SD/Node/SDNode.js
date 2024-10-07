@@ -19,13 +19,15 @@ let id = 0;
 
 export function SDNode(parent) {
     id++;
-    this.children = new Children(this);
     this.id = id;
-    this._ = {};
-    this.animate = new Animate(this);
+
     this.member = new SDMember();
-    this.updater = new Updater(this);
-    this.interact = new Interact(this);
+
+    this._ = {};
+    this._.animate = new Animate(this);
+    this._.children = new Children(this);
+    this._.updater = new Updater(this);
+    this._.interact = new Interact(this);
 
     // 1. SDNode
     // 2. SVGNode
@@ -113,7 +115,7 @@ SDNode.prototype.attachTo = function(parent) {
 
 SDNode.prototype.childAs = function(childName, child, rule) {
     if (child.parent !== this) child.attachTo(this);
-    this.children.push(childName, child, rule);
+    this._.children.push(childName, child, rule);
     this.tryUpdate();
     return this;
 }
@@ -162,7 +164,25 @@ SDNode.prototype.tryUpdate  = Forward("updater", "tryUpdate");
 SDNode.prototype.attachUpdate = Forward("updater", "attachUpdate");
 
 SDNode.prototype.updateList = [
-    SDNode.OrdinaryUpdate("opacity", Interp.numberInterp, "layer")
+    function() {
+        const layer = this._.layer;
+        if (this.member.hasChanged("opacity")) {
+            new Action(
+                this.delay(),
+                this.delay() + this.duration(),
+                this.member.oldValue("opacity"),
+                this.member.get("opacity"),
+                function(t) {
+                    const k = this.source + (this.target - this.source) * t;
+                    layer.setAttribute("opacity", k);
+                    if (t === 1) {
+                        layer.setAttribute("pointer-event", k === 0 ? "none" : "auto");
+                    }
+                }
+            )
+            this.member.flush("opacity");
+        }
+    }
 ]
 
 SDNode.prototype.drag       = Forward("interact", "drag");

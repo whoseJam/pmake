@@ -65,7 +65,7 @@ BaseGrid.prototype.insertByBaseGrid = function(i, j, element) {
     const elements = this.member.get("elements");
     while (elements.length <= ri) elements.push([]);
     elements[ri].splice(rj, 0, element);
-    this.children.push(element);
+    this._.children.push(element);
     this.member.set("n", elements.length);
     this.member.set("m", Math.max(elements[ri].length, this.member.get("m")));
     this.member.dirty("elements");

@@ -28,9 +28,8 @@ export class Animate {
                 l = this.startTimestamp;
                 r = l + arg0;
             } else {
-                if (!("animate" in arg0)) throw new Error("Invalid Arguments");
-                l = arg0.animate.delay();
-                r = l + arg0.animate.duration();
+                l = arg0.delay();
+                r = l + arg0.duration();
             }
         } else {
             const arg0 = arguments[0];
@@ -43,14 +42,14 @@ export class Animate {
         this.endTimestamp = r;
         this.animating = true;
         const node = this.node;
-        node.children.forEach(child => child.startAnimate(node));
+        node._.children.forEach(child => child.startAnimate(node));
     }
 
     endAnimate() {
         this.animateCheck();
         this.startTimestamp = this.endTimestamp;
         const node = this.node;
-        node.children.forEach(child => {
+        node._.children.forEach(child => {
             child.endAnimate();
         });
         this.animating = false;
@@ -62,7 +61,7 @@ export class Animate {
         this.startTimestamp = delay;
         this.endTimestamp = delay;
         const node = this.node;
-        node.children.forEach(child => {
+        node._.children.forEach(child => {
             child.after(delay);
         });
     }

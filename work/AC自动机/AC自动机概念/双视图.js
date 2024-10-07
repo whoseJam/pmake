@@ -33,9 +33,9 @@ sd.init(() => {
     const Q = [1];
     while (Q.length > 0) {
         const u = Q[0]; Q.shift();
-        const children = ac.childrenOnTree(u);
+        const children = ac.children(u);
         for (let i = 0; i < children.length; i++) {
-            const v = children[i].nodeId; Q.push(v);
+            const v = ac.nodeId(children[i]); Q.push(v);
             const character = ac.value(u, v).text();
             let f = ac.element(u).fail;
             while (f && !ac.element(f).acch[character]) {
@@ -105,7 +105,7 @@ function link(u, v) {
 function getString(u) {
     let ans = "";
     while (ac.father(u)) {
-        const f = ac.father(u).nodeId;
+        const f = ac.fatherId(u);
         ans = ac.text(f, u) + ans;
         u = f;
     }

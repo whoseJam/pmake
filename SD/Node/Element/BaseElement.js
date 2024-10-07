@@ -9,8 +9,7 @@ import { Check } from "@/Utility/Check";
 
 export function BaseElement(parent) {
     SDNode.call(this, parent);
-
-    this.newLayer("underBackground");
+    
     this.newLayer("background");
 
     this.member.new("x", 0);
@@ -97,7 +96,7 @@ BaseElement.prototype.value = function(value, rule) {
         element.startAnimate(this);
         element.opacity(1);
     }
-    this.children.push("value", value, rule);
+    this._.children.push("value", value, rule);
     this.member.setAndFlush("value", value);
     this.tryUpdate();
     return this;
@@ -121,7 +120,7 @@ BaseElement.prototype.valueFromExist = function(value, rule) {
         move();
         node.opacity(1);
     };
-    this.children.push("value", value, rule);
+    this._.children.push("value", value, rule);
     this.tryUpdate();
     return this;
 }

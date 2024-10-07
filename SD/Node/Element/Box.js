@@ -8,7 +8,7 @@ export function Box(parent, value) {
     
     this.type("Box");
 
-    this.children.push("background", new Rect(this.layer("background")), Background());
+    this._.children.push("background", new Rect(this.layer("background")), Background());
     
     this.value(value);
 }

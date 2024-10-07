@@ -73,6 +73,8 @@ export class SVGNode {
     setAttribute(key, value) {
         if (key === "innerHTML") {
             this.element.innerHTML = value;
+        } else if (key === "pointer-events") {
+            this.element.style[key] = value;
         } else {
             this.element.setAttribute(key, value);
         }

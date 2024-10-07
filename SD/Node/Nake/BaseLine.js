@@ -221,7 +221,7 @@ BaseLine.prototype.value = function(value, rule) {
         element.startAnimate(this);
         element.opacity(1);
     };
-    this.children.push("value", value, rule);
+    this._.children.push("value", value, rule);
     this.tryUpdate();
     return this;
 }

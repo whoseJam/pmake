@@ -24,7 +24,7 @@ export function Code(parent, source = undefined) {
     this.member.new("fontSize", 20);
     this.member.set("start", 1);
 
-    this.children.push(
+    this._.children.push(
         "focus",
         new Rect(this).color(C.BLUE).opacity(0),
         (parent, child) => {

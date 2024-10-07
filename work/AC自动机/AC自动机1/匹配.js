@@ -39,9 +39,9 @@ sd.init(() => {
     const Q = [1];
     while (Q.length > 0) {
         const u = Q[0]; Q.shift();
-        const children = ac.childrenOnTree(u);
+        const children = ac.children(u);
         for (let i = 0; i < children.length; i++) {
-            const v = children[i].nodeId; Q.push(v);
+            const v = ac.nodeId(children[i]); Q.push(v);
             const character = ac.value(u, v).text();
             let f = ac.element(u).fail;
             while (f && !ac.element(f).acch[character]) {
@@ -59,9 +59,9 @@ sd.init(() => {
     }
 
     ac.forEachNodes((node, id) => {
-        if (id === 1) return;
-        if (node.cx() < ac.father(node.nodeId).cx() ||
-           (node.cx() === ac.father(node.nodeId).cx() && node.cx() < ac.cx())) {
+        if (id === "1") return;
+        if (node.cx() < ac.father(node).cx() ||
+           (node.cx() === ac.father(node).cx() && node.cx() < ac.cx())) {
             sd.Label(node, getString(id), "lc");
         } else {
             sd.Label(node, getString(id), "rc");
@@ -71,14 +71,13 @@ sd.init(() => {
 
     ac.forEachNodes((node, id) => {
         let marked = false;
-        const circ = new sd.Circle(svg).r(5);
-        sd.Aside(node, circ.onClick(() => {
+        node.onClick(() => {
             if (marked) return;
             sd.inter(async () => {
                 marked = true;
-                circ.startAnimate().color(C.green).endAnimate();
+                sd.Aside(node, new sd.Text(node, "已标记").fontSize(10), "rb", -2);
             })
-        }), "rb", 2);
+        })
     })
 })
 
@@ -87,6 +86,7 @@ sd.main(async () => {
     let u = 1;
     const pointer = sd.Pointer(arr);
     const focusU = sd.Focus(ac).startAnimate().focus(u).endAnimate();
+    focusU._.layer.setAttribute("pointer-events", "none");
     const brace = sd.Brace(arr);
     
     for (let i = 0; i < target.length; i++) {
@@ -96,7 +96,7 @@ sd.main(async () => {
         const character = target[i];
         while (u && !ac.element(u).acch[character]) {
             u = ac.element(u).fail;
-            const length = ac.depth(u);
+            const length = ac.depth(u) - 1;
             if (u) {
                 await sd.pause();
                 focusU.startAnimate().focus(u).endAnimate();
@@ -105,7 +105,7 @@ sd.main(async () => {
             }
         }
         if (ac.element(u).acch[character]) {
-            const length = ac.depth(u) - 1;
+            const length = ac.depth(u) - 2;
             u = ac.element(u).acch[character];
             await sd.pause();
             focusU.startAnimate().focus(u).endAnimate();
@@ -148,7 +148,7 @@ function link(u, v) {
 function getString(u) {
     let ans = "";
     while (ac.father(u)) {
-        const f = ac.father(u).nodeId;
+        const f = ac.fatherId(u);
         ans = ac.text(f, u) + ans;
         u = f;
     }

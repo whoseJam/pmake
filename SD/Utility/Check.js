@@ -37,5 +37,8 @@ export const Check = {
     isTypeOfTree: IsTypeOf("TREE"),
     isFalseType: (object) => {
         return object === null || object === undefined || object === false;
+    },
+    isNumberOrString: (object) => {
+        return typeof(object) === "number" || typeof(object) === "string";
     }
 };

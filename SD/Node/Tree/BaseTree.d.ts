@@ -1,98 +1,74 @@
-import { Color }   from "SD/Utility/Color";
-import { SDNode }  from "SD/Node/SDNode";
-import { D3Layer } from "SD/Node/SDNode/D3Layer";
-
-
+import { Color }  from "SD/Utility/Color";
+import { SDNode } from "SD/Node/SDNode";
 
 export class BaseTree {
-    constructor(parent: SDNode|D3Layer);
+    constructor(parent: SDNode);
 
-    /**
-     * 获取某个节点
-     * @param nodeId 
-     */
-    element(nodeId: number|string): SDNode|undefined;
+    element(tid: number|string): SDNode|undefined;
+    element(sourceTid: number|string, targetTid: number|string): SDNode|undefined;
 
-    /**
-     * 获取某条边
-     * @param parentId 
-     * @param childId 
-     */
-    element(parentId: number|string, childId: number|string): SDNode|undefined;
-
-    /**
-     * 获取某个节点的 value
-     * @param nodeId 
-     */
-    value(nodeId: number|string): SDNode;
-
-    /**
-     * 设置某个节点的 value
-     * @param nodeId 
-     * @param value 
-     */
-    value(nodeId: number|string, value: any): this;
-
-    /**
-     * 获取某条边的 value
-     * @param parentId 
-     * @param childId 
-     */
-    value(parentId: number|string, childId: number|string): SDNode;
-
-    /**
-     * 设置某条边的 value
-     * @param parentId 
-     * @param childId 
-     * @param value 
-     */
-    value(parentId: number|string, childId: number|string, value: any): this;
+    value(tid: number|string): SDNode;
+    value(tid: number|string, value: any): this;
+    value(sourceTid: number|string, targetTid: number|string): SDNode;
+    value(sourceTid: number|string, targetTid: number|string, value: any): this;
 
     opacity(): number;
     opacity(opacity: number): this;
-    opacity(nodeId: number|string): number;
-    opacity(nodeId: number|string, opacity: number): this;
-    opacity(parentId: number|string, childId: number|string): number;
-    opacity(parentId: number|string, childId: number|string, opacity: number): this;
+    opacity(tid: number|string): number;
+    opacity(tid: number|string, opacity: number): this;
+    opacity(sourceTid: number|string, targetTid: number|string): number;
+    opacity(sourceTid: number|string, targetTid: number|string, opacity: number): this;
 
     color(color: Color): this;
-    color(nodeId: number|string): Color;
-    color(nodeId: number|string, color: Color): this;
-    color(parentId: number|string, childId: number|string): Color;
-    color(parentId: number|string, childId: number|string, color: Color): this;
+    color(tid: number|string): Color;
+    color(tid: number|string, color: Color): this;
+    color(sourceTid: number|string, targetTid: number|string): Color;
+    color(sourceTid: number|string, targetTid: number|string, color: Color): this;
 
     stratify(): any;
 
-    findNodeById(nodeId: number|string): SDNode|undefined;
-    findLinkById(parentId: number|string, childId: number|string): SDNode|undefined;
+    findNodeById(tid: number|string): SDNode|undefined;
+    findLinkById(sourceTid: number|string, targetTid: number|string): SDNode|undefined;
 
-    father(nodeId: number|string): SDNode|undefined;
+    father(node: SDNode): SDNode|undefined;
+    father(tid: number|string): SDNode|undefined;
+    father(link: SDNode): SDNode|undefined;
+    fatherId(node: SDNode): string;
+    fatherId(tid: number|string): string;
+
 
     depth(): number;
-    /**
-     * 根的深度被认为是 0
-     * @param nodeId 
-     */
-    depth(nodeId: number|string): number;
+    depth(tid: number|string): number;
 
-    lca(nodeId1: number|string, nodeId2: number|string): SDNode;
+    lca(x: number|string|SDNode, y: number|string|SDNode): SDNode;
+    lcaId(x: number|string|SDNode, y: number|string|SDNode): string;
 
-    childrenOnTree(nodeId: number|string): Array<SDNode>;
+    children(tid: number|string): Array<SDNode>;
+    children(node: SDNode): Array<SDNode>;
 
     root(): SDNode;
-    root(nodeId: number|string): this;
-    root(nodeId: number|string, value: any): this;
+    root(tid: number|string): this;
+    root(tid: number|string, value: any): this;
 
-    link(parentId: number|string, childId: number|string): this;
-    link(parentId: number|string, childId: number|string, value: any): this;
+    link(sourceTid: number|string, targetTid: number|string): this;
+    link(sourceTid: number|string, targetTid: number|string, value: any): this;
 
-    cut(parentId: number|string, childId: number|string): this;
+    cut(sourceTid: number|string, targetTid: number|string): this;
 
-    text(nodeId: number|string): string;
-    text(parentId: number|string, childId: number|string): string;
+    text(tid: number|string): string;
+    text(sourceTid: number|string, targetTid: number|string): string;
 
-    intValue(nodeId: number|string): number;
-    intValue(parentId: number|string, childId: number|string): number;
+    intValue(tid: number|string): number;
+    intValue(sourceTid: number|string, targetTid: number|string): number;
 
-    forEachNodes(callback: (node: SDNode, nodeId: number) => void): this;
+    forEachNodes(callback: (node: SDNode, tid: string) => void): this;
+    forEachLinks(callback: (link: SDNode, sourceTid: string, targetTid: string) => void): this;
+
+    rootId(): string;
+    nodeId(node: SDNode): string;
+    nodeId(tid: number|string): string;
+    sourceId(link: SDNode): string;
+    targetId(link: SDNode): string;
+    source(link: SDNode): SDNode;
+    target(link: SDNode): SDNode;
 }

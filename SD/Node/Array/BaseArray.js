@@ -93,7 +93,7 @@ BaseArray.prototype.pop = function() {
 BaseArray.prototype.insertByBaseArray = function(idx, elem) {
     const elements = this.member.get("elements");
     elements.splice(this.idx(idx), 0, elem);
-    this.children.push(elem);
+    this._.children.push(elem);
     this.member.dirty("elements");
     this.tryUpdate();
     return this;

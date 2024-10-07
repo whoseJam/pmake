@@ -16,12 +16,9 @@ Context.prototype.till = function(l, r) {
 }
 
 Context.prototype.tillc = function(l, r) {
-    // throw new Error("Not Implemented");
     return {
-        animate: {
-            delay: () => this.start + l * this.duration,
-            duration: () => this.start + (r - l) * this.duration
-        }
+        delay: () => this.start + l * this.duration,
+        duration: () => this.start + (r - l) * this.duration
     };
 }
 

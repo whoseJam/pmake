@@ -169,7 +169,7 @@ BaseGraph.prototype.newNodeByBaseGraph = function(gid, element) {
     gidToNodes[gid] = { node: element, key: element.id };
     this.member.get("nodes").push(element);
     this.member.dirty("nodes");
-    this.children.push(element);
+    this._.children.push(element);
     this.tryUpdate();
     return this;
 }
@@ -179,7 +179,7 @@ BaseGraph.prototype.newLinkByBaseGraph = function(sourceGid, targetGid, element)
     sidToLinks[element.id] = { link: element, source: String(sourceGid), target: String(targetGid) };
     this.member.get("links").push(element);
     this.member.dirty("links");
-    this.children.push(element);
+    this._.children.push(element);
     this.tryUpdate();
     return this;
 }

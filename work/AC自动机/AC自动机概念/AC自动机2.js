@@ -42,9 +42,9 @@ sd.main(async () => {
         await sd.pause();
         focus.startAnimate().focus(u).endAnimate();
 
-        const children = ac.childrenOnTree(u);
+        const children = ac.children(u);
         for (let i = 0; i < children.length; i++) {
-            const v = children[i].nodeId; Q.push(v);
+            const v = ac.nodeId(children[i]); Q.push(v);
             await sd.pause();
             ac.startAnimate().color(v, C.blue).endAnimate();
 
@@ -57,7 +57,7 @@ sd.main(async () => {
             }
             if (f && ac.element(f).acch[character]) {
                 const failOfV = ac.element(f).acch[character];
-                const length = ac.depth(failOfV);
+                const length = ac.depth(failOfV) - 1;
                 await sd.pause();
                 failFocus.startAnimate().focus(f).endAnimate();
                 ac.startAnimate()
@@ -120,8 +120,8 @@ function colorPath(path, color, width) {
 function getPath(u, length) {
     const path = [];
     for (let i = 1; i <= length; i++) {
-        path.push([ac.father(u).nodeId, u]);
-        u = ac.father(u).nodeId;
+        path.push([ac.fatherId(u), u]);
+        u = ac.fatherId(u);
     }
     return path.reverse();
 }

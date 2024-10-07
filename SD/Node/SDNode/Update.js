@@ -8,20 +8,20 @@ export function Updater(parent) {
 }
 
 Updater.prototype.preUpdate = function() {
-    this.parent.children.forEach(child => {
+    this.parent._.children.forEach(child => {
         child.freeze();
     });
 }
 
 Updater.prototype.postUpdate = function() {
-    this.parent.children.forEach(child => {
+    this.parent._.children.forEach(child => {
         const rule = child._.rule;
         if (!rule) return;
         this.tryMove(child, () => {
             rule(this.parent, child);
         });
     });
-    this.parent.children.forEach(child => {
+    this.parent._.children.forEach(child => {
         child.unfreeze();
     });
 }
