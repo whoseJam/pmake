@@ -196,7 +196,7 @@ BaseGraph.prototype.cut = function(x, y) {
     let link = this.findLinkById(x, y);
     let idx = links.indexOf(link);
     links.splice(idx, 1);
-    this.children.erase(link);
+    this._.children.erase(link);
     link.opacity(0).remove();
     this.tryUpdate();
     return this;

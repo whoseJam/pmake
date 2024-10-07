@@ -266,7 +266,7 @@ BaseTree.prototype.eraseLinkByBaseTree = function(x, y) {
     const links = this.member.get("links");
     const index = links.indexOf(link);
     links.splice(index, 1);
-    this.children.erase(link);
+    this._.children.erase(link);
     this.tryUpdate();
     return this;
 }

@@ -62,7 +62,7 @@ BaseElement.prototype.text = function() {
 
 BaseElement.prototype.drop = function() {
     const value = this.child("value");
-    this.children.erase(value);
+    this._.children.erase(value);
     value.attachTo(svg());
     return value;
 }
@@ -76,7 +76,7 @@ BaseElement.prototype.value = function(value, rule) {
     value = Cast.castToSDNode(this, value);
     const oldValue = this.member.get("value");
     if (oldValue) {
-        this.children.erase(oldValue);
+        this._.children.erase(oldValue);
         oldValue.opacity(0).remove();
     }
     if (value === undefined || value === null) {
@@ -110,7 +110,7 @@ BaseElement.prototype.intValue = function() {
 
 BaseElement.prototype.valueFromExist = function(value, rule) {
     rule = rule ? rule : CenterFixAspect(this.member.get("rate"));
-    const oldValue = this.children.erase("value");
+    const oldValue = this._.children.erase("value");
     if (oldValue) {
         oldValue.opacity(0).remove();
     }

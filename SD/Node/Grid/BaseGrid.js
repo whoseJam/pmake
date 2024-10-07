@@ -79,7 +79,7 @@ BaseGrid.prototype.eraseByBaseGrid = function(i, j) {
     const rj = this.idxM(j);
     const elements = this.member.get("elements");
     elements[ri].splice(rj, 1);
-    this.children.erase(element);
+    this._.children.erase(element);
     let m = 0;
     for (let i = 0; i < elements.length; i++) m = Math.max(m, elements[i].length);
     this.member.set("n", elements.length);

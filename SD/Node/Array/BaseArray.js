@@ -103,7 +103,7 @@ BaseArray.prototype.eraseByBaseArray = function(idx) {
     const elem = this.element(idx);
     const elems = this.member.get("elements");
     elems.splice(this.idx(idx), 1);
-    this.children.erase(elem);
+    this._.children.erase(elem);
     this.member.dirty("elements");
     this.tryUpdate();
     return this;
