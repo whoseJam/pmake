@@ -40,5 +40,8 @@ export const Check = {
     },
     isNumberOrString: (object) => {
         return typeof(object) === "number" || typeof(object) === "string";
+    },
+    isTypeOfString: (object) => {
+        return typeof(object) === "string";
     }
 };

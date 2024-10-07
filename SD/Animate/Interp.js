@@ -1,56 +1,45 @@
+import { Cast }  from "@/Utility/Cast";
+import { Check } from "@/Utility/Check";
 
-function hexToRgb(hex) {
-    hex = hex.replace("#", "");
-    const r = parseInt(hex.substring(0, 2), 16);
-    const g = parseInt(hex.substring(2, 4), 16);
-    const b = parseInt(hex.substring(4, 6), 16);
-    return { r: r, g: g, b: b };
-}
-
-function anyToArray(value) {
-    if (typeof(value) === "number") return [value];
-    return value;
-}
-
-export const Interp = {
-    numberInterp(owner, prop) {
+export class Interp {
+    static numberInterp(owner, prop) {
         return function(t) {
-            const A = this.from;
-            const B = this.to;
+            const A = this.source;
+            const B = this.target;
             const current =  (A * (1 - t) + B * t);
             owner.setAttribute(prop, current);
         }
-    },
-    
-    colorInterp(owner, prop) {
+    }
+
+    static colorInterp(owner, prop) {
         return function(t) {
-            const fRGB = typeof(this.from) === "string" ? hexToRgb(this.from) : this.from;
-            const tRGB = typeof(this.to) === "string" ? hexToRgb(this.to) : this.to;
+            const fRGB = Check.isTypeOfString(this.source) ? Cast.castHexToRGB(this.source) : this.source;
+            const tRGB = Check.isTypeOfString(this.target) ? Cast.castHexToRGB(this.target) : this.target;
             const r = fRGB.r * (1 - t) + tRGB.r * t;
             const g = fRGB.g * (1 - t) + tRGB.g * t;
             const b = fRGB.b * (1 - t) + tRGB.b * t;
             owner.setAttribute(prop, `rgb(${r}, ${g}, ${b})`);
         }
-    },
+    }
 
-    stringInterp(owner, prop) {
+    static stringInterp(owner, prop) {
         return function(t) {
-            if (t === 1) owner.setAttribute(prop, this.to);
+            if (t === 1) owner.setAttribute(prop, this.target);
         }
-    },
+    }
     
-    innerHTMLInterp(owner) {
+    static innerHTMLInterp(owner) {
         return function(t) {
             if (t === 1) {
-                owner.setAttribute("innerHTML", this.to);
+                owner.setAttribute("innerHTML", this.target);
             }
         }
-    },
+    }
 
-    arrayInterp(owner, prop) {
+    static arrayInterp(owner, prop) {
         return function(t) {
-            const A = anyToArray(this.from);
-            const B = anyToArray(this.to);
+            const A = Cast.castToArray(this.source);
+            const B = Cast.castToArray(this.target);
             const len = Math.max(A.length, B.length);
             const ans = [];
             for (let i = 0; i < len; i++) {
@@ -61,12 +50,12 @@ export const Interp = {
             }
             owner.setAttribute(prop, ans);
         }
-    },
+    }
 
-    matrixInterp(owner, prop) {
+    static matrixInterp(owner, prop) {
         return function(t) {
-            const A = this.from;
-            const B = this.to;
+            const A = this.source;
+            const B = this.target;
             const current = {
                 a: A.a * (1 - t) + B.a * t,
                 b: A.b * (1 - t) + B.b * t,
@@ -77,24 +66,24 @@ export const Interp = {
             };
             owner.setAttribute(prop, `matrix(${current.a}, ${current.b}, ${current.c}, ${current.d}, ${current.e}, ${current.f})`);
         }
-    },
+    }
 
-    viewBoxInterp(owner, prop) {
+    static viewBoxInterp(owner, prop) {
         return function(t) {
-            const A = this.from;
-            const B = this.to;
+            const A = this.source;
+            const B = this.target;
             const x = A.viewX * (1 - t) + B.viewX * t;
             const y = A.viewY * (1 - t) + B.viewY * t;
             const width = A.viewWidth * (1 - t) + B.viewWidth * t;
             const height = A.viewHeight * (1 - t) + B.viewHeight * t;
             owner.setAttribute(prop, `${x} ${y} ${width} ${height}`);
         }
-    },
+    }
 
-    childInterp(owner, prop) {
+    static childInterp(owner, prop) {
         return function(t) {
             if (t === 1) {
-                render(this.to, owner);
+                render(this.target, owner);
             }
         }
     }

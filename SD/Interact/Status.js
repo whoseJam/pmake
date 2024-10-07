@@ -1,5 +1,8 @@
 import { render } from "react-dom";
+
 import { Device } from "@/Interact/Device";
+
+import { Dom } from "@/Dom/Dom";
 
 function ReloadTheWindow() {
     window.parent.ResetAnimationSize(window.IFRAME_ID, window.IFRAME_NAME);
@@ -16,12 +19,12 @@ export class Status {
                 <i className="sync icon" onClick={ReloadTheWindow}></i>
             </div>
         </div>
-        const div = document.createElement("div");
-        document.body.append(div);
+        
+        const div = Dom.createElementAndAppendToBody("div");
         render(element, div);
-        Status.frameStatus = document.getElementById("frameStatus");
+        Status.frameStatus = Dom.getByID("frameStatus");
 
-        const wrapper = document.getElementById("wrapper");
+        const wrapper = Dom.getByID("wrapper");
         Device.onKeyDown("t", () => {
             wrapper.style["opacity"] ^= 1;
         })

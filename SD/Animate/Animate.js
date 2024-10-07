@@ -1,5 +1,6 @@
-import { ActionList }        from "@/Animate/ActionList";
-import { updateFrameStatus } from "@/Animate/FrameStatus";
+import { ActionList } from "@/Animate/ActionList";
+
+import { Status } from "@/Interact/Status";
 
 /**
  * @class ActionPool
@@ -60,7 +61,7 @@ class ActionPool {
             this.historyActionList[lastFrame] = this.currentActionList;
         }
         this.currentActionList = new ActionList();
-        updateFrameStatus();
+        Status.updateFrameStatus();
     }
 
     rollbackFrame() {
@@ -74,14 +75,14 @@ class ActionPool {
         }
         this.currentActionList = this.historyActionList[nextFrame].rollback();
         this.currentActionList.restart();
-        updateFrameStatus();
+        Status.updateFrameStatus();
     }
 
     replayFrame() {
         let frame = ++window.CURRENT_FRAME;
         this.currentActionList = this.historyActionList[frame].replay();
         this.currentActionList.restart();
-        updateFrameStatus();
+        Status.updateFrameStatus();
     }
 
     currentFinished() {

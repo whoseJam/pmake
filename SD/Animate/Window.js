@@ -2,7 +2,7 @@ import { Animate } from "@/Animate/Animate";
 
 import { Message } from "@/Interact/Message";
 import { RootSvg } from "@/Interact/RootSvg";
-import { updateFrameStatus } from "./FrameStatus";
+import { Status } from "@/Interact/Status";
 import { Device } from "@/Interact/Device";
 
 window.CURRENT_FRAME = 0;
@@ -51,7 +51,7 @@ function promiseOfFirstInterFrame() {
     if (window.IS_INTERACTING) throw new Error;
     if (window.MAXIMUM_FRAME !== window.CURRENT_FRAME) throw new Error;
     window.IS_INTERACTING = true;
-    updateFrameStatus();
+    Status.updateFrameStatus();
     return new Promise(function(resolve) {
         const fn = function() {
             if (window.IS_CONTINUING) return setTimeout(fn, 10);       // 主流程的动画不可被打断
@@ -65,7 +65,7 @@ function promiseOfFirstInterFrame() {
 
 function promiseOfLastInterFrame() {
     window.IS_INTERACTING = false;
-    updateFrameStatus();
+    Status.updateFrameStatus();
     return 0;
 }
 
@@ -87,7 +87,7 @@ function promiseOfNormalFrame() {
 
 function promiseOfContinueFrame() {
     window.IS_CONTINUING = true;
-    updateFrameStatus();
+    Status.updateFrameStatus();
     return new Promise(function(resolve) {
         const fn = function() {
             if (window.SHOULD_FLUSH) {
@@ -96,7 +96,7 @@ function promiseOfContinueFrame() {
             }
             if (window.WHOSEJAM === 0) return setTimeout(fn, 10);
             window.IS_CONTINUING = false;
-            updateFrameStatus();
+            Status.updateFrameStatus();
             window.WHOSEJAM--;
             return resolve(0);
         }

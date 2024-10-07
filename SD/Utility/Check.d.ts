@@ -37,5 +37,5 @@ export const Check = {
     isTypeOfHTML: IsTypeOfHTML,
     isTypeOfNake: IsTypeOfNake,
     isTypeOfTree: IsTypeOfTree,
-    isFalseType: IsFalseType
+    isFalseType: IsFalseType,
 }
