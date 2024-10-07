@@ -12,6 +12,10 @@ function Init(reveal) {
             const image = images[i];
             image.setAttribute("src", GetURL(image));
         }
+        // TODO 检测到所有 image 都加载完成后，再进行 reveal.layout
+        if (images.length >= 1) {
+            setTimeout(() => reveal.layout(), 50);
+        }
     })
 }
 

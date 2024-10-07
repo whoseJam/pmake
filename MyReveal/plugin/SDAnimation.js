@@ -42,7 +42,7 @@ function Init(reveal) {
 
     reveal.addEventListener("slidechanged", (event) => {
         const iframes = [...event.currentSlide.getElementsByTagName("iframe")];
-        iframes.forEach(iframe => ProcessIframe(iframe, cache))
+        iframes.forEach(iframe => ProcessIframe(iframe, cache));
     });
 
     reveal.on("fragmentshown", (event) => {
