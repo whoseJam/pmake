@@ -3,10 +3,7 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const graph = new sd.DAG(svg).width(200).height(200);
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     graph.freeze();
     for (let i = 1; i <= 6; i++) {
         graph.newNode(i);
@@ -21,8 +18,8 @@ function init() {
     link(2, 5);
     link(3, 6);
     graph.unfreeze();
-}
+})
 
-async function main() {
-    await sd.pause();
-}
+sd.main(async () => {
+
+})

@@ -11,10 +11,7 @@ const data = I.readCharMatrix(`
 \\\\///
 /\\\\\\\\`, n, m);
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     for (let i = 1; i <= n; i++) {
         for (let j = 1; j <= m; j++) {
             let tmp;
@@ -28,9 +25,9 @@ function init() {
             lightLines.push(tmp);
         }
     }
-}
+})
 
-async function main() {
+sd.main(async () => {
     await sd.pause();
     for (let i = 1; i <= n + 1; i++) {
         for (let j = 1; j <= m + 1; j++) {
@@ -43,8 +40,7 @@ async function main() {
     }
     await sd.pause();
     lightLines.forEach(l => l.startAnimate().opacity(1).endAnimate());
-    await sd.pause();
-}
+})
 
 function mark1(i, j, l) {
     const srcPos = [

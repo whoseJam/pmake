@@ -189,9 +189,6 @@ ActionList.prototype.updateWindowSize = function() {
             action.channel !== "opacity" &&
             action.channel !== "global-opacity") continue;
         const owner = action.owner;
-        if (!("g" in owner) || !owner._.nake) { // D3Layer
-            continue;
-        }
         if ("opacity" in owner && owner._.nake && isVisble(owner)) {
             const nake = owner._.nake;
             const x = owner.x();

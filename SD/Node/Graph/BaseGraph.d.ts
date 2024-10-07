@@ -1,53 +1,66 @@
 import { Color } from "SD/Utility/Color";
 
-import { SDNode }  from "SD/Node/SDNode";
-import { D3Layer } from "SD/Node/SDNode/D3Layer";
+import { SDNode } from "SD/Node/SDNode";
 
 type GraphMode = "direct"|"undirect";
 
 export class BaseGraph extends SDNode {
-    constructor(parent: SDNode|D3Layer);
+    constructor(parent: SDNode);
 
-    newNode(nodeId: number|string): this;
-    newNode(nodeId: number|string, value: any): this;
-    newLink(sourceId: number|string, targetId: number|string): this;
-    newLink(sourceId: number|string, targetId: number|string, value: any): this;
+    newNode(gid: number|string): this;
+    newNode(gid: number|string, value: any): this;
+    newNodeFromExistValue(gid: number|string, value: SDNode): this;
+    newNodeFromExistElement(gid: number|string, element: SDNode): this;
+    newLink(sourceGid: number|string, targetGid: number|string): this;
+    newLink(sourceGid: number|string, targetGid: number|string, value: any): this;
+    newLinkFromExistValue(gid: number|string, value: SDNode): this;
+    newLinkFromExistElement(gid: number|string, element: SDNode): this;
 
-    element(nodeId: number|string): SDNode;
-    element(sourceId: number|string, targetId: number|string): SDNode;
+    element(gid: number|string): SDNode;
+    element(sourceGid: number|string, targetGid: number|string): SDNode;
 
-    value(nodeId: number|string): SDNode;
-    value(nodeId: number|string, value: any): this;
-    value(sourceId: number|string, targetId: number|string): SDNode;
-    value(sourceId: number|string, targetId: number|string, value: any): this;
+    value(gid: number|string): SDNode;
+    value(gid: number|string, value: any): this;
+    value(sourceGid: number|string, targetGid: number|string): SDNode;
+    value(sourceGid: number|string, targetGid: number|string, value: any): this;
 
     opacity(): number;
     opacity(opacity: number): this;
-    opacity(nodeId: number|string): number;
-    opacity(nodeId: number|string, opacity: number): this;
-    opacity(sourceId: number|string, targetId: number|string): number;
-    opacity(sourceId: number|string, targetId: number|string, opacity: number): this;
+    opacity(gid: number|string): number;
+    opacity(gid: number|string, opacity: number): this;
+    opacity(sourceGid: number|string, targetGid: number|string): number;
+    opacity(sourceGid: number|string, targetGid: number|string, opacity: number): this;
 
     color(color: Color): this;
-    color(nodeId: number|string): Color;
-    color(nodeId: number|string, color: Color): this;
-    color(sourceId: number|string, targetId: number|string): Color;
-    color(sourceId: number|string, targetId: number|string, color: Color): this;
+    color(gid: number|string): Color;
+    color(gid: number|string, color: Color): this;
+    color(sourceGid: number|string, targetGid: number|string): Color;
+    color(sourceGid: number|string, targetGid: number|string, color: Color): this;
 
-    findNodeById(nodeId: number|string): SDNode;
-    findLinkById(sourceId: number|string, targetId: number|string): SDNode;
+    findNodeById(gid: number|string): SDNode;
+    findLinkById(sourceGid: number|string, targetGid: number|string): SDNode;
 
-    inNodes(nodeId: number|string, mode: GraphMode): Array<SDNode>;
-    inNodes(nodeId: number|string): Array<SDNode>;
+    inLinks(gid: number|string, mode: GraphMode): Array<SDNode>;
+    outLinks(gid: number|string, mode: GraphMode): Array<SDNode>;
+    
+    inNodes(gid: number|string, mode: GraphMode): Array<SDNode>;
+    inNodes(gid: number|string): Array<SDNode>;
+    inNodesId(gid: number|string): Array<string>;
+    outNodes(gid: number|string, mode: GraphMode): Array<SDNode>;
+    outNodes(gid: number|string): Array<SDNode>;
+    outNodesId(gid: number|string): Array<string>;
 
-    outNodes(nodeId: number|string, mode: GraphMode): Array<SDNode>;
-    outNodes(nodeId: number|string): Array<SDNode>
+    link(sourceGid: number|string, targetGid: number|string): this;
+    cut(sourceGid: number|string, targetGid: number|string): this;
 
-    link(sourceId: number|string, targetId: number|string): this;
-    cut(sourceId: number|string, targetId: number|string): this;
+    sourceId(link: SDNode): string;
+    targetId(link: SDNode): string;
+    nodeId(node: SDNode): string;
 
-    nodesId(): Array<number|string>;
-    Cast.castToSDNodeId(sourceId: number|string, link: SDNode): number|string;
+    nodesId(): Array<string>;
+
+    toNode(link: SDNode, sourceGid: number|string): string;
+    toNodeId(link: SDNode, sourceGid: number|string): string;
 
     links(): Array<SDNode>;
     nodes(): Array<SDNode>;

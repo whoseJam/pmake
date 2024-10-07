@@ -1,3 +1,8 @@
+function ddcmp(x) {
+    if (Math.abs(x) > 1e-2) return 1;
+    return Math.abs(x) < -1e-2 ? -1 : 0;
+}
+
 export class Vector {
     static add(a, b) {
         return [

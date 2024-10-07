@@ -18,8 +18,8 @@ export async function floyd(graph) {
     sd.Index(map, "l");
     graph.childAs("map", map, R.Aside("rc", 60));
     links.forEach((link) => {
-        const x = +link.fromNodeId;
-        const y = +link.toNodeId;
+        const x = +graph.sourceId(link);
+        const y = +graph.targetId(link);
         data[x][y] = Math.min(data[x][y], +link.value().text());
     });
     for (let i = 1; i <= n; i++)
@@ -47,9 +47,9 @@ export async function floyd(graph) {
                     await sd.pause();
                     map.startAnimate().value(i, j, dik + dkj).endAnimate();
                     await sd.pause();
-                    lij.startAnimate().fadeStoT().endAnimate().arrow(false);
-                    lik.startAnimate().fadeStoT().endAnimate().arrow(false);
-                    lkj.startAnimate().fadeStoT().endAnimate().arrow(false);
+                    lij.startAnimate().fadeStoT().endAnimate().arrow(false).remove();
+                    lik.startAnimate().fadeStoT().endAnimate().arrow(false).remove();
+                    lkj.startAnimate().fadeStoT().endAnimate().arrow(false).remove();
                 }
             }
         }

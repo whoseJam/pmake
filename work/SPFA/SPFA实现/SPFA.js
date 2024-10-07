@@ -14,7 +14,7 @@ const data = [
     [6, 7, 4]
 ];
 
-function init() {
+sd.init(() => {
     function put(nodeId, locator) {
         const varList = new sd.VarList(svg);
         graph.element(nodeId).childAs("varList", varList, R.Aside(locator));
@@ -30,19 +30,12 @@ function init() {
     data.forEach(link => {
         graph.newLink(link[0], link[1], link[2]);
     });
-    graph.element(5, 6).rule(R.PointAtPathByRate(0.25));
-}
+})
 
-init();
-main();
-
-async function main() {
+sd.main(async () => {
     await SPFA(graph);
-}
+})
 
-/**
- * @param {sd.GraphBase} graph 
- */
 async function SPFA(graph) {
     const Q = new sd.Array(svg).x(graph.x()).y(graph.my() + 100).push(1);
     const getDis = (x) => graph.element(x).child("varList").get("dis");
@@ -60,7 +53,7 @@ async function SPFA(graph) {
         graph.startAnimate().color(u, C.blue).endAnimate();
         const outLinks = graph.outLinks(u, "direct");
         for (let link of outLinks) {
-            const v = graph.toNodeId(u, link);
+            const v = graph.toNodeId(link, u);
             if (getDis(v) > getDis(u) + link.intValue()) {
                 await sd.pause();
                 graph.startAnimate().color(v, C.green).endAnimate();

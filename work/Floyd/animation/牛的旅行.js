@@ -9,8 +9,10 @@ const l = sd.Link(v1, v2);
 sd.Label(r1, "A", "tc");
 sd.Label(r2, "B", "tc");
 
-main();
+sd.init(() => {
 
-async function main() {
-    await sd.pause();
-}
+})
+
+sd.main(async () => {
+
+})

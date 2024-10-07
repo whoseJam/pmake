@@ -5,8 +5,11 @@ export function SelectValidValue(value1, value2) {
 }
 
 export class Cast {
-    static castToSDNode(parent, any) {
+    static castToSDNode(parent, any, id) {
         if (any === null || any === undefined) {
+            if (id !== undefined) {
+                return new Text(parent, id);
+            }
             return null;
         }
         if (typeof(any) === "function") {

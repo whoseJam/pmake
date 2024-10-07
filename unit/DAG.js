@@ -1,10 +1,11 @@
 import * as sd from "@/sd";
 
-let svg = sd.svg();
-let C = sd.color();
-let g = new sd.DAG(svg).cx(800).cy(300);
-let n = 9, m = 10;
-let e = [
+const svg = sd.svg();
+const C = sd.color();
+const g = new sd.DAG(svg).cx(800).cy(300);
+global.g = g;
+const n = 9, m = 10;
+const e = [
     ["V1", "V3"],
     ["V1", "V4"],
     ["V2", "V5"],
@@ -17,9 +18,7 @@ let e = [
     ["V8", "V9"]
 ];
 
-main();
-
-async function main() {
+sd.main(async () => {
     for (let i = 1; i <= n; i++) g.newNode("V" + i);
     for (let i = 0; i < m; i++) {
         await sd.pause();
@@ -32,5 +31,4 @@ async function main() {
     g.startAnimate().rankDir("RL").endAnimate();
     await sd.pause();
     g.startAnimate().align("DL").endAnimate();
-    await sd.pause();
-}
+})

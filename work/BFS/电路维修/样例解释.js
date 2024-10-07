@@ -10,10 +10,7 @@ const data = I.readCharMatrix(`
 \\\\///
 /\\\\\\\\`, n, m);
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     for (let i = 1; i <= n; i++) {
         for (let j = 1; j <= m; j++) {
             grid.element(i, j).line = new sd.Line(grid).strokeWidth(4);
@@ -24,19 +21,21 @@ function init() {
             }
             let cnt = 0;
             grid.element(i, j).onClick(element => {
-                cnt = (cnt + 1) % 2;
-                if (element.tag === 1) mark2(i, j);
-                else mark1(i, j);
-                if (cnt) element.color(C.grey);
-                else element.color(C.white);
+                sd.inter(async () => {
+                    cnt = (cnt + 1) % 2;
+                    if (element.tag === 1) mark2(i, j);
+                    else mark1(i, j);
+                    if (cnt) element.color(C.grey);
+                    else element.color(C.white);
+                })
             })
         }
     }
-}
+})
 
-async function main() {
-    await sd.pause();
-}
+sd.main(async () => {
+
+})
 
 function mark1(i, j) {
     const srcPos = [

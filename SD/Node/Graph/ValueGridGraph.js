@@ -1,27 +1,32 @@
+import { Enter }     from "@/Node/SDNode/Enter";
 import { GridGraph } from "@/Node/Graph/GridGraph";
 
 export function ValueGridGraph(parent) {
     GridGraph.call(this, parent);
 
     this.type("ValueGridGraph");
-
-    return this;
 }
 
 ValueGridGraph.prototype = {
     ...GridGraph.prototype
 };
 
-ValueGridGraph.prototype.newNode = function(id, value) {
+ValueGridGraph.prototype.newNode = function(gid, value) {
+    const sidToPos = this._.sidToPos;
     const element = value;
-    element.posN = this.member.get("curN");
-    element.posM = this.member.get("curM");
-    element._.enter = (element, move) => {
-        element.opacity(0);
-        move();
-        element.update();
-        element.startAnimate(this).opacity(1);
-    };
-    this.newNodeByBaseGraph(id, element);
+    sidToPos[element.id] = { x: this._.curN, y: this._.curM };
+    element.onEnter(Enter.Ordinary(this, "elements"));
+    this.newNodeByBaseGraph(gid, element);
     return this;
 }
+
+ValueGridGraph.prototype.newNodeFromExistElement = function(gid, value) {
+    const sidToPos = this._.sidToPos;
+    const element = value;
+    sidToPos[element.id] = { x: this._.curN, y: this._.curM };
+    element.onEnter(Enter.FromExist(this, "nodes"));
+    this.newNodeByBaseGraph(gid, element);
+    return this;
+}
+
+ValueGridGraph.prototype.newNodeFromExistValue = ValueGridGraph.prototype.newNodeFromExistElement;

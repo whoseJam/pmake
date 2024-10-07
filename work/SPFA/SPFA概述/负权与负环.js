@@ -4,10 +4,7 @@ const svg = sd.svg();
 const R = sd.rule();
 const graph = new sd.GridGraph(svg).width(90).height(90);
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     function link(a, b, w, xloc, yloc) {
         graph.link(a, b);
         graph.element(a, b).arrow().value(w, R.PointAtPathByRate(0.5, xloc, yloc));
@@ -20,8 +17,8 @@ function init() {
     link(2, 3, -4, "cx", "y");
     link(3, 4, 6, "x", "cy");
     link(4, 1, -2, "cx", "my");
-}
+})
 
-async function main() {
-    await sd.pause();
-}
+sd.main(async () => {
+
+})

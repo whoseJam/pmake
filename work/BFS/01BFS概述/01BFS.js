@@ -51,7 +51,7 @@ sd.main(async () => {
 
         const to = graph.outLinks(u, "undirected");
         for (let i = 0; i < to.length; i++) {
-            const v = graph.toNodeId(u, to[i]);
+            const v = graph.toNodeId(to[i], u);
             const w = to[i].intValue();
             const nodeV = graph.element(v);
             if (nodeV.dis > nodeU.dis + w) {
