@@ -72,7 +72,7 @@ Code.prototype.height = function(height) {
 
 Code.prototype.insert = function(index, value = "") {
     const element = Cast.castToSDNode(this.layer("elements"), value);
-    element.onEnter(Enter.Ordinary(this, "elements"));
+    element.onEnter(Enter.ordinary(this, "elements"));
     this.insertByBaseArray(index, element);
     return this;
 }

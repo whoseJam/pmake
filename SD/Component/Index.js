@@ -66,7 +66,7 @@ function IndexRule(parent, child) {
             const indexed = GetIndexedBox(parent, location, i, start);
             if (!dict[i]) {
                 const attach = new Text(child, i).fontSize(fontSize);
-                attach.onEnter(Enter.Ordinary(child));
+                attach.onEnter(Enter.ordinary(child));
                 elements.push(attach);
                 child._.children.push(attach);
                 child.tryMove(attach, () => {

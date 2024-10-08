@@ -51,7 +51,7 @@ VarList.prototype.put = function(key, value) {
     const element = new Text(this, `${key}=${stringValue}`);
     element.key = key;
     element.value = value;
-    element.onEnter(Enter.Ordinary(this));
+    element.onEnter(Enter.ordinary(this));
     this.insertByBaseArray(this.end() + 1, element);
     return this;
 }

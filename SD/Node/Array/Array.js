@@ -42,14 +42,14 @@ Array.prototype.height = function(height) {
 Array.prototype.insert = function(index, value) {
     const element = new Box(this.layer("elements"));
     element.value(value);
-    element.onEnter(Enter.Ordinary(this, "elements"));
+    element.onEnter(Enter.ordinary(this, "elements"));
     this.insertByBaseArray(index, element);
     return this;
 }
 
 Array.prototype.insertFromExistValue = function(index, value) {
     const element = new Box(this.layer("elements"));
-    element.onEnter(Enter.FromExistValue(this, value, "elements"));
+    element.onEnter(Enter.fromExistValue(this, value, "elements"));
     this.insertByBaseArray(index, element);
     return this;
 }
@@ -57,7 +57,7 @@ Array.prototype.insertFromExistValue = function(index, value) {
 Array.prototype.insertFromExistElement = function(index, value) {
     if (!(value instanceof Box)) throw new Error("Invalid Arguments");
     const element = value;
-    element.onEnter(Enter.FromExist(this, "elements"));
+    element.onEnter(Enter.fromExist(this, "elements"));
     this.insertByBaseArray(index, value);
     return this;
 }

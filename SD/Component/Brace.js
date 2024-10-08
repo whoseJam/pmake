@@ -7,8 +7,8 @@ import { BraceCurve } from "@/Node/Curve/BraceCurve"
 import { Cast }  from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
 
+import { Exit }  from "@/Node/SDNode/Exit";
 import { Enter }  from "@/Node/SDNode/Enter";
-import { Exist }  from "@/Node/SDNode/Exist";
 import { SDNode } from "@/Node/SDNode";
 
 function BraceRule(parent, child) {
@@ -102,10 +102,10 @@ export function Brace(parent) {
 
     brace.value = function(value, gap = 5) {
         this.member.set("valueGap", gap);
-        Exist.Ordinary(this, "value");
+        Exit.Ordinary(this, "value");
         const element = Cast.castToSDNode(this, value);
         element.member.new("location", undefined);
-        element.onEnter(Enter.Ordinary(this));
+        element.onEnter(Enter.ordinary(this));
         this.childAs("value", element, (parent, child) => {
             LabelRule(parent, child);
         });

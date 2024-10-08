@@ -63,7 +63,7 @@ BarArray.prototype.insert = function(index, value) {
         return this.value();
     }
 
-    element.onEnter(Enter.Ordinary(this, "elements"));
+    element.onEnter(Enter.ordinary(this, "elements"));
     this.insertByBaseArray(index, element);
     return this;
 }

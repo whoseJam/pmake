@@ -54,7 +54,7 @@ Grid.prototype.height = function(height) {
 
 Grid.prototype.insert = function(i, j, value) {
     const element = new Box(this.layer("elements"), value);
-    element.onEnter(Enter.Ordinary(this, "elements"));
+    element.onEnter(Enter.ordinary(this, "elements"));
     this.insertByBaseGrid(i, j, element);
     return this;
 }

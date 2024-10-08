@@ -2,21 +2,23 @@ import { D3Layer } from "SD/Node/SDNode/D3Layer";
 
 import { Vector } from "@/Math/Math";
 
+import { RenderNode } from "@/Renderer/RenderNode";
+
 type Rule = (parent: SDNode, child: SDNode) => void;
+type EnterCallback = (element: SDNode, move: () => void) => void;
 
 export class SDNode {
-    constructor(parent: SDNode|D3Layer);
-    g(): any;
-    newLayer(name: number|string): any
-    layer(name: number|string): any
-    attachTo(layer: any): void
+    constructor(parent: SDNode);
+    newLayer(name: string): this;
+    layer(name: string): RenderNode;
+    attachTo(layer: SDNode|RenderNode): void
     
-    childAs(name: number|string, child: SDNode, rule: Rule): this
-    childAs(name: number|string, child: SDNode): this
+    childAs(name: string, child: SDNode, rule: Rule): this
+    childAs(name: string, child: SDNode): this
     childAs(child: SDNode, rule: Rule): this;
     childAs(child: SDNode): this
 
-    child(name: number|string): SDNode;
+    child(name: string): SDNode;
 
     /**
      * 开启一段动画
@@ -91,6 +93,9 @@ export class SDNode {
      */
     inRange(point: Vector): boolean;
 
+    /**
+     * 移除该元素（以及子元素）
+     */
     remove(): void
 
     /**
@@ -162,7 +167,17 @@ export class SDNode {
      * @param cy 
      */
     center(cx: number, cy: number): this;
+
+    /**
+     * 获取 x 方向的 k 分位点
+     * @param k 
+     */
     kx(k: number): number;
+
+    /**
+     * 获取 y 方向的 k 分位点
+     * @param k 
+     */
     ky(k: number): number;
 
     /**
@@ -228,6 +243,8 @@ export class SDNode {
     unfreeze(): void;
     freezing(): boolean;
 
+    drag(type: true): this;
+
     /**
      * 设置单击回调函数
      * @param callback 
@@ -239,4 +256,9 @@ export class SDNode {
      * @param callback 
      */
     onDblClick(callback: (obj: this) => void): this;
+
+    rule(): Rule;
+    rule(rule: Rule): this;
+    triggerRule(): this;
+    onEnter(enter: EnterCallback): this;
 }

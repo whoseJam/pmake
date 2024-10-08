@@ -1,25 +1,23 @@
 import { Action } from "@/Animate/Action";
-import { Interp } from "@/Animate/Interp";
-
-import { InRange }           from "@/Node/Common";
-import { Forward }           from "@/Node/Common";
-import { ForwardWithReturn } from "@/Node/Common";
 
 import { Updater }  from "@/Node/SDNode/Update";
 import { Animate }  from "@/Node/SDNode/Animate";
 import { Interact } from "@/Node/SDNode/Interact";
 import { Children } from "@/Node/SDNode/Children";
 import { SDMember } from "@/Node/SDNode/SDMember";
+import { Location } from "@/Node/SDNode/Location";
 
 import { SVGNode } from "@/Renderer/SVG/SVGNode";
 
 import { Vector } from "@/Math/Vector";
 
-let id = 0;
+import { Check } from "@/Utility/Check";
+
+let sid = 0;
 
 export function SDNode(parent) {
-    id++;
-    this.id = id;
+    sid++;
+    this.id = sid;
 
     this.member = new SDMember();
 
@@ -41,6 +39,22 @@ export function SDNode(parent) {
     this.member.new("opacity", 1);
     
     this._.BASE_SDNODE = true;
+}
+
+SDNode.Forward = function(componentName, functionName) {
+    return function() {
+        const component = this._[componentName];
+        console.log("comp=", component, "func=", functionName)
+        component[functionName].apply(component, arguments);
+        return this;
+    }
+}
+
+SDNode.ForwardWithReturn = function(componentName, functionName) {
+    return function() {
+        const component = this._[componentName];
+        return component[functionName].apply(component, arguments);
+    }
 }
 
 SDNode.OrdinaryGSet = function(key, mode) {
@@ -107,8 +121,8 @@ SDNode.prototype.newLayer = function(name) {
 }
 
 SDNode.prototype.attachTo = function(parent) {
-    // 1. parent = SDNode -> parent.layer
-    // 2. parent = SVGNode -> parent
+    // 1. parent = SDNode -> parent.layer()
+    // 2. parent = RenderNode -> this
     this._.layer.moveTo(typeof(parent.layer) === "function" ? parent.layer() : parent);
     return this;
 }
@@ -128,49 +142,45 @@ SDNode.prototype.eraseChild = function(child) {
     this._.children.erase(child);
 }
 
-SDNode.prototype.child = ForwardWithReturn("children", "child");
+SDNode.prototype.child = SDNode.ForwardWithReturn("children", "child");
 
-SDNode.prototype.startAnimate = Forward("animate", "startAnimate");
-SDNode.prototype.endAnimate   = Forward("animate", "endAnimate");
-SDNode.prototype.isAnimating  = ForwardWithReturn("animate", "isAnimating");
-SDNode.prototype.delay        = ForwardWithReturn("animate", "delay");
-SDNode.prototype.after        = Forward("animate", "after");
-SDNode.prototype.duration     = ForwardWithReturn("animate", "duration");
+SDNode.prototype.startAnimate = SDNode.Forward("animate", "startAnimate");
+SDNode.prototype.endAnimate   = SDNode.Forward("animate", "endAnimate");
+SDNode.prototype.isAnimating  = SDNode.ForwardWithReturn("animate", "isAnimating");
+SDNode.prototype.delay        = SDNode.ForwardWithReturn("animate", "delay");
+SDNode.prototype.after        = SDNode.Forward("animate", "after");
+SDNode.prototype.duration     = SDNode.ForwardWithReturn("animate", "duration");
 
 SDNode.prototype.opacity = SDNode.OrdinaryGSet("opacity", "setByDqual");
-SDNode.prototype.inRange = InRange("rect");
+SDNode.prototype.inRange = SDNode.InRange("rect");
 SDNode.prototype.remove = function() { this._.layer.remove(); }
 
-import { Scale }             from "@/Node/SDNode/Location";
-import { Center }            from "@/Node/SDNode/Location";
-import { Position }          from "@/Node/SDNode/Location";
-import { CenterLocation }    from "@/Node/SDNode/Location";
-import { MaxiumLocation }    from "@/Node/SDNode/Location";
-import { MoveTheLocation }   from "@/Node/SDNode/Location";
-import { KQuantileLocation } from "@/Node/SDNode/Location";
-import { Check } from "@/Utility/Check";
-SDNode.prototype.scale = Scale;
-SDNode.prototype.pos = Position;
-SDNode.prototype.center = Center;
-SDNode.prototype.kx = KQuantileLocation("x", "width");
-SDNode.prototype.ky = KQuantileLocation("y", "height");
-SDNode.prototype.cx = CenterLocation("x", "width");
-SDNode.prototype.cy = CenterLocation("y", "height");
-SDNode.prototype.mx = MaxiumLocation("x", "width");
-SDNode.prototype.my = MaxiumLocation("y", "height");
-SDNode.prototype.dx = MoveTheLocation("x");
-SDNode.prototype.dy = MoveTheLocation("y");
+SDNode.prototype.scale = Location.scale;
+SDNode.prototype.pos = Location.position;
+SDNode.prototype.center = Location.center;
+SDNode.prototype.kx = Location.kQuantileLocation("x", "width");
+SDNode.prototype.ky = Location.kQuantileLocation("y", "height");
+SDNode.prototype.cx = Location.centerLocation("x", "width");
+SDNode.prototype.cy = Location.centerLocation("y", "height");
+SDNode.prototype.mx = Location.maxiumLocation("x", "width");
+SDNode.prototype.my = Location.maxiumLocation("y", "height");
+SDNode.prototype.dx = Location.moveLocation("x");
+SDNode.prototype.dy = Location.moveLocation("y");
 
-SDNode.prototype.preUpdate  = Forward("updater", "preUpdate");
-SDNode.prototype.postUpdate = Forward("updater", "postUpdate");
-SDNode.prototype.tryMove    = Forward("updater", "tryMove");
-SDNode.prototype.update     = Forward("updater", "update");
-SDNode.prototype.freeze     = Forward("updater", "freeze");
-SDNode.prototype.unfreeze   = Forward("updater", "unfreeze");
-SDNode.prototype.freezing   = Forward("updater", "freezing");
-SDNode.prototype.pendUpdate = Forward("updater", "pendUpdate");
-SDNode.prototype.tryUpdate  = Forward("updater", "tryUpdate");
-SDNode.prototype.attachUpdate = Forward("updater", "attachUpdate");
+SDNode.prototype.preUpdate    = SDNode.Forward("updater", "preUpdate");
+SDNode.prototype.postUpdate   = SDNode.Forward("updater", "postUpdate");
+SDNode.prototype.tryMove      = SDNode.Forward("updater", "tryMove");
+SDNode.prototype.update       = SDNode.Forward("updater", "update");
+SDNode.prototype.freeze       = SDNode.Forward("updater", "freeze");
+SDNode.prototype.unfreeze     = SDNode.Forward("updater", "unfreeze");
+SDNode.prototype.freezing     = SDNode.Forward("updater", "freezing");
+SDNode.prototype.pendUpdate   = SDNode.Forward("updater", "pendUpdate");
+SDNode.prototype.tryUpdate    = SDNode.Forward("updater", "tryUpdate");
+SDNode.prototype.attachUpdate = SDNode.Forward("updater", "attachUpdate");
+
+SDNode.prototype.drag       = SDNode.Forward("interact", "drag");
+SDNode.prototype.onClick    = SDNode.Forward("interact", "onClick");
+SDNode.prototype.onDblClick = SDNode.Forward("interact", "onDblClick");
 
 SDNode.prototype.updateList = [
     function() {
@@ -195,10 +205,6 @@ SDNode.prototype.updateList = [
     }
 ]
 
-SDNode.prototype.drag       = Forward("interact", "drag");
-SDNode.prototype.onClick    = Forward("interact", "onClick");
-SDNode.prototype.onDblClick = Forward("interact", "onDblClick");
-
 SDNode.prototype.rule = function(rule) {
     if (rule === undefined) {
         return this._.rule;
@@ -206,10 +212,12 @@ SDNode.prototype.rule = function(rule) {
     this._.rule = rule;
     return this;
 }
+
 SDNode.prototype.triggerRule = function() {
     this._.rule(this._.parent, this);
     return this;
 }
+
 SDNode.prototype.onEnter = function(callback) {
     this._.enter = callback;
 }

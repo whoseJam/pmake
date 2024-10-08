@@ -4,7 +4,7 @@ const svg = sd.svg();
 
 const r = new sd.Rect(svg).x(100).y(100);
 const arr = new sd.Array(svg).x(100).y(200).resize(10);
-const math = new sd.Mathjax(svg, "a^2+b^2=c^2").width(200);
+// const math = new sd.Mathjax(svg, "a^2+b^2=c^2").width(200);
 
 r.onClick(() => {
     console.log("click the rect");
@@ -22,4 +22,13 @@ arr.onDblClick(() => {
 });
 arr.drag(true);
 
-math.drag(true);
+// math.drag(true);
+
+sd.main(async () => {
+    await sd.pause();
+    arr.drag(false);
+    await sd.pause();
+    arr.drag((dx, dy) => {
+        return [0, dy];
+    })
+})

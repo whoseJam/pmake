@@ -29,4 +29,12 @@ export class Dom {
     static parent(element) {
         return element.parentElement;
     }
+
+    static removeEventListener(element, event, callback) {
+        element.removeEventListener(event, callback);
+    }
+
+    static addEventListener(element, event, callback) {
+        element.addEventListener(event, callback);
+    }
 }

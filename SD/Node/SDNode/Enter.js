@@ -1,6 +1,6 @@
 
-export const Enter = {
-    Ordinary(parent, layer = undefined) {
+export class Enter {
+    static ordinary(parent, layer) {
         return function(element, move) {
             element.opacity(0);
             element.update();
@@ -11,18 +11,18 @@ export const Enter = {
             element.startAnimate(parent);
             element.opacity(1);
         };
-    },
+    }
 
-    FromExist(parent, layer = undefined) {
+    static fromExist(parent, layer) {
         return function(element, move) {
             element.attachTo(layer ? parent.layer(layer) : parent);
             element.startAnimate(parent);
             move();
             element.opacity(1);
         }
-    },
-    
-    FromExistValue(parent, value, layer = undefined) {
+    }
+
+    static fromExistValue(parent, value, layer) {
         return function(element, move) {
             element.attachTo(layer ? parent.layer(layer) : parent);
             element.opacity(0);
