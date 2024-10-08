@@ -80,6 +80,14 @@ export class Interp {
         }
     }
 
+    static translateInterp(attrs, key) {
+        return function(t) {
+            const tx = this.source[0] + (this.target[0] - this.source[0]) * t;
+            const ty = this.source[1] + (this.target[1] - this.source[1]) * t;
+            attrs.setAttribute(key, `translate(${tx},${ty})`);
+        }
+    }
+
     static childInterp(owner, prop) {
         return function(t) {
             if (t === 1) {

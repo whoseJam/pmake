@@ -9,7 +9,7 @@ export function ActionList() {
 
 ActionList.prototype.push = function(action) {
     this.actionCount++;
-    this.rebuild(action);
+    // this.rebuild(action);
     this.directPush(action);
 }
 

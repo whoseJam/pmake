@@ -21,4 +21,12 @@ export class Dom {
     static getByID(id) {
         return document.getElementById(id);
     }
+
+    static tagName(element) {
+        return element.tagName;
+    }
+
+    static parent(element) {
+        return element.parentElement;
+    }
 }

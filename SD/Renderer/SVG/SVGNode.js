@@ -11,6 +11,12 @@ export class SVGNode {
         this.appear();
     }
 
+    append(tag) {
+        const tmp = new SVGNode(this.parent, this.layer, tag);
+        this.element.append(tmp.element);
+        return tmp;
+    }
+
     nakeLayer() {
         return this.layer;
     }

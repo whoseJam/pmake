@@ -10,5 +10,6 @@ export class Interp {
     static innerHTMLInterp(attrs: Attributable, key: string): (t: number) => void;
     static arrayInterp(attrs: Attributable, key: string): (t: number) => void;
     static matrixInterp(attrs: Attributable, key: string): (t: number) => void;
+    static translateInterp(attrs: Attributable, key: string): (t: number) => void;
     static viewBoxInterp(attrs: Attributable, key: string): (t: number) => void;
 }
