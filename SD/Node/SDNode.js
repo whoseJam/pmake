@@ -114,10 +114,18 @@ SDNode.prototype.attachTo = function(parent) {
 }
 
 SDNode.prototype.childAs = function(childName, child, rule) {
-    if (child.parent !== this) child.attachTo(this);
+    for (let i = 0; i < arguments.length; i++) {
+        if (Check.isTypeOfSDNode(arguments[i])) {
+            arguments[i].attachTo(this);
+        }
+    }
     this._.children.push(childName, child, rule);
     this.tryUpdate();
     return this;
+}
+
+SDNode.prototype.eraseChild = function(child) {
+    this._.children.erase(child);
 }
 
 SDNode.prototype.child = ForwardWithReturn("children", "child");
@@ -140,6 +148,7 @@ import { CenterLocation }    from "@/Node/SDNode/Location";
 import { MaxiumLocation }    from "@/Node/SDNode/Location";
 import { MoveTheLocation }   from "@/Node/SDNode/Location";
 import { KQuantileLocation } from "@/Node/SDNode/Location";
+import { Check } from "@/Utility/Check";
 SDNode.prototype.scale = Scale;
 SDNode.prototype.pos = Position;
 SDNode.prototype.center = Center;

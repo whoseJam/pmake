@@ -6,4 +6,5 @@ export class Cast {
     static castD3ToNake(d3: any): Element;
     static castHexToRGB(hex: string): { r: number, g: number, b: number };
     static castToArray(any: any): Array;
+    static castToNumber(any: any): number;
 }

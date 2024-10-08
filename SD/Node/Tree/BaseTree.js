@@ -156,6 +156,7 @@ BaseTree.prototype.outLinks = function(tid) {
 BaseTree.prototype.stratify = function() {
     const result = {};
     const root = this.root();
+    if (!root) return undefined;
     const dfs = (current, depth) => {
         let height = depth;
         const children = [];
@@ -168,7 +169,8 @@ BaseTree.prototype.stratify = function() {
             id: this.nodeId(current),
             children: children,
             depth: depth,
-            height: height
+            height: height,
+            data: current
         };
         return height;
     }

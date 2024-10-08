@@ -1,7 +1,7 @@
-import { Box }             from "@/Node/Element/Box";
-import { Enter }           from "@/Node/SDNode/Enter";
-import { BaseArray }       from "@/Node/Array/BaseArray";
-import { SDNode } from "@/Node/SDNode";
+import { Box }       from "@/Node/Element/Box";
+import { Enter }     from "@/Node/SDNode/Enter";
+import { SDNode }    from "@/Node/SDNode";
+import { BaseArray } from "@/Node/Array/BaseArray";
 
 export function Array(parent) {
     BaseArray.call(this, parent);
@@ -13,8 +13,6 @@ export function Array(parent) {
     this.member.new("y", 0);
     this.member.new("elementWidth", 40);
     this.member.new("elementHeight", 40);
-
-    return this;
 }
 
 Array.prototype = {

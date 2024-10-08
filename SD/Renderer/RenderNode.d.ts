@@ -1,4 +1,12 @@
+import { SDNode } from "@/Node/SDNode";
 
 export class RenderNode {
-    nakeLayer(): Element;
+    constructor(parent: SDNode, layer: RenderNode, tag: string);
+
+    nake(): Element;
+    append(tag: string): RenderNode;
+    moveTo(layer: RenderNode);
+    appear();
+    remove();
+    setAttribute(key: string, value: any);
 }

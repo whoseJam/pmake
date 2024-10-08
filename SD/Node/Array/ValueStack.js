@@ -1,6 +1,6 @@
-import { Stack } from "@/Node/Array/Stack";
+import { Stack }      from "@/Node/Array/Stack";
+import { SDNode }     from "@/Node/SDNode";
 import { ValueArray } from "@/Node/Array/ValueArray";
-import { SDNode } from "@/Node/SDNode";
 
 export function ValueStack(parent) {
     Stack.call(this, parent);
@@ -8,8 +8,6 @@ export function ValueStack(parent) {
     this.type("ValueStack");
 
     this.member.new("align", "cx");
-
-    return this;
 }
 
 ValueStack.prototype = {

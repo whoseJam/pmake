@@ -1,9 +1,9 @@
-import { Color }   from "SD/Utility/Color";
-import { SDNode }  from "SD/Node/SDNode";
-import { D3Layer } from "SD/Node/SDNode/D3Layer";
+import { Color } from "SD/Utility/Color";
+
+import { SDNode } from "SD/Node/SDNode";
 
 export class BaseArray extends SDNode {
-    constructor(parent: SDNode|D3Layer);
+    constructor(parent: SDNode);
 
     start(): number;
     start(start: number): this;
@@ -17,8 +17,8 @@ export class BaseArray extends SDNode {
      */
     resize(length: number): this;
 
-    idx(index: number): number;
-    element(index: number): SDNode;
+    idx(idx: number): number;
+    element(idx: number): SDNode;
     lastElement(): SDNode;
     firstElement(): SDNode;
 
@@ -28,24 +28,26 @@ export class BaseArray extends SDNode {
     pushFromExistElement(value: SDNode): this;
     pop(): this;
 
-    erase(index: number): this;
-    dropElement(index: number): SDNode;
-    dropValue(index: number): SDNode;
+    erase(idx: number): this;
+    dropElement(idx: number): SDNode;
+    dropFirstElement(idx: number): SDNode;
+    dropLastElement(idx: number): SDNode;
+    dropValue(idx: number): SDNode;
 
-    text(index: number): string;
-    intValue(index: number): number;
+    text(idx: number): string;
+    intValue(idx: number): number;
 
     opacity(): number;
     opacity(opacity: number): this;
-    opacity(index: number): number;
-    opacity(index: number, opacity: number): this;
+    opacity(idx: number): number;
+    opacity(idx: number, opacity: number): this;
 
-    value(index: number): SDNode;
-    value(index: number, value: SDNode): this
+    value(idx: number): SDNode;
+    value(idx: number, value: SDNode): this
 
     color(color: Color): this;
-    color(index: number): Color;
-    color(index: number, color: Color): this;
+    color(idx: number): Color;
+    color(idx: number, color: Color): this;
     color(l: number, r: number, color: Color): this;
 
     /**

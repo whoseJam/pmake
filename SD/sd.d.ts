@@ -18,6 +18,7 @@ export { Box }    from "./Node/Element/Box";
 export { Vertex } from "./Node/Element/Vertex";
 
 export { Code }       from "./Node/Array/Code";
+export { Pile }       from "./Node/Array/Pile";
 export { Array }      from "./Node/Array/Array";
 export { Stack }      from "./Node/Array/Stack";
 export { VarList }    from "./Node/Array/VarList";

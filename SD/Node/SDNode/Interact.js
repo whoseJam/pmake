@@ -40,7 +40,6 @@ Interact.prototype.drag = function(type) {
             const transform = `matrix(1,0,0,1,${x},${y})`
             nake.setAttribute("transform", transform);
         }, function() {
-            console.log(nake.transform);
             startX = nake.transform.baseVal.getItem(0).matrix.e;
             startY = nake.transform.baseVal.getItem(0).matrix.f;
         });

@@ -15,8 +15,6 @@ export function BarArray(parent) {
     this.member.new("elementWidth", 40);
     this.member.new("elementHeight", 40);
     this.member.new("height", 0);
-
-    return this;
 }
     
 BarArray.prototype = {

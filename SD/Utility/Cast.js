@@ -1,5 +1,7 @@
 import { Text } from "@/Node/Nake/Text";
 
+import { ErrorLauncher } from "@/Utility/ErrorLauncher";
+
 export function SelectValidValue(value1, value2) {
     return value1 === undefined || value1 === null? value2 : value1;
 }
@@ -36,5 +38,12 @@ export class Cast {
     static castToArray(value) {
         if (typeof(value) === "number") return [value];
         return value;
+    }
+
+    static castToNumber(value) {
+        if (+value === NaN) {
+            ErrorLauncher.invalidCastError("castToNumber");
+        }
+        return +value;
     }
 }

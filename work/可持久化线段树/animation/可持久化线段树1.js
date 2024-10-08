@@ -16,14 +16,11 @@ const operator = [
     { op: "M", pos: 4, value: 3, gap: 100 },
 ];
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     build();
-}
+})
 
-async function main() {
+sd.main(async () => {
     for (let i = 0; i < operator.length; i++) {
         if (operator[i].op === "M") {
             await insert(operator[i].pos, operator[i].value);
@@ -31,8 +28,7 @@ async function main() {
     }
     for (let i = 0; i < segmentTrees.length; i++)
         await query(i);
-    await sd.pause();
-}
+})
 
 function findNodeById(nodeId) {
     for (let i = 0; i < segmentTrees.length; i++) {
@@ -57,10 +53,10 @@ async function query(v) {
     }
     await sd.pause();
     tree.root().startAnimate().color(C.green).endAnimate();
-    dfs(tree.root().nodeId, 1, n, C.green);
+    dfs(tree.rootId(), 1, n, C.green);
     await sd.pause();
     tree.root().startAnimate().color(C.white).endAnimate();
-    dfs(tree.root().nodeId, 1, n, C.white);
+    dfs(tree.rootId(), 1, n, C.white);
 }
 
 function build() {
@@ -100,6 +96,7 @@ async function insert(pos, value) {
     tree.x(100 + gapSum).y(100);
     
     const dfsInsert = async function(x, lastx, l, r, pos, value) {
+        console.log("x=", x, "lastx=", lastx, "tree=", treeNodes[lastx]);
         treeNodes[x].lc = treeNodes[lastx].lc;
         treeNodes[x].rc = treeNodes[lastx].rc;
         const vertex = tree.element(x);
@@ -149,5 +146,5 @@ async function insert(pos, value) {
     const root = ++tot;
     await sd.pause();
     tree.startAnimate().root(root).endAnimate();
-    await dfsInsert(root, lastVersion ? lastVersion.root().nodeId : undefined,  1, n, pos, value);
+    await dfsInsert(root, lastVersion ? lastVersion.rootId() : undefined,  1, n, pos, value);
 }

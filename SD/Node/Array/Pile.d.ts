@@ -1,7 +1,7 @@
 import { SDNode }    from "SD/Node/SDNode";
 import { BaseArray } from "SD/Node/Array/BaseArray";
 
-export class Stack extends BaseArray {
+export class Pile extends BaseArray {
     constructor(parent: SDNode);
 
     elementWidth(): number;

@@ -61,6 +61,7 @@ function update() {
 export function binaryTreeLayout(mode) {
     const root = this.stratify();
     if (!root) return this;
+    console.log("root=", root);
     const realX = (mode === "vertical") ? 
         (rank, gap, depth) => this.x() + (rank * 2 + 1) * gap : 
         (rank, gap, depth) => this.x() + this.layerWidth() * depth;
@@ -89,8 +90,8 @@ export function binaryTreeLayout(mode) {
     
     const links = this.member.get("links");
     for (let link of links) {
-        const src = this.findNodeById(link.parentNodeId);
-        const tgt = this.findNodeById(link.childNodeId);
+        const src = this.findNodeById(this.sourceId(link));
+        const tgt = this.findNodeById(this.targetId(link));
         this.tryMove(link, () => {
             link.source(src.cx(), src.cy());
             link.target(tgt.cx(), tgt.cy());

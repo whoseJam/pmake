@@ -1,9 +1,8 @@
 import { SDNode }    from "SD/Node/SDNode";
-import { D3Layer }   from "SD/Node/SDNode/D3Layer";
 import { BaseArray } from "SD/Node/Array/BaseArray";
 
 export class VarList extends BaseArray {
-    constructor(parent: SDNode|D3Layer);
+    constructor(parent: SDNode);
 
     fontSize(): number;
     fontSize(fontSize: number): this;

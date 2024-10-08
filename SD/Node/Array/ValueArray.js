@@ -10,8 +10,6 @@ export function ValueArray(parent) {
     this.type("ValueArray");
 
     this.member.new("align", "cy");
-
-    return this;
 }
 
 ValueArray.prototype = {

@@ -4,6 +4,7 @@ import { Text }      from "@/Node/Nake/Text";
 import { Code }      from "@/Node/Array/Code";
 import { SDNode }    from "@/Node/SDNode";
 import { BaseArray } from "@/Node/Array/BaseArray";
+import { Enter } from "../SDNode/Enter";
 
 export function VarList(parent) {
     BaseArray.call(this, parent);
@@ -16,8 +17,6 @@ export function VarList(parent) {
     this.member.new("height", 0);
     this.member.new("font-size", 25);
     this.member.new("dx", 40);
-
-    return this;
 }
 
 VarList.prototype = { 
@@ -52,12 +51,7 @@ VarList.prototype.put = function(key, value) {
     const element = new Text(this, `${key}=${stringValue}`);
     element.key = key;
     element.value = value;
-    element._.enter = (element, move) => {
-        element.opacity(0);
-        move();
-        element.startAnimate(this);
-        element.opacity(1);
-    }
+    element.onEnter(Enter.Ordinary(this));
     this.insertByBaseArray(this.end() + 1, element);
     return this;
 }

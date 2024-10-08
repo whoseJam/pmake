@@ -1,4 +1,5 @@
 import { Action } from "@/Animate/Action";
+
 import { Dom } from "@/Dom/Dom";
 
 let SVGNodeID = 0;
@@ -17,8 +18,8 @@ export class SVGNode {
         return tmp;
     }
 
-    nakeLayer() {
-        return this.layer;
+    nake() {
+        return this.element;
     }
 
     moveTo(layer) {

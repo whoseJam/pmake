@@ -1,5 +1,8 @@
 import { SDNode } from "@/Node/SDNode";
 
+import { Cast }          from "@/Utility/Cast";
+import { ErrorLauncher } from "@/Utility/ErrorLauncher";
+
 export function BaseArray(parent) {
     SDNode.call(this, parent);
 
@@ -7,14 +10,11 @@ export function BaseArray(parent) {
     this.member.new("elements", []);
     
     this._.BASE_ARRAY = true;
-
-    return this;
 }
 
 BaseArray.prototype = {
     ...SDNode.prototype
 };
-BaseArray.prototype.baseArray = true;
 
 BaseArray.prototype.x     = SDNode.OrdinaryGSet("x", "setByEqual");
 BaseArray.prototype.y     = SDNode.OrdinaryGSet("y", "setByEqual");
@@ -26,9 +26,7 @@ BaseArray.prototype.length = function(size) {
         const elements = this.member.get("elements");
         return elements.length;
     }
-    if (typeof(size) !== "number" || size < 0) {
-        throw new Error(`Size Must Be A Positive Number (size = ${size}`);
-    }
+    size = Cast.castToNumber(size);
     let currentLength = this.length();
     while (currentLength < size) { this.push(); currentLength++; }
     while (currentLength > size) { this.pop();  currentLength--; }
@@ -53,7 +51,7 @@ BaseArray.prototype.element = function(idx) {
     const index = this.idx(idx);
     if (0 <= index && index < elements.length)
         return elements[index];
-    throw new Error(`Index ${idx} Out Of Range`);
+    ErrorLauncher.outOfRangeError(idx);
 }
 
 BaseArray.prototype.firstElement = function() {
@@ -90,20 +88,20 @@ BaseArray.prototype.pop = function() {
     return this;
 }
 
-BaseArray.prototype.insertByBaseArray = function(idx, elem) {
+BaseArray.prototype.insertByBaseArray = function(idx, element) {
     const elements = this.member.get("elements");
-    elements.splice(this.idx(idx), 0, elem);
-    this._.children.push(elem);
+    elements.splice(this.idx(idx), 0, element);
+    this.childAs(element);
     this.member.dirty("elements");
     this.tryUpdate();
     return this;
 }
 
 BaseArray.prototype.eraseByBaseArray = function(idx) {
-    const elem = this.element(idx);
-    const elems = this.member.get("elements");
-    elems.splice(this.idx(idx), 1);
-    this._.children.erase(elem);
+    const element = this.element(idx);
+    const elements = this.member.get("elements");
+    elements.splice(this.idx(idx), 1);
+    this.eraseChild(element);
     this.member.dirty("elements");
     this.tryUpdate();
     return this;
@@ -120,6 +118,10 @@ BaseArray.prototype.dropElement = function(idx) {
     const element = this.element(idx);
     this.eraseByBaseArray(idx);
     return element;
+}
+
+BaseArray.prototype.dropFirstElement = function() {
+    return this.dropElement(this.start());
 }
 
 BaseArray.prototype.dropLastElement = function() {
@@ -144,6 +146,14 @@ BaseArray.prototype.intValue = function(idx) {
     return +this.value(idx).text();
 }
 
+BaseArray.prototype.sort = function(comparator = (a, b) => a.intValue() - b.intValue()) {
+    const elements = this.member.get("elements");
+    elements.sort(comparator);
+    this.member.dirty("elements");
+    this.tryUpdate();
+    return this;
+}
+
 BaseArray.prototype.opacity = function() {
     if (arguments.length === 0) {
         return SDNode.prototype.opacity.call(this);
@@ -161,8 +171,7 @@ BaseArray.prototype.opacity = function() {
         this.element(idx).opacity(opacity);
         return this;
     }
-    console.log(arguments);
-    throw new Error("Invalid Arguments");
+    ErrorLauncher.invalidArguments();
 }
 
 BaseArray.prototype.value = function() {
@@ -175,8 +184,7 @@ BaseArray.prototype.value = function() {
         this.element(idx).value(value);
         return this;
     }
-    console.log(arguments);
-    throw new Error("Invalid Arguments");
+    ErrorLauncher.invalidArguments();
 }
 
 BaseArray.prototype.color = function() {
@@ -200,14 +208,5 @@ BaseArray.prototype.color = function() {
             this.element(i).color(color);
         return this;
     }
-    console.log(arguments);
-    throw new Error("Invalid Arguments");
-}
-
-BaseArray.prototype.sort = function(comparator = (a, b) => a.intValue() - b.intValue()) {
-    const elements = this.member.get("elements");
-    elements.sort(comparator);
-    this.member.dirty("elements");
-    this.tryUpdate();
-    return this;
+    ErrorLauncher.invalidArguments();
 }

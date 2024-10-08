@@ -24,6 +24,7 @@ export { Box }    from "./Node/Element/Box.js";
 export { Vertex } from "./Node/Element/Vertex.js";
 
 export { Code }       from "./Node/Array/Code.js";
+export { Pile }       from "./Node/Array/Pile.js";
 export { Array }      from "./Node/Array/Array.js";
 export { Stack }      from "./Node/Array/Stack.js";
 export { VarList }    from "./Node/Array/VarList.js";

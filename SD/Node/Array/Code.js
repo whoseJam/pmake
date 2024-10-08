@@ -1,14 +1,12 @@
-import { Rect }                 from "@/Node/Nake/Rect";
-import { BaseArray }            from "@/Node/Array/BaseArray";
-import { SDNode } from "@/Node/SDNode";
+import { Rect }      from "@/Node/Nake/Rect";
+import { Enter }     from "@/Node/SDNode/Enter";
+import { SDNode }    from "@/Node/SDNode";
+import { BaseArray } from "@/Node/Array/BaseArray";
 
 import { Context } from "@/Animate/Context";
 
-import { Cast } from "@/Utility/Cast";
-
-import { color } from "@/Utility/Color";
-
-const C = color();
+import { Cast }  from "@/Utility/Cast";
+import { Color } from "@/Utility/Color";
 
 export function Code(parent, source = undefined) {
     BaseArray.call(this, parent);
@@ -24,9 +22,9 @@ export function Code(parent, source = undefined) {
     this.member.new("fontSize", 20);
     this.member.set("start", 1);
 
-    this._.children.push(
+    this.childAs(
         "focus",
-        new Rect(this).color(C.BLUE).opacity(0),
+        new Rect(this).color(Color.BLUE).opacity(0),
         (parent, child) => {
             if (typeof(parent.l()) !== "number") return;
             const elementL = parent.element(parent.l());
@@ -40,11 +38,7 @@ export function Code(parent, source = undefined) {
 
     this.newLayer("elements");
 
-    if (source) {
-        this.code(source);
-    }
-
-    return this;
+    if (source) this.code(source);
 }
 
 Code.prototype = {
@@ -78,13 +72,7 @@ Code.prototype.height = function(height) {
 
 Code.prototype.insert = function(index, value = "") {
     const element = Cast.castToSDNode(this.layer("elements"), value);
-    element._.enter = (element, move) => {
-        element.opacity(0);
-        move();
-        element.update();
-        element.startAnimate(this);
-        element.opacity(1);
-    }
+    element.onEnter(Enter.Ordinary(this, "elements"));
     this.insertByBaseArray(index, element);
     return this;
 }
@@ -116,14 +104,14 @@ Code.prototype.focus = function(l, r) {
     this.member.setAndFlush("l", l);
     this.member.setAndFlush("r", r);
     if (!focus.opacity()) {
-        focus._.enter = (elem, move) => {
+        focus.onEnter((element, move) => {
             const context = new Context(this);
-            elem.startAnimate(context.tillc(0, 0));
+            element.startAnimate(context.tillc(0, 0));
             move();
-            elem.update();
-            elem.startAnimate(context.tillc(0, 1));
-            elem.opacity(1);
-        };
+            element.update();
+            element.startAnimate(context.tillc(0, 1));
+            element.opacity(1);
+        });
     }
     this.tryUpdate();
     return this;
