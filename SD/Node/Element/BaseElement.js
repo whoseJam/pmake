@@ -6,6 +6,8 @@ import { CenterFixAspect } from "@/Rule/Center";
 
 import { Cast }  from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
+import { Exit } from "../SDNode/Exit";
+import { Enter } from "../SDNode/Enter";
 
 export function BaseElement(parent) {
     SDNode.call(this, parent);
@@ -32,9 +34,7 @@ BaseElement.prototype.updateList = [
         if (this.member.hasChanged("rate")) {
             const rule = CenterFixAspect(this.member.get("rate"));
             const value = this.child("value");
-            if (value) {
-                value._.rule = rule;
-            }
+            value?.rule(rule);
             this.member.flush("rate");
         }
     }
@@ -54,52 +54,14 @@ BaseElement.prototype.strokeWidth   = BackgroundGSet("strokeWidth");
 
 BaseElement.prototype.text = function() {
     const value = this.child("value");
-    if (!value) {
-        return "";
-    }
-    return value.text();
+    return value ? value.text ? value.text() : undefined : undefined;
 }
 
 BaseElement.prototype.drop = function() {
     const value = this.child("value");
-    this._.children.erase(value);
+    this.eraseChild(value);
     value.attachTo(svg());
     return value;
-}
-
-BaseElement.prototype.value = function(value, rule) {
-    if (arguments.length === 0) {
-        return this.member.get("value");
-    }
-    rule = rule ? rule : CenterFixAspect(this.member.get("rate"));
-    const valueIsSDNode = Check.isTypeOfSDNode(value);
-    value = Cast.castToSDNode(this, value);
-    const oldValue = this.member.get("value");
-    if (oldValue) {
-        this._.children.erase(oldValue);
-        oldValue.opacity(0).remove();
-    }
-    if (value === undefined || value === null) {
-        return this;
-    }
-    value._.enter = (element, move) => {
-        if (!valueIsSDNode) {
-            element.attachTo(this)
-            element.opacity(0);
-        } else {
-            element.attachTo(this)
-            element.after(this);
-            element.opacity(0);
-        }
-        move();
-        element.update();
-        element.startAnimate(this);
-        element.opacity(1);
-    }
-    this._.children.push("value", value, rule);
-    this.member.setAndFlush("value", value);
-    this.tryUpdate();
-    return this;
 }
 
 BaseElement.prototype.intValue = function() {
@@ -108,29 +70,31 @@ BaseElement.prototype.intValue = function() {
     return +value.text();
 }
 
+BaseElement.prototype.value = function(value, rule) {
+    if (arguments.length === 0) return this.member.get("value");
+    Exit.ordinary(this, "value");
+    if (Check.isFalseType(value)) return this;
+    rule = rule ? rule : CenterFixAspect(this.member.get("rate"));
+    value = Cast.castToSDNode(this, value);
+    value.onEnter(Enter.ordinary(this));
+    this.childAs("value", value, rule);
+    this.member.setAndFlush("value", value);
+    this.tryUpdate();
+    return this;
+}
+
 BaseElement.prototype.valueFromExist = function(value, rule) {
     rule = rule ? rule : CenterFixAspect(this.member.get("rate"));
-    const oldValue = this._.children.erase("value");
-    if (oldValue) {
-        oldValue.opacity(0).remove();
-    }
-    value._.enter = (node, move) => {
-        node.startAnimate(this);
-        node.attachTo(this);
-        move();
-        node.opacity(1);
-    };
-    this._.children.push("value", value, rule);
+    Exit.ordinary(this, "value");
+    value.onEnter(Enter.fromExist(this));
+    this.childAs("value", value, rule);
     this.tryUpdate();
     return this;
 }
 
 BaseElement.prototype.valueRule = function(rule) {
-    this.member.set("rule", rule);
     const value = this.member.get("value");
-    if (value) {
-        value._.rule = rule;
-    }
+    value?.rule(rule);
 }
 
 function BackgroundGSet(key) {

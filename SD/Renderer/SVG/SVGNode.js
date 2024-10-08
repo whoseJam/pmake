@@ -42,6 +42,7 @@ export class SVGNode {
             Snap(this.layer.element).append(this.element);
             return;
         }
+        console.log("this.parent=", this.parent);
         const self = this;
         new Action(
             this.parent.delay() + this.parent.duration(),

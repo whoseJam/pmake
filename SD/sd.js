@@ -20,8 +20,9 @@ export { Ellipse }       from "./Node/Nake/Ellipse.js";
 export { Fragment }      from "./Node/Nake/Fragment.js";
 export { ForeignObject } from "./Node/Nake/ForeignObject.js";
 
-export { Box }    from "./Node/Element/Box.js";
-export { Vertex } from "./Node/Element/Vertex.js";
+export { Box }           from "./Node/Element/Box.js";
+export { Vertex }        from "./Node/Element/Vertex.js";
+export { EllipseVertex } from "./Node/Element/EllipseVertex.js";
 
 export { Code }       from "./Node/Array/Code.js";
 export { Pile }       from "./Node/Array/Pile.js";

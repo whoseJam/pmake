@@ -14,8 +14,6 @@ export function Vertex(parent, value) {
     this.childAs("background", new Circle(this.layer("background")), CircleBackground());
     
     this.value(value);
-
-    return this;
 }
 
 Vertex.prototype = {

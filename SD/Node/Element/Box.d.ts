@@ -1,5 +1,6 @@
-import { BaseElement } from "./BaseElement";
+import { SDNode }      from "@/Node/SDNode";
+import { BaseElement } from "@/Node/Element/BaseElement";
 
 export class Box extends BaseElement {
-    constructor(parent: any);
+    constructor(parent: SDNode);
 }

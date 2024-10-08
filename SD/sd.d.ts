@@ -14,8 +14,9 @@ export { Ellipse }       from "./Node/Nake/Ellipse";
 export { Fragment }      from "./Node/Nake/Fragment";
 export { ForeignObject } from "./Node/Nake/ForeignObject";
 
-export { Box }    from "./Node/Element/Box";
-export { Vertex } from "./Node/Element/Vertex";
+export { Box }           from "./Node/Element/Box";
+export { Vertex }        from "./Node/Element/Vertex";
+export { EllipseVertex } from "./Node/Element/EllipseVertex";
 
 export { Code }       from "./Node/Array/Code";
 export { Pile }       from "./Node/Array/Pile";
