@@ -1,16 +1,21 @@
 import * as sd from "@/sd";
 
-let svg = sd.svg();
-let C = sd.color();
-let l = new sd.Bezier(svg).opacity(0);
+const svg = sd.svg();
+const C = sd.color();
+const curveTypes = [
+    sd.Bezier,
+    sd.CircleCurve,
+    sd.Curve,
+    sd.VHBezier
+];
 
-main();
-
-async function main() {
-    await sd.pause();
-    l.opacity(1).source(100, 100).target(300, 200);
-    l.startAnimate();
-    l.pointStoT();
-    l.endAnimate().arrow();
-    await sd.pause();
-}
+sd.main(async () => {
+    for (let i = 0; i < curveTypes.length; i++) {
+        await sd.pause();
+        const line = new curveTypes[i](svg);
+        line.source(100, 100).target(300, 200);
+        line.startAnimate().pointStoT().endAnimate().arrow();
+        await sd.pause();
+        line.startAnimate().fadeStoT().endAnimate().arrow(null);
+    }
+})

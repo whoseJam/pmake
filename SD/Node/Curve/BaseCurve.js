@@ -10,8 +10,6 @@ export function BaseCurve(parent) {
     this.member.new("y2", 40);
 
     this._.BASE_CURVE = true;
-
-    return this;
 }
 
 BaseCurve.prototype = {
@@ -24,11 +22,5 @@ BaseCurve.prototype.x2 = SDNode.OrdinaryGSet("x2", "setByEqual");
 BaseCurve.prototype.y2 = SDNode.OrdinaryGSet("y2", "setByEqual");
 
 BaseCurve.prototype.updateList = [
-    function() {
-        const [path, hasChanged] = this.member.get("path-calculator").call(this);
-        if (hasChanged) {
-            this.member.set("d", path);
-        }
-    },
-    ...Path.prototype.updateList,
+    ...Path.prototype.updateList
 ]

@@ -25,4 +25,6 @@ export class PathPen {
     Arc(rx: number, ry: number, xAxisRotation: number, largeArcFlag: 0|1, sweepFlag: 0|1, x: number, y: number): this;
     arc(r: Vector, xAxisRotation: number, largeArcFlag: 0|1, sweepFlag: 0|1, dv: Vector): this;
     arc(rx: number, ry: number, xAxisRotation: number, largeArcFlag: 0|1, sweepFlag: 0|1, dx: number, dy: number): this;
+
+    toString(): string;
 }

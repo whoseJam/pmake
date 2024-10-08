@@ -53,6 +53,7 @@ export { ValueGridGraph } from "./Node/Graph/ValueGridGraph.js";
 
 export { Curve }           from "./Node/Curve/Curve.js";
 export { Bezier }          from "./Node/Curve/Bezier.js";
+export { VHBezier }        from "./Node/Curve/VHBezier.js";
 export { BraceCurve }      from "./Node/Curve/BraceCurve.js";
 export { CircleCurve }     from "./Node/Curve/CircleCurve.js";
 export { FixedPointCurve } from "./Node/Curve/FixedPointCurve.js";

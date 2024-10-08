@@ -4,7 +4,6 @@ export function Updater(parent) {
     this.freezeCount = 0;
     this.isPending = false;
     this.attachUpdateList = [];
-    return this;
 }
 
 Updater.prototype.preUpdate = function() {

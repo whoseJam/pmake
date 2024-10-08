@@ -44,7 +44,6 @@ export function SDNode(parent) {
 SDNode.Forward = function(componentName, functionName) {
     return function() {
         const component = this._[componentName];
-        console.log("comp=", component, "func=", functionName)
         component[functionName].apply(component, arguments);
         return this;
     }
