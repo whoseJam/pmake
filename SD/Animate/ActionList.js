@@ -9,7 +9,7 @@ export function ActionList() {
 
 ActionList.prototype.push = function(action) {
     this.actionCount++;
-    // this.rebuild(action);
+    this.rebuild(action);
     this.directPush(action);
 }
 
@@ -34,8 +34,9 @@ ActionList.prototype.checkConflict = function(before, after) {
      * - after : opacity: [50, 50] 1 -> 1
      * 在这种情况下，认为 before 是一个短暂的错误，阻止突变
      */
-    if (before.l === before.r && after.l === after.r && after.l === before.l && before.from === after.to) {
+    if (before.l === before.r && after.l === after.r && after.l === before.l && before.source === after.target) {
         after.from = before.from;
+        after.source = before.source;
         if (after.from === after.to) before.hide();
         else                         before.stop();
         return;
@@ -52,6 +53,7 @@ ActionList.prototype.checkConflict = function(before, after) {
      */
     if (before.l === after.l && before.r === after.r && before.l !== before.r) {
         after.from = before.from;
+        after.source = before.source;
         before.hide();
         return;
     }

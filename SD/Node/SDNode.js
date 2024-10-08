@@ -178,7 +178,8 @@ SDNode.prototype.updateList = [
                     if (t === 1) {
                         layer.setAttribute("pointer-event", k === 0 ? "none" : "auto");
                     }
-                }
+                },
+                this, "opacity"
             )
             this.member.flush("opacity");
         }

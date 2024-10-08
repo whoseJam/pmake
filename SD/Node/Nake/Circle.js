@@ -2,6 +2,7 @@ import { Interp } from "@/Animate/Interp";
 
 import { SDNode } from   "@/Node/SDNode";
 import { BaseNake } from "@/Node/Nake/BaseNake";
+import { Action } from "@/Animate/Action";
 
 export function Circle(parent) {
     BaseNake.call(this, parent, "circle");

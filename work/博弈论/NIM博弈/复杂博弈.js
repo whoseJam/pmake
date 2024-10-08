@@ -20,7 +20,6 @@ sd.init(() => {
                     stones[i][l],
                     stones[i][l + (1<<j) - 1]
                 ).opacity(0));
-                console.log("focus.opacity=", focuses[focuses.length - 1].opacity());
                 focuses[focuses.length - 1].index = i;
                 l += (1<<j);
             }
