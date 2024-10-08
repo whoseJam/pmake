@@ -32,7 +32,7 @@ export function Button(parent) {
         </div>
     );
 
-    this._.button = this._.nake.children[0].children[0];
+    this._.button = this._.nake.element.children[0].children[0];
 
     this.width(60).height(25);
 

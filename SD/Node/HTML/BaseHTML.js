@@ -21,6 +21,6 @@ BaseHTML.prototype = {
 BaseHTML.prototype.html = undefined;
 BaseHTML.prototype.dom = function(jsx) {
     const nake = this._.nake;
-    render(jsx, nake);
+    render(jsx, nake.element);
     return this;
 }

@@ -33,7 +33,7 @@ export function Slider(parent) {
                 } />
         </div>
     )
-    this._.slider = this._.nake.children[0].children[0];
+    this._.slider = this._.nake.element.children[0].children[0];
     this.width(60).height(25);
 
     return this;

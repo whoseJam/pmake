@@ -29,7 +29,7 @@ export function Input(parent) {
         </div>
     );
 
-    const div = this._.nake.children[0];
+    const div = this._.nake.element.children[0];
     this._.label = div.children[0];
     this._.input = div.children[1];
     this.width(120).height(25);

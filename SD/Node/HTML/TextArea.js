@@ -10,7 +10,7 @@ export function TextArea(parent) {
             </textarea>
         </div>
     );
-    this._.textarea = this._.nake.children[0].children[0];
+    this._.textarea = this._.nake.element.children[0].children[0];
     this.width(80).height(100);
 
     return this;
