@@ -54,7 +54,7 @@ export class SVGNode {
                     Snap(Dom.getByID(this.target.id)).append(self.element);
                 }
             },
-            this, "appear"
+            this.parent, "appear"
         )
     }
 

@@ -68,7 +68,7 @@ function IndexRule(parent, child) {
                 const attach = new Text(child, i).fontSize(fontSize);
                 attach.onEnter(Enter.Ordinary(child));
                 elements.push(attach);
-                child.children.push(attach);
+                child._.children.push(attach);
                 child.tryMove(attach, () => {
                     aside(indexed, attach, location, fontSize, gap);
                 });

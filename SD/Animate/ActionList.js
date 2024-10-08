@@ -189,7 +189,7 @@ ActionList.prototype.updateWindowSize = function() {
             action.channel !== "y2" &&
             action.channel !== "transform" &&
             action.channel !== "opacity" &&
-            action.channel !== "global-opacity") continue;
+            action.channel !== "appear") continue;
         const owner = action.owner;
         if ("opacity" in owner && owner._.nake && isVisble(owner)) {
             const nake = owner._.nake;
