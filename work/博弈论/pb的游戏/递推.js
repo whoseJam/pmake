@@ -19,8 +19,10 @@ sd.main(async () => {
         let flag = false;
         for (let j = 1; j <= (i >> 1); j++) {
             await sd.pause();
-            p1.startAnimate().moveTo(j).endAnimate();
-            p2.startAnimate().moveTo(i - j).endAnimate();
+            F.startAnimate();
+            p1.moveTo(j);
+            p2.moveTo(i - j);
+            F.endAnimate();
             const a = F.intValue(j);
             const b = F.intValue(i - j);
             if (!a && !b) {
@@ -31,8 +33,10 @@ sd.main(async () => {
         await sd.pause();
         F.startAnimate().value(i, flag ? 1 : 0).endAnimate();
         await sd.pause();
-        p1.startAnimate().moveTo(null).endAnimate();
-        p2.startAnimate().moveTo(null).endAnimate();
-        F.startAnimate().color(i, C.white).endAnimate();
+        F.startAnimate();
+        p1.moveTo(null);
+        p2.moveTo(null);
+        F.color(i, C.white);
+        F.endAnimate();
     }
 })

@@ -5,7 +5,6 @@ const background = svg.append("g");
 const C = sd.color();
 const R = sd.rule();
 const data = [3, 5, 7, 6, 4, 3];
-// const data = [3, 5, 6];
 const stones = [];
 const focuses = [];
 

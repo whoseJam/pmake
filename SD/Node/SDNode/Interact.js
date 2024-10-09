@@ -12,7 +12,7 @@ export function Interact(parent) {
 Interact.prototype.onClick = function(callback) {
     const nake = this.parent._.layer.nake();
     Dom.removeEventListener(nake, "click", this.onClickCb);
-    this.onClick = () => {
+    this.onClickCb = () => {
         clearTimeout(this.clickTimeout);
         this.clickTimeout = setTimeout(() => {
             callback(this.parent);
@@ -25,7 +25,7 @@ Interact.prototype.onClick = function(callback) {
 Interact.prototype.onDblClick = function(callback) {
     const nake = this.parent._.layer.nake();
     Dom.removeEventListener(nake, "dblclick", this.onDblClickCb);
-    this.onDblClick = () => {
+    this.onDblClickCb = () => {
         clearTimeout(this.clickTimeout);
         callback(this.parent);
     };

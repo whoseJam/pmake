@@ -220,3 +220,11 @@ SDNode.prototype.triggerRule = function() {
 SDNode.prototype.onEnter = function(callback) {
     this._.enter = callback;
 }
+
+SDNode.prototype.clickable = function(type) {
+    if (Check.isFalseType(type)) {
+        this._.layer.setAttribute("pointer-event", "none");
+    } else {
+        this._.layer.setAttribute("pointer-event", "auto");
+    }
+}
