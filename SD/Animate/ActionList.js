@@ -1,4 +1,3 @@
-
 export function ActionList() {
     this.actionList = null;
     this.actionListEnd = null;
@@ -189,9 +188,10 @@ ActionList.prototype.updateWindowSize = function() {
             action.channel !== "y2" &&
             action.channel !== "transform" &&
             action.channel !== "opacity" &&
+            action.channel !== "font-size" &&
             action.channel !== "appear") continue;
         const owner = action.owner;
-        if ("opacity" in owner && owner._.nake && isVisble(owner)) {
+        if ("opacity" in owner && (owner._.nake || owner._.BASE_MATHJAX) && isVisble(owner)) {
             const nake = owner._.nake;
             const x = owner.x();
             const mx = owner.mx();

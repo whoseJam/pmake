@@ -11,8 +11,8 @@ const operations = new sd.Code(svg);
 const elements = new sd.Array(svg).resize(n).start(1);
 sd.Index(elements);
 
-init();
-main();
+sd.init(init);
+sd.main(main);
 
 function init() {
     operations.y(elements.my() + 40);

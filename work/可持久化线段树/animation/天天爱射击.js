@@ -7,8 +7,8 @@ const n = 8;
 const arr = new sd.Array(svg).x(100).y(100).elementWidth(60);
 sd.Label(arr, "位置", "lc");
 
-init();
-main();
+sd.init(init);
+sd.main(main);
 
 function init() {
     for (let i = 0; i < n; i++) {

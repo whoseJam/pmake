@@ -15,8 +15,8 @@ const operator = [
     { op: "M", pos: 4, value: 3, gap: 80},
 ];
 
-init();
-main();
+sd.init(init);
+sd.main(main);
 
 function init() {
     for (let i = 0; i < operator.length; i++) {

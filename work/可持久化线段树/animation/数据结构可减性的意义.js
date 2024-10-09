@@ -5,8 +5,8 @@ const C = sd.color();
 const R = sd.rule();
 const grid = new sd.GridGraph(svg).n(2).m(7).width(560).cx(600).cy(300);
 
-init();
-main();
+sd.init(init);
+sd.main(main);
 
 function init() {
     function math(math) {

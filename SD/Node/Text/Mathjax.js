@@ -26,6 +26,8 @@ export function Mathjax(parent, text) {
     this.member.new("font-size", 20);
 
     if (text) this.math(text);
+
+    this._.BASE_MATHJAX = true;
 }
 
 Mathjax.prototype = {
@@ -148,7 +150,6 @@ function ParseMathjax(root, replace) {
         }
     }
     dfs(root);
-    console.log("Element=", elements);
     return elements;
 }
 
@@ -178,9 +179,9 @@ function ReplaceMathjax(oldSvg, newSvg, delay, duration) {
                         snap.animate({ d: this.to }, duration, mina.easeinout);
                     }
                 } else if (t === 1) {
-                    console.log("snap.attr=", snap.attr("d"));
-                    console.log("from=", this.from);
-                    console.log("to=", this.to);
+                    // console.log("snap.attr=", snap.attr("d"));
+                    // console.log("from=", this.from);
+                    // console.log("to=", this.to);
                     setTimeout(() => {
                         snap.attr({ d: this.to });
                     }, 50);

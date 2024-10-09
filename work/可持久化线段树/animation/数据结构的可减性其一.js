@@ -12,8 +12,8 @@ sd.Label(arr, "S", "lc");
 sd.Label(modify, "Modify", "lc");
 sd.Label(newArr, "S'", "lc");
 
-init();
-main();
+sd.init(init);
+sd.main(main);
 
 function init() {
     arr.pushArray(oldData).x(100).y(100);

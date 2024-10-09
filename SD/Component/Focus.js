@@ -82,6 +82,8 @@ export function Focus(parent) {
                 this.member.set("focusElement1", undefined);
                 this.member.set("focusElement2", undefined);
                 this.member.set("focusCount", 0);
+                this.opacity(0);
+                return this;
             } else {
                 this.member.set("focusElement1", typeof(arg0) === "object" ? arg0 : parent.element(arg0));
                 this.member.set("focusElement2", undefined);

@@ -13,10 +13,7 @@ const links = [
     [6, 8], [6, 9], [7, 10], [7, 11]
 ];
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     tree.root(1);
     links.forEach(link => {
         tree.link(link[0], link[1]);
@@ -26,16 +23,16 @@ function init() {
         const math = new sd.Mathjax(e, `insert(a_{${i}})`);
         e.childAs("math", math, R.Aside(getLocator(i)));
     }
-}
+})
 
-async function main() {
+sd.main(async () => {
     await sd.pause();
     tree.startAnimate();
     for (let i = 1; i <= 7; i++)
         tree.color(i, C.green);
     tree.endAnimate();
     await sd.pause();
-}
+})
 
 function getLocator(x) {
     if (x <= 7) return x & 1 ? "rc" : "lc";

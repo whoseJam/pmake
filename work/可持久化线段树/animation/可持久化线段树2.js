@@ -6,8 +6,8 @@ const R = sd.rule();
 const arr = new sd.Array(svg).x(100).y(100).elementWidth(60);
 const data = [1, 5, 3, 4, 2];
 
-init();
-main();
+sd.init(init);
+sd.main(main);
 
 function init() {
     data.forEach((item, idx) => {
