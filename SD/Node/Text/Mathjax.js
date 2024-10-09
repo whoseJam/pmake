@@ -1,4 +1,3 @@
-import { Fragment } from "@/Node/Nake/Fragment";
 import { Dom } from "@/Dom/Dom";
 import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
@@ -21,6 +20,8 @@ export function Mathjax(parent, text) {
 
     this.member.new("x", 0);
     this.member.new("y", 0);
+    this.member.new("width", 0);
+    this.member.new("height", 0);
     this.member.new("text", "");
     this.member.new("font-size", 20);
 
@@ -63,11 +64,14 @@ Mathjax.prototype.updateList = [
 ]
 
 Mathjax.prototype.math = function(text) {
+    if (text === undefined) return this.text();
     if (text.startsWith("$")) text = text.slice(1, -1);
     this.member.setAndFlush("text", text);
     const svg = MathJax.tex2svg(text).children[0];
+    const box = Mathjax.GetBox(svg);
+    this.member.setAndFlush("width", box.width);
+    this.member.setAndFlush("height", box.height);
     this._.layer.element.append(svg);
-    // this.fragment(svg.outerHTML);
     return this;
 }
 
@@ -80,27 +84,23 @@ Mathjax.prototype.text = function() {
 }
 
 Mathjax.prototype.width = function(width) {
-    const owidth = this.member.get("width");
-    const oheight = this.member.get("height");
-    if (width === undefined)
-        return owidth;
-    const k = width / owidth;
-    this.member.set("width", owidth * k);
-    this.member.set("height", oheight * k);
-    this.tryUpdate();
+    const w = this.member.get("width");
+    const fontSize = this.member.get("font-size");
+    if (width === undefined) return w * fontSize / 20;
+    if (w === 0) return this;
+    const k = width / w;
+    this.fontSize(20 * k);
     return this;
 }
 
 
 Mathjax.prototype.height = function(height) {
-    const owidth = this.member.get("width");
-    const oheight = this.member.get("height");
-    if (height === undefined)
-        return oheight;
-    const k = height / oheight;
-    this.member.set("width", owidth * k);
-    this.member.set("height", oheight * k);
-    this.tryUpdate();
+    const h = this.member.get("height");
+    const fontSize = this.member.get("font-size");
+    if (height === undefined) return h * fontSize / 20;
+    if (h === 0) return this;
+    const k = height / h;
+    this.fontSize(20 * k);
     return this;
 }
 
@@ -178,10 +178,27 @@ function ReplaceMathjax(oldSvg, newSvg, delay, duration) {
                         snap.animate({ d: this.to }, duration, mina.easeinout);
                     }
                 } else if (t === 1) {
-                    snap.attr({ d: this.to });
+                    console.log("snap.attr=", snap.attr("d"));
+                    console.log("from=", this.from);
+                    console.log("to=", this.to);
+                    setTimeout(() => {
+                        snap.attr({ d: this.to });
+                    }, 50);
                 }
             },
             i, "d"
         );
     }
+}
+
+Mathjax.Init = function() {
+    Mathjax.helper = Dom.createSVGElement("g");
+    Dom.getByID("1").append(Mathjax.helper);
+    Mathjax.helper.setAttribute("opacity", 0);
+    Mathjax.helper.setAttribute("font-size", 20);
+}
+
+Mathjax.GetBox = function(svg) {
+    Mathjax.helper.append(svg);
+    return Mathjax.helper.getBBox();
 }
