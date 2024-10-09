@@ -14,11 +14,15 @@ export function BraceCurve(parent) {
 }
 
 BraceCurve.prototype = {
-    update,
     ...BaseCurve.prototype
 };
 
 BraceCurve.prototype.bending = SDNode.OrdinaryGSet("bending", "setByEqual");
+
+BraceCurve.prototype.updateList = [
+    update,
+    ...BraceCurve.prototype.updateList
+];
 
 function update() {
     if (this.member.hasChanged("x1") ||

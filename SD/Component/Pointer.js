@@ -22,17 +22,15 @@ function PointerRule(parent, child) {
     const gap = child.member.getAndFlush("pointerGap");
     if (!element) return;
     const pointers = pointerMap[element.id].filter((pointer) => {
-        return pointer.direction === child.direction && (pointer.opacity() !== 0 || pointer === child);
+        return pointer.member.get("direction") === direction && (pointer.opacity() !== 0 || pointer === child);
     });
     pointers.sort((a, b) => a.id - b.id);
     for (let i = 0; i < pointers.length; i++) {
         const k = (i + 1) / (pointers.length + 1);
-        if (pointers[i] !== child) pointers[i].startAnimate(child);
         if (direction === "t") pointers[i].cx(element.kx(k)).y(element.my() + gap);
         if (direction === "b") pointers[i].cx(element.kx(k)).my(element.y() - gap);
         if (direction === "l") pointers[i].cy(element.ky(k)).x(element.mx() + gap);
         if (direction === "r") pointers[i].cy(element.ky(k)).mx(element.x() - gap);
-        if (pointers[i] !== child) pointers[i].endAnimate();
     }
 }
 

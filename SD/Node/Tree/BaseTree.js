@@ -89,7 +89,7 @@ BaseTree.prototype.opacity = function(arg0, arg1, arg2) {
 BaseTree.prototype.color = function(arg0, arg1, arg2) {
     const nodes = this.member.get("nodes");
     if (arguments.length === 1) {
-        if (typeof(arg0) === "string" || "main" in arg0) {
+        if (typeof(arg0) !== "number" && (typeof(arg0) === "string" || "main" in arg0)) {
             nodes.forEach(node => node.color(arg0));
             return this;
         } else return this.findNodeById(arg0).color();

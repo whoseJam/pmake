@@ -102,7 +102,7 @@ export function Brace(parent) {
 
     brace.value = function(value, gap = 5) {
         this.member.set("valueGap", gap);
-        Exit.Ordinary(this, "value");
+        Exit.ordinary(this, "value");
         const element = Cast.castToSDNode(this, value);
         element.member.new("location", undefined);
         element.onEnter(Enter.ordinary(this));

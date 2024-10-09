@@ -13,6 +13,8 @@ interface BraceType extends SDNode {
     braceGap(gap: number): this;
     valueGap(): number;
     valueGap(gap: number): this;
+
+    value(value: SDNode): this;
 }
 
 /**
