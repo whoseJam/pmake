@@ -227,4 +227,11 @@ SDNode.prototype.clickable = function(type) {
     } else {
         this._.layer.setAttribute("pointer-event", "auto");
     }
+    return this;
+}
+
+SDNode.prototype.title = function(title) {
+    const titleElment = new SVGNode(this, this._.layer, "title");
+    titleElment.setAttribute("innerHTML", title);
+    return this;
 }

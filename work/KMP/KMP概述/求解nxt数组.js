@@ -5,25 +5,22 @@ const C = sd.color();
 // const str = " abbabaabbabb";
 const str = " axabaaxayaxabaaxax";
 const n = str.length - 1;
-const arr = sd.WithBrace(new sd.Array(svg).x(100).y(200).resize(str.length));
+const arr = new sd.Array(svg).x(100).y(200).resize(str.length);
 const nxt = sd.make1d(100, 0);
-const rangeF = arr.brace(1, 1, "b", 10).opacity(0);
-const rangeB = arr.brace(1, 1, "b", 20).opacity(0);
-const rangeBF = arr.brace(1, 1, "b", 60).opacity(0);
-const rangeBB = arr.brace(1, 1, "b", 70).opacity(0);
+const rangeF = sd.Brace(arr);
+const rangeB = sd.Brace(arr);
+const rangeBF = sd.Brace(arr);
+const rangeBB = sd.Brace(arr);
 const pntCur = sd.Pointer(arr, "cur");
 const pntI = sd.Pointer(arr, "i");
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     for (let i = 0; i <= n; i++) {
         arr.value(i, str[i]);
     }
-}
+})
 
-async function main() {
+sd.main(async () => {
     let cur = 0;
     pntCur.moveTo(0);
     for (let i = 2; i <= n; i++) {
@@ -76,9 +73,8 @@ async function main() {
                 updateBFAndBB(i - 1, cur);
             }
         }
-
     }
-}
+})
 
 function updateBFAndBB(i, cur) {
     if (rangeBF.opacity() > 0) {
@@ -90,7 +86,7 @@ function updateBFAndBB(i, cur) {
             rangeBB.startAnimate().opacity(0).endAnimate();
         }
     } else {
-        rangeBF.brace(1, cur).startAnimate().opacity(1).endAnimate();
-        rangeBB.brace(i - cur + 1, i).startAnimate().opacity(1).endAnimate();
+        rangeBF.startAnimate().brace(1, cur).endAnimate();
+        rangeBB.startAnimate().brace(i - cur + 1, i).opacity(1).endAnimate();
     }
 }

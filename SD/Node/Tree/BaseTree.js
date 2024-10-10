@@ -242,12 +242,11 @@ BaseTree.prototype.children = function(tid) {
 BaseTree.prototype.newNodeByBaseTree = function(tid, element) {
     const sidToNodes = this._.sidToNodes;
     const tidToNodes = this._.tidToNodes;
-    tidToNodes[tid] = { node: element, key: element.id };
+    tidToNodes[String(tid)] = { node: element, key: element.id };
     sidToNodes[element.id] = { node: element, key: String(tid) };
-
     this.member.get("nodes").push(element);
     this.member.dirty("nodes");
-    this._.children.push(element);
+    this.childAs(element);
     this.tryUpdate();
     return this;
 }
@@ -258,7 +257,7 @@ BaseTree.prototype.newLinkByBaseTree = function(sourceTid, targetTid, element) {
     
     this.member.get("links").push(element);
     this.member.dirty("links");
-    this._.children.push(element);
+    this.childAs(element);
     this.tryUpdate();
     return this;
 }

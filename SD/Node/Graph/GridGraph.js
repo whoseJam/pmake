@@ -78,7 +78,6 @@ GridGraph.prototype.newLinkFromExistValue = function(sourceGid, targetGid, value
     element.onEnter(Enter.fromExistValue(this, value, "links"));
     this.newLinkByBaseGraph(sourceGid, targetGid, element);
     return this;
-    
 }
 
 GridGraph.prototype.newLinkFromExistElement = function(sourceGid, targetGid, value) {

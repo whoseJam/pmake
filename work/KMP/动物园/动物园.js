@@ -6,10 +6,7 @@ const n = 15;
 const arr = new sd.Array(svg).resize(n);
 const tree = new sd.Tree(svg).cx(arr.cx()).y(arr.my() + 40);
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     tree.freeze();
     tree.root(1, " ");
     tree.newNode(2, "...").element(2).strokeOpacity(0).fillOpacity(0);
@@ -30,8 +27,8 @@ function init() {
     arr.color(6, C.green);
     tree.color(3, C.blue);
     arr.color(2, C.blue);
-}
+})
 
-async function main() {
-    await sd.pause();
-}
+sd.main(async () => {
+
+})

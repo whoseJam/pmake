@@ -6,9 +6,10 @@ import { BaseTree } from "@/Node/Tree/BaseTree";
 import { Vector } from "@/Math/Vector";
 
 import { trim }             from "@/Utility/Trim";
-import { SelectValidValue } from "@/Utility/Cast";
+import { Cast, SelectValidValue } from "@/Utility/Cast";
 
 import * as d3 from "d3";
+import { Enter } from "../SDNode/Enter";
 
 export function Tree(parent) {
     BaseTree.call(this, parent);
@@ -52,29 +53,45 @@ Tree.prototype.updateList = [
 
 Tree.prototype.newNode = function(id, value) {
     const element = new this._.nodeType(this.layer("nodes"));
-    element.value(SelectValidValue(value, id));
-    element._.enter = (element, move) => {
-        element.opacity(0);
-        move();
-        element.update();
-        element.startAnimate(this)
-        element.opacity(1);
-    };
+    element.value(Cast.castToSDNode(element, value, id));
+    element.onEnter(Enter.ordinary(this, "nodes"));
     this.newNodeByBaseTree(id, element);
     return this;
 }
 
+Tree.prototype.newNodeFromExistValue = function(tid, value) {
+    const element = new this._.nodeType(this.layer("nodes"));
+    element.onEnter(Enter.fromExistValue(this, value, "nodes"));
+    this.newNodeByBaseTree(tid, element);
+    return this;
+}
+
+Tree.prototype.newNodeFromExistElement = function(tid, value) {
+    const element = value;
+    element.onEnter(Enter.fromExist(this, "nodes"));
+    this.newNodeByBaseTree(tid, element);
+    return this;
+}
+
 Tree.prototype.newLink = function(x, y, value = null) {
-    const elem = new this._.linkType(this.layer("links"));
-    if (value !== null) elem.value(value);
-    elem._.enter = (elem, move) => {
-        elem.opacity(0);
-        move();
-        elem.update();
-        elem.startAnimate(this)
-        elem.opacity(1);
-    };
-    this.newLinkByBaseTree(x, y, elem);
+    const element = new this._.linkType(this.layer("links"));
+    if (value !== null) element.value(value);
+    element.onEnter(Enter.ordinary(this, "links"));
+    this.newLinkByBaseTree(x, y, element);
+    return this;
+}
+
+Tree.prototype.newLinkFromExistValue = function(sourceTid, targetTid, value) {
+    const element = new this._.linkType(this.layer("links"));
+    element.onEnter(Enter.fromExistValue(this, value, "links"));
+    this.newLinkByBaseTree(sourceTid, targetTid, element);
+    return this;
+}
+
+Tree.prototype.newLinkFromExistElement = function(sourceTid, targetTid, value) {
+    const element = value;
+    element.onEnter(Enter.fromExist(this, "links"));
+    this.newLinkByBaseTree(sourceTid, targetTid, element);
     return this;
 }
 

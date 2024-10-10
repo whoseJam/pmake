@@ -95,6 +95,7 @@ BaseLine.prototype.pointTtoS = function() {
     this.strokeDashArray([len, len]);
     this.strokeDashOffset(-len);
     context.till(0, 1);
+    this.strokeDashArray([len, 0]);
     this.strokeDashOffset(0);
     context.recover();
     return this;
@@ -107,6 +108,7 @@ BaseLine.prototype.fadeStoT = function() {
     this.strokeDashArray([len, len]);
     this.strokeDashOffset(0);
     context.till(0, 1);
+    this.strokeDashArray([0, len]);
     this.strokeDashOffset(-len);
     context.recover();
     return this;
