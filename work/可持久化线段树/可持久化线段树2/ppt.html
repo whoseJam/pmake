@@ -3,9 +3,8 @@
         <h1>可持久化线段树2</h1>
         <p>分析一下可持久化数据结构中，版本之间的信息可减性</p>
     </section>
-    <section data-background-iframe="http://43.143.204.105/problem/1072" data-background-interactive>
-    </section>
-    <section>
+    <problem data-problemset="luogu" data-problemid="P3834"></problem>
+      <section>
         <h2>可持久化线段树2</h2>
         <p>对于一个长度为 $n$ 的序列，题目希望多次查询一段区间 $[l,r]$ 的第 $k$ 小</p>
         <p class="fragment">如果我们能将 $[l,r]$ 这个区间里面的元素，全部插入到一个权值线段树 $S$ 中，用权值线段树来维护一段区间中<b>元素的个数</b>，我们就能在 $S$ 上做二分，来定位到区间第 $k$ 小了</p>
@@ -15,7 +14,7 @@
             S=\{insert(a_L)\}+\{insert(a_{L+1})\}+...+\{insert(a_R)\}
             $$
         </p>
-        <iframe data-animation="./animation/可持久化线段树2.html" class="fragment"
+        <iframe data-animation="./可持久化线段树2.html" class="fragment"
             style="width: 1000px; height: 200px;"></iframe>
     </section>
     <section>

@@ -13,7 +13,7 @@ export class SDValue {
     }
 
     getAndFlush() {
-        this.isDirty = false;
+        this.flush();
         return this.value;
     }
 
