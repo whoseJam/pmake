@@ -50,7 +50,7 @@ sd.main(async () => {
     graph.links().forEach(link => {
         link.startAnimate(1000);
         link.opacity(0.2);
-        manualLink(link, link.fromNodeId, link.toNodeId);
+        manualLink(link, graph.sourceId(link), graph.targetId(link));
         link.endAnimate();
     })
 })
