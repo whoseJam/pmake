@@ -1,13 +1,15 @@
 import { trim } from "@/Utility/Trim";
 
 import { Tree } from "@/Node/Tree/Tree";
+import { Enter } from "../SDNode/Enter";
+import { Cast } from "@/Utility/Cast";
 
 export function BinaryTree(parent) {
     Tree.call(this, parent);
 
     this.type("BinaryTree");
 
-    return this;
+    this._.sidToChildren = {}; // id of SDNode -> [lc: id on Tree, rc: id on Tree]
 }
 
 BinaryTree.prototype = {
@@ -19,31 +21,48 @@ BinaryTree.prototype.updateList = [
     update
 ];
 
-BinaryTree.prototype.leftChild = function(x, y, value = null) {
-    if (arguments.length === 1) {
-        const nodes = this.member.get("nodes");
-        const target = String(x);
-        return nodes.find(node => node.parentNodeId === target && node.dir === 0);
-    }
-    if (!this.findNodeById(x)) this.newNode(x);
-    if (!this.findNodeById(y)) this.newNode(y);
-    this.findNodeById(y).dir = 0;
-    this.findNodeById(y).parentNodeId = String(y);
-    this.newLink(x, y, value);
+BinaryTree.prototype.newNode = function(tid, value) {
+    tid = String(tid);
+    const sidToChildren = this._.sidToChildren;
+    const element = new this._.nodeType(this.layer("nodes"));
+    sidToChildren[element.id] = [undefined, undefined];
+    element.value(Cast.castToSDNode(element, value, tid));
+    element.onEnter(Enter.ordinary(this, "nodes"));
+    this.newNodeByBaseTree(tid, element);
     return this;
 }
 
-BinaryTree.prototype.rightChild = function(x, y, value = null) {
+BinaryTree.prototype.newLink = function(sourceTid, targetTid, direction, value = null) {
+    sourceTid = String(sourceTid);
+    targetTid = String(targetTid);
+    const sidToChildren = this._.sidToChildren;
+    sidToChildren[this.element(sourceTid).id][direction] = targetTid;
+    const element = new this._.linkType(this.layer("links"));
+    if (value !== null) element.value(value);
+    element.onEnter(Enter.ordinary(this, "links"));
+    this.newLinkByBaseTree(sourceTid, targetTid, element);
+    return this;
+}
+
+BinaryTree.prototype.leftChild = function(sourceTid, targetTid, value = null) {
     if (arguments.length === 1) {
-        const nodes = this.member.get("nodes");
-        const target = String(x);
-        return nodes.find(node => node.parentNodeId === target && node.dir === 1);
+        const sidToChildren = this._.sidToChildren;
+        return this.findNodeById(sidToChildren[this.element(sourceTid).id][0]);
     }
-    if (!this.findNodeById(x)) this.newNode(x);
-    if (!this.findNodeById(y)) this.newNode(y);
-    this.findNodeById(y).dir = 1;
-    this.findNodeById(y).parentNodeId = String(x);
-    this.newLink(x, y, value);
+    if (!this.findNodeById(sourceTid)) this.newNode(sourceTid);
+    if (!this.findNodeById(targetTid)) this.newNode(targetTid);
+    this.newLink(sourceTid, targetTid, 0, value);
+    return this;
+}
+
+BinaryTree.prototype.rightChild = function(sourceTid, targetTid, value = null) {
+    if (arguments.length === 1) {
+        const sidToChildren = this._.sidToChildren;
+        return this.findNodeById(sidToChildren[this.element(sourceTid).id][1]);
+    }
+    if (!this.findNodeById(sourceTid)) this.newNode(sourceTid);
+    if (!this.findNodeById(targetTid)) this.newNode(targetTid);
+    this.newLink(sourceTid, targetTid, 1, value);
     return this;
 }
 
@@ -69,7 +88,8 @@ function update() {
  * @param {"vertical"|"horizontal"} mode 
  */
 export function binaryTreeLayout(mode) {
-    const root = this.stratify();
+    const sidToChildren = this._.sidToChildren;
+    const root = this.root();
     if (!root) return this;
     const realX = (mode === "vertical") ? 
         (rank, gap, depth) => this.x() + (rank * 2 + 1) * gap : 
@@ -77,25 +97,18 @@ export function binaryTreeLayout(mode) {
     const realY = (mode === "horizontal") ?
         (rank, gap, depth) => this.y() + (rank * 2 + 1) * gap :
         (rank, gap, depth) => this.y() + this.layerHeight() * depth;
-    const dfs = (u, rank, gap) => {
-        const children = u.children;
-        children.sort((a, b) => {
-            return a.dir - b.dir;
+    const dfs = (current, rank, gap, depth) => {
+        const x = realX(rank, gap, depth);
+        const y = realY(rank, gap, depth);
+        this.tryMove(current, () => {
+            current.cx(x);
+            current.cy(y);
         });
-        const x = realX(rank, gap, u.depth);
-        const y = realY(rank, gap, u.depth);
-        const node = u.data;
-        this.tryMove(node, () => {
-            node.cx(x).cy(y);
-        });
-        if (children.length > 2) throw new Error("Invalid Tree Structure");
-        if (children.length === 2 && children[0].data.dir === children[1].data.dir) throw new Error("Invalid Tree Structure");
-        for (let child of children) {
-            dfs(child, rank * 2 + child.data.dir, gap / 2);
-        }
+        if (sidToChildren[current.id][0]) dfs(this.element(sidToChildren[current.id][0]), rank * 2, gap / 2, depth + 1);
+        if (sidToChildren[current.id][1]) dfs(this.element(sidToChildren[current.id][1]), rank * 2 + 1, gap / 2, depth + 1);
     }
     const gap = ((mode === "vertical") ? this.member.get("width") : this.member.get("height")) / 2;
-    dfs(root, 0, gap);
+    dfs(root, 0, gap, 0);
     
     const links = this.member.get("links");
     for (let link of links) {

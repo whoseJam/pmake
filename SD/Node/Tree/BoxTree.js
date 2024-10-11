@@ -11,8 +11,6 @@ export function BoxTree(parent) {
     this._.nodeType = Box;
     this.member.new("elementWidth", 60);
     this.member.new("elementHeight", 40);
-
-    return this;
 }
 
 BoxTree.prototype = {

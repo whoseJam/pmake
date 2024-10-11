@@ -19,6 +19,7 @@ Splay.prototype.updateList = [
 
 function update() {
     let root;
+    const sidToChildren = this._.sidToChildren;
     try {
         root = this.stratify();
         if (!root) return this;
@@ -34,8 +35,10 @@ function update() {
             return a.dir - b.dir;
         });
         console.assert(u.children.length <= 2);
-        let lc = u.children.find(child => child.data.dir === 0);
-        let rc = u.children.find(child => child.data.dir === 1);
+        const lcId = sidToChildren[u.data.id][0];
+        const rcId = sidToChildren[u.data.id][1];
+        let lc = u.children.find(child => this.nodeId(child.data) === lcId);
+        let rc = u.children.find(child => this.nodeId(child.data) === rcId);
         if (lc) dfs(lc);
         sequence.push(u);
         if (rc) dfs(rc);
