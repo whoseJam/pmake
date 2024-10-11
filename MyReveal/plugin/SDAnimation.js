@@ -85,7 +85,7 @@ function ProcessIframe(iframe, cache) {
 
 function GetURL(iframe) {
     let url = iframe.getAttribute("data-animation");
-    if (!url) url = this.iframe.getAttribute("data-src");
+    if (!url) url = iframe.getAttribute("data-src");
     if (!url) return undefined;
     if (url.endsWith(".js")) url = url.replace(".js", ".html");
     if (url.startsWith("./animation") || url.startsWith("http") || url.startsWith("animation")) return url;

@@ -8,8 +8,10 @@ export class BinaryTree extends BaseTree {
     leftChild(parentId: number|string): SDNode;
     leftChild(parentId: number|string, childId: number|string): this;
     leftChild(parentId: number|string, childId: number|string, value: any): this;
+    leftChildId(tid: number|string|SDNode): string;
 
     rightChild(parentId: number|string): SDNode;
     rightChild(parentId: number|string, childId: number|string): this;
     rightChild(parentId: number|string, childId: number|string, value: any): this;
+    rightChildId(tid: number|string|SDNode): string;
 }

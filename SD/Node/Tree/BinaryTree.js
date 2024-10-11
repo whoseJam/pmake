@@ -23,11 +23,12 @@ BinaryTree.prototype.leftChild = function(x, y, value = null) {
     if (arguments.length === 1) {
         const nodes = this.member.get("nodes");
         const target = String(x);
-        return nodes.find(node => String(node.parentNodeId) === target && node.dir === 0);
+        return nodes.find(node => node.parentNodeId === target && node.dir === 0);
     }
+    if (!this.findNodeById(x)) this.newNode(x);
     if (!this.findNodeById(y)) this.newNode(y);
     this.findNodeById(y).dir = 0;
-    this.findNodeById(y).parentNodeId = x;
+    this.findNodeById(y).parentNodeId = String(y);
     this.newLink(x, y, value);
     return this;
 }
@@ -36,13 +37,22 @@ BinaryTree.prototype.rightChild = function(x, y, value = null) {
     if (arguments.length === 1) {
         const nodes = this.member.get("nodes");
         const target = String(x);
-        return nodes.find(node => String(node.parentNodeId) === target && node.dir === 1);
+        return nodes.find(node => node.parentNodeId === target && node.dir === 1);
     }
+    if (!this.findNodeById(x)) this.newNode(x);
     if (!this.findNodeById(y)) this.newNode(y);
     this.findNodeById(y).dir = 1;
-    this.findNodeById(y).parentNodeId = x;
+    this.findNodeById(y).parentNodeId = String(x);
     this.newLink(x, y, value);
     return this;
+}
+
+BinaryTree.prototype.leftChildId = function(node) {
+    return this.nodeId(this.leftChild(node));
+}
+
+BinaryTree.prototype.rightChildId = function(node) {
+    return this.nodeId(this.rightChild(node));
 }
 
 BinaryTree.prototype.link = function(x, y, dir, value = null) {
@@ -61,7 +71,6 @@ function update() {
 export function binaryTreeLayout(mode) {
     const root = this.stratify();
     if (!root) return this;
-    console.log("root=", root);
     const realX = (mode === "vertical") ? 
         (rank, gap, depth) => this.x() + (rank * 2 + 1) * gap : 
         (rank, gap, depth) => this.x() + this.layerWidth() * depth;

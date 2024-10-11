@@ -51,7 +51,7 @@ export async function rotate(tree, x, fa, ch) {
  */
 export async function findPrev(tree, fa, ch) {
     const focus = sd.Focus(tree);
-    let x = tree.root().nodeId;
+    let x = tree.rootId();
     await sd.pause();
     focus.startAnimate().focus(x).endAnimate();
     x = ch[x][0];
@@ -72,7 +72,7 @@ export async function findPrev(tree, fa, ch) {
  * @returns {number|string}
  */
 export function findPrevWithoutAnimation(tree, fa, ch) {
-    let x = tree.root().nodeId;
+    let x = tree.rootId();
     x = ch[x][0];
     while (ch[x][1]) x = ch[x][1];
     return x;
@@ -85,7 +85,7 @@ export function findPrevWithoutAnimation(tree, fa, ch) {
  * @returns {number|string}
  */
 export function findNextWithoutAnimation(tree, fa, ch) {
-    let x = tree.root().nodeId;
+    let x = tree.rootId();
     x = ch[x][1];
     while (ch[x][0]) x = ch[x][0];
     return x;

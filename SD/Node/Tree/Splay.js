@@ -6,8 +6,6 @@ export function Splay(parent) {
     BinaryTree.call(this, parent);
 
     this.type("Splay");
-
-    return this;
 }
 
 Splay.prototype = {
@@ -55,8 +53,8 @@ function update() {
     }
     const links = this.member.get("links");
     for (let link of links) {
-        const src = this.findNodeById(link.parentNodeId);
-        const tgt = this.findNodeById(link.childNodeId);
+        const src = this.findNodeById(this.sourceId(link));
+        const tgt = this.findNodeById(this.targetId(link));
         this.tryMove(link, () => {
             link.source(src.cx(), src.cy());
             link.target(tgt.cx(), tgt.cy());

@@ -27,10 +27,7 @@ const links = [
     { x: 7, rc: 12 }
 ];
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     tree.root(1, 12);
     for (let i = 1; i < data.length; i++)
         tree.newNode(data[i][0], data[i][1]);
@@ -45,18 +42,17 @@ function init() {
     });
     tree.update();
     instr.x(400).y(tree.root().y());
-}
+})
 
-async function main() {
+sd.main(async () => {
     await find(1, 7);
-    await sd.pause();
-}
+})
 
 async function find(x, value) {
     await sd.pause();
     focus.startAnimate().focus(x).endAnimate();
     const curValue = tree.intValue(x);
     if (curValue === value) return;
-    if (curValue > value) await find(tree.leftChild(x).nodeId, value);
-    else await find(tree.rightChild(x).nodeId, value);
+    if (curValue > value) await find(tree.leftChildId(x), value);
+    else await find(tree.rightChildId(x), value);
 }

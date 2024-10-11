@@ -14,19 +14,11 @@ const ch = sd.make2d(100, 2);
 const svg = sd.svg();
 const C = sd.color();
 const tree = new sd.Splay(svg);
-const px = sd.Pointer(tree, "x", "b");
-const py = sd.Pointer(tree, "y", "b");
-const pz = sd.Pointer(tree, "z", "b");
-let isInteracting = false;
+const px = sd.Pointer(tree, "x", "b", 3, 20, 3);
+const py = sd.Pointer(tree, "y", "b", 3, 20, 3);
+const pz = sd.Pointer(tree, "z", "b", 3, 20, 3);
 
-init();
-main();
-
-async function main() {
-    await sd.pause();
-}
-
-function init() {
+sd.init(() => {
     tree.width(800).cx(600).y(200).root(root);
     for (let i = 0; i < data.length; i++) {
         let cur = data[i][0];
@@ -43,18 +35,23 @@ function init() {
     
     for (let i = 1; i <= n; i++) {
         tree.element(i).onClick(() => {
-            if (isInteracting) {
-                return;
-            }
-            isInteracting = true;
-            rotate(i);
+            sd.inter(async () => {
+                await rotate(i);
+            });
         })
     }
-}
+})
+
+sd.main(async () => {
+})
 
 async function rotate(x) {
-    await sd.pause();
-    const y = fa[x], z = fa[y];
+    const y = fa[x];
+    if (!y) {
+        alert("不能旋转根");
+        return;
+    }
+    const z = fa[y];
     const L = (ch[y][0] === x) ? 0 : 1;
     const R = L^1;
     px.startAnimate().moveTo(x).endAnimate();
@@ -84,11 +81,9 @@ async function rotate(x) {
     tree.unfreeze().endAnimate();
 
     await sd.pause();
-    px.startAnimate().moveTo(null).endAnimate();
-    py.startAnimate().moveTo(null).endAnimate();
-    pz.startAnimate().moveTo(null).endAnimate();
-
-    isInteracting = false;
+    px.startAnimate().opacity(0).endAnimate();
+    py.startAnimate().opacity(0).endAnimate();
+    pz.startAnimate().opacity(0).endAnimate();
 
     if (z) {
         if (ch[z][0] === y) ch[z][0] = x;
