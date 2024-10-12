@@ -1,4 +1,5 @@
 import { trim }             from "@/Utility/Trim";
+import { Cast }             from "@/Utility/Cast";
 import { SelectValidValue } from "@/Utility/Cast";
 
 import { BaseGraph } from "@/Node/Graph/BaseGraph";
@@ -83,8 +84,8 @@ function update() {
         currentIndex[node.setNo]++;
     }
     for (let link of links) {
-        const sourceId = link.fromNodeId;
-        const targetId = link.Cast.castToSDNodeId;
+        const sourceId = this.sourceId(link);
+        const targetId = this.targetId(link);
         const source = this.findNodeById(sourceId);
         const target = this.findNodeById(targetId);
         this.tryMove(link, () => {
