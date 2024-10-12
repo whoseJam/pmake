@@ -10,6 +10,10 @@ sd.init(() => {
 })
 
 sd.main(async () => {
+    const b = sd.Brace(arr);
+    await sd.pause();
+    b.after(900).startAnimate().brace(1, 3).endAnimate();
+
     const brace1 = sd.Brace(arr);
     await sd.pause();
     brace1.startAnimate().brace(1, 3).endAnimate();

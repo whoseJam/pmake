@@ -18,7 +18,7 @@ Context.prototype.till = function(l, r) {
 Context.prototype.tillc = function(l, r) {
     return {
         delay: () => this.start + l * this.duration,
-        duration: () => this.start + (r - l) * this.duration
+        duration: () => (r - l) * this.duration
     };
 }
 

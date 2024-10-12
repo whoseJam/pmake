@@ -13,5 +13,4 @@ sd.main(async () => {
     await sd.pause();
     sd.Label(tree.element(1), "$v_S$", "bc", 15).opacity(0).startAnimate().opacity(1).endAnimate();
     sd.Label(tree.element(5), "$v_T$", "bc", 15).opacity(0).startAnimate().opacity(1).endAnimate();
-
 })

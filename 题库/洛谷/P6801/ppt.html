@@ -5,6 +5,14 @@
     <problem data-problemset="luogu" data-problemid="P6801"></problem>
     <section>
         <h2>花式围栏</h2>
+        <p>给定一个不规则的网格图</p>
+        <iframe data-animation="./样例解释.js"
+            style="width: 1000px; height: 300px;"></iframe>
+        <p>这个网格图的第 $i$ 个区块高度为 $h_i(h_i\le 10^9)$，宽度为 $w_i(w_i\le 10^9)$</p>
+        <p class="fragment">求能从中找出几个<b>被完整地包含在网格图内的</b>矩形</p>
+    </section>
+    <section>
+        <h2>花式围栏</h2>
         <p>对于 $10\%$ 的数据，$N\le 50$ 且 $h_i\le 50$ 且 $w_i=1$</p>
         <p class="fragment">枚举左边界，右边界和上边界的位置，然后下边界直接推算出来</p>
         <iframe data-animation="./暴力.js" class="fragment"
@@ -15,10 +23,10 @@
         <h2>花式围栏</h2>
         <p>对于另外 $10\%$ 的数据，$h_i=1$ 或者 $h_i=2$</p>
         <iframe data-animation="./h12.js"
-            style="width: 1000px; height: 200px;"></iframe>
+            style="width: 1000px; height: 280px;"></iframe>
         <ul>
-            <li class="fragment">对于下面这一排方格，形成的矩形数量显然为 $C_{n}^2$</li>
-            <li class="fragment">对于上面的一坨坨连续的冒尖，假设这段冒尖的长度为 $L$，形成的矩形数量显然为 $2C_{L}^2$</li>
+            <li class="fragment">对于下面这一排方格，形成的矩形数量显然为 $C_{\sum_{i=1}^nw_i+1}^2$</li>
+            <li class="fragment">对于上面的一坨坨连续的冒尖，假设这段冒尖的长度为 $L$，形成的矩形数量显然为 $2C_{L+1}^2$</li>
         </ul>
     </section>
     <section>
@@ -28,11 +36,12 @@
     </section>
     <section>
         <h2>花式围栏</h2>
+        <p>对于另外 $10\%$ 的数据，$N\le 1000$</p>
         <iframe data-animation="./增量统计.js"
             style="width: 1000px; height: 300px;"></iframe>
         <p>我们讨论最后增量的这一小块区域，能和前面已存在的区域组合出多少新的矩形来</p>
         <p class="fragment">假设前面的区域高度为 $h_j$，宽度为 $w_j$，则显然能组合出 $w_iw_jC_{min(h_i,h_j)+1}^2$ 个矩形</p>
-        <p class="fragment">对于任务 $5$ 和任务 $6$，它们都有一些特殊性质能让这个快速算出来，在此略过这两种数据范围</p>
+        <p class="fragment">可以直接枚举前面的每个区块，把增量组合出的矩形数量统计一下</p>
     </section>
     <section>
         <h2>花式围栏</h2>

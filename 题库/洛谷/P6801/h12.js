@@ -12,6 +12,8 @@ sd.init(() => {
             grid.insert(i, j);
         }
     }
+    const brace = sd.Brace(grid).brace(grid.element(0, 0), grid.element(data.length - 1, 0), "b");
+    brace.value(new sd.Mathjax(brace, "\\sum_{i=1}^nw_i"));
 })
 
 sd.main(async () => {

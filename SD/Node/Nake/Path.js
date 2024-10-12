@@ -85,7 +85,7 @@ function update() {
     if (this.member.hasChanged("d")) {
         const duration = this.duration();
         const snap = Snap(this._.nake.element);
-        new Action(
+        const t = new Action(
             this.delay(),
             this.delay() + this.duration(),
             this.member.oldValue("d"),
@@ -101,6 +101,7 @@ function update() {
             },
             this, "d"
         );
+        console.log(t.log());
         const box = Path.pathToBox(this.member.get("d"));
         this.member.set("x", box.x);
         this.member.set("y", box.y);
