@@ -5,18 +5,15 @@ const C = sd.color();
 const n = 4;
 const grid = new sd.Grid(svg).n(n).m(n).startN(1).startM(1);
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     for (let i = 1; i <= n; i++) {
         for (let j = 1; j <= i; j++) {
             grid.value(i, j, new sd.Mathjax(grid, `a_{${i},${j}}`));
         }
     }
-}
+})
 
-async function main() {
+sd.main(async () => {
     for (let i = 1; i <= n; i++) {
         await sd.pause();
         grid.startAnimate();
@@ -46,4 +43,4 @@ async function main() {
         }
         grid.endAnimate();
     }
-}
+})

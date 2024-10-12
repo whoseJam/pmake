@@ -7,9 +7,11 @@ const n = 4;
 const m = 5;
 g.n(n).startN(1).m(m).startM(1)
 
-main();
+sd.init(() => {
 
-async function main() {
+})
+
+sd.main(async () => {
     const f1 = sd.Focus(g);
     const f2 = sd.Focus(g);
     for (let i = 1; i <= n; i++) {
@@ -32,7 +34,7 @@ async function main() {
             }
         }
     }
-}
+})
 
 function color(x, y, lx, ly, c) {
     for (let i = x; i <= lx + x - 1; i++) {
