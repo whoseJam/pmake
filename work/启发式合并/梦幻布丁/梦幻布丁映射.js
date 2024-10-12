@@ -12,10 +12,7 @@ const graph = new sd.BoxDAG(svg).width(60).height(40).elementWidth(40).elementHe
 const table = new sd.Grid(svg).n(colors.length + 1).m(2).startN(-1).startM(1).elementWidth(60).elementHeight(20);
 const now = sd.make1d(20);
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     graph.newNode(1, " ");
     graph.newNode(2, " ");
     graph.newLink(1, 2).element(1, 2).arrow();
@@ -36,16 +33,15 @@ function init() {
     table.value(-1, 1, "原色");
     table.value(-1, 2, "当前色");
     table.x(arr1.mx() + 50).cy((arr1.y() + arr2.my()) / 2);
-}
+})
 
-async function main() {
+sd.main(async () => {
     await change(0, 1);
     await change(1, 2);
     await change(2, 0);
     await change(3, 1);
     await change(0, 1);
-    await sd.pause();
-}
+})
 
 function countFromAndTo(data, from, to) {
     let cntFrom = 0, cntTo = 0;

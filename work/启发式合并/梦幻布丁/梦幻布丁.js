@@ -9,10 +9,7 @@ const data = [
     C.red, C.red, C.green, C.green, C.blue, C.green, C.green
 ];
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     arr.resize(data.length);
     data.forEach((col, idx) => {
         arr.color(idx, col);
@@ -29,13 +26,12 @@ function init() {
         pair.childAs("label", new sd.Rect(pair).color(cols[i]).width(20).height(20), R.Aside("lc", 10));
         pairArray[cols[i]] = pair;
     }
-}
+})
 
-async function main() {
+sd.main(async () => {
     await insertInto(C.blue, C.green);
     await insertInto(C.red, C.green);
-    await sd.pause();
-}
+})
 
 async function insertInto(fromCol, toCol) {
     await sd.pause();
