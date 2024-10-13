@@ -32,7 +32,12 @@
     <section>
         <h2>花式围栏</h2>
         <p>对于另外 $20\%$ 的数据，所有的 $h_i$ 均相等</p>
-        <p>详见普及组题目<a href="https://www.luogu.com.cn/problem/P2241" target="_blank">统计方形</a></p>
+        <p>只需要计算一个 $W\times H$ 的矩形内有多少个小矩形即可</p>
+        <iframe data-animation="./小矩形.js" class="fragment"
+            style="width: 1000px; height: 300px;"></iframe>
+        <p class="fragment">
+            显然有 $C_W^2C_H^2$ 个
+        </p>
     </section>
     <section>
         <h2>花式围栏</h2>
@@ -40,7 +45,7 @@
         <iframe data-animation="./增量统计.js"
             style="width: 1000px; height: 300px;"></iframe>
         <p>我们讨论最后增量的这一小块区域，能和前面已存在的区域组合出多少新的矩形来</p>
-        <p class="fragment">假设前面的区域高度为 $h_j$，宽度为 $w_j$，则显然能组合出 $w_iw_jC_{min(h_i,h_j)+1}^2$ 个矩形</p>
+        <p class="fragment">假设前面的区域高度为 $h_j$，宽度为 $w_j$，则显然能组合出 $w_iw_jC_{min(h_{[j...i]})+1}^2$ 个矩形</p>
         <p class="fragment">可以直接枚举前面的每个区块，把增量组合出的矩形数量统计一下</p>
     </section>
     <section>
