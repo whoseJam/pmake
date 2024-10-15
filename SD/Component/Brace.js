@@ -11,33 +11,34 @@ import { Exit }  from "@/Node/SDNode/Exit";
 import { Enter }  from "@/Node/SDNode/Enter";
 import { SDNode } from "@/Node/SDNode";
 
+let braceID = 0;
+
 function BraceRule(parent, child) {
-    const l = child.member.getAndFlush("l");
-    const r = child.member.getAndFlush("r");
+    const element1 = child.member.getAndFlush("braceElement1");
+    const element2 = child.member.getAndFlush("braceElement2");
     const location = child.member.getAndFlush("location");
     const gap = child.member.getAndFlush("braceGap");
-    let element1, element2;
-
-    if (Check.isTypeOfArray(parent)) {
-        element1 = parent.element(l);
-        element2 = parent.element(r);
-    } else {
-        element1 = l;
-        element2 = r;
-    }
     
-    if (location === "b") {
-        child.source(element2.mx(), element2.my() + gap)
-        child.target(element1.x(), element1.my() + gap);
-    } else if (location === "t") {
-        child.source(element1.x(), element1.y() - gap);
-        child.target(element2.mx(), element2.y() - gap);
-    } else if (location === "l") {
-        child.source(element2.x() - gap, element2.my())
-        child.target(element1.x() - gap, element1.y());
-    } else if (location === "r") {
-        child.source(element1.mx() + gap, element1.y())
-        child.target(element2.mx() + gap, element2.my());
+    if (location === "b" || location === "t") {
+        const minx = Math.min(element1.x(), element2.x());
+        const maxx = Math.max(element1.mx(), element2.mx());
+        if (location === "b") {
+            child.source(maxx, element2.my() + gap);
+            child.target(minx, element1.my() + gap);
+        } else {
+            child.source(minx, element1.y() - gap);
+            child.target(maxx, element1.y() - gap);
+        }
+    } else if (location === "l" || location === "r") {
+        const miny = Math.min(element1.y(), element2.y());
+        const maxy = Math.max(element1.my(), element2.my());
+        if (location === "l") {
+            child.source(element2.x() - gap, maxy);
+            child.target(element1.x() - gap, miny);
+        } else {
+            child.source(element1.mx() + gap, miny);
+            child.target(element2.mx() + gap, maxy);
+        }
     }
 }
 
@@ -56,15 +57,15 @@ function LabelRule(parent, child) {
 export function Brace(parent) {
     const brace = new BraceCurve(parent).opacity(0);
 
-    brace.member.new("l", undefined);
-    brace.member.new("r", undefined);
+    brace.member.new("braceElement1", undefined);
+    brace.member.new("braceElement2", undefined);
     brace.member.new("location", undefined);
     brace.member.new("braceGap", 5);
     brace.member.new("valueGap", 5);
 
     brace.attachUpdate(() => {
-        if (brace.member.hasChanged("l") ||
-            brace.member.hasChanged("r") ||
+        if (brace.member.hasChanged("braceElement1") ||
+            brace.member.hasChanged("braceElement2") ||
             brace.member.hasChanged("location") ||
             brace.member.hasChanged("braceGap")) {
             brace.triggerRule();
@@ -72,16 +73,20 @@ export function Brace(parent) {
     });
 
     brace.brace = function(l, r, location = "t", gap = 5) {
-        this.member.set("l", l);
-        this.member.set("r", r);
+        if (Check.isTypeOfSDNode(l) && Check.isTypeOfSDNode(r)) {
+            this.member.set("braceElement1", l);
+            this.member.set("braceElement2", r);
+        } else if (Check.isTypeOfArray(parent)) {
+            this.member.set("braceElement1", parent.element(l));
+            this.member.set("braceElement2", parent.element(r));
+        } else if (Check.isTypeOfGrid(parent)) {
+            throw new Error("Not Implemented Yet");
+        }
         if (this.member.get("location") === undefined || (arguments.length >= 3))
             this.member.set("location", location);
         if (this.member.get("braceGap") === undefined || (arguments.length >= 4))
             this.member.set("braceGap", gap);
         
-        this.rule((parent, child) => {
-            BraceRule(parent, child);
-        });
         if (this.opacity() === 0) {
             const context = new Context(this);
             this.startAnimate(context.tillc(0, 0));
@@ -94,8 +99,6 @@ export function Brace(parent) {
         return this;
     }
 
-    brace.l = SDNode.OrdinaryGSet("l", "setByEqual");
-    brace.r = SDNode.OrdinaryGSet("r", "setByEqual");
     brace.location = SDNode.OrdinaryGSet("location", "set");
     brace.braceGap = SDNode.OrdinaryGSet("braceGap", "setByEqual");
     brace.valueGap = SDNode.OrdinaryGSet("valueGap", "setByEqual");
@@ -111,5 +114,8 @@ export function Brace(parent) {
         });
         return this;
     }
+
+    if (parent.childAs) parent.childAs(`brace_${++braceID}`, brace, BraceRule);
+    else brace.rule(BraceRule);
     return brace;
 }

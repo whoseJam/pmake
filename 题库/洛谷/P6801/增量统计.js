@@ -44,4 +44,14 @@ sd.main(async () => {
             cnt++;
         }
     }
+
+    const braceWj = sd.Brace(grid).value(new sd.Mathjax(svg, "w_j"));
+    const braceHj = sd.Brace(grid).value(new sd.Mathjax(svg, "h_j"));
+    for (let i = data.length - 1, j; i >= 0; i = j - 1) {
+        j = i;
+        while (j - 1 >= 0 && data[j-1] === data[i]) j--;
+        await sd.pause();
+        braceWj.startAnimate().brace(grid.element(j, 0), grid.element(i, 0), "b").endAnimate();
+        braceHj.startAnimate().brace(grid.element(j, 0), grid.element(j, data[i] - 1), "l").endAnimate();
+    }
 })

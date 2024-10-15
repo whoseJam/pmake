@@ -1,19 +1,19 @@
 import * as sd from "@/sd";
-import { A } from "@svgdotjs/svg.js";
 
 const svg = sd.svg();
 const arr = new sd.Array(svg).resize(10).x(100).y(100);
 const stk = new sd.Stack(svg).resize(10).x(800).y(100);
+const grid = new sd.Grid(svg).n(3).m(5).x(100).y(200);
 
 sd.init(() => {
 
 })
 
 sd.main(async () => {
-    const b = sd.Brace(arr);
+    const brace0 = sd.Brace(grid);
     await sd.pause();
-    b.after(900).startAnimate().brace(1, 3).endAnimate();
-
+    brace0.startAnimate().brace(1, 2, "l").endAnimate();
+    
     const brace1 = sd.Brace(arr);
     await sd.pause();
     brace1.startAnimate().brace(1, 3).endAnimate();
