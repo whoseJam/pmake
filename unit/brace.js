@@ -10,9 +10,9 @@ sd.init(() => {
 })
 
 sd.main(async () => {
-    const brace0 = sd.Brace(grid);
-    await sd.pause();
-    brace0.startAnimate().brace(1, 2, "l").endAnimate();
+    // const brace0 = sd.Brace(grid);
+    // await sd.pause();
+    // brace0.startAnimate().brace(1, 2, "l").endAnimate();
     
     const brace1 = sd.Brace(arr);
     await sd.pause();

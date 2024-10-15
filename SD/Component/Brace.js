@@ -23,21 +23,25 @@ function BraceRule(parent, child) {
         const minx = Math.min(element1.x(), element2.x());
         const maxx = Math.max(element1.mx(), element2.mx());
         if (location === "b") {
-            child.source(maxx, element2.my() + gap);
-            child.target(minx, element1.my() + gap);
+            const maxy = Math.max(element1.my(), element2.my()) + gap;
+            child.source(maxx, maxy);
+            child.target(minx, maxy);
         } else {
-            child.source(minx, element1.y() - gap);
-            child.target(maxx, element1.y() - gap);
+            const miny = Math.min(element1.y(), element2.y()) - gap;
+            child.source(minx, miny);
+            child.target(maxx, miny);
         }
     } else if (location === "l" || location === "r") {
         const miny = Math.min(element1.y(), element2.y());
         const maxy = Math.max(element1.my(), element2.my());
         if (location === "l") {
-            child.source(element2.x() - gap, maxy);
-            child.target(element1.x() - gap, miny);
+            const minx = Math.min(element1.x(), element2.x()) - gap;
+            child.source(minx, maxy);
+            child.target(minx, miny);
         } else {
-            child.source(element1.mx() + gap, miny);
-            child.target(element2.mx() + gap, maxy);
+            const maxx = Math.max(element1.mx(), element2.mx()) + gap;
+            child.source(maxx, miny);
+            child.target(maxx, maxy);
         }
     }
 }
