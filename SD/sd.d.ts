@@ -73,8 +73,9 @@ export { svg } from "./Interact/RootSvg";
 export { rule } from "./Rule/Rule";
 export { Rule } from "./Rule/Rule";
 
-export { color } from "./Utility/Color";
-export { input } from "./Utility/Reader";
+export { color }  from "./Utility/Color";
+export { input }  from "./Utility/Reader";
+export { device } from "./Interact/Device";
 
 export { init }  from "./Utility/Util";
 export { main }  from "./Utility/Util";

@@ -4,3 +4,5 @@ export class Device {
 
     static onKeyDown(key: string, callback: any);
 }
+
+export function device(): Device;

@@ -1,0 +1,19 @@
+<section>
+    <section>
+        <h1>简单的有限网格问题</h1>
+    </section>
+    <problem data-problemset="luogu" data-problemid="P10714"></problem>
+    <section>
+        <h2>简单的有限网格问题</h2>
+        <p>设 $P$ 是一条两折路径，$f(P)$ 表示 $P$ 上的星星总数</p>
+        <p class="math-fragment">
+            $$
+            \begin{aligned}
+            answer&=\sum_{任意一条路径P}f(P) \\
+            &=\sum_{任意一条路径P}\sum_{一颗在P上的星星}1 \\
+            &=\sum_{任意一颗星星}1[有多少条路径P包含该星星]
+            \end{aligned}
+            $$
+        </p>
+    </section>
+</section>

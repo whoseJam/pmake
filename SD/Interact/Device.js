@@ -14,3 +14,7 @@ export class Device {
         deviceMap[key] = callback;
     }
 }
+
+export function device() {
+    return Device;
+}

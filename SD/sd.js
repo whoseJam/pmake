@@ -89,5 +89,6 @@ export { trim }   from "./Utility/Trim.js";
 export { init }   from "./Utility/Util.js";
 export { main }   from "./Utility/Util.js";
 export { inter }  from "./Utility/Util.js";
-export { make1d } from "./Utility/Util.js"
+export { make1d } from "./Utility/Util.js";
 export { make2d } from "./Utility/Util.js";
+export { device } from "./Interact/Device";
