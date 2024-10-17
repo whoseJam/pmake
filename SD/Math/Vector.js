@@ -75,6 +75,18 @@ export class Vector {
     static onRight(a, b) {
         return this.cross(a, b) <= 0;
     }
+
+    static cos(a) {
+        return a[0] / this.length(a);
+    }
+
+    static sin(a) {
+        return a[1] / this.length(a);
+    }
+
+    static tan(a) {
+        return a[1] / a[0];
+    }
 }
 
 export function vec() {

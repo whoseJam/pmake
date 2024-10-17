@@ -39,20 +39,28 @@ Interact.prototype.drag = function(arg) {
         Snap(nake).undrag();
         return;
     }
-    let startX = 0;
-    let startY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let lastDx = 0;
+    let lastDy = 0;
     Snap(nake).drag(function(dx, dy) {
+        let screenDx = (dx - lastDx) / window.RATE;
+        let screenDy = (dx - lastDy) / window.RATE;
         if (typeof(arg) === "function") {
-            [dx, dy] = arg(dx, dy);
+            [screenDx, screenDy] = arg(screenDx, screenDy);
         }
-        const x = dx / window.RATE + startX;
-        const y = dy / window.RATE + startY;
-        const transform = `matrix(1,0,0,1,${x},${y})`;
+        lastDx = dx;
+        lastDy = dy;
+        currentX += screenDx;
+        currentY += screenDy;
+        const transform = `matrix(1,0,0,1,${currentX},${currentY})`;
         nake.setAttribute("transform", transform);
     }, function() {
         if (nake.transform.baseVal.length > 0) {
-            startX = nake.transform.baseVal.getItem(0).matrix.e;
-            startY = nake.transform.baseVal.getItem(0).matrix.f;
+            currentX = nake.transform.baseVal.getItem(0).matrix.e;
+            currentY = nake.transform.baseVal.getItem(0).matrix.f;
+            lastDx = 0;
+            lastDy = 0;
         }
     });
     return this;

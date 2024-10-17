@@ -7,8 +7,6 @@ import { SDNode } from "@/Node/SDNode";
 import { PathPen } from "@/Utility/PathPen";
 import { Context } from "@/Animate/Context";
 
-const SAMPLE_COUNT = 50;
-
 function XAxisRule(parent, child) {
     const parentX = parent.member.get("x");
     const parentWidth = parent.member.get("width");
@@ -51,16 +49,28 @@ export function Coord(parent) {
     this._.BASE_COORD = true;
 }
 
+Coord.SAMPLE_COUNT = 50;
+
 Coord.prototype = {
     ...SDNode.prototype
 };
 
 Coord.prototype.x = SDNode.OrdinaryGSet("x", "setByEqual");
 Coord.prototype.y = SDNode.OrdinaryGSet("y", "setByEqual");
+Coord.prototype.width = SDNode.OrdinaryGSet("width", "setByEqual");
+Coord.prototype.height = SDNode.OrdinaryGSet("height", "setByEqual");
 Coord.prototype.viewX = SDNode.OrdinaryGSet("viewX", "setByEqual");
 Coord.prototype.viewY = SDNode.OrdinaryGSet("viewY", "setByEqual");
 Coord.prototype.viewWidth = SDNode.OrdinaryGSet("viewWidth", "setByEqual");
 Coord.prototype.viewHeight = SDNode.OrdinaryGSet("viewHeight", "setByEqual");
+
+Coord.prototype.xAxis = function() {
+    return this.child("xAxis");
+}
+
+Coord.prototype.yAxis = function() {
+    return this.child("yAxis");
+}
 
 const keys = [
     ["viewX", "parentViewX"],
@@ -79,6 +89,19 @@ Coord.prototype.draw = function(name, func) {
         path.member.new(key[1]);
     }
     path.startAnimate(this);
+    path.valueAt = function(realX) {
+        const parentX = this.member.get("parentX");
+        const parentWidth = this.member.get("parentWidth");
+        const parentY = this.member.get("parentY");
+        const parentHeight = this.member.get("parentHeight");
+        const viewX = this.member.get("parentViewX");
+        const viewWidth = this.member.get("parentViewWidth");
+        const viewY = this.member.get("parentViewY");
+        const viewHeight = this.member.get("parentViewHeight");
+        const x = viewX + viewWidth * ((realX - parentX) / parentWidth);
+        const y = func(x);
+        return parentY + parentHeight - (y - viewY) / viewHeight * parentHeight;
+    }
     this.childAs(name, path, function(parent, child) {
         let valueChanged = false;
         for (let key of keys) {
@@ -96,8 +119,8 @@ Coord.prototype.draw = function(name, func) {
             const viewHeight = child.member.get("parentViewHeight");
             const pen = new PathPen();
             let segment = true;
-            for (let i = 0; i <= SAMPLE_COUNT; i++) {
-                const x = viewX + viewWidth * (i / SAMPLE_COUNT);
+            for (let i = 0; i <= Coord.SAMPLE_COUNT; i++) {
+                const x = viewX + viewWidth * (i / Coord.SAMPLE_COUNT);
                 const y = func(x);
                 const point = [
                     (x - viewX) / viewWidth * parentWidth + parentX,
