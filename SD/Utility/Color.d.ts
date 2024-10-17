@@ -84,7 +84,7 @@ interface ColorManager {
      */
     lemonChiffon: HexColor,
 
-    
+    yellow:       HexColor,
     azure:        HexColor,
     aliceBlue:    HexColor,
     cyan:         HexColor,

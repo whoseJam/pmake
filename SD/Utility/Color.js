@@ -21,6 +21,7 @@ export const Color = {
     aliceBlue:      "#F0F8FF",
     cyan:           "#00FFFF",
     paleGreen:      "#98FB98",
+    yellow:         "#ffff4d",
 
     RED:    { main: "#f14c4c", border: "#b13535" },
     GREEN:  { main: "#92d050", border: "#00b050" },
