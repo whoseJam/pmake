@@ -68,7 +68,7 @@ export class Interp {
         }
     }
 
-    static viewBoxInterp(owner, prop) {
+    static viewBoxInterp(attrs, key) {
         return function(t) {
             const A = this.source;
             const B = this.target;
@@ -76,7 +76,7 @@ export class Interp {
             const y = A.viewY * (1 - t) + B.viewY * t;
             const width = A.viewWidth * (1 - t) + B.viewWidth * t;
             const height = A.viewHeight * (1 - t) + B.viewHeight * t;
-            owner.setAttribute(prop, `${x} ${y} ${width} ${height}`);
+            attrs.setAttribute(key, `${x} ${y} ${width} ${height}`);
         }
     }
 

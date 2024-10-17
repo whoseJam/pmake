@@ -1,8 +1,8 @@
 import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
 
-import { BaseNake }             from "@/Node/Nake/BaseNake";
-import { SDNode } from "../SDNode";
+import { SDNode }   from "@/Node/SDNode";
+import { BaseNake } from "@/Node/Nake/BaseNake";
 
 function GetViewBox(svgElement, getter) {
     const x = svgElement.member[getter]("viewX");
@@ -35,6 +35,10 @@ export function Svg(parent) {
 Svg.prototype = {
     ...BaseNake.prototype
 };
+
+Svg.prototype.layer = function() {
+    return this._.nake;
+}
 
 Svg.prototype.x      = SDNode.OrdinaryGSet("x", "setByEqual");
 Svg.prototype.y      = SDNode.OrdinaryGSet("y", "setByEqual");
@@ -76,9 +80,19 @@ Svg.prototype.updateList = [
             new Action(
                 this.delay(),
                 this.delay() + this.duration(),
-                GetViewBox(this, "oldValue"),
-                GetViewBox(this, "get"),
-                Interp.viewBoxInterp,
+                {
+                    viewX: this.member.oldValue("viewX"),
+                    viewY: this.member.oldValue("viewY"),
+                    viewWidth: this.member.oldValue("viewWidth"),
+                    viewHeight: this.member.oldValue("viewHeight")
+                },
+                {
+                    viewX: this.member.get("viewX"),
+                    viewY: this.member.get("viewY"),
+                    viewWidth: this.member.get("viewWidth"),
+                    viewHeight: this.member.get("viewHeight")
+                },
+                Interp.viewBoxInterp(this._.nake, "viewBox"),
                 this, "viewBox"
             );
             this.member.flush("viewX");

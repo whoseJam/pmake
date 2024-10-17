@@ -33,6 +33,8 @@ export { BarArray }   from "./Node/Array/BarArray.js";
 export { ValueArray } from "./Node/Array/ValueArray.js";
 export { ValueStack } from "./Node/Array/ValueStack.js";
 
+export { Coord } from "./Node/Coord/Coord.js";
+
 export { Grid }      from "./Node/Grid/Grid.js";
 export { ValueGrid } from "./Node/Grid/ValueGrid.js";
 

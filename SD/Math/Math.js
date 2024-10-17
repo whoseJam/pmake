@@ -9,10 +9,12 @@ function dcmp(x) {
 }
 
 export function equal(x, y) {
+    if (typeof(x) !== "number" || typeof(y) !== "number") return false;
     return dcmp(x - y) === 0;
 }
 
 export function dqual(x, y) {
+    if (typeof(x) !== "number" || typeof(y) !== "number") return false;
     return ddcmp(x - y) === 0;
 }
 

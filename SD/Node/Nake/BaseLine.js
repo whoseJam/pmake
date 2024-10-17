@@ -78,13 +78,12 @@ BaseLine.prototype.doubleArrow = function(flag = true) {
 }
 
 BaseLine.prototype.pointStoT = function() {
-    let len = this.totalLength();
-    let context = new Context(this);
-    context.till(0, 0);
+    const len = this.totalLength();
+    const context = new Context(this);
+    this.startAnimate(context.tillc(0, 0));
     this.strokeDashArray([0, len]);
-    context.till(0, 1);
+    this.startAnimate(context.tillc(0, 1));
     this.strokeDashArray([len, 0]);
-    context.recover();
     return this;
 }
 

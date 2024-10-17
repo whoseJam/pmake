@@ -27,6 +27,8 @@ export { BarArray }   from "./Node/Array/BarArray";
 export { ValueArray } from "./Node/Array/ValueArray";
 export { ValueStack } from "./Node/Array/ValueStack";
 
+export { Coord } from "./Node/Coord/Coord";
+
 export { Grid }      from "./Node/Grid/Grid";
 export { ValueGrid } from "./Node/Grid/ValueGrid";
 
