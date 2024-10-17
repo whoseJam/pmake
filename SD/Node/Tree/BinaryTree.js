@@ -91,6 +91,7 @@ export function binaryTreeLayout(mode) {
     const sidToChildren = this._.sidToChildren;
     const root = this.root();
     if (!root) return this;
+    let maxDepth = 0;
     const realX = (mode === "vertical") ? 
         (rank, gap, depth) => this.x() + (rank * 2 + 1) * gap : 
         (rank, gap, depth) => this.x() + this.layerWidth() * depth;
@@ -98,6 +99,7 @@ export function binaryTreeLayout(mode) {
         (rank, gap, depth) => this.y() + (rank * 2 + 1) * gap :
         (rank, gap, depth) => this.y() + this.layerHeight() * depth;
     const dfs = (current, rank, gap, depth) => {
+        maxDepth = Math.max(maxDepth, depth);
         const x = realX(rank, gap, depth);
         const y = realY(rank, gap, depth);
         this.tryMove(current, () => {
@@ -120,6 +122,6 @@ export function binaryTreeLayout(mode) {
             trim(link, src, tgt);
         });
     }
-    if (mode === "vertical") this.member.setAndFlush("height", root.height * this.layerHeight());
-    else                     this.member.setAndFlush("width" , root.height * this.layerWidth());
+    if (mode === "vertical") this.member.setAndFlush("height", maxDepth * this.layerHeight());
+    else                     this.member.setAndFlush("width" , maxDepth * this.layerWidth());
 }

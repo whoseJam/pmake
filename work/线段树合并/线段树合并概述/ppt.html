@@ -1,0 +1,46 @@
+<section>
+    <section>
+        <h1>线段树合并</h1>
+        <p>通常是权值线段树在做合并</p>
+    </section>
+    <section>
+        <h2>线段树合并</h2>
+        <iframe data-animation="./线段树合并.js"
+            style="width: 1000px; height: 500px;"></iframe>
+    </section>
+    <section>
+        <h2>线段树合并</h2>
+        <ul>
+            <li>假设合并线段树某时刻，第一个线段树的位置为 $rt_1$，第二个线段树的位置为 $rt_2$</li>
+            <li class="fragment">如果 $lc(rt_1)$ 和 $lc(rt_2)$ 都存在，递归合并左子树</li>
+            <li class="fragment">如果 $lc(rt_1)$ 和 $lc(rt_2)$ 最多只存在一个，提溜上存在的那一个</li>
+            <li class="fragment">如果 $rc(rt_1)$ 和 $rc(rt_2)$ 都存在，递归合并右子树</li>
+            <li class="fragment">如果 $rc(rt_1)$ 和 $rc(rt_2)$ 最多只存在一个，提溜上存在的那一个</li>
+        </ul>
+        <codeblock class="fragment">
+            <script type="text/template">
+                // Merge 返回合并后的树根编号
+                int Merge(int rt1, int rt2) {
+                    if (!rt1) return rt2;
+                    if (!rt2) return rt1;
+                    if (l == r) {
+                        按需合并;
+                        return rt1;
+                    }
+                    t[rt1].lc = Merge(t[rt1].lc, t[rt2].lc);
+                    t[rt1].rc = Merge(t[rt1].rc, t[rt2].rc);
+                    pushUp(rt1);
+                    return rt1;
+                }
+            </script>
+        </codeblock>
+    </section>
+    <section>
+        <h2>时间复杂度分析</h2>
+        <p>两棵线段树合并的时间复杂度显然取决于<b>两棵线段树重合的叶子节点个数</b></p>
+        <p class="fragment">假设有 $m$ 个重合的点，那么这两棵线段树合并的时间复杂度就是 $O(mlogn)$，所以合并两棵满线段树的时间复杂度是特别糟糕的</p>
+        <p class="fragment">但如果我们看题的话，一般用线段树合并做的题数据范围都能开到 $10^5$ 去，这是为什么呢？</p>
+        <iframe data-animation="./时间复杂度.js" class="fragment"
+            style="width: 1000px; height: 300px;"></iframe>
+    </section>
+</section>
