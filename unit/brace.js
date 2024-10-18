@@ -10,10 +10,6 @@ sd.init(() => {
 })
 
 sd.main(async () => {
-    // const brace0 = sd.Brace(grid);
-    // await sd.pause();
-    // brace0.startAnimate().brace(1, 2, "l").endAnimate();
-    
     const brace1 = sd.Brace(arr);
     await sd.pause();
     brace1.startAnimate().brace(1, 3).endAnimate();
@@ -26,7 +22,7 @@ sd.main(async () => {
     await sd.pause();
     brace1.startAnimate().brace(3, 7).endAnimate();
     await sd.pause();
-    brace1.startAnimate().valueGap(50).endAnimate();
+    brace1.startAnimate().valueGap(20).endAnimate();
 
     const brace2 = sd.Brace(stk);
     await sd.pause();
@@ -39,5 +35,18 @@ sd.main(async () => {
     brace2.startAnimate().value("world").endAnimate();
     await sd.pause();
     brace2.startAnimate().braceGap(30).endAnimate();
+
+    const v1 = new sd.Vertex(svg).center([400, 300]);
+    const v2 = new sd.Vertex(svg).center([500, 400]);
+    await sd.pause();
+    const brace3 = sd.Brace(svg);
+    brace3.startAnimate().brace(v1, v2, "r").endAnimate();
+    await sd.pause();
+    v2.startAnimate().dx(-100).endAnimate();
+    await sd.pause();
+    v1.startAnimate().dx(100).dy(50).endAnimate();
+    await sd.pause();
+    v1.startAnimate().dx(-100).endAnimate();
+    v2.startAnimate().dx(100).endAnimate();
 })
 

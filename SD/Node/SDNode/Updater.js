@@ -3,7 +3,8 @@ export function Updater(parent) {
     this.parent = parent;
     this.freezeCount = 0;
     this.isPending = false;
-    this.attachUpdateList = [];
+    this.attachUpdateListPrefix = [];
+    this.attachUpdateListSuffix = [];
 }
 
 Updater.prototype.preUpdate = function() {
@@ -36,10 +37,13 @@ Updater.prototype.tryMove = function(element, move) {
 
 Updater.prototype.update = function() {
     this.preUpdate();
+    this.attachUpdateListPrefix.forEach(callback => {
+        callback.call(this.parent);
+    })
     this.parent.updateList.forEach(callback => {
         callback.call(this.parent);
     });
-    this.attachUpdateList.forEach(callback => {
+    this.attachUpdateListSuffix.forEach(callback => {
         callback.call(this.parent);
     });
     this.postUpdate();
@@ -73,6 +77,16 @@ Updater.prototype.tryUpdate = function() {
     else this.update();
 }
 
-Updater.prototype.attachUpdate = function(callback) {
-    this.attachUpdateList.push(callback);
+Updater.prototype.attachUpdate = function(callback, type = "suffix") {
+    if (type === "suffix") {
+        this.attachUpdateListSuffix.push(callback);
+    } else {
+        this.attachUpdateListPrefix.push(callback);
+    }
+    return callback;
+}
+
+Updater.prototype.removeUpdate = function(callback) {
+    this.attachUpdateListPrefix = this.attachUpdateListPrefix.filter(item => item !== callback);
+    this.attachUpdateListSuffix = this.attachUpdateListSuffix.filter(item => item !== callback);
 }
