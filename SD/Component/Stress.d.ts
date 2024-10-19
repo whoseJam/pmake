@@ -1,5 +1,6 @@
-interface StressType {
+export class CompStress {
     stress(): this;
+    stress(rate: number): this;
 }
 
-export function Stress<T>(parent: T): StressType&T;
+export function Stress<T>(parent: T): CompStress & T;

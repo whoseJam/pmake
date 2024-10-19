@@ -1,18 +1,14 @@
 import * as sd from "@/sd";
 
-let svg = sd.svg();
-// let text = new sd.Text(svg, "Hello World").x(100).y(100);
-let latex = new sd.Mathjax(svg, "A^2+B^2=C^2").cx(600).cy(300);
-// text = sd.Stress(text);
-latex = sd.Stress(latex);
+const svg = sd.svg();
+const latex = sd.Stress(new sd.Mathjax(svg, "A^2+B^2=C^2").cx(600).cy(300));
+const label = sd.Label(latex, "label", "tc");
 
-main();
+sd.init(() => {
+    console.log(label);
+})
 
-async function main() {
-    // await sd.pause();
-    // text.startAnimate().stress().endAnimate();
+sd.main(async () => {
     await sd.pause();
-    let width = latex.width();
     latex.startAnimate(1000).stress(2).endAnimate();
-    await sd.pause();
-}
+})
