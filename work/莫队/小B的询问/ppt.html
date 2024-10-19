@@ -25,14 +25,16 @@
             <script type="text/template">
                 struct Query {
                     int l, r;
-                }
+                } Q[M];
+                int B = sqrt(n); // 块大小取 sqrt(n) 时间最优
+                // 先按左端点所在块编号排序
+                // 再按右端点位置排序
                 bool cmp(Query a, Query b) {
                     int blockA = (a.l - 1) / B;
                     int blockB = (b.l - 1) / B;
                     if (blockA != blockB) return blockA < blockB;
                     return a.r < b.r;
                 }
-                int B = sqrt(n);
             </script>
         </codeblock>
         <codeblock class="fragment">
@@ -40,11 +42,11 @@
                 // a 数组为题目给出的原始数组
                 int l = 1, r = 0;
                 for (int i = 1; i <= m; i++) {
-                    while (l < q[i].l) Add(a[l], -1), l++;
-                    while (l > q[i].l) l--, Add(a[l], 1);
-                    while (r < q[i].r) r++, Add(a[r], 1);
-                    while (r > q[i].r) Add(a[r], -1), r--;
-                    计算 q[i] 的答案为 ans
+                    while (l < Q[i].l) Add(a[l], -1), l++;
+                    while (l > Q[i].l) l--, Add(a[l], 1);
+                    while (r < Q[i].r) r++, Add(a[r], 1);
+                    while (r > Q[i].r) Add(a[r], -1), r--;
+                    计算 Q[i] 的答案为 ans;
                 }
             </script>
         </codeblock>

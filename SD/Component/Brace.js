@@ -2,14 +2,13 @@ import { Context } from "@/Animate/Context";
 
 import { PointAtPathByRate } from "@/Rule/Path";
 
-import { BraceCurve } from "@/Node/Curve/BraceCurve"
-
 import { Cast }  from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
 
-import { Exit }  from "@/Node/SDNode/Exit";
-import { Enter }  from "@/Node/SDNode/Enter";
-import { SDNode } from "@/Node/SDNode";
+import { Exit }       from "@/Node/SDNode/Exit";
+import { Enter }      from "@/Node/SDNode/Enter";
+import { SDNode }     from "@/Node/SDNode";
+import { BraceCurve } from "@/Node/Curve/BraceCurve"
 
 let braceID = 0;
 
@@ -50,7 +49,7 @@ function LabelRule(parent, child) {
     const location = parent.member.getAndFlush("location");
     const gap = parent.member.getAndFlush("valueGap");
     const rule = {
-        "t": PointAtPathByRate(0.5, "cx", "my", 0, 0),
+        "t": PointAtPathByRate(0.5, "cx", "my", 0, -gap),
         "b": PointAtPathByRate(0.5, "cx", "y", 0, gap),
         "l": PointAtPathByRate(0.5, "mx", "cy", -gap, 0),
         "r": PointAtPathByRate(0.5, "x", "cy", gap, 0)
@@ -60,6 +59,7 @@ function LabelRule(parent, child) {
 
 export function Brace(parent) {
     const brace = new BraceCurve(parent).opacity(0);
+    const name = `brace_${++braceID}`;
 
     brace.member.new("braceElement1", undefined);
     brace.member.new("braceElement2", undefined);
@@ -78,6 +78,14 @@ export function Brace(parent) {
 
     brace.brace = function(l, r, location = "t", gap = 5) {
         if (Check.isTypeOfSDNode(l) && Check.isTypeOfSDNode(r)) {
+            if (!parent.childAs) { // 这是全局的 brace，需要手动管理规则回调
+                const element1 = this.member.get("braceElement1");
+                const element2 = this.member.get("braceElement2");
+                if (element1) element1.eraseChild(name);
+                if (element2) element2.eraseChild(name);
+                l.childAs(name, this);
+                r.childAs(name, this);
+            }
             this.member.set("braceElement1", l);
             this.member.set("braceElement2", r);
         } else if (Check.isTypeOfArray(parent)) {
@@ -113,13 +121,11 @@ export function Brace(parent) {
         const element = Cast.castToSDNode(this, value);
         element.member.new("location", undefined);
         element.onEnter(Enter.ordinary(this));
-        this.childAs("value", element, (parent, child) => {
-            LabelRule(parent, child);
-        });
+        this.childAs("value", element, LabelRule);
         return this;
     }
 
-    if (parent.childAs) parent.childAs(`brace_${++braceID}`, brace, BraceRule);
+    if (parent.childAs) parent.childAs(name, brace, BraceRule);
     else brace.rule(BraceRule);
     return brace;
 }

@@ -75,4 +75,9 @@ Updater.prototype.tryUpdate = function() {
 
 Updater.prototype.attachUpdate = function(callback) {
     this.attachUpdateList.push(callback);
+    return callback;
+}
+
+Updater.prototype.removeUpdate = function(callback) {
+    this.attachUpdateList = this.attachUpdateList.filter(item => item !== callback);
 }

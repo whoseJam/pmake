@@ -1,6 +1,6 @@
 import { Action } from "@/Animate/Action";
 
-import { Updater }  from "@/Node/SDNode/Update";
+import { Updater }  from "@/Node/SDNode/Updater";
 import { Animate }  from "@/Node/SDNode/Animate";
 import { Interact } from "@/Node/SDNode/Interact";
 import { Children } from "@/Node/SDNode/Children";
@@ -176,6 +176,7 @@ SDNode.prototype.freezing     = SDNode.Forward("updater", "freezing");
 SDNode.prototype.pendUpdate   = SDNode.Forward("updater", "pendUpdate");
 SDNode.prototype.tryUpdate    = SDNode.Forward("updater", "tryUpdate");
 SDNode.prototype.attachUpdate = SDNode.Forward("updater", "attachUpdate");
+SDNode.prototype.removeUpdate = SDNode.Forward("updater", "removeUpdate");
 
 SDNode.prototype.drag       = SDNode.Forward("interact", "drag");
 SDNode.prototype.onClick    = SDNode.Forward("interact", "onClick");

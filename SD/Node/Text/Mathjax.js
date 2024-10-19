@@ -25,6 +25,8 @@ export function Mathjax(parent, text) {
     this.member.new("text", "");
     this.member.new("font-size", 20);
 
+    this._.layer.setAttribute("font-size", 20);
+
     if (text) this.math(text);
 
     this._.BASE_MATHJAX = true;
@@ -88,9 +90,11 @@ Mathjax.prototype.text = function() {
 Mathjax.prototype.width = function(width) {
     const w = this.member.get("width");
     const fontSize = this.member.get("font-size");
+    console.log("width=", w, "fontSize=", fontSize, "k=", fontSize /  20, "realWidth=", w * fontSize / 20);
     if (width === undefined) return w * fontSize / 20;
     if (w === 0) return this;
     const k = width / w;
+    console.log("chang width set k=", k);
     this.fontSize(20 * k);
     return this;
 }

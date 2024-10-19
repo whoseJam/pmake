@@ -3,8 +3,9 @@ import { Line } from "@/Node/Nake/Line";
 import { svg } from "@/Interact/RootSvg";
 
 import { trim } from "@/Utility/Trim";
+import { SDNode } from "@/Node/SDNode";
 
-let id = 0;
+let linkID = 0;
 
 function LinkRule(parent, child) {
     const element1 = child.member.getAndFlush("linkElement1");
@@ -20,6 +21,7 @@ function LinkRule(parent, child) {
 
 export function Link(sourceElement, targetElement, linkType = Line, sourceXLocation = "cx", sourceYLocation = "cy", targetXLocation = "cx", targetYLocation = "cy", callback = () => {}) {
     const link = new linkType(svg());
+    const name = `link_${++linkID}`;
     callback(link);
 
     link.member.new("linkElement1", sourceElement);
@@ -40,7 +42,28 @@ export function Link(sourceElement, targetElement, linkType = Line, sourceXLocat
         }
     })
 
-    sourceElement.childAs(`link_${++id}`, link, LinkRule);
-    targetElement.childAs(`link_${++id}`, link, LinkRule);
+    link.sourceElement = function(element) {
+        if (element === undefined) return this.member.get("linkElement1");
+        this.member.get("linkElement1").eraseChild(name);
+        this.member.set("linkElement1", element);
+        element.childAs(name, this, LinkRule);
+        return this;
+    }
+
+    link.targetElement = function(element) {
+        if (element === undefined) return this.member.get("linkElement2");
+        this.member.get("linkElement2").eraseChild(name);
+        this.member.set("linkElement2", element);
+        element.childAs(name, this, LinkRule);
+        return this;
+    }
+
+    link.sourceXLocation = SDNode.OrdinaryGSet("xlocation1", "set");
+    link.sourceYLocation = SDNode.OrdinaryGSet("ylocation1", "set");
+    link.targetXLocation = SDNode.OrdinaryGSet("xlocation2", "set");
+    link.targetYLocation = SDNode.OrdinaryGSet("ylocation2", "set");
+
+    sourceElement.childAs(name, link, LinkRule);
+    targetElement.childAs(name, link, LinkRule);
     return link;
 }
