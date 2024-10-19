@@ -1,5 +1,3 @@
-import { D3Layer } from "SD/Node/SDNode/D3Layer";
-
 import { Vector } from "@/Math/Math";
 
 import { RenderNode } from "@/Renderer/RenderNode";

@@ -37,7 +37,7 @@ Interact.prototype.drag = function(arg) {
     const nake = this.parent._.layer.nake();
     if (Check.isFalseType(arg)) {
         Snap(nake).undrag();
-        return;
+        return this;
     }
     let currentX = 0;
     let currentY = 0;
@@ -45,7 +45,8 @@ Interact.prototype.drag = function(arg) {
     let lastDy = 0;
     Snap(nake).drag(function(dx, dy) {
         let screenDx = (dx - lastDx) / window.RATE;
-        let screenDy = (dx - lastDy) / window.RATE;
+        let screenDy = (dy - lastDy) / window.RATE;
+        console.log("rate=", window.RATE);
         if (typeof(arg) === "function") {
             [screenDx, screenDy] = arg(screenDx, screenDy);
         }

@@ -43,5 +43,6 @@ export const Check = {
     },
     isTypeOfString: (object) => {
         return typeof(object) === "string";
-    }
+    },
+    isValidNumber: IsValidNumber
 };

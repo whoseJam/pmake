@@ -9,7 +9,7 @@ import { Message } from "@/Interact/Message";
 import { RootSvg } from "@/Interact/RootSvg";
 
 export function init() {
-    RootSvg.init();
+    RootSvg.Init();
     Text.init();
     Path.init();
     Mathjax.Init();

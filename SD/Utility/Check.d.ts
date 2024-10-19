@@ -38,4 +38,5 @@ export const Check = {
     isTypeOfNake: IsTypeOfNake,
     isTypeOfTree: IsTypeOfTree,
     isFalseType: IsFalseType,
+    isValidNumber: IsValidNumber
 }

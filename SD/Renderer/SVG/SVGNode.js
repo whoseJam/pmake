@@ -4,6 +4,14 @@ import { Dom } from "@/Dom/Dom";
 
 let SVGNodeID = 0;
 
+function AppearOrRemove(element) {
+    return function(t) {
+        if (t !== 1) return;
+        if (this.target) this.target.append(element);
+        else element.remove();
+    }
+}
+
 export class SVGNode {
     constructor(parent, layer, tag) {
         this.parent = parent;
@@ -12,25 +20,25 @@ export class SVGNode {
         this.appear();
     }
 
-    append(tag) {
-        const tmp = new SVGNode(this.parent, this.layer, tag);
-        this.element.append(tmp.element);
-        return tmp;
-    }
-
     nake() {
         return this.element;
     }
 
+    append(tag) {
+        const result = new SVGNode(this.parent, this.layer, tag);
+        this.nake().append(result.nake());
+        return result;
+    }
+
     moveTo(layer) {
-        const element = this.element;
+        const element = Snap(this.nake());
         new Action(
             this.parent.delay() + this.parent.duration(),
             this.parent.delay() + this.parent.duration(),
-            this.layer.element, layer.element,
+            Snap(this.layer.nake()), Snap(layer.nake()),
             function(t) {
                 if (t !== 1) return;
-                Snap(this.target).append(Snap(element));
+                this.target.append(element);
             },
             this, "moveTo"
         );
@@ -42,37 +50,21 @@ export class SVGNode {
             Snap(this.layer.element).append(this.element);
             return;
         }
-        const self = this;
         new Action(
             this.parent.delay() + this.parent.duration(),
             this.parent.delay() + this.parent.duration(),
-            undefined, this.layer,
-            function(t) {
-                if (t !== 1) return;
-                if (this.target === undefined) {
-                    Snap(Dom.getByID(self.id)).remove();
-                } else {
-                    Snap(Dom.getByID(this.target.id)).append(self.element);
-                }
-            },
-            this.parent, "appear"
+            undefined, Snap(this.layer.nake()),
+            AppearOrRemove(Snap(this.nake())),
+            this, "appear"
         )
     }
 
     remove() {
-        const self = this;
         new Action(
             this.parent.delay() + this.parent.duration(),
             this.parent.delay() + this.parent.duration(),
-            this.layer, undefined,
-            function(t) {
-                if (t !== 1) return;
-                if (this.target === undefined) {
-                    Snap(Dom.getByID(self.id)).remove();
-                } else {
-                    Snap(Dom.getByID(this.target.id)).append(self.element);
-                }
-            },
+            Snap(this.layer.nake()), undefined,
+            AppearOrRemove(Snap(this.nake())),
             this, "remove"
         );
     }
@@ -80,7 +72,7 @@ export class SVGNode {
     setAttribute(key, value) {
         if (key === "innerHTML") {
             this.element.innerHTML = value;
-        } else if (key === "pointer-events") {
+        } else if (key === "pointer-events" || key === "min-width" || key === "min-height") {
             this.element.style[key] = value;
         } else {
             this.element.setAttribute(key, value);
