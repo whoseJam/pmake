@@ -17,10 +17,7 @@ const data = [
 const arr = new sd.ValueArray(svg).x(100).y(100).elementWidth(100);
 const tree = new sd.Array(svg).resize(10);
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     data.forEach(value => {
         const stk = new sd.Stack(arr).elementWidth(80);
         stk.valueX = value.x;
@@ -34,11 +31,12 @@ function init() {
         const e = tree.element(i);
         e.childAs("stk", new sd.Stack(e).elementWidth(20).elementHeight(20), R.Aside("bc"));
     }
-}
+})
 
-async function main() {
+sd.main(async () => {
     await sd.pause();
     const group = [];
+    arr.freeze();
     for (let i = 0; i < data.length; i++) {
         const e = arr.element(0);
         group.push({
@@ -53,7 +51,7 @@ async function main() {
     for (let i = 0; i < group.length; i++) {
         arr.pushFromExistElement(group[i].element);
     }
-    arr.endAnimate();
+    arr.unfreeze().endAnimate();
     
     const focus = new sd.Focus(tree);
     for (let i = 0; i < arr.length(); i++) {
@@ -69,8 +67,7 @@ async function main() {
         await sd.pause();
         arr.startAnimate().color(i, C.white).endAnimate();
     }
-    await sd.pause();
-}
+})
 
 function insert(pos) {
     const e = tree.element(pos);

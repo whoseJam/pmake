@@ -5,14 +5,11 @@ const C = sd.color();
 const data = [4, 2, 3, 6, 5, 6, 3, 4];
 const arr = new sd.Array(svg).x(100).y(100);
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     data.forEach(value => arr.push(value));
-}
+})
 
-async function main() {
+sd.main(async () => {
     await sd.pause();
     arr.freeze();
     const group = [];
@@ -47,5 +44,4 @@ async function main() {
         focus.startAnimate().focus(null).endAnimate();
         focusFront.startAnimate().focus(null).endAnimate();
     }
-    await sd.pause();
-}
+})

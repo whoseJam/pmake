@@ -32,10 +32,7 @@ const pCur = sd.Pointer(svg, "cur");
 const pI = sd.Pointer(svg, "i");
 const focus = sd.Focus(arr);
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     data.forEach((item, idx) => {
         tables.push(new sd.Stack(svg)
             .elementWidth(80)
@@ -51,16 +48,15 @@ function init() {
     }
     tableObj.update();
     arr.cx(100 + 4.5 * 100).y(520);
-}
+})
 
-async function main() {
+sd.main(async () => {
     await sd.pause();
     sortSubarray(data, 0, n - 1, (a, b) => a.a - b.a);
     tableObj.startAnimate().update().endAnimate();
     
     await CDQ(0, n - 1);
-    await sd.pause();
-}
+})
 
 function sortSubarray(arr, l, r, cmp) {
     const subArr = arr.slice(l, r + 1);
@@ -105,8 +101,8 @@ async function CDQ(l, r) {
         focus.startAnimate().focus(null).endAnimate();
     }
     await sd.pause();
-    pI.startAnimate().moveTo(null).endAnimate();
-    pCur.startAnimate().moveTo(null).endAnimate();
+    pI.startAnimate().opacity(0).endAnimate();
+    pCur.startAnimate().opacity(0).endAnimate();
     brace.startAnimate().opacity(0).remove();
     clear();
     for (let i = l; i <= cur; i++)
@@ -114,7 +110,6 @@ async function CDQ(l, r) {
 
     await sd.pause();
     sortSubarray(data, l, r, (a, b) => a.b - b.b);
-    console.log("new data = ", data);
     tableObj.startAnimate().update().endAnimate();
 }
 
