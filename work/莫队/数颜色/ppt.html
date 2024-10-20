@@ -53,10 +53,12 @@
             <script type="text/template">
                 void Upd(int t, int l, int r, int f) {
                     if (f == 1) { // 应用修改
+                        // 为了便于撤销
+                        // 记录一下该修改是把 a[x] 从 pre 变为 nxt
+                        M[t].pre = a[M[t].x];
                         if (l <= M[t].x && M[t].x <= r) {
-                            M[t].pre = a[M[t].x]; // 记录一下该修改是把 a[x] 从 pre 变为 nxt
-                            Del(a[M[t].x]);
-                            Add(a[M[t].x] = M[t].nxt);
+                            Del(M[t].pre);
+                            Add(M[t].nxt);
                         }
                     } // 撤销修改类似
                 }
