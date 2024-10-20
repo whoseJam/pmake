@@ -3,51 +3,34 @@ export class Action {
     constructor(
         l: number,
         r: number,
-        from: any,
-        to: any,
+        source: any,
+        target: any,
         callback: (t: number) => void,
         owner: any,
         channel: string,
         flag: boolean
     );
-
-    /**
-     * 动画开始的相对时间戳
-     */
-    l: number;
-
-    /**
-     * 动画结束的相对时间戳
-     */
-    r: number;
-
-    
-    from: any;
-    to: any;
-    owner: any;
-    channel: string;
-    callback: (t: number) => void;
     
     /**
      * 触发该 Action 的渲染行为
-     * @param timestamp 时间戳
+     * @param t 时间戳
      */
-    call(timestamp: number): void;
+    call(t: number);
 
     /**
      * 强制结束
      */
-    finish(): void;
+    finish();
 
     /**
      * 停止
      */
-    stop(): void;
+    stop();
 
     /**
      * 隐藏
      */
-    hide(): void;
+    hide();
 
     /**
      * 打印日志

@@ -90,11 +90,9 @@ Mathjax.prototype.text = function() {
 Mathjax.prototype.width = function(width) {
     const w = this.member.get("width");
     const fontSize = this.member.get("font-size");
-    console.log("width=", w, "fontSize=", fontSize, "k=", fontSize /  20, "realWidth=", w * fontSize / 20);
     if (width === undefined) return w * fontSize / 20;
     if (w === 0) return this;
     const k = width / w;
-    console.log("chang width set k=", k);
     this.fontSize(20 * k);
     return this;
 }

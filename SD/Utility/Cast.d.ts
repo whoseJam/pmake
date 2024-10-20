@@ -1,4 +1,4 @@
-import { SDNode } from "SD/Node/SDNode";
+import { SDNode } from "@/Node/SDNode";
 
 export class Cast {
     static castToSDNode(parent: SDNode, any: any): SDNode;

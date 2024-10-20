@@ -36,15 +36,15 @@ export class ActionList {
 
     /**
      * 触发一次动画渲染，这个函数应该在 requestAnimationFrame 中被使用
-     * @param timestamp 绝对时间戳
+     * @param t 绝对时间戳
      */
-    tick(timestamp: number): void;
+    tick(t: number): void;
 
     /**
      * 重启该调度器
-     * @param timestamp 绝对时间戳
+     * @param t 绝对时间戳
      */
-    restart(timestamp: number): void;
+    restart(t: number): void;
 
     /**
      * 强制该调度器内所有的动画行为立刻结束

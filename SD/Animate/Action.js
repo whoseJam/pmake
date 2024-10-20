@@ -4,41 +4,45 @@ function easeInOut(t) {
     return 0.5 * (1 - Math.cos(Math.PI * t));
 }
 
-export function Action(l, r, from, to, callback, owner = window, channel = "default", flag = true) {
+export function Action(
+    l,
+    r,
+    source,
+    target,
+    callback,
+    owner = window,
+    channel = "default",
+    flag = true) {
     this.l = l;
     this.r = r;
-    this.from = from;
-    this.to = to;
-    this.source = from;
-    this.target = to;
+    this.from = source;
+    this.to = target;
+    this.source = source;
+    this.target = target;
     this.callback = callback;
     this.owner = owner;
     this.channel = channel;
     this.frame = window.CURRENT_FRAME;
-    this.next = null;
+    this.next = undefined;
     this.isStopped = false;
-    this.hidden = false;
-    this.firstCall = true;
+    this.isHidden = false;
+    this.first = true;
     if (flag) Animate.push(this);
 }
 
-Action.prototype.call = function(timestamp) {
-    if (timestamp < this.l) return;
+Action.prototype.call = function(t) {
+    if (t < this.l) return;
     if (this.l < this.r - 1) {
-        const k = easeInOut(
-            (timestamp - this.l) /
-            (this.r - this.l)
-        );
-        const t = (this.firstCall) ? 0 : 
-                    (timestamp > this.r) ? 1 : k;
-        this.callback(t);
-        if (t === 1) this.stop();
+        const k0 = easeInOut((t - this.l) / (this.r - this.l));
+        const k1 = (this.first) ? 0 : (t > this.r) ? 1 : k0;
+        this.callback(k1);
+        if (k1 === 1) this.stop();
     } else {
-        const t = (this.firstCall) ? 0 : 1;
-        this.callback(t);
-        if (t === 1) this.stop();
+        const k1 = (this.first) ? 0 : 1;
+        this.callback(k1);
+        if (k1 === 1) this.stop();
     }
-    this.firstCall = false;
+    this.first = false;
 }
 
 Action.prototype.finish = function() {
@@ -46,12 +50,21 @@ Action.prototype.finish = function() {
     if (!this.isStopped) this.call(this.r + 5);
 }
 
-Action.prototype.stop = function() {
-    this.isStopped = true;
+Action.prototype.stop = function(stopped) {
+    if (arguments.length === 1) this.isStopped = stopped;
+    else this.isStopped = true;
+}
+
+Action.prototype.stopped = function() {
+    return this.isStopped;
 }
     
 Action.prototype.hide = function() {
-    this.hidden = true;
+    this.isHidden = true;
+}
+
+Action.prototype.hidden = function() {
+    return this.isHidden;
 }
 
 Action.prototype.log = function() {
@@ -59,10 +72,19 @@ Action.prototype.log = function() {
 }
 
 Action.prototype.clone = function() {
-    const other = new Action(this.l, this.r, this.from, this.to, this.callback, this.owner, this.channel, false);
+    const other = new Action(
+        this.l, 
+        this.r, 
+        this.source,
+        this.target,
+        this.callback,
+        this.owner,
+        this.channel,
+        false
+    );
     other.frame = this.frame;
     other.next = null;
     other.isStopped = false;
-    other.hidden = this.hidden;
+    other.isHidden = this.isHidden;
     return other;
 }
