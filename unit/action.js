@@ -6,6 +6,8 @@ let r = new sd.Rect(svg).width(100).cx(600).cy(300);
 let ir = new sd.Rect(svg);
 r.childAs("newRect", ir, R.CenterOnly());
 
+const D = sd.device();
+
 main();
 console.log(r._.animateL, r._.animateR, "animate");
 

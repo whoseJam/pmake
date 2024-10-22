@@ -25,7 +25,7 @@ export class Status {
         Status.frameStatus = Dom.getByID("frameStatus");
 
         const wrapper = Dom.getByID("wrapper");
-        Device.onKeyDown("t", () => {
+        Device.getIns().onKeyDown("t", () => {
             wrapper.style["opacity"] ^= 1;
         })
     }

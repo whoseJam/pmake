@@ -3,7 +3,7 @@ import { SVGNode } from "SD/Renderer/SVG/SVGNode";
 export function svg(): SVGNode;
 
 export class RootSvg {
-    Init();
+    static init();
 
     /**
      * 设置主 svg 画布的 viewBox
@@ -15,7 +15,7 @@ export class RootSvg {
      * @param parentHeight 嵌入框的高度
      * @param rate 留白比例
      */
-    setViewBox(
+    static setViewBox(
         x: number,
         y: number,
         width: number,

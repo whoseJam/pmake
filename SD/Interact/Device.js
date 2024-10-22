@@ -1,20 +1,26 @@
 
-const deviceMap = {};
-
 export class Device {
+    static deviceMap = {};
+
+    static instance = new Device();
+    
     static init() {
         document.addEventListener("keydown", (event) => {
-            if (deviceMap[event.key]) {
-                deviceMap[event.key]();
+            if (this.deviceMap[event.key]) {
+                this.deviceMap[event.key]();
             }
         })
     }
 
-    static onKeyDown(key, callback) {
-        deviceMap[key] = callback;
+    static getIns() {
+        return this.instance;
+    }
+
+    onKeyDown(key, callback) {
+        Device.deviceMap[key] = callback;
     }
 }
 
 export function device() {
-    return Device;
+    return Device.getIns();
 }

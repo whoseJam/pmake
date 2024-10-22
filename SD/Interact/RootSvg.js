@@ -1,15 +1,16 @@
 import { SVGNode }  from "@/Renderer/SVG/SVGNode";
 import { HTMLNode } from "@/Renderer/HTML/HTMLNode";
+
 import { Check } from "@/Utility/Check";
 
 const str0 = "0123456789-";
 
 function DefineArrows() {
-    Snap(RootSvg.SVG.nake()).append(Snap.parse(`
+    Snap(svg().nake()).append(Snap.parse(`
     <marker id="arrow" markerUnits="userSpaceOnUse" viewBox="0 0 12 12" refX="9.5" refY="6" markerWidth="12" markerHeight="12" orient="auto">
         <path d="M2,2 L10,6 L2,10 L6,6 L2,2" stroke="context-stroke" fill="context-stroke"></path>
     </marker>`));
-    Snap(RootSvg.SVG.nake()).append(Snap.parse(`
+    Snap(svg().nake()).append(Snap.parse(`
     <marker id="arrowReverse" markerUnits="userSpaceOnUse" viewBox="0 0 12 12" refX="9.5" refY="6" markerWidth="12" markerHeight="12" orient="auto-start-reverse">
         <path d="M2,2 L10,6 L2,10 L6,6 L2,2" stroke="context-stroke" fill="context-stroke"></path>
     </marker>`));
@@ -35,7 +36,9 @@ function UpdateWindowRate(svg, width, height) {
 }
 
 export class RootSvg {
-    static Init() {
+    static svg = undefined;
+
+    static init() {
         // screen delta / window.RATE = svg delta
         window.RATE = 1;
 
@@ -59,14 +62,14 @@ export class RootSvg {
             svg.setAttribute("height", "100%");
         }
         
-        RootSvg.SVG = svg;
+        this.svg = svg;
 
         UpdateWindowRate(svg, 1200, 600);
         DefineArrows();
     }
 
     static setViewBox(x, y, width, height, parentWidth, parentHeight, rate) {
-        const svg = RootSvg.SVG;
+        const svg = this.svg;
         /*
             |-----------W-----------|
             X           cX          mX
@@ -108,5 +111,5 @@ export class RootSvg {
 }
 
 export function svg() {
-    return RootSvg.SVG;
+    return RootSvg.svg;
 }

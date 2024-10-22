@@ -17,8 +17,9 @@ window.SVG_MINY = 600;
 window.SVG_MAXX = 0;
 window.SVG_MAXY = 0;
 
-Device.onKeyDown("n", nextFrame);
-Device.onKeyDown("p", prevFrame);
+
+Device.getIns().onKeyDown("n", nextFrame);
+Device.getIns().onKeyDown("p", prevFrame);
 
 function lastMainFrame() {
     if (window.SHOULD_EXPORT) {
