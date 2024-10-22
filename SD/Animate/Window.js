@@ -25,7 +25,6 @@ function lastMainFrame() {
         Animate.reset();
     }
     if (window.SHOULD_FLUSH) {
-        console.log("MinX=", window.SVG_MINX, "MinY=", window.SVG_MINY, "MaxY=", window.SVG_MAXY);
         Message.notifyParent(); // set the animation size of parent window
         if (window.SHOULD_EXPORT) {
             RootSvg.setViewBox(

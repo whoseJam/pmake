@@ -20,7 +20,10 @@ function PointerRule(parent, child) {
     const direction = child.member.getAndFlush("direction");
     const element = child.member.getAndFlush("pointAt");
     const gap = child.member.getAndFlush("pointerGap");
-    if (!element) return;
+    if (!element) {
+        child.opacity(0);
+        return;
+    }
     const pointers = pointerMap[element.id].filter((pointer) => {
         return pointer.member.get("direction") === direction && (pointer.opacity() !== 0 || pointer === child);
     });
