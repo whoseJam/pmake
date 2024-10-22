@@ -4,33 +4,39 @@ function ddcmp(x) {
 }
 
 export class Vector {
-    static add(a, b) {
+    static instance = new Vector();
+
+    static getIns() {
+        return this.instance;
+    }
+
+    add(a, b) {
         return [
             a[0] + b[0],
             a[1] + b[1]
         ];
     }
 
-    static sub(a, b) {
+    sub(a, b) {
         return [
             a[0] - b[0],
             a[1] - b[1]
         ];
     }
 
-    static dotMul(a, b) {
+    dotMul(a, b) {
         return a[0] * b[0] + a[1] * b[1];
     }
 
-    static numberMul(a, b) {
+    numberMul(a, b) {
         return [a[0] * b, a[1] * b];
     }
 
-    static length(a) {
+    length(a) {
         return Math.sqrt(a[0] * a[0] + a[1] * a[1]);
     }
 
-    static identity(a) {
+    identity(a) {
         const length = this.length(a);
         if (ddcmp(length) > 0) {
             return [
@@ -41,50 +47,50 @@ export class Vector {
         return [0, 0];
     }
 
-    static complexMul(a, b) {
+    complexMul(a, b) {
         return [
             a[0] * b[0] - a[1] * b[1],
             a[0] * b[1] - a[1] * b[0]
         ];
     }
 
-    static makeComplex(r, arc) {
+    makeComplex(r, arc) {
         return [
             r * Math.cos(arc),
             r * Math.sin(arc)
         ];
     }
 
-    static rotate(a, arc) {
+    rotate(a, arc) {
         const direction = this.makeComplex(1, arc);
         return this.complexMul(a, direction);
     }
 
-    static norm(a) {
+    norm(a) {
         return this.identity(a);
     }
 
-    static cross(a, b) {
+    cross(a, b) {
         return a[0] * b[1] - a[1] * b[0];
     }
 
-    static onLeft(a, b) {
+    onLeft(a, b) {
         return this.cross(a, b) >= 0;
     }
 
-    static onRight(a, b) {
+    onRight(a, b) {
         return this.cross(a, b) <= 0;
     }
 
-    static cos(a) {
+    cos(a) {
         return a[0] / this.length(a);
     }
 
-    static sin(a) {
+    sin(a) {
         return a[1] / this.length(a);
     }
 
-    static tan(a) {
+    tan(a) {
         return a[1] / a[0];
     }
 }

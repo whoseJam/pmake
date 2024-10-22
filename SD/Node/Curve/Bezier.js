@@ -24,14 +24,15 @@ function update() {
         this.member.hasChanged("y1") ||
         this.member.hasChanged("x2") ||
         this.member.hasChanged("y2")) {
+        const vector = Vector.getIns();
         const v1 = this.source();
         const v2 = this.target();
-        const d = Vector.sub(v2, v1);
-        const d1q = Vector.numberMul(d, 0.25);
-        const d3q = Vector.numberMul(d, 0.75);
-        const pc1 = Vector.add(Vector.add(v1, d1q), Vector.rotate(d1q, Math.PI / 2));
-        const pm = Vector.add(v1, Vector.numberMul(d, 0.5));
-        const pc2 = Vector.add(Vector.add(v1, d3q), Vector.rotate(d1q, -Math.PI / 2));       
+        const d = vector.sub(v2, v1);
+        const d1q = vector.numberMul(d, 0.25);
+        const d3q = vector.numberMul(d, 0.75);
+        const pc1 = vector.add(vector.add(v1, d1q), vector.rotate(d1q, Math.PI / 2));
+        const pm = vector.add(v1, vector.numberMul(d, 0.5));
+        const pc2 = vector.add(vector.add(v1, d3q), vector.rotate(d1q, -Math.PI / 2));       
         const pen = new PathPen().MoveTo(v1).Quad(pc1, pm).Quad(pc2, v2);
         this.member.set("d", pen.toString());
         this.member.flush("x1");

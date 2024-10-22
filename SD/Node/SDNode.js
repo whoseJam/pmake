@@ -88,7 +88,7 @@ SDNode.InRange = function(mode) {
     if (mode === "circle") {
         return function(vec) {
             const center = [this.cx(), this.cy()];
-            const length = Vector.length(Vector.sub(vec, center));
+            const length = Vector.getIns().length(Vector.getIns().sub(vec, center));
             return length <= this.r();
         }
     } else if (mode === "rect") {

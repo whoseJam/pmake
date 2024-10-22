@@ -29,6 +29,7 @@ function update() {
         this.member.hasChagned("x2") ||
         this.member.hasChagned("y2") ||
         this.member.hasChagned("fixedPoint")) {
+        const vector = Vector.getIns();
         const v1 = this.source();
         const v2 = this.target();
         const vc = this.member.get("fixedPoint");
@@ -36,10 +37,10 @@ function update() {
         if (!vc) {
             return `M ${v1[0]}, ${v1[1]} L ${v2[0]}, ${v2[1]}`;
         }
-        const dirVcV1 = Vector.norm(Vector.sub(v1, vc));
-        const p1 = Vector.add(vc, Vector.numberMul(dirVcV1, r));
-        const dirVcV2 = Vector.norm(Vector.sub(v2, vc));
-        const p2 = Vector.add(vc, Vector.numberMul(dirVcV2, r));
+        const dirVcV1 = vector.norm(vector.sub(v1, vc));
+        const p1 = vector.add(vc, vector.numberMul(dirVcV1, r));
+        const dirVcV2 = vector.norm(vector.sub(v2, vc));
+        const p2 = vector.add(vc, vector.numberMul(dirVcV2, r));
         this.member.set("d", `M ${v1[0]}, ${v1[1]} L ${p1[0]}, ${p1[1]} Q ${vc[0]}, ${vc[1]}, ${p2[0]}, ${p2[1]} L ${v2[0]}, ${v2[1]}`);
         this.member.flush("x1");
         this.member.flush("y1");

@@ -41,8 +41,8 @@ Line.prototype.updateList = [
 Line.prototype.at = function(k) {
     const v1 = this.source();
     const v2 = this.target();
-    const d = Vector.sub(v2, v1);
-    return Vector.add(v1, Vector.numberMul(d, k));
+    const d = Vector.getIns().sub(v2, v1);
+    return Vector.getIns().add(v1, Vector.getIns().numberMul(d, k));
 }
 
 Line.prototype.getPointAtLength = function(length) {
@@ -54,5 +54,5 @@ Line.prototype.getPointAtLength = function(length) {
 Line.prototype.totalLength = function() {
     const v1 = this.source();
     const v2 = this.target();
-    return Vector.length(Vector.sub(v1, v2));
+    return Vector.getIns().length(Vector.getIns().sub(v1, v2));
 }

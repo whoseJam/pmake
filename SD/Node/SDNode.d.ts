@@ -1,5 +1,3 @@
-import { Vector } from "@/Math/Math";
-
 import { RenderNode } from "@/Renderer/RenderNode";
 
 type Rule = (parent: SDNode, child: SDNode) => void;
@@ -89,7 +87,7 @@ export class SDNode {
      * 判断某个坐标是否落在节点内部
      * @param point
      */
-    inRange(point: Vector): boolean;
+    inRange(point: [number, number]): boolean;
 
     /**
      * 移除该元素（以及子元素）
@@ -146,18 +144,18 @@ export class SDNode {
      */
     height(height: number): this;
     
-    pos(xLocator: string, yLocator: string, dx: number, dy: number): Vector;
+    pos(xLocator: string, yLocator: string, dx: number, dy: number): [number, number];
     
     /**
      * 获取中点
      */
-    center(): Vector;
+    center(): [number, number];
 
     /**
      * 设置中点
      * @param center 
      */
-    center(center: Vector): this;
+    center(center: [number, number]): this;
 
     /**
      * 设置中点

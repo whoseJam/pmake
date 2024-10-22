@@ -6,7 +6,7 @@ import { BaseTree } from "@/Node/Tree/BaseTree";
 import { Vector } from "@/Math/Vector";
 
 import { trim }             from "@/Utility/Trim";
-import { Cast, SelectValidValue } from "@/Utility/Cast";
+import { Cast } from "@/Utility/Cast";
 
 import * as d3 from "d3";
 import { Enter } from "../SDNode/Enter";
@@ -141,7 +141,7 @@ export function d3TreeLayout(mode, transX, transY, minDistanceRatio, parentSizeI
         const vecI = [transX(descendants[i]), transY(descendants[i])];
         for (let j = i + 1; j < descendants.length; j++) {
             const vecJ = [transX(descendants[j]), transY(descendants[j])];
-            limit = Math.min(limit, Vector.length(Vector.sub(vecI, vecJ)));
+            limit = Math.min(limit, Vector.getIns().length(Vector.getIns().sub(vecI, vecJ)));
         }
     }
 

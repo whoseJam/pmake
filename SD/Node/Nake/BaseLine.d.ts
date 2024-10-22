@@ -1,5 +1,3 @@
-import { Vector } from "@/Math/Math";
-
 import { SDNode }   from "SD/Node/SDNode";
 import { BaseNake } from "SD/Node/BaseNake";
 
@@ -22,12 +20,12 @@ export class BaseLine extends BaseNake {
     fadeStoT(): this;
     fadeTtoS(): this;
 
-    source(): Vector
-    source(vector: Vector): this;
+    source(): [number, number];
+    source(vector: [number, number]): this;
     source(x: number, y: number): this
 
-    target(): Vector;
-    target(vector: Vector): this
+    target(): [number, number];
+    target(vector: [number, number]): this
     target(x: number, y: number): this
 
     x1(): number;
