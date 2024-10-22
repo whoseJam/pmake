@@ -3,8 +3,6 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const arr = new sd.Array(svg).resize(20);
 
-main();
+sd.main(async () => {
 
-async function main() {
-    await sd.pause();
-}
+})

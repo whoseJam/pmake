@@ -2,6 +2,19 @@ import { Action } from "@/Animate/Action";
 
 import { Dom } from "@/Dom/Dom";
 
+const SHAPE_TAG = new Set([
+    "circle",
+    "ellipse",
+    "foreignObject",
+    "fragment",
+    "image",
+    "line",
+    "path",
+    "rect",
+    "svg",
+    "text"
+]);
+
 let SVGNodeID = 0;
 
 function AppearOrRemove(element) {
@@ -17,6 +30,7 @@ export class SVGNode {
         this.parent = parent;
         this.layer = layer;
         this.element = Dom.createSVGElement(tag, this.id = ++SVGNodeID);
+        this.tag = tag;
         this.appear();
     }
 
@@ -77,5 +91,9 @@ export class SVGNode {
         } else {
             this.element.setAttribute(key, value);
         }
+    }
+
+    hasShape() {
+        return SHAPE_TAG.has(this.tag);
     }
 }

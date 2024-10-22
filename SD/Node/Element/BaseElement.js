@@ -52,6 +52,10 @@ BaseElement.prototype.stroke        = BackgroundGSet("stroke");
 BaseElement.prototype.strokeOpacity = BackgroundGSet("strokeOpacity");
 BaseElement.prototype.strokeWidth   = BackgroundGSet("strokeWidth");
 
+BaseElement.prototype.background = function() {
+    return this.child("background");
+}
+
 BaseElement.prototype.text = function() {
     const value = this.child("value");
     return value ? value.text ? value.text() : undefined : undefined;

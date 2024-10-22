@@ -25,6 +25,7 @@ function lastMainFrame() {
         Animate.reset();
     }
     if (window.SHOULD_FLUSH) {
+        console.log("MinX=", window.SVG_MINX, "MinY=", window.SVG_MINY);
         Message.notifyParent(); // set the animation size of parent window
         if (window.SHOULD_EXPORT) {
             RootSvg.setViewBox(
@@ -130,7 +131,7 @@ export function pause(frameType = 0) {
             return 0;
         }
     }
-    Animate.debug();
+    // Animate.debug();
     switch(frameType) {
         case FIRST_INTER_FRAME:
             return promiseOfFirstInterFrame();

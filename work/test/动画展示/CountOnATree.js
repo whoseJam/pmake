@@ -1,5 +1,4 @@
 import * as sd from "@/sd";
-import { xml } from "d3";
 
 const svg = sd.svg();
 const C = sd.color();
