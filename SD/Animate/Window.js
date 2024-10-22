@@ -130,7 +130,7 @@ export function pause(frameType = 0) {
             return 0;
         }
     }
-    // Animate.debug();
+    Animate.debug();
     switch(frameType) {
         case FIRST_INTER_FRAME:
             return promiseOfFirstInterFrame();

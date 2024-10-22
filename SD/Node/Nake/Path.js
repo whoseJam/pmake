@@ -93,9 +93,9 @@ function update() {
             function(t) {
                 if (t === 0) {
                     if (duration === 0) {
-                        snap.attr({ d: this.to });
+                        snap.attr({ d: this.target });
                     } else {
-                        snap.animate({ d: this.to }, duration, mina.easeinout);
+                        snap.animate({ d: this.target }, duration, mina.easeinout);
                     }
                 }
             },

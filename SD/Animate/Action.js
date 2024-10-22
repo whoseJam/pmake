@@ -15,8 +15,6 @@ export function Action(
     flag = true) {
     this.l = l;
     this.r = r;
-    this.from = source;
-    this.to = target;
     this.source = source;
     this.target = target;
     this.callback = callback;
