@@ -21,12 +21,11 @@ let edges = [
 for (let i = 0; i < edges.length; i++)
     g.newLink(edges[i][0], edges[i][1])
 
-main();
 
-async function main() {
+sd.main(async () => {
     await match([["x1", "y1"], ["x2", "y3"], ["x3", "y4"]]);
     await match([["x1", "y2"], ["x2", "y1"], ["x3", "y4"], ["x4", "y3"]]);
-}
+})
 
 async function match(matches) {
     await sd.pause();

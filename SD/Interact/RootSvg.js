@@ -67,7 +67,6 @@ export class RootSvg {
 
     static setViewBox(x, y, width, height, parentWidth, parentHeight, rate) {
         const svg = RootSvg.SVG;
-        if (width <= 10 || height <= 10) return;
         /*
             |-----------W-----------|
             X           cX          mX
@@ -82,6 +81,7 @@ export class RootSvg {
             |   +-------+-------+   |  |
             |                       |  |
         mY  +-----------+-----------+  -
+        
         */
         const cx = (x + width / 2);
         const cy = (y + height / 2);
@@ -95,7 +95,7 @@ export class RootSvg {
         const mY = my + (my - cy) * (rate - 1) / 2;
         const W = mX > X ? mX - X : 1200;
         const H = mY > Y ? my - Y : 600;
-        svg.setAttribute("viewBox", `${X} ${Y} ${W} ${H}`);
+        svg.setAttribute("viewBox", `${X} ${Y} ${W} ${H + 1}`);
         if (W / H <= parentWidth / parentHeight) {
             svg.setAttribute("width", `${100 * (W / H) / (parentWidth / parentHeight) - 2}%`);
             svg.setAttribute("height", "98%");

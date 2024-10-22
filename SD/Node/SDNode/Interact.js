@@ -46,7 +46,6 @@ Interact.prototype.drag = function(arg) {
     Snap(nake).drag(function(dx, dy) {
         let screenDx = (dx - lastDx) / window.RATE;
         let screenDy = (dy - lastDy) / window.RATE;
-        console.log("rate=", window.RATE);
         if (typeof(arg) === "function") {
             [screenDx, screenDy] = arg(screenDx, screenDy);
         }
