@@ -7,51 +7,56 @@ function IsTypeOf(type) {
     }
 }
 
-export const IsTypeOfSDNode = IsTypeOf("SDNODE");
-export const IsTypeOfArray = IsTypeOf("ARRAY");
-export const IsTypeOfElement = IsTypeOf("ELEMENT");
-export const IsTypeOfCurve = IsTypeOf("CURVE");
-export const IsTypeOfGraph = IsTypeOf("GRAPH");
-export const IsTypeOfGrid = IsTypeOf("GRID");
-export const IsTypeOfHTML = IsTypeOf("HTML");
-export const IsTypeOfNake = IsTypeOf("NAKE");
-export const IsTypeOfTree = IsTypeOf("TREE");
-export const IsTypeOfLine = IsTypeOf("LINE");
+// export const IsTypeOfSDNode = IsTypeOf("SDNODE");
+// export const IsTypeOfArray = IsTypeOf("ARRAY");
+// export const IsTypeOfElement = IsTypeOf("ELEMENT");
+// export const IsTypeOfCurve = IsTypeOf("CURVE");
+// export const IsTypeOfGraph = IsTypeOf("GRAPH");
+// export const IsTypeOfGrid = IsTypeOf("GRID");
+// export const IsTypeOfHTML = IsTypeOf("HTML");
+// export const IsTypeOfNake = IsTypeOf("NAKE");
+// export const IsTypeOfTree = IsTypeOf("TREE");
+// export const IsTypeOfLine = IsTypeOf("LINE");
 
-export function IsNumberOrString(any) {
-    return typeof(any) === "number" || typeof(any) === "string";
-}
+export class Check {
+    static isTypeOfSDNode = IsTypeOf("SDNODE")
 
-export function IsValidNumber(num) {
-    return typeof(num) === "number" && num !== NaN && num !== Infinity && num !== -Infinity;
-}
+    static isTypeOfArray = IsTypeOf("ARRAY")
+    
+    static isTypeOfElement = IsTypeOf("ELEMENT")
+    
+    static isTypeOfCurve = IsTypeOf("CURVE")
+    
+    static isTypeOfGraph = IsTypeOf("GRAPH")
+    
+    static isTypeOfGrid = IsTypeOf("GRID")
+    
+    static isTypeOfHTML = IsTypeOf("HTML")
+    
+    static isTypeOfNake = IsTypeOf("NAKE")
+    
+    static isTypeOfTree = IsTypeOf("TREE")
 
-export const Check = {
-    isTypeOfSDNode: IsTypeOf("SDNODE"),
-    isTypeOfArray: IsTypeOf("ARRAY"),
-    isTypeOfElement: IsTypeOf("ELEMENT"),
-    isTypeOfCurve: IsTypeOf("CURVE"),
-    isTypeOfGraph: IsTypeOf("GRAPH"),
-    isTypeOfGrid: IsTypeOf("GRID"),
-    isTypeOfHTML: IsTypeOf("HTML"),
-    isTypeOfNake: IsTypeOf("NAKE"),
-    isTypeOfTree: IsTypeOf("TREE"),
-    isFalseType: (object) => {
+    static isTypeOfLine = IsTypeOf("LINE")
+
+    static isFalseType(object) {
         return object === null || object === undefined || object === false;
-    },
-    isNumberOrString: (object) => {
+    }
+
+    static isNumberOrString(object) {
         return typeof(object) === "number" || typeof(object) === "string";
-    },
-    isTypeOfString: (object) => {
+    }
+
+    static isTypeOfString(object) {
         return typeof(object) === "string";
-    },
-    isValidNumber: IsValidNumber,
-    isTypeOfOpacity: (object) => {
+    }
+
+    static isTypeOfOpacity(object) {
         if (typeof(object) !== "number") return false;
         return 0 <= object && object <= 1;
-    },
-    isTypeOfLine: IsTypeOf("LINE"),
-    isTypeOfColor: function(object) {
+    }
+
+    static isTypeOfColor(object) {
         if (typeof(object) === "string" && object.startsWith("#")) {
             return true;
         } else if (typeof(object) === "object" && object.main && object.border) {
@@ -59,4 +64,47 @@ export const Check = {
         }
         return false;
     }
-};
+}
+
+// export function IsNumberOrString(any) {
+//     return typeof(any) === "number" || typeof(any) === "string";
+// }
+
+// export function IsValidNumber(num) {
+//     return typeof(num) === "number" && num !== NaN && num !== Infinity && num !== -Infinity;
+// }
+
+// export const Check = {
+//     isTypeOfSDNode: IsTypeOf("SDNODE"),
+//     isTypeOfArray: IsTypeOf("ARRAY"),
+//     isTypeOfElement: IsTypeOf("ELEMENT"),
+//     isTypeOfCurve: IsTypeOf("CURVE"),
+//     isTypeOfGraph: IsTypeOf("GRAPH"),
+//     isTypeOfGrid: IsTypeOf("GRID"),
+//     isTypeOfHTML: IsTypeOf("HTML"),
+//     isTypeOfNake: IsTypeOf("NAKE"),
+//     isTypeOfTree: IsTypeOf("TREE"),
+//     isFalseType: (object) => {
+//         return object === null || object === undefined || object === false;
+//     },
+//     isNumberOrString: (object) => {
+//         return typeof(object) === "number" || typeof(object) === "string";
+//     },
+//     isTypeOfString: (object) => {
+//         return typeof(object) === "string";
+//     },
+//     isValidNumber: IsValidNumber,
+//     isTypeOfOpacity: (object) => {
+//         if (typeof(object) !== "number") return false;
+//         return 0 <= object && object <= 1;
+//     },
+//     isTypeOfLine: IsTypeOf("LINE"),
+//     isTypeOfColor: function(object) {
+//         if (typeof(object) === "string" && object.startsWith("#")) {
+//             return true;
+//         } else if (typeof(object) === "object" && object.main && object.border) {
+//             return true;
+//         }
+//         return false;
+//     }
+// };
