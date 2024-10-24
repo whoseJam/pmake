@@ -16,6 +16,7 @@ export const IsTypeOfGrid = IsTypeOf("GRID");
 export const IsTypeOfHTML = IsTypeOf("HTML");
 export const IsTypeOfNake = IsTypeOf("NAKE");
 export const IsTypeOfTree = IsTypeOf("TREE");
+export const IsTypeOfLine = IsTypeOf("LINE");
 
 export function IsNumberOrString(any) {
     return typeof(any) === "number" || typeof(any) === "string";
@@ -46,6 +47,16 @@ export const Check = {
     },
     isValidNumber: IsValidNumber,
     isTypeOfOpacity: (object) => {
+        if (typeof(object) !== "number") return false;
         return 0 <= object && object <= 1;
+    },
+    isTypeOfLine: IsTypeOf("LINE"),
+    isTypeOfColor: function(object) {
+        if (typeof(object) === "string" && object.startsWith("#")) {
+            return true;
+        } else if (typeof(object) === "object" && object.main && object.border) {
+            return true;
+        }
+        return false;
     }
 };

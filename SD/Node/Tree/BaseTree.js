@@ -62,52 +62,43 @@ BaseTree.prototype.value = function() {
     }
 }
 
-BaseTree.prototype.opacity = function(arg0, arg1, arg2) {
-    // const args = arguments;
-    // switch (args.length) {
-    //     case 0:
-    //         return SDNode.prototype.opacity.call(this);
-    //     case 1: {
-    //         return Check.isTypeOfOpacity(args[0]) ? SDNode.prototype.opacity.call(this, args[0]) : this.element(args[0]).opacity();
-    //     }
-    // }
-    if (arguments.length === 0) {
-        return SDNode.prototype.opacity.call(this);
-    } else if (arguments.length === 1) {
-        if (0 <= arg0 && arg0 <= 1) return SDNode.prototype.opacity.call(this, arg0);
-        return this.findNodeById(arg0).opacity();
-    } else if (arguments.length === 2) {
-        if (0 <= arg1 && arg1 <= 1) {
-            this.findNodeById(arg0).opacity(arg1);
-            return this;
-        }
-        return this.findLinkById(arg0, arg1).opacity();
-    } else if (arguments.length === 3) {
-        this.findLinkById(arg0, arg1).opacity(arg2);
-        return this;
+BaseTree.prototype.opacity = function() {
+    const args = arguments;
+    switch (args.length) {
+        case 0:
+            return SDNode.prototype.opacity.call(this);
+        case 1:
+            return Check.isTypeOfOpacity(args[0]) ? SDNode.prototype.opacity.call(this, args[0]) : this.element(args[0]).opacity();
+        case 2:
+            return Check.isTypeOfOpacity(args[1]) ? this.element(args[0]).opacity(args[1]) : this.element(args[0], args[1]).opacity();
+        case 3:
+            return (this.element(args[0], args[1]).opacity(args[2]), this);
+        default:
+            ErrorLauncher.invalidArguments();
     }
-    console.error(arguments);
-    throw new Error("Invalid Arguments");
 }
 
-BaseTree.prototype.color = function(arg0, arg1, arg2) {
-    const nodes = this.member.get("nodes");
-    if (arguments.length === 1) {
-        if (typeof(arg0) !== "number" && (typeof(arg0) === "string" || "main" in arg0)) {
-            nodes.forEach(node => node.color(arg0));
-            return this;
-        } else return this.findNodeById(arg0).color();
-    } else if (arguments.length === 2) {
-        if (typeof(arg1) === "string" || "main" in arg1) {
-            this.findNodeById(arg0).color(arg1);
-            return this;
-        } else return this.findLinkById(arg0, arg1);
-    } else if (arguments.length === 3) {
-        this.findLinkById(arg0, arg1).color(arg2);
-        return this;
+BaseTree.prototype.color = function() {
+    const args = arguments;
+    switch (args.length) {
+        case 1: {
+            const node = this.findNodeById(args[0]);
+            return node ? node.color() : (this.forEachNodes(node => node.color(args[0])), this);
+        }
+        case 2: {
+            const node = this.findNodeById(args[0]);
+            const link = this.findLinkById(args[0], args[1]);
+            return link ? link.color() : 
+                   Check.isTypeOfColor(args[1]) ? (node.color(args[1]), this) : 
+                   ErrorLauncher.invalidArguments();
+        }
+        case 3: {
+            const link = this.findLinkById(args[0], args[1]);
+            return link ? link.color(args[2]) : ErrorLauncher.linkNotExist(args[0], args[1]);
+        }
+        default:
+            ErrorLauncher.invalidArguments();
     }
-    console.error(arguments);
-    throw new Error("Invalid Arguments");
 }
 
 BaseTree.prototype.findNodeById = function(tid) {

@@ -28,6 +28,7 @@ export function IsValidNumber(object: any): boolean;
 function IsFalseType(object: any): boolean;
 
 function isTypeOfOpacity(object: any): boolean;
+function isTypeOfLine(object: any): boolean;
 
 export const Check = {
     isTypeOfSDNode: IsTypeOfSDNode,
@@ -41,5 +42,6 @@ export const Check = {
     isTypeOfTree: IsTypeOfTree,
     isFalseType: IsFalseType,
     isValidNumber: IsValidNumber,
-    isTypeOfOpacity: isTypeOfOpacity
+    isTypeOfOpacity: isTypeOfOpacity,
+    isTypeOfLine: isTypeOfLine
 }

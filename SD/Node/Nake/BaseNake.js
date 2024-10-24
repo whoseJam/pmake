@@ -3,6 +3,7 @@ import { Interp } from "@/Animate/Interp";
 import { Text }    from "@/Node/Nake/Text";
 import { SDNode }  from "@/Node/SDNode";
 import { SVGNode } from "@/Renderer/SVG/SVGNode";
+import { Check } from "@/Utility/Check";
 
 export function BaseNake(parent, tag) {
     SDNode.call(this, parent);
@@ -41,6 +42,8 @@ BaseNake.prototype.color = function(color) {
     if (typeof(color) === "string") {
         this.fill(color);
         if (this instanceof Text) {
+            this.stroke(color);
+        } else if (Check.isTypeOfLine(this)) {
             this.stroke(color);
         }
     } else {

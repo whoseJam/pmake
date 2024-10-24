@@ -26,6 +26,8 @@ export function BaseLine(parent, tag) {
     nake.setAttribute("stroke-opacity", this.member.get("stroke-opacity"));
     nake.setAttribute("stroke-width", this.member.get("stroke-width"));
     nake.setAttribute("stroke", this.member.get("stroke"));
+
+    this._.BASE_LINE = true;
 }
 
 BaseLine.prototype = {
