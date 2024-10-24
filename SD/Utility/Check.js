@@ -44,5 +44,8 @@ export const Check = {
     isTypeOfString: (object) => {
         return typeof(object) === "string";
     },
-    isValidNumber: IsValidNumber
+    isValidNumber: IsValidNumber,
+    isTypeOfOpacity: (object) => {
+        return 0 <= object && object <= 1;
+    }
 };

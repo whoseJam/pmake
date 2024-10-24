@@ -1,6 +1,7 @@
 import { SDNode } from "@/Node/SDNode";
 
-import { Check } from "@/Utility/Check";
+import { Check }         from "@/Utility/Check";
+import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 export function BaseTree(parent) {
     SDNode.call(this, parent);
@@ -24,49 +25,52 @@ BaseTree.prototype = {
 BaseTree.prototype.x = SDNode.OrdinaryGSet("x", "setByEqual");
 BaseTree.prototype.y = SDNode.OrdinaryGSet("y", "setByEqual");
 
-BaseTree.prototype.element = function(arg0, arg1) {
-    if (arguments.length === 1)
-        return this.findNodeById(arg0);
-    if (arguments.length === 2)
-        return this.findLinkById(arg0, arg1);
-    console.log(arguments);
-    throw new Error("Invalid Arguments");
+BaseTree.prototype.element = function() {
+    const args = arguments;
+    switch (args.length) {
+        case 1:
+            const node = this.findNodeById(args[0]);
+            return node ? node : ErrorLauncher.nodeNotExists(args[0]);
+        case 2:
+            const link = this.findLinkById(args[0], args[1]);
+            return link ? link : ErrorLauncher.linkNotExist(args[0], args[1]);
+        default:
+            ErrorLauncher.invalidArguments();
+    }
 }
 
-BaseTree.prototype.value = function(arg0, arg1, arg2) {
-    if (arguments.length === 1) {
-        const node = this.findNodeById(arg0);
-        if (!node) {
-            throw new Error(`Node (id = ${arg0}) Do Not Exists`);
+BaseTree.prototype.value = function() {
+    const args = arguments;
+    switch (args.length) {
+        case 1: {
+            const node = this.findNodeById(args[0]);
+            return node ? node.value() : ErrorLauncher.nodeNotExists(args[0]);
         }
-        return node.value();
+        case 2: {
+            const link = this.findLinkById(args[0], args[1]);
+            const node = this.findNodeById(args[0]);
+            return link ? link.value() : 
+                   node ? (node.value(args[1]), this) : 
+                   ErrorLauncher.nodeNotExists(args[0]);
+        }
+        case 3: {
+            const link = this.findLinkById(args[0], args[1]);
+            return link ? (link.value(args[2]), this) : ErrorLauncher.linkNotExist(args[0], args[1]);
+        }
+        default:
+            ErrorLauncher.invalidArguments();
     }
-    else if (arguments.length === 2) {
-        if (Check.isNumberOrString(arg0) && Check.isNumberOrString(arg1)) {
-            const link = this.findLinkById(arg0, arg1);
-            if (link) {
-                return link.value();
-            }
-        }
-        const node = this.findNodeById(arg0);
-        if (!node) {
-            throw new Error(`Node (id = ${arg0}) Do Not Exists`);
-        }
-        node.value(arg1);
-        return this;
-    } else if (arguments.length === 3) {
-        const link = this.findLinkById(arg0, arg1);
-        if (!link) {
-            throw new Error(`Link (parentId = ${arg0} childId = ${arg1}) Do Not Exists`);
-        }
-        link.value(arg2);
-        return this;
-    }
-    console.log(arguments);
-    throw new Error("Invalid Arguments");
 }
 
 BaseTree.prototype.opacity = function(arg0, arg1, arg2) {
+    // const args = arguments;
+    // switch (args.length) {
+    //     case 0:
+    //         return SDNode.prototype.opacity.call(this);
+    //     case 1: {
+    //         return Check.isTypeOfOpacity(args[0]) ? SDNode.prototype.opacity.call(this, args[0]) : this.element(args[0]).opacity();
+    //     }
+    // }
     if (arguments.length === 0) {
         return SDNode.prototype.opacity.call(this);
     } else if (arguments.length === 1) {

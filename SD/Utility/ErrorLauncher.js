@@ -15,4 +15,12 @@ export class ErrorLauncher {
     static invalidArguments() {
         throw new Error("Invalid Arguments");
     }
+
+    static nodeNotExists(id) {
+        throw new Error(`Node (id = ${id}) Do Not Exists`);
+    }
+    
+    static linkNotExist(source, target) {
+        throw new Error(`Link (source = ${source}, target = ${target}) Do Not Exists`);
+    }
 }
