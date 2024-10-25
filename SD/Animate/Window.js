@@ -71,6 +71,7 @@ function promiseOfLastInterFrame() {
 }
 
 function promiseOfNormalFrame() {
+    const currentInteracting = window.IS_INTERACTING;
     return new Promise(function(resolve) {
         const fn = function() {
             if (window.SHOULD_FLUSH) {
@@ -78,6 +79,7 @@ function promiseOfNormalFrame() {
                 return resolve(0);
             }
             if (window.IS_CONTINUING) return setTimeout(fn, 10);
+            if (window.IS_INTERACTING && !currentInteracting) return setTimeout(fn, 10);
             if (window.WHOSEJAM === 0) return setTimeout(fn, 10);
             window.WHOSEJAM--;
             return resolve(0);
@@ -131,7 +133,7 @@ export function pause(frameType = 0) {
             return 0;
         }
     }
-    Animate.debug();
+    // Animate.debug();
     switch(frameType) {
         case FIRST_INTER_FRAME:
             return promiseOfFirstInterFrame();

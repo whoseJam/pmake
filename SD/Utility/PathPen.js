@@ -22,7 +22,7 @@ PathPen.prototype.Arc    = ArcFunction("A", "Arc");
 PathPen.prototype.arc    = ArcFunction("a", "arc");
 
 function CheckNumberIsValid(label, x) {
-    if (!Check.IsValidNumber(x)) {
+    if (!Check.isValidNumber(x)) {
         throw new Error(`Number ${label} = ${x} Is Not Valid`);
     }
 }
