@@ -1,6 +1,6 @@
 import { Box } from "../Element/Box";
 import { Vertex } from "../Element/Vertex";
-import { d3TreeLayout, Tree } from "./Tree";
+import { D3Layout, Tree } from "./Tree";
 
 /**
  * @class RoundSquareTreee
@@ -59,7 +59,7 @@ export class RoundSquareTree extends Tree {
     }
 
     update() {
-        return d3TreeLayout.call(
+        return D3Layout.call(
             this,
             "vertical",
             node => node.x + this.x(),

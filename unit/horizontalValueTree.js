@@ -1,11 +1,9 @@
 import * as sd from "@/sd";
 
-let svg = sd.svg();
-let t = new sd.HorizontalValueTree(svg).x(100).cy(300).layerWidth(300);
+const svg = sd.svg();
+const t = new sd.HorizontalValueTree(svg).x(100).cy(300).layerWidth(300);
 
-main();
-
-async function main() {
+sd.main(async () => {
     t.root(1, new sd.Array(svg).push(1).push(2).push(3));
     await sd.pause();
     t.startAnimate();
@@ -16,6 +14,4 @@ async function main() {
     t.startAnimate();
     t.newNode(3, new sd.Mathjax(svg, `A^2+B^2=C^2`));
     t.newLink(1, 3);
-    t.endAnimate();
-    await sd.pause(true);
-}
+})

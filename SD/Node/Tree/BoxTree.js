@@ -1,7 +1,7 @@
-import { Box }             from "@/Node/Element/Box";
-import { Tree }            from "@/Node/Tree/Tree";
-import { d3TreeLayout }    from "@/Node/Tree/Tree";
-import { SDNode } from "@/Node/SDNode";
+import { Box }      from "@/Node/Element/Box";
+import { Tree }     from "@/Node/Tree/Tree";
+import { SDNode }   from "@/Node/SDNode";
+import { D3Layout } from "@/Node/Tree/Tree";
 
 export function BoxTree(parent) {
     Tree.call(this, parent);
@@ -26,12 +26,28 @@ BoxTree.prototype.updateList = [
 ];
 
 function update() {
-    return d3TreeLayout.call(
-        this,
-        "vertical",
-        node => node.x + this.x(),
-        node => node.y + this.y(),
-        [1.5, 1.5], 
-        ["elementWidth", "elementHeight"],
-        ["width", "height"]);
+    if (this.member.hasChanged("nodes") ||
+        this.member.hasChanged("links") ||
+        this.member.hasChanged("elementWidth") || 
+        this.member.hasChanged("elementHeight") ||
+        this.member.hasChanged("width") ||
+        this.member.hasChanged("layerHeight")) {
+        const w = this.member.get("elementWidth");
+        const h = this.member.get("elementHeight");
+        D3Layout.apply(this, [
+            "vertical",
+            node => node.x + this.x(),
+            node => node.y + this.y(),
+            (node, limit) => {
+                node.width(Math.min(w, limit / 1.5));
+                node.height(Math.min(h, limit / 1.5));
+            }
+        ]);
+        this.member.flush("nodes");
+        this.member.flush("links");
+        this.member.flush("elementWidth");
+        this.member.flush("elementHeight");
+        this.member.flush("width");
+        this.member.flush("layerHeight");
+    }
 }

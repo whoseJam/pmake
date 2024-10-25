@@ -1,15 +1,17 @@
 import { Line }     from "@/Node/Nake/Line";
+import { Enter }    from "@/Node/SDNode/Enter";
 import { SDNode }   from "@/Node/SDNode";
 import { Vertex }   from "@/Node/Element/Vertex";
 import { BaseTree } from "@/Node/Tree/BaseTree";
 
 import { Vector } from "@/Math/Vector";
 
-import { trim }             from "@/Utility/Trim";
+import { trim } from "@/Utility/Trim";
 import { Cast } from "@/Utility/Cast";
 
-import * as d3 from "d3";
-import { Enter } from "../SDNode/Enter";
+import { tree }      from "d3";
+import { stratify }  from "d3";
+import { hierarchy } from "d3";
 
 export function Tree(parent) {
     BaseTree.call(this, parent);
@@ -25,8 +27,6 @@ export function Tree(parent) {
     this.member.new("width", 300);
     this.member.new("height", 0);
     this.member.new("layerHeight", 60);
-
-    return this;
 }
 
 Tree.prototype = {
@@ -96,70 +96,76 @@ Tree.prototype.newLinkFromExistElement = function(sourceTid, targetTid, value) {
 }
 
 function update() {
-    d3TreeLayout.call(
-        this,
-        "vertical",
-        node => node.x + this.x(),
-        node => node.y + this.y(),
-        [2.1], ["r"], ["r"]);
+    if (this.member.hasChanged("nodes") ||
+        this.member.hasChanged("links") ||
+        this.member.hasChanged("r") ||
+        this.member.hasChanged("width") ||
+        this.member.hasChanged("layerHeight")) {
+        const r = this.member.get("r");
+        D3Layout.apply(this, [
+            "vertical",
+            node => node.x + this.x(),
+            node => node.y + this.y(),
+            (node, limit) => node.r(Math.min(r, limit / 2.1))
+        ]);
+        this.member.flush("nodes");
+        this.member.flush("links");
+        this.member.flush("r");
+        this.member.flush("width");
+        this.member.flush("layerHeight");
+    }
 }
 
-/**
- * 基于d3的TreeLayout，对树类组件进行布局
- * @param {"vertical"|"horizontal"} mode
- * @param {(node: {x: number, y: number}) => number} transX 
- * @param {(node: {x: number, y: number}) => number} transY
- * @param {Array<number>} minDistanceRatio
- * @param {Array<string>} parentSizeIndex
- * @param {Array<string>} childSizeIndex
- * @returns {this}
- */
-export function d3TreeLayout(mode, transX, transY, minDistanceRatio, parentSizeIndex, childSizeIndex) {
-    let rt, tr;
+export function D3Layout(mode, transX, transY, setSize) {
+    // call d3 to make
+    // data: the dataset of the tree
+    // root: the root of the tree, which hold the hierarchy of the tree
+    // layout: analyse the position of each node
+    // result: the result
+    let data, root, layout, result;
     try {
-        rt = d3.stratify();
-        rt.id(d => this.nodeId(d));
-        rt.parentId(d => {
+        const template = stratify();
+        template.id(d => this.nodeId(d));
+        template.parentId(d => {
             const father = this.father(d);
-            if (father === undefined) return undefined;
-            return this.nodeId(father);
+            return father ? this.nodeId(father) : undefined;
         });
-        rt = rt(this.member.get("nodes"));
+        data = template(this.member.get("nodes"));
     } catch(error) { return this; }
-    const hierarchy = d3.hierarchy(rt);
-    if (mode === "vertical") {
-        this.member.set("height", hierarchy.height * this.layerHeight());
-        tr = d3.tree().size([this.member.get("width"), this.member.get("height")]);
-    } else {
-        this.member.set("width", hierarchy.height * this.layerWidth());
-        tr = d3.tree().size([this.member.get("height"), this.member.get("width")]);
-    }
-    const info = tr(hierarchy);
+    root = hierarchy(data);
+    this.member.setAndFlush(mode === "vertical" ? "height" : "width", root.height * this[mode === "vertical" ? "layerHeight": "layerWidth"]());
+    layout = tree().size([
+        this.member.get(mode === "vertical" ? "width" : "height"),
+        this.member.get(mode === "vertical" ? "height" : "width")
+    ]);
+    result = layout(root);
+
+    // auto adjust the node size
+    // limit: the min distance between any two node
+    const V = Vector.getIns();
     let limit = Infinity;
-    const descendants = info.descendants();
-    for (let i = 0; i < descendants.length; i++) {
-        const vecI = [transX(descendants[i]), transY(descendants[i])];
-        for (let j = i + 1; j < descendants.length; j++) {
-            const vecJ = [transX(descendants[j]), transY(descendants[j])];
-            limit = Math.min(limit, Vector.getIns().length(Vector.getIns().sub(vecI, vecJ)));
+    const nodes = result.descendants();
+    const links = result.links();
+    nodes.forEach((nodeI, i) => {
+        const vecI = [transX(nodeI), transY(nodeI)];
+        for (let j = i + 1; j < nodes.length; j++) {
+            const nodeJ = nodes[j];
+            const vecJ = [transX(nodeJ), transY(nodeJ)];
+            limit = Math.min(limit, V.length(V.sub(vecI, vecJ)));
         }
-    }
+    })
 
-    const sizeCof = parentSizeIndex.map(index => this[index]());
-    for (let i = 0; i < sizeCof.length; i++)
-        sizeCof[i] = Math.min(sizeCof[i], limit / minDistanceRatio[i]);
-
-    info.descendants().forEach(nodeInfo => {
+    // update the position of nodes
+    nodes.forEach(nodeInfo => {
         const x = transX(nodeInfo);
         const y = transY(nodeInfo);
         const node = nodeInfo.data.data;
         this.tryMove(node, () => {
-            for (let i = 0; i < childSizeIndex.length; i++)
-                if (childSizeIndex[i] in node) node[childSizeIndex[i]](sizeCof[i]);
+            setSize(node, limit);
             node.cx(x).cy(y);
         });
     });
-    info.links().forEach(linkInfo => {
+    links.forEach(linkInfo => {
         const source = linkInfo.source;
         const target = linkInfo.target;
         const src = source.data.id;

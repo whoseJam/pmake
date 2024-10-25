@@ -38,6 +38,7 @@ export { BoxTree }             from "./Node/Tree/BoxTree";
 export { ValueTree }           from "./Node/Tree/ValueTree";
 export { BinaryTree }          from "./Node/Tree/BinaryTree";
 export { HorizontalTree }      from "./Node/Tree/HorizontalTree";
+export { HorizontalValueTree } from "./Node/Tree/HorizontalValueTree";
 
 export { DAG }            from "./Node/Graph/DAG";
 export { BoxDAG }         from "./Node/Graph/BoxDAG";
@@ -66,8 +67,6 @@ export { Focus }        from "./Component/Focus";
 export { Label }        from "./Component/Label";
 export { Stress }       from "./Component/Stress";
 export { Pointer }      from "./Component/Pointer";
-export { WithBrace }    from "./Component/WithBrace";
-export { ValueBoard }   from "./Component/ValueBoard";
 export { MathjaxLabel } from "./Component/Label";
 
 export { svg } from "./Interact/RootSvg";

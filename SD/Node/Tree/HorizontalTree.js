@@ -1,7 +1,7 @@
-import { d3TreeLayout } from "@/Node/Tree/Tree";
+import { Tree }     from "@/Node/Tree/Tree";
+import { SDNode }   from "@/Node/SDNode";
+import { D3Layout } from "@/Node/Tree/Tree";
 
-import { Tree }   from "@/Node/Tree/Tree";
-import { SDNode } from "@/Node/SDNode";
 
 export function HorizontalTree(parent) {
     Tree.call(this, parent);
@@ -34,10 +34,22 @@ HorizontalTree.prototype.updateList = [
 ];
 
 function update() {
-    return d3TreeLayout.call(
-        this,
-        "horizontal",
-        node => node.y + this.x(),
-        node => node.x + this.y(),
-        [2.1], ["r"], ["r"]);
+    if (this.member.hasChanged("nodes") ||
+        this.member.hasChanged("links") ||
+        this.member.hasChanged("r") ||
+        this.member.hasChanged("height") ||
+        this.member.hasChanged("layerWidth")) {
+        const r = this.member.get("r");
+        D3Layout.apply(this, [
+            "horizontal",
+            node => node.y + this.x(),
+            node => node.x + this.y(),
+            (node, limit) => node.r(Math.min(r, limit / 2.1))
+        ]);
+        this.member.flush("nodes");
+        this.member.flush("links");
+        this.member.flush("r");
+        this.member.flush("height");
+        this.member.flush("layerWidth");
+    }
 }

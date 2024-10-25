@@ -1,12 +1,11 @@
-import { Tree } from         "@/Node/Tree/Tree";
-import { d3TreeLayout } from "@/Node/Tree/Tree";
+import { Tree }     from "@/Node/Tree/Tree";
+import { Enter }    from "@/Node/SDNode/Enter";
+import { D3Layout } from "@/Node/Tree/Tree";
 
 export function ValueTree(parent) {
     Tree.call(this, parent);
 
     this.type("ValueTree");
-
-    return this;
 }
 
 ValueTree.prototype = {
@@ -20,24 +19,16 @@ ValueTree.prototype.updateList = [
 
 ValueTree.prototype.newNode = function(id, value) {
     const element = value;
-    value._.enter = (element, move) => {
-        element.attachTo(this.layer("nodes"));
-        element.opacity(0);
-        move();
-        element.update();
-        element.startAnimate(this);
-        element.opacity(1);
-    };
+    element.onEnter(Enter.ordinary(this, "nodes"));
     this.newNodeByBaseTree(id, element);
     return this;
 }
 
 function update() {
-    return d3TreeLayout.call(
-        this,
+    D3Layout.apply(this, [
         "vertical",
         node => node.x + this.x(),
         node => node.y + this.y(),
-        [], [], []
-    );
+        () => {}
+    ]);
 }

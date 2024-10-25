@@ -1,7 +1,7 @@
 import { Color }  from "SD/Utility/Color";
 import { SDNode } from "SD/Node/SDNode";
 
-export class BaseTree {
+export class BaseTree extends SDNode {
     constructor(parent: SDNode);
 
     element(tid: number|string): SDNode|undefined;
