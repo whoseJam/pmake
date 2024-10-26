@@ -28,9 +28,9 @@ sd.init(() => {
     }
 
     tree.freeze();
-    tree.root(1, graph.element(1));
+    tree.newNodeFromExistElement(1, graph.element(1));
     for (let i = 2; i <= tot; i++) {
-        tree.newNode(i, graph.element(i));
+        tree.newNodeFromExistElement(i, graph.element(i));
         tree.newLink(fa[i], i);
         const link = tree.element(fa[i], i);
         link.opacity(0.2).arrow().strokeDashArray([5, 5]);
@@ -60,4 +60,5 @@ function manualLink(link, a, b) {
     link.source(graph.element(a).center());
     link.target(graph.element(b).center());
     sd.trim(link, graph.element(a), graph.element(b));
+    link.onEnter(undefined);
 }

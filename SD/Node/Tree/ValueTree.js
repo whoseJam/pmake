@@ -24,6 +24,8 @@ ValueTree.prototype.newNode = function(id, value) {
     return this;
 }
 
+ValueTree.prototype.newNodeFromExistValue = Tree.prototype.newNodeFromExistElement;
+
 function update() {
     D3Layout.apply(this, [
         "vertical",
