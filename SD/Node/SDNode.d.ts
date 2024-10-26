@@ -242,6 +242,12 @@ export class SDNode {
     drag(type: true): this;
 
     /**
+     * 设置该元素是否可点击
+     * @param type 
+     */
+    clickable(type: true|false|undefined|null): this;
+
+    /**
      * 设置单击回调函数
      * @param callback 
      */

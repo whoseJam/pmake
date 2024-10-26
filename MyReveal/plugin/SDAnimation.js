@@ -98,6 +98,10 @@ function GetViewBox(iframe) {
     return iframe.getAttribute("data-viewBox");
 }
 
+function GetViewBoxDelta(iframe) {
+    return iframe.getAttribute("data-viewBoxDelta");
+}
+
 function GetMaxFrame(iframe) {
     const maxFrame = iframe.getAttribute("data-maxFrame");
     if (maxFrame) return maxFrame;
@@ -134,11 +138,25 @@ function GetBoundingBox(iframe) {
 function SetAnimationSize(iframe, box) {
     const rate = GetRate(iframe);
     const boundingBox = GetBoundingBox(iframe);
+    const viewBoxDelta = GetViewBoxDelta(iframe);
+    const delta = {
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0
+    };
+    if (viewBoxDelta) {
+        const tmp = viewBoxDelta.split(" ");
+        delta.x = +tmp[0];
+        delta.y = +tmp[1];
+        delta.width = +tmp[2];
+        delta.height = +tmp[3];
+    }
     GetMessage(iframe).SetViewBox(
-        box.x,
-        box.y,
-        box.width,
-        box.height,
+        box.x + delta.x,
+        box.y + delta.y,
+        box.width + delta.width,
+        box.height + delta.height,
         boundingBox.width,
         boundingBox.height,
         rate

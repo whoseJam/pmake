@@ -195,7 +195,7 @@ SDNode.prototype.updateList = [
                     const k = this.source + (this.target - this.source) * t;
                     layer.setAttribute("opacity", k);
                     if (t === 1) {
-                        layer.setAttribute("pointer-event", k === 0 ? "none" : "auto");
+                        layer.setAttribute("pointer-events", k === 0 ? "none" : "auto");
                     }
                 },
                 this, "opacity"
