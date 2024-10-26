@@ -9,10 +9,7 @@ const stk = new sd.Stack(svg).resize(10);
 const graph = new sd.GridGraph(svg);
 const data = [];
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     for (let i = 1; i <= n; i++) {
         arr.push(new sd.Mathjax(arr, `Star_{${i}}`));
         stk.element(i-1).childAs("impact", new sd.Array(stk).elementWidth(10).elementHeight(10), R.Aside("rc", 10));
@@ -44,9 +41,9 @@ function init() {
     sd.Label(arrowA, "x轴", "br");
     const arrowB = new sd.Line(graph).source(graph.x() - 140, graph.my() + 30).target(graph.x() - 140, graph.y() - 50).arrow();
     sd.Label(arrowB, "y轴", "lt");
-}
+})
 
-async function main() {
+sd.main(async () => {
     const focus = sd.Focus(stk);
     for (let i = 0; i < 10; i++) {
         await sd.pause();
@@ -70,4 +67,4 @@ async function main() {
         arr.endAnimate();
         data[i].circ.startAnimate().color(C.ORANGE).endAnimate();
     }
-}
+})
