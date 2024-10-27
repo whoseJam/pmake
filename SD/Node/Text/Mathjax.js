@@ -372,34 +372,46 @@ function ReplacePath(oldSvg, oldPaths, newSvg, newPaths) {
     if (oldPaths.length > newPaths.length) newPaths = RebuildNewPaths(newPaths, oldPaths.length);
     const duration = this.duration();
     for (let i = 0; i < oldPaths.length; i++) {
-        const snap = Snap(oldPaths[i]);
-        new Action(
-            this.delay(),
-            this.delay() + this.duration(),
-            oldPaths[i].transform.baseVal[0].matrix,
-            newPaths[i].transform.baseVal[0].matrix,
-            Interp.matrixInterp(oldPaths[i], "transform"),
-            rand(1, 1000000000), "transform"
-        );
-        if (oldPaths[i].character && oldPaths[i].character === newPaths[i].character) continue;
-        new Action(
-            this.delay(),
-            this.delay() + this.duration(),
-            oldPaths[i].getAttribute("d"),
-            newPaths[i].getAttribute("d"),
-            function(t) {
-                if (t === 0) {
-                    if (duration === 0) {
-                        snap.attr({ d: this.target });
-                    } else {
-                        snap.animate({ d: this.target }, duration, mina.easeinout);
+        if (!newPaths[i]) {
+            const matrix = oldPaths[i].transform.baseVal[0].matrix;
+            new Action(
+                this.delay(),
+                this.delay() + this.duration(),
+                oldPaths[i].transform.baseVal[0].matrix,
+                { a: 0, b: 0, c: 0, d: 0, e: matrix.e, f: matrix.f },
+                Interp.matrixInterp(oldPaths[i], "transform"),
+                rand(1, 1000000000), "transform"
+            );
+        } else {
+            new Action(
+                this.delay(),
+                this.delay() + this.duration(),
+                oldPaths[i].transform.baseVal[0].matrix,
+                newPaths[i].transform.baseVal[0].matrix,
+                Interp.matrixInterp(oldPaths[i], "transform"),
+                rand(1, 1000000000), "transform"
+            );
+            if (oldPaths[i].character && oldPaths[i].character === newPaths[i].character) continue;
+            const snap = Snap(oldPaths[i]);
+            new Action(
+                this.delay(),
+                this.delay() + this.duration(),
+                oldPaths[i].getAttribute("d"),
+                newPaths[i].getAttribute("d"),
+                function(t) {
+                    if (t === 0) {
+                        if (duration === 0) {
+                            snap.attr({ d: this.target });
+                        } else {
+                            snap.animate({ d: this.target }, duration, mina.easeinout);
+                        }
+                    } else if (t === 1) {
+                        setTimeout(() => { snap.attr({ d: this.target }); }, 50);
                     }
-                } else if (t === 1) {
-                    setTimeout(() => { snap.attr({ d: this.target }); }, 50);
-                }
-            },
-            rand(1, 1000000000), "d"
-        );
+                },
+                rand(1, 1000000000), "d"
+            );
+        }
     }
 }
 

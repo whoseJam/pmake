@@ -1,6 +1,7 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
+const T = 300;
 
 sd.main(async () => {
     await Test1();
@@ -21,43 +22,43 @@ async function Test6() {
     await sd.pause();
     for (let i = 1; i <= n; i++) {
         const gcd = getGCD(i, n);
-        maths[i - 1].startAnimate().replaceMath(`\\frac{{${i/gcd}}}{{${n/gcd}}}`, {1:1,2:2}).cx(500 + i * 40).endAnimate();
+        maths[i - 1].startAnimate(T).replaceMath(`\\frac{{${i/gcd}}}{{${n/gcd}}}`, {1:1,2:2}).cx(500 + i * 40).endAnimate();
     }
 }
 
 async function Test5() {
     await sd.pause();
-    const math = new sd.Mathjax(svg, "\\sum_{i=1}^{10}i").x(500).y(200);
+    const math = new sd.Mathjax(svg, "\\sum_{i=1}^{10}{i}").x(500).y(200);
     await sd.pause();
-    math.startAnimate(3000).replaceMath("1+2+3+4+5+6+7+8+9+10").endAnimate();
+    math.startAnimate(T).replaceMath("{1+2+3+4+5+6+7+8+9+10}", {3:1}).endAnimate();
 }
 
 async function Test4() {
     await sd.pause();
     const math = new sd.Mathjax(svg, "\\frac{{a}}{{b}}={c}").fontSize(40).x(500).y(100);
     await sd.pause();
-    math.startAnimate(3000).replaceMath("{a}={b}{c}", {1:1,2:2,3:3}).endAnimate();
+    math.startAnimate(T).replaceMath("{a}={b}{c}", {1:1,2:2,3:3}).endAnimate();
 }
 
 async function Test3() {
     await sd.pause();
     const math = new sd.Mathjax(svg, "{a^2}{+}{b^2}{=}{c^2}").fontSize(40).x(100).y(300);
     await sd.pause();
-    math.startAnimate(3000).replaceMath("{a^2}{=}{c^2}{-}{b^2}", {1:1,2:4,3:5,4:2,5:3}).endAnimate();
+    math.startAnimate(T).replaceMath("{a^2}{=}{c^2}{-}{b^2}", {1:1,2:4,3:5,4:2,5:3}).endAnimate();
 }
 
 async function Test2() {
     await sd.pause();
     const math = new sd.Mathjax(svg, "a^2+b^2=c^2").fontSize(40).x(100).y(200);
     await sd.pause();
-    math.startAnimate(3000).replaceMath("a^2=c^2-b^2").endAnimate();
+    math.startAnimate(T).replaceMath("a^2=c^2-b^2").endAnimate();
 }
 
 async function Test1() {
     await sd.pause();
     const math = new sd.Mathjax(svg, "{aaaa}{b}{c}{dddd}").fontSize(40).x(100).y(100);
     await sd.pause();
-    math.startAnimate(3000).replaceMath("{a}{c}{b}{d}", {1:1,2:3,3:2,4:4}).endAnimate();
+    math.startAnimate(T).replaceMath("{a}{c}{b}{d}", {1:1,2:3,3:2,4:4}).endAnimate();
 }
 
 function getGCD(a, b) {
