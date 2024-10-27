@@ -55,9 +55,10 @@ export { FixedPointCurve } from "./Node/Curve/FixedPointCurve";
 
 export { Mathjax } from "./Node/Text/Mathjax";
 
-export { Input }  from "./Node/HTML/Input";
-export { Button } from "./Node/HTML/Button";
-export { Slider } from "./Node/HTML/Slider";
+export { Input }    from "./Node/HTML/Input";
+export { Button }   from "./Node/HTML/Button";
+export { Slider }   from "./Node/HTML/Slider";
+export { TextArea } from "./Node/HTML/TextArea";
 
 export { Link }         from "./Component/Link";
 export { Aside }        from "./Component/Aside";

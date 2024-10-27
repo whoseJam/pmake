@@ -67,8 +67,9 @@ SDNode.OrdinaryGSet = function(key, mode) {
     }
 }
 
-SDNode.OrdinaryUpdate = function(key, interp, target) {
+SDNode.OrdinaryUpdate = function(key, interp, target, attr) {
     const targetKey = target ? target : "nake";
+    const interpKey = attr ? attr : key;
     return function() {
         if (this.member.hasChanged(key)) {
             new Action(
@@ -76,7 +77,7 @@ SDNode.OrdinaryUpdate = function(key, interp, target) {
                 this.delay() + this.duration(),
                 this.member.oldValue(key),
                 this.member.get(key),
-                interp(this._[targetKey], key),
+                interp(this._[targetKey], interpKey),
                 this, key
             );
             this.member.flush(key);

@@ -1,7 +1,8 @@
-import { BaseHTML } from "SD/Node/HTML/BaseHTML";
+import { SDNode }   from "@/Node/SDNode";
+import { BaseHTML } from "@/Node/HTML/BaseHTML";
 
 export class Slider extends BaseHTML {
-    constructor(parent: any);
+    constructor(parent: SDNode);
 
     max(): number;
     max(max: number): this;

@@ -1,9 +1,13 @@
-import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
 
 import { SDNode }   from "@/Node/SDNode";
 import { BaseHTML } from "@/Node/HTML/BaseHTML";
+import { HTMLNode } from "@/Renderer/HTML/HTMLNode";
 
+function ButtonCallback() {
+    const callback = this.member.get("onClick");
+    if (callback) callback.call(this);
+}
 
 export function Button(parent) {
     BaseHTML.call(this, parent);
@@ -12,31 +16,16 @@ export function Button(parent) {
     this.member.new("onClick", undefined);
     
     this.dom(
-        <div>
-            <button
-                style={{
-                    width: "90%",
-                    height: "90%",
-                    top: "50%",
-                    left: "50%",
-                }}
-                onClick={() => {
-                    const callback = this.member.get("onClick");
-                    if (callback) {
-                        callback.call(this);
-                    }
-                }}
-                >
-                点击
-            </button>
-        </div>
+        <button
+            style={{ width: "90%", height: "90%", top: "50%", left: "50%" }}
+            onClick={ ButtonCallback.bind(this) }>
+            点击
+        </button>
     );
 
-    this._.button = this._.nake.element.children[0].children[0];
+    this._.button = new HTMLNode(this, undefined, this._.nake.nake().children[0]);
 
     this.width(60).height(25);
-
-    return this;
 }
 
 Button.prototype = {
@@ -52,17 +41,5 @@ Button.prototype.onClick = function(callback) {
 
 Button.prototype.updateList = [
     ...Button.prototype.updateList,
-    function() {
-        if (this.member.hasChanged("text")) {
-            new Action(
-                this.delay(),
-                this.delay() + this.duration(),
-                this.member.oldValue("text"),
-                this.member.get("text"),
-                Interp.innerHTMLInterp(this._.button),
-                this, "text"
-            );
-            this.member.flush("text");
-        }
-    }
+    SDNode.OrdinaryUpdate("text", Interp.innerHTMLInterp, "button", "innerHTML")
 ]

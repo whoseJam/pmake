@@ -1,17 +1,14 @@
-import { ForeignObject } from "../Nake/ForeignObject";
-import { render } from "react-dom";
+import { ForeignObject } from "@/Node/Nake/ForeignObject";
+
 import React from "react";
+import { render } from "react-dom";
 
 global.React = React;
 
 export function BaseHTML(parent) {
     ForeignObject.call(this, parent);
 
-    this.member.new("innerHtml", "");
-
     this._.BASE_HTML = true;
-
-    return this;
 }
 
 BaseHTML.prototype = {

@@ -68,8 +68,9 @@ export { Mathjax } from "./Node/Text/Mathjax.js";
 export { Input }    from  "./Node/HTML/Input.js";
 export { Button }   from "./Node/HTML/Button.js";
 export { Slider }   from "./Node/HTML/Slider.js";
-export { TextArea } from "./Node/HTML/TextArea.js"
+export { TextArea } from "./Node/HTML/TextArea.js";
 
+export { Link }         from "./Component/Link.js";
 export { Aside }        from "./Component/Aside.js";
 export { Focus }        from "./Component/Focus.js";
 export { Index }        from "./Component/Index.js";
@@ -78,7 +79,6 @@ export { Brace }        from "./Component/Brace.js";
 export { Stress }       from "./Component/Stress.js";
 export { Pointer }      from "./Component/Pointer.js";
 export { MathjaxLabel } from "./Component/Label.js";
-export { Link }         from "./Component/Link.js";
 
 export { PathPen } from "./Utility/PathPen.js";
 

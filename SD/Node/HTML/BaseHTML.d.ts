@@ -1,7 +1,7 @@
-import { SDNode } from "SD/Node/SDNode";
+import { SDNode } from "@/Node/SDNode";
 
 export class BaseHTML extends SDNode {
-    constructor(parent: any);
+    constructor(parent: SDNode);
 
     dom(jsx: JSX.Element): this;
 }

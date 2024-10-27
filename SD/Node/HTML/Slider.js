@@ -2,7 +2,16 @@ import { Interp } from "@/Animate/Interp";
 
 import { SDNode }   from "@/Node/SDNode";
 import { BaseHTML } from "@/Node/HTML/BaseHTML";
+import { HTMLNode } from "@/Renderer/HTML/HTMLNode";
 
+function SliderCallback(event) {
+    const callback = this.member.get("onChange");
+    if (callback) {
+        const nativeEvent = event.nativeEvent;
+        const sourceElement = nativeEvent.srcElement;
+        callback(+sourceElement.value);
+    }
+}
 export function Slider(parent) {
     BaseHTML.call(this, parent);
 
@@ -11,32 +20,17 @@ export function Slider(parent) {
     this.member.new("max", 10);
 
     this.dom(
-        <div>
-            <input
-                style={
-                    {   width: "90%",
-                        height: "100%"
-                    }
-                }
-                type={ "range" }
-                min={ 0 }
-                max={ 10 }
-                onChange={
-                    (event) => {
-                        const callback = this.member.get("onChange");
-                        if (callback) {
-                            const nativeEvent = event.nativeEvent;
-                            const sourceElement = nativeEvent.srcElement;
-                            callback(+sourceElement.value);
-                        }
-                    }
-                } />
-        </div>
+        <input
+            style={{ width: "90%", height: "100%" }}
+            type={ "range" }
+            min={ 0 }
+            max={ 10 }
+            onChange={ SliderCallback.bind(this) }
+        />
     )
-    this._.slider = this._.nake.element.children[0].children[0];
+    this._.slider = new HTMLNode(this, undefined, this._.nake.nake().children[0]);
+    
     this.width(60).height(25);
-
-    return this;
 }
 
 Slider.prototype = {
