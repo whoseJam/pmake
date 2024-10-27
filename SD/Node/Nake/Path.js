@@ -174,6 +174,8 @@ Path.getTotalLength = function(d) {
     }
 }
 
+Path.move = move;
+
 function move(d, dx, dy) {
     let i = 0;
     function alphabeta(ch) {
@@ -189,8 +191,11 @@ function move(d, dx, dy) {
         let ans = "";
         while (i < d.length && !valid(d[i]))
             i++;
-        while (i < d.length && valid(d[i]))
+        while (i < d.length && valid(d[i])) {
+            if (ans.length > 0 && alphabeta(ans[0]) !== alphabeta(d[i])) break;
+            if (ans.length > 0 && alphabeta(ans[0])) break;
             ans = ans + d[i++];
+        }
         if (alphabeta(ans[0])) return ans;
         return +ans;
     }

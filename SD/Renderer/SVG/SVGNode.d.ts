@@ -6,8 +6,9 @@ export class SVGNode extends RenderNode {
 
     nake(): SVGElement;
     append(tag: string): SVGNode;
-    moveTo(layer: RenderNode);
-    appear();
-    remove();
-    setAttribute(key: string, value: any);
+    moveTo(layer: RenderNode): void;
+    appear(): void;
+    remove(): void;
+    setAttribute(key: string, value: any): void;
+    getAttribute(key: string): any;
 }

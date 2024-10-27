@@ -29,9 +29,15 @@ export class SVGNode {
     constructor(parent, layer, tag) {
         this.parent = parent;
         this.layer = layer;
-        this.element = Dom.createSVGElement(tag, this.id = ++SVGNodeID);
-        this.tag = tag;
-        this.appear();
+        if (typeof(tag) === "string") {
+            this.element = Dom.createSVGElement(tag, this.id = ++SVGNodeID);
+            this.tag = tag;
+            this.appear();
+        } else {
+            this.element = tag;
+            this.tag = Dom.tagName(tag);
+            this.appear();
+        }
     }
 
     nake() {
@@ -91,6 +97,10 @@ export class SVGNode {
         } else {
             this.element.setAttribute(key, value);
         }
+    }
+
+    getAttribute(key) {
+        return this.element.getAttribute(key);
     }
 
     hasShape() {

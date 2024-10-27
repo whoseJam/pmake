@@ -2,11 +2,20 @@ import { Cast }  from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
 
 export class Interp {
+    static exLengthInterp(attrs, key) {
+        return function(t) {
+            const A = +(this.source.slice(0, -2));
+            const B = +(this.target.slice(0, -2));
+            const current = (A * (1 - t) + B * t);
+            attrs.setAttribute(key, current + "ex");
+        }
+    }
+
     static numberInterp(owner, prop) {
         return function(t) {
             const A = this.source;
             const B = this.target;
-            const current =  (A * (1 - t) + B * t);
+            const current = (A * (1 - t) + B * t);
             owner.setAttribute(prop, current);
         }
     }
