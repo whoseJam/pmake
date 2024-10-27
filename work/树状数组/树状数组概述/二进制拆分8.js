@@ -32,6 +32,21 @@ sd.init(() => {
 sd.main(async () => {
     await Prepare();
     await BuildTree();
+    await sd.pause();
+    const l1 = new sd.Line(svg).source([0, -260]).target([0, 40]).strokeWidth(3).stroke(C.red).opacity(0).startAnimate().opacity(1).endAnimate();
+    const l2 = new sd.Line(svg).source([40, -260]).target([40, 40]).strokeWidth(3).stroke(C.red).opacity(0).startAnimate().opacity(1).endAnimate();
+    tree[1].startAnimate().color(C.orange).endAnimate();
+    for (let i = 2; i <= n; i++) {
+        await sd.pause();
+        tree[i - 1].startAnimate().color(C.white).endAnimate();
+        tree[i].startAnimate().color(C.orange).endAnimate();
+        l1.startAnimate().dx(40).endAnimate();
+        l2.startAnimate().dx(40).endAnimate();
+    }
+    await sd.pause();
+    tree[n].startAnimate().color(C.white).endAnimate();
+    l1.startAnimate().opacity(0).endAnimate();
+    l2.startAnimate().opacity(0).endAnimate();
 })
 
 async function BuildTree() {
