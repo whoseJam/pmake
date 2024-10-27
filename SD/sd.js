@@ -65,8 +65,9 @@ export { FixedPointCurve } from "./Node/Curve/FixedPointCurve.js";
 
 export { Mathjax } from "./Node/Text/Mathjax.js";
 
-export { Input }    from  "./Node/HTML/Input.js";
+export { Input }    from "./Node/HTML/Input.js";
 export { Button }   from "./Node/HTML/Button.js";
+export { Canvas }   from "./Node/HTML/Canvas.js";
 export { Slider }   from "./Node/HTML/Slider.js";
 export { TextArea } from "./Node/HTML/TextArea.js";
 

@@ -57,6 +57,7 @@ export { Mathjax } from "./Node/Text/Mathjax";
 
 export { Input }    from "./Node/HTML/Input";
 export { Button }   from "./Node/HTML/Button";
+export { Canvas }   from "./Node/HTML/Canvas";
 export { Slider }   from "./Node/HTML/Slider";
 export { TextArea } from "./Node/HTML/TextArea";
 
@@ -88,4 +89,3 @@ export { inter } from "./Utility/Util";
 export { PathPen } from "./Utility/PathPen";
 
 export { CONTINUE_FRAME }    from "./Animate/Window";
-export { FIRST_INTER_FRAME } from "./Animate/Window";

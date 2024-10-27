@@ -7,10 +7,9 @@ export function TextArea(parent) {
 
     this.dom(
         <textarea style={{ width: "100%", height: "100%" }}>
-
         </textarea>
     );
-    this._.textarea = new HTMLNode(this, undefined, this._.nake.element.children[0]);
+    this._.textarea = new HTMLNode(this, undefined, this._.nake.nake().children[0]);
     
     this.width(80).height(100);
 }
