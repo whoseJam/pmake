@@ -1,6 +1,3 @@
-import { Interp } from "@/Animate/Interp";
-
-import { SDNode }   from "@/Node/SDNode";
 import { BaseHTML } from "@/Node/HTML/BaseHTML";
 import { HTMLNode } from "@/Renderer/HTML/HTMLNode";
 
@@ -42,18 +39,20 @@ Slider.prototype.onChange = function(callback) {
     return this;
 }
 
-Slider.prototype.max = SDNode.OrdinaryGSet("max", "set");
-Slider.prototype.min = SDNode.OrdinaryGSet("min", "set");
-Slider.prototype.value = function(value) {
-    if (value === undefined) {
-        return +this._.slider.value;
-    }
-    this._.slider.value = value;
+Slider.prototype.max = function(max) {
+    if (max === undefined) return this._.slider.getAttribute("max");
+    this._.slider.setAttribute("max", max);
     return this;
 }
 
-Slider.prototype.updateList = [
-    ...Slider.prototype.updateList,
-    SDNode.OrdinaryUpdate("max", Interp.numberInterp, "slider"),
-    SDNode.OrdinaryUpdate("min", Interp.numberInterp, "slider")
-]
+Slider.prototype.min = function(min) {
+    if (min === undefined) return this._.slider.getAttribute("min");
+    this._.slider.setAttribute("min", min);
+    return this;
+}
+
+Slider.prototype.value = function(value) {
+    if (value === undefined) return this._.slider.getAttribute("value");
+    this._.slider.setAttribute("value", value);
+    return this;
+}

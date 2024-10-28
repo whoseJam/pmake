@@ -380,7 +380,7 @@ function ReplacePath(oldSvg, oldPaths, newSvg, newPaths) {
                 oldPaths[i].transform.baseVal[0].matrix,
                 { a: 0, b: 0, c: 0, d: 0, e: matrix.e, f: matrix.f },
                 Interp.matrixInterp(oldPaths[i], "transform"),
-                rand(1, 1000000000), "transform"
+                oldPaths[i], "transform"
             );
         } else {
             new Action(
@@ -389,7 +389,7 @@ function ReplacePath(oldSvg, oldPaths, newSvg, newPaths) {
                 oldPaths[i].transform.baseVal[0].matrix,
                 newPaths[i].transform.baseVal[0].matrix,
                 Interp.matrixInterp(oldPaths[i], "transform"),
-                rand(1, 1000000000), "transform"
+                oldPaths[i], "transform"
             );
             if (oldPaths[i].character && oldPaths[i].character === newPaths[i].character) continue;
             const snap = Snap(oldPaths[i]);
@@ -409,7 +409,7 @@ function ReplacePath(oldSvg, oldPaths, newSvg, newPaths) {
                         setTimeout(() => { snap.attr({ d: this.target }); }, 50);
                     }
                 },
-                rand(1, 1000000000), "d"
+                oldPaths[i], "d"
             );
         }
     }

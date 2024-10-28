@@ -34,9 +34,25 @@ export class HTMLNode {
         throw new Error("Not Implemented Yet");
     }
 
+    getAttribute(key) {
+        if (key === "innerHTML") {
+            return this.element.innerHTML;
+        } else if (key === "value") {
+            return this.element.value;
+        } else if (key === "pointer-events") {
+            return this.element.style[key];
+        } else {
+            return this.element.getAttribute(key);
+        }
+    }
+
     setAttribute(key, value) {
         if (key === "innerHTML") {
             this.element.innerHTML = value;
+        } else if (key === "value") {
+            console.log("set value = ", value);
+            this.element.value = value;
+            console.log("current element value = ", this.element.value);
         } else if (key === "pointer-events") {
             this.element.style[key] = value;
         } else {
