@@ -36,7 +36,7 @@ export class SVGNode {
         } else {
             this.element = tag;
             this.tag = Dom.tagName(tag);
-            this.appear();
+            if (layer) this.appear();
         }
     }
 

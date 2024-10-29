@@ -1,9 +1,9 @@
-import { SDNode } from "SD/Node/SDNode";
+import { SDNode } from "@/Node/SDNode";
 
 type color = string;
 
 export class BaseNake extends SDNode {
-    constructor(parent: any, tag: string);
+    constructor(parent: SDNode, tag: string);
 
     /**
      * 获取填充色

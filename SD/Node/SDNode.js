@@ -15,7 +15,7 @@ import { Check } from "@/Utility/Check";
 
 let sid = 0;
 
-export function SDNode(parent) {
+export function SDNode(parent, layer = undefined) {
     sid++;
     this.id = sid;
 
@@ -32,7 +32,11 @@ export function SDNode(parent) {
     this._.parent = parent instanceof SVGNode ? parent.parent : parent; // 指向上一个 SDNode
 
     // layer
-    this._.layer = new SVGNode(this, parent instanceof SVGNode ? parent : parent.layer(), "g");
+    if (!layer) {
+        this._.layer = new SVGNode(this, parent instanceof SVGNode ? parent : parent.layer(), "g");
+    } else {
+        this._.layer = new SVGNode(this, undefined, layer);
+    }
     this._.layers = {};
 
     // opacity

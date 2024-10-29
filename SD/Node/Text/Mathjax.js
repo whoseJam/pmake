@@ -1,11 +1,10 @@
 import { Dom } from "@/Dom/Dom";
 import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
-import { SDNode } from "../SDNode";
+import { SDNode } from "@/Node/SDNode";
 import { SVGNode } from "@/Renderer/SVG/SVGNode";
-import { rand } from "@/Utility/Random";
-import { Path } from "../Nake/Path";
 import { PathPen } from "@/Utility/PathPen";
+import { TeXAtom } from "./TeXAtom";
 
 const UNICODE_MAP = {
     "1D44E": "a",
@@ -57,6 +56,7 @@ export function Mathjax(parent, text) {
     this.member.new("height", 0);
     this.member.new("text", "");
     this.member.new("font-size", 20);
+    this.member.new("elements", []);
 
     this._.layer.setAttribute("font-size", 20);
     this._.math = undefined;
@@ -113,12 +113,18 @@ Mathjax.prototype.math = function(text) {
     // replace the old mathjax and append the new mathjax
     if (this._.math) this._.math.remove();
     this._.math = svg;
+
+    BuildTeXAtom.call(this);
+
     return this;
 }
 
 Mathjax.prototype.x        = SDNode.OrdinaryGSet("x", "setByEqual");
 Mathjax.prototype.y        = SDNode.OrdinaryGSet("y", "setByEqual");
 Mathjax.prototype.fontSize = SDNode.OrdinaryGSet("font-size", "setByEqual");
+Mathjax.prototype.element  = function(idx) {
+    return this.member.get("elements")[idx];
+}
 
 Mathjax.prototype.text = function() {
     return this.member.get("text");
@@ -133,7 +139,6 @@ Mathjax.prototype.width = function(width) {
     this.fontSize(20 * k);
     return this;
 }
-
 
 Mathjax.prototype.height = function(height) {
     const h = this.member.get("height");
@@ -288,20 +293,20 @@ function ReplaceSVG(oldSvg, newSvg) {
         Interp.numberInterp(newSvg, "opacity"),
         newSvg, "opacity"
     );
-    // new Action(
-    //     this.delay() + this.duration(),
-    //     this.delay() + this.duration(),
-    //     0, 1,
-    //     Interp.numberInterp(newSvg, "opacity"),
-    //     newSvg, "opacity"
-    // );
-    // new Action(
-    //     this.delay() + this.duration(),
-    //     this.delay() + this.duration(),
-    //     1, 0,
-    //     Interp.numberInterp(oldSvg, "opacity"),
-    //     oldSvg, "opacity"
-    // );
+    new Action(
+        this.delay() + this.duration(),
+        this.delay() + this.duration(),
+        0, 1,
+        Interp.numberInterp(newSvg, "opacity"),
+        newSvg, "opacity"
+    );
+    new Action(
+        this.delay() + this.duration(),
+        this.delay() + this.duration(),
+        1, 0,
+        Interp.numberInterp(oldSvg, "opacity"),
+        oldSvg, "opacity"
+    );
 }
 
 function RebuildOldPaths(oldPaths, length, oldRoot) {
@@ -413,6 +418,18 @@ function ReplacePath(oldSvg, oldPaths, newSvg, newPaths) {
             );
         }
     }
+}
+
+function BuildTeXAtom() {
+    const elements = this.member.get("elements");
+    elements.slice(-1);
+    const svg = this._.math.nake();
+    const root = svg.children[1].children[0];
+    const atoms = svg.querySelectorAll("g[data-mml-node='TeXAtom']");
+    elements.push(new TeXAtom(this, root));
+    atoms.forEach(atom => {
+        elements.push(new TeXAtom(this, atom));
+    });
 }
 
 Mathjax.Init = function() {
