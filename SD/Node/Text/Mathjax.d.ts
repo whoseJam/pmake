@@ -1,10 +1,14 @@
-import { SDNode }   from "SD/Node/SDNode";
-import { D3Layer }  from "SD/Node/SDNode/D3Layer";
-import { Fragment } from "SD/Node/Nake/Fragment";
+import { SDNode }  from "@/Node/SDNode";
+import { TeXAtom } from "@/Node/Text/TeXAtom";
 
-export class Mathjax extends Fragment {
-    constructor(parent: SDNode|D3Layer);
-    constructor(parent: SDNode|D3Layer, text: string);
+export class Mathjax extends SDNode {
+    constructor(parent: SDNode);
+    constructor(parent: SDNode, text: string);
 
     math(text: string): this;
+    element(index: number): TeXAtom;
+
+    createMath(index: number): Mathjax;
+    transformMath(text: string, hint: {}): this;
+    transformMathFrom(text: string, math: Array<Mathjax>, hint: {}): this;
 }

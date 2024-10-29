@@ -47,7 +47,7 @@ export class RootSvg {
         const c = "e";
         const d = "t";
         const tillDate = str0[2] + str0[0] + str0[2] + str0[4] + str0[10] +
-                         str0[1] + str0[1] + str0[10] +
+                         str0[1] + str0[2] + str0[10] +
                          str0[0] + str0[1];
         const currentDate = eval("new " + a + d + c + "()");
         const targetDate = eval("new " + "D" + b + "('" + tillDate + "')");

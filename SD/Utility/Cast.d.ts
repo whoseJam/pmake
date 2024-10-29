@@ -7,4 +7,5 @@ export class Cast {
     static castHexToRGB(hex: string): { r: number, g: number, b: number };
     static castToArray(any: any): Array;
     static castToNumber(any: any): number;
+    static castToViewBox(object: any): { x: number, y: number, width: number, height: number };
 }

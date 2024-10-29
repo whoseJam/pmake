@@ -13,4 +13,5 @@ export class Interp {
     static matrixInterp(attrs: Attributable, key: string): (t: number) => void;
     static translateInterp(attrs: Attributable, key: string): (t: number) => void;
     static viewBoxInterp(attrs: Attributable, key: string): (t: number) => void;
+    static boxInterp(attrs: Attributable, key: string): (t: number) => void;
 }

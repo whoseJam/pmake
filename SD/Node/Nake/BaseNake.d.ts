@@ -1,74 +1,23 @@
 import { SDNode } from "@/Node/SDNode";
 
-type color = string;
+import { SDColor }     from "@/Utility/Color";
+import { HexColor }    from "@/Utility/Color";
+import { PacketColor } from "@/Utility/Color";
 
 export class BaseNake extends SDNode {
     constructor(parent: SDNode, tag: string);
 
-    /**
-     * 获取填充色
-     */
-    fill(): color;
-
-    /**
-     * 设置填充色
-     * @param fill 
-     */
-    fill(fill: color): this;
-
-    /**
-     * 获取填充透明度
-     */
+    fill(): HexColor;
+    fill(fill: SDColor): this;
     fillOpacity(): number;
-
-    /**
-     * 设置填充透明度
-     * @param opacity 
-     */
     fillOpacity(opacity: number): this;
-
-    /**
-     * 获取边线颜色
-     */
-    stroke(): color;
-
-    /**
-     * 设置边线颜色
-     * @param stroke 
-     */
-    stroke(stroke: color): this;
-
-    /**
-     * 获取边线透明度
-     */
+    stroke(): HexColor;
+    stroke(stroke: SDColor): this;
     strokeOpacity(): number;
-
-    /**
-     * 设置边线透明度
-     * @param opacity 
-     */
     strokeOpacity(opacity: number): this;
-
-    /**
-     * 获取边线粗细
-     */
     strokeWidth(): number
-    
-    /**
-     * 设置边线粗细
-     * @param width 
-     */
     strokeWidth(width: number): this;
-
-    /**
-     * 获取边线偏移量
-     */
     strokeDashOffset(): number;
-
-    /**
-     * 设置边线偏移量
-     * @param offset 
-     */
     strokeDashOffset(offset: number): this;
 
     /**
@@ -92,7 +41,7 @@ export class BaseNake extends SDNode {
      * 
      * { main: 填充颜色, border: 边线颜色 }
      */
-    color(): color;
+    color(): PacketColor;
 
 
     /**
@@ -101,5 +50,5 @@ export class BaseNake extends SDNode {
      * 此函数是 fill 和 stroke 函数的一个糖
      * @param color
      */
-    color(color: color): this;
+    color(color: SDColor): this;
 }

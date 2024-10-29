@@ -89,6 +89,18 @@ export class Interp {
         }
     }
 
+    static boxInterp(attrs, key) {
+        return function(t) {
+            const A = this.source;
+            const B = this.target;
+            const x = A.x * (1 - t) + B.x * t;
+            const y = A.y * (1 - t) + B.y * t;
+            const width = A.width * (1 - t) + B.width * t;
+            const height = A.height * (1 - t) + B.height * t;
+            attrs.setAttribute(key, `${x} ${y} ${width} ${height}`);
+        }
+    }
+
     static translateInterp(attrs, key) {
         return function(t) {
             const tx = this.source[0] + (this.target[0] - this.source[0]) * t;

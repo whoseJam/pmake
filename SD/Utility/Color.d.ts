@@ -1,108 +1,74 @@
 
 export type HexColor = string;
 export type PacketColor = { main: HexColor, border: HexColor };
-export type Color = HexColor | PacketColor;
+export type SDColor = HexColor | PacketColor;
 
-interface ColorManager {
-    /**
-     * 黑色
-     */
-    black:        HexColor,
-    
-    /**
-     * 绿色
-     */
-    green:        HexColor,
+export class Color {
 
-    /**
-     * 白色
-     */
-    white:        HexColor,
-
-    /**
-     * 灰色
-     */
-    grey:         HexColor,
-
-    /**
-     * 蓝色
-     */
-    blue:         HexColor,
-
-    /**
-     * 天空蓝
-     */
-    deepSkyBlue:  HexColor,
-
-    /**
-     * 文本蓝
-     */
-    textBlue:     HexColor,
-
-    /**
-     * 红色
-     */
-    red:          HexColor,
-
-    /**
-     * 珊瑚红
-     */
-    coral:        HexColor,
-
-    /**
-     * 橙色
-     */
-    orange:       HexColor,
-
-    /**
-     * 紫色
-     */
-    purple:       HexColor,
-
-    /**
-     * 紫罗兰色
-     */
-    violet:       HexColor,
+    static red: HexColor
+    static blue: HexColor
+    static cyan: HexColor
+    static grey: HexColor
 
     /**
      * 雪白色
      */
-    snow:         HexColor,
+    static snow: HexColor
+
+    static azure: HexColor
+    static black: HexColor
 
     /**
-     * 幽灵白
+     * 珊瑚红
      */
-    ghostWhite:   HexColor,
+    static coral: HexColor
+
+    static green: HexColor
+    static white: HexColor
+    static oragne: HexColor
+    static purple: HexColor
+
+    /**
+     * 紫罗兰色
+     */
+    static violet: HexColor
+
+    static yellow: HexColor
+
+    /**
+     * 文本蓝
+     */
+    static textBlue: HexColor
+
+    static aliceBlue: HexColor
+
+    static paleGreen: HexColor
 
     /**
      * 粉红桃色
      */
-    peachPuff:    HexColor,
+    static peachPuff: HexColor
+
+    /**
+     * 幽灵白
+     */
+    static ghostWhite: HexColor
+
+    /**
+     * 天空蓝
+     */
+    static deepSkyBlue: HexColor
 
     /**
      * 柠檬绸色
      */
-    lemonChiffon: HexColor,
-
-    yellow:       HexColor,
-    azure:        HexColor,
-    aliceBlue:    HexColor,
-    cyan:         HexColor,
-    paleGreen:    HexColor,
-
-    RED:     PacketColor,
-    GREEN:   PacketColor,
-    GREY:    PacketColor,
-    BLUE:    PacketColor,
-    ORANGE:  PacketColor,
-    PURPLE:  PacketColor,
-    DEFAULT: PacketColor,
+    static lemonChiffon: HexColor
 
     /**
      * 获取一种随机的颜色
      * @returns 
      */
-    rand: () => HexColor,
+    static rand: () => HexColor
     
     /**
      * 获取梯度颜色生成器
@@ -112,7 +78,7 @@ interface ColorManager {
      * @param r 右端点
      * @returns 梯度颜色生成器
      */
-    gradient: (start: HexColor, end: HexColor, l: number, r: number) => (grad: number) => HexColor, 
+    static gradient: (start: HexColor, end: HexColor, l: number, r: number) => (grad: number) => HexColor    
 }
 
-export function color(): ColorManager;
+export function color(): typeof Color;

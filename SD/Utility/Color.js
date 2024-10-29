@@ -1,45 +1,45 @@
 import { randHexColor } from "@/Utility/Random";
 
-export const Color = {
-    black:          "#000000",
-    green:          "#92d050",
-    white:          "#ffffff",
-    grey:           "#cccccc",
-    blue:           "#bbe0e3",
-    deepSkyBlue:    "#00BFFF",
-    textBlue:       "#24b7ff",
-    red:            "#f14c4c",
-    coral:          "#FF7256",
-    orange:         "#f58617",
-    purple:         "#800080",
-    violet:         "#EE82EE",
-    snow:           "#FFFAFA",
-    ghostWhite:     "#F8F8FF",
-    peachPuff:      "#FFDAB9",
-    lemonChiffon:   "#FFFACD",
-    azure:          "#F0FFFF",
-    aliceBlue:      "#F0F8FF",
-    cyan:           "#00FFFF",
-    paleGreen:      "#98FB98",
-    yellow:         "#ffff4d",
+export class Color {
+    static red = "#f14c4c"
+    static blue = "#bbe0e3"
+    static cyan = "#00FFFF"
+    static grey = "#cccccc"
+    static snow = "#fffafa"
+    static azure = "#F0FFFF"
+    static black = "#000000"
+    static coral = "#FF7256"
+    static green = "#92d050"
+    static white = "#ffffff"
+    static orange = "#f58617"
+    static purple = "#800080"
+    static violet = "#ee82ee"
+    static yellow = "#ffff4d"
+    static textBlue = "#24b7ff"
+    static aliceBlue = "#F0F8FF"
+    static paleGreen = "#98FB98"
+    static peachPuff = "#FFDAB9"
+    static ghostWhite = "#F8F8FF"
+    static deepSkyBlue = "#00bfff"
+    static lemonChiffon = "#FFFACD"
 
-    RED:    { main: "#f14c4c", border: "#b13535" },
-    GREEN:  { main: "#92d050", border: "#00b050" },
-    GREY:   { main: "#cccccc", border: "#808080" },
-    BLUE:   { main: "#bbe0e3", border: "#89a4a7" },
-    ORANGE: { main: "#f58617", border: "#b4610e" },
-    PURPLE: { main: "#800080", border: "#5c0a5c" },
-    DEFAULT:{ main: "#ffffff", border: "#000000" },
+    static RED = { main: "#f14c4c", border: "#b13535" }
+    static BLUE = { main: "#bbe0e3", border: "#89a4a7" }
+    static GREY = { main: "#cccccc", border: "#808080" }
+    static GREEN = { main: "#92d050", border: "#00b050" }
+    static ORANGE = { main: "#f58617", border: "#b4610e" }
+    static PURPLE = { main: "#800080", border: "#5c0a5c" }
+    static DEFAULT = { main: "#ffffff", border: "#000000" }
 
-    rand: randHexColor,
-    gradient: gradient
+    rand = randHexColor
+    gradient = Gradient
 }
 
 export function color() {
     return Color;
 }
 
-function gradient(from, to, l, r) {
+function Gradient(from, to, l, r) {
     from = HexToRGB(from); to = HexToRGB(to);
     return function(at) {
         const k = (at - l) / (r - l);

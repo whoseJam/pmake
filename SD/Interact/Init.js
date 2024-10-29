@@ -12,7 +12,7 @@ export function init() {
     RootSvg.init();
     Text.init();
     Path.init();
-    Mathjax.Init();
+    Mathjax.init();
     Fragment.init();
     Message.init();
     Status.init();

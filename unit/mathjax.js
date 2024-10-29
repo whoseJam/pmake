@@ -1,16 +1,36 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
+const C = sd.color();
 const T = 300;
 
 sd.main(async () => {
-    await Test1();
-    await Test2();
-    await Test3();
-    await Test4();
-    await Test5();
-    await Test6();
+    // await Test1();
+    // await Test2();
+    // await Test3();
+    // await Test4();
+    // await Test5();
+    // await Test6();
+    await Test7();
 })
+
+async function Test7() {
+    // await sd.pause();
+    // const math = new sd.Mathjax(svg, "\\sum_{i=1}^{n}{(a+b)^2}").x(500).y(400);
+    // await sd.pause();
+    // math.element(1).startAnimate().color(C.textBlue).endAnimate();
+    // math.element(2).startAnimate().color(C.red).endAnimate();
+    // math.element(3).startAnimate().color(C.purple).endAnimate();
+    // await sd.pause();
+    // math.startAnimate().transformMath("{a+b}={c}").endAnimate();
+    await sd.pause();
+    const m1 = new sd.Mathjax(svg, "a").x(700).y(100);
+    const m2 = new sd.Mathjax(svg, "b").x(800).y(100);
+    const m3 = new sd.Mathjax(svg, "c").x(900).y(100);
+    const m = new sd.Mathjax(svg, "ttt").x(800).y(200);
+    await sd.pause();
+    m.startAnimate(10000).transformMathFrom("\\sum_{i=1}^{n}{a+b}", [m1, m2, m3], {0:1,1:2,2:3}).endAnimate();
+}
 
 async function Test6() {
     await sd.pause();

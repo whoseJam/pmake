@@ -1,5 +1,16 @@
-import { SDNode } from "../SDNode";
+import { SDNode } from "@/Node/SDNode";
+
+import { SDColor }     from "@/Utility/Color";
+import { HexColor }    from "@/Utility/Color";
+import { PacketColor } from "@/Utility/Color";
 
 export class TeXAtom {
     constructor(parent: SDNode);
+
+    fill(): HexColor;
+    fill(fill: SDColor): this;
+    stroke(): HexColor;
+    stroke(stroke: SDColor): this;
+    color(): PacketColor;
+    color(color: SDColor): this;
 }

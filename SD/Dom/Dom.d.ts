@@ -54,4 +54,8 @@ export class Dom {
      * @param callback 
      */
     static removeEventListener(element: Element, event: string, callback: any): void;
+
+    static clone(element);
+
+    static deepClone(element);
 }

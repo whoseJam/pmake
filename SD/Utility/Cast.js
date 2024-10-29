@@ -46,4 +46,13 @@ export class Cast {
         }
         return +value;
     }
+
+    static castToViewBox(object) {
+        if (typeof(object) === "string") {
+            const args = object.split(" ");
+            return { x: +args[0], y: +args[1], width: +args[2], height: +args[3] };
+        } else {
+            throw new Error("Not Implemented Yet");
+        }
+    }
 }

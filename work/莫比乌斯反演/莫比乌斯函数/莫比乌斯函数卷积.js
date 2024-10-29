@@ -18,10 +18,14 @@ sd.init(() => {
 sd.main(async () => {
     await sd.pause();
     const math = new sd.Mathjax(svg, `${n}=${Divide(n)}`).cx(100).opacity(0).startAnimate().opacity(1).endAnimate();
-    const a1 = math.element(1);
-    console.log("a1=", a1);
-    await sd.pause();
-    a1.startAnimate().color(C.red).endAnimate();
+    const m = dividers.length;
+    for (let i = 0; i <= m; i++) {
+        for (let S = 0; S < (1<<m); S++) {
+            if (BitCount(S) === i) {
+                await Combination()
+            }
+        }
+    }
 })
 
 function Divide(n) {
@@ -34,6 +38,12 @@ function Divide(n) {
             else ans = ans + "\\times " + `{${String(prim[i])}}`;
         }
     }
+    return ans;
+}
+
+function BitCount(S) {
+    let ans = 0;
+    while (S) { if (S&1) ans++; S >>= 1; }
     return ans;
 }
 

@@ -37,4 +37,17 @@ export class Dom {
     static addEventListener(element, event, callback) {
         element.addEventListener(event, callback);
     }
+
+    static clone(element) {
+        global.element =  element;
+        return element.cloneNode();
+    }
+
+    static deepClone(element) {
+        const ans = this.clone(element);
+        for (let child of element.children) {
+            ans.append(this.deepClone(child));
+        }
+        return ans;
+    }
 }
