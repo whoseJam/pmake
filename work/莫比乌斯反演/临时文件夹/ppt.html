@@ -1,0 +1,42 @@
+<section>
+    <section>
+        <h1>欧拉函数与 $1$ 的Dirichlet卷积</h1>
+        <p>的研究<del>（太长排不下了）</del></p>
+    </section>
+    <section>
+        <h1>Dirichlet卷积</h1>
+    </section>
+    <section>
+        <h2>Dirichlet卷积</h2>
+        <p>假设 $f$ 和 $g$ 为两个数论函数，则 $f$ 和 $g$ 的Dirichlet卷积结果也是一个数论函数 $t(t=f*g)$，其中：
+            $$
+            t(n)=\sum_{d|n}f(d)g(\frac{n}{d})
+            $$
+        </p>
+    </section>
+    <section>
+        <h1>欧拉函数 $\varphi$</h1>
+    </section>
+    <section>
+        <h2>欧拉函数 $\varphi$</h2>
+        <p>$\varphi(n)$：表示 $[1,n]$ 中与 $n$ 互质的整数个数</p>
+        <p class="fragment">我们来研究一下 $\varphi * 1$ 的结果</p>
+        <p class="fragment">设 $f=\varphi * 1$，则有：
+            $$
+            f(n)=\sum_{d|n}\varphi(d)\times 1=\sum_{d|n}\varphi(d)
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>欧拉函数的重要性质</h2>
+        <p>
+            $$
+            f(n)=\sum_{d|n}\varphi(d)=n
+            $$
+        </p>
+        <iframe data-animation="./欧拉函数卷积.js"
+            style="width: 1000px; height: 400px;"></iframe>
+        <p class="fragment">我们把 $\frac{1}{n},\frac{2}{n}...\frac{n}{n}$ 写出来，共 $n$ 个分数<span class="fragment">，把每个分数约到<b>最简形式</b></span></p>
+        <p class="fragment">容易知道分母一定为 $n$ 的因子，且分母为 $d$ 的分数有 $\varphi(d)$ 个</p>
+    </section>
+</section>

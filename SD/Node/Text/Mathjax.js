@@ -66,8 +66,10 @@ Mathjax.prototype.math = function(text) {
 
     const newMath = new SVGNode(this, this._.layer, MathJax.tex2svg(text).children[0]);
     const oldMath = this._.math;
+    this._.lastMath = oldMath;
+    this._.math = newMath;
 
-    UpdateThisAndSVG.call(this, this._.math = newMath);
+    UpdateThisAndSVG.call(this, newMath);
     BuildTeXAtom.call(this);
     oldMath?.remove();
     return this;
@@ -79,8 +81,10 @@ Mathjax.prototype.transformMath = function(text, hint) {
     
     const newMath = new SVGNode(this, this._.layer, MathJax.tex2svg(text).children[0]);
     const oldMath = this._.math;
+    this._.lastMath = oldMath;
+    this._.math = newMath;
 
-    UpdateThisAndSVG.call(this, this._.math = newMath);
+    UpdateThisAndSVG.call(this, newMath);
     TransformMathjax.call(this, oldMath, newMath, hint);
     oldMath?.remove();
     return this;
@@ -92,8 +96,10 @@ Mathjax.prototype.transformMathFrom = function(text, math, hint) {
 
     const newMath = new SVGNode(this, this._.layer, MathJax.tex2svg(text).children[0]);
     const oldMath = this._.math;
+    this._.lastMath = oldMath;
+    this._.math = newMath;
 
-    UpdateThisAndSVG.call(this, this._.math = newMath);
+    UpdateThisAndSVG.call(this, newMath);
     TransformMathjaxFrom.call(this, oldMath, newMath, math.map(math => math._.math), hint);
     oldMath?.remove();
     math.forEach(math => math.startAnimate(this).remove());
@@ -465,7 +471,7 @@ function MathjaxPositionUpdate(key) {
                     this.delay() + this.duration(),
                     this.member.oldValue(key),
                     this.member.get(key),
-                    Interp.numberInterp(this._.math, key),
+                    Interp.numberInterp(this._.lastMath, key),
                     this._.lastMath, key
                 );
             }
