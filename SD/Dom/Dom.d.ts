@@ -55,7 +55,15 @@ export class Dom {
      */
     static removeEventListener(element: Element, event: string, callback: any): void;
 
+    /**
+     * 克隆一个元素
+     * @param element 
+     */
     static clone(element);
 
+    /**
+     * 深度克隆一个元素，包括它的所有后代
+     * @param element 
+     */
     static deepClone(element);
 }

@@ -39,7 +39,6 @@ export class Dom {
     }
 
     static clone(element) {
-        global.element =  element;
         return element.cloneNode();
     }
 

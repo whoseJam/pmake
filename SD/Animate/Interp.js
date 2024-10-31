@@ -11,12 +11,12 @@ export class Interp {
         }
     }
 
-    static numberInterp(owner, prop) {
+    static numberInterp(attrs, key) {
         return function(t) {
             const A = this.source;
             const B = this.target;
             const current = (A * (1 - t) + B * t);
-            owner.setAttribute(prop, current);
+            attrs.setAttribute(key, current);
         }
     }
 

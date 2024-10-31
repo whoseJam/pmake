@@ -1,0 +1,36 @@
+<section>
+    <section>
+        <h1>斜率优化dp</h1>
+        <p>概述</p>
+    </section>
+    <section>
+        <h2>斜率优化dp</h2>
+        <p>假设在推导某个动态规划题目的时候，推导出如下状态转移：</p>
+        <p>
+            $$
+            f_i=\mathop{min}\limits_{j\lt i}\{f_j+v_iv_j\}
+            $$
+        </p>
+        <p class="fragment">这个转移显然可以 $O(n^2)$ 实现</p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                void Solve() {
+                    // 初始化 f
+                    for (int i = 2; i <= n; i++) {
+                        f[i] = inf;
+                        for (int j = 1; j < i; j++) {
+                            f[i] = min(f[i], f[j] + v[i] * v[j]);
+                        }
+                    }
+                }
+            </script>
+        </codeblock>
+        <iframe data-animation="./暴力转移.js" class="fragment"
+            style="width: 1000px; height: 200px;"></iframe>
+    </section>
+    <section>
+        <h2>斜率优化dp</h2>
+        <iframe data-animation="./斜率优化.js"
+            style="width: 1000px; height: 300px;"></iframe>
+    </section>
+</section>
