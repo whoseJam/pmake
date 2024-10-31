@@ -24,6 +24,7 @@ export class Enter {
 
     static fromExistValue(parent, value, layer) {
         return function(element, move) {
+            value.startAnimate(parent);
             element.attachTo(layer ? parent.layer(layer) : parent);
             element.opacity(0);
             move();

@@ -64,6 +64,16 @@ Coord.prototype.viewY = SDNode.OrdinaryGSet("viewY", "setByEqual");
 Coord.prototype.viewWidth = SDNode.OrdinaryGSet("viewWidth", "setByEqual");
 Coord.prototype.viewHeight = SDNode.OrdinaryGSet("viewHeight", "setByEqual");
 
+Coord.prototype.at = function(x, y) {
+    if (arguments.length === 1) {
+        return this.at(x[0], x[1]);
+    }
+    return [
+        this.x() + (x - this.viewX()) / this.viewWidth() * this.width(),
+        this.my() - (y - this.viewY()) / this.viewHeight() * this.height()
+    ];
+}
+
 Coord.prototype.xAxis = function() {
     return this.child("xAxis");
 }

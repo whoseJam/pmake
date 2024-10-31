@@ -101,7 +101,7 @@ Mathjax.prototype.transformMath = function(text, hint) {
     UpdateThisAndSVG.call(this, newMath);
     TransformMathjax.call(this, oldMath, newMath, hint);
     BuildTeXAtom.call(this);
-    // oldMath?.remove();
+    oldMath?.remove();
     return this;
 }
 
@@ -480,6 +480,7 @@ function UpdateThisAndSVG(svg) {
     this.member.setAndFlush("height-20", box.height);
     svg.setAttribute("x", this.x() - svg.offsetX);
     svg.setAttribute("y", this.y() - svg.offsetY);
+    svg.nake().children[1].setAttribute("fill", this.fill());
 }
 
 function UpdateThatAndSVG(svg, from) {
@@ -539,7 +540,6 @@ function MathjaxPositionUpdate(key, offsetKey) {
 function MathjaxColorUpdate(key) {
     return function() {
         if (this.member.hasChanged(key)) {
-            console.log("has changed key=", key, "old=", this.member.oldValue(key), "new=", this.member.get(key))
             if (this._.math) {
                 new Action(
                     this.delay(),
