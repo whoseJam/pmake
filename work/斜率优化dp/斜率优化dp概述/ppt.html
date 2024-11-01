@@ -8,7 +8,7 @@
         <p>假设在推导某个动态规划题目的时候，推导出如下状态转移：</p>
         <p>
             $$
-            f_i=\mathop{min}\limits_{j\lt i}\{f_j+v_iv_j\}
+            f_i=\mathop{min}\limits_{j\lt i}\{f_j+A_iB_j\}
             $$
         </p>
         <p class="fragment">这个转移显然可以 $O(n^2)$ 实现</p>
@@ -19,7 +19,7 @@
                     for (int i = 2; i <= n; i++) {
                         f[i] = inf;
                         for (int j = 1; j < i; j++) {
-                            f[i] = min(f[i], f[j] + v[i] * v[j]);
+                            f[i] = min(f[i], f[j] + A[i] * B[j]);
                         }
                     }
                 }
@@ -31,8 +31,8 @@
     <section>
         <h2>斜率优化dp</h2>
         <iframe data-animation="./斜率优化.js"
-            style="width: 1000px; height: 600px;"></iframe>
-        <p class="fragment">不妨把用于转移更新的点叫做转移点，用于逼近的线叫做逼近线</p>
+            style="width: 1000px; height: 500px;"></iframe>
+        <p class="fragment">不妨把用于逼近的线叫做逼近线</p>
     </section>
     <section>
         <h2>斜率优化dp</h2>
@@ -55,7 +55,7 @@
         <h2>如何用一条斜率固定的线去逼近凸包</h2>
         <iframe data-animation="./二分逼近凸包.js"
             style="width: 1000px; height: 450px;"></iframe>
-        <p>由于下凸包上的斜率具有单调性，我们显然可以通过二分找到逼近点</p>
+        <p>由于下凸包上的斜率具有单调性，我们显然可以通过二分找到最优决策点</p>
         <p class="fragment quote">如果斜率随着 $i$ 单调递增，我们还能把这个二分摘掉，这种情况我们留到具体题目中做讨论</p>
     </section>
 </section>

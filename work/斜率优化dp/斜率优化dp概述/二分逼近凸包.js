@@ -54,9 +54,6 @@ function UpdateLine(k) {
     for (let i = 1; i < convex.length - 1; i++) {
         const K1 = Slope(convex[i], convex[i - 1]);
         const K2 = Slope(convex[i], convex[i + 1]);
-        if (i === 4) {
-            console.log("k=", k, "K1=", K1, "K2=", K2, data[convex[i-1]], data[convex[i]], data[convex[i+1]])
-        }
         if (K1 <= k && K2 >= k) {
             target = i;
         }
@@ -110,7 +107,7 @@ function CreateLink(a, b) {
 function CreateNode(x) {
     const item = data[x];
     item.circle = new sd.Circle(coord).r(2).color(C.black).center(coord.at(item.x, item.y)).strokeWidth(0).childAs(
-        new sd.Mathjax(coord, `(v_{${x+1}},f_{${x+1}})`).fontSize(20),
+        new sd.Mathjax(coord, `(x_{${x+1}},y_{${x+1}})`).fontSize(20),
         R.Aside("tc", 2)
     );
 }
