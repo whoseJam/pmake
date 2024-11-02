@@ -5,6 +5,12 @@
     <problem data-problemset="luogu" data-problemid="P10714"></problem>
     <section>
         <h2>简单的有限网格问题</h2>
+        <iframe data-animation="./样例解释.js"
+            style="width: 1000px; height: 400px;"></iframe>
+        <p>在 $(n+m-2)^2$ 种两折路径中，经过的星星之和为多少？</p>
+    </section>
+    <section>
+        <h2>简单的有限网格问题</h2>
         <p>设 $P$ 是一条两折路径，$f(P)$ 表示 $P$ 上的星星总数</p>
         <p class="math-fragment">
             $$
@@ -32,7 +38,7 @@
                 </ul>
                 <p class="fragment">然后是稍微复杂一点的同行同列</p>
                 <ul>
-                    <li class="fragment">浅蓝色部分：$(n-a+1)a+a(n+m-2)$</li>
+                    <li class="fragment">浅蓝色部分：$(n-a-1)a+a(n+m-2)$</li>
                     <li class="fragment">......</li>
                 </ul>
             </div>

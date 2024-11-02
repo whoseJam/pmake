@@ -12,6 +12,8 @@ const colorMap = [
     [C.grey, C.white, C.purple],
     [C.orange, C.yellow, C.coral]
 ];
+const rect = new sd.Rect(svg).color(C.blue).width(20).height(20).drag(true);
+rect.center(grid.element(x, y).center());
 
 sd.init(() => {
     for (let i = 1; i <= n; i++) {

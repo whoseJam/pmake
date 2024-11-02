@@ -1,6 +1,7 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
+const C = sd.color();
 const arr = new sd.Array(svg);
 const sum = new sd.Array(svg).dx(-40).y(60);
 const data = [-3, 5, 1, 2];
@@ -29,5 +30,9 @@ sd.main(async () => {
     for (let i = 1; i <= data.length; i++) {
         await sd.pause();
         brace.startAnimate().brace(i, i + data.length - 1, "b", 5).endAnimate();
+        await sd.pause();
+        sum.startAnimate().color(i - 1, C.blue).color(i, i + data.length - 1, C.coral).endAnimate();
+        await sd.pause();
+        sum.startAnimate().color(C.white).endAnimate();
     }
 })

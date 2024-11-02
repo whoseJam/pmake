@@ -25,7 +25,7 @@ export class Color {
 
     static green: HexColor
     static white: HexColor
-    static oragne: HexColor
+    static orange: HexColor
     static purple: HexColor
 
     /**
