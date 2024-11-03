@@ -1,4 +1,4 @@
-import { Path }                 from "@/Node/Nake/Path";
+import { Path }   from "@/Node/Nake/Path";
 import { SDNode } from "@/Node/SDNode";
 
 export function BaseCurve(parent) {

@@ -11,8 +11,12 @@ export { Text }          from "./Node/Nake/Text";
 export { Image }         from "./Node/Nake/Image";
 export { Circle }        from "./Node/Nake/Circle";
 export { Ellipse }       from "./Node/Nake/Ellipse";
+export { Polygon }       from "./Node/Nake/Polygon";
 export { Fragment }      from "./Node/Nake/Fragment";
 export { ForeignObject } from "./Node/Nake/ForeignObject";
+
+export { Triangle }         from "./Node/Polygon/Triangle";
+export { InvertedTriangle } from "./Node/Polygon/InvertedTriangle";
 
 export { Box }           from "./Node/Element/Box";
 export { Vertex }        from "./Node/Element/Vertex";

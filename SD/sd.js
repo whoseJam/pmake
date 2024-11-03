@@ -17,8 +17,12 @@ export { Text }          from "./Node/Nake/Text.js";
 export { Image }         from "./Node/Nake/Image.js";
 export { Circle }        from "./Node/Nake/Circle.js";
 export { Ellipse }       from "./Node/Nake/Ellipse.js";
+export { Polygon }       from "./Node/Nake/Polygon.js";
 export { Fragment }      from "./Node/Nake/Fragment.js";
 export { ForeignObject } from "./Node/Nake/ForeignObject.js";
+
+export { Triangle }         from "./Node/Polygon/Triangle.js";
+export { InvertedTriangle } from "./Node/Polygon/InvertedTriangle.js";
 
 export { Box }           from "./Node/Element/Box.js";
 export { Vertex }        from "./Node/Element/Vertex.js";
@@ -44,7 +48,7 @@ export { BoxTree }             from "./Node/Tree/BoxTree.js";
 export { ValueTree }           from "./Node/Tree/ValueTree.js";
 export { BinaryTree }          from "./Node/Tree/BinaryTree.js";
 export { HorizontalTree }      from "./Node/Tree/HorizontalTree.js";
-export { RoundSquareTree }     from "./Node/Tree/RoundSquareTree.js";
+// export { RoundSquareTree }     from "./Node/Tree/RoundSquareTree.js";
 export { HorizontalValueTree } from "./Node/Tree/HorizontalValueTree.js";
 
 export { DAG }            from "./Node/Graph/DAG.js";

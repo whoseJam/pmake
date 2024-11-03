@@ -5,12 +5,25 @@
     <problem data-problemset="luogu" data-problemid="P3195"></problem>
     <section>
         <h2>玩具装箱</h2>
+        <iframe data-animation="./样例解释.js"
+            style="width: 1000px; height: 300px;"></iframe>
+        <p class="fragment">求如何划分整个序列，才能让序列的价值最小</p>
+    </section>
+    <section>
+        <h2>玩具装箱</h2>
         <p>设 $f_i$ 表示装好前 $i$ 个玩具的最小花费，容易得到转移：
+            $$
+            f_i=\mathop{min}_{j\lt i}\{f_j+(s_i-s_j-1-L)^2\}
+            $$
+        </p>
+        <p>其中 $S_i$ 为 $\{C_i+1\}$ 的前缀和，即 $S_i=\sum_{j\le i}(C_j+1)$</p>
+        <iframe data-animation="./状态转移.js"
+            style="width: 1000px; height: 280px;"></iframe>
+        <p class="fragment">设 $T=L+1$，则：
             $$
             f_i=\mathop{min}_{j\lt i}\{f_j+(s_i-s_j-T)^2\}
             $$
         </p>
-        <p>其中 $T=L+1$，$S_i$ 为 $\{C\}$ 的前缀和，即 $S_i=\sum_{j\le i}C_j$</p>
     </section>
     <section>
         <h2>玩具装箱</h2>
@@ -58,7 +71,7 @@
             $$
         </p>
         <p>第 $i$ 个点的斜率为 $2s_i$，最小化截距</p>
-        <p class="fragment">由于 $s_i$ 是 $\{C\}$ 的前缀和，并且 $\{C\}$ 里面全是正数，所以 $s_i$ 是单调递增的</p>
+        <p class="fragment">由于 $s_i$ 是 $\{C_i+1\}$ 的前缀和，并且 $\{C_i+1\}$ 里面全是正数，所以 $s_i$ 是单调递增的</p>
         <ul>
             <li class="fragment">转移点的横坐标单调递增</li>
             <li class="fragment">逼近线斜率单调递增</li>

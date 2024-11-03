@@ -84,7 +84,7 @@ Path.prototype.height = function(height) {
 function update() {
     if (this.member.hasChanged("d")) {
         const duration = this.duration();
-        const snap = Snap(this._.nake.element);
+        const snap = Snap(this._.nake.nake());
         const t = new Action(
             this.delay(),
             this.delay() + this.duration(),
@@ -102,14 +102,10 @@ function update() {
             this, "d"
         );
         const box = Path.pathToBox(this.member.get("d"));
-        this.member.set("x", box.x);
-        this.member.set("y", box.y);
-        this.member.set("width", box.width);
-        this.member.set("height", box.height);
-        this.member.flush("x");
-        this.member.flush("y");
-        this.member.flush("width");
-        this.member.flush("height");
+        this.member.setAndFlush("x", box.x);
+        this.member.setAndFlush("y", box.y);
+        this.member.setAndFlush("width", box.width);
+        this.member.setAndFlush("height", box.height);
         this.member.flush("d");
     }
 }

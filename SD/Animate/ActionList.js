@@ -13,7 +13,8 @@ const KEY_RELTAED_TO_SIZE = new Set([
     "y2",
     "transform",
     "opacity",
-    "font-size"
+    "font-size",
+    "points"
 ]);
 
 export function ActionList() {

@@ -33,6 +33,7 @@ export function SDNode(parent, layer = undefined) {
 
     // layer
     if (!layer) {
+        console.log("parent=", parent);
         this._.layer = new SVGNode(this, parent instanceof SVGNode ? parent : parent.layer(), "g");
     } else {
         this._.layer = new SVGNode(this, undefined, layer);
