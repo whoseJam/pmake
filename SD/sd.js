@@ -1,10 +1,5 @@
 import "../MyReveal/slide.css";
 
-export { svg } from "./Interact/RootSvg.js";
-export { color } from "./Utility/Color.js";
-export { rule } from "./Rule/Rule.js";
-export { input } from "./Utility/Reader.js";
-export { vec } from "./Math/Vector.js";
 import { init } from "./Interact/Init.js";
 
 init();
@@ -48,7 +43,6 @@ export { BoxTree }             from "./Node/Tree/BoxTree.js";
 export { ValueTree }           from "./Node/Tree/ValueTree.js";
 export { BinaryTree }          from "./Node/Tree/BinaryTree.js";
 export { HorizontalTree }      from "./Node/Tree/HorizontalTree.js";
-// export { RoundSquareTree }     from "./Node/Tree/RoundSquareTree.js";
 export { HorizontalValueTree } from "./Node/Tree/HorizontalValueTree.js";
 
 export { DAG }            from "./Node/Graph/DAG.js";
@@ -83,17 +77,23 @@ export { Stress }       from "./Component/Stress.js";
 export { Pointer }      from "./Component/Pointer.js";
 export { MathjaxLabel } from "./Component/Label.js";
 
+export { svg }    from "./Interact/RootSvg.js";
+export { vec }    from "./Math/Vector.js";
+export { rule }   from "./Rule/Rule.js";
+export { color }  from "./Utility/Color.js";
+export { input }  from "./Utility/Reader.js";
+export { device } from "./Interact/Device.js";
+
+export { int }    from "./Utility/Util.js"
+export { init }   from "./Utility/Util.js";
+export { main }   from "./Utility/Util.js";
+export { rand }   from "./Utility/Random.js";
+export { trim }   from "./Utility/Trim.js";
+export { inter }  from "./Utility/Util.js";
+export { pause }  from "./Animate/Window.js";
+export { make1d } from "./Utility/Util.js";
+export { make2d } from "./Utility/Util.js";
+
 export { PathPen } from "./Utility/PathPen.js";
 
 export { CONTINUE_FRAME }    from "./Animate/Window";
-export { FIRST_INTER_FRAME } from "./Animate/Window";
-
-export { pause }  from "./Animate/Window.js";
-export { rand }   from "./Utility/Random.js";
-export { trim }   from "./Utility/Trim.js";
-export { init }   from "./Utility/Util.js";
-export { main }   from "./Utility/Util.js";
-export { inter }  from "./Utility/Util.js";
-export { make1d } from "./Utility/Util.js";
-export { make2d } from "./Utility/Util.js";
-export { device } from "./Interact/Device";

@@ -57,26 +57,19 @@ function MarkerGSet(key) {
 }
 
 BaseLine.prototype.arrow = function(flag = true) {
-    if (flag) {
-        this.markerEnd("arrow");
-    } else {
-        this.markerEnd("");
-    }
+    this.markerEnd(flag ? "arrow" : "");
     return this;
 }
 
 BaseLine.prototype.revArrow = function(flag = true) {
-    if (flag) {
-        this.markerStart("arrowReverse");
-    } else {
-        this.markerStart("");
-    }
+    this.markerStart(flag ? "arrowReverse" : "");
     return this;
 }
 
 BaseLine.prototype.doubleArrow = function(flag = true) {
     this.arrow(flag);
     this.revArrow(flag);
+    return this;
 }
 
 BaseLine.prototype.pointStoT = function() {
@@ -90,39 +83,36 @@ BaseLine.prototype.pointStoT = function() {
 }
 
 BaseLine.prototype.pointTtoS = function() {
-    let len = this.totalLength();
-    let context = new Context(this);
-    context.till(0, 0);
+    const len = this.totalLength();
+    const context = new Context(this);
+    this.startAnimate(context.tillc(0, 0));
     this.strokeDashArray([len, len]);
     this.strokeDashOffset(-len);
-    context.till(0, 1);
+    this.startAnimate(context.tillc(0, 1));
     this.strokeDashArray([len, 0]);
     this.strokeDashOffset(0);
-    context.recover();
     return this;
 }
 
 BaseLine.prototype.fadeStoT = function() {
-    let len = this.totalLength();
-    let context = new Context(this);
-    context.till(0, 0);
+    const len = this.totalLength();
+    const context = new Context(this);
+    this.startAnimate(context.tillc(0, 0));
     this.strokeDashArray([len, len]);
     this.strokeDashOffset(0);
-    context.till(0, 1);
+    this.startAnimate(context.tillc(0, 1));
     this.strokeDashArray([0, len]);
     this.strokeDashOffset(-len);
-    context.recover();
     return this;
 }
 
 BaseLine.prototype.fadeTtoS = function() {
-    let len = this.totalLength();
-    let context = new Context(this);
-    context.till(0, 0);
+    const len = this.totalLength();
+    const context = new Context(this);
+    this.startAnimate(context.tillc(0, 0));
     this.strokeDashArray([len, 0]);
-    context.till(0, 1);
+    this.startAnimate(context.tillc(0, 1));
     this.strokeDashArray([0, len]);
-    context.recover();
     return this;
 }
 
@@ -152,11 +142,9 @@ BaseLine.prototype.x = function(x) {
     const x1 = this.x1();
     const x2 = this.x2();
     const ox = Math.min(x1, x2);
-    if (x === undefined) {
-        return ox;
-    }
+    if (x === undefined) return ox;
     const dx = x - ox;
-    this.x1(x1 + dx).x2(x2 + dx);
+    this.freeze().x1(x1 + dx).x2(x2 + dx).unfreeze();
     return this;
 }
 
@@ -164,39 +152,27 @@ BaseLine.prototype.y = function(y) {
     const y1 = this.y1();
     const y2 = this.y2();
     const oy = Math.min(y1, y2);
-    if (y === undefined) {
-        return oy;
-    }
+    if (y === undefined) return oy;
     const dy = y - oy;
-    this.y1(y1 + dy).y2(y2 + dy);
+    this.freeze().y1(y1 + dy).y2(y2 + dy).unfreeze();
     return this;
 }
 
 BaseLine.prototype.width = function(width) {
     const x1 = this.x1();
     const x2 = this.x2();
-    if (width === undefined) {
-        return Math.abs(x1 - x2);
-    }
-    if (x1 < x2) {
-        this.x2(x1 + width);
-    } else {
-        this.x1(x2 + width);
-    }
+    if (width === undefined) return Math.abs(x1 - x2);
+    if (x1 < x2) this.x2(x1 + width);
+    else this.x1(x2 + width);
     return this;
 }
 
 BaseLine.prototype.height = function(height) {
     const y1 = this.y1();
     const y2 = this.y2();
-    if (height === undefined) {
-        return Math.abs(y1 - y2);
-    }
-    if (y1 < y2) {
-        this.y2(y1 + height);
-    } else {
-        this.y1(y2 + height);
-    }
+    if (height === undefined) return Math.abs(y1 - y2);
+    if (y1 < y2) this.y2(y1 + height);
+    else this.y1(y2 + height);
     return this;
 }
 
@@ -240,8 +216,5 @@ BaseLine.prototype.valueRule = function(rule) {
 
 BaseLine.prototype.intValue = function() {
     const value = this.child("value");
-    if (!value) {
-        return 0;
-    }
-    return +value.text();
+    return !value ? 0 : +value.text();
 }

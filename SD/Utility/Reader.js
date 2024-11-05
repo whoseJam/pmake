@@ -1,26 +1,23 @@
 
 class Reader {
-    static readCharArray = readArrayFn(readChar);
     static readCharArray = readArrayFn(readChar)
+
+    static readCharArray = readArrayFn(readChar)
+    
     static readCharMatrix = readMatrixFn(readChar)
+    
     static readIntArray = readArrayFn(readInt)
+    
     static readIntMatrix = readMatrixFn(readInt)
+    
     static readDoubleArray = readArrayFn(readDouble)
+    
     static readDoubleMatrix = readMatrixFn(readDouble)
 }
 
 export function input() {
     return Reader;
 }
-
-// const Reader = {
-//     readCharArray: readArrayFn(readChar),
-//     readCharMatrix: readMatrixFn(readChar),
-//     readIntArray: readArrayFn(readInt),
-//     readIntMatrix: readMatrixFn(readInt),
-//     readDoubleArray: readArrayFn(readDouble),
-//     readDoubleMatrix: readMatrixFn(readDouble)
-// }
 
 function readChar(word, pos) {
     while (pos < word.length && (word[pos] === " " || word[pos] === "\n"))

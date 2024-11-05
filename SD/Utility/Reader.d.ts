@@ -58,4 +58,4 @@ class Reader {
     static readDoubleArray(input: string, n: number, m: number, padding: boolean): Array<Array<number>>;
 }
 
-export function input(): Reader;
+export function input(): typeof Reader;

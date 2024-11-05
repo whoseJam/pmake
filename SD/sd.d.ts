@@ -75,20 +75,23 @@ export { Stress }       from "./Component/Stress";
 export { Pointer }      from "./Component/Pointer";
 export { MathjaxLabel } from "./Component/Label";
 
-export { svg } from "./Interact/RootSvg";
-
-export { rule } from "./Rule/Rule";
-export { Rule } from "./Rule/Rule";
-
+// Singleton
+export { svg }    from "./Interact/RootSvg";
 export { vec }    from "./Math/Vector";
-export { Vector } from "./Math/Vector";
+export { rule }   from "./Rule/Rule";
 export { color }  from "./Utility/Color";
 export { input }  from "./Utility/Reader";
 export { device } from "./Interact/Device";
 
-export { init }  from "./Utility/Util";
-export { main }  from "./Utility/Util";
-export { inter } from "./Utility/Util";
+export { int }    from "./Utility/Util";
+export { init }   from "./Utility/Util";
+export { main }   from "./Utility/Util";
+export { rand }   from "./Utility/Random";
+export { trim }   from "./Utility/Trim";
+export { inter }  from "./Utility/Util";
+export { pause }  from "./Animate/Window";
+export { make1d } from "./Utility/Util";
+export { make2d } from "./Utility/Util";
 
 export { PathPen } from "./Utility/PathPen";
 

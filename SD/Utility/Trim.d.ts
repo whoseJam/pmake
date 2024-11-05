@@ -1,4 +1,4 @@
-import { BaseLine } from "SD/Node/Nake/BaseLine";
-import { SDNode } from "SD/Node/SDNode";
+import { SDNode }   from "@/Node/SDNode";
+import { BaseLine } from "@/Node/Nake/BaseLine";
 
-export function trim(link: BaseLine, from: SDNode|null|undefined, to: SDNode|null|undefined): void;
+export function trim(link: BaseLine, source: SDNode|null|undefined, target: SDNode|null|undefined): void;
