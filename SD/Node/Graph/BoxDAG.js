@@ -1,7 +1,8 @@
-import { SelectValidValue } from "@/Utility/Cast";
+import { Cast } from "@/Utility/Cast";
 
-import { DAG }                  from "@/Node/Graph/DAG";
-import { Box }                  from "@/Node/Element/Box";
+import { DAG }    from "@/Node/Graph/DAG";
+import { Box }    from "@/Node/Element/Box";
+import { Enter }  from "@/Node/SDNode/Enter";
 import { SDNode } from "@/Node/SDNode";
 
 export function BoxDAG(parent) {
@@ -17,7 +18,7 @@ export function BoxDAG(parent) {
         element.height(this.member.get("elementHeight"));
     })
 
-    return this;
+    this._.nodeType = Box;
 }
 
 
@@ -29,20 +30,11 @@ BoxDAG.prototype.elementWidth  = SDNode.OrdinaryGSet("elementWidth", "setByEqual
 BoxDAG.prototype.elementHeight = SDNode.OrdinaryGSet("elementHeight", "setByEqual");
 
 BoxDAG.prototype.newNode = function(id, value = null) {
-    const element = new Box(this.layer("nodes"));
-    element.value(SelectValidValue(value, id));
-    element._.enter = (element, move) => {
-        element.opacity(0);
-        move();
-        element.update();
-        element.startAnimate(this).opacity(1);
-    };
+    const element = new this._.nodeType(this.layer("nodes"));
+    element.value(Cast.castToSDNode(element, value, id));
+    element.onEnter(Enter.ordinary(this));
     const graph = this.member.get("graph");
-    graph.setNode(id, {
-        label: id,
-        width: this.member.get("elementWidth"),
-        height: this.member.get("elementHeight")
-    });
+    graph.setNode(id, {});
     this.newNodeByBaseGraph(id, element);
     return this;
 }

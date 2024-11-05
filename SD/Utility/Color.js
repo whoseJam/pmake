@@ -31,25 +31,25 @@ export class Color {
     static PURPLE = { main: "#800080", border: "#5c0a5c" }
     static DEFAULT = { main: "#ffffff", border: "#000000" }
 
-    rand = randHexColor
-    gradient = Gradient
+    static rand = randHexColor
+
+    static gradient(source, target, l, r) {
+        source = HexToRGB(source);
+        target = HexToRGB(target);
+        return function(at) {
+            const k = (at - l) / (r - l);
+            const color = {
+                r: source.r + (target.r - source.r) * k,
+                g: source.g + (target.g - source.g) * k,
+                b: source.b + (target.b - source.b) * k
+            };
+            return RGBToHex(color);
+        }
+    }
 }
 
 export function color() {
     return Color;
-}
-
-function Gradient(from, to, l, r) {
-    from = HexToRGB(from); to = HexToRGB(to);
-    return function(at) {
-        const k = (at - l) / (r - l);
-        const color = {
-            r: from.r + (to.r - from.r) * k,
-            g: from.g + (to.g - from.g) * k,
-            b: from.b + (to.b - from.b) * k
-        };
-        return RGBToHex(color);
-    }
 }
 
 function HexToNumber(str) {

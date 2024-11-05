@@ -65,37 +65,40 @@ GridGraph.prototype.newNodeFromExistElement = function(id, value) {
     return this;
 }
 
-GridGraph.prototype.newLink = function(sourceGid, targetGid, value) {
+GridGraph.prototype.newLink = function(sourceId, targetId, value) {
     const element = new this._.linkType(this.layer("links"));
     element.value(value);
     element.onEnter(Enter.ordinary(this, "links"));
-    this.newLinkByBaseGraph(sourceGid, targetGid, element);
+    this.newLinkByBaseGraph(sourceId, targetId, element);
     return this;
 }
 
-GridGraph.prototype.newLinkFromExistValue = function(sourceGid, targetGid, value) {
+GridGraph.prototype.newLinkFromExistValue = function(sourceId, targetId, value) {
     const element = new this._.linkType(this.layer("links"));
-    element.onEnter(Enter.fromExistValue(this, value, "links"));
-    this.newLinkByBaseGraph(sourceGid, targetGid, element);
+    element.onEnter(Enter.fromExistValue(this, value));
+    this.newLinkByBaseGraph(sourceId, targetId, element);
     return this;
 }
 
-GridGraph.prototype.newLinkFromExistElement = function(sourceGid, targetGid, value) {
+GridGraph.prototype.newLinkFromExistElement = function(sourceId, targetId, value) {
     const element = value;
     element.onEnter(Enter.fromExist(this, "links"));
-    this.newLinkByBaseGraph(sourceGid, targetGid, element);
+    this.newLinkByBaseGraph(sourceId, targetId, element);
     return this;
 }
 
 function update() {
-    if (this.member.hasChanged("m") ||
+    const locationChanged = 
+        this.member.hasChanged("m") ||
         this.member.hasChanged("n") || 
+        this.member.hasChanged("x") ||
+        this.member.hasChanged("y") ||
         this.member.hasChanged("width") ||
-        this.member.hasChanged("height") ||
-        this.member.hasChanged("nodes")) {
+        this.member.hasChanged("height");
+    if (locationChanged || this.member.hasChanged("nodes")) {
         const sidToPos = this._.sidToPos;
-        const x = this.x(), mx = this.mx(), W = (mx - x) / this.member.getAndFlush("m");
-        const y = this.y(), my = this.my(), H = (my - y) / this.member.getAndFlush("n");
+        const x = this.x(), mx = this.mx(), W = (mx - x) / this.m();
+        const y = this.y(), my = this.my(), H = (my - y) / this.n();
         const convertX = node => sidToPos[node.id].y * W + x;
         const convertY = node => sidToPos[node.id].x * H + y;
         const nodes = this.member.getAndFlush("nodes");
@@ -105,10 +108,8 @@ function update() {
                 node.cy(convertY(node));
             });
         }
-        this.member.flush("width");
-        this.member.flush("height");
     }
-    if (this.member.hasChanged("links")) {
+    if (locationChanged || this.member.hasChanged("links")) {
         const links = this.member.getAndFlush("links");
         for (let link of links) {
             const sourceId = this.sourceId(link);
@@ -122,4 +123,10 @@ function update() {
             });
         }
     }
+    this.member.flush("m");
+    this.member.flush("n");
+    this.member.flush("x");
+    this.member.flush("y");
+    this.member.flush("width");
+    this.member.flush("height");
 }

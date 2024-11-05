@@ -1,6 +1,7 @@
-import { trim }             from "@/Utility/Trim";
-import { SelectValidValue } from "@/Utility/Cast";
+import { trim } from "@/Utility/Trim";
+import { Cast } from "@/Utility/Cast";
 
+import { Enter }     from "@/Node/SDNode/Enter";
 import { BaseGraph } from "@/Node/Graph/BaseGraph";
 import { GridGraph } from "@/Node/Graph/GridGraph";
 
@@ -27,13 +28,8 @@ TinyGraph.prototype.updateList = [
 
 TinyGraph.prototype.newNode = function(id, value) {
     const element = new this._.nodeType(this.layer("nodes"));
-    element.value(SelectValidValue(value, id));
-    element._.enter = (element, move) => {
-        element.opacity(0);
-        move();
-        element.update();
-        element.startAnimate(this).opacity(1);
-    };
+    element.value(Cast.castToSDNode(element, value, id));
+    element.onEnter(Enter.ordinary(this));
     this.newNodeByBaseGraph(id, element);
     return this;
 }
@@ -49,8 +45,8 @@ function update_update() {
     if (nodes.length === 6) update6.call(this, nodes);
     if (nodes.length >= 7) throw new Error("Cannot Process Graph With count(Nodes) >= 7");
     for (let link of links) {
-        const sourceId = link.fromNodeId;
-        const targetId = link.Cast.castToSDNodeId;
+        const sourceId = this.sourceId(link);
+        const targetId = this.targetId(link);
         const source = this.findNodeById(sourceId);
         const target = this.findNodeById(targetId);
         this.tryMove(link, () => {

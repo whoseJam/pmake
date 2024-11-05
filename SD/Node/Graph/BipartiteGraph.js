@@ -1,18 +1,19 @@
-import { trim }             from "@/Utility/Trim";
-import { Cast }             from "@/Utility/Cast";
-import { SelectValidValue } from "@/Utility/Cast";
+import { trim } from "@/Utility/Trim";
+import { Cast } from "@/Utility/Cast";
 
+import { Enter }     from "@/Node/SDNode/Enter";
 import { BaseGraph } from "@/Node/Graph/BaseGraph";
+import { GridGraph } from "@/Node/Graph/GridGraph";
 
 export function BipartiteGraph(parent) {
     BaseGraph.call(this, parent);
+
+    this.type("BipartiteGraph");
 
     this.member.new("r", 20);
     this.member.new("rank", 0);
     this.member.new("width", 600);
     this.member.new("height", 250);
-
-    return this;
 }
 
 BipartiteGraph.prototype = {
@@ -25,34 +26,18 @@ BipartiteGraph.prototype.updateList = [
 ];
 
 BipartiteGraph.prototype.newNode = function(id, value, setNo) {
-    if (arguments.length === 2) {
-        return this.newNode(id, undefined, value);
-    }
+    if (arguments.length === 2) return this.newNode(id, undefined, value);
     const element = new this._.nodeType(this.layer("nodes"));
-    element.value(SelectValidValue(value, id));
+    element.value(Cast.castToSDNode(element, value, id));
+    element.onEnter(Enter.ordinary(this));
     element.setNo = setNo;
-    element._.enter = (element, move) => {
-        element.opacity(0);
-        move();
-        element.update();
-        element.startAnimate(this).opacity(1);
-    };
     this.newNodeByBaseGraph(id, element);
     return this;
 }
 
-BipartiteGraph.prototype.newLink = function(x, y, value) {
-    const element = new this._.linkType(this.layer("links"));
-    element.value(value);
-    element._.enter = (element, move) => {
-        element.opacity(0);
-        move();
-        element.update();
-        element.startAnimate(this).opacity(1);
-    };
-    this.newLinkByBaseGraph(x, y, element);
-    return this;
-}
+BipartiteGraph.prototype.newLink                 = GridGraph.prototype.newLink;
+BipartiteGraph.prototype.newLinkFromExistValue   = GridGraph.prototype.newLinkFromExistValue;
+BipartiteGraph.prototype.newLinkFromExistElement = GridGraph.prototype.newLinkFromExistElement;
 
 function update() {
     const nodes = this.member.get("nodes");

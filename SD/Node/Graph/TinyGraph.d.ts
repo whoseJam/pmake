@@ -1,7 +1,6 @@
-import { SDNode }    from "SD/Node/SDNode";
-import { D3Layer }   from "SD/Node/SDNode/D3Layer";
-import { BaseGraph } from "SD/Node/Graph/BaseGraph";
+import { SDNode }    from "@/Node/SDNode";
+import { BaseGraph } from "@/Node/Graph/BaseGraph";
 
 export class TinyGraph extends BaseGraph {
-    constructor(parent: SDNode|D3Layer);
+    constructor(parent: SDNode);
 }

@@ -1,5 +1,5 @@
-import { SDNode }    from "SD/Node/SDNode";
-import { BaseGraph } from "SD/Node/Graph/BaseGraph";
+import { SDNode }    from "@/Node/SDNode";
+import { BaseGraph } from "@/Node/Graph/BaseGraph";
 
 export class GridGraph extends BaseGraph {
     constructor(parent: SDNode);

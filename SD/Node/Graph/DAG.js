@@ -1,7 +1,9 @@
-import { trim }             from "@/Utility/Trim";
-import { mapTo }            from "@/Math/Math";
-import { SelectValidValue } from "@/Utility/Cast";
+import { trim } from "@/Utility/Trim";
+import { Cast } from "@/Utility/Cast";
 
+import { mapTo } from "@/Math/Math";
+
+import { Enter }     from "@/Node/SDNode/Enter";
 import { BaseGraph } from "@/Node/Graph/BaseGraph";
 
 import { graphlib as DAGLib }  from "dagre";
@@ -42,35 +44,21 @@ DAG.prototype.updateList = [
 
 DAG.prototype.newNode = function(id, value) {
     const element = new this._.nodeType(this.layer("nodes"));
-    element.value(SelectValidValue(value, id));
-    element._.enter = (element, move) => {
-        element.opacity(0);
-        move();
-        element.update();
-        element.startAnimate(this).opacity(1);
-    };
+    element.value(Cast.castToSDNode(element, value, id));
+    element.onEnter(Enter.ordinary(this));
     const graph = this.member.get("graph");
-    graph.setNode(id, {
-        label: id,
-        width: this.member.get("r") * 2,
-        height: this.member.get("r") * 2
-    });
+    graph.setNode(id, {});
     this.newNodeByBaseGraph(id, element);
     return this;
 }
 
-DAG.prototype.newLink = function(x, y, value) {
+DAG.prototype.newLink = function(sourceId, targetId, value) {
     const element = new this._.linkType(this.layer("links"));
     element.value(value);
-    element._.enter = (element, move) => {
-        element.opacity(0);
-        move();
-        element.update();
-        element.startAnimate(this).opacity(1);
-    };
+    element.onEnter(Enter.ordinary(this));
     const graph = this.member.get("graph");
-    graph.setEdge(x, y);
-    this.newLinkByBaseGraph(x, y, element);
+    graph.setEdge(sourceId, targetId);
+    this.newLinkByBaseGraph(sourceId, targetId, element);
     return this;
 }
 

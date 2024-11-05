@@ -1,6 +1,9 @@
 import { Line }   from "@/Node/Nake/Line";
 import { SDNode } from "@/Node/SDNode";
 import { Vertex } from "@/Node/Element/Vertex";
+import { ErrorLauncher } from "@/Utility/ErrorLauncher";
+import { BaseTree } from "../Tree/BaseTree";
+import { Exit } from "../SDNode/Exit";
 
 export function BaseGraph(parent) {
     SDNode.call(this, parent);
@@ -33,153 +36,95 @@ BaseGraph.prototype.y      = SDNode.OrdinaryGSet("y", "setByEqual");
 BaseGraph.prototype.width  = SDNode.OrdinaryGSet("width", "setByEqual");
 BaseGraph.prototype.height = SDNode.OrdinaryGSet("height", "setByEqual");
 
-BaseGraph.prototype.element = function(arg0, arg1) {
-    if (arguments.length === 1)
-        return this.findNodeById(arg0);
-    else if (arguments.length === 2)
-        return this.findLinkById(arg0, arg1);
-    console.error(arguments);
-    throw new Error("Invalid Arguments");
-}
-
-BaseGraph.prototype.value = function(arg0, arg1, arg2) {
-    if (arguments.length === 1) 
-        return this.findNodeById(arg0).value();
-    else if (arguments.length === 2) {
-        const link = this.findLinkById(arg0, arg1);
-        if (link) return link.value();
-        this.findNodeById(arg0).value(arg1);
-        return this;
-    } else if (arguments.length === 3) {
-        this.findLinkById(arg0, arg1).value(arg2);
-        return this;
-    }
-    console.error(arguments);
-    throw new Error("Invalid Arguments");
-}
+BaseGraph.prototype.color   = BaseTree.prototype.color;
+BaseGraph.prototype.value   = BaseTree.prototype.value;
+BaseGraph.prototype.element = BaseTree.prototype.element;
+BaseGraph.prototype.opacity = BaseTree.prototype.opacity;
 
 BaseGraph.prototype.text = function() {
     return this.value.apply(this, arguments).text();
 }
 
-BaseGraph.prototype.opacity = function(arg0, arg1, arg2) {
-    if (arguments.length === 0) {
-        return SDNode.prototype.opacity.call(this);
-    } else if (arguments.length === 1) {
-        let v = arguments[0];
-        if (0 <= v && v <= 1) return SDNode.prototype.opacity.call(this, v);
-        else return this.findNodeById(v).opacity();
-    } else if (arguments.length === 2) {
-        if (0 <= arg1 && arg1 <= 1) {
-            this.findNodeById(arg0).opacity(arg1);
-            return this;
-        } else return this.findLinkById(arg0, arg1).opacity();
-    } else if (arguments.length === 3) {
-        this.findLinkById(arg0, arg1).opacity(arg2);
-        return this;
-    }
-    console.error(arguments);
-    throw new Error("Invalid Arguments");
-}
-
-BaseGraph.prototype.color = function(arg0, arg1, arg2) {
-    if (arguments.length === 1) {
-        if (typeof(arg0) === "string" || "main" in arg0) {
-            this.member.get("nodes").forEach(node => node.color(arg1));
-            return this;
-        }
-        return this.findNodeById(arg0).color();
-    } else if (arguments.length === 2) {
-        if (typeof(arg1) === "string" || "main" in arg1) {
-            this.findNodeById(arg0).color(arg1);
-            return this;
-        } else return this.findLinkById(arg0, arg1).color();
-    } else if (arguments.length === 3) {
-        this.findLinkById(arg0, arg1).color(arg2);
-        return this;
-    }
-    console.error(arguments);
-    throw new Error("Invalid Arguments"); 
-}
-
-BaseGraph.prototype.findNodeById = function(gid) {
-    gid = String(gid);
+BaseGraph.prototype.findNodeById = function(id) {
+    const graphId = String(id);
     const gidToNodes = this._.gidToNodes;
-    const node = gidToNodes[gid];
-    if (node === undefined) return node;
-    return gidToNodes[gid].node;
+    const node = gidToNodes[graphId];
+    return node?.node;
 }
 
-BaseGraph.prototype.findLinkById = function(sourceGid, targetGid) {
-    sourceGid = String(sourceGid);
-    targetGid = String(targetGid);
+BaseGraph.prototype.findLinkById = function(sourceId, targetId) {
+    const sourceGraphId = String(sourceId);
+    const targetGraphId = String(targetId);
     const links = this.member.get("links");
     const sidToLinks = this._.sidToLinks;
     for (let i = 0; i < links.length; i++) {
-        if (sidToLinks[links[i].id].source === sourceGid &&
-            sidToLinks[links[i].id].target === targetGid) {
+        if (sidToLinks[links[i].id].source === sourceGraphId &&
+            sidToLinks[links[i].id].target === targetGraphId) {
             return sidToLinks[links[i].id].link;
         }
     }
     return undefined;
 }
 
-BaseGraph.prototype.inLinks = function(gid, mode = "direct") {
-    gid = String(gid);
+BaseGraph.prototype.inLinks = function(id, mode = "direct") {
+    const graphId = String(id);
     const links = this.member.get("links");
     const sidToLinks = this._.sidToLinks;
     const filter = (mode === "direct") ? 
-        link => sidToLinks[link.id].target === gid :
-        link => sidToLinks[link.id].target === gid || sidToLinks[link.id].source === gid;
+        link => sidToLinks[link.id].target === graphId :
+        link => sidToLinks[link.id].target === graphId || sidToLinks[link.id].source === graphId;
     return links.filter(filter);
 }
 
-BaseGraph.prototype.outLinks = function(gid, mode = "direct") {
-    gid = String(gid);
+BaseGraph.prototype.outLinks = function(id, mode = "direct") {
+    const graphId = String(id);
     const links = this.member.get("links");
     const sidToLinks = this._.sidToLinks;
     const filter = (mode === "direct") ? 
-        link => sidToLinks[link.id].source === gid :
-        link => sidToLinks[link.id].target === gid || sidToLinks[link.id].source === gid;
+        link => sidToLinks[link.id].source === graphId :
+        link => sidToLinks[link.id].target === graphId || sidToLinks[link.id].source === graphId;
     return links.filter(filter);
 }
 
-BaseGraph.prototype.inNodes = function(gid, mode = "direct") {
-    gid = String(gid);
-    return [...new Set(this.inLinks(gid, mode).map(link => this.toNode(link, gid)))];
+BaseGraph.prototype.inNodes = function(id, mode = "direct") {
+    const graphId = String(id);
+    return [...new Set(this.inLinks(graphId, mode).map(link => this.toNode(link, graphId)))];
 }
 
-BaseGraph.prototype.outNodes = function(gid, mode = "direct") {
-    gid = String(gid);
-    return [...new Set(this.outLinks(gid, mode).map(link => this.toNode(link, gid)))];
+BaseGraph.prototype.outNodes = function(id, mode = "direct") {
+    const graphId = String(id);
+    return [...new Set(this.outLinks(graphId, mode).map(link => this.toNode(link, graphId)))];
 }
 
-BaseGraph.prototype.inNodesId = function(gid, mode = "direct") {
-    return this.inNodes(gid, mode).map(node => this.nodeId(node));
+BaseGraph.prototype.inNodesId = function(id, mode = "direct") {
+    return this.inNodes(id, mode).map(node => this.nodeId(node));
 }
 
-BaseGraph.prototype.outNodesId = function(gid, mode = "direct") {
-    return this.outNodes(gid, mode).map(node => this.nodeId(node));
+BaseGraph.prototype.outNodesId = function(id, mode = "direct") {
+    return this.outNodes(id, mode).map(node => this.nodeId(node));
 }
 
-BaseGraph.prototype.newNodeByBaseGraph = function(gid, element) {
+BaseGraph.prototype.newNodeByBaseGraph = function(id, element) {
+    const graphId = String(id);
     const sidToNodes = this._.sidToNodes;
     const gidToNodes = this._.gidToNodes;
-    sidToNodes[element.id] = { node: element, key: String(gid) };
-    gidToNodes[gid] = { node: element, key: element.id };
+    sidToNodes[element.id] = { node: element, key: graphId };
+    gidToNodes[graphId] = { node: element, key: element.id };
     this.member.get("nodes").push(element);
     this.member.dirty("nodes");
-    this._.children.push(element);
+    this.childAs(element);
     this.tryUpdate();
     return this;
 }
 
-BaseGraph.prototype.newLinkByBaseGraph = function(sourceGid, targetGid, element) {
+BaseGraph.prototype.newLinkByBaseGraph = function(sourceId, targetId, element) {
+    const sourceGraphId = String(sourceId);
+    const targetGraphId = String(targetId);
     const sidToLinks = this._.sidToLinks;
-    sidToLinks[element.id] = { link: element, source: String(sourceGid), target: String(targetGid) };
+    sidToLinks[element.id] = { link: element, source: sourceGraphId, target: targetGraphId };
     this.member.get("links").push(element);
     this.member.dirty("links");
-    this._.children.push(element);
+    this.childAs(element);
     this.tryUpdate();
     return this;
 }
@@ -196,8 +141,7 @@ BaseGraph.prototype.cut = function(x, y) {
     let link = this.findLinkById(x, y);
     let idx = links.indexOf(link);
     links.splice(idx, 1);
-    this._.children.erase(link);
-    link.opacity(0).remove();
+    Exit.ordinary(this, link);
     this.tryUpdate();
     return this;
 }
@@ -230,13 +174,14 @@ BaseGraph.prototype.nodesId = function() {
     return [...new Set(nodesId)];
 }
 
-BaseGraph.prototype.toNode = function(link, sourceGid) {
+BaseGraph.prototype.toNode = function(link, sourceId) {
+    const sourceGraphId = String(sourceId);
     const sidToLinks = this._.sidToLinks;
     const gidToNodes = this._.gidToNodes;
     link = sidToLinks[link.id];
-    return gidToNodes[(link.source === String(sourceGid)) ? link.target : link.source].node;
+    return gidToNodes[(link.source === sourceGraphId) ? link.target : link.source].node;
 }
 
-BaseGraph.prototype.toNodeId = function(link, sourceGid) {
-    return this.nodeId(this.toNode(link, sourceGid))
+BaseGraph.prototype.toNodeId = function(link, sourceId) {
+    return this.nodeId(this.toNode(link, sourceId))
 }
