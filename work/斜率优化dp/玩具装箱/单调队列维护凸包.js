@@ -92,7 +92,7 @@ function CreateLink(a, b) {
 function CreateNode(x) {
     const item = data[x];
     item.circle = new sd.Circle(coord).r(2).color(C.black).center(coord.at(item.x, item.y)).strokeWidth(0).childAs(
-        new sd.Mathjax(coord, `(v_{${x+1}},f_{${x+1}})`).fontSize(20),
+        new sd.Mathjax(coord, `(x_{${x+1}},y_{${x+1}})`).fontSize(20),
         R.Aside("tc", 2)
     ).opacity(0).startAnimate().opacity(1).endAnimate();
 }

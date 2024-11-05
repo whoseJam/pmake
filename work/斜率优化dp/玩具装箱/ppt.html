@@ -16,7 +16,7 @@
             f_i=\mathop{min}_{j\lt i}\{f_j+(s_i-s_j-1-L)^2\}
             $$
         </p>
-        <p>其中 $S_i$ 为 $\{C_i+1\}$ 的前缀和，即 $S_i=\sum_{j\le i}(C_j+1)$</p>
+        <p>其中 $s_i$ 为 $\{C_i+1\}$ 的前缀和，即 $s_i=\sum_{j\le i}(C_j+1)$</p>
         <iframe data-animation="./状态转移.js"
             style="width: 1000px; height: 280px;"></iframe>
         <p class="fragment">设 $T=L+1$，则：
@@ -29,9 +29,9 @@
         <h2>玩具装箱</h2>
         <p>首先把 $f_i$ 的状态转移展开，并且分离出：</p>
         <ul>
-            <li class="fragment">仅含 $i$ 的项</li>
-            <li class="fragment">仅含 $j$ 的项</li>
-            <li class="fragment">$i$ 和 $j$ 的交差项</li>
+            <li class="fragment">仅和 $i$ 有关的项</li>
+            <li class="fragment">仅和 $j$ 有关的项</li>
+            <li class="fragment">$i$ 和 $j$ 的交叉项</li>
         </ul>
         <p class="fragment math-fragment">
             $$
@@ -52,7 +52,7 @@
             \end{cases}
             $$
         </p>
-        <p class="fragment">第 $i$ 个点对应逼近线的斜率为 $2s_i$，最小化截距即可</p>
+        <p class="fragment">第 $i$ 个计算点对应逼近线的斜率为 $2s_i$，最小化截距即可</p>
     </section>
     <section>
         <h2>玩具装箱</h2>
