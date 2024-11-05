@@ -1,6 +1,7 @@
 import { BaseCurve } from "@/Node/Curve/BaseCurve";
 
-import { Vector } from "@/Math/Vector";
+import { Vector as V } from "@/Math/Vector";
+
 import { PathPen } from "@/Utility/PathPen";
 
 export function VHBezier(parent) {
@@ -23,11 +24,10 @@ function update() {
         this.member.hasChanged("y1") ||
         this.member.hasChanged("x2") ||
         this.member.hasChanged("y2")) {
-        const vector = Vector.getIns();
         const v1 = [this.x1(), this.y1()];
         const v2 = [this.x2(), this.y2()];
-        let d = vector.sub(v2, v1), p1, p2, pm;
-        pm = vector.add(v1, vector.numberMul(d, 0.5));
+        let d = V.sub(v2, v1), p1, p2, pm;
+        pm = V.add(v1, V.numberMul(d, 0.5));
         if (d[0] < d[1]) {
             p1 = [v1[0], v1[1] + d[1] * 0.5];
             p2 = [v2[0], v2[1] - d[1] * 0.5];
@@ -42,7 +42,4 @@ function update() {
         this.member.flush("x2");
         this.member.flush("y2");
     }
-    // return "M " + v1[0] + ", " + v1[1]
-    //     + " Q " + p1[0] + ", " + p1[1] + ", " + pm[0] + ", " + pm[1]
-    //     + " Q " + p2[0] + ", " + p2[1] + ", " + v2[0] + ", " + v2[1];
 }

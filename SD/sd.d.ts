@@ -50,12 +50,12 @@ export { GridGraph }      from "./Node/Graph/GridGraph";
 export { TinyGraph }      from "./Node/Graph/TinyGraph";
 export { BipartiteGraph } from "./Node/Graph/BipartiteGraph";
 
-export { Curve }           from "./Node/Curve/Curve";
-export { Bezier }          from "./Node/Curve/Bezier";
-export { VHBezier }        from "./Node/Curve/VHBezier";
-export { BraceCurve }      from "./Node/Curve/BraceCurve";
-export { CircleCurve }     from "./Node/Curve/CircleCurve";
-export { FixedPointCurve } from "./Node/Curve/FixedPointCurve";
+export { Curve }       from "./Node/Curve/Curve";
+export { Bezier }      from "./Node/Curve/Bezier";
+export { ZZLine }      from "./Node/Curve/ZZLine";
+export { VHBezier }    from "./Node/Curve/VHBezier";
+export { BraceCurve }  from "./Node/Curve/BraceCurve";
+export { CircleCurve } from "./Node/Curve/CircleCurve";
 
 export { Mathjax } from "./Node/Text/Mathjax";
 

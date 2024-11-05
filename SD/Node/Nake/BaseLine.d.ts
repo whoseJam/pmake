@@ -1,5 +1,5 @@
-import { SDNode }   from "SD/Node/SDNode";
-import { BaseNake } from "SD/Node/BaseNake";
+import { SDNode }   from "@/Node/SDNode";
+import { BaseNake } from "@/Node/Nake/BaseNake";
 
 export class BaseLine extends BaseNake {
     constructor(parent: SDNode, tag: string);

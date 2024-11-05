@@ -1,5 +1,5 @@
 export class Vector {
-    static getIns(): Vector;
+    static getIns(): typeof Vector;
 
     /**
      * 将两个向量相加
@@ -7,7 +7,7 @@ export class Vector {
      * @param b 第二个向量
      * @returns 答案向量
      */
-    add(a: [number, number], b: [number, number]): [number, number];
+    static add(a: [number, number], b: [number, number]): [number, number];
 
     /**
      * 将两个向量相减
@@ -15,7 +15,7 @@ export class Vector {
      * @param b 
      * @returns 
      */
-    sub(a: [number, number], b: [number, number]): [number, number];
+    static sub(a: [number, number], b: [number, number]): [number, number];
 
     /**
      * 将两个向量做点积
@@ -23,7 +23,7 @@ export class Vector {
      * @param b 
      * @returns 
      */
-    dotMul(a: [number, number], b: [number, number]): number;
+    static dotMul(a: [number, number], b: [number, number]): number;
 
     /**
      * 将向量做数乘
@@ -31,21 +31,21 @@ export class Vector {
      * @param b 
      * @returns 
      */
-    numberMul(a: [number, number], b: number): [number, number];
+    static numberMul(a: [number, number], b: number): [number, number];
 
     /**
      * 求向量的长度
      * @param a 
      * @returns 
      */
-    length(a: [number, number]): number;
+    static length(a: [number, number]): number;
 
     /**
      * 将向量单位化
      * @param a 
      * @returns 
      */
-    identity(a: [number, number]): [number, number];
+    static identity(a: [number, number]): [number, number];
 
     /**
      * 把向量当作复数做乘法
@@ -53,7 +53,7 @@ export class Vector {
      * @param b 
      * @returns 
      */
-    complexMul(a: [number, number], b: [number, number]): [number, number];
+    static complexMul(a: [number, number], b: [number, number]): [number, number];
 
     /**
      * 指定辐角和半径，构造一个复数，用向量表示
@@ -61,7 +61,7 @@ export class Vector {
      * @param arc 以弧度制给出的角度
      * @returns 
      */
-    makeComplex(r: number, arc: number): [number, number];
+    static makeComplex(r: number, arc: number): [number, number];
 
     /**
      * 将向量旋转指定角度
@@ -69,14 +69,14 @@ export class Vector {
      * @param arc 以弧度制给出的角度
      * @returns 
      */
-    rotate(a: [number, number], arc: number): [number, number];
+    static rotate(a: [number, number], arc: number): [number, number];
 
     /**
      * 将向量单位化
      * @param a 
      * @returns 
      */
-    norm(a: [number, number]): [number, number];
+    static norm(a: [number, number]): [number, number];
 
     /**
      * 将向量做叉积
@@ -84,7 +84,7 @@ export class Vector {
      * @param b 
      * @returns 
      */
-    cross(a: [number, number], b: [number, number]): number;
+    static cross(a: [number, number], b: [number, number]): number;
 
     /**
      * 判断b是否在a的左边
@@ -92,7 +92,7 @@ export class Vector {
      * @param b 
      * @returns 
      */
-    onLeft(a: [number, number], b: [number, number]): boolean;
+    static onLeft(a: [number, number], b: [number, number]): boolean;
 
     /**
      * 判断b是否在a的右边
@@ -100,7 +100,13 @@ export class Vector {
      * @param b 
      * @returns 
      */
-    onRight(a: [number, number], b: [number, number]): boolean;
+    static onRight(a: [number, number], b: [number, number]): boolean;
+
+    static cos(a: [number, number]): number;
+
+    static sin(a: [number, number]): number;
+
+    static tan(a: [number, number]): number;
 }
 
-export function vec(): Vector;
+export function vec(): typeof Vector;

@@ -1,7 +1,6 @@
-import { Path }    from "SD/Node/Nake/Path";
-import { SDNode }  from "SD/Node/SDNode";
-import { D3Layer } from "SD/Node/SDNode/D3Layer";
+import { Path }   from "@/Node/Nake/Path";
+import { SDNode } from "@/Node/SDNode";
 
 export class BaseCurve extends Path {
-    constructor(parent: SDNode|D3Layer);
+    constructor(parent: SDNode);
 }

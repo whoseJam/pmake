@@ -4,39 +4,38 @@ function ddcmp(x) {
 }
 
 export class Vector {
-    static instance = new Vector();
 
     static getIns() {
-        return this.instance;
+        return Vector;
     }
 
-    add(a, b) {
+    static add(a, b) {
         return [
             a[0] + b[0],
             a[1] + b[1]
         ];
     }
 
-    sub(a, b) {
+    static sub(a, b) {
         return [
             a[0] - b[0],
             a[1] - b[1]
         ];
     }
 
-    dotMul(a, b) {
+    static dotMul(a, b) {
         return a[0] * b[0] + a[1] * b[1];
     }
 
-    numberMul(a, b) {
+    static numberMul(a, b) {
         return [a[0] * b, a[1] * b];
     }
 
-    length(a) {
+    static length(a) {
         return Math.sqrt(a[0] * a[0] + a[1] * a[1]);
     }
 
-    identity(a) {
+    static identity(a) {
         const length = this.length(a);
         if (ddcmp(length) > 0) {
             return [
@@ -47,50 +46,50 @@ export class Vector {
         return [0, 0];
     }
 
-    complexMul(a, b) {
+    static complexMul(a, b) {
         return [
             a[0] * b[0] - a[1] * b[1],
             a[0] * b[1] - a[1] * b[0]
         ];
     }
 
-    makeComplex(r, arc) {
+    static makeComplex(r, arc) {
         return [
             r * Math.cos(arc),
             r * Math.sin(arc)
         ];
     }
 
-    rotate(a, arc) {
+    static rotate(a, arc) {
         const direction = this.makeComplex(1, arc);
         return this.complexMul(a, direction);
     }
 
-    norm(a) {
+    static norm(a) {
         return this.identity(a);
     }
 
-    cross(a, b) {
+    static cross(a, b) {
         return a[0] * b[1] - a[1] * b[0];
     }
 
-    onLeft(a, b) {
+    static onLeft(a, b) {
         return this.cross(a, b) >= 0;
     }
 
-    onRight(a, b) {
+    static onRight(a, b) {
         return this.cross(a, b) <= 0;
     }
 
-    cos(a) {
+    static cos(a) {
         return a[0] / this.length(a);
     }
 
-    sin(a) {
+    static sin(a) {
         return a[1] / this.length(a);
     }
 
-    tan(a) {
+    static tan(a) {
         return a[1] / a[0];
     }
 }
