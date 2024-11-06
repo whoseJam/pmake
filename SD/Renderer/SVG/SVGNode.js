@@ -76,7 +76,14 @@ export class SVGNode {
             undefined, Snap(this.layer.nake()),
             AppearOrRemove(Snap(this.nake())),
             this, "appear"
-        )
+        );
+        new Action(
+            this.parent.delay() + this.parent.duration(),
+            this.parent.delay() + this.parent.duration(),
+            0, 1,
+            () => {},
+            this.parent, "opacity"
+        );
     }
 
     remove() {

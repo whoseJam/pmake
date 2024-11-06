@@ -95,7 +95,6 @@ async function CDQ(l, r) {
         const elemC = tables[data[i].id].element(2);
         elemC.startAnimate().strokeWidth(3).stroke(C.red).endAnimate();
         focus.startAnimate().focus(1, data[i].c).endAnimate();
-        console.log(data[i]);
         await sd.pause();
         elemC.startAnimate().strokeWidth(1).stroke(C.black).endAnimate();
         focus.startAnimate().focus(null).endAnimate();

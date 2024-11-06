@@ -22,8 +22,5 @@ BaseCurve.prototype.x2 = SDNode.OrdinaryGSet("x2", "setByEqual");
 BaseCurve.prototype.y2 = SDNode.OrdinaryGSet("y2", "setByEqual");
 
 BaseCurve.prototype.updateList = [
-    function() {
-        console.log("curve start update");
-    },
     ...Path.prototype.updateList
 ]

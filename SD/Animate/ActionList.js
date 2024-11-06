@@ -219,16 +219,6 @@ ActionList.prototype.updateWindowSize = function() {
                 window.SVG_MINY = Math.min(window.SVG_MINY, y);
             }
         }
-        if (!action.hidden() && action.channel === "appear") {
-            const owner = action.owner;
-            if (owner.hasShape && owner.hasShape()) {
-                const parent = owner.parent;
-                window.SVG_MAXX = Math.max(window.SVG_MAXX, parent.mx());
-                window.SVG_MINX = Math.min(window.SVG_MINX, parent.x());
-                window.SVG_MAXY = Math.max(window.SVG_MAXY, parent.my());
-                window.SVG_MINY = Math.min(window.SVG_MINY, parent.y());
-            }
-        }
     }
 }
 
