@@ -43,7 +43,7 @@ async function Query(x) {
             if (i === 0) pI.startAnimate().cx(0).endAnimate();
             else pI.startAnimate().moveTo(i).endAnimate();
             l.target(pI.pos("cx", "cy", +5));
-            l.startAnimate().pointStoT().value(new sd.Text(svg, `L(${last})`).fontSize(10), R.PointAtPathByRate(0.5, "cx", "y", 0, 5)).endAnimate().arrow();
+            l.startAnimate().pointStoT().value(new sd.Text(svg, `L(${last})`).fontSize(10), R.pointAtPathByRate(0.5, "cx", "y", 0, 5)).endAnimate().arrow();
             allLinks.push(l);
             if (i === 0) break;
             last -= lowbit(last);

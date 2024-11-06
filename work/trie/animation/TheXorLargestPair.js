@@ -38,7 +38,7 @@ function insert(str) {
             if (c === "0") tree.leftChild(u, ch[u][c], c);
             else tree.rightChild(u, ch[u][c], c);
             tree.element(u, ch[u][c]).arrow().rule(
-                R.PointAtPathByRate(0.5, "x", "cy")
+                R.pointAtPathByRate(0.5, "x", "cy")
             );
         }
         u = ch[u][c];

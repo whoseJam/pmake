@@ -54,7 +54,7 @@ function getBinaryExpression(a) {
 
 function makeMathjaxPointer() {
     const pointer = sd.Pointer(arr, " ", "t", 10, 30);
-    pointer.childAs("math", new sd.Mathjax(pointer, "a^1"), R.Aside("bc"));
+    pointer.childAs("math", new sd.Mathjax(pointer, "a^1"), R.aside("bc"));
     pointer.changeMath = function(math) {
         this.child("math").math(math);
         return this;

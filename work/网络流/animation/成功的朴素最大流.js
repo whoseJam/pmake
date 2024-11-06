@@ -31,7 +31,7 @@ function init() {
     links.forEach(lk => {
         link(lk.from, lk.to);
         const e = graph.element(lk.from, lk.to).arrow();
-        e.value(new sd.Text(e, lk.cap).fontSize(20), R.PointAtPathByRate(0.5, lk.xloc, lk.yloc));
+        e.value(new sd.Text(e, lk.cap).fontSize(20), R.pointAtPathByRate(0.5, lk.xloc, lk.yloc));
     });
 }
 

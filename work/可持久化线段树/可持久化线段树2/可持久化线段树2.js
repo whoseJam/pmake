@@ -13,8 +13,8 @@ function init() {
     data.forEach((item, idx) => {
         arr.push(item);
         const e = arr.lastElement();
-        e.childAs("segment", makeSegmentTree(), R.Aside("tc"));
-        e.childAs("math", new sd.Mathjax(svg, `insert(a_${idx})`).width(40), R.Aside("bc"));
+        e.childAs("segment", makeSegmentTree(), R.aside("tc"));
+        e.childAs("math", new sd.Mathjax(svg, `insert(a_${idx})`).width(40), R.aside("bc"));
     })
 }
 

@@ -13,7 +13,7 @@ function init() {
         graph.newLink(u, v);
         graph.element(u, v)
             .arrow().stroke(col)
-            .value(value, R.PointAtPathByRate(0.5, xloc, yloc));
+            .value(value, R.pointAtPathByRate(0.5, xloc, yloc));
     }
     graph.at(0, 0.5).newNode("S");
     graph.at(1, 0.5).newNode("T");

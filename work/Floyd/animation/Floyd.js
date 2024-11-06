@@ -16,7 +16,7 @@ export async function floyd(graph) {
     const map = new sd.Grid(graph).n(n).m(n).startN(1).startM(1);
     sd.Index(map, "t");
     sd.Index(map, "l");
-    graph.childAs("map", map, R.Aside("rc", 60));
+    graph.childAs("map", map, R.aside("rc", 60));
     links.forEach((link) => {
         const x = +graph.sourceId(link);
         const y = +graph.targetId(link);

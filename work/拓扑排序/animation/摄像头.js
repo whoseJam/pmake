@@ -38,6 +38,6 @@ async function main() {
 function init() {
     data.forEach((camera, idx) => {
         camera.vertex = new sd.Vertex(arr, `C${idx}`);
-        arr.element(camera.pos).childAs("camera", camera.vertex, R.Aside("bc", 40));
+        arr.element(camera.pos).childAs("camera", camera.vertex, R.aside("bc", 40));
     })
 }

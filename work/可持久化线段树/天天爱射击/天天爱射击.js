@@ -15,8 +15,8 @@ function init() {
         arr.freeze();
         arr.push();
         const e = arr.lastElement();
-        e.childAs("segment", makeSegmentTree(), R.Aside("tc"));
-        e.childAs("math", new sd.Code(svg, `Insert\nBullets\nHit(${i + 1})`).width(40), R.Aside("bc"));
+        e.childAs("segment", makeSegmentTree(), R.aside("tc"));
+        e.childAs("math", new sd.Code(svg, `Insert\nBullets\nHit(${i + 1})`).width(40), R.aside("bc"));
         arr.unfreeze();
     }
 }

@@ -39,7 +39,7 @@ function init() {
     }
     for (let i = 0; i < cols.length; i++) {
         const e = colArray.element(i);
-        e.childAs("col", new sd.Rect(e).width(20).height(20).color(cols[i]), R.Aside("tc"));
+        e.childAs("col", new sd.Rect(e).width(20).height(20).color(cols[i]), R.aside("tc"));
     }
     colArray.cx(tree.cx()).y(tree.my() + 50);
     sumArray.cx(tree.cx()).y(colArray.my() + 30);

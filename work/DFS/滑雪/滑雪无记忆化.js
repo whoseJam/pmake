@@ -26,7 +26,7 @@ function init() {
     for (let i = 1; i <= n; i++) {
         for (let j = 1; j <= m; j++) {
             grid.color(i, j, grad(data[i][j]));
-            grid.element(i, j).value(new sd.Circle(grid).color(C.ORANGE), R.CenterFixAspect(2));
+            grid.element(i, j).value(new sd.Circle(grid).color(C.ORANGE), R.centerFixAspect(2));
             grid.value(i, j).opacity(0);
         }
     }

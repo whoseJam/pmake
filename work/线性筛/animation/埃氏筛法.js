@@ -17,7 +17,7 @@ function init() {
         const e = arr.element(i);
         const stk = new sd.Stack(e);
         stk.elementWidth(20).elementHeight(20);
-        e.childAs("stk", stk, R.Aside("bc"));
+        e.childAs("stk", stk, R.aside("bc"));
     }
 }
 

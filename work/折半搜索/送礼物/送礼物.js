@@ -31,9 +31,9 @@ sd.main(async () => {
     await sd.pause();
 
     const stk1 = new sd.Stack(arr1).elementWidth(80).elementHeight(20);
-    arr1.childAs("stk", stk1, R.Aside("bc", 30));
+    arr1.childAs("stk", stk1, R.aside("bc", 30));
     const stk2 = new sd.Stack(arr2).elementWidth(80).elementHeight(20);
-    arr2.childAs("stk", stk2, R.Aside("bc", 30));
+    arr2.childAs("stk", stk2, R.aside("bc", 30));
 
     arr1.startAnimate(); dfs(arr1, 0, 0); arr1.endAnimate();
     arr2.startAnimate(); dfs(arr2, 0, 0); arr2.endAnimate();

@@ -17,7 +17,7 @@ const data = [
 sd.init(() => {
     function put(nodeId, locator) {
         const varList = new sd.VarList(svg);
-        graph.element(nodeId).childAs("varList", varList, R.Aside(locator));
+        graph.element(nodeId).childAs("varList", varList, R.aside(locator));
         return varList;
     }
     graph.at(0.5, 0).newNode(1); put(1, "lc").put("dis", 0).put("inq", 1);

@@ -7,7 +7,7 @@ const R = sd.rule();
 const arr = new sd.Array(svg).resize(11).start(1);
 
 sd.init(() => {
-    brace(new sd.BraceCurve(svg), arr, 6, 10, false).value(new sd.Mathjax(svg, "第k条线段(l_k,r_k,绿,w_k)"), R.PointAtPathByRate(0.5, "cx", "y"));
+    brace(new sd.BraceCurve(svg), arr, 6, 10, false).value(new sd.Mathjax(svg, "第k条线段(l_k,r_k,绿,w_k)"), R.pointAtPathByRate(0.5, "cx", "y"));
 })
 
 sd.main(async () => {

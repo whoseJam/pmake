@@ -42,7 +42,7 @@ function init() {
                 ch[u][dir] = ++tot;
                 tree.newNode(tot);
                 tree.link(u, tot);
-                tree.element(u, tot).value(word[i], R.PointAtPathByRate(0.5, "x", "cy"));
+                tree.element(u, tot).value(word[i], R.pointAtPathByRate(0.5, "x", "cy"));
             }
             u = ch[u][dir];
         }

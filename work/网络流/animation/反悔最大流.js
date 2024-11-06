@@ -31,7 +31,7 @@ function init() {
     links.forEach(lk => {
         link(lk.from, lk.to);
         const e = graph.element(lk.from, lk.to).arrow();
-        e.value(new sd.Text(e, lk.cap).fontSize(20), R.PointAtPathByRate(0.5, lk.xloc, lk.yloc));
+        e.value(new sd.Text(e, lk.cap).fontSize(20), R.pointAtPathByRate(0.5, lk.xloc, lk.yloc));
         e.xloc = lk.xloc;
         e.yloc = lk.yloc;
     });
@@ -90,7 +90,7 @@ async function flow(graph, edges) {
             const re = graph.element(edge.to, edge.from);
             re.stroke(C.deepSkyBlue);
             re.startAnimate()
-            re.value(bottleNeck, R.PointAtPathByRate(0.5, e.xloc, e.yloc))
+            re.value(bottleNeck, R.pointAtPathByRate(0.5, e.xloc, e.yloc))
             re.pointStoT()
             re.endAnimate();
             re.arrow();

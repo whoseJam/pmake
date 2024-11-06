@@ -12,7 +12,7 @@ function init() {
     dag.elementWidth(80).elementHeight(30);
     function link(a, b, xloc, yloc, xgap, ygap) {
         dag.link(a, b);
-        dag.element(a, b).arrow().value(`${a}能监视${b}`, R.PointAtPathByRate(0.5, xloc, yloc, xgap, ygap));
+        dag.element(a, b).arrow().value(`${a}能监视${b}`, R.pointAtPathByRate(0.5, xloc, yloc, xgap, ygap));
     }
     link("a", "b", "cx", "my", 0, -10);
     link("a", "c", "cx", "my", 0, 0);

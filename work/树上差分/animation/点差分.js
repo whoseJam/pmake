@@ -24,7 +24,7 @@ function init() {
     });
     for (let i = 1; i <= n; i++) {
         const node = tree.element(i);
-        node.childAs("token", new sd.Stack(node).elementWidth(10).elementHeight(10), R.Aside("lt"));
+        node.childAs("token", new sd.Stack(node).elementWidth(10).elementHeight(10), R.aside("lt"));
     }
     tree.cx(600).cy(300);
     tree.unfreeze();

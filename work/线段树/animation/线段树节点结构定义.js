@@ -30,7 +30,7 @@ function initSegmentTree(parent, l, r) {
         const stk = new sd.ValueStack(array).elementHeight(20);
         stk.push(new sd.Text(stk, `l=${l} r=${r}`));
         stk.push(new sd.Text(stk, "mx mn sm"));
-        array.childAs("label", stk, R.Aside("tc"));
+        array.childAs("label", stk, R.aside("tc"));
         array.resize(r - l + 1).start(l);
         return array;
     }

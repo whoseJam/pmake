@@ -23,7 +23,7 @@ sd.init(() => {
             if (data[l] !== cols[i]) continue;
             for (let i = l; i <= r; i++) pair.push(i + 1);
         }
-        pair.childAs("label", new sd.Rect(pair).color(cols[i]).width(20).height(20), R.Aside("lc", 10));
+        pair.childAs("label", new sd.Rect(pair).color(cols[i]).width(20).height(20), R.aside("lc", 10));
         pairArray[cols[i]] = pair;
     }
 })

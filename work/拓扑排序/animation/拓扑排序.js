@@ -22,9 +22,9 @@ export async function toposort(graph, Qgap, callback) {
         node.color(grad(node.ind));
     })
 
-    graph.childAs("Q", Q, R.Aside("bl", Qgap));
+    graph.childAs("Q", Q, R.aside("bl", Qgap));
     sd.Label(Q, "Q队列", "lc");
-    Q.childAs("SEQ", SEQ, R.Aside("bl", 10));
+    Q.childAs("SEQ", SEQ, R.aside("bl", 10));
     sd.Label(SEQ, "拓扑序", "lc");
 
     await sd.pause();

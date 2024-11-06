@@ -11,7 +11,7 @@ sd.init(() => {
     function dfs(lastVertex, l, r, depth, eqcnt, type) {
         const mid = (l + r) >> 1;
         const vertex = new sd.Rect(svg).width((mid - l + 1) * 40).height(10).x(arr.element(l).x()).y(depth * 70 + 60);
-        if (lastVertex) sd.Link(lastVertex, vertex).arrow().value(type, R.PointAtPathByRate(0.5, type === "+a" ? "mx" : "x", "cy"));
+        if (lastVertex) sd.Link(lastVertex, vertex).arrow().value(type, R.pointAtPathByRate(0.5, type === "+a" ? "mx" : "x", "cy"));
         if (l === r) {
             if (eqcnt === 0) eqcnt++;
             else return;

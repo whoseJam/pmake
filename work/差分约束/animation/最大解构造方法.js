@@ -25,7 +25,7 @@ function init() {
         const linkTo = (a, b, v, locx, locy) => {
             graph.newLink(a, b, v);
             graph.value(a, b).fontSize(25);
-            graph.element(a, b).rule(R.PointAtPathByRate(0.5, locx, locy));
+            graph.element(a, b).rule(R.pointAtPathByRate(0.5, locx, locy));
             graph.element(a, b).arrow();
             return graph.element(a, b);
         }
@@ -47,7 +47,7 @@ async function main() {
         for (let i = 1; i <= n; i++) {
             const nodeU = graph.element(i);
             const dis = nodeU.dis;
-            const rule = R.Aside(locator[i], 5);
+            const rule = R.aside(locator[i], 5);
             const text = new sd.Text(nodeU, `dis=${dis}`);
             nodeU.childAs("distance", text, rule).update();
             text.opacity(0).startAnimate().opacity(1).endAnimate();

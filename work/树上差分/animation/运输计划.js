@@ -33,7 +33,7 @@ function makeTree() {
     for (let i = 0; i < edges.length; i++) {
         t.link(edges[i][0], edges[i][1], sd.rand(1, 5));
         let l = t.element(edges[i][0], edges[i][1]);
-        l.child("value").rule = R.PointAtPathByRate(0.5, "x", "cy");
+        l.child("value").rule = R.pointAtPathByRate(0.5, "x", "cy");
     }
     t.update();
     return t;

@@ -1,31 +1,41 @@
-import { Aside } from "./Aside";
-import { Background, CircleBackground } from "./Background";
-import { CenterFixAspect, CenterOnly } from "./Center";
-import { PointAtPathByLength } from "./Path";
-import { PointAtPathByRate } from "./Path";
+import { Aside } from "@/Rule/Aside";
 
-export { Background } from "./Background";
+import { Background }       from "@/Rule/Background";
+import { CircleBackground } from "@/Rule/Background";
 
-export { Center } from "./Center";
-export { CenterOnly } from "./Center";
-export { CenterFixAspect } from "./Center";
-export { TriangleCenterFixAspect } from "./Center";
+import { CenterOnly }              from "@/Rule/Center";
+import { CenterFixAspect }         from "@/Rule/Center";
+import { TriangleCenterFixAspect } from "@/Rule/Center";
 
-export { PointAtPathByRate } from "./Path";
-export { PointAtPathByLength } from "./Path";
+import { PointAtPathByRate }   from "@/Rule/Path";
+import { PointAtPathByLength } from "@/Rule/Path";
 
-const Rule = {
-    PointAtPathByRate: PointAtPathByRate,
-    PointAtPathByLength: PointAtPathByLength,
-    CenterOnly: CenterOnly,
-    CenterFixAspect: CenterFixAspect,
-    Aside: Aside,
-    Background: Background,
-    CircleBackground: CircleBackground
-};
+class Rule {
+    static aside = Aside;
+    static Aside = Aside;
+
+    static background = Background;
+    static Background = Background;
+
+    static circleBackground = CircleBackground;
+    static CircleBackground = CircleBackground;
+
+    static centerOnly = CenterOnly;
+    static CenterOnly = CenterOnly;
+
+    static centerFixAspect = CenterFixAspect;
+    static CenterFixAspect = CenterFixAspect;
+
+    static triangleCenterFixAspect = TriangleCenterFixAspect;
+    static TriangleCenterFixAspect = TriangleCenterFixAspect;
+
+    static pointAtPathByRate = PointAtPathByRate;
+    static PointAtPathByRate = PointAtPathByRate;
+
+    static pointAtPathByLength = PointAtPathByLength;
+    static PointAtPathByLength = PointAtPathByLength;
+}
 
 export function rule() {
     return Rule;
 }
-
-export * as Latex from "./Latex";

@@ -20,10 +20,10 @@ slider2.onChange(() => {
 })
 
 sd.init(() => {
-    lAB.childAs(new sd.Text(lAB, "A"), R.PointAtPathByRate(0, "cx", "my"));
-    lAB.childAs(new sd.Text(lAB, "B"), R.PointAtPathByRate(1, "cx", "y"));
-    lCD.childAs(new sd.Text(lCD, "C"), R.PointAtPathByRate(0, "cx", "my"));
-    lCD.childAs(new sd.Text(lCD, "D"), R.PointAtPathByRate(1, "cx", "y"));
+    lAB.childAs(new sd.Text(lAB, "A"), R.pointAtPathByRate(0, "cx", "my"));
+    lAB.childAs(new sd.Text(lAB, "B"), R.pointAtPathByRate(1, "cx", "y"));
+    lCD.childAs(new sd.Text(lCD, "C"), R.pointAtPathByRate(0, "cx", "my"));
+    lCD.childAs(new sd.Text(lCD, "D"), R.pointAtPathByRate(1, "cx", "y"));
     slider1.mx(0).cy(33);
     slider2.mx(0).cy(66);
     sd.Label(slider1, "e");

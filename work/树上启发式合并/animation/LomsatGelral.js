@@ -39,7 +39,7 @@ function init() {
     for (let i = 0; i < cols.length; i++) {
         colArray.value(i, new sd.Rect(colArray).color(cols[i]));
         const stk = new sd.Stack(colArray).elementWidth(20).elementHeight(20);
-        colArray.element(i).childAs("stk", stk, R.Aside("bc"));
+        colArray.element(i).childAs("stk", stk, R.aside("bc"));
     }
     colArray.cx(tree.cx()).y(tree.my() + 50);
 }

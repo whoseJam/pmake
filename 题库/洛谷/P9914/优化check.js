@@ -20,20 +20,20 @@ sd.init(() => {
     for (let i = 1; i <= n; i++) {
         graph.at(n - i, 0).newNode(i, new sd.Mathjax(graph, `A_{${i}}`));
         graph.element(i).rate(1.8);
-        graph.element(i).childAs("l", new sd.Line(svg).source(0, 0).target(20, 0).arrow(), R.Aside("rc", 0));
+        graph.element(i).childAs("l", new sd.Line(svg).source(0, 0).target(20, 0).arrow(), R.aside("rc", 0));
     }
     for (let j = 1; j <= m; j++) {
         graph.at(n, j).newNode(n + j, new sd.Mathjax(graph, `B_{${j}}`));
         graph.element(n + j).rate(1.8);
-        graph.element(n + j).childAs("l", new sd.Line(svg).source(0, 0).target(0, -20).arrow(), R.Aside("tc", 0));
+        graph.element(n + j).childAs("l", new sd.Line(svg).source(0, 0).target(0, -20).arrow(), R.aside("tc", 0));
     }
     graph.color(A, C.blue).color(n + B, C.blue);
 })
 
 sd.main(async () => {
     await sd.pause();
-    const bj = new sd.BraceCurve(graph).target(graph.x(), graph.my() + 30).source(graph.element(n + B).cx(), graph.my() + 30).value("j", R.PointAtPathByRate(0.5, "cx", "y"));
-    const bi = new sd.BraceCurve(graph).source(graph.x() - 30, graph.my()).target(graph.x() - 30, graph.element(A).cy()).value("i", R.PointAtPathByRate(0.5, "mx", "cy"));
+    const bj = new sd.BraceCurve(graph).target(graph.x(), graph.my() + 30).source(graph.element(n + B).cx(), graph.my() + 30).value("j", R.pointAtPathByRate(0.5, "cx", "y"));
+    const bi = new sd.BraceCurve(graph).source(graph.x() - 30, graph.my()).target(graph.x() - 30, graph.element(A).cy()).value("i", R.pointAtPathByRate(0.5, "mx", "cy"));
     function appear(obj) {
         obj.opacity(0).startAnimate().opacity(1).endAnimate();
     }

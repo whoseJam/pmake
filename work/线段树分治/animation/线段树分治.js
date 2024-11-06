@@ -21,7 +21,7 @@ async function collectImpact() {
     const lc = x => x * 2;
     const rc = x => x * 2 + 1;
     const mover = new sd.ValueArray(svg).elementWidth(12).elementHeight(12).opacity(0);
-    mover.childAs("border", new sd.Rect(mover.layer("elements")).width(60).height(20), R.CenterOnly());
+    mover.childAs("border", new sd.Rect(mover.layer("elements")).width(60).height(20), R.centerOnly());
     function moveTo(x) {
         const e = tree.element(x);
         if (mover.opacity() === 0) {
@@ -95,7 +95,7 @@ function initTimeline(parent) {
         const er = this.element(r);
         brace.freeze().target(el.x(), el.my() + gap)
             .source(er.mx(), er.my() + gap).unfreeze();
-        brace.childAs("circle", new sd.Circle(brace).r(5).color(color), R.PointAtPathByRate(0.5, "cx", "y", 0, 4));
+        brace.childAs("circle", new sd.Circle(brace).r(5).color(color), R.pointAtPathByRate(0.5, "cx", "y", 0, 4));
         brace.opacity(0).startAnimate().opacity(1).endAnimate();
         return this;
     }
@@ -118,7 +118,7 @@ function initSegmentTree(parent, l, r) {
     function initArray(parent, l, r) {
         const array = new sd.Array(parent);
         array.resize(r - l + 1).start(l);
-        array.childAs("impact", new sd.ValueStack(array).elementWidth(12).elementHeight(12), R.Aside("rt", 2));
+        array.childAs("impact", new sd.ValueStack(array).elementWidth(12).elementHeight(12), R.aside("rt", 2));
         return array;
     }
     tree.freeze();

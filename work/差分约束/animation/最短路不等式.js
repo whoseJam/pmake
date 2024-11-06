@@ -18,9 +18,9 @@ function init() {
     function math(math) {
         return new sd.Mathjax(svg, math);
     }
-    link("S", "v").strokeDashArray([5, 5]).value(math("dis(v)"), R.PointAtPathByRate(0.5, "cx", "my"));
-    link("S", "u").strokeDashArray([5, 5]).value(math("dis(u)"), R.PointAtPathByRate(0.5, "mx", "y"));
-    link("u", "v").value(math("w(u, v)"), R.PointAtPathByRate(0.5, "x", "y"));
+    link("S", "v").strokeDashArray([5, 5]).value(math("dis(v)"), R.pointAtPathByRate(0.5, "cx", "my"));
+    link("S", "u").strokeDashArray([5, 5]).value(math("dis(u)"), R.pointAtPathByRate(0.5, "mx", "y"));
+    link("u", "v").value(math("w(u, v)"), R.pointAtPathByRate(0.5, "x", "y"));
 }
 
 async function main() {

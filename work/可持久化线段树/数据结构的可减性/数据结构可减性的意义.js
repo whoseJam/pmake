@@ -22,7 +22,7 @@ function init() {
     grid.at(0, 7).newNode(8, math("S_7"));
     for (let i = 1; i <= 7; i++) {
         grid.newLink(i, i + 1);
-        grid.element(i, i + 1).value(math(`M_${i}`), R.PointAtPathByRate(0.5, "cx", "my"));
+        grid.element(i, i + 1).value(math(`M_${i}`), R.pointAtPathByRate(0.5, "cx", "my"));
         grid.element(i, i + 1).arrow();
     }
     for (let i = 1; i <= 8; i++)
@@ -36,7 +36,7 @@ async function createChain(l, r, dy) {
     const nodes = [];
     for (let i = l; i <= r; i++) {
         nodes.push(new sd.Vertex(svg).value(math(`S_${i}`)).rate(2).center(grid.element(i + 1).center()));
-        if (i > l) sd.Link(nodes[i - l - 1], nodes[i - l]).arrow().value(math(`M_${i}`), R.PointAtPathByRate(0.5, "cx", "my"));
+        if (i > l) sd.Link(nodes[i - l - 1], nodes[i - l]).arrow().value(math(`M_${i}`), R.pointAtPathByRate(0.5, "cx", "my"));
     }
     await sd.pause();
     nodes.forEach(node => {

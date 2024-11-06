@@ -24,7 +24,7 @@ function init() {
         graph.newLink(u, v);
         graph.element(u, v)
             .arrow()
-            .value(value, R.PointAtPathByRate(0.5, xloc, yloc));
+            .value(value, R.pointAtPathByRate(0.5, xloc, yloc));
     }
     function linkWithColor(u, v, color) {
         graph.newLink(u, v);

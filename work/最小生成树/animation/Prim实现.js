@@ -33,7 +33,7 @@ function init() {
         let x = links[i][0];
         let y = links[i][1];
         graph.newLink(x, y, links[i][2]);
-        graph.element(x, y).rule(R.PointAtPathByRate(0.5, "x", "y"));
+        graph.element(x, y).rule(R.pointAtPathByRate(0.5, "x", "y"));
     }
 }
 

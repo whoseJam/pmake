@@ -24,7 +24,7 @@ sd.init(() => {
             if (ch[i][v]) {
                 graph.newLink(i, ch[i][v]);
                 graph.element(i, ch[i][v]).arrow();
-                const rule = (graph.element(i, ch[i][v]).width() <= 5) ? R.PointAtPathByRate(0.5, "x", "cy") : R.PointAtPathByRate(0.5, "cx", "my");
+                const rule = (graph.element(i, ch[i][v]).width() <= 5) ? R.pointAtPathByRate(0.5, "x", "cy") : R.pointAtPathByRate(0.5, "cx", "my");
                 graph.element(i, ch[i][v]).value(String.fromCharCode(v + "a".charCodeAt(0)), rule);
             }
         }
@@ -91,8 +91,8 @@ sd.main(async () => {
         const link = graph.element(id, cur);
         link.startAnimate();
         link.pointStoT();
-        if (id === 3) link.value("a", R.PointAtPathByRate(0.5, "x", "my")).opacity(0.2);
-        if (id === 6) link.value("a", R.PointAtPathByRate(0.5, "x", "y"));
+        if (id === 3) link.value("a", R.pointAtPathByRate(0.5, "x", "my")).opacity(0.2);
+        if (id === 6) link.value("a", R.pointAtPathByRate(0.5, "x", "y"));
         link.endAnimate().arrow();
         
         graph.startAnimate();

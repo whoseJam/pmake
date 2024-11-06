@@ -25,7 +25,7 @@ sd.init(() => {
             if (!cur.acch[s[i]]) {
                 cur.acch[s[i]] = ++tot;
                 ac.link(u, tot);
-                ac.element(u, tot).value(s[i], R.PointAtPathByRate(0.5, "mx", "cy", -5));
+                ac.element(u, tot).value(s[i], R.pointAtPathByRate(0.5, "mx", "cy", -5));
                 ac.element(tot).acch = {};
             }
             u = cur.acch[s[i]];

@@ -34,7 +34,7 @@ sd.main(async () => {
         nodeCur.startAnimate().color(C.green).endAnimate();
         const link = sd.Link(nodeU, nodeCur, sd.Curve).bending(0.5);
         nodeU.update();
-        link.startAnimate().pointStoT().value(`${++i}级祖先`, R.PointAtPathByRate(0.5, "x", "cy")).endAnimate().arrow();
+        link.startAnimate().pointStoT().value(`${++i}级祖先`, R.pointAtPathByRate(0.5, "x", "cy")).endAnimate().arrow();
         await sd.pause();
         link.startAnimate().opacity(0).endAnimate();
         nodeCur.startAnimate().color(C.white).endAnimate();

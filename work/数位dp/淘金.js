@@ -46,8 +46,8 @@ async function 二维转一维() {
     resizeElement(g); resizeElement(row); resizeElement(col);
     sd.Index(row, "t");
     sd.Index(col, "l");
-    g.childAs("row", row, R.Aside("tc"));
-    g.childAs("col", col, R.Aside("lc"));
+    g.childAs("row", row, R.aside("tc"));
+    g.childAs("col", col, R.aside("lc"));
     function f(x) {
         let ans = 1;
         while (x > 0) {

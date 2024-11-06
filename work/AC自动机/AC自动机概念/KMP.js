@@ -14,7 +14,7 @@ const bb = sd.Brace(arr);
 sd.init(() => {
     for (let i = 0; i <= n; i++) arr.push(str[i]);
     for (let i = 0; i <= n; i++) {
-        arr.element(i).childAs(new sd.Text(svg, i).fontSize(12), R.Aside("bc", 3));
+        arr.element(i).childAs(new sd.Text(svg, i).fontSize(12), R.aside("bc", 3));
         if (i >= 1) {
             const idx = i;
             arr.element(idx).onClick(() => {

@@ -39,7 +39,7 @@ export async function flow(graph, edges, gap = 40) {
             const re = graph.element(edge.to, edge.from);
             re.stroke(C.deepSkyBlue);
             re.startAnimate()
-            re.value(bottleNeck, R.PointAtPathByRate(0.5, e.xloc, e.yloc))
+            re.value(bottleNeck, R.pointAtPathByRate(0.5, e.xloc, e.yloc))
             re.pointStoT()
             re.endAnimate();
             re.arrow();

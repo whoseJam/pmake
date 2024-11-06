@@ -64,12 +64,12 @@ sd.main(async () => {
     data.forEach((item, idx) => {
         item.circle = new sd.Circle(coord).r(2).color(C.black).center(coord.at(item.x, item.y)).strokeWidth(0).childAs(
             new sd.Mathjax(coord, `(B_{${idx+1}},f_{${idx+1}})`).fontSize(8),
-            R.Aside("tc", 2)
+            R.aside("tc", 2)
         );
     });
     await sd.pause();
     line.source([0, 0]).target(400, -80).cx(coord.cx()).my(coord.my()).startAnimate().opacity(1).endAnimate();
-    line.childAs(new sd.Mathjax(line, "k=-A_i").fontSize(8), R.PointAtPathByRate(1, "cx", "my"));
+    line.childAs(new sd.Mathjax(line, "k=-A_i").fontSize(8), R.pointAtPathByRate(1, "cx", "my"));
     for (let i = 0; i < data.length; i++) {
         await sd.pause();
         const pos = coord.at(data[i].x, data[i].y);

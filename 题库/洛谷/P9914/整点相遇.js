@@ -18,12 +18,12 @@ sd.init(() => {
     for (let i = 1; i <= n; i++) {
         graph.at(n - i, 0).newNode(i, new sd.Mathjax(graph, `A_{${i}}`));
         graph.element(i).rate(1.8);
-        graph.element(i).childAs("l", new sd.Line(svg).source(0, 0).target(20, 0).arrow(), R.Aside("rc", 0));
+        graph.element(i).childAs("l", new sd.Line(svg).source(0, 0).target(20, 0).arrow(), R.aside("rc", 0));
     }
     for (let j = 1; j <= m; j++) {
         graph.at(n, j).newNode(n + j, new sd.Mathjax(graph, `B_{${j}}`));
         graph.element(n + j).rate(1.8);
-        graph.element(n + j).childAs("l", new sd.Line(svg).source(0, 0).target(0, -20).arrow(), R.Aside("tc", 0));
+        graph.element(n + j).childAs("l", new sd.Line(svg).source(0, 0).target(0, -20).arrow(), R.aside("tc", 0));
     }
 })
 
@@ -37,6 +37,6 @@ sd.main(async () => {
     const v = new sd.Circle(svg).r(5);
     v.cy(graph.element(2).cy());
     v.cx(graph.element(4).cx());
-    v.childAs("math", new sd.Mathjax(svg, "(2,2)"), R.Aside("rc"));
+    v.childAs("math", new sd.Mathjax(svg, "(2,2)"), R.aside("rc"));
     v.opacity(0).startAnimate().opacity(1).endAnimate();
 })

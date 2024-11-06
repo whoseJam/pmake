@@ -23,7 +23,7 @@ export function createLazytagGraph(parent, oldTagList, newTagList, tagColor) {
         if (i > 0) {
             graph.link(id1(i-1), id1(i));
             const link = graph.element(id1(i-1), id1(i));
-            link.value(math(oldTagList[i - 1]), R.PointAtPathByRate(0.5, "cx", "my", 0, -5)).arrow();
+            link.value(math(oldTagList[i - 1]), R.pointAtPathByRate(0.5, "cx", "my", 0, -5)).arrow();
             if (i - 1 < oldTagList.length - 1) {
                 link.stroke(tagColor[i - 1]).strokeWidth(3);
             }
@@ -37,14 +37,14 @@ export function createLazytagGraph(parent, oldTagList, newTagList, tagColor) {
             child.source(e1.center()).target(e2.center());
             sd.trim(child, e1, e2);
         });
-        link.value(math(newTagList[0]), R.PointAtPathByRate(0.5, "cx", "y"));
+        link.value(math(newTagList[0]), R.pointAtPathByRate(0.5, "cx", "y"));
     } else {
         for (let i = 0; i < m; i++) {
             graph.at(1, gap2 * (i+1)).newNode(id2(i), math(`e_${i + n}`)).element(id2(i)).rate(2);
             if (i > 1 && i < newTagList.length) {
                 graph.link(id2(i-1), id2(i));
                 const link = graph.element(id2(i-1), id2(i));
-                link.value(math(newTagList[i]), R.PointAtPathByRate(0.5, "cx", "y")).arrow().stroke(tagColor[i]).strokeWidth(3);
+                link.value(math(newTagList[i]), R.pointAtPathByRate(0.5, "cx", "y")).arrow().stroke(tagColor[i]).strokeWidth(3);
             }
         }
 
@@ -55,7 +55,7 @@ export function createLazytagGraph(parent, oldTagList, newTagList, tagColor) {
                 child.source(e1.center()).target(e2.center());
                 sd.trim(child, e1, e2);
             });
-            link1.value(math(newTagList[0]), R.PointAtPathByRate(0.5, "mx", "y"));
+            link1.value(math(newTagList[0]), R.pointAtPathByRate(0.5, "mx", "y"));
         }
         {   const link2 = new sd.Curve(graph).arrow().stroke(tagColor[tagColor.length - 1]).strokeWidth(3);
             const e1 = graph.element(id2(m - 1));
@@ -64,7 +64,7 @@ export function createLazytagGraph(parent, oldTagList, newTagList, tagColor) {
                 child.source(e1.center()).target(e2.center());
                 sd.trim(child, e1, e2);
             });
-            link2.value(math(newTagList[m]), R.PointAtPathByRate(0.5, "x", "y"));
+            link2.value(math(newTagList[m]), R.pointAtPathByRate(0.5, "x", "y"));
         }
     }
 

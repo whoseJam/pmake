@@ -44,7 +44,7 @@ sd.init(() => {
     for (let i = 1; i <= 10; i++) {
         arr.push(i);
         const e = arr.lastElement();
-        e.childAs("stk", new sd.Stack(e).elementWidth(20).elementHeight(20), R.Aside("bc"));
+        e.childAs("stk", new sd.Stack(e).elementWidth(20).elementHeight(20), R.aside("bc"));
     }
     tableObj.update();
     arr.cx(100 + 4.5 * 100).y(520);

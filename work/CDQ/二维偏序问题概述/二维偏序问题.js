@@ -29,7 +29,7 @@ sd.init(() => {
     tree.cx(arr.cx()).y(arr.my() + 50).start(1);
     for (let i = 1; i <= tree.length(); i++) {
         const e = tree.element(i);
-        e.childAs("stk", new sd.Stack(e).elementWidth(20).elementHeight(20), R.Aside("bc"));
+        e.childAs("stk", new sd.Stack(e).elementWidth(20).elementHeight(20), R.aside("bc"));
     }
 })
 

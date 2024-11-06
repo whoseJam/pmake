@@ -17,8 +17,8 @@ function init() {
     initGraph(graph2);
     graph1.newLink(1, 2);
     const e = graph1.element(1, 2).arrow();
-    e.childAs("maxFlow", new sd.Text(e, 100), R.PointAtPathByRate(0.5, "mx", "cy", -10));
-    e.childAs("minFlow", new sd.Text(e, 20), R.PointAtPathByRate(0.5, "x", "cy", 10));
+    e.childAs("maxFlow", new sd.Text(e, 100), R.pointAtPathByRate(0.5, "mx", "cy", -10));
+    e.childAs("minFlow", new sd.Text(e, 20), R.pointAtPathByRate(0.5, "x", "cy", 10));
 }
 
 async function main() {

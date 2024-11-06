@@ -36,7 +36,7 @@ function init() {
     }
     for (let i = 1; i <= depArray.length(); i++) {
         const stk = new sd.Stack(depArray).elementWidth(20).elementHeight(20);
-        depArray.element(i).childAs("stk", stk, R.Aside("bc"));
+        depArray.element(i).childAs("stk", stk, R.aside("bc"));
     }
     depArray.x(tree.mx() + 50).y(tree.y());
 }

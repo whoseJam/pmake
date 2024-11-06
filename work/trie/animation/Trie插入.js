@@ -52,7 +52,7 @@ async function insert(str) {
             tree.newNode(ch[u][c]);
             tree.newLink(u, ch[u][c], c);
             tree.element(u, ch[u][c]).arrow().rule(
-                R.PointAtPathByRate(0.5, "x", "cy")
+                R.pointAtPathByRate(0.5, "x", "cy")
             );
             tree.endAnimate();
         }

@@ -30,7 +30,7 @@ function init() {
         graph.element(u, v)
             .arrow()
             .stroke(col)
-            .value(value, R.PointAtPathByRate(0.5, xloc, yloc));
+            .value(value, R.pointAtPathByRate(0.5, xloc, yloc));
     }
     function simpleLink(u, v) {
         graph.newLink(u, v);

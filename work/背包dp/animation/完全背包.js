@@ -61,7 +61,7 @@ function makeDp() {
                     t.newNode(k, tmp=makeBackpack(at[1], C.blue));
                     sd.MathjaxLabel(tmp, `F_{${at[0]}, ${at[1]}}=${dp.intValue(at[0], at[1])}`, "rc");
                     t.newLink(-1, k);
-                    t.element(-1, k).value(makeSpace(cost, C.red, sd.Box).value(`+${gain}`, R.CenterOnly())).revArrow();
+                    t.element(-1, k).value(makeSpace(cost, C.red, sd.Box).value(`+${gain}`, R.centerOnly())).revArrow();
                     ans = Math.max(ans, dp.intValue(at[0], at[1])+gain);
                     dp.color(at[0], at[1], C.blue);
                 }
@@ -94,7 +94,7 @@ function makeDp() {
                 child.target(parent.x() - 5, parent.y());
                 child.source(parent.x() - 5, parent.my());
             });
-            r.child("bbb").value(size, R.PointAtPathByRate(0.5, "mx", "cy"));
+            r.child("bbb").value(size, R.pointAtPathByRate(0.5, "mx", "cy"));
         }
         return r;
     }

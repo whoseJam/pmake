@@ -27,7 +27,7 @@ function init() {
         const e = graph.element(lk.from, lk.to).arrow();
         const math = new sd.Mathjax(e, lk.cap);
         math.height(math.height() * 2);
-        e.value(math, R.PointAtPathByRate(0.5, lk.xloc, lk.yloc));
+        e.value(math, R.pointAtPathByRate(0.5, lk.xloc, lk.yloc));
         e.xloc = lk.xloc;
         e.yloc = lk.yloc;
     });

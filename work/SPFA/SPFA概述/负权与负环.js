@@ -7,7 +7,7 @@ const graph = new sd.GridGraph(svg).width(90).height(90);
 sd.init(() => {
     function link(a, b, w, xloc, yloc) {
         graph.link(a, b);
-        graph.element(a, b).arrow().value(w, R.PointAtPathByRate(0.5, xloc, yloc));
+        graph.element(a, b).arrow().value(w, R.pointAtPathByRate(0.5, xloc, yloc));
     }
     graph.at(0, 0).newNode(1);
     graph.at(1, 0).newNode(2);

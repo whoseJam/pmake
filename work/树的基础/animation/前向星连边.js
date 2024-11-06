@@ -33,7 +33,7 @@ function makeForwardStar() {
         fwstar.push(new sd.Box(svg).value(`h[${i}]`));
         let elem = fwstar.element(i);
         elem.linkList = linkList;
-        elem.childAs("linkList", linkList, R.Aside("rc", 10));
+        elem.childAs("linkList", linkList, R.aside("rc", 10));
         h.value(i, 0);
     }
     for (let i = 1; i <= m; i++)

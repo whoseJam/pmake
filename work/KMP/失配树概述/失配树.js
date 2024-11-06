@@ -26,7 +26,7 @@ const nxt = sd.make1d(20);
 sd.init(() => {
     for (let i = 0; i <= n; i++) arr.push(str[i]);
     for (let i = 0; i <= n; i++) {
-        arr.element(i).childAs(new sd.Text(svg, i).fontSize(12), R.Aside("bc", 3));
+        arr.element(i).childAs(new sd.Text(svg, i).fontSize(12), R.aside("bc", 3));
         if (i >= 1) {
             let flag = 0;
             const substr = str.slice(1, i + 1);
@@ -34,7 +34,7 @@ sd.init(() => {
             element.title(substr).onClick(() => {
                 if (flag) return;
                 sd.inter(async () => {
-                    element.childAs(new sd.Text(svg, substr), R.Aside(location[i].loc, location[i].gap));
+                    element.childAs(new sd.Text(svg, substr), R.aside(location[i].loc, location[i].gap));
                 });
             });
         }

@@ -1,28 +1,35 @@
-import { SDNode } from "SD/Node/SDNode";
+import { SDNode } from "@/Node/SDNode";
 
-import { Aside }                   from "SD/Rule/Aside";
+import { Aside } from "@/Rule/Aside";
 
-import { Background }              from "SD/Rule/Background";
-import { CircleBackground }        from "SD/Rule/Background";
+import { Background }       from "@/Rule/Background";
+import { CircleBackground } from "@/Rule/Background";
 
-import { CenterOnly }              from "SD/Rule/Center";
-import { CenterFixAspect }         from "SD/Rule/Center";
-import { TriangleCenterFixAspect } from "SD/Rule/Center";
+import { CenterOnly }              from "@/Rule/Center";
+import { CenterFixAspect }         from "@/Rule/Center";
+import { TriangleCenterFixAspect } from "@/Rule/Center";
 
-import { PointAtPathByRate }       from "SD/Rule/Path";
-import { PointAtPathByLength }     from "SD/Rule/Path";
+import { PointAtPathByRate }   from "@/Rule/Path";
+import { PointAtPathByLength } from "@/Rule/Path";
 
-export type Rule = (parent: SDNode, child: SDNode) => void;
+export type RuleType = (parent: SDNode, child: SDNode) => void;
 
-interface AllRule {
-    Aside                  : typeof Aside;
-    Background             : typeof Background;
-    CircleBackground       : typeof CircleBackground;
-    CenterOnly             : typeof CenterOnly;
-    CenterFixAspect        : typeof CenterFixAspect;
-    TriangleCenterFixAspect: typeof TriangleCenterFixAspect;
-    PointAtPathByRate      : typeof PointAtPathByRate;
-    PointAtPathByLength    : typeof PointAtPathByLength;
+export class Rule {
+    static aside = Aside;
+
+    static background = Background;
+
+    static circleBackground = CircleBackground;
+
+    static centerOnly = CenterOnly;
+
+    static centerFixAspect = CenterFixAspect;
+
+    static triangleCenterFixAspect = TriangleCenterFixAspect;
+
+    static pointAtPathByRate = PointAtPathByRate;
+
+    static pointAtPathByLength = PointAtPathByLength;
 }
 
-export function rule(): AllRule;
+export function rule(): typeof Rule;

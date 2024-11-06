@@ -7,8 +7,8 @@ const q = new sd.Vertex(svg, "q").x(80).y(80);
 const u = new sd.Vertex(svg, "u").y(80);
 
 sd.init(() => {
-    sd.Link(p, q).arrow().value("c", R.PointAtPathByRate(0.4, "x", "cy"));
-    sd.Link(p, u).arrow().value("c", R.PointAtPathByRate(0.4, "mx", "cy"));
+    sd.Link(p, q).arrow().value("c", R.pointAtPathByRate(0.4, "x", "cy"));
+    sd.Link(p, u).arrow().value("c", R.pointAtPathByRate(0.4, "mx", "cy"));
 })
 
 sd.main(async () => {

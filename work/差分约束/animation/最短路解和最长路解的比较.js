@@ -24,7 +24,7 @@ function init() {
         links.forEach(link => {
             graph.newLink(link[0], link[1], link[2]);
             graph.value(link[0], link[1]).fontSize(25);
-            graph.element(link[0], link[1]).rule(R.PointAtPathByRate(0.5, link[3], link[4]))
+            graph.element(link[0], link[1]).rule(R.pointAtPathByRate(0.5, link[3], link[4]))
             graph.element(link[0], link[1]).arrow();
         });
     }
@@ -39,7 +39,7 @@ async function main() {
         for (let i = 1; i <= n; i++) {
             const nodeU = graph.element(i);
             const dis = nodeU.dis;
-            const rule = (i <= 2) ? R.Aside("lc", 10) : R.Aside("rc", 10);
+            const rule = (i <= 2) ? R.aside("lc", 10) : R.aside("rc", 10);
             const text = new sd.Text(nodeU, `dis=${dis}`);
             nodeU.childAs("distance", text, rule).update();
             text.opacity(0).startAnimate().opacity(1).endAnimate();

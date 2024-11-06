@@ -20,7 +20,7 @@ function init() {
     links.forEach(link => {
         graph.newLink(link[0], link[1], link[2]);
         graph.value(link[0], link[1]).fontSize(25);
-        graph.element(link[0], link[1]).rule(R.PointAtPathByRate(0.5, link[3], link[4]))
+        graph.element(link[0], link[1]).rule(R.pointAtPathByRate(0.5, link[3], link[4]))
         graph.element(link[0], link[1]).arrow();
     });
 }

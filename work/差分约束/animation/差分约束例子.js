@@ -22,7 +22,7 @@ function init() {
     graph.at(0.5, 1).newNode(4);
     links.forEach(link => {
         graph.newLink(link[0], link[1]);
-        graph.element(link[0], link[1]).value(link[2], R.PointAtPathByRate(0.5, link[3], link[4])).arrow();
+        graph.element(link[0], link[1]).value(link[2], R.pointAtPathByRate(0.5, link[3], link[4])).arrow();
     })
 }
 

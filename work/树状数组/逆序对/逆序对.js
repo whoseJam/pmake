@@ -15,7 +15,7 @@ main();
 function init() {
     for (let i = 1; i <= n; i++) {
         arr.push(new sd.Mathjax(arr, `Value_{${i}}`));
-        stk.element(i-1).childAs("impact", new sd.Array(stk).elementWidth(10).elementHeight(10), R.Aside("rc", 10));
+        stk.element(i-1).childAs("impact", new sd.Array(stk).elementWidth(10).elementHeight(10), R.aside("rc", 10));
         arr.element(i-1).rate(1.5);
     }
     stk.add = function(x) {

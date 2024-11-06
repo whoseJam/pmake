@@ -30,7 +30,7 @@ sd.init(() => {
     for (let i = 1; i <= n; i++) {
         for (let j = 1; j <= m; j++) {
             fa[(i - 1) * m + j] = (i - 1) * m + j;
-            grid.element(i, j).value(data[i][j], R.CenterOnly());
+            grid.element(i, j).value(data[i][j], R.centerOnly());
             for (let k = 0; k < 4; k++) {
                 const ni = i + D[k][0];
                 const nj = j + D[k][1];

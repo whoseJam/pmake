@@ -41,7 +41,7 @@ function initSegmentTree(parent, l, r) {
     function initArray(parent, l, r) {
         const array = new sd.Array(parent);
         array.resize(r - l + 1).start(l);
-        array.childAs("impact", new sd.ValueStack(array).elementWidth(12).elementHeight(12), R.Aside("rt", 2));
+        array.childAs("impact", new sd.ValueStack(array).elementWidth(12).elementHeight(12), R.aside("rt", 2));
         return array;
     }
     tree.freeze();

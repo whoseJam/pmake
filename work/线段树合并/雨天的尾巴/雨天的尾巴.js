@@ -18,7 +18,7 @@ sd.init(() => {
         tree.link(link[0], link[1]);
     })
     tree.forEachNodes((node, tid) => {
-        node.childAs("arr", new sd.Array(node).start(1).elementWidth(15).elementHeight(15).resize(m), R.Aside("tc"));
+        node.childAs("arr", new sd.Array(node).start(1).elementWidth(15).elementHeight(15).resize(m), R.aside("tc"));
     })
 })
 

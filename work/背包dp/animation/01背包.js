@@ -88,7 +88,7 @@ function makeDp() {
                 child.target(parent.x() - 5, parent.y());
                 child.source(parent.x() - 5, parent.my());
             });
-            r.child("bbb").value(size, R.PointAtPathByRate(0.5, "mx", "cy"));
+            r.child("bbb").value(size, R.pointAtPathByRate(0.5, "mx", "cy"));
         }
         return r;
     }
@@ -107,7 +107,7 @@ function makeDp() {
         let b1 = makeBackpack(j, C.blue);
         let b2 = j - v[i] >= 0 ? makeBackpack(j - v[i], C.blue) : null;
         let b3 = makeBackpack(j, C.blue);
-        let r = b2 ? makeSpace(v[i], C.red, sd.Box).value("+" + w[i], R.CenterOnly()) : null;
+        let r = b2 ? makeSpace(v[i], C.red, sd.Box).value("+" + w[i], R.centerOnly()) : null;
         if (b2) { b1.x(X).y(Y); b2.x(X).y(Y+200); b3.x(X+Layer).y(Y+100); }
         else { b1.x(X).y(Y+100); b3.x(X+Layer).y(Y+100); }
         sd.Label(b1, new sd.Mathjax(svg, `F_{i-1,j}=${dp.intValue(i-1, j)}`), "tc", 20, 5);

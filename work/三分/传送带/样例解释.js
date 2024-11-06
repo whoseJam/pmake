@@ -7,10 +7,10 @@ const lAB = new sd.Line(svg).source([0, 0]).target([20, 100]);
 const lCD = new sd.Line(svg).source([100, 0]).target([140, 100]);
 
 sd.init(() => {
-    lAB.childAs(new sd.Text(lAB, "A"), R.PointAtPathByRate(0, "cx", "my"));
-    lAB.childAs(new sd.Text(lAB, "B"), R.PointAtPathByRate(1, "cx", "y"));
-    lCD.childAs(new sd.Text(lCD, "C"), R.PointAtPathByRate(0, "cx", "my"));
-    lCD.childAs(new sd.Text(lCD, "D"), R.PointAtPathByRate(1, "cx", "y"));
+    lAB.childAs(new sd.Text(lAB, "A"), R.pointAtPathByRate(0, "cx", "my"));
+    lAB.childAs(new sd.Text(lAB, "B"), R.pointAtPathByRate(1, "cx", "y"));
+    lCD.childAs(new sd.Text(lCD, "C"), R.pointAtPathByRate(0, "cx", "my"));
+    lCD.childAs(new sd.Text(lCD, "D"), R.pointAtPathByRate(1, "cx", "y"));
 })
 
 sd.main(async () => {

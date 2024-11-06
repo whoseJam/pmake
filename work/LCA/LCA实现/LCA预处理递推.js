@@ -34,5 +34,5 @@ function link(u, v, col, label, bend = 0.5, xloc = "x") {
     const nodeV = tree.element(v);
     const l = sd.Link(nodeU, nodeV, sd.Curve).bending(bend).stroke(col);
     nodeU.update();
-    return l.startAnimate().pointStoT().value(label, R.PointAtPathByRate(0.5, xloc, "cy")).endAnimate().arrow();
+    return l.startAnimate().pointStoT().value(label, R.pointAtPathByRate(0.5, xloc, "cy")).endAnimate().arrow();
 }

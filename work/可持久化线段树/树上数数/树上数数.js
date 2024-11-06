@@ -21,7 +21,7 @@ sd.init(() => {
     for (let i = 1; i <= n; i++) {
         const e = tree.element(i);
         const math = new sd.Mathjax(e, `insert(a_{${i}})`);
-        e.childAs("math", math, R.Aside(getLocator(i)));
+        e.childAs("math", math, R.aside(getLocator(i)));
     }
 })
 

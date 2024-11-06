@@ -15,17 +15,17 @@ const data = [
 ];
 
 function init() {
-    graph.at(0.5, 0).newNode(1); graph.element(1).childAs("varList", new sd.VarList(svg).put("dis", 0), R.Aside("lc"));
-    graph.at(0, 0.25).newNode(2); graph.element(2).childAs("varList", new sd.VarList(svg).put("dis", Infinity), R.Aside("tc"));
-    graph.at(1, 0.25).newNode(3); graph.element(3).childAs("varList", new sd.VarList(svg).put("dis", Infinity), R.Aside("bc"));
-    graph.at(0.5, 0.5).newNode(4); graph.element(4).childAs("varList", new sd.VarList(svg).put("dis", Infinity), R.Aside("rc"));
-    graph.at(0, 0.75).newNode(5); graph.element(5).childAs("varList", new sd.VarList(svg).put("dis", Infinity), R.Aside("tc"));
-    graph.at(1, 0.75).newNode(6); graph.element(6).childAs("varList", new sd.VarList(svg).put("dis", Infinity), R.Aside("bc"));
-    graph.at(0.5, 1).newNode(7); graph.element(7).childAs("varList", new sd.VarList(svg).put("dis", Infinity), R.Aside("rc"));
+    graph.at(0.5, 0).newNode(1); graph.element(1).childAs("varList", new sd.VarList(svg).put("dis", 0), R.aside("lc"));
+    graph.at(0, 0.25).newNode(2); graph.element(2).childAs("varList", new sd.VarList(svg).put("dis", Infinity), R.aside("tc"));
+    graph.at(1, 0.25).newNode(3); graph.element(3).childAs("varList", new sd.VarList(svg).put("dis", Infinity), R.aside("bc"));
+    graph.at(0.5, 0.5).newNode(4); graph.element(4).childAs("varList", new sd.VarList(svg).put("dis", Infinity), R.aside("rc"));
+    graph.at(0, 0.75).newNode(5); graph.element(5).childAs("varList", new sd.VarList(svg).put("dis", Infinity), R.aside("tc"));
+    graph.at(1, 0.75).newNode(6); graph.element(6).childAs("varList", new sd.VarList(svg).put("dis", Infinity), R.aside("bc"));
+    graph.at(0.5, 1).newNode(7); graph.element(7).childAs("varList", new sd.VarList(svg).put("dis", Infinity), R.aside("rc"));
     data.forEach(link => {
         graph.newLink(link[0], link[1], link[2]);
     });
-    graph.element(5, 6).rule(R.PointAtPathByRate(0.25));
+    graph.element(5, 6).rule(R.pointAtPathByRate(0.25));
 }
 
 init();

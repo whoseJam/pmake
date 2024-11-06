@@ -45,7 +45,7 @@ async function Add(x) {
         l.source(pI.pos("cx", "cy", +5));
         pI.startAnimate().moveTo(next).endAnimate();
         l.target(pI.pos("cx", "cy", -5));
-        l.startAnimate().pointStoT().value(new sd.Text(svg, `L(${x})`).fontSize(10), R.PointAtPathByRate(0.5, "cx", "cy", 0, 5)).endAnimate().arrow();
+        l.startAnimate().pointStoT().value(new sd.Text(svg, `L(${x})`).fontSize(10), R.pointAtPathByRate(0.5, "cx", "cy", 0, 5)).endAnimate().arrow();
         allLinks.push(l);
         tree[next].startAnimate().color(C.orange).endAnimate();
 

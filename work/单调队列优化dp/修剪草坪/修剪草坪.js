@@ -26,7 +26,7 @@ sd.main(async () => {
         p.startAnimate().moveTo(i).endAnimate();
         await sd.pause();
         que.startAnimate().push(e[i]).color(que.end(), C.blue).endAnimate();
-        que.element(que.end()).childAs("pos", new sd.Text(svg, `pos=${i}`).fontSize(10), R.Aside("tc", 2));
+        que.element(que.end()).childAs("pos", new sd.Text(svg, `pos=${i}`).fontSize(10), R.aside("tc", 2));
         que.element(que.end()).idx = i;
         
         while (que.length() >= 2 && i - que.element(0).idx > k) {

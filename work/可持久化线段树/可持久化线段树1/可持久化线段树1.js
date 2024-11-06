@@ -67,7 +67,7 @@ function build() {
         const vertex = tree.element(x);
         if (l === r) {
             const text = new sd.Text(svg, `v=${data[l]}`);
-            vertex.childAs("v", text, R.Aside("bc", 10));
+            vertex.childAs("v", text, R.aside("bc", 10));
             return;
         }
         const mid = (l + r) >> 1;
@@ -104,7 +104,7 @@ async function insert(pos, value) {
 
         if (l === r) {
             const text = new sd.Text(svg, `v=${value}`);
-            vertex.childAs("v", text, R.Aside("bc", 10));
+            vertex.childAs("v", text, R.aside("bc", 10));
             text.opacity(0).startAnimate().opacity(1).endAnimate();
             return;
         }

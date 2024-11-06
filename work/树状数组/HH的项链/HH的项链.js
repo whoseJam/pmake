@@ -26,7 +26,7 @@ async function main() {
         }
         const curve = new sd.Curve(arr).bending(1);
         link(curve, arr.element(i), arr.element(j));
-        curve.value(new sd.Text(curve, "prev").fontSize(10), R.PointAtPathByRate(0.5, "cx", "my"));
+        curve.value(new sd.Text(curve, "prev").fontSize(10), R.pointAtPathByRate(0.5, "cx", "my"));
         curve.startAnimate().pointStoT().endAnimate().arrow();
     }
     await sd.pause();

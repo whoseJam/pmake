@@ -4,7 +4,7 @@ let svg = sd.svg();
 let R = sd.rule();
 let r = new sd.Rect(svg).width(100).cx(600).cy(300);
 let ir = new sd.Rect(svg);
-r.childAs("newRect", ir, R.CenterOnly());
+r.childAs("newRect", ir, R.centerOnly());
 
 const D = sd.device();
 

@@ -65,7 +65,7 @@ function makeDp() {
                     t.newNode(k, tmp=makeBackpack(j-k*v[i], C.blue));
                     sd.MathjaxLabel(tmp, `F_{${i-1}, ${j-k*v[i]}}=${dp.intValue(i-1, j-k*v[i])}`, "rc");
                     t.newLink(-1, k);
-                    t.element(-1, k).value(makeSpace(k * v[i], C.red, sd.Box).value(`+${k*w[i]}`, R.CenterOnly())).revArrow();
+                    t.element(-1, k).value(makeSpace(k * v[i], C.red, sd.Box).value(`+${k*w[i]}`, R.centerOnly())).revArrow();
                     ans = Math.max(ans, dp.intValue(i-1, j-k*v[i])+k*w[i]);
                     dp.color(i-1, j-k*v[i], C.blue);
                 }
@@ -101,7 +101,7 @@ function makeDp() {
                 child.target(parent.x() - 5, parent.y());
                 child.source(parent.x() - 5, parent.my());
             });
-            r.child("bbb").value(size, R.PointAtPathByRate(0.5, "mx", "cy"));
+            r.child("bbb").value(size, R.pointAtPathByRate(0.5, "mx", "cy"));
         }
         return r;
     }

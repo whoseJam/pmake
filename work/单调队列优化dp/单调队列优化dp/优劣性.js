@@ -29,7 +29,7 @@ sd.main(async () => {
     sd.MathjaxLabel(arr.element(8), "i", "bc").opacity(0).startAnimate().opacity(1).endAnimate();
     await sd.pause();
     const brace = sd.WithBrace(arr);
-    brace.brace(3, 8, "b", 40).startAnimate().pointStoT().value(new sd.Mathjax(svg, "[i-t,i]"), R.PointAtPathByRate(0.5, "cx", "y")).endAnimate();
+    brace.brace(3, 8, "b", 40).startAnimate().pointStoT().value(new sd.Mathjax(svg, "[i-t,i]"), R.pointAtPathByRate(0.5, "cx", "y")).endAnimate();
     await sd.pause();
     sd.MathjaxLabel(arr.element(3), "j_1", "bc").opacity(0).startAnimate().opacity(1).endAnimate();
     sd.MathjaxLabel(arr.element(5), "j_2", "bc").opacity(0).startAnimate().opacity(1).endAnimate();

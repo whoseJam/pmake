@@ -1,4 +1,4 @@
-import { Rule } from "./Rule";
+import { RuleType } from "@/Rule/Rule";
 
 type XLocatorType = "x"|"cx"|"mx";
 type YLocatorType = "y"|"cy"|"my";
