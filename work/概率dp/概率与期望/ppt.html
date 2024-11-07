@@ -24,8 +24,17 @@
     </section>
     <section>
         <h2>随机变量</h2>
+        <p>以下是一些随机变量的例子：</p>
+        <ul>
+            <li class="fragment">设 $X$ 表示投一次骰子的结果，那么 $X$ 是一个随机变量，该随机变量有 $\{1,2,3,4,5,6\}$ 这 $6$ 种取值</li>
+            <li class="fragment">设 $Y$ 表示投 $10$ 次骰子，它们的点数之和，那么 $Y$ 也是一个随机变量</li>
+            <li class="fragment">设 $Z$ 表示一个随机生成的长度为 $5$ 的排列中的逆序对数，那么 $Z$ 也是一个随机变量</li>
+        </ul>
+    </section>
+    <section>
+        <h2>随机变量</h2>
         <p>为了更好地刻画一个随机变量 $X$，我们可以用列表的方法去写出这个随机变量的取值，以及该取值的可能性</p>
-        <table>
+        <table class="fragment">
             <thead>
                 <tr>
                     <th>$X=$</th>
@@ -45,13 +54,14 @@
                 </tr>
             </tbody>
         </table>
+        <p class="fragment quote">上表忽略了随机变量的具体含义，只关注于随机变量的数学属性</p>
         <p class="fragment">我们定义 $X$ 的期望 $E(X)=\sum_iP(X=i)i$</p>
         <div class="fragment quote">
             上表中的随机变量的期望即为：$1\times 0.2+2\times 0.4+3\times 0.1+4\times 0.3=2.5$
         </div>
         <div class="fragment quote">
             <h3>期望</h3>
-            <p style="margin-bottom: 0px;">我们把观测随机变量看作一次开箱，观测到的随机变量的具体值看作这次开箱的收益，那么期望其实就是在问你，如果你能看很多很多次箱，你的平均收益会是多少</p>
+            <p style="margin-bottom: 0px;">我们把观测随机变量看作一次开箱，观测到的随机变量的具体值看作这次开箱的收益，那么期望其实就是在问你，如果你能开很多很多次箱，你的平均收益会是多少</p>
         </div>
     </section>
     <section>
@@ -68,8 +78,8 @@
                 $$
                 \begin{aligned}
                 E(X+Y)&=\sum_iP(X+Y=i)i \\
-                &=\sum_x\sum_yP(X=x)P(Y=y)(x+y) \\
-                &=\sum_x\sum_yP(X=x)P(Y=y)x+\sum_x\sum_yP(X=x)P(Y=y)y \\
+                &=\sum_x\sum_yP(X=x,Y=y)(x+y) \\
+                &=\sum_x\sum_yP(X=x,Y=y)x+\sum_x\sum_yP(X=x,Y=y)y \\
                 &=\sum_xP(X=x)x+\sum_yP(Y=y)y=E(X)+E(Y)
                 \end{aligned}
                 $$

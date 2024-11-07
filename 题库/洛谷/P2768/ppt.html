@@ -1,0 +1,51 @@
+<section>
+    <section>
+        <h1>珍珠项链</h1>
+    </section>
+    <problem data-problemset="luogu" data-problemid="P2768"></problem>
+    <section>
+        <h2>珍珠项链</h2>
+        <p>对于 $20\%$ 的数据，$1\le N\le 5$，$0\le K\le 5$</p>
+        <p class="fragment">搜索这条项链的组成，保证每种珍珠都出现过即可</p>
+    </section>
+    <section>
+        <h2>珍珠项链</h2>
+        <p>对于 $40\%$ 的数据，$1\le N\le 1000$，$0\le K\le 30$</p>
+        <p class="fragment">设 $f_{i,j}$ 表示构造了一串长度为 $i$ 的项链，目前使用过 $j$ 种珍珠，能构造出的项链总数</p>
+        <p class="fragment">
+            $$
+            f_{i,j}=f_{i-1,j}\times j +f_{i-1,j-1}\times(K-j+1)
+            $$
+        </p>
+        <p class="fragment">最后答案就是 $\sum_{1\le i\le n}f_{i,K}$</p>
+        <p class="fragment">时间复杂度 $O(NK)$</p>
+    </section>
+    <section>
+        <h2>珍珠项链</h2>
+        <p>对于 $100\%$ 的数据，$1\le N\le 10^9$，$1\le K\le 30$</p>
+        <p>
+            $$
+            f_{i,j}=f_{i-1,j}\times j +f_{i-1,j-1}\times(K-j+1)
+            $$
+        </p>
+        <p class="fragment">我们把 $f_{i,*}$ 看作一个长度为 $K$ 的向量，则：</p>
+        <p class="fragment">
+            $$
+            \begin{pmatrix}
+            1 & 0 & \cdots & 0 & 0 \\
+            K-1 & 2 & \cdots & 0 & 0\\
+            \vdots & \vdots & \ddots & \vdots &\vdots \\
+            0 & 0 & \cdots & 1 & K
+            \end{pmatrix}
+            \begin{pmatrix}
+            f_{i-1,1}\\ f_{i-1,2}\\ \vdots \\ f_{i-1,K}
+            \end{pmatrix}
+            =
+            \begin{pmatrix}
+            f_{i,1}\\ f_{i,2}\\ \vdots \\ f_{i,K}
+            \end{pmatrix}
+            $$
+        </p>
+        <p class="fragment">矩阵快速幂优化转移，时间复杂度 $O(K^3logN)$</p>
+    </section>
+</section>

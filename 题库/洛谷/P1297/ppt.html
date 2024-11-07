@@ -1,0 +1,56 @@
+<section>
+    <section>
+        <h1>单选错位</h1>
+    </section>
+    <problem data-problemset="luogu" data-problemid="P1297"></problem>
+    <section>
+        <h2>单选错位</h2>
+        <p>对于 $30\%$ 的数据，$n\le 10$ 且 $C\le 5$</p>
+        <p>搜索出所有的选填情况，统计每种错位情况下仍然正确的题目数量</p>
+        <ul>
+            <li class="fragment">记总情况数为 $T$</li>
+            <li class="fragment">记所有情况在错位下仍然正确的题目数量为 $t$</li>
+        </ul>
+        <p class="fragment">
+            $$
+            E(AC)=\frac t T
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>单选错位</h2>
+        <p>对于另外 $20\%$ 的数据，$A=0$ 且 $a_1=B$</p>
+        <p class="fragment">所有单选题的选项数目是一样的</p>
+        <p class="fragment">这种情况下，错位的正确率显然和随机填答案是一样的</p>
+        <p class="fragment">$$E(AC)=\frac n {a_1}$$</p>
+    </section>
+    <section>
+        <h2>单选错位</h2>
+        <p>对于 $100\%$ 的数据，$2\le n\le 10^7$</p>
+        <p>
+            $$
+            E(AC)=E(第一题AC)+E(第二题AC)+...+E(第n题AC)
+            $$
+        </p>
+        <p class="fragment">考虑如何计算 $E(第i题AC)$</p>
+        <ul>
+            <li class="fragment">如果 $a_i=a_{i-1}$</li>
+            <ul>
+                <li class="fragment">正确率显然是 $\frac 1 {a_i}$</li>
+            </ul>
+            <li class="fragment">如果 $a_i\gt a_{i-1}$</li>
+            <ul>
+                <li class="fragment">正确率显然是 $\frac{a_{i-1} }{a_i}\frac{1}{a_{i-1} }$<span class="fragment">，第一个分数是说第 $i$ 个题目的正确选项出现在 $[1,a_{i-1}]$ 这个区间</span><span class="fragment">，第二个分数是说第 $i-1$ 个题目的答案正好和第 $i$ 个题目的答案撞上</span></li>
+            </ul>
+            <li class="fragment">如果 $a_i\lt a_{i-1}$</li>
+            <ul>
+                <li class="fragment">正确率显然是 $\frac{a_{i} }{a_{i-1} }\frac{1}{a_{i} }$<span class="fragment">，第一个分数是说第 $i-1$ 个题目的正确选项出现在 $[1,a_i]$ 这个区间</span><span class="fragment">，第二个分数是说第 $i$ 个题目的答案正好和第 $i-1$ 个题目的答案撞上</span></li>
+            </ul>
+        </ul>
+        <p class="fragment">
+            $$
+            E(AC)=\sum_{i=1}^n \frac{1}{max(a_i,a_{i+1})}
+            $$
+        </p>
+    </section>
+</section>

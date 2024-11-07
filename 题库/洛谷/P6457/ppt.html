@@ -1,0 +1,41 @@
+<section>
+    <section>
+        <h1>IVANA</h1>
+    </section>
+    <problem data-problemset="luogu" data-problemid="P6457"></problem>
+    <section>
+        <h2>IVANA</h2>
+        <p>对于 $20\%$ 的数据，$1\le n\le 4$</p>
+        <p class="fragment">这部分得分留给分类讨论选手</p>
+    </section>
+    <section>
+        <h2>IVANA</h2>
+        <p>对于 $50\%$ 的数据，$1\le n\le 100$</p>
+        <p>由于是在环上取数，为了后续处理方便，不妨先拆环为链</p>
+        <p class="fragment">我们考虑枚举每一种开局，判断该开局最终能否导致先手获胜</p>
+        <p class="fragment">设 $f_{l,r}$ 表示把 $[l,r]$ 这段区间取完后，先手能比后手领先多少个奇数</p>
+        <ul>
+            <li class="fragment">如果 $f_{l,r}\gt 0$，那么在这段区间上取数是<b>先手必胜</b>的</li>
+            <li class="fragment">如果 $f_{l,r}\lt 0$，那么在这段区间上取数是<b>先手必败</b>的</li>
+        </ul>
+        <p class="fragment">为了<b>强制选某个数作为开局</b>，假设开局选了第 $i$ 个数，那么让 $f_{i,i}=1$，其他的 $f_{j,j}=-\infty$ 即可</p>
+        <p class="fragment">
+            $$
+            f_{l,r}=max\{f(l,l)-f(l+1,r),f(r,r)-f(l,r-1)\}
+            $$
+        </p>
+        <iframe data-animation="./状态转移.js" class="fragment"
+            style="width: 1000px; height: 150px;"></iframe>
+    </section>
+    <section>
+        <h2>IVANA</h2>
+        <p>最后检验 $f_{i,i}-f_{i+1,i+n-1}$ 是否比 $0$ 大</p>
+        <p>总时间复杂度 $O(n^3)$</p>
+    </section>
+    <section>
+        <h2>IVANA</h2>
+        <p>对于 $100\%$ 的数据，$n\le 1000$</p>
+        <p class="fragment">容易发现前一种做法中，我们似乎没有必要去每枚举一个强制约束，都做一次动态规划</p>
+        <p class="fragment">我们提前把 $f$ 数组预处理出来后，对每一个 $i$，依次检验 $f_{i,i}-f_{i+1,i+n-1}$ 是否比 $0$ 大即可</p>
+    </section>
+</section>
