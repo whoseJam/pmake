@@ -91,7 +91,7 @@ function CreateLink(a, b) {
 
 function CreateNode(x) {
     const item = data[x];
-    item.circle = new sd.Circle(coord).r(2).color(C.black).center(coord.at(item.x, item.y)).strokeWidth(0).childAs(
+    item.circle = new sd.Circle(coord).r(2).color(C.black).center(coord.globalAt(item.x, item.y)).strokeWidth(0).childAs(
         new sd.Mathjax(coord, `(x_{${x+1}},y_{${x+1}})`).fontSize(20),
         R.aside("tc", 2)
     ).opacity(0).startAnimate().opacity(1).endAnimate();
@@ -127,9 +127,9 @@ function UpdateLine(k) {
     nodesArr.endAnimate();
 
     const id = convex[target];
-    const rate = (coord.at(data[id].x, data[id].y)[0] - coord.x()) / coord.width();
+    const rate = (coord.globalAt(data[id].x, data[id].y)[0] - coord.x()) / coord.width();
     const lineH = line.at(rate)[1];
-    const nodeH = (coord.at(data[id].x, data[id].y)[1]);
+    const nodeH = (coord.globalAt(data[id].x, data[id].y)[1]);
     line.startAnimate().dy(nodeH - lineH).endAnimate();
     
     lastTarget = target;
