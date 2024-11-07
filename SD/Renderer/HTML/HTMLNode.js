@@ -50,9 +50,7 @@ export class HTMLNode {
         if (key === "innerHTML") {
             this.element.innerHTML = value;
         } else if (key === "value") {
-            console.log("set value = ", value);
             this.element.value = value;
-            console.log("current element value = ", this.element.value);
         } else if (key === "pointer-events") {
             this.element.style[key] = value;
         } else {

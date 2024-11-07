@@ -1,7 +1,7 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-const coord = new sd.Coord(svg).viewWidth(5).viewHeight(5);
+const coord = new sd.Coord(svg).viewX(-2.5).viewY(-2.5).viewWidth(5).viewHeight(5);
 
 sd.init(() => {
 

@@ -34,7 +34,7 @@ sd.main(async () => {
         else pml.startAnimate().cx(ml).endAnimate();
         if (!pmr.opacity()) pmr.cx(mr).startAnimate().opacity(1).endAnimate();
         else pmr.startAnimate().cx(mr).endAnimate();
-        if (coord.child(1).valueAt(ml) < coord.child(1).valueAt(mr)) {
+        if (coord.child(1).globalY(coord.coordX(ml)) < coord.child(1).globalY(coord.coordX(mr))) {
             await sd.pause();
             pmr.startAnimate().opacity(0).endAnimate();
             pr.startAnimate().cx(r = mr).endAnimate();
@@ -49,10 +49,10 @@ sd.main(async () => {
 function MakeTracer(pointer) {
     pointer.childAs(new sd.Line(pointer).strokeDashArray([2, 2]), function(parent, child) {
         child.source(parent.target());
-        child.target([parent.cx(), coord.child(1).valueAt(parent.cx())]);
+        child.target([parent.cx(), coord.child(1).trimGlobalY(coord.coordX(parent.cx()))]);
     })
     pointer.childAs("circle", new sd.Circle(pointer).r(5).strokeDashArray([2, 2]).color(C.grey), function(parent, child) {
         child.cx(parent.cx());
-        child.cy(coord.child(1).valueAt(child.cx()));
+        child.cy(coord.child(1).trimGlobalY(coord.coordX(child.cx())));
     })
 }

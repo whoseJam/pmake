@@ -107,6 +107,8 @@ export class Vector {
     static sin(a: [number, number]): number;
 
     static tan(a: [number, number]): number;
+
+    static cohenSutherland(a: [number, number], b: [number, number], x: number, y: number, width: number, height: number): [[number, number], [number, number]];
 }
 
 export function vec(): typeof Vector;

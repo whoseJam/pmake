@@ -92,6 +92,60 @@ export class Vector {
     static tan(a) {
         return a[1] / a[0];
     }
+
+    static cohenSutherland(a, b, x, y, width, height) {
+        const INSIDE = 0;
+        const LEFT = 1;
+        const RIGHT = 2;
+        const BOTTOM = 4;
+        const TOP = 8;
+        const mx = x + width;
+        const my = y + height;
+        function computeCode(x0, y0) {
+            let code = INSIDE;
+            if (x0 < x) code |= LEFT;
+            if (x0 > mx) code |= RIGHT;
+            if (y0 < y) code |= BOTTOM;
+            if (y0 > my) code |= TOP;
+            return code;
+        }
+        let codeA = computeCode(a[0], a[1]);
+        let codeB = computeCode(b[0], b[1]);
+        let accepted = false;
+        while (true) {
+            if (codeA === INSIDE && codeB === INSIDE) {
+                accepted = true;
+                break;
+            } else if (codeA & codeB) {
+                break;
+            } else {
+                let x1, y1;
+                const codeOut = (codeA) ? codeA : codeB;
+                if (codeOut & TOP) {
+                    x1 = a[0] + (b[0] - a[0]) * (my - a[1]) / (b[1] - a[1]);
+                    y1 =  my;
+                } else if (codeOut & BOTTOM) {
+                    x1 = a[0] + (b[0] - a[0]) * (y - a[1]) / (b[1] - a[1]);
+                    y1 = y;
+                } else if (codeOut & RIGHT) {
+                    y1 = a[1] + (b[1] - a[1]) * (mx - a[0]) / (b[0] - a[0]);
+                    x1 = mx;
+                } else if (codeOut & LEFT) {
+                    y1 = a[1] + (b[1] - a[1]) * (x - a[0]) / (b[0] - a[0]);
+                    x1 = x;
+                }
+                if (codeOut === codeA) {
+                    a = [x1, y1];
+                    codeA = computeCode(x1, y1);
+                } else {
+                    b = [x1, y1];
+                    codeB = computeCode(x1, y1);
+                }
+            }
+        }
+        return [a, b, accepted];
+    }
+
 }
 
 export function vec() {
