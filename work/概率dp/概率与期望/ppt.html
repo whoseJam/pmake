@@ -66,7 +66,7 @@
     </section>
     <section>
         <h2>期望的线性性</h2>
-        <p>假设有两个<b style="color: red;">独立的</b>随机变量 $X$ 和 $Y$，则：
+        <p>假设有两个不同的随机变量 $X$ 和 $Y$，则：
             $$
             E(X+Y)=E(X)+E(Y)
             $$
@@ -77,10 +77,10 @@
             <p style="margin-bottom: 0px;">
                 $$
                 \begin{aligned}
-                E(X+Y)&=\sum_iP(X+Y=i)i \\
-                &=\sum_x\sum_yP(X=x,Y=y)(x+y) \\
-                &=\sum_x\sum_yP(X=x,Y=y)x+\sum_x\sum_yP(X=x,Y=y)y \\
-                &=\sum_xP(X=x)x+\sum_yP(Y=y)y=E(X)+E(Y)
+                E(X+Y)&=\sum_iiP(X+Y=i) \\
+                &=\sum_x\sum_y(x+y)P(X=x,Y=y) \\
+                &=\sum_x\sum_yxP(X=x,Y=y)+\sum_x\sum_yyP(X=x,Y=y) \\
+                &=\sum_xxP(X=x)+\sum_yyP(Y=y)=E(X)+E(Y)
                 \end{aligned}
                 $$
             </p>

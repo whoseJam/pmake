@@ -1,32 +1,11 @@
 <section>
     <section>
         <h1>单选错位</h1>
+        <p>利用期望的线性性</p>
     </section>
     <problem data-problemset="luogu" data-problemid="P1297"></problem>
     <section>
         <h2>单选错位</h2>
-        <p>对于 $30\%$ 的数据，$n\le 10$ 且 $C\le 5$</p>
-        <p>搜索出所有的选填情况，统计每种错位情况下仍然正确的题目数量</p>
-        <ul>
-            <li class="fragment">记总情况数为 $T$</li>
-            <li class="fragment">记所有情况在错位下仍然正确的题目数量为 $t$</li>
-        </ul>
-        <p class="fragment">
-            $$
-            E(AC)=\frac t T
-            $$
-        </p>
-    </section>
-    <section>
-        <h2>单选错位</h2>
-        <p>对于另外 $20\%$ 的数据，$A=0$ 且 $a_1=B$</p>
-        <p class="fragment">所有单选题的选项数目是一样的</p>
-        <p class="fragment">这种情况下，错位的正确率显然和随机填答案是一样的</p>
-        <p class="fragment">$$E(AC)=\frac n {a_1}$$</p>
-    </section>
-    <section>
-        <h2>单选错位</h2>
-        <p>对于 $100\%$ 的数据，$2\le n\le 10^7$</p>
         <p>
             $$
             E(AC)=E(第一题AC)+E(第二题AC)+...+E(第n题AC)

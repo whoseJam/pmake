@@ -20,7 +20,6 @@ function BuildSearchGraph(n) {
             const clazz = (j&1) ? sd.Triangle : sd.InvertedTriangle;
             const dis = j - mid;
             row.push(new clazz(svg).y(h * i).cx(dis * 20));
-            console.log("x=", row[row.length - 1].x(), "mx=", row[row.length - 1].mx());
         }
         rows.push(row);
     }

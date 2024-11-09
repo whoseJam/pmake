@@ -7,35 +7,40 @@
         <h2>IVANA</h2>
         <p>对于 $20\%$ 的数据，$1\le n\le 4$</p>
         <p class="fragment">这部分得分留给分类讨论选手</p>
+        <p class="fragment">同时由于我们只关心数字的奇偶性，不关心具体值是多少，所以提前把每一个 $a_i$ 都取余 $2$ 会极大地简化讨论</p>
     </section>
     <section>
         <h2>IVANA</h2>
-        <p>对于 $50\%$ 的数据，$1\le n\le 100$</p>
-        <p>由于是在环上取数，为了后续处理方便，不妨先拆环为链</p>
-        <p class="fragment">我们考虑枚举每一种开局，判断该开局最终能否导致先手获胜</p>
-        <p class="fragment">设 $f_{l,r}$ 表示把 $[l,r]$ 这段区间取完后，先手能比后手领先多少个奇数</p>
+        <p>对于 $100\%$ 的数据，$1\le n\le 1000$</p>
+        <p>由于是在环上取数，为了后续处理方便，不妨先拆环为链<span class="fragment">，在链上，我们把已经取走的数字形成的区间叫做<b>完成区间</b></span><span class="fragment">，我们倒着考虑这个游戏，每回合相当于放一个数字到完成区间的两端，然后让完成区间缩小</span></p>
+        <p class="fragment">设 $f_{l,r}$ 表示把 $[l,r]$ 这段完成区间上做游戏，先手能比后手领先多少个奇数</p>
         <ul>
             <li class="fragment">如果 $f_{l,r}\gt 0$，那么在这段区间上取数是<b>先手必胜</b>的</li>
             <li class="fragment">如果 $f_{l,r}\lt 0$，那么在这段区间上取数是<b>先手必败</b>的</li>
         </ul>
-        <p class="fragment">为了<b>强制选某个数作为开局</b>，假设开局选了第 $i$ 个数，那么让 $f_{i,i}=1$，其他的 $f_{j,j}=-\infty$ 即可</p>
         <p class="fragment">
             $$
-            f_{l,r}=max\{f(l,l)-f(l+1,r),f(r,r)-f(l,r-1)\}
+            f_{l,r}=max\{a_l-f_{l+1,r},a_r-f_{l,r-1}\}
             $$
         </p>
         <iframe data-animation="./状态转移.js" class="fragment"
             style="width: 1000px; height: 150px;"></iframe>
+        <p class="fragment quote">前者相当于最后一个放的数字是 $a_l$，留给对手的局面是 $[l,r]$</p>
     </section>
     <section>
         <h2>IVANA</h2>
-        <p>最后检验 $f_{i,i}-f_{i+1,i+n-1}$ 是否比 $0$ 大</p>
-        <p>总时间复杂度 $O(n^3)$</p>
-    </section>
-    <section>
-        <h2>IVANA</h2>
-        <p>对于 $100\%$ 的数据，$n\le 1000$</p>
-        <p class="fragment">容易发现前一种做法中，我们似乎没有必要去每枚举一个强制约束，都做一次动态规划</p>
-        <p class="fragment">我们提前把 $f$ 数组预处理出来后，对每一个 $i$，依次检验 $f_{i,i}-f_{i+1,i+n-1}$ 是否比 $0$ 大即可</p>
+        <p>那么我应该如何强制先手选某个数字作为开局呢？</p>
+        <p class="fragment">假设先手选第 $i$ 个数字作为开局，那么第 $i$ 个数字一定是最先被取走的</p>
+        <p class="fragment">留给对手的局面就是 $[i+1,i+n-1]$ 了</p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                int ans = 0;
+                for (int i = 1; i <= n; i++) {
+                    if (a[i] - f[i + 1][i + n - 1] > 0) {
+                        ans++;
+                    }
+                }
+            </script>
+        </codeblock>
     </section>
 </section>
