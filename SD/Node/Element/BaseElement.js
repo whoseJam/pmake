@@ -19,7 +19,6 @@ export function BaseElement(parent) {
     this.member.new("width", 40);
     this.member.new("height", 40);
     this.member.new("rate", 1.2);
-    this.member.new("value", undefined);
 
     this._.BASE_ELEMENT = true;
 }
@@ -64,25 +63,25 @@ BaseElement.prototype.text = function() {
 BaseElement.prototype.drop = function() {
     const value = this.child("value");
     this.eraseChild(value);
+    value.after(this.delay());
     value.attachTo(svg());
     return value;
 }
 
 BaseElement.prototype.intValue = function() {
-    const value = this.member.get("value");
+    const value = this.value();
     if (!value) return 0;
     return +value.text();
 }
 
 BaseElement.prototype.value = function(value, rule) {
-    if (arguments.length === 0) return this.member.get("value");
+    if (arguments.length === 0) return this.child("value");
     Exit.ordinary(this, "value");
     if (Check.isFalseType(value)) return this;
     rule = rule ? rule : CenterFixAspect(this.member.get("rate"));
     value = Cast.castToSDNode(this, value);
     value.onEnter(Enter.ordinary(this));
     this.childAs("value", value, rule);
-    this.member.setAndFlush("value", value);
     this.tryUpdate();
     return this;
 }
@@ -97,7 +96,7 @@ BaseElement.prototype.valueFromExist = function(value, rule) {
 }
 
 BaseElement.prototype.valueRule = function(rule) {
-    const value = this.member.get("value");
+    const value = this.value();
     value?.rule(rule);
 }
 

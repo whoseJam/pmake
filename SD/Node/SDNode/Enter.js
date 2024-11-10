@@ -1,3 +1,4 @@
+import { svg } from "@/Interact/RootSvg";
 
 export class Enter {
     static ordinary(parent, layer) {
@@ -15,8 +16,10 @@ export class Enter {
 
     static fromExist(parent, layer) {
         return function(element, move) {
-            element.attachTo(layer ? parent.layer(layer) : parent);
+            element.after(parent.delay());
+            element.attachTo(svg());
             element.startAnimate(parent);
+            element.attachTo(layer ? parent.layer(layer) : parent);
             move();
             element.opacity(1);
         }

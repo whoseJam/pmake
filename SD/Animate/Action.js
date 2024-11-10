@@ -66,7 +66,7 @@ Action.prototype.hidden = function() {
 }
 
 Action.prototype.log = function() {
-    return `[${this.l}, ${this.r}] channel=${this.channel} source=${this.source} target=${this.target} id=${this.owner.id} frame=${this.frame}`;
+    return `[${this.l}, ${this.r}] channel=${this.channel} source=${source} target=${target} id=${this.owner.id} frame=${this.frame}`;
 }
 
 Action.prototype.clone = function() {
