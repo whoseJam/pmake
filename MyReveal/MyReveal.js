@@ -2,12 +2,13 @@ const plugins = [];
 
 import Reveal from "reveal.js";
 
-import { Picture } from "./plugin/Picture";
-import { Codeblock } from "./plugin/Codeblock";
-import { Problem } from "./plugin/Problem";
-import { Image } from "./plugin/Image";
+import { Image }       from "./plugin/Image";
+import { Picture }     from "./plugin/Picture";
+import { Problem }     from "./plugin/Problem";
+import { MathJax2 }    from "./plugin/MathJax2";
+import { MathJax3 }    from "./plugin/MathJax3";
+import { Codeblock }   from "./plugin/Codeblock";
 import { SDAnimation } from "./plugin/SDAnimation";
-import { MathJax2 } from "./plugin/MathJax2";
 
 import Highlight from "./plugin/HighlightEngine";
 import "./plugin/Chalkboard";
@@ -17,7 +18,7 @@ plugins.push(Codeblock);
 plugins.push(Problem);
 plugins.push(Image);
 plugins.push(SDAnimation);
-plugins.push(MathJax2);
+plugins.push(MathJax3);
 plugins.push(Highlight);
 plugins.push(window.RevealChalkboard);
 window.Reveal = Reveal

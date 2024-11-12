@@ -12,14 +12,18 @@ export function Picture() {
             const parent = picture.parentNode;
             const url = GetURL(picture);
 
+            // build structure
             const div = document.createElement("div");
             const img = document.createElement("img");
             div.append(img);
-            img.setAttribute("data-source", url);
-            div.style["textAlign"] = "center";
-
+            
+            // build attribute of img
             CopyStyles(picture, img, ["width", "height"]);
+            img.setAttribute("data-source", url);
+            
+            // build attribute of div
             ReplaceElement(parent, picture, div);
+            div.style["textAlign"] = "center";
             
             init(reveal);
         }
