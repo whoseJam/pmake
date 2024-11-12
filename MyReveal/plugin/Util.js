@@ -1,10 +1,28 @@
-export function ReplaceElement(parent, oldElement, newElement) {
-    CopyStyles(oldElement, newElement);
-    parent.insertBefore(newElement, oldElement.previousSibling);
-    parent.removeChild(oldElement);
+const DEFAULT_STYLES = [
+    "style",
+    "width",
+    "height"
+];
+
+export function ReplaceElement(source, target) {
+    if (arguments.length === 3) {
+        ReplaceElement(arguments[1], arguments[2]);
+        return;
+    }
+    const parent = source.parentNode;
+    target.className = source.className;
+    CopyStyles(source, target);
+    parent.insertBefore(target, source.previousSibling);
+    parent.removeChild(source);
 }
 
-function CopyStyles(source, target) {
-    const style = source.getAttribute("style");
-    target.setAttribute("style", style);
+export function CopyAttributes(source, target, attributes = []) {
+    for (let attribute of attributes) {
+        const value = source.getAttribute(attribute);
+        if (value) target.setAttribute(attribute, value);
+    }
+}
+
+export function CopyStyles(source, target, styles = DEFAULT_STYLES) {
+    CopyAttributes(source, target, styles);
 }
