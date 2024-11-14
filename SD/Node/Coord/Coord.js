@@ -140,7 +140,7 @@ Coord.prototype.draw = function(name, func) {
 
     this.childAs(name, path, LineRule);
 
-    return this;
+    return path;
 }
 
 function LineRule(parent, child) {
