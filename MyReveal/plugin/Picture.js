@@ -22,7 +22,7 @@ export function Picture() {
             img.setAttribute("data-source", url);
             
             // build attribute of div
-            ReplaceElement(parent, picture, div);
+            ReplaceElement(picture, div);
             div.style["textAlign"] = "center";
             
             init(reveal);
@@ -41,6 +41,6 @@ function GetURL(element) {
         const source = element.getAttribute(key);
         if (source) return source;
     }
-    console.error(`Element ${element} Seem Do Not Have a Valid URL(src, data-src or data-source)`);
+    console.error(`Picture ${element} Seem Do Not Have a Valid URL(src, data-src or data-source)`);
     return "";
 }
