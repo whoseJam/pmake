@@ -1,113 +1,94 @@
-export const MathJax2 = () => {
-	let deck;
 
-	const defaultOptions = {
-		messageStyle: "none",
-		tex2jax: {
-			inlineMath: [["$", "$" ], ["\\(", "\\)"]],
-			skipTags: ["script", "noscript", "style", "textarea", "pre"]
-		},
-		skipStartupTypeset: true
-	};
-
-	function loadScript(url, callback) {
-		const head = document.querySelector("head");
-		const script = document.createElement("script");
-		script.type = "text/javascript";
-		script.src = url;
-
-		// Wrapper for callback to make sure it only fires once
-		const finish = () => {
-			if (typeof(callback) === "function") {
-				callback.call();
-				callback = null;
-			}
-		}
-		script.onload = finish;
-
-		head.appendChild(script);
-	}
-
-	return {
-		id: "mathjax2",
-
-		init: function( reveal ) {
-
-			deck = reveal;
-
-			memorizeFragmentIndex();
-
-			const revealOptions = deck.getConfig().mathjax2 || deck.getConfig().math || {};
-
-			const options = { ...defaultOptions, ...revealOptions };
-			const mathjax = options.mathjax || 'https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js';
-			const config = options.config || "TeX-AMS_SVG"; 
-			// "TeX-AMS_SVG"; 
-			// "TeX-AMS_CHTML"; 
-			// "TeX-AMS_HTML-full";
-			const url = mathjax + '?config=' + config;
-
-			options.tex2jax = { ...defaultOptions.tex2jax, ...revealOptions.tex2jax };
-
-			options.mathjax = options.config = null;
-
-			loadScript(url, function() {
-				MathJax.Hub.Config(options);
-
-				// Typeset followed by an immediate reveal.js layout since
-				// the typesetting process could affect slide height
-				MathJax.Hub.Queue(["Typeset", MathJax.Hub, deck.getRevealElement()]);
-				MathJax.Hub.Queue(renderMathFragment);
-				MathJax.Hub.Queue(deck.layout);
-
-				// Reprocess equations in slides when they turn visible
-				deck.on("slidechanged", function( event ) {
-					MathJax.Hub.Queue(['Typeset', MathJax.Hub, event.currentSlide]);
-				});
-			});
-		}
-	}
+const DEFAULT_OPTIONS = {
+	messageStyle: "none",
+	tex2jax: {
+		inlineMath: [["$", "$"], ["\\(", "\\)"]],
+		skipTags: ["script", "noscript", "style", "textarea", "pre"]
+	},
+	skipStartupTypeset: true
 };
 
-function memorizeFragmentIndex() {
-	document.querySelectorAll(".fragment").forEach(fragment => {
-		const index = fragment.getAttribute("data-fragment-index");
-		if (index) fragment.setAttribute("fix-data-fragment-index", true);
-	});
+// "TeX-AMS_SVG"  : Chinese Character Display Error
+// "TeX-AMS_HTML" : Full Tested
+// "TeX-AMS_CHTML": Not Support Yet  
+const DEFAULT_CONFIG = "TeX-AMS_HTML";
+
+function LoadScript(url, callback) {
+	const head = document.querySelector("head");
+	const script = document.createElement("script");
+	script.type = "text/javascript";
+	script.src = url;
+
+	script.onload = function() {
+		if (typeof(callback) === "function") {
+			callback.call();
+			callback = null;
+		}
+	};
+
+	head.appendChild(script);
 }
 
-function renderMathFragment() {
-	const math = document.querySelectorAll(".math-fragment");
-	math.forEach(element => render(element));
-	function render(element) {
-		const svg = element.querySelector(".MathJax_SVG").children[0];
-		const strokeColorG = svg.children[0];
-		const blockG = strokeColorG.children[0];
-		const tableG = blockG.children[1];
-		for (let i = 1; i < tableG.children.length; i++) {
-			tableG.children[i].classList.add("fragment");
+export function MathJax2() {
+	return {
+		id: "MathJax2",
+		init: async function(reveal) {
+			const revealOptions = reveal.getConfig().mathjax2 || reveal.getConfig().math || {};
+			const options = { ...DEFAULT_OPTIONS, ...revealOptions };
+			const script = options.mathjax || "https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js";
+			const config = options.config || DEFAULT_CONFIG;
+			const url = script + "?config=" + config;
+			
+			options.tex2jax = { ...DEFAULT_OPTIONS.tex2jax, ...revealOptions.tex2jax };
+			options.mathjax = options.config = null;
+
+			const promise = new Promise(resolve => {
+				LoadScript(url, function() {
+					MathJax.Hub.Config(options);
+
+					MathJax.Hub.Queue(["Typeset", MathJax.Hub, reveal.getRevealElement()]);
+					MathJax.Hub.Queue(() => RenderMathFragment(config));
+					MathJax.Hub.Queue(() => reveal.layout());
+					MathJax.Hub.Queue(() => resolve(0));
+				})
+			});
+
+			return promise;
 		}
 	}
-	document.querySelectorAll(".fragment").forEach(fragment => {
-		if (fragment.hasAttribute("fix-data-fragment-index")) return;
-		fragment.removeAttribute("data-fragment-index");
-	})
 }
 
-// function renderMathFragment() {
-// 	return;
-// 	const math = document.querySelectorAll(".math-fragment");
-// 	function render(element) {
-// 		const displaySpan = element.querySelector(".MJXc-display");
-// 		const fontControl = displaySpan.children[0];
-// 		fontControl.style["font-size"] = "121%";
-// 		const tableSpan = displaySpan.querySelector(".mjx-math .mjx-mrow .mjx-mtable .mjx-table");
-// 		for (let i = 1; i < tableSpan.children.length; i++) {
-// 			const row = tableSpan.children[i];
-// 			row.classList.add("fragment");
-// 		}
-// 	}
-// 	for (let i = 0; i < math.length; i++) {
-// 		render(math[i]);
-// 	}
-// }
+function RenderMathFragment(config) {
+	const math = document.querySelectorAll(".math-fragment");
+	math.forEach(element => Renderer[config](element));
+}
+
+const Renderer = {
+	"TeX-AMS_SVG": function(math) {
+		const svg = math.querySelector(".MathJax_SVG").children[0];
+		const a = svg.children[0]; if (!a) return;
+		const b = a.children[0]; if (!b) return;
+		const c = b.children[1]; if (!c) return;
+		AttachFragment(c);
+	},
+	"TeX-AMS_CHTML": function(math) {
+		throw new Error("Not Implemented Yet");
+	},
+	"TeX-AMS_HTML": function(math) {
+		const span = math.querySelector(".math");
+		const a = span.children[0]; if (!a) return;
+		const b = a.children[0]; if (!b) return;
+		const c = b.children[0]; if (!c) return;
+		const d = c.children[0]; if (!d) return;
+		const e = d.children[0]; if (!e) return;
+		const f = e.children[1]; if (!f) return;
+		const g = f.children[0]; if (!g) return;
+		AttachFragment(g);
+	}
+}
+
+function AttachFragment(rows) {
+	for (let i = 1; i < rows.children.length; i++) {
+		rows.children[i].classList.add("fragment");
+	}
+}

@@ -6,19 +6,18 @@ import { Image }       from "./plugin/Image";
 import { Picture }     from "./plugin/Picture";
 import { Problem }     from "./plugin/Problem";
 import { MathJax2 }    from "./plugin/MathJax2";
-import { MathJax3 }    from "./plugin/MathJax3";
 import { Codeblock }   from "./plugin/Codeblock";
 import { SDAnimation } from "./plugin/SDAnimation";
 
 import Highlight from "./plugin/HighlightEngine";
 import "./plugin/Chalkboard";
 
-plugins.push(Picture);
-plugins.push(Codeblock);
-plugins.push(Problem);
 plugins.push(Image);
-plugins.push(SDAnimation);
+plugins.push(Picture);
+plugins.push(Problem);
 plugins.push(MathJax2);
+plugins.push(Codeblock);
+plugins.push(SDAnimation);
 plugins.push(Highlight);
 plugins.push(window.RevealChalkboard);
 window.Reveal = Reveal

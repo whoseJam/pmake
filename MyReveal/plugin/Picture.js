@@ -3,7 +3,7 @@ import { ReplaceElement } from "./Util";
 
 export function Picture() {
     return {
-        id: "picture",
+        id: "Picture",
         init: function init(reveal) {
             const pictures = document.getElementsByTagName("picture");
             if (pictures.length === 0) return;
