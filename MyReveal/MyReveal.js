@@ -18,7 +18,7 @@ plugins.push(Codeblock);
 plugins.push(Problem);
 plugins.push(Image);
 plugins.push(SDAnimation);
-plugins.push(MathJax3);
+plugins.push(MathJax2);
 plugins.push(Highlight);
 plugins.push(window.RevealChalkboard);
 window.Reveal = Reveal
