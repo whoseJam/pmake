@@ -1,0 +1,29 @@
+<section>
+    <section>
+        <h1>Tarjan</h1>
+        <p>帮助找到所有的强连通分量</p>
+    </section>
+    <section>
+        <h2>Tarjan</h2>
+        <iframe data-animation="./边分类.js"
+            style="width: 1000px; height: 300px;"></iframe>
+        <p>Tarjan 尝试通过 DFS，把一张有向图划分为一棵树加上若干条额外边<span class="fragment">，再通过分析额外边对树的结构的影响，来找到所有强连通分量</span></p>
+        <p class="fragment">根据额外边的属性不同，我们有如下分类：</p>
+        <ul>
+            <li class="fragment"><b style="color: orange;">前向边</b>：这种额外边总是从树上的祖先指向后代</li>
+            <li class="fragment"><b style="color: red;">返祖边</b>：这种额外边总是从树上的后代指向祖先</li>
+            <li class="fragment"><b style="color: purple;">横叉边</b>：这种额外边两端是两个没什么关系的节点</li>
+        </ul>
+    </section>
+    <section>
+        <h2>Tarjan</h2>
+        <iframe data-animation="./dfn&low.js"
+            style="width: 1000px; height: 400px;"></iframe>
+        <p style="margin-top: -20px;">我们在遍历整张图时，把遍历到的每个节点依次记录下来，形成一个序列，并且记点 $u$ 在序列中的位置为 $dfn(u)$<span class="fragment">，由于<b style="color: red;">返祖边</b>和<b style="color: purple;">横叉边</b>的存在，导致某些节点可以逆流而上，来到自己的祖先处，形成一个个环</span><span class="fragment">，为了描述这样的结构，我们对点 $u$ 记录 $low(u)$，表示从 $u$ 出发，沿着树边或者至多一条非树边，能回溯到的最早的祖先的 $dfn$ 是多少</span></p>
+        <p class="fragment quote">在图上有三个点被标为了绿色，它们的 $dfn(u)=low(u)$，思考一下满足这个条件的点的性质</p>
+    </section>
+    <section>
+        <h2>Tarjan</h2>
+        <p></p>
+    </section>
+</section>

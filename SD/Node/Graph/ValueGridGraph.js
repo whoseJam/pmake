@@ -15,7 +15,7 @@ ValueGridGraph.prototype.newNode = function(gid, value) {
     const sidToPos = this._.sidToPos;
     const element = value;
     sidToPos[element.id] = { x: this._.curN, y: this._.curM };
-    element.onEnter(Enter.ordinary(this, "elements"));
+    element.onEnter(Enter.ordinary(this, "nodes"));
     this.newNodeByBaseGraph(gid, element);
     return this;
 }

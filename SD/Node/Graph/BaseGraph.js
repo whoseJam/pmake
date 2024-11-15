@@ -185,3 +185,13 @@ BaseGraph.prototype.toNode = function(link, sourceId) {
 BaseGraph.prototype.toNodeId = function(link, sourceId) {
     return this.nodeId(this.toNode(link, sourceId))
 }
+
+BaseGraph.prototype.forEachNodes = function(callback) {
+    this.nodes().forEach(node => callback(node, this.nodeId(node)));
+    return this;
+}
+
+BaseGraph.prototype.forEachLinks = function(callback) {
+    this.links().forEach(link => callback(link, this.sourceId(link), this.targetId(link)));
+    return this;
+}

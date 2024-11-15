@@ -46,9 +46,11 @@ export { HorizontalValueTree } from "./Node/Tree/HorizontalValueTree";
 
 export { DAG }            from "./Node/Graph/DAG";
 export { BoxDAG }         from "./Node/Graph/BoxDAG";
+export { BaseGraph }      from "./Node/Graph/BaseGraph";
 export { GridGraph }      from "./Node/Graph/GridGraph";
 export { TinyGraph }      from "./Node/Graph/TinyGraph";
 export { BipartiteGraph } from "./Node/Graph/BipartiteGraph";
+export { ValueGridGraph } from "./Node/Graph/ValueGridGraph";
 
 export { Curve }       from "./Node/Curve/Curve";
 export { Bezier }      from "./Node/Curve/Bezier";

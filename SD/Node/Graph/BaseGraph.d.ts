@@ -64,4 +64,7 @@ export class BaseGraph extends SDNode {
 
     links(): Array<SDNode>;
     nodes(): Array<SDNode>;
+    
+    forEachNodes(callback: (node: SDNode, id: string) => void): this;
+    forEachLinks(callback: (link: SDNode, sourceId: string, targetId: string) => void): this;
 }

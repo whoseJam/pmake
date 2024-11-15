@@ -330,10 +330,12 @@ BaseTree.prototype.intValue = function() {
 
 BaseTree.prototype.forEachNodes = function(callback) {
     this.member.get("nodes").forEach(node => callback(node, this.nodeId(node)));
+    return this;
 }
 
 BaseTree.prototype.forEachLinks = function(callback) {
     this.member.get("links").forEach(link => callback(link, this.sourceId(link), this.targetId(link)));
+    return this;
 }
 
 BaseTree.prototype.rootId = function() {
