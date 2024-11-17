@@ -71,23 +71,18 @@ async function Dfs(u) {
 
     const toNodes = ToNodes(u);
     for (let to of toNodes) {
-        // await sd.pause();
         const v = to.id;
         if (!dfn[v]) {
             LinkTo(to.link, C.textBlue);
             prt[v] = u;
             await Dfs(to.id);
             low[u] = Math.min(low[u], low[v]);
-        } else if (ins[v]) {
-            const color = IsAncesstor(v, u) ? "red" : "purple";
+        } else  {
+            const color = IsAncesstor(v, u) ? "red" : IsAncesstor(u, v) ? "orange" : "purple";
             postProc[color].push(() => {
-                LinkTo(to.link, IsAncesstor(v, u) ? C.red : C.purple);
+                LinkTo(to.link, C[color]);
             });
-            low[u] = Math.min(low[u], dfn[v]);
-        } else {
-            postProc["orange"].push(() => {
-                LinkTo(to.link, C.orange);
-            });
+            if (ins[v]) low[u] = Math.min(low[u], dfn[v]);
         }
     }
 

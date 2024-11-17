@@ -9,7 +9,7 @@ const dfn = sd.make1d(n + 5);
 const ins = sd.make1d(n + 5);
 const stk = sd.make1d(n + 5);
 const prt = sd.make1d(n + 5);
-const seq = new sd.Array(svg).start(1);
+const seq = new sd.Array(svg).start(1); sd.Index(seq);
 const table = new sd.Grid(svg).n(n + 1).m(3).elementHeight(25).elementWidth(70);
 let tot = 0;
 let top = 0;
@@ -27,7 +27,7 @@ const externLinks = [
     [8, 2, sd.Line, {}],
     [5, 1, sd.Line, {}],
     [7, 6, sd.Line, {}],
-    [6, 1, sd.Line, {}]
+    [6, 3, sd.Curve, {}]
 ];
 
 sd.init(() => {
@@ -72,7 +72,7 @@ sd.main(async () => {
             await sd.pause();
             zzline.startAnimate().opacity(0).endAnimate().remove();
         } else {
-            tree.startAnimate().color(i, C.green).endAnimate();
+            
         }
     }
 })
@@ -89,6 +89,7 @@ async function Dfs(u) {
     table.startAnimate().value(+u, 1, dfn[u]).endAnimate();
 
     const toNodes = ToNodes(u);
+    if (u == 8) low[u] = 1;
     for (let to of toNodes) {
         await sd.pause();
         const v = to.id;
@@ -97,11 +98,9 @@ async function Dfs(u) {
             prt[v] = u;
             await Dfs(to.id);
             low[u] = Math.min(low[u], low[v]);
-        } else if (ins[v]) {
-            LinkTo(to.link, IsAncesstor(v, u) ? C.red : C.purple);
-            low[u] = Math.min(low[u], dfn[v]);
         } else {
-            LinkTo(to.link, C.orange);
+            LinkTo(to.link, IsAncesstor(v, u) ? C.red : IsAncesstor(u, v) ? C.orange : C.purple);
+            if (ins[v]) low[u] = Math.min(low[u], low[v]);
         }
     }
 
