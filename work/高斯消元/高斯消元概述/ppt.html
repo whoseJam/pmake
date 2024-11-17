@@ -221,10 +221,10 @@
         <codeblock class="fragment">
             <script type="text/template">
                 bool noSolution(){
-                    for (int i = 1; i <= n; i++) {
+                    for (int i = 1; i <= m; i++) {
                         bool allZero = true;
                         for (int j = 1; j <= n; j++) {
-                            if (dcmp(A[i][j]) != 0) {
+                            if (A[i][j] != 0) {
                                 allZero = false;
                                 break;
                             }
