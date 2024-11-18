@@ -5,14 +5,11 @@ const grid = new sd.Grid(svg);
 const c = sd.make2d(20, 20);
 const n = 5;
 
-init();
-main();
+sd.init(() => {
 
-function init() {
+})
 
-}
-
-async function main() {
+sd.main(async () => {
     c[0][0] = 1;
     grid.insert(0, 0, 1);
     for (let i = 1; i <= n; i++) {
@@ -36,4 +33,4 @@ async function main() {
     }
     grid.endAnimate();
     await sd.pause();
-}
+})

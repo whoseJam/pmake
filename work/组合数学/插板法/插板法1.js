@@ -4,15 +4,12 @@ const svg = sd.svg();
 const C = sd.color();
 const arr = new sd.ValueArray(svg).elementWidth(60);
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     for (let i = 1; i <= 5; i++)
         arr.push(new sd.Circle(arr).r(15).color(C.ORANGE));
-}
+})
 
-async function main() {
+sd.main(async () => {
     await sd.pause();
 
     const rects = [];
@@ -31,7 +28,7 @@ async function main() {
             rects[j].startAnimate().opacity(j < 2 ? 1 : 0).endAnimate();
         }
     }
-}
+})
 
 function randomShuffle(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
