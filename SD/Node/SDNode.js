@@ -131,22 +131,18 @@ SDNode.prototype.attachTo = function(parent) {
     return this;
 }
 
-SDNode.prototype.childAs = function(childName, child, rule) {
-    for (let i = 0; i < arguments.length; i++) {
-        if (Check.isTypeOfSDNode(arguments[i])) {
-            arguments[i].attachTo(this);
-        }
-    }
-    this._.children.push(childName, child, rule);
-    this.tryUpdate();
+SDNode.prototype.childAs = function() {
+    const args = [...arguments];
+    const child = args.filter(arg => Check.isTypeOfSDNode(arg))[0];
+    child.attachTo(this);
+    const rule = args[args.indexOf(child) + 1];
+    this._.children.push(args[0], args[1], args[2]);
+    if (rule) rule(this, child);
     return this;
 }
 
-SDNode.prototype.eraseChild = function(child) {
-    return this._.children.erase(child);
-}
-
-SDNode.prototype.child = SDNode.ForwardWithReturn("children", "child");
+SDNode.prototype.child      = SDNode.ForwardWithReturn("children", "child");
+SDNode.prototype.eraseChild = SDNode.ForwardWithReturn("children", "erase");
 
 SDNode.prototype.startAnimate = SDNode.Forward("animate", "startAnimate");
 SDNode.prototype.endAnimate   = SDNode.Forward("animate", "endAnimate");
@@ -182,6 +178,7 @@ SDNode.prototype.pendUpdate   = SDNode.Forward("updater", "pendUpdate");
 SDNode.prototype.tryUpdate    = SDNode.Forward("updater", "tryUpdate");
 SDNode.prototype.attachUpdate = SDNode.Forward("updater", "attachUpdate");
 SDNode.prototype.removeUpdate = SDNode.Forward("updater", "removeUpdate");
+SDNode.prototype.updating     = SDNode.ForwardWithReturn("updater", "updating");
 
 SDNode.prototype.drag       = SDNode.Forward("interact", "drag");
 SDNode.prototype.onClick    = SDNode.Forward("interact", "onClick");
@@ -225,6 +222,17 @@ SDNode.prototype.triggerRule = function() {
 
 SDNode.prototype.onEnter = function(callback) {
     this._.enter = callback;
+    return this;
+}
+
+SDNode.prototype.onExit = function(callback) {
+    if (callback === undefined) {
+        if (this._.exit) this._.exit(this);
+        this._.exit = undefined;
+        return;
+    }
+    this._.exit = callback;
+    return this;
 }
 
 SDNode.prototype.clickable = function(type) {

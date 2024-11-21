@@ -1,4 +1,4 @@
-import { SDNode }    from "SD/Node/SDNode";
+import { SDNode }    from "@/Node/SDNode";
 import { BaseArray } from "@/Node/Array/BaseArray";
 
 interface IndexComponent extends BaseArray {

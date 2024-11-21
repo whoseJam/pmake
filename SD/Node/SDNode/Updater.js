@@ -2,6 +2,7 @@
 export function Updater(parent) {
     this.parent = parent;
     this.freezeCount = 0;
+    this.isUpdating = false;
     this.isPending = false;
     this.attachUpdateList = [];
 }
@@ -36,14 +37,20 @@ Updater.prototype.tryMove = function(element, move) {
 
 Updater.prototype.update = function() {
     this.preUpdate();
+    this.isUpdating = true;
     this.parent.updateList.forEach(callback => {
         callback.call(this.parent);
     });
     this.attachUpdateList.forEach(callback => {
         callback.call(this.parent);
     });
+    this.isUpdating = false;
     this.postUpdate();
     return this;
+}
+
+Updater.prototype.updating = function() {
+    return this.isUpdating;
 }
 
 Updater.prototype.freeze = function() {
@@ -53,7 +60,10 @@ Updater.prototype.freeze = function() {
 Updater.prototype.unfreeze = function() {
     this.freezeCount--;
     if (this.freezeCount > 0) return;
-    if (this.freezeCount < 0) throw new Error("Too Many Unfreeze Operation");
+    if (this.freezeCount < 0) {
+        console.log("this=", this.parent);
+        throw new Error("Too Many Unfreeze Operation");
+    }
     if (this.isPending) {
         this.isPending = false;
         this.update();

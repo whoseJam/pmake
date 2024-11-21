@@ -75,6 +75,7 @@ export class Children {
                 }
         }
         child = this.children[childName];
+        child.onExit();
         delete this.children[childName];
         return child;
     }

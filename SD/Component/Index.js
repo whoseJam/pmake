@@ -1,8 +1,9 @@
-import { Text }            from "@/Node/Nake/Text";
-import { Enter }           from "@/Node/SDNode/Enter";
-import { Aside }           from "@/Rule/Aside";
-import { BaseArray }       from "@/Node/Array/BaseArray";
-import { SDNode } from "@/Node/SDNode";
+import { Text }      from "@/Node/Nake/Text";
+import { Enter }     from "@/Node/SDNode/Enter";
+import { SDNode }    from "@/Node/SDNode";
+import { BaseArray } from "@/Node/Array/BaseArray";
+
+import { Aside } from "@/Rule/Aside";
 
 import { Check } from "@/Utility/Check";
 
@@ -39,53 +40,58 @@ function GetIndexLength(parent, location) {
     } else return parent.length();
 }
 
-function IndexRule(parent, child) {
-    const location = child.member.get("location");
-    child.member.set("indexLength", GetIndexLength(parent, location));
-    child.member.set("indexStart", GetIndexStart(parent, location));
+function IndexRule(parent, index) {
+    const location = index.member.get("location");
+    index.member.set("index-length", GetIndexLength(parent, location));
+    index.member.set("index-start", GetIndexStart(parent, location));
+    
     function aside(indexed, attach, location, fontSize, gap) {
         attach.fontSize(fontSize);
         const rule = Aside(location + "c", gap + (location === "l" || location === "r") * 3);
         rule(indexed, attach);
     }
-    if (child.member.hasChanged("indexLength") ||
-        child.member.hasChanged("indexStart") ||
-        child.member.hasChanged("location") ||
-        child.member.hasChanged("fontSize") ||
-        child.member.hasChanged("indexGap")) {
-        const length = child.member.getAndFlush("indexLength");
-        const start = child.member.getAndFlush("indexStart");
-        const location = child.member.getAndFlush("location");
-        const dict = {};
-        const elements = child.member.getAndFlush("elements");
-        const fontSize = child.member.getAndFlush("fontSize");
-        const gap = child.member.getAndFlush("indexGap");
-        for (let i = 0; i < elements.length; i++)
-            dict[elements[i].intValue()] = elements[i];
+
+    if (index.member.hasChanged("index-length") ||
+        index.member.hasChanged("index-start")) {
+        const indexes  = {};
+        const start    = index.member.getAndFlush("index-start");
+        const length   = index.member.getAndFlush("index-length");
+        const elements = index.member.getAndFlush("elements");
+
+        elements.forEach((element) => {
+            indexes[element.intValue()] = element;
+        });
+
+        // Add
         for (let i = start; i < start + length; i++) {
-            const indexed = GetIndexedBox(parent, location, i, start);
-            if (!dict[i]) {
-                const attach = new Text(child, i).fontSize(fontSize);
-                attach.onEnter(Enter.ordinary(child));
-                elements.push(attach);
-                child._.children.push(attach);
-                child.tryMove(attach, () => {
-                    aside(indexed, attach, location, fontSize, gap);
-                });
-            } else {
-                const attach = dict[i];
-                child.tryMove(attach, () => {
-                    aside(indexed, attach, location, fontSize, gap);
-                })
-                delete dict[i];
-            }
+            if (!indexes[i]) {
+                const text = new Text(index, i);
+                text.onEnter(Enter.ordinary(index));
+                elements.push(text);
+                index.childAs(text);
+                if (index.updating()) text.freeze();
+            } else delete indexes[i];
         }
-        for (let idx in dict) {
-            const attach = dict[idx];
-            child._.children.erase(attach);
-            elements.splice(elements.indexOf(attach), 1);
-            attach.opacity(0).remove();
+        // Delete
+        for (let i in indexes) {
+            const text = indexes[i];
+            text.onExit(element => element.opacity(0).update().remove());
+            index.eraseChild(text);
+            elements.splice(elements.indexOf(text), 1);
         }
+    }
+    if (true) {
+        const gap      = index.member.getAndFlush("index-gap");
+        const start    = index.member.getAndFlush("index-start");
+        const elements = index.member.getAndFlush("elements");
+        const fontSize = index.member.getAndFlush("font-size");
+        elements.forEach(element => {
+            index.tryMove(element, () => {
+                const id = element.intValue();
+                const box = GetIndexedBox(parent, location, id, start);
+                aside(box, element, location, fontSize, gap);
+            });
+        });
     }
 }
 
@@ -94,18 +100,18 @@ export function Index(parent, location = "t", fontSize = 15, gap = 3) {
 
     index.attachUpdate(() => {
         index.triggerRule();
-    })
+    });
 
-    index.member.new("indexLength", undefined);
-    index.member.new("indexStart", undefined);
+    index.member.new("index-gap", gap);
+    index.member.new("index-start", undefined);
+    index.member.new("index-length", undefined);
     index.member.new("location", location);
-    index.member.new("fontSize", fontSize);
-    index.member.new("indexGap", gap);
+    index.member.new("font-size", fontSize);
 
+    index.gap      = SDNode.OrdinaryGSet("index-gap", "setByDqual");
     index.location = SDNode.OrdinaryGSet("location", "set");
-    index.fontSize = SDNode.OrdinaryGSet("fontSize", "setByDqual");
-    index.gap = SDNode.OrdinaryGSet("indexGap", "setByDqual");
-
+    index.fontSize = SDNode.OrdinaryGSet("font-size", "setByDqual");
+    
     parent.childAs(`index_${++indexID}`, index, IndexRule);
 
     return index;

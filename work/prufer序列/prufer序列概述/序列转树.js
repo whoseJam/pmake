@@ -26,8 +26,8 @@ sd.init(() => {
         const cnt = arr.elements().filter(element => element.intValue() === i).length + 1;
         deg.push(cnt);
     }
-    deg.y(arr.my() + 40);
     sd.Index(deg, "t");
+    deg.y(arr.my() + 40);
     sd.Label(deg, "节点的度");
 })
 
