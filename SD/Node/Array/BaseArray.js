@@ -210,3 +210,11 @@ BaseArray.prototype.color = function() {
     }
     ErrorLauncher.invalidArguments();
 }
+
+BaseArray.prototype.forEachElement = function(callback) {
+    const elements = this.member.get("elements");
+    elements.forEach((element, id) => {
+        callback(element, id);
+    });
+    return this;
+}

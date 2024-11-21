@@ -82,7 +82,7 @@ function IndexRule(parent, child) {
         }
         for (let idx in dict) {
             const attach = dict[idx];
-            child.children.erase(attach);
+            child._.children.erase(attach);
             elements.splice(elements.indexOf(attach), 1);
             attach.opacity(0).remove();
         }

@@ -80,4 +80,6 @@ export class BaseGrid extends SDNode {
      * @param color 
      */
     color(i: number, j: number, color: Color): Color;
+
+    forEachElement(callback: (element: SDNode, rowId: number, colId: number) => void): this;
 }

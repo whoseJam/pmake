@@ -8,21 +8,31 @@
     </section>
     <section>
         <h2>插板法</h2>
-        <p>假设有 $n$ 个完全相同的元素，要求将其分为 $k$ 组，保证每组至少有一个元素</p>
+        <p>假设有 $n$ 个完全相同的元素，把它们分成 $k$ 组，保证每组至少有一个元素</p>
         <p class="fragment">问一共有多少种方案</p>
-        <p class="fragment">考虑拿 $k-1$ 块板子插入到 $n$ 个元素两两形成的 $n-1$ 个空里面</p>
+        <div class="fragment">
+            <p>考虑拿 $k-1$ 块板子插入到 $n$ 个元素两两形成的 $n-1$ 个空里面</p>
+            <div class="quote">
+                <span>例如 $n=5$，$k=3$</span>
+                <iframe data-animation="./插板法1.js"
+                    style="width: 1000px; height: 100px;"></iframe>
+            </div>
+        </div>
         <p class="fragment">那么答案就是 $C_{n-1}^{k-1}$</p>
-        <iframe data-animation="./插板法1.js" class="fragment"
-            style="width: 1000px; height: 100px;"></iframe>
     </section>
     <section>
         <h2>插板法</h2>
         <p>假设有 $n$ 个完全相同的元素，把它们分成 $k$ 组，每组可以为空</p>
         <p class="fragment">问一共有多少种方案</p>
-        <p class="fragment">我们在 $n+k-1$ 的元素中选 $k-1$ 个当作板子，剩下的当元素，正好就对应题意</p>
+        <div class="fragment">
+            <p>我们在 $n+k-1$ 的元素中选 $k-1$ 个当作板子，剩下的当元素，正好就对应题意</p>
+            <div class="quote">
+                <span>例如 $n=5$，$k=3$</span>
+                <iframe data-animation="./插板法2.js" class="fragment"
+                    style="width: 1000px; height: 100px;"></iframe>
+            </div>
+        </div>
         <p class="fragment">那么答案就是 $C_{n+k-1}^{k-1}$</p>
-        <iframe data-animation="./插板法2.js" class="fragment"
-            style="width: 1000px; height: 100px;"></iframe>
     </section>
     <section>
         <h2>插板法</h2>

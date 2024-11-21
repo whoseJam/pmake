@@ -203,3 +203,14 @@ BaseGrid.prototype.color = function(arg0, arg1, arg2) {
     console.log(arguments);
     throw new Error("无效的参数");
 }
+
+
+BaseGrid.prototype.forEachElement = function(callback) {
+    const elements = this.member.get("elements");
+    elements.forEach((row, rowId) => {
+        row.forEach((col, colId) => {
+            callback(col, rowId + this.startN(), colId + this.startM());
+        });
+    });
+    return this;
+}

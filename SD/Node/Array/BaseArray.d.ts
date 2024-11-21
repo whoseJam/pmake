@@ -56,4 +56,6 @@ export class BaseArray extends SDNode {
      * @param comparator 自定义比较器
      */
     sort(comparator: (a: SDNode, b: SDNode) => boolean): this;
+
+    forEachElement(callback: (element: SDNode, id: number) => void): this;
 }

@@ -143,7 +143,7 @@ SDNode.prototype.childAs = function(childName, child, rule) {
 }
 
 SDNode.prototype.eraseChild = function(child) {
-    this._.children.erase(child);
+    return this._.children.erase(child);
 }
 
 SDNode.prototype.child = SDNode.ForwardWithReturn("children", "child");
