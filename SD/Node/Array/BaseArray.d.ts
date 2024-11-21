@@ -1,6 +1,6 @@
-import { Color } from "SD/Utility/Color";
+import { Color } from "@/Utility/Color";
 
-import { SDNode } from "SD/Node/SDNode";
+import { SDNode } from "@/Node/SDNode";
 
 export class BaseArray extends SDNode {
     constructor(parent: SDNode);
@@ -8,56 +8,51 @@ export class BaseArray extends SDNode {
     start(): number;
     start(start: number): this;
     end(): number;
+
     length(): number;
     length(length: number): this;
-
-    /**
-     * 设置序列的长度
-     * @param length 目标长度 
-     */
     resize(length: number): this;
 
-    idx(idx: number): number;
-    element(idx: number): SDNode;
+    idx(id: number): number;
+    
+    element(id: number): SDNode;
+    elements(): Array<SDNode>;
     lastElement(): SDNode;
     firstElement(): SDNode;
+    forEachElement(callback: (element: SDNode, id: number) => void): this;
 
+    insert(value: any): this;
+    insertFromExistValue(value: SDNode): this;
+    insertFromExistElement(element: SDNode): this;
     push(value: any): this;
     pushArray(array: Array<any>): this;
     pushFromExistValue(value: SDNode): this;
-    pushFromExistElement(value: SDNode): this;
+    pushFromExistElement(element: SDNode): this;
+    
     pop(): this;
+    erase(id: number): this;
+    
+    dropElement(id: number): SDNode;
+    dropFirstElement(id: number): SDNode;
+    dropLastElement(id: number): SDNode;
+    dropValue(id: number): SDNode;
 
-    erase(idx: number): this;
-    dropElement(idx: number): SDNode;
-    dropFirstElement(idx: number): SDNode;
-    dropLastElement(idx: number): SDNode;
-    dropValue(idx: number): SDNode;
-
-    text(idx: number): string;
-    intValue(idx: number): number;
+    text(id: number): string;
+    text(id: number, text: string): this;
+    intValue(id: number): number;
 
     opacity(): number;
     opacity(opacity: number): this;
-    opacity(idx: number): number;
-    opacity(idx: number, opacity: number): this;
+    opacity(id: number): number;
+    opacity(id: number, opacity: number): this;
 
-    value(idx: number): SDNode;
-    value(idx: number, value: SDNode): this
+    value(id: number): SDNode;
+    value(id: number, value: SDNode): this
 
     color(color: Color): this;
-    color(idx: number): Color;
-    color(idx: number, color: Color): this;
+    color(id: number): Color;
+    color(id: number, color: Color): this;
     color(l: number, r: number, color: Color): this;
 
-    /**
-     * 对数组内部元素做排序
-     * 
-     * @param comparator 自定义比较器
-     */
     sort(comparator: (a: SDNode, b: SDNode) => boolean): this;
-
-    forEachElement(callback: (element: SDNode, id: number) => void): this;
-
-    elements(): Array<SDNode>;
 }

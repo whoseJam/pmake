@@ -1,8 +1,8 @@
-import { Rect }            from "@/Node/Nake/Rect";
-import { Array }           from "@/Node/Array/Array";
-import { Enter }           from "@/Node/SDNode/Enter";
-import { BaseArray }       from "@/Node/Array/BaseArray";
-import { SDNode } from "@/Node/SDNode";
+import { Rect }      from "@/Node/Nake/Rect";
+import { Array }     from "@/Node/Array/Array";
+import { Enter }     from "@/Node/SDNode/Enter";
+import { SDNode }    from "@/Node/SDNode";
+import { BaseArray } from "@/Node/Array/BaseArray";
 
 export function BarArray(parent) {
     BaseArray.call(this, parent);
@@ -32,16 +32,12 @@ BarArray.prototype.intValue = function(idx) {
     return this.value(idx);
 }
 
-BarArray.prototype.width = Array.prototype.width;
+BarArray.prototype.width  = Array.prototype.width;
 BarArray.prototype.height = function(height) {
-    if (height === undefined) {
-        return this.member.get("height");
-    }
+    if (height === undefined) return this.member.get("height");
     const elements = this.member.get("elements");
     let maxValue = 1;
-    for (let element of elements) {
-        maxValue = Math.max(maxValue, element.value());
-    }
+    for (let element of elements) maxValue = Math.max(maxValue, element.value());
     this.elementHeight(height / maxValue);
     return this;
 }
@@ -62,7 +58,6 @@ BarArray.prototype.insert = function(index, value) {
     element.intValue = function() {
         return this.value();
     }
-
     element.onEnter(Enter.ordinary(this, "elements"));
     this.insertByBaseArray(index, element);
     return this;

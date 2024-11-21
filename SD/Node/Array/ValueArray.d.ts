@@ -1,5 +1,5 @@
-import { Array }   from "SD/Node/Array/Array";
-import { SDNode }  from "SD/Node/SDNode";
+import { Array }   from "@/Node/Array/Array";
+import { SDNode }  from "@/Node/SDNode";
 
 export class ValueArray extends Array {
     constructor(parent: SDNode);

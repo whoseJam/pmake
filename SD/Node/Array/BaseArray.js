@@ -1,7 +1,9 @@
 import { SDNode } from "@/Node/SDNode";
 
 import { Cast }          from "@/Utility/Cast";
+import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
+import { Exit } from "../SDNode/Exit";
 
 export function BaseArray(parent) {
     SDNode.call(this, parent);
@@ -19,7 +21,9 @@ BaseArray.prototype = {
 BaseArray.prototype.x     = SDNode.OrdinaryGSet("x", "setByEqual");
 BaseArray.prototype.y     = SDNode.OrdinaryGSet("y", "setByEqual");
 BaseArray.prototype.start = SDNode.OrdinaryGSet("start", "set");
-BaseArray.prototype.updateList = [...BaseArray.prototype.updateList];
+BaseArray.prototype.updateList = [
+    ...BaseArray.prototype.updateList
+];
 
 BaseArray.prototype.length = function(size) {
     if (size === undefined) {
@@ -42,16 +46,21 @@ BaseArray.prototype.end = function() {
     return this.start() + this.length() - 1;
 }
 
-BaseArray.prototype.idx = function(idx) {
-    return idx - this.start();
+BaseArray.prototype.idx = function(id) {
+    return id - this.start();
 }
 
-BaseArray.prototype.element = function(idx) {
+BaseArray.prototype.element = function(id) {
     const elements = this.member.get("elements");
-    const index = this.idx(idx);
-    if (0 <= index && index < elements.length)
-        return elements[index];
-    ErrorLauncher.outOfRangeError(idx);
+    const i = this.idx(id);
+    if (0 <= i && i < elements.length)
+        return elements[i];
+    ErrorLauncher.outOfRangeError(id);
+}
+
+BaseArray.prototype.elements = function() {
+    const elements = this.member.get("elements");
+    return [...elements];
 }
 
 BaseArray.prototype.firstElement = function() {
@@ -60,6 +69,23 @@ BaseArray.prototype.firstElement = function() {
 
 BaseArray.prototype.lastElement = function() {
     return this.element(this.end());
+}
+
+BaseArray.prototype.forEachElement = function(callback) {
+    const elements = this.member.get("elements");
+    elements.forEach((element, id) => {
+        callback(element, id);
+    });
+    return this;
+}
+
+BaseArray.prototype.insertByBaseArray = function(id, element) {
+    const elements = this.member.get("elements");
+    elements.splice(this.idx(id), 0, element);
+    this.childAs(element);
+    this.member.dirty("elements");
+    this.tryUpdate();
+    return this;
 }
 
 BaseArray.prototype.push = function(value = null) {
@@ -83,40 +109,31 @@ BaseArray.prototype.pushFromExistElement = function(value) {
     return this;
 }
 
-BaseArray.prototype.pop = function() {
-    this.erase(this.end());
-    return this;
-}
-
-BaseArray.prototype.insertByBaseArray = function(idx, element) {
+BaseArray.prototype.eraseByBaseArray = function(id) {
+    const element = this.element(id);
     const elements = this.member.get("elements");
-    elements.splice(this.idx(idx), 0, element);
-    this.childAs(element);
-    this.member.dirty("elements");
-    this.tryUpdate();
-    return this;
-}
-
-BaseArray.prototype.eraseByBaseArray = function(idx) {
-    const element = this.element(idx);
-    const elements = this.member.get("elements");
-    elements.splice(this.idx(idx), 1);
+    elements.splice(this.idx(id), 1);
     this.eraseChild(element);
     this.member.dirty("elements");
     this.tryUpdate();
     return this;
 }
 
-BaseArray.prototype.erase = function(idx) {
-    const element = this.element(idx);
-    this.eraseByBaseArray(idx);
-    element.opacity(0).remove();
+BaseArray.prototype.pop = function() {
+    this.erase(this.end());
     return this;
 }
 
-BaseArray.prototype.dropElement = function(idx) {
-    const element = this.element(idx);
-    this.eraseByBaseArray(idx);
+BaseArray.prototype.erase = function(id) {
+    const element = this.element(id);
+    element.onExit(Exit.naive(this, element));
+    this.eraseByBaseArray(id);
+    return this;
+}
+
+BaseArray.prototype.dropElement = function(id) {
+    const element = this.element(id);
+    this.eraseByBaseArray(id);
     return element;
 }
 
@@ -128,22 +145,71 @@ BaseArray.prototype.dropLastElement = function() {
     return this.dropElement(this.end());
 }
 
-BaseArray.prototype.dropValue = function(idx) {
-    const element = this.element(idx);
-    this.eraseByBaseArray(idx);
+BaseArray.prototype.dropValue = function(id) {
+    const element = this.element(id);
+    this.eraseByBaseArray(id);
     const value = element.after(this.delay()).drop();
     element.startAnimate(this).opacity(0).remove();
     return value;
 }
 
-BaseArray.prototype.text = function(idx, text) {
-    return this.value(idx).text(text);
+BaseArray.prototype.text = function(id, text) {
+    if (text === undefined) return this.value(id).text();
+    this.value(id).text(text);
+    return this;
 }
 
-BaseArray.prototype.intValue = function(idx) {
-    const value = this.value(idx);
+BaseArray.prototype.intValue = function(id) {
+    const value = this.value(id);
     if (value === undefined) return 0;
-    return +this.value(idx).text();
+    return +this.value(id).text();
+}
+
+BaseArray.prototype.opacity = function() {
+    const args = arguments;
+    switch (args.length) {
+        case 0:
+            return SDNode.prototype.opacity.call(this);
+        case 1:
+            return Check.isTypeOfOpacity(args[0]) ? SDNode.prototype.opacity.call(this, args[0]) : this.element(args[0]).opacity();
+        case 2:
+            this.element(args[0]).opacity(args[1]);
+            return this;
+        default:
+            ErrorLauncher.invalidArguments();
+    }
+}
+
+BaseArray.prototype.value = function() {
+    const args = arguments.length;
+    switch (args.length) {
+        case 1:
+            return this.element(args[0]).value();
+        case 2:
+            this.element(args[0]).value(args[1]);
+            return this;
+        default:
+            ErrorLauncher.invalidArguments();
+    }
+}
+
+BaseArray.prototype.color = function() {
+    const args = arguments;
+    switch (args.length) {
+        case 1:
+            if (typeof(args[0]) === "number") return this.element(args[0]).color();
+            this.forEachElement(element => element.color(args[0]));
+            return this;
+        case 2:
+            this.element(args[0]).color(args[1]);
+            return this;
+        case 3:
+            for (let i = args[0]; i <= args[1]; i++)
+                this.color(i, args[2]);
+            return this;
+        default:
+            ErrorLauncher.invalidArguments();
+    }
 }
 
 BaseArray.prototype.sort = function(comparator = (a, b) => a.intValue() - b.intValue()) {
@@ -152,74 +218,4 @@ BaseArray.prototype.sort = function(comparator = (a, b) => a.intValue() - b.intV
     this.member.dirty("elements");
     this.tryUpdate();
     return this;
-}
-
-BaseArray.prototype.opacity = function() {
-    if (arguments.length === 0) {
-        return SDNode.prototype.opacity.call(this);
-    } else if (arguments.length === 1) {
-        const opacity = arguments[0];
-        if (0 <= opacity && opacity <= 1) {
-            SDNode.prototype.opacity.call(this, opacity);
-            return this;
-        }
-        const idx = arguments[0];
-        return this.element(idx).opacity();
-    } else if (arguments.length === 2) {
-        const idx = arguments[0];
-        const opacity = arguments[1];
-        this.element(idx).opacity(opacity);
-        return this;
-    }
-    ErrorLauncher.invalidArguments();
-}
-
-BaseArray.prototype.value = function() {
-    if (arguments.length === 1) {
-        const idx = arguments[0];
-        return this.element(idx).value();
-    } else if (arguments.length === 2) {
-        const idx = arguments[0];
-        const value = arguments[1];
-        this.element(idx).value(value);
-        return this;
-    }
-    ErrorLauncher.invalidArguments();
-}
-
-BaseArray.prototype.color = function() {
-    if (arguments.length === 1) {
-        const idx = arguments[0];
-        if (typeof(idx) === "number") return this.element(idx).color();
-        const color = arguments[0];
-        for (let i = this.start(); i <= this.end(); i++)
-            this.element(i).color(color);
-        return this;
-    } else if (arguments.length === 2) {
-        const idx = arguments[0];
-        const color = arguments[1];
-        this.element(idx).color(color);
-        return this;
-    } else if (arguments.length === 3) {
-        const l = arguments[0];
-        const r = arguments[1];
-        const color = arguments[2];
-        for (let i = l; i <= r; i++)
-            this.element(i).color(color);
-        return this;
-    }
-    ErrorLauncher.invalidArguments();
-}
-
-BaseArray.prototype.forEachElement = function(callback) {
-    const elements = this.member.get("elements");
-    elements.forEach((element, id) => {
-        callback(element, id);
-    });
-    return this;
-}
-
-BaseArray.prototype.elements = function() {
-    const elements = this.member.get("elements");
-    return elements;
 }
