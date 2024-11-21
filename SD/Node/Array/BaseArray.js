@@ -218,3 +218,8 @@ BaseArray.prototype.forEachElement = function(callback) {
     });
     return this;
 }
+
+BaseArray.prototype.elements = function() {
+    const elements = this.member.get("elements");
+    return elements;
+}
