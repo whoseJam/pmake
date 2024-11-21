@@ -39,26 +39,26 @@ Array.prototype.height = function(height) {
     return this;
 }
 
-Array.prototype.insert = function(index, value) {
+Array.prototype.insert = function(id, value) {
     const element = new Box(this.layer("elements"));
     element.value(value);
     element.onEnter(Enter.ordinary(this, "elements"));
-    this.insertByBaseArray(index, element);
+    this.insertByBaseArray(id, element);
     return this;
 }
 
-Array.prototype.insertFromExistValue = function(index, value) {
+Array.prototype.insertFromExistValue = function(id, value) {
     const element = new Box(this.layer("elements"));
     element.onEnter(Enter.fromExistValue(this, value, "elements"));
-    this.insertByBaseArray(index, element);
+    this.insertByBaseArray(id, element);
     return this;
 }
 
-Array.prototype.insertFromExistElement = function(index, value) {
+Array.prototype.insertFromExistElement = function(id, value) {
     if (!(value instanceof Box)) throw new Error("Invalid Arguments");
     const element = value;
     element.onEnter(Enter.fromExist(this, "elements"));
-    this.insertByBaseArray(index, value);
+    this.insertByBaseArray(id, value);
     return this;
 }
 

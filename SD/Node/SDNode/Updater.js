@@ -60,10 +60,7 @@ Updater.prototype.freeze = function() {
 Updater.prototype.unfreeze = function() {
     this.freezeCount--;
     if (this.freezeCount > 0) return;
-    if (this.freezeCount < 0) {
-        console.log("this=", this.parent);
-        throw new Error("Too Many Unfreeze Operation");
-    }
+    if (this.freezeCount < 0) throw new Error("Too Many Unfreeze Operation");
     if (this.isPending) {
         this.isPending = false;
         this.update();
