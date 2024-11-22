@@ -1,9 +1,9 @@
+import { Exit }   from "@/Node/SDNode/Exit";
 import { SDNode } from "@/Node/SDNode";
 
 import { Cast }          from "@/Utility/Cast";
-import { Check } from "@/Utility/Check";
+import { Check }         from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
-import { Exit } from "../SDNode/Exit";
 
 export function BaseArray(parent) {
     SDNode.call(this, parent);
@@ -181,7 +181,7 @@ BaseArray.prototype.opacity = function() {
 }
 
 BaseArray.prototype.value = function() {
-    const args = arguments.length;
+    const args = arguments;
     switch (args.length) {
         case 1:
             return this.element(args[0]).value();
