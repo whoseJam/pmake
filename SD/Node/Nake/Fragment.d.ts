@@ -1,7 +1,8 @@
-import { BaseNake } from "./BaseNake";
+import { SDNode }   from "@/Node/SDNode";
+import { BaseNake } from "@/Node/Nake/BaseNake";
 
 export class Fragment extends BaseNake {
-    constructor(parent: any, html: string);
+    constructor(parent: SDNode, html: string);
 
     fragment(): string
     fragment(html: string): this

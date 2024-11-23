@@ -1,7 +1,7 @@
-import { Box }             from "@/Node/Element/Box";
-import { Enter }           from "@/Node/SDNode/Enter";
-import { BaseGrid }        from "@/Node/Grid/BaseGrid";
-import { SDNode } from "@/Node/SDNode";
+import { Box }      from "@/Node/Element/Box";
+import { Enter }    from "@/Node/SDNode/Enter";
+import { SDNode }   from "@/Node/SDNode";
+import { BaseGrid } from "@/Node/Grid/BaseGrid";
 
 export function Grid(parent) {
     BaseGrid.call(this, parent);

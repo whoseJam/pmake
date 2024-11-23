@@ -1,4 +1,4 @@
-import { BaseNake } from "SD/Node/Nake/BaseNake";
+import { BaseNake } from "@/Node/Nake/BaseNake";
 
 export class Text extends BaseNake {
     constructor(parent: any);

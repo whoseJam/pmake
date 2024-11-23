@@ -1,4 +1,5 @@
-import { BaseNake } from "./BaseNake";
+import { SDNode }   from "@/Node/SDNode";
+import { BaseNake } from "@/Node/Nake/BaseNake";
 
 type AspectRatioType =
     "XMinYMin meet"|"XMinYMin slice"|
@@ -12,7 +13,7 @@ type AspectRatioType =
     "XMaxYMax meet"|"XMaxYMax slice";
 
 export class Image extends BaseNake {
-    constructor(parent: any);
+    constructor(parent: SDNode);
     
     href(): string;
     href(href: string): void;

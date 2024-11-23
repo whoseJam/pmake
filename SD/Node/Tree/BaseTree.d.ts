@@ -1,5 +1,6 @@
-import { Color }  from "SD/Utility/Color";
-import { SDNode } from "SD/Node/SDNode";
+import { Color } from "@/Utility/Color";
+
+import { SDNode } from "@/Node/SDNode";
 
 export class BaseTree extends SDNode {
     constructor(parent: SDNode);

@@ -1,4 +1,4 @@
-import { BasePolygon } from "./BasePolygon";
+import { BasePolygon } from "@/Node/Polygon/BasePolygon";
 
 export function InvertedTriangle(parent) {
     BasePolygon.call(this, parent, [

@@ -1,8 +1,9 @@
-import { Color } from "SD/Utility/Color";
-import { SDNode } from "../SDNode";
+import { Color } from "@/Utility/Color";
+
+import { SDNode } from "@/Node/SDNode";
 
 export class BaseGrid extends SDNode {
-    constructor(parent: any);
+    constructor(parent: SDNode);
 
     startN(): number;
     startN(start: number): this;

@@ -1,8 +1,8 @@
+import { Cast } from "@/Utility/Cast";
 import { trim } from "@/Utility/Trim";
 
-import { Tree } from "@/Node/Tree/Tree";
-import { Enter } from "../SDNode/Enter";
-import { Cast } from "@/Utility/Cast";
+import { Tree }  from "@/Node/Tree/Tree";
+import { Enter } from "@/Node/SDNode/Enter";
 
 export function BinaryTree(parent) {
     Tree.call(this, parent);

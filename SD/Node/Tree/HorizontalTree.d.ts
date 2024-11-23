@@ -1,5 +1,5 @@
-import { SDNode }   from "SD/Node/SDNode";
-import { BaseTree } from "SD/Node/Tree/BaseTree";
+import { SDNode }   from "@/Node/SDNode";
+import { BaseTree } from "@/Node/Tree/BaseTree";
 
 export class HorizontalTree extends BaseTree {
     constructor(parent: SDNode);

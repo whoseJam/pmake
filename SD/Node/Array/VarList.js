@@ -2,9 +2,9 @@ import { Context } from "@/Animate/Context";
 
 import { Text }      from "@/Node/Nake/Text";
 import { Code }      from "@/Node/Array/Code";
+import { Enter }     from "@/Node/SDNode/Enter";
 import { SDNode }    from "@/Node/SDNode";
 import { BaseArray } from "@/Node/Array/BaseArray";
-import { Enter } from "../SDNode/Enter";
 
 export function VarList(parent) {
     BaseArray.call(this, parent);

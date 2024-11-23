@@ -1,5 +1,5 @@
+import { Path }   from "@/Node/Nake/Path";
 import { SDNode } from "@/Node/SDNode";
-import { Path } from "../Nake/Path";
 
 class SDFunction {
     function(func: (x: number) => number): this;

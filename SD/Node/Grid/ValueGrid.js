@@ -1,11 +1,9 @@
-import { Grid } from "./Grid";
+import { Grid } from "@/Node/Grid/Grid";
 
 export function ValueGrid(parent) {
     Grid.call(this, parent);
 
     this.type("ValueGrid");
-
-    return this;
 }
 
 ValueGrid.prototype = {

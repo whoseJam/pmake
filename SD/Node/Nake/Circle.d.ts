@@ -1,7 +1,8 @@
-import { BaseNake } from "./BaseNake";
+import { SDNode }   from "@/Node/SDNode";
+import { BaseNake } from "@/Node/Nake/BaseNake";
 
 export class Circle extends BaseNake {
-    constructor(parent: any);
+    constructor(parent: SDNode);
 
     r(): number;
     r(r: number): this;

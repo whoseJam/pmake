@@ -1,5 +1,6 @@
-import { BaseNake } from "./BaseNake";
+import { SDNode }   from "@/Node/SDNode";
+import { BaseNake } from "@/Node/Nake/BaseNake";
 
 export class ForeignObject extends BaseNake {
-    constructor(parent: any);
+    constructor(parent: SDNode);
 }
