@@ -1,13 +1,13 @@
 import { svg } from "@/Interact/RootSvg";
 
+import { Exit }   from "@/Node/SDNode/Exit";
+import { Enter }  from "@/Node/SDNode/Enter";
 import { SDNode } from "@/Node/SDNode";
 
 import { CenterFixAspect } from "@/Rule/Center";
 
 import { Cast }  from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
-import { Exit } from "../SDNode/Exit";
-import { Enter } from "../SDNode/Enter";
 
 export function BaseElement(parent) {
     SDNode.call(this, parent);
