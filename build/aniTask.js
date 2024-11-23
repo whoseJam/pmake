@@ -77,5 +77,8 @@ function animationConfiguration(animationName) {
             "dagre": "dagre",
             "@/sd": "sd"
         }
+        // externals: function (context, request, callback) {
+        //     callback(null, request);
+        // }
     };
 }
