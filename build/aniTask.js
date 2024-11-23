@@ -49,6 +49,7 @@ function animationConfiguration(animationName) {
                 scriptLoading: "blocking"
             })
         ],
+        watch: (mode === "development" ? true : false),
         module: {
             rules: [
                 {   test: /.js$/,
@@ -77,8 +78,5 @@ function animationConfiguration(animationName) {
             "dagre": "dagre",
             "@/sd": "sd"
         }
-        // externals: function (context, request, callback) {
-        //     callback(null, request);
-        // }
     };
 }

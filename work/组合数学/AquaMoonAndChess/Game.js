@@ -63,3 +63,5 @@ export function CreateGame(data) {
         arr.endAnimate();
     }
 }
+
+console.log("Game !!!!!!!");
