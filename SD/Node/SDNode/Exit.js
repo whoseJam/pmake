@@ -1,3 +1,4 @@
+import { svg } from "@/Interact/RootSvg";
 
 export class Exit {
     
@@ -12,5 +13,14 @@ export class Exit {
         if (!erase) return;
         parent.eraseChild(erase);
         erase.opacity(0).remove();
+    }
+
+    static drop(parent, child) {
+        return function() {
+            const erase = typeof(child) === "string" ? parent.child(child) : child;
+            if (!erase) return;
+            erase.after(parent.delay());
+            erase.attachTo(svg());
+        }
     }
 }

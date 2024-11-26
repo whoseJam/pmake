@@ -62,9 +62,8 @@ BaseElement.prototype.text = function() {
 
 BaseElement.prototype.drop = function() {
     const value = this.child("value");
+    value.onExit(Exit.drop(this, value));
     this.eraseChild(value);
-    value.after(this.delay());
-    value.attachTo(svg());
     return value;
 }
 
