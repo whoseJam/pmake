@@ -1,4 +1,5 @@
 import { Dom } from "@/Dom/Dom";
+
 import { Check } from "@/Utility/Check";
 
 export function Interact(parent) {

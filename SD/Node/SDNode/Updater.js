@@ -1,4 +1,20 @@
 
+/**
+ * preUpdate
+ *  - freeze all children
+ * 
+ * update
+ *  - the main update logic of this component
+ *  - iteracte all the updater in the updateList
+ * 
+ * attach update
+ *  - the attach update logic of this component
+ *  - iteracte the the updater in the attachUpdateList
+ * 
+ * postUpdate
+ *  - rule all children
+ *  - unfreeze all children
+ */
 export function Updater(parent) {
     this.parent = parent;
     this.freezeCount = 0;

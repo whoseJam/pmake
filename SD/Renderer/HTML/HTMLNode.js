@@ -57,4 +57,8 @@ export class HTMLNode {
             this.element.setAttribute(key, value);
         }
     }
+
+    getParent() {
+        return this.parent;
+    }
 }

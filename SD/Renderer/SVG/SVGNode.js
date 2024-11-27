@@ -113,4 +113,8 @@ export class SVGNode {
     hasShape() {
         return SHAPE_TAG.has(this.tag);
     }
+
+    getParent() {
+        return this.parent;
+    }
 }
