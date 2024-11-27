@@ -3,4 +3,7 @@ import { SDNode }  from "@/Node/SDNode";
 
 export class ValueStack extends Stack {
     constructor(parent: SDNode);
+
+    align(): "x"|"cx"|"mx";
+    align(align: "x"|"cx"|"mx");
 }

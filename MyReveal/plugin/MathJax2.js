@@ -84,6 +84,9 @@ const Renderer = {
 		const f = e.children[1]; if (!f) return;
 		const g = f.children[0]; if (!g) return;
 		AttachFragment(g);
+		// const h = e.children[0]; if (!h) return;
+		// const i = h.children[0]; if (!i) return;
+		// AttachFragment(i);
 	}
 }
 
