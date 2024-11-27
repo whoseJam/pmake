@@ -17,14 +17,14 @@ module.exports = function animationTask(sourceFilePath, targetFilePath) {
         process.exit(1);
     }
 
-    if (global["w"]) {
-        const watcher = gulp.watch(sourceFilePath);
-        watcher.on("change", function(path) {
-            gulp.src(sourceFilePath)
-                .pipe(webpack(webpackConfiguration))
-                .pipe(gulp.dest(targetFilePath));
-        })
-    }
+    // if (global["w"]) {
+    //     const watcher = gulp.watch(sourceFilePath);
+    //     watcher.on("change", function(path) {
+    //         gulp.src(sourceFilePath)
+    //             .pipe(webpack(webpackConfiguration))
+    //             .pipe(gulp.dest(targetFilePath));
+    //     })
+    // }
 
     return gulp.src(sourceFilePath)
                .pipe(webpack(webpackConfiguration))
@@ -49,15 +49,12 @@ function animationConfiguration(animationName) {
                 scriptLoading: "blocking"
             })
         ],
-        watch: (mode === "development" ? true : false),
+        watch: (global["w"] ? true : false),
         module: {
             rules: [
                 {   test: /.js$/,
                     use: {
-                        loader: 'babel-loader',
-                        options: {
-                            presets: ['@babel/preset-react', '@babel/preset-env'],
-                        },
+                        loader: 'babel-loader'
                     },
                 },
                 {   test: /\.css$/,
@@ -75,7 +72,6 @@ function animationConfiguration(animationName) {
             },
         },
         externals: {
-            "dagre": "dagre",
             "@/sd": "sd"
         }
     };
