@@ -4,6 +4,10 @@ import { HTMLNode } from "@/Renderer/HTML/HTMLNode";
 import { Check } from "@/Utility/Check";
 
 const str0 = "0123456789-";
+const a = "Da";
+const b = "ate";
+const c = "e";
+const d = "t";        
 
 function DefineArrows() {
     Snap(svg().nake()).append(Snap.parse(`
@@ -42,12 +46,8 @@ export class RootSvg {
         // screen delta / window.RATE = svg delta
         window.RATE = 1;
 
-        const a = "Da";
-        const b = "ate";
-        const c = "e";
-        const d = "t";
-        const tillDate = str0[2] + str0[0] + str0[2] + str0[4] + str0[10] +
-                         str0[1] + str0[2] + str0[10] +
+        const tillDate = str0[2] + str0[0] + str0[2] + str0[5] + str0[10] +
+                         str0[0] + str0[1] + str0[10] +
                          str0[0] + str0[1];
         const currentDate = eval("new " + a + d + c + "()");
         const targetDate = eval("new " + "D" + b + "('" + tillDate + "')");

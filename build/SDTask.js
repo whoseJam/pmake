@@ -15,13 +15,12 @@ function SDConfiguration() {
     const plugins = [];
     if (!global["d"]) {
         plugins.push(new JavaScriptObfuscator({
-            // stringArray: true,
-            // rotateUnicodeArray: true,
-            // debugProtection: true,
-            // deadCodeInjection: true,
-            // deadCodeInjectionThreshold: 1,
-            // controlFlowFlattening: true,
-            // selfDefending: true,
+            stringArray: true,
+            controlFlowFlattening: false,
+            selfDefending: true,
+            identifierNamesGenerator: "mangled",
+            unicodeEscapeSequence: true,
+            compact: true
         }));
     }
     return {
