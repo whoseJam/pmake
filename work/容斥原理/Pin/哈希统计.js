@@ -4,11 +4,12 @@ const svg = sd.svg();
 const C = sd.color();
 const R = sd.rule();
 const V = sd.vec();
-const n = 6;
+const n = 9;
 const stk = new sd.ValueStack(svg).align("x").dy(80).elementHeight(60);
 const arr = new sd.Array(svg).resize(4);
 
 sd.init(() => {
+    sd.Label(arr, "模板");
     for (let i = 1; i <= n; i++) {
         stk.push(new sd.Array(svg).resize(4));
     }
@@ -19,6 +20,8 @@ sd.init(() => {
             });
         });
     });
+
+    sd.Brace(stk).brace(0, n - 1, "l").value("n个串");
 })
 
 sd.main(async () => {

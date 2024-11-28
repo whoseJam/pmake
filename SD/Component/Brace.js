@@ -15,9 +15,10 @@ let braceID = 0;
 function BraceRule(parent, child) {
     const element1 = child.member.getAndFlush("braceElement1");
     const element2 = child.member.getAndFlush("braceElement2");
+    if (!element1 || !element2) return;
     const location = child.member.getAndFlush("location");
     const gap = child.member.getAndFlush("braceGap");
-    
+
     if (location === "b" || location === "t") {
         const minx = Math.min(element1.x(), element2.x());
         const maxx = Math.max(element1.mx(), element2.mx());
