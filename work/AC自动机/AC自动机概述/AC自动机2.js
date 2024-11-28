@@ -1,126 +1,120 @@
 import * as sd from "@/sd";
+import { BuildTrieTree } from "../AC自动机";
+import { BuildFailTree } from "../AC自动机";
 
 const svg = sd.svg();
 const C = sd.color();
 const R = sd.rule();
 const ac = new sd.Tree(svg).layerHeight(70);
+const focus = sd.Focus(ac);
+const failFocus = sd.Focus(ac);
 const data = [
-    "ababa",
+    "abab",
     "babb"
 ];
 
-ac.root(1);
+let pathToV;
+let pathToU;
 
 sd.init(() => {
-    let tot = 1;
-    function insert(s) {
-        let u = 1;
-        for (let i = 0; i < s.length; i++) {
-            const cur = ac.element(u);
-            if (!cur.acch) cur.acch = {};
-            if (!cur.acch[s[i]]) {
-                cur.acch[s[i]] = ++tot;
-                ac.link(u, tot);
-                ac.element(u, tot).value(s[i], R.pointAtPathByRate(0.5, "mx", "cy", -5));
-            }
-            u = cur.acch[s[i]];
-        }
-    }
-    data.forEach(s => insert(s));
-    for (let i = 1; i <= tot; i++) {
-        ac.element(i).fail = 0;
-    }
+    BuildTrieTree(ac, data);
 })
 
 sd.main(async () => {
     await sd.pause();
-    const Q = [1];
-    const focus = sd.Focus(ac);
-    const failFocus = sd.Focus(ac);
-    while (Q.length > 0) {
-        const u = Q[0]; Q.shift();
-        await sd.pause();
-        focus.startAnimate().focus(u).endAnimate();
+    ac.forEachNodes((node, idx) => {
+        if (idx === "1") return;
+        sd.Label(node, node.str, node.cx() < ac.root().cx() ? "lc" : "rc", 20, 3).opacity(0).startAnimate().opacity(1).endAnimate();
+    });
 
-        const children = ac.children(u);
-        for (let i = 0; i < children.length; i++) {
-            const v = ac.nodeId(children[i]); Q.push(v);
-            await sd.pause();
-            ac.startAnimate().color(v, C.blue).endAnimate();
+    await BuildFailTree(ac, {
+        OnLink: OnLink,
+        OnFocusParent: (parent) => {
+            focus.startAnimate().focus(parent).endAnimate();
+            failFocus.focus(null).after(focus).focus(parent);
+        },
+        OnFocusChild: (child) => {
+            ac.startAnimate().color(child, C.blue).endAnimate();
+        },
+        OnRemoveFocusChild: (child) => {
+            ac.startAnimate().color(child, C.white).endAnimate();
+        },
+        OnFailJumpTo: OnFailJumpTo,
+        OnFirstFailJumpTo: OnFirstFailJumpTo
+    });
 
-            const character = ac.value(u, v).text();
-            let f = ac.element(u).fail;
-            while (f && !ac.element(f).acch[character]) {
-                await sd.pause();
-                failFocus.startAnimate().focus(f).endAnimate();
-                f = ac.element(f).fail;
-            }
-            if (f && ac.element(f).acch[character]) {
-                const failOfV = ac.element(f).acch[character];
-                const length = ac.depth(failOfV) - 1;
-                await sd.pause();
-                failFocus.startAnimate().focus(f).endAnimate();
-                ac.startAnimate()
-                colorPath(getPath(v, length), C.red, 3);
-                colorPath(getPath(failOfV, length), C.red, 3);
-                ac.color(failOfV, C.orange)
-                ac.endAnimate();
-                
-                await sd.pause();
-                link(v, failOfV);
-
-                await sd.pause();
-                failFocus.startAnimate().focus(null).endAnimate();
-                ac.startAnimate();
-                colorPath(getPath(v, length), C.black, 1);
-                colorPath(getPath(failOfV, length), C.black, 1);
-                ac.color(failOfV, C.white);
-                ac.endAnimate();
-                ac.element(v).fail = failOfV;
-            } else {
-                link(v, 1);
-                ac.element(v).fail = 1;
-            }
-            await sd.pause();
-            ac.startAnimate().color(v, C.white).endAnimate();
-        }
-    }
     await sd.pause();
     focus.startAnimate().focus(null).endAnimate();
+    failFocus.startAnimate().focus(null).endAnimate();
 })
 
-function link(u, v) {
-    const nodeU = ac.element(u);
-    const nodeV = ac.element(v);
+function OnFailJumpTo(fail, parent) {
+    failFocus.startAnimate().focus(fail).endAnimate();
+    const length = ac.depth(fail);
+    pathToU.startAnimate().d(CreatePathD(GetPath(parent, length))).endAnimate();
+    pathToV.startAnimate().d(CreatePathD(GetPath(fail, length))).endAnimate();
+}
+
+function OnFirstFailJumpTo(fail, parent) {
+    const length = ac.depth(fail);
+    pathToU = CreatePath(GetPath(parent, length), C.textBlue).startAnimate().pointStoT().endAnimate().arrow();
+    pathToV = CreatePath(GetPath(fail, length), "#ff7300").startAnimate().pointStoT().endAnimate().arrow();
+}
+
+// v is fail of u
+async function OnLink(nodeU, nodeV, u, v) {
+    let pathOfU, pathOfV;
+    if (v !== 1) {
+        const length = ac.depth(v);
+        pathToU.startAnimate().d(CreatePathD(GetPath(u, length))).endAnimate();
+        pathToV.startAnimate().d(CreatePathD(GetPath(v, length))).endAnimate();
+        ac.startAnimate().color(v, C.orange).endAnimate();
+        await sd.pause();
+    }
+
     let type = sd.Line;
     if (nodeU.cx() == nodeV.cx() || nodeU.parentNodeId == v || nodeV.parentNodeId == u) type = sd.Curve;
     if (u === 5 && v === 7) type = sd.Curve;
     if (v === 1) type = sd.Curve;
     const l = new type(svg);
-    if (u === 5 && v === 7) l.bending(-0.3);
-    if (u === 6 && v === 4) l.bending(-0.3);
-    if (u === 2) l.bending(-0.3);
-    if (u === 7) l.bending(0.3);
+    if (type === sd.Curve) {
+        if (u === 2) l.bending(-0.3);
+        if (u === 6) l.bending(0.3);
+    }
     l.source(nodeU.center())
-        .target(nodeV.center())
-        .arrow()
-        .strokeDashArray([5, 5])
-        .opacity(0);
+    l.target(nodeV.center())
+    l.arrow()
+    l.strokeDashArray([5, 5])
+    l.opacity(0);
     sd.trim(l, nodeU, nodeV);
     l.startAnimate().opacity(1).endAnimate();
-    return l;
-}
-
-function colorPath(path, color, width) {
-    for (let i = 0; i < path.length; i++) {
-        ac.element(path[i][0], path[i][1]).stroke(color).strokeWidth(width);
+    
+    if (v !== 1) {
+        await sd.pause();
+        failFocus.startAnimate().focus(null).endAnimate();
+        ac.startAnimate().color(v, C.white).endAnimate();
+        pathToU.startAnimate().opacity(0).endAnimate().remove();
+        pathToV.startAnimate().opacity(0).endAnimate().remove();
     }
 }
 
-function getPath(u, length) {
+function CreatePath(path, color = C.black) {
+    return new sd.Path(svg).d(CreatePathD(path).toString()).stroke(color).strokeWidth(2).update();
+}
+
+function CreatePathD(path) {
+    const pen = new sd.PathPen();
+    pen.MoveTo(path[0].center());
+    for (let i = 1; i < path.length; i++) {
+        pen.LinkTo(path[i].center());
+    }
+    return pen.toString();
+}
+
+function GetPath(u, length) {
     const path = [];
     for (let i = 1; i <= length; i++) {
-        path.push([ac.fatherId(u), u]);
+        path.push(ac.element(u));
         u = ac.fatherId(u);
     }
     return path.reverse();

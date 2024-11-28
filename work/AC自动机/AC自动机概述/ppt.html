@@ -6,28 +6,42 @@
         <h2>AC自动机</h2>
         <p>AC自动机=Trie+KMP</p>
         <p class="fragment">
-            AC自动机在Trie树上添加 $fail$ 指针，该 $fail$ 指针和KMP中的 $fail$ 指针功能类似</span>
+            AC自动机在Trie树上添加<b style="color: red;">fail指针</b>，该fail指针和KMP中的fail指针功能类似</span>
         </p>
-        <div class="fragment quote">
-            <h3>回忆</h3>
-            <p>KMP中任意一个节点的 $fail$ 指针，指向了自己的最长 $border$</p>
-            <iframe data-animation="./KMP.js"
-                data-viewBox="93.5 188.15416666269303 533 171.35833365917208"
-                style="width: 1000px; height: 300px;"></iframe>
-        </div>
     </section>
     <section>
-        <h2>AC自动机</h2>
-        <p>以下是一个包含 $\{aba,bab\}$ 两个串的Trie树，什么是每个节点的 $fail$ 指针呢？</p>
+        <h2>KMP回顾</h2>
+        <p>KMP把字符串拆成了 $n$ 个前缀看待，第 $i$ 个前缀的fail指针指向其最长 $border$</p>
+        <iframe data-animation="./KMP.js"
+            data-viewBox="93.5 188.15416666269303 533 171.35833365917208"
+            style="width: 1000px; height: 300px;"></iframe>
+        <ul>
+            <li class="fragment">我们记上图字符串的每个前缀为 $s_1,s_2,s_3,...,s_n$</li>
+            <li class="fragment">对 $s_i$ 而言，它的fail指针指向最长的 $s_j$，满足 <b style="color: red;">$j\lt i$</b> 且 <b style="color: red;">$s_j$ 是 $s_i$ 的后缀</b></li>
+        </ul>
+    </section>
+    <section>
+        <h2>Trie树回顾</h2>
+        <p>以下是一个包含 $\{aba,bab\}$ 两个串的Trie树</p>
         <iframe data-animation="./AC自动机1.html"
             style="width: 1000px; height: 300px;"></iframe>
-        <p class="quote">让我们从树根往下顺次标出每个节点的子节点的 $fail$ 指针</p>
+        <ul>
+            <li class="fragment">Trie树容纳了多个字符串，我们不妨把这多个字符串形成的字典简记为 $D$</li>
+            <li class="fragment">Trie树上的每个节点，都是 $D$ 的一个前缀</li>
+        </ul>
+        <p class="fragment quote">那么Trie树上的fail指针是如何定义的呢？我们可以效仿KMP</p>
+        <ul>
+            <li class="fragment">假设 $D$ 里面总共有 $n$ 个字符串，它们形成 $m$ 个不同的前缀</li>
+            <li class="fragment">我们记 $D$ 中的字符串的每个前缀为 $d_1,d_2,d_3,...,d_m$</li>
+            <li class="fragment">对 $d_i$ 而言，它的fail指针指向最长的 $d_j$，满足 <b style="color: red;">$|d_j|\lt |d_i|$</b> 且 <b style="color: red;">$d_j$ 是 $d_i$ 的后缀</b></li>
+        </ul>
     </section>
     <section>
         <h2>AC自动机</h2>
+        <p>我们用BFS逐层递推出Trie树上每个节点的fail指针......</p>
         <div style="display: flex; align-items: center;">
             <iframe data-animation="./AC自动机2.js"
-                style="width: 1000px; height: 500px;">
+                style="min-width: 50%; height: 500px;">
             </iframe>
             <codeblock style="width: 600px; height: 445px;">
                 <script type="text/template">
@@ -60,15 +74,16 @@
         <h2>AC自动机</h2>
         <div style="display: flex; align-items: center;">
             <div>
-                <p>AC自动机实际上由两棵树构成，一棵Trie树，一棵 $fail$ 树</p>
+                <p>AC自动机实际上由两棵树构成，一棵Trie树，一棵fail树</p>
                 <p class="fragment">沿着Trie树往下走，本质上是字符串的延拓的过程</p>
                 <p class="fragment quote">
                     $$1\rightarrow 2\rightarrow 3\rightarrow 4$$
                     $$空串\rightarrow a\rightarrow ab\rightarrow aba$$
                 </p>
-                <p class="fragment">沿着 $fail$ 树往上走，本质上是在切削字符串，留下字符串的某个后缀部分</p>
+                <p class="fragment">沿着fail树往上走，本质上是在切削字符串，留下字符串的某个后缀部分</p>
                 <p class="fragment quote">
-                    当然这个切削不是随便切削的，我们需要保证切削后的字符串仍然是 $n$ 个模式串中的某个模式串的前缀
+                    $$6\rightarrow 4\rightarrow 8\rightarrow 2\rightarrow 1$$
+                    $$ababa\rightarrow aba\rightarrow ba\rightarrow a\rightarrow 空串$$
                 </p>
             </div>
             <iframe data-animation="./双视图.js"

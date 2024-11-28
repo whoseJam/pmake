@@ -39,6 +39,7 @@ export { ValueGrid } from "./Node/Grid/ValueGrid";
 export { Tree }                from "./Node/Tree/Tree";
 export { Splay }               from "./Node/Tree/Splay";
 export { BoxTree }             from "./Node/Tree/BoxTree";
+export { BaseTree }            from "./Node/Tree/BaseTree";
 export { ValueTree }           from "./Node/Tree/ValueTree";
 export { BinaryTree }          from "./Node/Tree/BinaryTree";
 export { HorizontalTree }      from "./Node/Tree/HorizontalTree";
