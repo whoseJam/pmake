@@ -12,6 +12,7 @@ import { SVGNode } from "@/Renderer/SVG/SVGNode";
 import { Vector } from "@/Math/Vector";
 
 import { Check } from "@/Utility/Check";
+import { Interp } from "@/Animate/Interp";
 
 let SDNodeID = 0;
 
@@ -225,6 +226,7 @@ SDNode.prototype.unfreeze     = SDNode.forward("updater", "unfreeze");
 SDNode.prototype.freezing     = SDNode.forward("updater", "freezing");
 SDNode.prototype.updateList = [
     function() {
+        const self = this;
         const layer = this._.layer;
         if (this.member.hasChanged("opacity")) {
             new Action(
@@ -235,7 +237,7 @@ SDNode.prototype.updateList = [
                 function(t) {
                     const k = this.source + (this.target - this.source) * t;
                     layer.setAttribute("opacity", k);
-                    if (t === 1) {
+                    if (t === 1 && !self._.clickableCalled) {
                         layer.setAttribute("pointer-events", k === 0 ? "none" : "auto");
                     }
                 },
@@ -248,7 +250,8 @@ SDNode.prototype.updateList = [
 
 SDNode.prototype.drag       = SDNode.forward("interact", "drag");
 SDNode.prototype.clickable  = function(type) {
-    this._.layer.setAttribute("pointer-event", Check.isFalseType(type) ? "none" : "auto");
+    this._.layer.setAttribute("pointer-events", Check.isFalseType(type) ? "none" : "auto");
+    this._.clickableCalled = true;
     return this;
 }
 SDNode.prototype.onClick    = SDNode.forward("interact", "onClick");

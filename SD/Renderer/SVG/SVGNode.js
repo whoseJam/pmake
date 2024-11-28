@@ -100,6 +100,7 @@ export class SVGNode {
         if (key === "innerHTML") {
             this.element.innerHTML = value;
         } else if (key === "pointer-events" || key === "min-width" || key === "min-height") {
+            console.log("value=", value);
             this.element.style[key] = value;
         } else {
             this.element.setAttribute(key, value);

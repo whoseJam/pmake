@@ -85,8 +85,7 @@ sd.main(async () => {
     await sd.pause();
     let u = 1;
     const pointer = sd.Pointer(arr);
-    const focusU = sd.Focus(ac).startAnimate().focus(u).endAnimate();
-    focusU._.layer.setAttribute("pointer-events", "none");
+    const focusU = sd.Focus(ac).startAnimate().focus(u).endAnimate().clickable(false);
     const brace = sd.Brace(arr);
     
     for (let i = 0; i < target.length; i++) {
