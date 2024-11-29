@@ -1,7 +1,7 @@
 import * as sd from "@/sd";
-import { BuildTrieTree } from "../AC自动机";
-import { BuildFailTree } from "../AC自动机";
-import { MatchOnACMachine } from "../AC自动机";
+import { BuildTrieTree } from "../_/BuildTrieTree";
+import { BuildFailTree } from "../_/BuildFailTree";
+import { MatchOnACMachine } from "../_/MatchOnACMachine";
 
 const svg = sd.svg();
 const C = sd.color();
@@ -17,7 +17,7 @@ const data = [
 ];
 
 sd.init(async () => {
-    BuildTrieTree(ac, data);
+    await BuildTrieTree(ac, data);
     await BuildFailTree(ac, {
         OnLink: OnLink
     }, true);

@@ -1,6 +1,6 @@
 import * as sd from "@/sd";
-import { BuildFailTree } from "../AC自动机";
-import { BuildTrieTree } from "../AC自动机";
+import { BuildTrieTree } from "../_/BuildTrieTree";
+import { BuildFailTree } from "../_/BuildFailTree";
 
 const svg = sd.svg();
 const ac = new sd.Tree(svg).layerHeight(70);
@@ -10,8 +10,8 @@ const data = [
     "bab"
 ];
 
-sd.init(() => {
-    BuildTrieTree(ac, data);
+sd.init(async () => {
+    await BuildTrieTree(ac, data);
 })
 
 sd.main(async () => {

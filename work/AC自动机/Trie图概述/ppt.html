@@ -5,7 +5,28 @@
     </section>
     <section>
         <h2>Trie图</h2>
-        <iframe data-animation="./Trie图.js"
-            style="width: 1000px; height: 300px;"></iframe>
+        <div style="display: flex; align-items: center;">
+            <iframe data-animation="./Trie图.js"
+                style="width: 40%; height: 450px;"></iframe>
+            <codeblock style="width: 60%;">
+                <script type="text/template">
+                    void Build() {
+                        queue< int > q; q.push(1);
+                        while (q.size()) {
+                            int u = q.front(); q.pop();
+                            for (int i = 0, v, f, to; i < 26; i++) {
+                                v = ch[u][i]; f = fail[u]; 
+                                to = ch[f][i] ? ch[f][i] : 1;
+                                if (!v) ch[u][i] = to;
+                                else {
+                                    q.push(v);
+                                    fail[v] = to;
+                                }
+                            }
+                        }
+                    }
+                </script>
+            </codeblock>
+        </div>
     </section>
 </section>

@@ -1,6 +1,6 @@
 import * as sd from "@/sd";
-import { BuildTrieTree } from "../AC自动机";
-import { BuildFailTree } from "../AC自动机";
+import { BuildTrieTree } from "../_/BuildTrieTree";
+import { BuildFailTree } from "../_/BuildFailTree";
 
 const svg = sd.svg();
 const C = sd.color();
@@ -11,15 +11,14 @@ const data = [
     "babb"
 ];
 
-sd.init(() => {
-    BuildTrieTree(ac, data);
-})
-
-sd.main(async () => {
+sd.init(async () => {
+    await BuildTrieTree(ac, data);
     await BuildFailTree(ac, {
         OnLink: OnLink
     }, true);
+})
 
+sd.main(async () => {
     await sd.pause(sd.CONTINUE_FRAME);
     ac.forEachNodes((node, id) => {
         if (node.cx() < ac.cx()) {
