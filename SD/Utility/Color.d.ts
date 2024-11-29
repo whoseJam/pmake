@@ -9,6 +9,7 @@ export class Color {
     static blue: HexColor
     static cyan: HexColor
     static grey: HexColor
+    static pink: HexColor
 
     /**
      * 雪白色
@@ -34,6 +35,9 @@ export class Color {
     static violet: HexColor
 
     static yellow: HexColor
+    static darkRed: HexColor
+    static darkBlue: HexColor
+    static darkPink: HexColor
 
     /**
      * 文本蓝
@@ -41,13 +45,17 @@ export class Color {
     static textBlue: HexColor
 
     static aliceBlue: HexColor
-
+    static chocolate: HexColor
+    static darkGreen: HexColor
     static paleGreen: HexColor
 
     /**
      * 粉红桃色
      */
     static peachPuff: HexColor
+
+    static darkOrange: HexColor
+    static darkPurple: HexColor
 
     /**
      * 幽灵白
@@ -63,6 +71,14 @@ export class Color {
      * 柠檬绸色
      */
     static lemonChiffon: HexColor
+
+    static RED: PacketColor
+    static BLUE: PacketColor
+    static GREY: PacketColor
+    static GREEN: PacketColor
+    static ORANGE: PacketColor
+    static PURPLE: PacketColor
+    static DEFAULT: PacketColor 
 
     /**
      * 获取一种随机的颜色

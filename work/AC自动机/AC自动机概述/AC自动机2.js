@@ -58,7 +58,7 @@ function OnFailJumpTo(fail, parent) {
 function OnFirstFailJumpTo(fail, parent) {
     const length = ac.depth(fail);
     pathToU = CreatePath(GetPath(parent, length), C.textBlue).startAnimate().pointStoT().endAnimate().arrow();
-    pathToV = CreatePath(GetPath(fail, length), "#ff7300").startAnimate().pointStoT().endAnimate().arrow();
+    pathToV = CreatePath(GetPath(fail, length), C.darkOrange).startAnimate().pointStoT().endAnimate().arrow();
 }
 
 // v is fail of u
