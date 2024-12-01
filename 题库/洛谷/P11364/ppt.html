@@ -3,6 +3,7 @@
         <h1>树上查询</h1>
         <p>T4</p>
     </section>
+    <problem data-problemset="luogu" data-problemid="P11364"></problem>
     <section>
         <h2>树上查询</h2>
         <div style="display: flex;">
@@ -60,6 +61,7 @@
     <section>
         <h2>树上查询</h2>
         <p>本质不同的 $LCA$ 贡献段只有 $O(n)$ 个</p>
+        <p>假设一个节点 $x$ 的子树内有 $[a,b]$ 范围内所有元素，且另一棵子树内有 $[c,d]$ 范围内的所有元素，<b>且 $b+1=c$</b>，那么所有 $l\in [a,b],r\in [c,d]$ 的区间的 $LCA^*$ 都应该是 $x$</p>
         <div style="display: flex;">
             <iframe data-animation="./线段树合并.js"
                 style="width: 1000px; height: 400px;"></iframe>

@@ -3,6 +3,7 @@
         <h1>遗失的赋值</h1>
         <p>T2</p>
     </section>
+    <problem data-problemset="luogu" data-problemid="P11362"></problem>
     <section>
         <h2>遗失的赋值</h2>
         <iframe data-animation="./样例解释.js"
@@ -22,7 +23,7 @@
         <p>对于 $25\%$ 的数据，$n,m\le 12$，$v\le 2$</p>
         <iframe data-animation="./暴力搜索.js"
             style="width: 1000px; height: 200px;"></iframe>
-        <p class="fragment">我们总共有至多 $12$ 对 $(a_i,b_i)$ 的取值需要确定，且每个待定量的取值范围是 $[1,2]$ 的</p>
+        <p class="fragment">我们总共有至多 $11$ 对 $(a_i,b_i)$ 的取值需要确定，且每个待定量的取值范围是 $[1,2]$ 的</p>
         <p class="fragment">暴力搜索加上剪枝，能通过这部分得分</p>
         <p class="fragment">时间复杂度 $O(v^n)$</p>
     </section>
@@ -36,7 +37,7 @@
             <li class="fragment">对于 $x_k$ 之后的二元限制来说，它们随便取什么都行，$x_{k+1},x_{k+2},...,x_{n}$ 一定可以配合这些二元限制取出合法的取值来</li>
             <li class="fragment">对于 $x_k$ 之前的二元限制来说，$x_{k-1},x_{k-2},...,x_1$ 也都一定可以配合这些二元限制，让 $x_k$ 上的一元限制不被打破</li>
         </ul>
-        <p class="fragment">总方案数即为 $v^{2n}$</p>
+        <p class="fragment">总方案数即为 $v^{2(n-1)}$</p>
     </section>
     <section>
         <h2>遗失的赋值</h2>
