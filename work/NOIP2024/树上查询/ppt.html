@@ -1,0 +1,77 @@
+<section>
+    <section>
+        <h1>树上查询</h1>
+        <p>T4</p>
+    </section>
+    <section>
+        <h2>树上查询</h2>
+        <div style="display: flex;">
+            <iframe data-animation="./样例解释.js"
+                style="width: 1000px; height: 400px;"></iframe>
+            <div>
+                <p>定义 $LCA^*(l,r)$ 为编号在 $[l,r]$ 中所有节点的最近公共祖先</p>
+                <p class="fragment">给出 $q$ 次询问，每次询问给定 $[l,r]$ 和 $k$，输出：
+                    $$
+                    \mathop{max}_\limits{l\le l'\le r'\le r\\ r'-l'+1\ge k}\{dep_{LCA^*(l',r')}\}
+                    $$
+                </p>
+            </div>
+        </div>
+    </section>
+    <section>
+        <h2>树上查询</h2>
+        <div style="display: flex;">
+            <div>
+                <p>对于 $20\%$ 的数据 $n,q\le 5000$，以及对于另外 $12\%$ 的数据满足 $k=r-l+1$，这两部分可以一起做</p>
+                <p class="fragment">我们考虑如何快速计算 $LCA^*(l,r)$</p>
+                <p class="fragment">容易发现，欲求某一批节点的 $LCA$，我们只需要关注<b>DFS序最小的节点</b>和<b>DFS序最大的节点</b>的 $LCA$ 即可<span class="fragment">，经过RMQ预处理后这个可以 $O(1)$ 求出</span></p>
+                <p class="fragment">由于我们要求 $LCA^*$ 的深度最大值，于是对每次询问，我们只需要关心 $[l,r]$ 内长度恰好等于 $k$ 的子区间它们的 $LCA^*$</p>
+            </div>
+            <iframe data-animation="./DFS序.js"
+                style="width: 1000px; height: 400px;"></iframe>
+        </div>
+        <codeblock class="fragment">
+            <script type="text/template">
+                for (int i = 1, l, r, k; i <= q; i++) {
+                    l = read(); r = read(); k = read();
+                    int ans = 0;
+                    for (int l1 = l; l1 + k - 1 <= r; l1++) {
+                        ans = max(ans, dep[LCA(l1, l1 + k - 1)]); // O(1)
+                    }
+                    cout << ans << '\n';
+                }
+            </script>
+        </codeblock>
+    </section>
+    <section>
+        <h2>树上查询</h2>
+        <p>我们考虑统计某个节点 $x$ 是哪些区间的 $LCA^*$，然后把这些区间丢到一个表格里面去</p>
+        <iframe data-animation="./LCA贡献.js"
+            style="width: 1000px; height: 250px;"></iframe>
+        <div style="display: flex;">
+            <iframe data-animation="./样例LCA表.js" class="fragment"
+                style="width: 1000px; height: 250px;"></iframe>
+            <div>
+                <p class="fragment">只要这个表格能被快速填充出来，问题可以转化为询问表格中某个区域的深度最大值</p>
+                <p class="fragment">我们可以认为一个 $LCA$ 覆盖了一些区间，我们能对这玩意优化的前提就是<b>本质不同的覆盖区间不太多</b></p>
+            </div>
+        </div>
+    </section>
+    <section>
+        <h2>树上查询</h2>
+        <p>本质不同的 $LCA$ 贡献段只有 $O(n)$ 个</p>
+        <div style="display: flex;">
+            <iframe data-animation="./线段树合并.js"
+                style="width: 1000px; height: 400px;"></iframe>
+            <iframe data-animation="./样例LCA表.js"
+                style="width: 1000px; height: 400px;"></iframe>
+        </div>
+        <p class="fragment">我们可以用线段树合并全部预处理出来</p>
+    </section>
+    <section>
+        <h2>树上查询</h2>
+        <p>现在问题转化为，在一个平面上有很多权值不一的矩形</p>
+        <p class="fragment">我们需要查询一些平行四边形区域的最大权值</p>
+        <p class="fragment">用扫描线扫一扫即可</p>
+    </section>
+</section>

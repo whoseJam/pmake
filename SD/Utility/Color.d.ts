@@ -37,6 +37,7 @@ export class Color {
     static yellow: HexColor
     static darkRed: HexColor
     static darkBlue: HexColor
+    static darkGrey: HexColor
     static darkPink: HexColor
 
     /**

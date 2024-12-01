@@ -212,6 +212,7 @@ BaseTree.prototype.lca = function(x, y) {
     let dx = this.depth(x);
     let dy = this.depth(y);
     for (let i = 1; i <= 100 && x !== y; i++) {
+        console.log("x=", x, "y=", y);
         if (dx > dy) {
             x = this.fatherId(x);
             dx--;
@@ -220,6 +221,7 @@ BaseTree.prototype.lca = function(x, y) {
             dy--;
         }
     }
+    console.log("x=", x);
     return this.findNodeById(x);
 }
 
@@ -346,7 +348,7 @@ BaseTree.prototype.nodeId = function(node) {
     if (Check.isTypeOfSDNode(node)) {
         return this._.sidToNodes[node.id].key;
     }
-    return node;
+    return String(node);
 }
 
 BaseTree.prototype.sourceId = function(link) {
