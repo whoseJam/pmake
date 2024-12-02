@@ -92,8 +92,10 @@ export class SDNode {
     rule(rule: (parent: SDNode, child: SDNode) => void): this;
     triggerRule(): this;
     onEnter(enter: (element: SDNode, move: () => void) => void): this;
+    onEnter(): (element: SDNode) => void|undefined;
     triggerEnter(): this;
     onExit(exit: (element: SDNode) => void): this;
+    onExit(): (element: SDNode) => void|undefined;
     triggerExit(): this;
 
     title(title: string): this;

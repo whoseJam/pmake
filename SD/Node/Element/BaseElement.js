@@ -1,13 +1,12 @@
-import { svg } from "@/Interact/RootSvg";
-
 import { Exit }   from "@/Node/SDNode/Exit";
 import { Enter }  from "@/Node/SDNode/Enter";
 import { SDNode } from "@/Node/SDNode";
 
 import { CenterFixAspect } from "@/Rule/Center";
 
-import { Cast }  from "@/Utility/Cast";
-import { Check } from "@/Utility/Check";
+import { Cast }          from "@/Utility/Cast";
+import { Check }         from "@/Utility/Check";
+import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 export function BaseElement(parent) {
     SDNode.call(this, parent);
@@ -39,11 +38,11 @@ BaseElement.prototype.updateList = [
     }
 ]
 
-BaseElement.prototype.x             = SDNode.OrdinaryGSet("x", "setByEqual");
-BaseElement.prototype.y             = SDNode.OrdinaryGSet("y", "setByEqual");
-BaseElement.prototype.width         = SDNode.OrdinaryGSet("width", "setByEqual");
-BaseElement.prototype.height        = SDNode.OrdinaryGSet("height", "setByEqual");
-BaseElement.prototype.rate          = SDNode.OrdinaryGSet("rate", "setByDqual");
+BaseElement.prototype.x             = SDNode.ordinaryGetterAndSetter("x", "setByEqual");
+BaseElement.prototype.y             = SDNode.ordinaryGetterAndSetter("y", "setByEqual");
+BaseElement.prototype.width         = SDNode.ordinaryGetterAndSetter("width", "setByEqual");
+BaseElement.prototype.height        = SDNode.ordinaryGetterAndSetter("height", "setByEqual");
+BaseElement.prototype.rate          = SDNode.ordinaryGetterAndSetter("rate", "setByDqual");
 BaseElement.prototype.color         = BackgroundGSet("color");
 BaseElement.prototype.fill          = BackgroundGSet("fill");
 BaseElement.prototype.fillOpacity   = BackgroundGSet("fillOpacity");
@@ -57,12 +56,14 @@ BaseElement.prototype.background = function() {
 
 BaseElement.prototype.text = function() {
     const value = this.child("value");
-    return value ? value.text ? value.text() : undefined : undefined;
+    if (!value) return "";
+    if (!value.text) return "";
+    return value.text();
 }
 
 BaseElement.prototype.drop = function() {
     const value = this.child("value");
-    value.onExit(Exit.drop(this, value));
+    value.onExit(Exit.drop());
     this.eraseChild(value);
     return value;
 }
@@ -70,42 +71,40 @@ BaseElement.prototype.drop = function() {
 BaseElement.prototype.intValue = function() {
     const value = this.value();
     if (!value) return 0;
+    if (!value.text) ErrorLauncher.invalidInvoke("intValue");
     return +value.text();
 }
 
 BaseElement.prototype.value = function(value, rule) {
     if (arguments.length === 0) return this.child("value");
-    Exit.ordinary(this, "value");
+    if (this.hasChild("value")) this.eraseChild("value");
     if (Check.isFalseType(value)) return this;
-    rule = rule ? rule : CenterFixAspect(this.member.get("rate"));
+    rule = GetValueRule.call(this, rule);
     value = Cast.castToSDNode(this, value);
-    value.onEnter(Enter.ordinary(this));
+    if (!value.onEnter()) value.onEnter(Enter.appear());
+    if (!value.onExit()) value.onExit(Exit.fade());
     this.childAs("value", value, rule);
-    this.tryUpdate();
     return this;
 }
 
 BaseElement.prototype.valueFromExist = function(value, rule) {
-    rule = rule ? rule : CenterFixAspect(this.member.get("rate"));
-    Exit.ordinary(this, "value");
-    value.onEnter(Enter.fromExist(this));
+    if (this.hasChild("value")) this.eraseChild("value");
+    rule = GetValueRule.call(this, rule);
+    value.onEnter(Enter.moveTo());
+    if (!value.onExit()) value.onExit(Exit.fade());
     this.childAs("value", value, rule);
-    this.tryUpdate();
     return this;
-}
-
-BaseElement.prototype.valueRule = function(rule) {
-    const value = this.value();
-    value?.rule(rule);
 }
 
 function BackgroundGSet(key) {
     return function(value) {
         const background = this.child("background");
-        if (value === undefined) {
-            return background[key]();
-        }
+        if (value === undefined) return background[key]();
         background[key](value);
         return this;
     }
+}
+
+function GetValueRule(rule) {
+    return rule ? rule : CenterFixAspect(this.member.get("rate"));
 }

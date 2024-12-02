@@ -1,4 +1,4 @@
-import { SDNode } from "../SDNode";
+import { SDNode } from "@/Node/SDNode";
 
 export class Enter {
     static ordinary(parent: SDNode);
@@ -9,4 +9,11 @@ export class Enter {
 
     static fromExistValue(parent: SDNode, value: SDNode);
     static fromExistValue(parent: SDNode, value: SDNode, layer: string);
+
+    static appear(): (element: SDNode, move: () => void) => void;
+    static appear(layer: string): (element: SDNode, move: () => void) => void;
+    static moveTo(): (element: SDNode, move: () => void) => void;
+    static moveTo(layer: string): (element: SDNode, move: () => void) => void;
 }
+
+export function enter(): typeof Enter;

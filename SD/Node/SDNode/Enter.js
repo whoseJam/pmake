@@ -37,4 +37,31 @@ export class Enter {
             element.valueFromExist(value);
         }
     }
+
+    static appear(layer) {
+        return function(element, move) {
+            element.after(this.delay());
+            element.opacity(0);
+            element.attachTo(this.layer(layer));
+            move();
+            element.update();
+            element.startAnimate(this);
+            element.opacity(1);
+        }
+    }
+
+    static moveTo(layer) {
+        return function(element, move) {
+            element.after(this.delay());
+            element.attachTo(svg());
+            element.startAnimate(this);
+            element.attachTo(this.layer(layer));
+            move();
+            element.opacity(1);
+        }
+    }
+}
+
+export function enter() {
+    return Enter;
 }

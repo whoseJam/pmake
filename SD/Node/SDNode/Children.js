@@ -1,4 +1,4 @@
-import { SDNode } from "../SDNode";
+import { SDNode } from "@/Node/SDNode";
 
 let id = 0;
 
@@ -51,9 +51,9 @@ export class Children {
             child = arguments[0];
             rule = arguments[1] ? arguments[1] : undefined;
         }
-        child.parent = this.node;
+        child._.parent = this.node;
         this.children[childName] = child;
-        if (rule) child._.rule = rule;
+        child.rule(rule);
         return childName;
     }
 
@@ -75,34 +75,21 @@ export class Children {
                 }
         }
         child = this.children[childName];
-        child.onExit();
+        child.triggerExit();
         delete this.children[childName];
         return child;
     }
 
-
-    /**
-     * 
-     */
-    rule() {
-        this.forEach(child => {
-            const rule = child._.rule;
-            if (!rule) return;
-            const move = () => { rule(this.node, child); };
-            if (child._.enter) {
-                child._.enter(child, move);
-                child._.enter = undefined;
-            } else move();
-        });
-    }
-
-    /**
-     * 
-     */
-    update() {
-        this.rule(); // WARNING：以后删掉
-        this.forEach(child => {
-            child.update();
-        })
+    has(child) {
+        let childName = child;
+        if (typeof(child) !== "string" && typeof(child) !== "number") {
+            for (let id in this.children)
+                if (this.children[id] === child) {
+                    childName = id;
+                    break;
+                }
+        }
+        if (this.children[childName]) return true;
+        return false;
     }
 }

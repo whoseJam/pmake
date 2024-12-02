@@ -20,7 +20,7 @@ Vertex.prototype = {
     ...BaseElement.prototype
 };
 
-Vertex.prototype.r       = SDNode.OrdinaryGSet("r", "setByEqual");
+Vertex.prototype.r       = SDNode.ordinaryGetterAndSetter("r", "setByEqual");
 Vertex.prototype.width   = Circle.prototype.width;
 Vertex.prototype.height  = Circle.prototype.height;
 Vertex.prototype.inRange = Circle.prototype.inRange;

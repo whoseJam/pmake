@@ -6,4 +6,8 @@ export class Exit {
 
     static ordinary(parent: SDNode, child: string|SDNode): void;
 
+    static fade(): (element: SDNode) => void;
+    static drop(): (element: SDNode) => void;
 }
+
+export function exit(): typeof Exit;

@@ -177,7 +177,7 @@ SDNode.prototype.attachTo = function(parent) {
 SDNode.prototype.childAs = function() {
     const args = [...arguments];
     const child = args.filter(arg => Check.isTypeOfSDNode(arg))[0];
-    child.attachTo(this);
+    if (child._.parent !== this) child.attachTo(this);
     const rule = args[args.indexOf(child) + 1];
     this._.children.push(args[0], args[1], args[2]);
     // TODO: 当使用 fromExist 的时候，这里使用 rule 会有问题
@@ -187,6 +187,7 @@ SDNode.prototype.childAs = function() {
 }
 
 SDNode.prototype.child      = SDNode.forwardWithReturn("children", "child");
+SDNode.prototype.hasChild   = SDNode.forwardWithReturn("children", "has");
 SDNode.prototype.eraseChild = SDNode.forwardWithReturn("children", "erase");
 
 SDNode.prototype.startAnimate = SDNode.forward("animate", "startAnimate");
@@ -270,29 +271,32 @@ SDNode.prototype.triggerRule = function() {
 }
 
 SDNode.prototype.onEnter = function(enter) {
+    if (enter === undefined) return this._.enter;
     this._.enter = enter;
     return this;
 }
 
 SDNode.prototype.triggerEnter = function(move) {
     if (!this._.enter) return this;
-    this._.enter(this, move);
+    if (arguments.length === 2) {
+        this._.enter(arguments[0], this, arguments[1]);
+    } else {
+        this._.enter.call(this._.parent, this, move);
+    }
+    this._.enter = undefined;
     return this;
 }
 
-SDNode.prototype.onExit = function(callback) {
-    if (callback === undefined) {
-        if (this._.exit) this._.exit(this);
-        this._.exit = undefined;
-        return;
-    }
-    this._.exit = callback;
+SDNode.prototype.onExit = function(exit) {
+    if (exit === undefined) return this._.exit;
+    this._.exit = exit;
     return this;
 }
 
 SDNode.prototype.triggerExit = function() {
     if (!this._.exit) return this;
-    this._.exit(this);
+    this._.exit.call(this._.parent, this);
+    this._.exit = undefined;
     return this;
 }
 

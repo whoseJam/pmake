@@ -96,6 +96,9 @@ export { pause }  from "./Animate/Window";
 export { make1d } from "./Utility/Util";
 export { make2d } from "./Utility/Util";
 
+export { exit }  from "./Node/SDNode/Exit";
+export { enter } from "./Node/SDNode/Enter";
+
 export { PathPen } from "./Utility/PathPen";
 
 export { CONTINUE_FRAME }    from "./Animate/Window";

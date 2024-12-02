@@ -8,6 +8,10 @@ export class ErrorLauncher {
         throw new Error(`Invalid Cast ${key}`);
     }
 
+    static invalidInvoke(key) {
+        throw new Error(`The Function ${key} Cannot Be Invoked In Current Environment`);
+    }
+
     static outOfRangeError(index) {
         throw new Error(`Index ${index} Out of Range`);
     }

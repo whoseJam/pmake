@@ -23,32 +23,32 @@ export function Updater(parent) {
     this.attachUpdateList = [];
 }
 
+Updater.prototype.component = function(comp) {
+    return this.parent._[comp];
+}
+
 Updater.prototype.preUpdate = function() {
-    this.parent._.children.forEach(child => {
+    this.component("children").forEach(child => {
         child.freeze();
     });
 }
 
 Updater.prototype.postUpdate = function() {
-    this.parent._.children.forEach(child => {
-        const rule = child._.rule;
+    this.component("children").forEach(child => {
+        const rule = child.rule();
         if (!rule) return;
         this.tryMove(child, () => {
             rule(this.parent, child);
         });
     });
-    this.parent._.children.forEach(child => {
+    this.component("children").forEach(child => {
         child.unfreeze();
     });
 }
 
 Updater.prototype.tryMove = function(element, move) {
-    if (element._.enter) {
-        element._.enter(element, move);
-        element._.enter = undefined;
-    } else {
-        move();
-    }
+    if (!element.onEnter()) return move();
+    element.triggerEnter(move);
 }
 
 Updater.prototype.update = function() {
