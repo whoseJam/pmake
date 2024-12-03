@@ -69,15 +69,17 @@ export class SDNode {
     my(my: number): this;
 
     update(): this;
-    preUpdate(): void;
-    postUpdate(): void;
-    tryUpdate(): void;
-    pendUpdate(): void;
-    attachUpdate(update: () => void): void;
-    removeUpdate(update: () => void): void;
-    tryMove(element: SDNode, move: () => void): void;
-    freeze(): void;
-    unfreeze(): void;
+    preUpdate(): this;
+    postUpdate(): this;
+    tryUpdate(): this;
+    pendUpdate(): this;
+    beforeUpdate(update: () => void): this;
+    afterUpdate(update: () => void): this;
+    attachUpdate(update: () => void): this;
+    removeUpdate(update: () => void): this;
+    tryMove(element: SDNode, move: () => void): this;
+    freeze(): this;
+    unfreeze(): this;
     freezing(): boolean;
 
     drag(type: true): this;

@@ -1,22 +1,14 @@
-import { Line } from "@/Node/Nake/Line";
+import { Line }   from "@/Node/Nake/Line";
+import { SDNode } from "@/Node/SDNode";
 
 import { svg } from "@/Interact/RootSvg";
 
 import { trim } from "@/Utility/Trim";
-import { SDNode } from "@/Node/SDNode";
 
 let linkID = 0;
 
 function LinkRule(parent, child) {
-    const element1 = child.member.getAndFlush("linkElement1");
-    const element2 = child.member.getAndFlush("linkElement2");
-    const xlocation1 = child.member.getAndFlush("xlocation1");
-    const ylocation1 = child.member.getAndFlush("ylocation1");
-    const xlocation2 = child.member.getAndFlush("xlocation2");
-    const ylocation2 = child.member.getAndFlush("ylocation2");
-    child.source(element1[xlocation1](), element1[ylocation1]());
-    child.target(element2[xlocation2](), element2[ylocation2]());
-    trim(child, element1, element2);
+    child.update();
 }
 
 export function Link(sourceElement, targetElement, linkType = Line, sourceXLocation = "cx", sourceYLocation = "cy", targetXLocation = "cx", targetYLocation = "cy", callback = () => {}) {
@@ -31,16 +23,25 @@ export function Link(sourceElement, targetElement, linkType = Line, sourceXLocat
     link.member.new("xlocation2", targetXLocation);
     link.member.new("ylocation2", targetYLocation);
 
-    link.attachUpdate(() => {
-        if (link.member.hasChanged("linkElement1") ||
-            link.member.hasChanged("linkElement2") ||
-            link.member.hasChanged("xlocation1") ||
-            link.member.hasChanged("ylocation1") ||
-            link.member.hasChanged("xlocation2") || 
-            link.member.hasChanged("ylocation2")) {
-            link.triggerRule();
-        }
-    })
+    link.beforeUpdate(() => {
+        console.log("link update");
+        const element1 = link.member.getAndFlush("linkElement1");
+        const element2 = link.member.getAndFlush("linkElement2");
+        const xlocation1 = link.member.getAndFlush("xlocation1");
+        const ylocation1 = link.member.getAndFlush("ylocation1");
+        const xlocation2 = link.member.getAndFlush("xlocation2");
+        const ylocation2 = link.member.getAndFlush("ylocation2");
+        link.source(element1[xlocation1](), element1[ylocation1]());
+        link.target(element2[xlocation2](), element2[ylocation2]());
+    });
+
+    link.afterUpdate(() => {
+        const element1 = link.member.getAndFlush("linkElement1");
+        const element2 = link.member.getAndFlush("linkElement2");
+        trim(link, element1, element2);
+        link.updateList[0].call(link);
+        link.updateList[link.updateList.length - 1].call(link);
+    });
 
     link.sourceElement = function(element) {
         if (element === undefined) return this.member.get("linkElement1");
@@ -58,10 +59,10 @@ export function Link(sourceElement, targetElement, linkType = Line, sourceXLocat
         return this;
     }
 
-    link.sourceXLocation = SDNode.OrdinaryGSet("xlocation1", "set");
-    link.sourceYLocation = SDNode.OrdinaryGSet("ylocation1", "set");
-    link.targetXLocation = SDNode.OrdinaryGSet("xlocation2", "set");
-    link.targetYLocation = SDNode.OrdinaryGSet("ylocation2", "set");
+    link.sourceXLocation = SDNode.ordinaryGetterAndSetter("xlocation1", "set");
+    link.sourceYLocation = SDNode.ordinaryGetterAndSetter("ylocation1", "set");
+    link.targetXLocation = SDNode.ordinaryGetterAndSetter("xlocation2", "set");
+    link.targetYLocation = SDNode.ordinaryGetterAndSetter("ylocation2", "set");
 
     sourceElement.childAs(name, link, LinkRule);
     targetElement.childAs(name, link, LinkRule);

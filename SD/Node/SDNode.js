@@ -219,12 +219,14 @@ SDNode.prototype.preUpdate    = SDNode.forward("updater", "preUpdate");
 SDNode.prototype.postUpdate   = SDNode.forward("updater", "postUpdate");
 SDNode.prototype.tryUpdate    = SDNode.forward("updater", "tryUpdate");
 SDNode.prototype.pendUpdate   = SDNode.forward("updater", "pendUpdate");
+SDNode.prototype.beforeUpdate = SDNode.forward("updater", "beforeUpdate");
+SDNode.prototype.afterUpdate  = SDNode.forward("updater", "afterUpdate");
 SDNode.prototype.attachUpdate = SDNode.forward("updater", "attachUpdate");
 SDNode.prototype.removeUpdate = SDNode.forward("updater", "removeUpdate");
 SDNode.prototype.tryMove      = SDNode.forward("updater", "tryMove");
 SDNode.prototype.freeze       = SDNode.forward("updater", "freeze");
 SDNode.prototype.unfreeze     = SDNode.forward("updater", "unfreeze");
-SDNode.prototype.freezing     = SDNode.forward("updater", "freezing");
+SDNode.prototype.freezing     = SDNode.forwardWithReturn("updater", "freezing");
 SDNode.prototype.updateList = [
     function() {
         const self = this;

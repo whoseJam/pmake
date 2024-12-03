@@ -3,11 +3,13 @@
  * preUpdate
  *  - freeze all children
  * 
+ * before update
+ * 
  * update
  *  - the main update logic of this component
  *  - iteracte all the updater in the updateList
  * 
- * attach update
+ * attach update / after update
  *  - the attach update logic of this component
  *  - iteracte the the updater in the attachUpdateList
  * 
@@ -20,6 +22,7 @@ export function Updater(parent) {
     this.freezeCount = 0;
     this.isUpdating = false;
     this.isPending = false;
+    this.beforeUpdateList = [];
     this.attachUpdateList = [];
 }
 
@@ -52,8 +55,12 @@ Updater.prototype.tryMove = function(element, move) {
 }
 
 Updater.prototype.update = function() {
+    if (this.updating()) return this;
     this.preUpdate();
     this.isUpdating = true;
+    this.beforeUpdateList.forEach(callback => {
+        callback.call(this.parent);
+    });
     this.parent.updateList.forEach(callback => {
         callback.call(this.parent);
     });
@@ -96,6 +103,14 @@ Updater.prototype.tryUpdate = function() {
     else this.update();
 }
 
+Updater.prototype.beforeUpdate = function(callback) {
+    this.beforeUpdateList.push(callback);
+}
+
+Updater.prototype.afterUpdate = function(callback) {
+    this.attachUpdateList.push(callback);
+}
+
 Updater.prototype.attachUpdate = function(callback) {
     this.attachUpdateList.push(callback);
     return callback;
@@ -103,4 +118,5 @@ Updater.prototype.attachUpdate = function(callback) {
 
 Updater.prototype.removeUpdate = function(callback) {
     this.attachUpdateList = this.attachUpdateList.filter(item => item !== callback);
+    this.beforeUpdateList = this.beforeUpdateList.filter(item => item !== callback);
 }

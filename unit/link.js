@@ -1,13 +1,23 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-const arr = new sd.Array(svg).resize(10).cx(600).cy(300);
 
 sd.init(() => {
-
+    
 })
 
-sd.main(async () => {
+sd.main(TestBasic);
+
+async function TestPropertyChangeAfterLink() {
+    const v1 = new sd.Vertex(svg).center(100, 100);
+    const v2 = new sd.Vertex(svg).center(200, 100);
+    const l = sd.Link(v1, v2, sd.Curve);
+    await sd.pause();
+    l.startAnimate().bending(-0.5).endAnimate();
+}
+
+async function TestBasic() {
+    const arr = new sd.Array(svg).resize(10).cx(600).cy(300);
     await sd.pause();
     sd.Link(arr.element(1), arr.element(5), sd.Curve);
     await sd.pause();
@@ -29,4 +39,4 @@ sd.main(async () => {
     const line1 = sd.Link(v1, v2, sd.Curve);
     await sd.pause();
     line1.startAnimate().bending(-0.5).triggerRule().endAnimate();
-})
+}
