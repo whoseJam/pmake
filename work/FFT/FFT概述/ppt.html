@@ -114,6 +114,7 @@
     <section>
         <h2>复数单位根</h2>
         <iframe data-animation="./复数单位根.js"
+            data-viewBoxDelta="-20 0 20 0"
             style="width: 1000px; height: 300px;"></iframe>
         <p class="fragment">记复数的 $n$ 次单位根为 $w_n$</p>
         <p class="fragment">
@@ -128,7 +129,8 @@
     </section>
     <section>
         <h2>FFT</h2>
-        <p>对于一个 $n$ 次多项式，FFT 把复数单位根及其若干次方带入多项式进行插值</p>
+        <p>对于一个 $n-1$ 次多项式，FFT 把复数单位根及其若干次方带入多项式进行插值</p>
+        <p class="quote">为了后续讨论方便，这里我们认为 $n$ 是一个偶数，即使你正在处理一个 $n$ 为奇数的多项式，你总能通过补一个系数为 $0$ 的高位，让它变成一个 $n$ 为偶数的多项式</p>
         <p>
             $$
             (w_n^0,w_n^1,w_n^2,...,w_n^{n-1})\stackrel{f}{\rightarrow} \big(f(w_n^0),f(w_n^1),f(w_n^2),...,f(w_n^{n-1})\big)
@@ -140,14 +142,14 @@
         <p class="math-fragment">
             $$
             \begin{aligned}
-            f(x)&=a_0+a_1x+a_2x^2+...+a_nx^n \\
-            &=(a_0+a_2x^2+a^4x^4+...+a_{n-1}x^{n-1})+(a_1x+a_3x^3+a_5x^5+...+a_{n}x^{n}) \\
-            &=(a_0+a_2x^2+a^4x^4+...+a_{n-1}x^{n-1})+x(a_1+a_3x^2+a_5x^4+...+a_{n}x^{n-1})
+            f(x)&=a_0+a_1x+a_2x^2+...+a_{n-1}x^{n-1} \\
+            &=(a_0+a_2x^2+a^4x^4+...+a_{n-2}x^{n-2})+(a_1x+a_3x^3+a_5x^5+...+a_{n-1}x^{n-1}) \\
+            &=(a_0+a_2x^2+a^4x^4+...+a_{n-2}x^{n-2})+x(a_1+a_3x^2+a_5x^4+...+a_{n-1}x^{n-1})
             \end{aligned}
             $$
         </p>
         <ul>
-            <li class="fragment">令 $f_1(x)=a_0+a_2x+a_4x^2+...+a_{n-1}x^{\frac{n-1}{2} }$</li>
+            <li class="fragment">令 $f_1(x)=a_0+a_2x+a_4x^2+...+a_{n-1}x^{\frac{n-2}{2} }$</li>
             <li class="fragment">令 $f_2(x)=a_1+a_3x+a_5x^2+...+a_{n}x^{\frac{n-1}{2} }$</li>
         </ul>
         <p class="fragment">
@@ -155,16 +157,7 @@
             f(x)=f_1(x^2)+xf_2(x^2)
             $$
         </p>
-    </section>
-    <section>
-        <h2>FFT</h2>
-        <p>
-            $$
-            f(x)=f_1(x^2)+xf_2(x^2)
-            $$
-        </p>
-        <p>把单位复根 $\{w_n^0,w_n^1,...,w_n^{n-1} \}$依次带入</p>
-        <p class="fragment">假设正在带入 $w_n^k$</p>
+        <p class="fragment">把单位复根 $\{w_n^0,w_n^1,...,w_n^{n-1} \}$依次带入<span class="fragment">，假设正在带入 $w_n^k$：</span></p>
         <p class="fragment math-fragment">
             $$
             \begin{aligned}
@@ -173,5 +166,25 @@
             \end{aligned}
             $$
         </p>
+        <div class="quote fragment">
+            本来我们要把 $\{w_n^0,w_n^1,...,w_n^{n-1}\}$ 带入到一个含有 $n$ 项的多项式中，现在我们只需要把 $\{w_{n/2}^0,w_{n/2}^1,...,w_{n/2}^{n/2-1}\}$ 带入到两个含有 $\frac n 2$ 项的多项式中即可
+            <div style="text-align: center;">
+                <span class="fragment">$T(n)=O(n)+2T(\frac n 2) \Rightarrow T(n)=O(nlogn)$</span>
+            </div>
+        </div>
+    </section>
+    <section>
+        <h2>FFT</h2>
+        <p>由于任何一个时刻我们都要求多项式的项数得是偶数，才能做上述分治</p>
+        <p class="fragment">所以在做多项式乘法时，需要提前把参与乘法的两个多项式补齐到 $2^k$ 项</p>
+        <ul>
+            <li class="fragment">一个 $1$ 次多项式乘上一个 $2$ 次多项式，会得到一个 $3$ 次多项式，需要 $4$ 个点值<span class="fragment">——所以我们需要提前把这两个多项式补齐成 $3$ 次多项式，从中取 $4$ 个点值出来</span></li>
+            <li class="fragment">一个 $3$ 次多项式乘上一个 $5$ 次多项式，会得到一个 $8$ 次多项式，需要 $9$ 个点值<span class="fragment">——所以我们需要提前把这两个多项式补齐成 $15$ 次多项式，从中取 $16$ 个点值出来</span></li>
+        </ul>
+    </section>
+    <section>
+        <h2>FFT</h2>
+        <iframe data-animation="./FFT分治演示.js"
+            style="width: 1000px; height: 300px;"></iframe>
     </section>
 </section>

@@ -70,3 +70,14 @@ gulp.task("ppt", (done) => {
     return gulp.task("ppt-inner")(done);
 })
 
+gulp.task("serve", (done) => {
+    const exec = require("child_process").exec;
+    exec(`cd ${defaultPPTTargetFilePath} && live-server`, function(error, stdout, stderr) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log("success");
+        }
+        done();
+    });
+})

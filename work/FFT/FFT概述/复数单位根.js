@@ -12,7 +12,7 @@ const slider = new sd.Slider(svg).min(2).max(10).onChange(value => {
     for (let i = 0; i < value; i++) {
         MakeVec(2 * Math.PI / value * i);
     }
-    slider.child("label").text(value);
+    slider.child("label").text(value).triggerRule();
 });
 slider.childAs("label", new sd.Text(svg), R.aside("lc"));
 
