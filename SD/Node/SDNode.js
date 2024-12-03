@@ -177,7 +177,7 @@ SDNode.prototype.attachTo = function(parent) {
 SDNode.prototype.childAs = function() {
     const args = [...arguments];
     const child = args.filter(arg => Check.isTypeOfSDNode(arg))[0];
-    if (child._.parent !== this) child.attachTo(this);
+    if (child._.parent !== this && !child.onEnter()) child.attachTo(this);
     const rule = args[args.indexOf(child) + 1];
     this._.children.push(args[0], args[1], args[2]);
     // TODO: 当使用 fromExist 的时候，这里使用 rule 会有问题

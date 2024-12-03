@@ -32,7 +32,7 @@ export function Mathjax(parent, text) {
     this._.math = undefined;
     this._.lastMath = undefined;
 
-    if (typeof(text) === "string") this.math(text);
+    if (typeof(text) === "string" || typeof(text) === "number") this.math(text);
 
     this._.BASE_MATHJAX = true;
 }
@@ -69,6 +69,7 @@ Mathjax.prototype.text = function() {
 
 Mathjax.prototype.math = function(text) {
     if (text === undefined) return this.text();
+    text = String(text);
     if (text.startsWith("$")) text = text.slice(1, -1);
     this.member.setAndFlush("text", text);
 

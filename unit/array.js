@@ -1,23 +1,27 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
+const R = sd.rule();
+const EN = sd.enter();
 
 sd.init(() => {
 
 })
 
 sd.main(async () => {
-    await main();
+    await TestTwoArrayMoveValue();
 })
 
 async function TestTwoArrayMoveValue() {
     const n = 10;
     const arr1 = new sd.Array(svg).resize(n).x(100).y(100);
-    const arr2 = new sd.Array(svg).resize(n).x(100).y(200);
-    for (let i = 0; i < n; i++) arr1.value(i, i);
+    const arr2 = new sd.Array(svg).x(100).y(200);
+    for (let i = 0; i < n; i++) arr1.value(i, new sd.Mathjax(arr1, i));
+    await sd.pause();
     for (let i = 0; i < n; i++) {
-        arr2.startAnimate();
-        arr2.element(i).value(arr1.element(i).drop());
+        arr2.startAnimate(10000);
+        arr2.push();
+        arr2.element(i).value(arr1.element(i).drop().onEnter(EN.moveTo()));
         arr2.endAnimate();
     }
 }
