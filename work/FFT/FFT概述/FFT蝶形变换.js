@@ -6,22 +6,36 @@ const R = sd.rule();
 const EN = sd.enter();
 const n = 8;
 const arr = new sd.Array(svg).resize(n);
+let id = 0;
 
 sd.init(() => {
     for (let i = 0; i < n; i++) {
         arr.element(i).value(new sd.Mathjax(arr, `a_{${i}}`), R.centerOnly());
+        arr.value(i).rank = i;
     }
 })
 
 sd.main(async () => {
+    await Solve(arr, 50);
+})
+
+async function Solve(arr, gap) {
+    const myId = ++id;
+    if (arr.length() === 1) {
+        arr.value(0).startAnimate().transformMath(`y^{\\small(${myId}\\small)}_{${arr.value(0).rank}}`).triggerRule().endAnimate();
+        return;
+    }
+
     await sd.pause();
+    const n = arr.length();
     const f0 = new sd.Array(svg);
     const f1 = new sd.Array(svg);
-    f0.x(arr.x() - 20).y(arr.my() + 40);
-    f1.x(arr.cx() + 20).y(arr.my() + 40);
+    f0.x(arr.x() - gap).y(arr.my() + 40);
+    f1.x(arr.cx() + gap).y(arr.my() + 40);
 
     for (let i = 0; i < n; i++) {
         const math = new sd.Mathjax(svg, arr.value(i).math()).center(arr.value(i).center());
+        math.rank = arr.value(i).rank;
         if (!(i & 1)) {
             f0.startAnimate();
             f0.push();
@@ -35,17 +49,14 @@ sd.main(async () => {
         }
     }
 
-    await sd.pause();
-    for (let i = 0; i < n / 2; i++) {
-        f0.value(i).startAnimate().transformMath(`y^{\\small(1\\small)}_{${i * 2}}`).triggerRule().endAnimate();
-        f1.value(i).startAnimate().transformMath(`y^{\\small(2\\small)}_{${i * 2 + 1}}`).triggerRule().endAnimate();
-    }
+    await Solve(f0, gap / 2);
+    await Solve(f1, gap / 2);
 
+    await sd.pause();
     const n2 = n / 2;
     for (let i = 0; i < n; i++) {
-        await sd.pause();
         sd.Link(f0.element(i % n2), arr.element(i), sd.Line, "cx", "y", "cx", "my").startAnimate().pointStoT().endAnimate().arrow();
         sd.Link(f1.element(i % n2), arr.element(i), sd.Line, "cx", "y", "cx", "my").startAnimate().pointStoT().endAnimate().arrow();
-        arr.value(i).after(300).startAnimate().transformMath(`y_{${i}}`)
+        arr.value(i).after(300).startAnimate().transformMath(`y^{\\small(${myId}\\small)}_{${arr.value(i).rank}}`).triggerRule().endAnimate();
     }
-})
+}

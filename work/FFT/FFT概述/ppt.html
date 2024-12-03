@@ -175,16 +175,100 @@
     </section>
     <section>
         <h2>FFT</h2>
-        <p>由于任何一个时刻我们都要求多项式的项数得是偶数，才能做上述分治</p>
-        <p class="fragment">所以在做多项式乘法时，需要提前把参与乘法的两个多项式补齐到 $2^k$ 项</p>
-        <ul>
-            <li class="fragment">一个 $1$ 次多项式乘上一个 $2$ 次多项式，会得到一个 $3$ 次多项式，需要 $4$ 个点值<span class="fragment">——所以我们需要提前把这两个多项式补齐成 $3$ 次多项式，从中取 $4$ 个点值出来</span></li>
-            <li class="fragment">一个 $3$ 次多项式乘上一个 $5$ 次多项式，会得到一个 $8$ 次多项式，需要 $9$ 个点值<span class="fragment">——所以我们需要提前把这两个多项式补齐成 $15$ 次多项式，从中取 $16$ 个点值出来</span></li>
-        </ul>
+        <p style="font-size: 20px;">
+            $$
+            \begin{cases}
+            f(x)=a_0+a_1x+a_2x^2+...+a_{n-1}x^{n-1} \\
+            f_1(x)=a_0+a_2x+a_4x^2+...+a_{n-1}x^{\frac{n-2}{2} } \\
+            f_2(x)=a_1+a_3x+a_5x^2+...+a_{n}x^{\frac{n-1}{2} } \\
+            f(w_n^k)=f_1(w_{n/2}^k)+w_n^kf_2(w_{n/2}^k)
+            \end{cases}
+            $$
+        </p>
+        <p class="fragment">由于任何一个时刻我们都要求多项式的项数得是偶数，才能做上述分治<span class="fragment">，所以在做多项式乘法时，需要提前把参与乘法的两个多项式补齐到 $2^k$ 项</span></p>
+        <div class="fragment quote">
+            <ul>
+                <li>一个 $1$ 次多项式乘上一个 $2$ 次多项式，会得到一个 $3$ 次多项式，需要 $4$ 个点值<span class="fragment">——所以我们需要提前把这两个多项式补齐成 $3$ 次多项式，从中取 $4$ 个点值出来</span></li>
+                <li class="fragment">一个 $3$ 次多项式乘上一个 $5$ 次多项式，会得到一个 $8$ 次多项式，需要 $9$ 个点值<span class="fragment">——所以我们需要提前把这两个多项式补齐成 $15$ 次多项式，从中取 $16$ 个点值出来</span></li>
+            </ul>
+        </div>
+        <iframe data-animation="./FFT分治演示.js" class="fragment"
+            style="width: 1000px; height: 200px; margin-top: 20px;"></iframe>
     </section>
     <section>
-        <h2>FFT</h2>
-        <iframe data-animation="./FFT分治演示.js"
+        <h2>蝶形变换</h2>
+        <p>在代码实现中，我们往往不会用递归去实现上述过程，而是用循环替代递归</p>
+        <iframe data-animation="./FFT蝶形变换.js"
             style="width: 1000px; height: 300px;"></iframe>
+        <p class="fragment">我们尝试把每个 $a_i$ 最后要去哪里预处理出来，经过观察发现，设 $rev_i$ 为 $i$ 的二进制翻转对称，则 $a_{i}\rightarrow a_{rev_i}$</p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                void Prepare(int n) {
+                    int l = log2(n) + 1;
+                    int len = 1 << l;
+                    for (int i = 0; i < len; i++)
+                        rev[i] = rev[i >> 1] >> 1 | ((i & 1) << (l - 1));
+                    return len;
+                }
+            </script>
+        </codeblock>
+        <codeblock class="fragment" style="position: absolute; top: 300px; left: 300px;">
+            <script type="text/template">
+                void FFT(Complex a[], int len) {
+                    for (int i = 0; i < len; i++) 
+                        if (rev[i] > i) swap(a[rev[i]], a[i]); // 提前把系数调整到对应位置上
+                    // 所有的 0 次多项式的 y 就应该等于其系数 a
+                    // 这里只是为了方便理解这么写，实际代码中可以省略这一个循环，直接在 a 上做变换
+                    for (int i = 0; i < len; i++)
+                        y[i] = a[i];
+                    for (int i = 0; i < len; i <<= 1) { // 合并长度为 i 的多项式 -> 长度为 2i 的多项式
+                        Complex w = 1 / i 单位根;
+                        // [j, j + i) 与 [j + i, j + 2i) 做合并
+                        for (int j = 0; j < n; j += (i << 1))
+                            for (int k = 0; k < i; k++) {
+                                根据 y[j + k] 和 y[i + j + k] 计算得到 y'[j + k];
+                                根据 y[j + k] 和 y[i + j + k] 计算得到 y'[i + j + k];
+                            }
+                    }
+                }
+            </script>
+        </codeblock>
+    </section>
+    <section>
+        <h2>IFFT</h2>
+        <p>IFFT就是FFT的逆变换，FFT把一个系数表示转换为了点值表示，IFFT可以把一个点值表示转化为一个系数表示</p>
+        <codeblock style="margin-top: -12px;">
+            <script type="text/template">
+                void FFT(Complex a[], int len, int flg) {
+                    for (int i = 0; i < len; i++) 
+                        if (rev[i] > i) swap(a[rev[i]], a[i]);
+                    for (int i = 0; i < len; i <<= 1) {
+                        Complex w = 1 / i 单位根;
+                        // 预处理 w 的 1,2,3,...,i-1 次方
+                        for (int j = 0; j < n; j += (i << 1))
+                            for (int k = 0; k < i; k++) {
+                                Complex x = a[j + k];
+                                Complex y = a[i + j + k] * (w 的 k 次方);
+                                a[j + k] = x + y;
+                                a[i + j + k] = x - y;
+                            }
+                    }
+                    if (flg == -1) for (int i = 0; i < len; i++) a[i] /= len;
+                }
+            </script>
+        </codeblock>
+        <codeblock class="fragment" style="margin-top: -8px;">
+            <script type="text/template">
+                for (int i = 0; i <= n; i++) a[i] = read();
+                for (int i = 0; i <= m; i++) b[i] = read();
+                int len = Prepare(n + m + 1);
+                FFT(a, len, 1); FFT(b, len, 1);
+                for (int i = 0; i < len; i++) c[i] = a[i] * b[i]; // 此时 a,b,c 都是复数，都带有 i
+                FFT(c, len, -1); // 做完逆变换后，c 应该全是实数
+                for (int i = 0; i < len; i++) { // real() 取一个复数的实部，+0.1 是为了避免精度误差
+                    cout << C[i].real() + 0.1 << ' ';
+                }
+            </script>
+        </codeblock>
     </section>
 </section>
