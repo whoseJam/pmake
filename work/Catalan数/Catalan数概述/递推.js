@@ -12,6 +12,18 @@ sd.init(() => {
 sd.main(async () => {
     await sd.pause();
     arr.startAnimate().value(1, "A").endAnimate();
-    await sd.pause();
-    arr.startAnimate().value(n * 2, "B").endAnimate();
+
+    const B = new sd.Text(arr, "B").opacity(0);
+    const p = sd.Pointer(arr, "2i", "b", 5, 30, 5);
+    for (let i = 2; i <= n * 2; i += 2) {
+        await sd.pause();
+        p.startAnimate().moveTo(i).endAnimate();
+        if (i === 2) arr.startAnimate().value(i, B).endAnimate();
+        else {
+            arr.startAnimate();
+            arr.element(i - 2).drop();
+            arr.element(i).valueFromExist(B);
+            arr.endAnimate();
+        }
+    }
 })
