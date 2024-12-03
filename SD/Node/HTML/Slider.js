@@ -54,5 +54,7 @@ Slider.prototype.min = function(min) {
 Slider.prototype.value = function(value) {
     if (value === undefined) return this._.slider.getAttribute("value");
     this._.slider.setAttribute("value", value);
+    const callback = this.member.get("onChange");
+    if (callback) callback(value);
     return this;
 }

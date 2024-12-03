@@ -3,43 +3,38 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const C = sd.color();
 const R = sd.rule();
+const V = sd.vec();
 const coord = new sd.Coord(svg).viewX(-5).viewWidth(10).viewY(-5).viewHeight(10);
-const vec = new sd.Line(svg).arrow();
+const arrows = [];
+
+const slider = new sd.Slider(svg).min(2).max(10).onChange(value => {
+    arrows.forEach(arrow => arrow.opacity(0));
+    for (let i = 0; i < value; i++) {
+        MakeVec(2 * Math.PI / value * i);
+    }
+    slider.child("label").text(value);
+});
+slider.childAs("label", new sd.Text(svg), R.aside("lc"));
 
 let radius = 0;
-let A = 3;
 
 sd.init(() => {
     coord.width(200).height(200);
     const cirlce = new sd.Circle(svg).r(80).fillOpacity(0).center(coord.center());
     radius = coord.coordX(cirlce.mx());
-    vec.source(coord.center());
-    vec.target(coord.globalAt(A, Math.sqrt(radius * radius - A * A)));
-
-    coord.xAxis().childAs(new sd.Text(svg, "实轴"), R.pointAtPathByRate(1, "cx", "y", 0, 5));
-    coord.yAxis().childAs(new sd.Text(svg, "虚轴"), R.pointAtPathByRate(1, "x", "cy", 10));
-    vec.childAs("x-line", new sd.Line(svg).stroke(C.grey).strokeDashArray([5, 5]), function(parent, child) {
-        const B = Math.sqrt(radius * radius - A * A);
-        child.source(coord.globalAt(A, 0));
-        child.target(coord.globalAt(A, B));
-    });
-    vec.childAs("x-label", new sd.Mathjax(svg, "a"), function(parent, child) {
-        child.cx(coord.globalX(A));
-        child.y(coord.globalY(0) + 5);
-    });
-    vec.childAs("y-line", new sd.Line(svg).stroke(C.grey).strokeDashArray([5, 5]), function(parent, child) {
-        const B = Math.sqrt(radius * radius - A * A);
-        child.source(coord.globalAt(0, B));
-        child.target(coord.globalAt(A, B));
-    });
-    vec.childAs("y-label", new sd.Mathjax(svg, "b"), function(parent, child) {
-        const B = Math.sqrt(radius * radius - A * A);
-        child.mx(coord.globalX(0) - 5);
-        child.cy(coord.globalY(B));
-    });
+    slider.my(coord.y() - 20).width(200).value(5);
 })
 
 sd.main(async () => {
-    await sd.pause();
-    vec.startAnimate().opacity(0).endAnimate();
+    
 })
+
+function MakeVec(arc) {
+    let arrow;
+    for (let i = 0; i < arrows.length; i++)
+        if (!arrows[i].opacity()) arrow = arrows[i];
+    arrows.push(arrow = new sd.Line(svg).arrow().stroke(C.red));
+    arrow.opacity(1);
+    arrow.source(coord.center());
+    arrow.target(coord.globalAt(V.makeComplex(radius, arc)));
+}
