@@ -1,12 +1,15 @@
 import * as sd from "@/sd";
 
 /**
- * 
  * @param {sd.BaseTree} lastTree 
  * @param {{
  *  OnNewNode: () => number
- *  OnCreateValueAtLeaf: (x: number) => void
+ *  OnCreateValueAtLeaf: (x: number, value: any) => void
  *  OnTreeCreated: (tree: sd.BinaryTree) => void
+ *  OnHistoryLeftChildLink: (current: sd.SDNode, last: sd.SDNode) => void
+ *  OnHistoryRightChildLink: (current: sd.SDNode, last: sd.SDNode) => void
+ *  VirtualLeftChild: boolean
+ *  VirtualRightChild: boolean
  * }} args
  */
 export async function InsertBaseOn(lastTree, n, position, args, skipAll = false) {
@@ -15,10 +18,15 @@ export async function InsertBaseOn(lastTree, n, position, args, skipAll = false)
     const OnNewNode = args.OnNewNode;
     const OnCreateValueAtLeaf = args.OnCreateValueAtLeaf;
     const OnTreeCreated = args.OnTreeCreated;
+    const OnHistoryLeftChildLink = args.OnHistoryLeftChildLink;
+    const OnHistoryRightChildLink = args.OnHistoryRightChildLink;
+    const VirtualLeftChild = args.VirtualLeftChild;
+    const VirtualRightChild = args.VirtualRightChild;
     const currentTree = new sd.BinaryTree(svg);
     
+    let virtualId = 100;
+
     if (OnTreeCreated) {
-        // if (!skipAll) await sd.pause();
         await OnTreeCreated(currentTree);
     }
 
@@ -33,27 +41,48 @@ export async function InsertBaseOn(lastTree, n, position, args, skipAll = false)
         currentNode.left_child = lastNode?.left_child;
         currentNode.right_child = lastNode?.right_child; 
 
-        console.log("l=", l, "r=", r, "pos=", position);
-
         if (l === r) {
             if (OnCreateValueAtLeaf) {
-                if (!skipAll) await sd.pause();
                 await OnCreateValueAtLeaf(currentNodeId);
             }
             return currentNode;
         }
 
+        await sd.pause();
+
         const mid = (l + r) >> 1;
         if (position <= mid) {
             if (lastNode && lastNode.right_child) {
-                console.log("link current_node=", currentNode, "right_child=", lastNode.right_child);
-                sd.Link(currentNode, lastNode.right_child).stroke(C.red).strokeWidth(3).opacity(0).arrow().startAnimate().opacity(1).endAnimate();
+                let current = currentNode;
+                if (VirtualRightChild) {
+                    currentTree.startAnimate();
+                    currentTree.newNode(++virtualId, lastNode.right_child.my_id);
+                    const virtualRC = currentTree.element(virtualId);
+                    currentTree.rightChild(currentNodeId, virtualId);
+                    currentTree.endAnimate();
+                    virtualRC.background().after(0).strokeDashArray([5, 5]).stroke(C.grey);
+                    current = virtualRC;
+                }
+                if (OnHistoryRightChildLink) {
+                    await OnHistoryRightChildLink(current, lastNode.right_child);
+                }
             }
             currentNode.left_child = await Dfs(currentNodeId, "leftChild", lastNode?.left_child, l, mid, position);
         } else {
             if (lastNode && lastNode.left_child) {
-                console.log("link current_node=", currentNode, "left_child=", lastNode.left_child);
-                sd.Link(currentNode, lastNode.left_child).stroke(C.textBlue).strokeWidth(3).opacity(0).arrow().startAnimate().opacity(1).endAnimate();
+                let current = currentNode;
+                if (VirtualLeftChild) {
+                    currentTree.startAnimate();
+                    currentTree.newNode(++virtualId, lastNode.left_child.my_id);
+                    const virtualLC = currentTree.element(virtualId);
+                    currentTree.leftChild(currentNodeId, virtualId);
+                    currentTree.endAnimate();
+                    virtualLC.background().after(0).strokeDashArray([5, 5]).stroke(C.grey);
+                    current = virtualLC;
+                }
+                if (OnHistoryLeftChildLink) {
+                    await OnHistoryLeftChildLink(current, lastNode.left_child);
+                }
             }
             currentNode.right_child = await Dfs(currentNodeId, "rightChild", lastNode?.right_child, mid + 1, r, position);
         }
