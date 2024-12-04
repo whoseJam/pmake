@@ -39,8 +39,9 @@ export function Link(sourceElement, targetElement, linkType = Line, sourceXLocat
         const element1 = link.member.getAndFlush("linkElement1");
         const element2 = link.member.getAndFlush("linkElement2");
         trim(link, element1, element2);
-        link.updateList[0].call(link);
-        link.updateList[link.updateList.length - 1].call(link);
+        link.updateList.forEach(callback => {
+            callback.call(link);
+        });
     });
 
     link.sourceElement = function(element) {
@@ -66,5 +67,6 @@ export function Link(sourceElement, targetElement, linkType = Line, sourceXLocat
 
     sourceElement.childAs(name, link, LinkRule);
     targetElement.childAs(name, link, LinkRule);
+    console.log("linkCreated!!!");
     return link;
 }
