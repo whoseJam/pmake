@@ -109,6 +109,14 @@ export class Vector {
     static tan(a: [number, number]): number;
 
     static cohenSutherland(a: [number, number], b: [number, number], x: number, y: number, width: number, height: number): [[number, number], [number, number]];
+
+    static intersect(point1: [number, number], direction1: number|[number, number], point2: [number, number], direction2: number|[number, number]): [boolean, [number, number]];
+    static intersectLineWithLine(point1: [number, number], direction1: number|[number, number], point2: [number, number], direction2: number|[number, number]): [boolean, [number, number]];
+    static intersectLineWithShootLine(point1: [number, number], direction1: number|[number, number], point2: [number, number], direction2: number|[number, number]): [boolean, [number, number]];
+    static intersectLineWithSegment(point: [number, number], direction: number|[number, number], source: [number, number], target: [number, number]): [boolean, [number, number]];
+    static intersectLineWithSegment(point: [number, number], direction: number|[number, number], segment: { x1: number, y1: number, x2: number, y2: number }): [boolean, [number, number]];
+    static intersectLineWithBox(point: [number, number], direction: number|[number, number], box: { x: number, y: number, width: number, height: number }): [boolean, [number, number], [number, number]];
+    static intersectLineWithBox(point: [number, number], direction: number|[number, number], x: number, y: number, width: number, height: number): [boolean, [number, number], [number, number]];
 }
 
 export function vec(): typeof Vector;

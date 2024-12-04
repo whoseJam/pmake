@@ -33,4 +33,8 @@ export class Check {
     static isTypeOfOpacity(object: any): boolean;
 
     static isTypeOfColor(object: any): boolean;
+
+    static isValidNumber(object: any): boolean;
+
+    static isTypeOfVector(object: any): boolean;
 }

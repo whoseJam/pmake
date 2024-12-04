@@ -95,6 +95,7 @@ Coord.prototype.sampleY = function(y, count) {
 }
 
 Coord.prototype.trim = function(source, target) {
+    if (typeof(target) === "number") return V.intersect(source, target);
     return V.cohenSutherland(source, target, this.x(), this.y(), this.width(), this.height());
 }
 
@@ -127,7 +128,7 @@ Coord.prototype.draw = function(name, func) {
 
     path.member.new("function", func);
 
-    path.function = SDNode.OrdinaryGSet("function", "set");
+    path.function = SDNode.ordinaryGetterAndSetter("function", "set");
 
     path.coordX = function(y) { return this.function()(y); }
     path.coordY = function(x) { return this.function()(x); }
@@ -138,12 +139,43 @@ Coord.prototype.draw = function(name, func) {
     path.trimGlobalY = function(x) { return Math.min(Math.max(this.globalY(x), parent.y()), parent.my()); }
     path.trimGlobalX = function(y) { return Math.min(Math.max(this.globalX(y), parent.x()), parent.mx()); }
 
-    this.childAs(name, path, LineRule);
+    this.childAs(name, path, PathRule);
 
     return path;
 }
 
+Coord.prototype.drawLine = function(name, k, x, y) {
+    if (arguments.length === 3) return this.drawLine(name, k, x[0], x[1]);
+    const line = new Line(this).opacity(0);
+    for (let key in COORD_LOCATION_KEYS)
+        line.member.new(COORD_LOCATION_KEYS[key]);
+
+    line.startAnimate(this);
+    line.member.new("k", k);
+    line.member.new("point", [x, y]);
+    
+    line.k = SDNode.ordinaryGetterAndSetter("k", "setByDqual");
+    line.point = SDNode.ordinaryGetterAndSetter("point", "set");
+
+    this.childAs(name, line, LineRule);
+
+    return line;
+}
+
 function LineRule(parent, child) {
+    let valueChanged = false;
+    for (let key in COORD_LOCATION_KEYS) {
+        child.member.setByEqual(COORD_LOCATION_KEYS[key], parent.member.get(key));
+        valueChanged |= child.member.hasChanged(COORD_LOCATION_KEYS[key]);
+    }
+    if (valueChanged) {
+        const point = child.member.get("point");
+        const k = child.member.get("k");
+        
+    }
+}
+
+function PathRule(parent, child) {
     let valueChanged = false;
     for (let key in COORD_LOCATION_KEYS) {
         child.member.setByEqual(COORD_LOCATION_KEYS[key], parent.member.get(key));
