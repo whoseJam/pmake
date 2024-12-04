@@ -1,0 +1,65 @@
+<section>
+    <section>
+        <h1>导数</h1>
+        <p>数学补充知识点</p>
+    </section>
+    <section>
+        <h2>求导</h2>
+        <p>给定一个函数曲线 $f(x)$，我们希望知道其上过某个点切线的斜率</p>
+        <p>取一个微小量 $\Delta x$，则 $x=x_0$ 的斜率可以被表示为：
+            $$
+            k=\frac{f(x_0+\Delta x)-f(x_0)}{\Delta x}
+            $$
+        </p>
+        <p class="fragment">当 $\Delta x\rightarrow 0$ 时，$k$ 就可以被精确求出了</p>
+    </section>
+    <section>
+        <h2>求导</h2>
+        <p>以 $y=x^2$ 为例</p>
+        <iframe data-animation="./切线.js"
+            style="width: 1000px; height: 300px;"></iframe>
+        <p class="math-fragment" style="font-size: 20px; margin-top: -20px;">
+            $$
+            \begin{aligned}
+            k(x_0)&=\mathop{lim}_{\Delta x\rightarrow 0}\frac{(x_0+\Delta x)^2-x_0^2}{\Delta x} \\
+            &=\mathop{lim}_{\Delta x\rightarrow 0}\frac{(x_0^2+2x_0\Delta x+\Delta x^2)-x_0^2}{\Delta x} \\
+            &=\mathop{lim}_{\Delta x\rightarrow 0}\frac{2x_0\Delta x+\Delta x^2}{\Delta x}=2x_0
+            \end{aligned}
+            $$
+        </p>
+        <p class="fragment">求出来的切线也是一个关于 $x$ 的函数，我们把这个函数叫做原函数的导数</p>
+    </section>
+    <section>
+        <h2>求导法则</h2>
+        <p>假设 $y$ 是一个函数，我们在其头上画一个斜线来表示其导数，即 $y'$ 就是 $y$ 的导数</p>
+        <table>
+            <thead>
+                <tr>
+                    <th>原函数</th>
+                    <th>导函数</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>$C$（常数）</td><td>$0$</td></tr>
+                <tr><td>$x^n$</td><td>$nx^{n-1}$</td></tr>
+                <tr><td>$sinx$</td><td>$cosx$</td></tr>
+                <tr><td>$cosx$</td><td>$-sinx$</td></tr>
+                <tr><td>$e^x$</td><td>$e^x$</td></tr>
+                <tr><td>$lnx$</td><td>$\frac 1 x$</td></tr>
+                <tr><td>$f(x)+g(x)$</td><td>$f'(x)+g'(x)$</td></tr>
+                <tr><td>$f(x)g(x)$</td><td>$f'(x)g(x)+f(x)g'(x)$</td></tr>
+                <tr><td>$\frac{f(x)}{g(x)}$</td><td>$\frac{f'(x)g(x)-f(x)g'(x)}{g^2(x)}$</td></tr>
+                <tr><td>$f(g(x))$</td><td>$f'(g(x))g'(x)$</td></tr>
+            </tbody>
+        </table>
+    </section>
+    <section>
+        <h2>求导</h2>
+        <ul style="width: 400px;">
+            <li>$(e^x)''=?$<span class="fragment" style="float: right;">$e^x$</span></li>
+            <li>$(xe^x)'=?$<span class="fragment" style="float: right;">$(x+1)e^x$</span></li>
+            <li>$((1+x)^a)'=?$<span class="fragment" style="float: right;;">$ax^{a-1}$</span></li>
+            <li>$(\frac{e^x-e^{-x} }2)'=?$<span class="fragment" style="float: right;">$\frac{e^x+e^{-x} }2$</span></li>
+        </ul>
+    </section>
+</section>

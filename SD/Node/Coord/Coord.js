@@ -181,7 +181,7 @@ function PathRule(parent, child) {
         child.member.setByEqual(COORD_LOCATION_KEYS[key], parent.member.get(key));
         valueChanged |= child.member.hasChanged(COORD_LOCATION_KEYS[key]);
     }
-    if (valueChanged) {
+    if (valueChanged || child.member.hasChanged("function")) {
         const func = child.member.get("function");
         const pen = new PathPen();
         let firstMoveTo = false;

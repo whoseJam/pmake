@@ -129,14 +129,11 @@
         <p>乘起来，化简</p>
         <p class="fragment">
             $$
-            A(x)=x(1-x)^{-4}
+            A(x)=\frac{x}{(1-x)^4}
             $$
         </p>
-        <p class="fragment">由广义二项式定理，把 $A(x)$ 展开可得：</p>
-        <p class="fragment">
-            $$
-            A(x)=x\sum_{i\le 0}C_{-4}^i(-x)^i
-            $$
-        </p>
+        <p class="fragment">而我们知道 $\frac 1{1-x}=(1+x+x^2+x^3+...)$</p>
+        <p class="fragment">$A(x)=x(1+x+x^2+x^3+...)^4$，等价于取四个体积任意的物品，再取一个体积为 $1$ 的物品，填充背包的方案数</p>
+        <p class="fragment">根据插板法，答案即为 $C_{n+2}^3$</p>
     </section>
 </section>

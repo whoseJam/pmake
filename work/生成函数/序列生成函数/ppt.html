@@ -1,0 +1,50 @@
+<section>
+    <section>
+        <h1>序列生成函数</h1>
+    </section>
+    <section>
+        <h2>常见的序列生成函数</h2>
+        <p>
+            $$
+            (1+x)^n=\sum C_n^ix^i
+            $$
+        </p>
+        <p class="fragment">由二项式定理易得</p>
+    </section>
+    <section>
+        <h2>常见的序列生成函数</h2>
+        <p>
+            $$
+            \frac 1{1-x}=\sum x^i
+            $$
+        </p>
+        <p class="fragment">由泰勒展开/等比数列求和易得</p>
+    </section>
+    <section>
+        <h2>常见的序列生成函数</h2>
+        <p>
+            $$
+            \frac 1{(1-x)^{n+1} }=\sum C_{n+i}^n x^i
+            $$
+        </p>
+        <p class="fragment">考虑该生成函数的组合意义，用插板法可得</p>
+    </section>
+    <section>
+        <h2>常见的序列生成函数</h2>
+        <p>
+            $$
+            Fib(x)=\frac 1{1-x-x^2}
+            $$
+        </p>
+        <p class="fragment">刚刚才推导过</p>
+    </section>
+    <section>
+        <h2>生成函数与序列的关系</h2>
+        <ul>
+            <li class="fragment">序列的乘积是生成函数的卷积</li>
+            <li class="fragment">一个生成函数乘以 $(1-x)$，对应序列相当于做了一次差分</li>
+            <li class="fragment">一个生成函数乘以 $\frac 1{1-x}$，对应序列相当于做了一次求和</li>
+            <li class="fragment">$差分=\frac{1}{求和}$</li>
+        </ul>
+    </section>
+</section>
