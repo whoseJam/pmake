@@ -3,7 +3,7 @@ import * as sd from "@/sd";
 /**
  * @param {{
  *  OnNewNode: () => number
- *  OnCreateValueAtLeaf: (x: number, value: any) => void
+ *  OnCreateValueAtLeaf: (tree: sd.BinaryTree, node: sd.SDNode, value: any) => void
  *  OnTreeCreated: (tree: sd.BinaryTree) => void
  * }} args
  */
@@ -26,7 +26,7 @@ export async function BuildFromSequence(seq, args, skipAll = false) {
         
         if (l === r) {
             if (OnCreateValueAtLeaf) {
-                await OnCreateValueAtLeaf(currentNodeId, seq[l]);
+                await OnCreateValueAtLeaf(tree, currentNode, seq[l]);
             }
             return currentNode;
         }

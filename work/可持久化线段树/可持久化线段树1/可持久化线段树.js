@@ -4,45 +4,40 @@ import { BuildFromSequence } from "../_/BuildFromSequence";
 
 const svg = sd.svg();
 const C = sd.color();
+const R = sd.rule();
+const EN = sd.enter();
+const n = 4;
 let tot = 0;
 
-sd.init(() => {
-    
+const initData = [0, 3, 2, 4, 1];
+const operator = [
+    { pos: 1, value: 1, gap: 300 },
+    { pos: 2, value: 3, gap: 200 },
+    { pos: 3, value: 2, gap: 100 },
+    { pos: 4, value: 3, gap: 100 }
+];
+const trees = [];
+
+sd.init(async () => {
+    trees.push(await BuildFromSequence(initData, {
+        OnNewNode: OnNewNode,
+        OnTreeCreated: tree => tree.x(100).y(100).layerHeight(130),
+        OnCreateValueAtLeaf: (tree, node, value) => node.childAs("v", new sd.Text(svg, `v=${value}`), R.aside("bc", 10))
+    }));
 })
 
 sd.main(async () => {
-    const t0 = await BuildFromSequence([0, 1, 2, 3, 4], {
-        OnNewNode: OnNewNode,
-        OnTreeCreated: (tree) => tree.x(100).y(100).layerHeight(130)
-    })
-    const t1 = await InsertBaseOn(t0, 4, 1, {
-        OnNewNode: OnNewNode,
-        OnTreeCreated: (tree) => tree.x(400).y(100).layerHeight(130),
-        OnHistoryLeftChildLink: OnHistoryLeftChildLink,
-        OnHistoryRightChildLink: OnHistoryRightChildLink,
-        VirtualRightChild: true
-    });
-    const t2 = await InsertBaseOn(t1, 4, 2, {
-        OnNewNode: OnNewNode,
-        OnTreeCreated: (tree) => tree.x(600).y(100).layerHeight(130),
-        OnHistoryLeftChildLink: OnHistoryLeftChildLink,
-        OnHistoryRightChildLink: OnHistoryRightChildLink,
-        VirtualRightChild: true
-    });
-    const t3 = await InsertBaseOn(t2, 4, 3, {
-        OnNewNode: OnNewNode,
-        OnTreeCreated: (tree) => tree.x(700).y(100).layerHeight(130),
-        OnHistoryLeftChildLink: OnHistoryLeftChildLink,
-        OnHistoryRightChildLink: OnHistoryRightChildLink,
-        VirtualRightChild: true
-    });
-    const t4 = await InsertBaseOn(t3, 4, 4, {
-        OnNewNode: OnNewNode,
-        OnTreeCreated: (tree) => tree.x(800).y(100).layerHeight(130),
-        OnHistoryLeftChildLink: OnHistoryLeftChildLink,
-        OnHistoryRightChildLink: OnHistoryRightChildLink,
-        VirtualRightChild: true
-    });
+    for (let i = 0; i < operator.length; i++) {
+        const tree = await InsertBaseOn(trees[i], n, operator[i].pos, operator[i].value, {
+            OnNewNode: OnNewNode,
+            OnTreeCreated: tree => tree.x(trees[i].x() + operator[i].gap).y(100).layerHeight(130),
+            OnHistoryLeftChildLink: OnHistoryLeftChildLink,
+            OnHistoryRightChildLink: OnHistoryRightChildLink,
+            VirtualRightChild: true,
+            OnCreateValueAtLeaf: (tree, node, value) => node.childAs("v", new sd.Text(svg, `v=${value}`), R.aside("bc", 10))
+        });
+        trees.push(tree);
+    }
 })
 
 function OnNewNode() {

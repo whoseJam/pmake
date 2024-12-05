@@ -12,7 +12,7 @@ import * as sd from "@/sd";
  *  VirtualRightChild: boolean
  * }} args
  */
-export async function InsertBaseOn(lastTree, n, position, args, skipAll = false) {
+export async function InsertBaseOn(lastTree, n, position, value, args, skipAll = false) {
     const svg = sd.svg();
     const C = sd.color();
     const OnNewNode = args.OnNewNode;
@@ -43,7 +43,7 @@ export async function InsertBaseOn(lastTree, n, position, args, skipAll = false)
 
         if (l === r) {
             if (OnCreateValueAtLeaf) {
-                await OnCreateValueAtLeaf(currentNodeId);
+                await OnCreateValueAtLeaf(currentTree, currentNode, value);
             }
             return currentNode;
         }
