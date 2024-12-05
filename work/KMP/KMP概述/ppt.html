@@ -15,8 +15,10 @@
     <section>
         <h2>在KMP以前......</h2>
         <p>暴力匹配，把字符串 $A$ 和字符串 $B$ 的后缀 $B[i...M]$ 对齐，然后扫描逐一比较</p>
-        <p class="fragment">时间复杂度 $O(|A||B|)$</p>
-        <codeblock class="fragment">
+        <iframe data-animation="./暴力匹配.js"
+            style="width: 1000px; height: 200px;"></iframe>
+        <p>时间复杂度 $O(|A||B|)$</p>
+        <codeblock>
             <script type="text/template">
                 for (int i = 1; i <= lenB - lenA + 1; i++) {
                     bool flag = true;
@@ -34,6 +36,8 @@
     <section>
         <h2>在KMP以前......</h2>
         <p>又或者，我们可以用Hash，在 $O(|A|+|B|)$ 的时间复杂度内预处理出字符串 $A$ 和字符串 $B$ 的前缀Hash值，然后就可以 $O(1)$ 查询该字符串的任意一个子串的Hash值</p>
+        <iframe data-animation="./Hash匹配.js"
+            style="width: 1000px; height: 300px;"></iframe>
         <codeblock>
             <script type="text/template">
                 for (int i = 1; i <= lenB - lenA + 1; i++) {
@@ -44,35 +48,34 @@
         </codeblock>
     </section>
     <section>
-        <h2>$border$</h2>
-        <p>定义一个字符串 $s$ 的 $border$，是该字符串中非本身的子串，满足该子串既是 $s$ 的前缀，又是 $s$ 的后缀</p>
-        <iframe data-animation="./Border.js"
-            style="width: 1000px; height: 150px;"></iframe>
+        <h2>KMP</h2>
+        <p>KMP延续了暴力的思路，在暴力的基础上做优化</p>
+        <iframe data-animation="./KMP匹配.js"
+            style="width: 1000px; height: 200px;"></iframe>
+        <p class="fragment">容易注意到，在暴力匹配过程中，产生 $s[i]\ne t[j]$ 的失配时，其实没有必要让匹配从头开始</p>
+        <p class="fragment">既然我们已经知道了 $s[1...i]$ 和 $t[1..j]$ 内的所有信息，我们尝试让尽可能多的<b>已匹配字符</b>保留下来</p>
     </section>
     <section>
         <h2>KMP</h2>
-        <p>KMP算法以 $O(n+m)$ 的复杂度解决这个问题，并且相比于Hash算法，为我们提供了更多的<b>额外辅助信息</b></p>
-        <p class="fragment">KMP算法分为两步：</p>
-        <ol>
-            <li class="fragment">对字符串 $A$ 进行<b>自我匹配</b>：求出一个 $nxt$ 数组，其中 $nxt[i]$ 表示 $A[1...i]$ 的<b style="color: red;">最长 $border$ 的长度</b></li>
-            <picture class="fragment" data-source="./nxt数组.png"></picture>
-            <li class="fragment">对字符串 $A$ 和 $B$ 进行匹配：利用 $nxt$ 进行匹配</li>
-        </ol>
+        <p>显然，假设在 $t[j+1]$ 处发生失配时，能利用的、尽可能多的<b>已匹配字符数量</b>，应该等同于最长的一个前缀长度 $t[1...k]$，满足 $k\lt j$ 且 $t[1...k]$ 是 $t[1...j]$ 的一个后缀</p>
+        <iframe data-animation="./失配利用.js"
+            style="width: 1000px; height: 200px;"></iframe>
+        <p class="fragment">在后文中，我们将会以 $len_j$ 来指代 $t[1...j]$ 的最长的一个前缀（同时该前缀是 $t[1...j]$ 的一个后缀）的长度</p>
+        <p class="fragment">$len_j$ 将会指导我们做字符串匹配</p>
     </section>
     <section>
         <h2>KMP</h2>
-        <iframe data-animation="./求解nxt数组.js"
-            style="width: 1000px; height: 300px;"></iframe>
+        <iframe data-animation="./KMP匹配.js"
+            style="width: 1000px; height: 200px;"></iframe>
         <codeblock>
             <script type="text/template">
-                void Prepare() {
-                    nxt[1] = 0;
-                    int cur = 0;
-                    for (int i = 2; i <= n; i++) {
-                        while (cur && A[cur + 1] != A[i])
-                            cur = nxt[cur];
-                        if (A[cur + 1] == A[i]) nxt[i] = ++cur;
-                        else nxt[i] = 0;
+                void Match(char* s, char* t, int ls, int lt) {
+                    int j = 0;
+                    for (int i = 1; i <= ls; i++) {
+                        while (t[j + 1] != s[i])
+                            j = len[j];
+                        if (t[j + 1] == s[i]) j++;
+                        if (j == lt) 找到一个匹配点;
                     }
                 }
             </script>
@@ -80,16 +83,19 @@
     </section>
     <section>
         <h2>KMP</h2>
-        <iframe data-animation="./A和B匹配.js"
-            style="width: 1000px; height: 400px;"></iframe>
+        <p>那么我们如何求解 $len$ 数组呢？很简单，我们让 $t$ 串和自己做一个自匹配即可</p>
+        <iframe data-animation="./KMP自匹配.js"
+            style="width: 1000px; height: 200px;"></iframe>
         <codeblock>
             <script type="text/template">
-                int cur = 0;
-                for (int i = 1; i <= m; i++) {
-                    while (cur > 0 && A[cur + 1] != B[i])
-                        cur = nxt[cur];
-                    if (A[cur + 1] == B[i]) cur++;
-                    if (cur == n) cout << i - n + 1 << '\n';
+                void Prepare() { // len[1] = 0，不过在下面没有体现
+                    int j = 0;
+                    for (int i = 2; i <= n; i++) {
+                        while (j && s[j + 1] != s[i])
+                            j = len[j];
+                        if (s[j + 1] == s[i]) j++;
+                        len[i] = j;
+                    }
                 }
             </script>
         </codeblock>

@@ -68,7 +68,7 @@ export function Brace(parent) {
     brace.member.new("braceGap", 5);
     brace.member.new("valueGap", 5);
 
-    brace.attachUpdate(() => {
+    brace.beforeUpdate(() => {
         if (brace.member.hasChanged("braceElement1") ||
             brace.member.hasChanged("braceElement2") ||
             brace.member.hasChanged("location") ||

@@ -62,7 +62,7 @@ export function Pointer(parent, label, direction = "b", pointerGap = 10, length 
         LabelRule(direction, labelGap)
     );
 
-    pointer.attachUpdate(() => {
+    pointer.beforeUpdate(() => {
         if (pointer.member.hasChanged("pointAt")) {
             pointer.triggerRule();
         }
