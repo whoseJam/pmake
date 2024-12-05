@@ -43,6 +43,7 @@ export async function InsertBaseOn(lastTree, n, position, value, args, skipAll =
 
         if (l === r) {
             if (OnCreateValueAtLeaf) {
+                currentTree.after(0);
                 await OnCreateValueAtLeaf(currentTree, currentNode, value);
             }
             return currentNode;
@@ -58,6 +59,7 @@ export async function InsertBaseOn(lastTree, n, position, value, args, skipAll =
                     currentTree.startAnimate();
                     currentTree.newNode(++virtualId, lastNode.right_child.my_id);
                     const virtualRC = currentTree.element(virtualId);
+                    currentNode.virtual_right_child = virtualRC;
                     currentTree.rightChild(currentNodeId, virtualId);
                     currentTree.endAnimate();
                     virtualRC.background().after(0).strokeDashArray([5, 5]).stroke(C.grey);
@@ -75,6 +77,7 @@ export async function InsertBaseOn(lastTree, n, position, value, args, skipAll =
                     currentTree.startAnimate();
                     currentTree.newNode(++virtualId, lastNode.left_child.my_id);
                     const virtualLC = currentTree.element(virtualId);
+                    currentNode.virtual_left_child = virtualLC;
                     currentTree.leftChild(currentNodeId, virtualId);
                     currentTree.endAnimate();
                     virtualLC.background().after(0).strokeDashArray([5, 5]).stroke(C.grey);

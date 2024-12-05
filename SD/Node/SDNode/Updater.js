@@ -32,6 +32,7 @@ Updater.prototype.component = function(comp) {
 
 Updater.prototype.preUpdate = function() {
     this.component("children").forEach(child => {
+        child._.tryMoved = false;
         child.freeze();
     });
 }
@@ -39,7 +40,10 @@ Updater.prototype.preUpdate = function() {
 Updater.prototype.postUpdate = function() {
     this.component("children").forEach(child => {
         const rule = child.rule();
-        if (!rule) return;
+        if (!rule) {
+            if (!child._.tryMoved) return;
+            return this.tryMove(child, () => {});
+        }
         this.tryMove(child, () => {
             rule(this.parent, child);
         });
@@ -50,6 +54,7 @@ Updater.prototype.postUpdate = function() {
 }
 
 Updater.prototype.tryMove = function(element, move) {
+    element._.tryMoved = true;
     if (!element.onEnter()) return move();
     element.triggerEnter(move);
 }

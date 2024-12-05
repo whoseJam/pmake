@@ -64,7 +64,7 @@ export function Focus(parent) {
     focus.member.new("focusGap", undefined);
     focus.member.new("focusCount", 0);
 
-    focus.attachUpdate(() => {
+    focus.beforeUpdate(() => {
         if (focus.member.hasChanged("focusElement1") ||
             focus.member.hasChanged("focusElement2") ||
             focus.member.hasChanged("focusCount")) {

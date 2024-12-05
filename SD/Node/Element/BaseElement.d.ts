@@ -2,7 +2,7 @@ import { Color } from "@/Utility/Color";
 
 import { SDNode } from "@/Node/SDNode";
 
-export class BaseElement {
+export class BaseElement extends SDNode {
     constructor(parent: any);
 
     rate(): number;

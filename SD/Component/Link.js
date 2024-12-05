@@ -24,7 +24,6 @@ export function Link(sourceElement, targetElement, linkType = Line, sourceXLocat
     link.member.new("ylocation2", targetYLocation);
 
     link.beforeUpdate(() => {
-        console.log("link update");
         const element1 = link.member.getAndFlush("linkElement1");
         const element2 = link.member.getAndFlush("linkElement2");
         const xlocation1 = link.member.getAndFlush("xlocation1");
@@ -67,6 +66,5 @@ export function Link(sourceElement, targetElement, linkType = Line, sourceXLocat
 
     sourceElement.childAs(name, link, LinkRule);
     targetElement.childAs(name, link, LinkRule);
-    console.log("linkCreated!!!");
     return link;
 }
