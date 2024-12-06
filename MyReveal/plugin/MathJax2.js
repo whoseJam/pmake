@@ -11,7 +11,7 @@ const DEFAULT_OPTIONS = {
 // "TeX-AMS_SVG"  : Chinese Character Display Error
 // "TeX-AMS_HTML" : Full Tested
 // "TeX-AMS_CHTML": Not Support Yet  
-const DEFAULT_CONFIG = "TeX-AMS_HTML";
+const DEFAULT_CONFIG = "TeX-AMS_CHTML";
 
 function LoadScript(url, callback) {
 	const head = document.querySelector("head");
@@ -48,6 +48,8 @@ export function MathJax2() {
 
 					MathJax.Hub.Queue(["Typeset", MathJax.Hub, reveal.getRevealElement()]);
 					MathJax.Hub.Queue(() => RenderMathFragment(config));
+					if (config === "TeX-AMS_CHTML") 
+						MathJax.Hub.Queue(() => MaintainFontSize());
 					MathJax.Hub.Queue(() => reveal.layout());
 					MathJax.Hub.Queue(() => resolve(0));
 				})
@@ -63,6 +65,11 @@ function RenderMathFragment(config) {
 	math.forEach(element => Renderer[config](element));
 }
 
+function MaintainFontSize() {
+	const math = document.querySelectorAll(".mjx-chtml.MathJax_CHTML");
+	math.forEach(element => element.style["fontSize"] = "120%");
+}
+
 const Renderer = {
 	"TeX-AMS_SVG": function(math) {
 		const svg = math.querySelector(".MathJax_SVG").children[0];
@@ -72,7 +79,9 @@ const Renderer = {
 		AttachFragment(c);
 	},
 	"TeX-AMS_CHTML": function(math) {
-		throw new Error("Not Implemented Yet");
+		const span = math.querySelector(".mjx-chtml.MJXc-display"); if (!span) return;
+		const table = span.querySelector(".mjx-table"); if (!table) return;
+		AttachFragment(table);
 	},
 	"TeX-AMS_HTML": function(math) {
 		const span = math.querySelector(".math");
