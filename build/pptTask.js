@@ -44,9 +44,10 @@ defineEventListener("js", {
 module.exports = function PPTTask(sourceFileFolder, targetFileFolder) {
     const pptFilePath = `${sourceFileFolder}/ppt.html`;
 
-    // if (fs.existsSync(pptFilePath)) {
-    //     // console.log(colors("red", `[error] 请检查`));
-    // }
+    if (!fs.existsSync(pptFilePath)) {
+        console.log(colors("red", `[error] 请检查路径 ${pptFilePath} 是否存在`));
+        process.exit();
+    }
 
     gulp.task("ppt-task", (done) => {
         return gulp.src(pptFilePath)
