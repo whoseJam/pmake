@@ -20,7 +20,7 @@ plugins.push(Codeblock);
 plugins.push(SDAnimation);
 plugins.push(Highlight);
 plugins.push(window.RevealChalkboard);
-window.Reveal = Reveal
+window.Reveal = Reveal;
 
 window.MyRevealCallback = function() {
     Reveal.initialize({

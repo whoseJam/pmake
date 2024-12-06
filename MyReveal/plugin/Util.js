@@ -12,6 +12,7 @@ export function ReplaceElement(source, target) {
     const parent = source.parentNode;
     target.className = source.className;
     CopyStyles(source, target);
+    CopyAttributes(source, target, ["data-fragment-index"]);
     parent.insertBefore(target, source.previousSibling);
     parent.removeChild(source);
 }
