@@ -144,13 +144,13 @@
             \begin{aligned}
             f(x)&=a_0+a_1x+a_2x^2+...+a_{n-1}x^{n-1} \\
             &=(a_0+a_2x^2+a^4x^4+...+a_{n-2}x^{n-2})+(a_1x+a_3x^3+a_5x^5+...+a_{n-1}x^{n-1}) \\
-            &=(a_0+a_2x^2+a^4x^4+...+a_{n-2}x^{n-2})+x(a_1+a_3x^2+a_5x^4+...+a_{n-1}x^{n-1})
+            &=(a_0+a_2x^2+a^4x^4+...+a_{n-2}x^{n-2})+x(a_1+a_3x^2+a_5x^4+...+a_{n-1}x^{n-2})
             \end{aligned}
             $$
         </p>
         <ul>
             <li class="fragment">令 $f_1(x)=a_0+a_2x+a_4x^2+...+a_{n-1}x^{\frac{n-2}{2} }$</li>
-            <li class="fragment">令 $f_2(x)=a_1+a_3x+a_5x^2+...+a_{n}x^{\frac{n-1}{2} }$</li>
+            <li class="fragment">令 $f_2(x)=a_1+a_3x+a_5x^2+...+a_{n}x^{\frac{n-2}{2} }$</li>
         </ul>
         <p class="fragment">
             $$
@@ -180,7 +180,7 @@
             \begin{cases}
             f(x)=a_0+a_1x+a_2x^2+...+a_{n-1}x^{n-1} \\
             f_1(x)=a_0+a_2x+a_4x^2+...+a_{n-1}x^{\frac{n-2}{2} } \\
-            f_2(x)=a_1+a_3x+a_5x^2+...+a_{n}x^{\frac{n-1}{2} } \\
+            f_2(x)=a_1+a_3x+a_5x^2+...+a_{n}x^{\frac{n-2}{2} } \\
             f(w_n^k)=f_1(w_{n/2}^k)+w_n^kf_2(w_{n/2}^k)
             \end{cases}
             $$
