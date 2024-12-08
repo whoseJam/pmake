@@ -4,6 +4,6 @@ import { BaseTree } from "@/Node/Tree/BaseTree";
 export class HorizontalValueTree extends BaseTree {
     constructor(parent: SDNode);
 
-    layerHeight(): number;
-    layerHeight(height: number): this;
+    layerWidth(): number;
+    layerWidth(height: number): this;
 }

@@ -2,6 +2,7 @@ import * as sd from "@/sd";
 
 const svg = sd.svg();
 const R = sd.rule();
+const EN = sd.enter();
 const str = " abbabaabbabb";
 const n = str.length - 1;
 const arr = new sd.Array(svg);
@@ -27,17 +28,6 @@ sd.init(() => {
     for (let i = 0; i <= n; i++) arr.push(str[i]);
     for (let i = 0; i <= n; i++) {
         arr.element(i).childAs(new sd.Text(svg, i).fontSize(12), R.aside("bc", 3));
-        if (i >= 1) {
-            let flag = 0;
-            const substr = str.slice(1, i + 1);
-            const element = arr.element(i);
-            element.title(substr).onClick(() => {
-                if (flag) return;
-                sd.inter(async () => {
-                    element.childAs(new sd.Text(svg, substr), R.aside(location[i].loc, location[i].gap));
-                });
-            });
-        }
     }
     prepare();
     arr.x(100).cy(300);
@@ -56,9 +46,9 @@ sd.main(async () => {
     }
 
     await sd.pause();
-    const tree = new sd.HorizontalTree(svg).layerWidth(150).height(600).x(arr.x()).cy(arr.cy());
+    const tree = new sd.HorizontalValueTree(svg).layerWidth(150).height(600).x(arr.x()).cy(arr.cy());
     tree.freeze();
-    tree.startAnimate();
+    tree.startAnimate(2000);
     for (let i = 0; i <= n; i++) {
         tree.newNodeFromExistElement(i, arr.element(i));
         if (i > 0) {
@@ -69,6 +59,15 @@ sd.main(async () => {
     }
     tree.unfreeze();
     tree.endAnimate();
+    await sd.pause();
+    for (let i = 0; i <= n; i++) {
+         if (i >= 1) {
+            let flag = 0;
+            const substr = str.slice(1, i + 1);
+            const element = arr.element(i);
+            element.startAnimate().childAs(new sd.Text(svg, substr).onEnter(EN.appear()), R.aside(location[i].loc, location[i].gap)).endAnimate();
+        }
+    }
 })
 
 function prepare() {
