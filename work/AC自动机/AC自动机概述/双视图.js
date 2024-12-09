@@ -51,6 +51,7 @@ sd.main(async () => {
                 const col = current ? C.white : C.green;
                 let f = id;
                 const path = [f];
+                let cnt = 0;
                 while (ac.fatherId(f)) {
                     f = ac.fatherId(f);
                     path.push(f);

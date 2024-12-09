@@ -22,7 +22,6 @@ export async function BuildTrieGraph(ac, characterSet, args, skipAll = false) {
     while (Q.length > 0) {
         const u = Q[0]; Q.shift();
         if (OnFocusParent) {
-            if (!skipAll) await sd.pause();
             await OnFocusParent(u);
         }
 
@@ -35,12 +34,10 @@ export async function BuildTrieGraph(ac, characterSet, args, skipAll = false) {
                 SetChild(u, character, next);
                 
                 if (OnLink) {
-                    if (!skipAll) await sd.pause();
                     await OnLink(ac.element(u), ac.element(next), +u, +next, character);
                 }
             } else {
                 if (OnFocusChild) {
-                    if (!skipAll) await sd.pause();
                     await OnFocusChild(v);
                 }
 
@@ -48,19 +45,16 @@ export async function BuildTrieGraph(ac, characterSet, args, skipAll = false) {
                 ac.element(v).fail = next;
 
                 if (OnLink) {
-                    if (!skipAll) await sd.pause();
                     await OnLink(ac.element(v), ac.element(next), +v, +next);
                 }
 
                 if (OnRemoveFocusChild) {
-                    if (!skipAll) await sd.pause();
                     await OnRemoveFocusChild(v);
                 }
             }
         }
 
         if (OnRemoveFocusParent) {
-            if (!skipAll) await sd.pause();
             await OnRemoveFocusParent(u);
         }
     }

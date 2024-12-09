@@ -27,7 +27,6 @@ export async function BuildFailTree(ac, args, skipAll = false) {
        const u = Q[0]; Q.shift();
        
        if (OnFocusParent) {
-           if (!skipAll) await sd.pause();
            await OnFocusParent(u);
        }
        const children = ac.children(u);
@@ -36,7 +35,6 @@ export async function BuildFailTree(ac, args, skipAll = false) {
            const v = ac.nodeId(children[i]); Q.push(v);
 
            if (OnFocusChild) {
-               if (!skipAll) await sd.pause();
                await OnFocusChild(v);
            }
            const character = ac.value(u, v).text();
@@ -45,12 +43,10 @@ export async function BuildFailTree(ac, args, skipAll = false) {
            let first = true;
            while (f && !ac.element(f).acch[character]) {
                if (first && OnFirstFailJumpTo) {
-                   if (!skipAll) await sd.pause();
                    await OnFirstFailJumpTo(f, u);
                    await OnFailJumpTo(f, u);
                    first = false;
                } else if (OnFailJumpTo) {
-                   if (!skipAll) await sd.pause();
                    await OnFailJumpTo(f, u);
                }
 
@@ -59,37 +55,31 @@ export async function BuildFailTree(ac, args, skipAll = false) {
 
            if (f && ac.element(f).acch[character]) {
                if (first && OnFirstFailJumpTo) {
-                   if (!skipAll) await sd.pause();
                    await OnFirstFailJumpTo(f, u);
                    await OnFailJumpTo(f, u);
                    first = false;
                } else if (OnFailJumpTo) {
-                   if (!skipAll) await sd.pause();
                    await OnFailJumpTo(f, u);
                }
 
                const failOfV = ac.element(f).acch[character];
                if (OnLink) {
-                   if (!skipAll) await sd.pause();
                    OnLink(ac.element(v), ac.element(failOfV), +v, +failOfV);
                }
                ac.element(v).fail = failOfV;
            } else {
                if (OnLink) {
-                   if (!skipAll) await sd.pause();
                    OnLink(ac.element(v), ac.element(1), +v, 1);
                }
                ac.element(v).fail = 1;
            }
 
            if (OnRemoveFocusChild) {
-               if (!skipAll) await sd.pause();
                await OnRemoveFocusChild(v);
            }
        }
 
        if (OnRemoveFocusParent) {
-           if (!skipAll) await sd.pause();
            await OnRemoveFocusParent(u);
        }
    }

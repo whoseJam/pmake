@@ -30,6 +30,7 @@ sd.main(async () => {
 })
 
 async function OnLink(nodeU, nodeV, u, v) {
+    await sd.pause();
     let type = sd.Line;
     if (v === 1) type = sd.Curve;
     const l = new type(svg);
@@ -46,5 +47,6 @@ async function OnLink(nodeU, nodeV, u, v) {
 }
 
 async function OnFocusChild(child) {
+    await sd.pause();
     focus.startAnimate().focus(child).endAnimate();
 }

@@ -348,6 +348,7 @@ BaseTree.prototype.nodeId = function(node) {
     if (Check.isTypeOfSDNode(node)) {
         return this._.sidToNodes[node.id].key;
     }
+    if (node === undefined) return undefined;
     return String(node);
 }
 

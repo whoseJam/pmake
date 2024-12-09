@@ -15,6 +15,7 @@ const data = [
 
 let pathToV;
 let pathToU;
+let isFirst = false;
 
 sd.init(async () => {
     await BuildTrieTree(ac, data);
@@ -29,14 +30,17 @@ sd.main(async () => {
 
     await BuildFailTree(ac, {
         OnLink: OnLink,
-        OnFocusParent: (parent) => {
+        OnFocusParent: async (parent) => {
+            await sd.pause();
             focus.startAnimate().focus(parent).endAnimate();
             failFocus.focus(null).after(focus).focus(parent);
         },
-        OnFocusChild: (child) => {
+        OnFocusChild: async (child) => {
+            await sd.pause();
             ac.startAnimate().color(child, C.blue).endAnimate();
         },
-        OnRemoveFocusChild: (child) => {
+        OnRemoveFocusChild: async (child) => {
+            await sd.pause();
             ac.startAnimate().color(child, C.white).endAnimate();
         },
         OnFailJumpTo: OnFailJumpTo,
@@ -48,14 +52,18 @@ sd.main(async () => {
     failFocus.startAnimate().focus(null).endAnimate();
 })
 
-function OnFailJumpTo(fail, parent) {
+async function OnFailJumpTo(fail, parent) {
+    if (!isFirst) await sd.pause();
+    isFirst = false;
     failFocus.startAnimate().focus(fail).endAnimate();
     const length = ac.depth(fail);
     pathToU.startAnimate().d(CreatePathD(GetPath(parent, length))).endAnimate();
     pathToV.startAnimate().d(CreatePathD(GetPath(fail, length))).endAnimate();
 }
 
-function OnFirstFailJumpTo(fail, parent) {
+async function OnFirstFailJumpTo(fail, parent) {
+    await sd.pause();
+    isFirst = true;
     const length = ac.depth(fail);
     pathToU = CreatePath(GetPath(parent, length), C.textBlue).startAnimate().pointStoT().endAnimate().arrow();
     pathToV = CreatePath(GetPath(fail, length), C.darkOrange).startAnimate().pointStoT().endAnimate().arrow();
@@ -65,13 +73,14 @@ function OnFirstFailJumpTo(fail, parent) {
 async function OnLink(nodeU, nodeV, u, v) {
     let pathOfU, pathOfV;
     if (v !== 1) {
+        await sd.pause();
         const length = ac.depth(v);
         pathToU.startAnimate().d(CreatePathD(GetPath(u, length))).endAnimate();
         pathToV.startAnimate().d(CreatePathD(GetPath(v, length))).endAnimate();
         ac.startAnimate().color(v, C.orange).endAnimate();
-        await sd.pause();
     }
 
+    await sd.pause();
     let type = sd.Line;
     if (nodeU.cx() == nodeV.cx() || nodeU.parentNodeId == v || nodeV.parentNodeId == u) type = sd.Curve;
     if (u === 5 && v === 7) type = sd.Curve;

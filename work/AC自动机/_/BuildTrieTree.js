@@ -28,7 +28,6 @@ export async function BuildTrieTree(ac, strs, args = {}, skipAll = false) {
                 ac.element(tot).acch = {};
 
                 if (OnLink) {
-                    if (!skipAll) await sd.pause();
                     await OnLink(ac.element(u), ac.element(tot), +u, +tot);
                 }
             }
