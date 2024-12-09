@@ -5,7 +5,7 @@ import { BuildFailTreeFromLen } from "../_/BuildFailTreeFromLen";
 
 const svg = sd.svg();
 const R = sd.rule();
-const str = " abbabaabbabb";
+const str = " aaaabbabbaa";
 const n = str.length - 1;
 const arr = new sd.Array(svg);
 const gap = 5;
@@ -19,9 +19,9 @@ const locations = [
     { location: "rc", gap: gap },
     { location: "rc", gap: gap },
     { location: "rc", gap: gap },
-    { location: "tc", gap: gap },
-    { location: "tc", gap: gap },
-    { location: "tc", gap: gap },
+    { location: "rc", gap: gap },
+    { location: "rc", gap: gap },
+    { location: "rc", gap: gap },
     { location: "rc", gap: gap }
 ]
 const len = BuildLenSync(str);

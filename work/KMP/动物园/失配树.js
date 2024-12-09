@@ -5,7 +5,7 @@ import { BuildFailTreeFromLen } from "../_/BuildFailTreeFromLen";
 
 const svg = sd.svg();
 const R = sd.rule();
-const str = " abbabaabbabb";
+const str = " abcababc";
 const n = str.length - 1;
 const arr = new sd.Array(svg);
 const gap = 5;
@@ -14,14 +14,10 @@ const locations = [
     { location: "tc", gap: gap },
     { location: "tc", gap: gap },
     { location: "tc", gap: gap },
-    { location: "tc", gap: gap },
-    { location: "tc", gap: gap },
     { location: "rc", gap: gap },
     { location: "rc", gap: gap },
     { location: "rc", gap: gap },
-    { location: "tc", gap: gap },
-    { location: "tc", gap: gap },
-    { location: "tc", gap: gap },
+    { location: "rc", gap: gap },
     { location: "rc", gap: gap }
 ]
 const len = BuildLenSync(str);
@@ -34,6 +30,6 @@ sd.init(() => {
 
 sd.main(async () => {
     await BuildFailTreeFromLen(arr, len, locations, {
-        OnTreeCreated: (tree) => tree.layerWidth(150).height(600).x(arr.x()).cy(arr.cy())
+        OnTreeCreated: (tree) => tree.layerWidth(150).height(500).x(arr.x()).cy(arr.cy())
     });
 })
