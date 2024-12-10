@@ -28,38 +28,37 @@ sd.main(async () => {
         }
     })
 
-    let current = 0;
-    let status = undefined;
     ac.forEachNodes((node, id) => {
         node.onClick(() => {
-            if (current && (current !== id || status !== "click")) return;
             sd.inter(async () => {
-                const col = current ? C.white : C.green;
                 let f = id;
-                ac.startAnimate().color(f, col).endAnimate();
+                ac.startAnimate().color(f, C.green).endAnimate();
                 while (ac.element(f).fail) {
                     f = ac.element(f).fail;
-                    ac.startAnimate().color(f, col).endAnimate();
+                    ac.startAnimate().color(f, C.green).endAnimate();
                 }
-                if (current) { current = 0; status = undefined; }
-                else { current = id; status = "click"; }
+                await sd.pause();
+                f = id;
+                ac.startAnimate().color(f, C.white).endAnimate();
+                while (ac.element(f).fail) {
+                    f = ac.element(f).fail;
+                    ac.startAnimate().color(f, C.white).endAnimate();
+                }
             })
         })
         node.onDblClick(() => {
-            if (current && (current !== id || status !== "dblClick")) return;
             sd.inter(async () => {
-                const col = current ? C.white : C.green;
                 let f = id;
                 const path = [f];
-                let cnt = 0;
                 while (ac.fatherId(f)) {
                     f = ac.fatherId(f);
                     path.push(f);
                 }
                 for (let i = path.length - 1; i >= 0; i--)
-                    ac.startAnimate().color(path[i], col).endAnimate();
-                if (current) { current = 0; status = undefined; }
-                else { current = id; status = "dblClick"; }
+                    ac.startAnimate().color(path[i], C.green).endAnimate();
+                await sd.pause();
+                for (let i = path.length - 1; i >= 0; i--)
+                    ac.startAnimate().color(path[i], C.white).endAnimate();
             })
         })
     })

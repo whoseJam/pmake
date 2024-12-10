@@ -1,6 +1,7 @@
 import * as sd from "@/sd";
-import { BuildTrieTree }  from "../_/BuildTrieTree";
-import { BuildTrieGraph } from "../_/BuildTrieGraph";
+
+import { BuildTrieGraph }    from "../_/BuildTrieGraph";
+import { BuildTrieTreeSync } from "../_/BuildTrieTreeSync";
 
 const svg = sd.svg();
 const C = sd.color();
@@ -14,24 +15,27 @@ const data = [
 ];
 
 
-sd.init(async () => {
-    await BuildTrieTree(ac, data, {
+sd.init(() => {
+    BuildTrieTreeSync(ac, data, {
         OnLink: (nodeU, nodeV, u, v) => {
             ac.element(u, v).arrow();
         }
-    }, true);
+    });
 })
 
 sd.main(async () => {
     await BuildTrieGraph(ac, "ab", {
         OnLink: OnLink,
-        OnFocusParent: (parent) => {
+        OnFocusParent: async (parent) => {
+            await sd.pause();
             focus.startAnimate().focus(parent).endAnimate();
         },
-        OnFocusChild: (child) => {
+        OnFocusChild: async (child) => {
+            await sd.pause();
             ac.startAnimate().color(child, C.blue).endAnimate();
         },
-        OnRemoveFocusChild: (child) => {
+        OnRemoveFocusChild: async (child) => {
+            await sd.pause();
             ac.startAnimate().color(child, C.white).endAnimate();
         }
     });
@@ -42,13 +46,15 @@ sd.main(async () => {
 async function OnLink(nodeU, nodeV, u, v, character) {
     let pathToU, pathToV;
     if (character) {
+        await sd.pause();
         const length = ac.depth(nodeU.fail);
         pathToU = CreatePath(GetPath(u, length), C.textBlue).startAnimate().pointStoT().endAnimate().arrow();
         pathToV = CreatePath(GetPath(nodeU.fail, length), "#ff7300").startAnimate().pointStoT().endAnimate().arrow();
-        await sd.pause();
         // pathToU.startAnimate().d(CreatePathD(u, length + 1)).endAnimate();
         // pathToV.startAnimate().d(CreatePathD(v, length + 1)).endAnimate();
     }
+
+    await sd.pause();
 
     let line;
     if (!character) {

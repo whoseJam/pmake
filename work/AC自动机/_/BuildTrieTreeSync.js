@@ -8,7 +8,7 @@ import * as sd from "@/sd";
  *  OnLink: (nodeU: sd.SDNode, nodeV: sd.SDNode, u: number, v: number) => void
  * }} args
  */
-export async function BuildTrieTree(ac, strs, args = {}) {
+export function BuildTrieTreeSync(ac, strs, args = {}) {
     const R = sd.rule();
     const OnLink = args.OnLink;
 
@@ -16,7 +16,7 @@ export async function BuildTrieTree(ac, strs, args = {}) {
     ac.root(1);
     ac.element(1).str = "";
     ac.element(1).acch = {};
-    async function insert(s) {
+    function insert(s) {
         let u = 1;
         for (let i = 0; i < s.length; i++) {
             const cur = ac.element(u);
@@ -28,14 +28,14 @@ export async function BuildTrieTree(ac, strs, args = {}) {
                 ac.element(tot).acch = {};
 
                 if (OnLink) {
-                    await OnLink(ac.element(u), ac.element(tot), +u, +tot);
+                    OnLink(ac.element(u), ac.element(tot), +u, +tot);
                 }
             }
             u = cur.acch[s[i]];
         }
     }
     for (let i = 0; i < strs.length; i++) {
-        await insert(strs[i]);
+        insert(strs[i]);
     }
     for (let i = 1; i <= tot; i++) {
         ac.element(i).fail = 0;

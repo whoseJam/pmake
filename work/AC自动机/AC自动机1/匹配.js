@@ -1,6 +1,7 @@
 import * as sd from "@/sd";
-import { BuildTrieTree } from "../_/BuildTrieTree";
-import { BuildFailTree } from "../_/BuildFailTree";
+
+import { BuildTrieTreeSync } from "../_/BuildTrieTreeSync";
+import { BuildFailTreeSync } from "../_/BuildFailTreeSync";
 import { MatchOnACMachine } from "../_/MatchOnACMachine";
 
 const svg = sd.svg();
@@ -9,6 +10,9 @@ const R = sd.rule();
 const ac = new sd.Tree(svg).layerHeight(90).width(600);
 const target = "abaa";
 const arr = new sd.Array(svg).pushArray(target);
+const pointer = sd.Pointer(arr);
+const focus = sd.Focus(ac);
+const brace = sd.Brace(arr);
 const data = [
     "aba",
     "ba",
@@ -17,10 +21,8 @@ const data = [
 ];
 
 sd.init(async () => {
-    await BuildTrieTree(ac, data);
-    await BuildFailTree(ac, {
-        OnLink: OnLink
-    }, true);
+    BuildTrieTreeSync(ac, data);
+    BuildFailTreeSync(ac, { OnLink: OnLink });
 
     ac.forEachNodes((node, id) => {
         if (id === "1") return;
@@ -45,8 +47,55 @@ sd.init(async () => {
 })
 
 sd.main(async () => {
-    await MatchOnACMachine(ac, arr);
+    await MatchOnACMachine(ac, arr, {
+        OnFocusNode: OnFocusNode,
+        OnStartMatchAt: OnStartMatchAt,
+        OnFailJumpTo: OnFailJumpTo,
+        OnMatchExtended: OnMatchExtended,
+        OnMatchFailed: OnMatchFailed
+    });
 })
+
+async function OnFocusNode(u) {
+    await sd.pause();
+    focus.startAnimate().focus(u).endAnimate().clickable(false);
+}
+
+async function OnStartMatchAt(i) {
+    await sd.pause();
+    pointer.startAnimate().moveTo(i).endAnimate();
+}
+
+async function OnFailJumpTo(nextFail, prevFail, i) {
+    console.log("fail = ", nextFail, "cur=", prevFail, "i=", i);
+    const nextLength = ac.depth(nextFail);
+    const prevLength = ac.depth(prevFail);
+    if (nextFail) {
+        await sd.pause();
+        focus.startAnimate().focus(nextFail).endAnimate();
+        brace.startAnimate().brace(i - nextLength + 1, i - 1).endAnimate();
+        arr.startAnimate();
+        arr.color(i - prevLength + 1, i - nextLength, C.white);
+        arr.color(i, C.red);
+        arr.endAnimate();
+    }
+}
+
+async function OnMatchExtended(u, i) {
+    await sd.pause();
+    const length = ac.depth(u) - 3;
+    focus.startAnimate().focus(u).endAnimate();
+    ac.startAnimate().color(u, C.green).endAnimate();
+    brace.startAnimate().brace(i - length - 1, i).endAnimate();
+    arr.startAnimate().color(i, C.green).endAnimate();
+
+    await sd.pause();
+    ac.startAnimate().color(u, C.white).endAnimate();
+}
+
+async function OnMatchFailed(u, i) {
+    brace.startAnimate().opacity(0).endAnimate();
+}
 
 function OnLink(nodeU, nodeV, u, v) {
     let type = sd.Line;
