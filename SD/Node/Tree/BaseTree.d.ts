@@ -14,31 +14,31 @@ export class BaseTree extends SDNode {
     newLinkFromExistValue(id: number|string, value: SDNode): this;
     newLinkFromExistElement(id: number|string, element: SDNode): this;
 
-    element(tid: number|string): SDNode|undefined;
-    element(sourceTid: number|string, targetTid: number|string): SDNode|undefined;
+    element(node: number|string|SDNode): SDNode;
+    element(source: number|string|SDNode, target: number|string|SDNode): SDNode;
 
-    value(tid: number|string): SDNode;
-    value(tid: number|string, value: any): this;
-    value(sourceTid: number|string, targetTid: number|string): SDNode;
-    value(sourceTid: number|string, targetTid: number|string, value: any): this;
+    value(node: number|string|SDNode): SDNode;
+    value(node: number|string|SDNode, value: any): this;
+    value(source: number|string|SDNode, target: number|string|SDNode): SDNode;
+    value(source: number|string|SDNode, target: number|string|SDNode, value: any): this;
 
     opacity(): number;
     opacity(opacity: number): this;
-    opacity(tid: number|string): number;
-    opacity(tid: number|string, opacity: number): this;
-    opacity(sourceTid: number|string, targetTid: number|string): number;
-    opacity(sourceTid: number|string, targetTid: number|string, opacity: number): this;
+    opacity(id: number|string): number;
+    opacity(id: number|string, opacity: number): this;
+    opacity(sourceId: number|string, targetId: number|string): number;
+    opacity(sourceId: number|string, targetId: number|string, opacity: number): this;
 
     color(color: Color): this;
     color(tid: number|string): Color;
     color(tid: number|string, color: Color): this;
-    color(sourceTid: number|string, targetTid: number|string): Color;
-    color(sourceTid: number|string, targetTid: number|string, color: Color): this;
+    color(sourceId: number|string, targetId: number|string): Color;
+    color(sourceId: number|string, targetId: number|string, color: Color): this;
 
     stratify(): any;
 
     findNodeById(tid: number|string): SDNode|undefined;
-    findLinkById(sourceTid: number|string, targetTid: number|string): SDNode|undefined;
+    findLinkById(sourceId: number|string, targetId: number|string): SDNode|undefined;
 
     father(node: SDNode): SDNode|undefined;
     father(tid: number|string): SDNode|undefined;
@@ -60,25 +60,28 @@ export class BaseTree extends SDNode {
     root(tid: number|string): this;
     root(tid: number|string, value: any): this;
 
-    link(sourceTid: number|string, targetTid: number|string): this;
-    link(sourceTid: number|string, targetTid: number|string, value: any): this;
+    link(sourceId: number|string, targetId: number|string): this;
+    link(sourceId: number|string, targetId: number|string, value: any): this;
 
-    cut(sourceTid: number|string, targetTid: number|string): this;
+    cut(sourceId: number|string, targetId: number|string): this;
 
     text(tid: number|string): string;
-    text(sourceTid: number|string, targetTid: number|string): string;
+    text(sourceId: number|string, targetId: number|string): string;
 
     intValue(tid: number|string): number;
-    intValue(sourceTid: number|string, targetTid: number|string): number;
+    intValue(sourceId: number|string, targetId: number|string): number;
 
+    nodesOnPath(source: number|string|SDNode, target: number|string|SDNode): Array<SDNode>;
+    linksOnPath(source: number|string|SDNode, target: number|string|SDNode): Array<SDNode>;
+    forEachNodesOnPath(sourceId: number|string, targetId: number|string, callback: (node: SDNode, id: string) => void): this;
+    forEachLinksOnPath(sourceId: number|string, targetId: number|string, callback: (link: SDNode, sourceId: string, targetId: string) => void): this;
     forEachNodes(callback: (node: SDNode, tid: string) => void): this;
-    forEachLinks(callback: (link: SDNode, sourceTid: string, targetTid: string) => void): this;
+    forEachLinks(callback: (link: SDNode, sourceId: string, targetId: string) => void): this;
 
     rootId(): string;
-    nodeId(node: SDNode): string;
-    nodeId(tid: number|string): string;
-    sourceId(link: SDNode): string;
-    targetId(link: SDNode): string;
+    nodeId(node: number|string|SDNode): string|undefined;
+    sourceId(link: SDNode): string|undefined;
+    targetId(link: SDNode): string|undefined;
     source(link: SDNode): SDNode;
     target(link: SDNode): SDNode;
 }

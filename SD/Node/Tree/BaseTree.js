@@ -3,6 +3,10 @@ import { SDNode } from "@/Node/SDNode";
 import { Check }         from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
+function CastIntoId(tree, object) {
+    return (Check.isTypeOfSDNode(object)) ? tree.nodeId(object) : object;
+}
+
 export function BaseTree(parent) {
     SDNode.call(this, parent);
 
@@ -29,11 +33,13 @@ BaseTree.prototype.element = function() {
     const args = arguments;
     switch (args.length) {
         case 1:
+            if (Check.isTypeOfSDNode(args[0])) return args[0];
             const node = this.findNodeById(args[0]);
             return node ? node : ErrorLauncher.nodeNotExists(args[0]);
         case 2:
-            const link = this.findLinkById(args[0], args[1]);
-            return link ? link : ErrorLauncher.linkNotExist(args[0], args[1]);
+            const link = this.findLinkById(CastIntoId(this, args[0]), CastIntoId(this, args[1]));
+            return link ? link : 
+                          ErrorLauncher.linkNotExist(CastIntoId(this, args[0]), CastIntoId(this, args[1]));
         default:
             ErrorLauncher.invalidArguments();
     }
@@ -43,19 +49,20 @@ BaseTree.prototype.value = function() {
     const args = arguments;
     switch (args.length) {
         case 1: {
-            const node = this.findNodeById(args[0]);
+            const node = this.element(args[0]);
             return node ? node.value() : ErrorLauncher.nodeNotExists(args[0]);
         }
         case 2: {
-            const link = this.findLinkById(args[0], args[1]);
-            const node = this.findNodeById(args[0]);
+            const link = this.findLinkById(CastIntoId(this, args[0]), CastIntoId(this, args[1]));
+            const node = this.findNodeById(CastIntoId(this, args[0]));
             return link ? link.value() : 
                    node ? (node.value(args[1]), this) : 
-                   ErrorLauncher.nodeNotExists(args[0]);
+                   ErrorLauncher.nodeNotExists(CastIntoId(this, args[0]));
         }
         case 3: {
-            const link = this.findLinkById(args[0], args[1]);
-            return link ? (link.value(args[2]), this) : ErrorLauncher.linkNotExist(args[0], args[1]);
+            const link = this.findLinkById(CastIntoId(this, args[0]), CastIntoId(this, args[1]));
+            return link ? (link.value(args[2]), this) : 
+                          ErrorLauncher.linkNotExist(CastIntoId(this, args[0]), CastIntoId(this, args[1]));
         }
         default:
             ErrorLauncher.invalidArguments();
@@ -212,7 +219,6 @@ BaseTree.prototype.lca = function(x, y) {
     let dx = this.depth(x);
     let dy = this.depth(y);
     for (let i = 1; i <= 100 && x !== y; i++) {
-        console.log("x=", x, "y=", y);
         if (dx > dy) {
             x = this.fatherId(x);
             dx--;
@@ -221,7 +227,6 @@ BaseTree.prototype.lca = function(x, y) {
             dy--;
         }
     }
-    console.log("x=", x);
     return this.findNodeById(x);
 }
 
@@ -330,6 +335,54 @@ BaseTree.prototype.intValue = function() {
     return +value.text();
 }
 
+BaseTree.prototype.nodesOnPath = function(source, target) {
+    source = this.element(source); const sourceList = [];
+    target = this.element(target); const targetList = [];
+    let sourceDepth = this.depth(source);
+    let targetDepth = this.depth(target);
+    for (let i = 1; i <= 100 && source !== target; i++) {
+        if (sourceDepth > targetDepth) {
+            sourceList.push(source);
+            source = this.father(source);
+            sourceDepth--;
+        } else {
+            targetList.push(target);
+            target = this.father(target);
+            targetDepth--;
+        }
+    }
+    return [...sourceList, source, ...targetList.reverse()];
+}
+
+BaseTree.prototype.linksOnPath = function(source, target) {
+    source = this.element(source); const sourceList = [];
+    target = this.element(target); const targetList = [];
+    let sourceDepth = this.depth(source);
+    let targetDepth = this.depth(target);
+    for (let i = 1; i <= 100 && source !== target; i++) {
+        if (sourceDepth > targetDepth) {
+            sourceList.push(this.element(this.father(source), source));
+            source = this.father(source);
+            sourceDepth--;
+        } else {
+            targetList.push(this.element(this.father(target), target));
+            target = this.father(target);
+            targetDepth--;
+        }
+    }
+    return [...sourceList, ...targetList.reverse()];
+}
+
+BaseTree.prototype.forEachNodesOnPath = function(source, target, callback) {
+    this.nodesOnPath(source, target).forEach(node => callback(node, this.nodeId(node)));
+    return this;
+}
+
+BaseTree.prototype.forEachLinksOnPath = function(source, target, callback) {
+    this.linksOnPath(source, target).forEach(link => callback(link, this.sourceId(link), this.targetId(link)));
+    return this;
+}
+
 BaseTree.prototype.forEachNodes = function(callback) {
     this.member.get("nodes").forEach(node => callback(node, this.nodeId(node)));
     return this;
@@ -345,25 +398,25 @@ BaseTree.prototype.rootId = function() {
 }
 
 BaseTree.prototype.nodeId = function(node) {
-    if (Check.isTypeOfSDNode(node)) {
-        return this._.sidToNodes[node.id].key;
-    }
-    if (node === undefined) return undefined;
-    return String(node);
+    return Check.isTypeOfSDNode(node) ?
+        (this._.sidToNodes[node.id] ? this._.sidToNodes[node.id].key : undefined) :
+        (node === undefined ? undefined : String(node));
 }
 
 BaseTree.prototype.sourceId = function(link) {
-    return this._.sidToLinks[link.id].source;
+    return this._.sidToLinks[link.id] ? this._.sidToLinks[link.id].source : undefined;
 }
 
 BaseTree.prototype.targetId = function(link) {
-    return this._.sidToLinks[link.id].target;
+    return this._.sidToLinks[link.id] ? this._.sidToLinks[link.id].target : undefined;
 }
 
 BaseTree.prototype.source = function(link) {
-    return this.findNodeById(this.sourceId(link));
+    const sourceId = this.sourceId(link);
+    return sourceId !== undefined ? sourceId : ErrorLauncher.linkNotExist("?", "?");
 }
 
 BaseTree.prototype.target = function(link) {
-    return this.findNodeById(this.targetId(link));
+    const targetId = this.targetId(link);
+    return targetId !== undefined ? targetId : ErrorLauncher.linkNotExist("?", "?")
 }
