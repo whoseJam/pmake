@@ -2,8 +2,12 @@
     <section>
         <h1>DNA修复</h1>
     </section>
-    <problem data-src="http://43.143.204.105/problem/942"></problem>
+    <problem data-problemset="poj" data-problemid="3691"></problem>
     <section>
         <h2>DNA修复</h2>
+        <p>你有一个字符串和一个字典，你希望修改字符串，使之不包含任何字典内出现过的单词</p>
+        <p class="fragment">求至少修改几个字符</p>
+        <p class="fragment">把字典建成Trie图，修改一个字符意味着可以往任何一个方向走一次</p>
+        <p class="fragment">设 $f_{i,u}$ 表示走了 $i$ 个单位的距离，到了Trie图上的点 $u$，并且从未经过任意一个终止点，需要执行至少多少次修改</p>
     </section>
 </section>

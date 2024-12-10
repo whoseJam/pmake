@@ -6,11 +6,13 @@ import * as sd from "@/sd";
  * @param {Array<string>} strs 
  * @param {{
  *  OnLink: (nodeU: sd.SDNode, nodeV: sd.SDNode, u: number, v: number) => void
+ *  OnReachEndOfString: (nodeU: sd.SDNode, u: number) => void
  * }} args
  */
 export async function BuildTrieTree(ac, strs, args = {}) {
     const R = sd.rule();
     const OnLink = args.OnLink;
+    const OnReachEndOfString = args.OnReachEndOfString;
 
     let tot = 1;
     ac.root(1);
@@ -32,6 +34,10 @@ export async function BuildTrieTree(ac, strs, args = {}) {
                 }
             }
             u = cur.acch[s[i]];
+        }
+        ac.element(u).is_end = true;
+        if (OnReachEndOfString) {
+            await OnReachEndOfString(ac.element(u), u);
         }
     }
     for (let i = 0; i < strs.length; i++) {

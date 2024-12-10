@@ -4,7 +4,7 @@ import * as sd from "@/sd";
  * 构建Trie图
  * @param {sd.BaseTree} ac
  * @param {{
-*  OnLink: (u: sd.SDNode, v: sd.SDNode, sourceId: number, targetId: number, character: string, creatChild: boolean) => void,
+*  OnLink: (u: sd.SDNode, v: sd.SDNode, sourceId: number, targetId: number, character: string) => void,
 *  OnFocusParent: (parent: number) => void,
 *  OnRemoveFocusParent: (parent: number) => void,
 *  OnFocusChild: (child: number) => void,

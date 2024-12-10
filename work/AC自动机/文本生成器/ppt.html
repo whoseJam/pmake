@@ -2,8 +2,15 @@
     <section>
         <h1>文本生成器</h1>
     </section>
-    <problem data-src="http://43.143.204.105/problem/918"></problem>
+    <problem data-problemset="luogu" data-problemid="P4052"></problem>
     <section>
         <h2>文本生成器</h2>
+        <p>所谓可读文本数量，就是Trie图上经过至少一个终止点的、长度为 $m$ 的路径数量</p>
+        <p class="fragment">设 $f_{i,u,0/1}$ 表示走 $i$ 个单位的距离，当前位于Trie图上的 $u$ 点，有/没有经过终止点的方案数</p>
+        <p class="fragment">
+            $$
+            answer=\sum_{u\in V(AC)}f_{m,u,1}
+            $$
+        </p>
     </section>
 </section>
