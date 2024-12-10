@@ -14,7 +14,6 @@ const data = [
     "babb"
 ];
 
-let forwardWait = false;
 let failChainU;
 let failChainV;
 

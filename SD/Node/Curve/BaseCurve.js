@@ -1,6 +1,8 @@
 import { Path }   from "@/Node/Nake/Path";
 import { SDNode } from "@/Node/SDNode";
 
+import { Vector as V } from "@/Math/Vector";
+
 export function BaseCurve(parent) {
     Path.call(this, parent);
 
@@ -24,3 +26,19 @@ BaseCurve.prototype.y2 = SDNode.OrdinaryGSet("y2", "setByEqual");
 BaseCurve.prototype.updateList = [
     ...Path.prototype.updateList
 ]
+
+BaseCurve.prototype.dx = function(dx) {
+    this.freeze();
+    this.source(V.add(this.source(), [dx, 0]));
+    this.target(V.add(this.target(), [dx, 0]));
+    this.unfreeze();
+    return this;
+}
+
+BaseCurve.prototype.dy = function(dy) {
+    this.freeze();
+    this.source(V.add(this.source(), [0, dy]));
+    this.target(V.add(this.target(), [0, dy]));
+    this.unfreeze();
+    return this;
+}

@@ -14,6 +14,39 @@ const data = [
     "babb"
 ];
 
+const links1 = [
+    { type: sd.Line },
+    { u: 2, v: 2, type: sd.CircleCurve, props: { r: 30 } },
+    { u: 6, v: 6, type: sd.CircleCurve, props: { r: 30 } },
+    { u: 3, v: 6, type: sd.Line, props: { dy: 3 } },
+    { u: 7, v: 2, type: sd.Line, props: { dy: 3 } },
+    { u: 4, v: 2, type: sd.Curve, props: { bending: -0.5 } },
+    { u: 5, v: 4, type: sd.Curve, props: {} },
+    { u: 9, v: 7, type: sd.Curve, props: {} },
+    { u: 9, v: 6, type: sd.Curve, props: { bending: 0.5, dx: 3 } }
+
+];
+const links2 = [
+    { type: sd.Line },
+    { u: 2, v: 1, type: sd.Curve, props: { bending: -0.3 } },
+    { u: 6, v: 1, type: sd.Curve, props: { bending: 0.3 } },
+    { u: 9, v: 6, type: sd.Curve, props: { bending: 0.5 } }
+]
+
+function CreateLink(links, nodeU, nodeV, u, v) {
+    for (let i = 1; i < links.length; i++) {
+        if (links[i].u == u && links[i].v == v) {
+            const line = new links[i].type(svg);
+            line.source(nodeU.center());
+            line.target(nodeV.center());
+            for (let key in links[i].props) {
+                line[key](links[i].props[key]);
+            }
+            return line;
+        }
+    }
+    return new links[0].type(svg).source(nodeU.center()).target(nodeV.center());
+}
 
 sd.init(() => {
     BuildTrieTreeSync(ac, data, {
@@ -44,73 +77,49 @@ sd.main(async () => {
 })
 
 async function OnLink(nodeU, nodeV, u, v, character) {
-    let pathToU, pathToV;
     if (character) {
         await sd.pause();
         const length = ac.depth(nodeU.fail);
-        pathToU = CreatePath(GetPath(u, length), C.textBlue).startAnimate().pointStoT().endAnimate().arrow();
-        pathToV = CreatePath(GetPath(nodeU.fail, length), "#ff7300").startAnimate().pointStoT().endAnimate().arrow();
-        // pathToU.startAnimate().d(CreatePathD(u, length + 1)).endAnimate();
-        // pathToV.startAnimate().d(CreatePathD(v, length + 1)).endAnimate();
-    }
+        const failChainU = CreatePath(u, length, C.textBlue).startAnimate().pointStoT().endAnimate().arrow();
+        const failChainV = CreatePath(nodeU.fail, length, C.darkOrange).startAnimate().pointStoT().endAnimate().arrow();
 
-    await sd.pause();
-
-    let line;
-    if (!character) {
-        if (Math.abs(nodeU.cx() - nodeV.cx()) < 5 || ac.fatherId(u) == v || ac.fatherId(v) == u) line = new sd.Curve(svg);
-        else line = new sd.Line(svg);
-        if (u === 2) line.bending(-0.3);
-        if (u === 9 && v === 6) line.bending(0.5);
-        line.strokeDashArray([5, 5]);
-        line.source(nodeU.center());
-        line.target(nodeV.center());
-    } else {
-        if (u === v) line = new sd.CircleCurve(svg).r(30);
-        else if (Math.abs(nodeU.cx() - nodeV.cx()) < 5 || ac.fatherId(u) == v || ac.fatherId(v) == u) line = new sd.Curve(svg);
-        else line = new sd.Line(svg);
-        if (u === 4 && v === 2) line.bending(-0.5);
-        if (u === 9 && v === 6) {
-            line.bending(0.5);
-            line.source(V.add(nodeU.center(), [3, 0]));
-            line.target(V.add(nodeV.center(), [3, 0]));
-        } else {
-            line.source(V.add(nodeU.center(), [0, 3]));
-            line.target(V.add(nodeV.center(), [0, 3]));
-        }
-    }
-    line.arrow();
-    sd.trim(line, nodeU, nodeV);
-    if (character) {
-        line.value(character, R.pointAtPathByRate(0.3, "x", "cy"));
-    }
-    line.opacity(0).startAnimate().opacity(1).endAnimate();
-
-    if (character) {
         await sd.pause();
-        pathToU.startAnimate().opacity(0).endAnimate().remove();
-        pathToV.startAnimate().opacity(0).endAnimate().remove();
+        const line = CreateLink(links1, nodeU, nodeV, u, v).arrow();
+        line.value(character, R.pointAtPathByRate(0.3, "x", "cy"));
+        sd.trim(line, nodeU, nodeV);
+        line.opacity(0).startAnimate().opacity(1).endAnimate();
+
+        await sd.pause();
+        failChainU.startAnimate().opacity(0).endAnimate().remove();
+        failChainV.startAnimate().opacity(0).endAnimate().remove();
+    } else {
+        await sd.pause();
+        const line = CreateLink(links2, nodeU, nodeV, u, v).arrow();
+        line.strokeDashArray([5, 5]);
+        sd.trim(line, nodeU, nodeV);
+        line.opacity(0).startAnimate().opacity(1).endAnimate();
     }
+    
 }
 
-function CreatePath(path, color = C.black) {
-    return new sd.Path(svg).d(CreatePathD(path).toString()).stroke(color).strokeWidth(2).update();
+function CreatePath(u, length, color = C.black) {
+    return new sd.Path(svg).d(CreatePathD(u, length).toString()).stroke(color).strokeWidth(2).update();
 }
 
-function CreatePathD(path) {
+function CreatePathD(u, length) {
+    function GetPath(u, length) {
+        const path = [];
+        for (let i = 1; i <= length; i++) {
+            path.push(ac.element(u));
+            u = ac.fatherId(u);
+        }
+        return path.reverse();
+    }
+    const path = GetPath(u, length);
     const pen = new sd.PathPen();
     pen.MoveTo(path[0].center());
     for (let i = 1; i < path.length; i++) {
         pen.LinkTo(path[i].center());
     }
     return pen.toString();
-}
-
-function GetPath(u, length) {
-    const path = [];
-    for (let i = 1; i <= length; i++) {
-        path.push(ac.element(u));
-        u = ac.fatherId(u);
-    }
-    return path.reverse();
 }
