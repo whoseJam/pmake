@@ -1,6 +1,7 @@
 import * as sd from "@/sd";
-import { BuildTrieTree } from "../_/BuildTrieTree";
-import { BuildFailTree } from "../_/BuildFailTree";
+
+import { BuildFailTreeSync } from "../_/BuildFailTreeSync";
+import { BuildTrieTreeSync } from "../_/BuildTrieTreeSync";
 
 const svg = sd.svg();
 const C = sd.color();
@@ -11,11 +12,32 @@ const data = [
     "babb"
 ];
 
+const links = [
+    { type: sd.Line },
+    { u: 2, v: 1, type: sd.Curve, props: { bending: -0.3 } },
+    { u: 7, v: 1, type: sd.Curve, props: { bending: 0.3 } },
+    { u: 6, v: 4, type: sd.Curve, props: { bending: -0.3 } },
+    { u: 10, v: 7, type: sd.Curve, props: { bending: 0.3 } },
+];
+
+function CreateLink(u, v) {
+    for (let i = 1; i < links.length; i++) {
+        if (links[i].u == u && links[i].v == v) {
+            const line = new links[i].type(svg);
+            for (let key in links[i].props) {
+                line[key](links[i].props[key]);
+            }
+            return line;
+        }
+    }
+    return new links[0].type(svg);
+}
+
 sd.init(async () => {
-    await BuildTrieTree(ac, data);
-    await BuildFailTree(ac, {
+    BuildTrieTreeSync(ac, data);
+    BuildFailTreeSync(ac, {
         OnLink: OnLink
-    }, true);
+    });
 })
 
 sd.main(async () => {
@@ -65,18 +87,10 @@ sd.main(async () => {
 })
 
 function OnLink(nodeU, nodeV, u, v) {
-    let type = sd.Line;
-    if (nodeU.cx() == nodeV.cx() || ac.fatherId(u) == v || ac.fatherId(v) == u) type = sd.Curve;
-    if (u === 5 && v === 7) type = sd.Curve;
-    if (v === 1) type = sd.Curve;
-    const l = new type(svg);
-    if (u === 5 && v === 7) l.bending(-0.3);
-    if (u === 6 && v === 4) l.bending(-0.3);
-    if (u === 2) l.bending(-0.3);
-    if (u === 7) l.bending(0.3);
-    l.source(nodeU.center());
-    l.target(nodeV.center());
-    l.arrow();
-    l.strokeDashArray([5, 5]);
-    sd.trim(l, nodeU, nodeV);
+    const line = CreateLink(u, v);
+    line.source(nodeU.center());
+    line.target(nodeV.center());
+    line.arrow();
+    line.strokeDashArray([5, 5]);
+    sd.trim(line, nodeU, nodeV);
 }

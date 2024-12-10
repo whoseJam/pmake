@@ -64,12 +64,12 @@ export async function BuildFailTree(ac, args, skipAll = false) {
 
                const failOfV = ac.element(f).acch[character];
                if (OnLink) {
-                   OnLink(ac.element(v), ac.element(failOfV), +v, +failOfV);
+                   await OnLink(ac.element(v), ac.element(failOfV), +v, +failOfV);
                }
                ac.element(v).fail = failOfV;
            } else {
                if (OnLink) {
-                   OnLink(ac.element(v), ac.element(1), +v, 1);
+                   await OnLink(ac.element(v), ac.element(1), +v, 1);
                }
                ac.element(v).fail = 1;
            }

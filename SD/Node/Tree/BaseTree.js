@@ -193,11 +193,23 @@ BaseTree.prototype.father = function(arg) {
         } else {
             return this.findNodeById(sidToLinks[arg.id].source);
         }
-    }
+    } else return undefined;
 }
 
 BaseTree.prototype.fatherId = function(arg) {
     return this.nodeId(this.father(arg));
+}
+
+BaseTree.prototype.ancestor = function(node, kth) {
+    node = this.element(node);
+    for (let i = 1; i <= kth; i++) {
+        node = this.father(node);
+    }
+    return node;
+}
+
+BaseTree.prototype.ancestorId = function(node, kth) {
+    return this.nodeId(this.ancestor(node, kth));
 }
 
 BaseTree.prototype.depth = function(u) {

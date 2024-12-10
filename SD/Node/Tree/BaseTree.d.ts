@@ -40,11 +40,11 @@ export class BaseTree extends SDNode {
     findNodeById(tid: number|string): SDNode|undefined;
     findLinkById(sourceId: number|string, targetId: number|string): SDNode|undefined;
 
-    father(node: SDNode): SDNode|undefined;
-    father(tid: number|string): SDNode|undefined;
+    father(node: number|string|SDNode): SDNode|undefined;
     father(link: SDNode): SDNode|undefined;
-    fatherId(node: SDNode): string;
-    fatherId(tid: number|string): string;
+    fatherId(node: number|string|SDNode): string;
+    ancestor(node: number|string|SDNode, kth: number): SDNode|undefined;
+    ancestorId(node: number|string|SDNode, kth: number): string;
 
 
     depth(): number;

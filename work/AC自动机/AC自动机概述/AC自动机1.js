@@ -1,6 +1,7 @@
 import * as sd from "@/sd";
-import { BuildTrieTree } from "../_/BuildTrieTree";
-import { BuildFailTree } from "../_/BuildFailTree";
+
+import { BuildFailTree }     from "../_/BuildFailTree";
+import { BuildTrieTreeSync } from "../_/BuildTrieTreeSync";
 
 const svg = sd.svg();
 const ac = new sd.Tree(svg).layerHeight(70);
@@ -10,8 +11,27 @@ const data = [
     "bab"
 ];
 
-sd.init(async () => {
-    await BuildTrieTree(ac, data);
+const links = [
+    { type: sd.Line },
+    { u: 2, v: 1, type: sd.Curve, props: { bending: -0.3 } },
+    { u: 5, v: 1, type: sd.Curve, props: { bending: 0.3} }
+];
+
+function CreateLink(u, v) {
+    for (let i = 1; i < links.length; i++) {
+        if (links[i].u == u && links[i].v == v) {
+            const line = new links[i].type(svg);
+            for (let key in links[i].props) {
+                line[key](links[i].props[key]);
+            }
+            return line;
+        }
+    }
+    return new links[0].type(svg);
+}
+
+sd.init(() => {
+    BuildTrieTreeSync(ac, data);
 })
 
 sd.main(async () => {
@@ -25,25 +45,20 @@ sd.main(async () => {
         OnLink: OnLink,
         OnFocusChild: OnFocusChild
     });
-    await sd.pause();
+
     focus.startAnimate().focus(null).endAnimate();
 })
 
 async function OnLink(nodeU, nodeV, u, v) {
     await sd.pause();
-    let type = sd.Line;
-    if (v === 1) type = sd.Curve;
-    const l = new type(svg);
-    if (v === 1) l.bending(-0.3);
-    if (u === 5) l.bending(0.3);
-    l.source(nodeU.center());
-    l.target(nodeV.center());
-    l.arrow();
-    l.strokeDashArray([5, 5]);
-    l.opacity(0);
-    sd.trim(l, nodeU, nodeV);
-    l.startAnimate().opacity(1).endAnimate();
-    return l;
+    const line = CreateLink(u, v);
+    line.source(nodeU.center());
+    line.target(nodeV.center());
+    line.arrow();
+    line.strokeDashArray([5, 5]);
+    line.opacity(0);
+    sd.trim(line, nodeU, nodeV);
+    line.startAnimate().opacity(1).endAnimate();
 }
 
 async function OnFocusChild(child) {

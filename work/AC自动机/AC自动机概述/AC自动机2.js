@@ -1,24 +1,45 @@
 import * as sd from "@/sd";
-import { BuildTrieTree } from "../_/BuildTrieTree";
-import { BuildFailTree } from "../_/BuildFailTree";
+
+import { BuildTrieTreeSync } from "../_/BuildTrieTreeSync";
+import { BuildFailTree }     from "../_/BuildFailTree";
 
 const svg = sd.svg();
 const C = sd.color();
 const R = sd.rule();
 const ac = new sd.Tree(svg).layerHeight(70);
-const focus = sd.Focus(ac);
+const parentFocus = sd.Focus(ac);
 const failFocus = sd.Focus(ac);
 const data = [
     "abab",
     "babb"
 ];
 
-let pathToV;
-let pathToU;
-let isFirst = false;
+let forwardWait = false;
+let failChainU;
+let failChainV;
 
-sd.init(async () => {
-    await BuildTrieTree(ac, data);
+const links = [
+    { type: sd.Line },
+    { u: 2, v: 1, type: sd.Curve, props: { bending: -0.3 } },
+    { u: 6, v: 1, type: sd.Curve, props: { bending: 0.3 } },
+    { u: 9, v: 6, type: sd.Curve, props: { bending: 0.3 } },
+];
+
+function CreateLink(u, v) {
+    for (let i = 1; i < links.length; i++) {
+        if (links[i].u == u && links[i].v == v) {
+            const line = new links[i].type(svg);
+            for (let key in links[i].props) {
+                line[key](links[i].props[key]);
+            }
+            return line;
+        }
+    }
+    return new links[0].type(svg);
+}
+
+sd.init(() => {
+    BuildTrieTreeSync(ac, data);
 })
 
 sd.main(async () => {
@@ -32,8 +53,8 @@ sd.main(async () => {
         OnLink: OnLink,
         OnFocusParent: async (parent) => {
             await sd.pause();
-            focus.startAnimate().focus(parent).endAnimate();
-            failFocus.focus(null).after(focus).focus(parent);
+            parentFocus.startAnimate().focus(parent).endAnimate();
+            failFocus.focus(null).after(parentFocus).focus(parent);
         },
         OnFocusChild: async (child) => {
             await sd.pause();
@@ -48,83 +69,72 @@ sd.main(async () => {
     });
 
     await sd.pause();
-    focus.startAnimate().focus(null).endAnimate();
+    parentFocus.startAnimate().focus(null).endAnimate();
     failFocus.startAnimate().focus(null).endAnimate();
 })
 
 async function OnFailJumpTo(fail, parent) {
-    if (!isFirst) await sd.pause();
-    isFirst = false;
+    if (!forwardWait) await sd.pause(); forwardWait = false;
     failFocus.startAnimate().focus(fail).endAnimate();
     const length = ac.depth(fail);
-    pathToU.startAnimate().d(CreatePathD(GetPath(parent, length))).endAnimate();
-    pathToV.startAnimate().d(CreatePathD(GetPath(fail, length))).endAnimate();
+    failChainU.startAnimate().d(CreatePathD(parent, length)).endAnimate();
+    failChainV.startAnimate().d(CreatePathD(fail, length)).endAnimate();
 }
 
 async function OnFirstFailJumpTo(fail, parent) {
     await sd.pause();
-    isFirst = true;
+    forwardWait = true;
     const length = ac.depth(fail);
-    pathToU = CreatePath(GetPath(parent, length), C.textBlue).startAnimate().pointStoT().endAnimate().arrow();
-    pathToV = CreatePath(GetPath(fail, length), C.darkOrange).startAnimate().pointStoT().endAnimate().arrow();
+    failChainU = CreatePath(parent, length, C.textBlue).startAnimate().pointStoT().endAnimate().arrow();
+    failChainV = CreatePath(fail, length, C.darkOrange).startAnimate().pointStoT().endAnimate().arrow();
 }
 
-// v is fail of u
 async function OnLink(nodeU, nodeV, u, v) {
-    let pathOfU, pathOfV;
-    if (v !== 1) {
+    if (v != 1) {
         await sd.pause();
         const length = ac.depth(v);
-        pathToU.startAnimate().d(CreatePathD(GetPath(u, length))).endAnimate();
-        pathToV.startAnimate().d(CreatePathD(GetPath(v, length))).endAnimate();
+        failChainU.startAnimate().d(CreatePathD(u, length)).endAnimate();
+        failChainV.startAnimate().d(CreatePathD(v, length)).endAnimate();
         ac.startAnimate().color(v, C.orange).endAnimate();
     }
 
     await sd.pause();
-    let type = sd.Line;
-    if (nodeU.cx() == nodeV.cx() || nodeU.parentNodeId == v || nodeV.parentNodeId == u) type = sd.Curve;
-    if (u === 5 && v === 7) type = sd.Curve;
-    if (v === 1) type = sd.Curve;
-    const l = new type(svg);
-    if (type === sd.Curve) {
-        if (u === 2) l.bending(-0.3);
-        if (u === 6) l.bending(0.3);
-    }
-    l.source(nodeU.center())
-    l.target(nodeV.center())
-    l.arrow()
-    l.strokeDashArray([5, 5])
-    l.opacity(0);
-    sd.trim(l, nodeU, nodeV);
-    l.startAnimate().opacity(1).endAnimate();
-    
-    if (v !== 1) {
+    const line = CreateLink(u, v);
+    line.source(nodeU.center());
+    line.target(nodeV.center());
+    line.arrow();
+    line.strokeDashArray([5, 5]);
+    line.opacity(0);
+    sd.trim(line, nodeU, nodeV);
+    line.startAnimate().opacity(1).endAnimate();
+
+    if (v != 1) {
         await sd.pause();
         failFocus.startAnimate().focus(null).endAnimate();
         ac.startAnimate().color(v, C.white).endAnimate();
-        pathToU.startAnimate().opacity(0).endAnimate().remove();
-        pathToV.startAnimate().opacity(0).endAnimate().remove();
+        failChainU.startAnimate().opacity(0).endAnimate().remove();
+        failChainV.startAnimate().opacity(0).endAnimate().remove();
     }
 }
 
-function CreatePath(path, color = C.black) {
-    return new sd.Path(svg).d(CreatePathD(path).toString()).stroke(color).strokeWidth(2).update();
+function CreatePath(u, length, color = C.black) {
+    return new sd.Path(svg).d(CreatePathD(u, length).toString()).stroke(color).strokeWidth(2).update();
 }
 
-function CreatePathD(path) {
+function CreatePathD(u, length) {
+    function GetPath(u, length) {
+        const path = [];
+        for (let i = 1; i <= length; i++) {
+            path.push(ac.element(u));
+            u = ac.fatherId(u);
+        }
+        return path.reverse();
+    }
+    const path = GetPath(u, length);
     const pen = new sd.PathPen();
     pen.MoveTo(path[0].center());
     for (let i = 1; i < path.length; i++) {
         pen.LinkTo(path[i].center());
     }
     return pen.toString();
-}
-
-function GetPath(u, length) {
-    const path = [];
-    for (let i = 1; i <= length; i++) {
-        path.push(ac.element(u));
-        u = ac.fatherId(u);
-    }
-    return path.reverse();
 }
