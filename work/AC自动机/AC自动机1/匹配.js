@@ -1,14 +1,15 @@
 import * as sd from "@/sd";
 
+import { MatchOnACMachine }  from "../_/MatchOnACMachine";
 import { BuildTrieTreeSync } from "../_/BuildTrieTreeSync";
 import { BuildFailTreeSync } from "../_/BuildFailTreeSync";
-import { MatchOnACMachine } from "../_/MatchOnACMachine";
 
 const svg = sd.svg();
 const C = sd.color();
 const R = sd.rule();
 const ac = new sd.Tree(svg).layerHeight(90).width(600);
 const target = "abaa";
+// const target = "abaabba";
 const arr = new sd.Array(svg).pushArray(target);
 const pointer = sd.Pointer(arr);
 const focus = sd.Focus(ac);
@@ -19,6 +20,27 @@ const data = [
     "aa",
     "bb"
 ];
+
+const links = [
+    { type: sd.Line },
+    { u: 2, v: 1, type: sd.Curve, props: { bending: -0.3 } },
+    { u: 5, v: 1, type: sd.Curve, props: { bending: 0.3} },
+    { u: 7, v: 2, type: sd.Curve, props: { bending: -0.3 } },
+    { u: 8, v: 5, type: sd.Curve, props: { bending: 0.3 } }
+];
+
+function CreateLink(u, v) {
+    for (let i = 1; i < links.length; i++) {
+        if (links[i].u == u && links[i].v == v) {
+            const line = new links[i].type(svg);
+            for (let key in links[i].props) {
+                line[key](links[i].props[key]);
+            }
+            return line;
+        }
+    }
+    return new links[0].type(svg);
+}
 
 sd.init(async () => {
     BuildTrieTreeSync(ac, data);
@@ -67,7 +89,6 @@ async function OnStartMatchAt(i) {
 }
 
 async function OnFailJumpTo(nextFail, prevFail, i) {
-    console.log("fail = ", nextFail, "cur=", prevFail, "i=", i);
     const nextLength = ac.depth(nextFail);
     const prevLength = ac.depth(prevFail);
     if (nextFail) {
@@ -98,18 +119,10 @@ async function OnMatchFailed(u, i) {
 }
 
 function OnLink(nodeU, nodeV, u, v) {
-    let type = sd.Line;
-    if (nodeU.cx() == nodeV.cx() || ac.fatherId(u) == v || ac.fatherId(v) == u) type = sd.Curve;
-    if (u === 5 && v === 7) type = sd.Curve;
-    if (v === 1) type = sd.Curve;
-    const l = new type(svg);
-    if (u === 5 && v === 7) l.bending(-0.3);
-    if (u === 6 && v === 4) l.bending(-0.3);
-    if (u === 2) l.bending(-0.3);
-    if (u === 7) l.bending(0.3);
-    l.source(nodeU.center());
-    l.target(nodeV.center());
-    l.arrow();
-    l.strokeDashArray([5, 5]);
-    sd.trim(l, nodeU, nodeV);
+    const line = CreateLink(u, v);
+    line.source(nodeU.center());
+    line.target(nodeV.center());
+    line.arrow();
+    line.strokeDashArray([5, 5]);
+    sd.trim(line, nodeU, nodeV);
 }

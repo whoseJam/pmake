@@ -64,8 +64,7 @@ sd.main(async () => {
             await sd.pause();
             ac.startAnimate().color(child, C.white).endAnimate();
         },
-        OnFailJumpTo: OnFailJumpTo,
-        OnFirstFailJumpTo: OnFirstFailJumpTo
+        OnFailJumpTo: OnFailJumpTo
     });
 
     await sd.pause();
@@ -73,20 +72,17 @@ sd.main(async () => {
     failFocus.startAnimate().focus(null).endAnimate();
 })
 
-async function OnFailJumpTo(fail, parent) {
-    if (!forwardWait) await sd.pause(); forwardWait = false;
-    failFocus.startAnimate().focus(fail).endAnimate();
-    const length = ac.depth(fail);
-    failChainU.startAnimate().d(CreatePathD(parent, length)).endAnimate();
-    failChainV.startAnimate().d(CreatePathD(fail, length)).endAnimate();
-}
-
-async function OnFirstFailJumpTo(fail, parent) {
+async function OnFailJumpTo(fail, parent, first) {
     await sd.pause();
-    forwardWait = true;
     const length = ac.depth(fail);
-    failChainU = CreatePath(parent, length, C.textBlue).startAnimate().pointStoT().endAnimate().arrow();
-    failChainV = CreatePath(fail, length, C.darkOrange).startAnimate().pointStoT().endAnimate().arrow();
+    failFocus.startAnimate().focus(fail).endAnimate();
+    if (first) {
+        failChainU = CreatePath(parent, length, C.textBlue).startAnimate().pointStoT().endAnimate().arrow();
+        failChainV = CreatePath(fail, length, C.darkOrange).startAnimate().pointStoT().endAnimate().arrow();
+    } else {
+        failChainU.startAnimate().d(CreatePathD(parent, length)).endAnimate();
+        failChainV.startAnimate().d(CreatePathD(fail, length)).endAnimate();
+    }
 }
 
 async function OnLink(nodeU, nodeV, u, v) {
