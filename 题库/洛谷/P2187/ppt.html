@@ -1,0 +1,47 @@
+<section>
+    <section>
+        <h1>小Z的笔记</h1>
+    </section>
+    <problem data-problemset="luogu" data-problemid="P2187"></problem>
+    <section>
+        <h2>小Z的笔记</h2>
+        <p>对于 $10\%$ 的数据，$M=0$</p>
+        <p class="fragment">答案显然是 $0$</p>
+    </section>
+    <section>
+        <h2>小Z的笔记</h2>
+        <p>对于 $30\%$ 的数据，$N\le 1000$</p>
+        <p class="fragment">设 $f(i)$ 表示考虑前 $i$ 个字母，至少需要擦掉多少个，才能使得整个笔记合法</p>
+        <iframe data-animation="./状态转移.js" class="fragment"
+            style="width: 1000px; height: 200px;"></iframe>
+        <p class="fragment">
+            $$
+            f(i)=\mathop{min}\limits_{\begin{aligned}j&\lt i\\ a_ja_i&合法\end{aligned} }\{f(j)+i-j-1\}
+            $$
+        </p>
+        <p class="fragment">时间复杂度 $O(n^2)$</p>
+    </section>
+    <section>
+        <h2>小Z的笔记</h2>
+        <p>对于 $100\%$ 的数据，$N\le 10^5$</p>
+        <p class="fragment" style="margin-top: -10px; font-size: 20px;">
+            $$
+            f(i)=\mathop{min}\limits_{\begin{aligned}j&\lt i\\ a_ja_i&合法\end{aligned} }\{f(j)+i-j-1\}
+            $$
+        </p>
+        <p class="fragment" style="margin-top: -20px;">考虑优化上述动态规划<span class="fragment">，考虑减少<b>状态转移的数量</b></span></p>
+        <iframe data-animation="./减少状态转移数量.js" class="fragment"
+            style="width: 1000px; height: 150px;"></iframe>
+        <p class="fragment">我们可以预处理出当前字符为 $a_i$ 时，上一个字符可能是什么，这里最多只有 $26$ 种情况<span class="fragment">；当前面有多个更新点，它们的字符相同时，我们只关心其中 $f(j)-j$ 最小的 $j$</span><span class="fragment">，用桶维护一下即可</span></p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                for (int i = 1; i <= n; i++) {
+                    for (int j = 'a'; j <= 'z'; j++)
+                        if (a[i] 上一个字符可以为 j) f[i] = min(f[i], t[j] + i - 1);
+                    t[a[i]] = min(t[a[i]], f[i] - i);
+                }
+            </script>
+        </codeblock>
+        <p class="fragment">时间复杂度 $O(26\cdot n)$</p>
+    </section>
+</section>
