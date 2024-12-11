@@ -17,6 +17,7 @@ sd.init(() => {
 sd.main(async () => {
     await sd.pause();
     const poly = coord.startAnimate().draw(2, funcs[0]).stroke(C.red).endAnimate();
+    console.log(poly);
     for (let i = 1; i < funcs.length; i++) {
         await sd.pause();
         poly.startAnimate().function(funcs[i]).triggerRule().endAnimate();
