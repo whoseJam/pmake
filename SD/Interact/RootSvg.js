@@ -60,6 +60,8 @@ export class RootSvg {
             svg.setAttribute("viewBox", "0 0 1200 600");
             svg.setAttribute("width", "100%");
             svg.setAttribute("height", "100%");
+        } else {
+            svg.setAttribute("opacity", 0);
         }
         
         this.svg = svg;
@@ -107,6 +109,7 @@ export class RootSvg {
             svg.setAttribute("height", `${100 * (H / W) / (parentHeight / parentWidth) - 2}%`);
         }
         UpdateWindowRate(svg, W, H);
+        svg.setAttribute("opacity", 1);
     }
 }
 

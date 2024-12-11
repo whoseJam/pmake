@@ -1,12 +1,12 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
+new sd.Mathjax(svg, "a^b=c");
 
 sd.init(() => {
-    // new sd.Rect(svg).height(500);
-    new sd.Array(svg).resize(10);
+
 })
 
 sd.main(async () => {
-
+    
 })
