@@ -1,0 +1,81 @@
+<section>
+    <section>
+        <h1>普通生成函数</h1>
+        <p>Ordinary Generating Function，OGF</p>
+    </section>
+    <section>
+        <h2>size函数</h2>
+        <p>在组合计数时，我们往往需要求满足某个条件的组合对象的数量</p>
+        <p class="fragment">我们常常用集合 $A$ 来表示满足要求的所有组合对象</p>
+        <p class="fragment">我们对 $A$ 中所有对象定义一个 $size$ 函数，$size$ 函数的含义可以自由发挥的<span class="fragment">，不妨假设 $a$ 是一个我们要求的组合对象，$a\in A$</span></p>
+        <ul>
+            <li class="fragment">如果 $a$ 是一棵树，$size(a)$ 可能表示 $a$ 的节点数量</li>
+            <li class="fragment">如果 $a$ 是一个序列，$size(a)$ 可能表示 $a$ 的长度</li>
+        </ul>
+        <p class="fragment">我们的任务往往是求出 $size(a)=n$ 的满足条件的 $a$ 的数量</p>
+    </section>
+    <section>
+        <h2>组合对象的生成函数</h2>
+        <p>记 $size$ 为 $i$ 的对象数量有 $A_i$ 个，我们定义组合对象的生成函数（OGF）为</p>
+        <p class="fragment">
+            $$
+            A(x)=\sum_i A_ix^i
+            $$
+        </p>
+        <p class="fragment">
+            $$
+            A(x)=\sum_{a\in A}x^{size(a)}
+            $$
+        </p>
+        <p class="fragment">这里的 $x$ 被称为<b>未定元</b></p>
+        <p class="fragment">我们用 $[x^n]A(x)$ 来表示 $A(x)$ 中 $x^n$ 的系数</p>
+        <p class="fragment">这样的 $\{A_i\}$ 序列称为组合对象的<b>计数序列</b></p>
+    </section>
+    <section>
+        <h2>组合形式和atom</h2>
+        <p>我们可以这样理解生成函数</p>
+        <p>枚举没有给对象，把里面对 $size$ 没有贡献的部分删掉，最后只剩下若干个点，这样的点又变成未定元 $z$，乘起来，就是生成函数</p>
+        <p class="fragment">这样的一个点，我们把它叫做 $atom$</p>
+        <picture data-source="./未定元.png" style="height: 300px;"></picture>
+    </section>
+    <section>
+        <h2>加法原理</h2>
+        <p>有两个集合 $A$ 和 $B$，$A\cap B = \emptyset$<span class="fragment">，我们想统计 $C=A\cup B$</span></p>
+        <p class="fragment">根据加法原理，应该有：
+            $$
+            C_i=A_i+B_i
+            $$
+        </p>
+        <p class="fragment">那么集合 $C$ 的生成函数为：
+            $$
+            C(x)=A(x)+B(x)
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>乘法原理</h2>
+        <p>定义两个集合的笛卡尔积为：
+            $$
+            A\cdot B=\{(a,b)|a\in A,b\in B\}
+            $$
+        </p>
+        <ul>
+            <li class="fragment">笛卡尔积相当于把两个集合内的元素做了一次<b>有序拼接</b></li>
+        </ul>
+        <p class="fragment">如果 $size((a,b))=size(a)+size(b)$</p>
+        <p class="fragment">那么 $C=A\cdot B$ 的生成函数 $C(x)$ 为：
+            $$
+            C(x)=A(x)B(x)
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>例题</h2>
+        <ul>
+            <li>空对象为 $size$ 为 $0$ 的对象，求其生成函数</li>
+            <li class="fragment">求一个 $atom$ 的生成函数</li>
+            <li class="fragment">求用 $26$ 个字母生成单词的生成函数，$size$ 为单词长度</li>
+            <li class="fragment">已知 $A$ 集合，生成 $\{(a,a)|a\in A\}$</li>
+        </ul>
+    </section>
+</section>
