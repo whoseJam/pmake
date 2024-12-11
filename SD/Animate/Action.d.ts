@@ -1,44 +1,22 @@
 
 export class Action {
-    constructor(
-        l: number,
-        r: number,
-        source: any,
-        target: any,
-        callback: (t: number) => void,
-        owner: any,
-        channel: string,
-        flag: boolean
-    );
-    
-    /**
-     * 触发该 Action 的渲染行为
-     * @param t 时间戳
-     */
-    call(t: number);
+    static STOP_FLAG = 1 << 0;
+    static HIDE_FLAG = 1 << 1;
+    static FIRST_CALL_FLAG = 1 << 2;
 
-    /**
-     * 强制结束
-     */
-    finish();
+    constructor(l: number, r: number, source: any, target: any, callback: (t: number) => void, owner: any, channel: string, flag: boolean);
 
-    /**
-     * 停止
-     */
-    stop();
+    is(flag: number): void;
+    set(flag: number): void;
+    unset(flag: number): void;
 
-    /**
-     * 隐藏
-     */
-    hide();
+    tick(t: number): void;
 
-    /**
-     * 打印日志
-     */
-    log(): string;
+    forceToFinish(): void;
 
-    /**
-     * 克隆一个 Action
-     */
+    toString(): string;
+
+    ownerIsReady(): boolean;
+
     clone(): Action;
 }

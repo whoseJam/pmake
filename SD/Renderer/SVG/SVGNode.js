@@ -17,11 +17,21 @@ const SHAPE_TAG = new Set([
 
 let SVGNodeID = 0;
 
-function AppearOrRemove(element) {
+function AppearOrRemove(element, owner) {
     return function(t) {
         if (t !== 1) return;
-        if (this.target) this.target.append(element);
-        else element.remove();
+        if (this.target) {
+            this.target.append(element);
+            requestAnimationFrame(() => {
+                owner._.ready = true;
+            });
+        }
+        else {
+            element.remove();
+            requestAnimationFrame(() => {
+                owner._.ready = false;
+            });
+        }
     }
 }
 
@@ -67,14 +77,14 @@ export class SVGNode {
 
     appear() {
         if (this.parent === undefined) {
-            Snap(this.layer.element).append(this.element);
+            this.layer.nake().appendChild(this.nake());
             return;
         }
         new Action(
             this.parent.delay() + this.parent.duration(),
             this.parent.delay() + this.parent.duration(),
             undefined, Snap(this.layer.nake()),
-            AppearOrRemove(Snap(this.nake())),
+            AppearOrRemove(Snap(this.nake()), this.parent),
             this, "appear"
         );
         new Action(
@@ -91,7 +101,7 @@ export class SVGNode {
             this.parent.delay() + this.parent.duration(),
             this.parent.delay() + this.parent.duration(),
             Snap(this.layer.nake()), undefined,
-            AppearOrRemove(Snap(this.nake())),
+            AppearOrRemove(Snap(this.nake()), this.parent),
             this, "remove"
         );
     }

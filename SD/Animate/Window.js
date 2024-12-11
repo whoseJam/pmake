@@ -23,7 +23,7 @@ Device.getIns().onKeyDown("p", prevFrame);
 
 function lastMainFrame() {
     if (window.SHOULD_EXPORT) {
-        Animate.reset();
+        Animate.forceToFinish();
     }
     if (window.SHOULD_FLUSH) {
         Message.notifyParent(); // set the animation size of parent window
@@ -56,7 +56,7 @@ function promiseOfFirstInterFrame() {
     return new Promise(function(resolve) {
         const fn = function() {
             if (window.IS_CONTINUING) return setTimeout(fn, 10);       // 主流程的动画不可被打断
-            if (!Animate.currentFinished()) return setTimeout(fn, 10); // 当前 inter frame 过去已经生成，现在触发，需要等待上一帧动画完全结束
+            if (!Animate.finished()) return setTimeout(fn, 10); // 当前 inter frame 过去已经生成，现在触发，需要等待上一帧动画完全结束
             Animate.startNewFrame();
             resolve(0);
         }
@@ -151,8 +151,8 @@ export function pause(frameType = 0) {
 
 function prevFrame() {
     if (window.CURRENT_FRAME < 0) return;
-    if (!Animate.currentFinished()) {
-        Animate.reset();
+    if (!Animate.finished()) {
+        Animate.forceToFinish();
         return;
     }
     Animate.rollbackFrame();
@@ -160,15 +160,15 @@ function prevFrame() {
 
 function nextFrame() {
     if (window.CURRENT_FRAME + 1 > window.MAXIMUM_FRAME) {
-        if (!Animate.currentFinished()) {
-            Animate.reset();
+        if (!Animate.finished()) {
+            Animate.forceToFinish();
         } else if (window.WHOSEJAM === 0) {
             window.WHOSEJAM++;
             Animate.startNewFrame();
         }
     } else {
-        if (!Animate.currentFinished()) {
-            Animate.reset();
+        if (!Animate.finished()) {
+            Animate.forceToFinish();
         } else {
             Animate.replayFrame();
         }

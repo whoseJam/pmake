@@ -9,26 +9,24 @@ export class Animate {
     static currentActionList = new ActionList();
 
     static tick(t) {
-        if (t !== undefined) {
-            this.currentTimestamp = t;
-            const currentActionList = this.currentActionList;
-            if (window.SHOULD_FLUSH) return;
-            currentActionList.tick(t);
-            requestAnimationFrame(Animate.tick.bind(Animate));
-        } else {
-            throw new Error("Not Implemented Yet");
-            this.currentActionList.tick();
-        }
+        this.currentTimestamp = t;
+        const currentActionList = this.currentActionList;
+        if (window.SHOULD_FLUSH) return;
+        currentActionList.tick(t);
+        requestAnimationFrame(Animate.tick.bind(Animate));
     }
 
-    static reset() {
-        const currentActionList = this.currentActionList;
-        currentActionList.finish();
+    static finished() {
+        return this.currentActionList.finished();
+    }
+
+    static forceToFinish() {
+        this.currentActionList.forceToFinish();
     }
 
     static push(action) {
         const currentActionList = this.currentActionList;
-        action.startTimestamp = this.currentTimestamp;
+        action.t = this.currentTimestamp;
         currentActionList.push(action);
     }
 
@@ -62,10 +60,6 @@ export class Animate {
         this.currentActionList = this.historyActionList[frame].replay();
         this.currentActionList.restart();
         Status.updateFrameStatus();
-    }
-
-    static currentFinished() {
-        return this.currentActionList.finished();
     }
 
     static debug() {

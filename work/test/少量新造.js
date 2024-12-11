@@ -8,5 +8,6 @@ sd.init(() => {
 })
 
 sd.main(async () => {
-    
+    await sd.pause();
+    grid.element(1, 1).remove();
 })

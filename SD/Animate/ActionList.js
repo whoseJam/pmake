@@ -1,43 +1,33 @@
+import { Action } from "@/Animate/Action";
 
 const KEY_RELTAED_TO_SIZE = new Set([
-    "x",
-    "y",
-    "cx",
-    "cy",
-    "width",
-    "height",
-    "d",
-    "x1",
-    "y1",
-    "x2",
-    "y2",
-    "transform",
-    "opacity",
-    "font-size",
-    "points"
+    "x", "y", "cx", "cy", "width", "height",
+    "d", "x1", "y1", "x2", "y2", "transform",
+    "opacity", "font-size", "points"
 ]);
 
 export function ActionList() {
-    this.actionList = undefined;
-    this.actionListEnd = undefined;
-    this.actionCount = 0;
+    this.actionHead = undefined;
+    this.actionTail = undefined;
+    this.validCount = 0;
+    this.totalCount = 0;
     this.actions = [];
 }
 
 ActionList.prototype.push = function(action) {
-    this.actionCount++;
-    this.rebuild(action);
-    this.directPush(action);
+    this.totalCount++;
+    this.trim(action);
+    this.pushWithoutTrim(action);
 }
 
-ActionList.prototype.directPush = function(action) {
-    if (!this.actionList) {
-        this.actionList = this.actionListEnd = action;
+ActionList.prototype.pushWithoutTrim = function(action) {
+    if (!this.actionHead) {
+        this.actionHead = this.actionTail = action;
     } else {
-        this.actionListEnd.next = action;
-        this.actionListEnd = action;
+        this.actionTail.next = action;
+        this.actionTail = action;
     }
-    if (!action.stopped() && !action.hidden()) this.size++;
+    if (!action.is(Action.STOP_FLAG) && !action.is(Action.HIDE_FLAG)) this.validCount++;
 }
 
 ActionList.prototype.checkConflict = function(before, after) {
@@ -53,8 +43,8 @@ ActionList.prototype.checkConflict = function(before, after) {
      */
     if (before.l === before.r && after.l === after.r && after.l === before.l && before.source === after.target) {
         after.source = before.source;
-        if (after.source === after.target) before.hide();
-        else before.stop();
+        if (after.source === after.target) before.set(Action.HIDE_FLAG);
+        else before.set(Action.STOP_FLAG);
         return;
     }
 
@@ -69,103 +59,85 @@ ActionList.prototype.checkConflict = function(before, after) {
      */
     if (before.l === after.l && before.r === after.r && before.l !== before.r) {
         after.source = before.source;
-        before.hide();
+        before.set(Action.HIDE_FLAG);
         return;
     }
 }
 
-ActionList.prototype.rebuild = function(action) {
-    for (let other = this.actionList; other; other = other.next) {
-        // if (other.hidden()) continue;
+ActionList.prototype.trim = function(action) {
+    for (let other = this.actionHead; other; other = other.next) {
         if (other.owner === action.owner && other.channel === action.channel) {
             this.checkConflict(other, action);
-            if (other.hidden()) this.size--;
+            if (other.is(Action.HIDE_FLAG)) this.validCount--;
         }
     }
     this.flushHidden();
 }
 
 ActionList.prototype.flushHidden = function() {
-    let prevAction = undefined;
-    let actionList = undefined;
-    for (let action = this.actionList; action; action = action.next) {
-        if (!action.hidden()) {
-            if (prevAction) prevAction.next = action;
-            prevAction = action;
-            if (!actionList) actionList = action;
-        } else {
-            if (prevAction) prevAction.next = undefined;
-        }
-    }
-    this.actionList = actionList;
-    this.actionListEnd = prevAction;
+    this.filter((action) => {
+        return !action.is(Action.HIDE_FLAG);
+    });
 }
 
-ActionList.prototype.flush = function(condition) {
+ActionList.prototype.filter = function(condition) {
     let prevAction = undefined;
-    let actionList = undefined;
-    for (let action = this.actionList; action; action = action.next) {
-        if (!condition(action)) {
+    let actionHead = undefined;
+    for (let action = this.actionHead; action; action = action.next) {
+        if (condition(action)) {
             if (prevAction) prevAction.next = action;
             prevAction = action;
-            if (!actionList) actionList = action;
+            if (!actionHead) actionHead = action;
         } else {
             if (prevAction) prevAction.next = undefined;
         }
     }
-    this.actionList = actionList;
-    this.actionListEnd = prevAction;
+    this.actionHead = actionHead;
+    this.actionTail = prevAction;
 }
 
 ActionList.prototype.tick = function(t) {
-    if (t !== undefined) {
-        this.currentTimestamp = t;
-        for (let action = this.actionList; action; action = action.next) {
-            if (action.hidden() || action.stopped()) continue;
-            if (!action.startTimestamp) action.startTimestamp = t;
-            const duration = this.currentTimestamp - action.startTimestamp;
-            action.call(duration);
-        }
-    } else {
-        throw new Error("Not Implemented Yet");
-        for (let action = this.actionList; action; action = action.next) {
-            if (action.hidden() || action.stopped()) continue;
-            if (action.first) action.call(0);
-        }
+    this.t = t;
+    for (let action = this.actionHead; action; action = action.next) {
+        if (action.is(Action.HIDE_FLAG | Action.STOP_FLAG)) continue;
+        if (!action.ownerIsReady()) { action.t = t; continue; }
+        if (!action.t) action.t = t;
+        const duration = this.t - action.t;
+        action.tick(duration);
     }
 }
 
-ActionList.prototype.restart = function(timestamp) {
-    for (let action = this.actionList; action; action = action.next) {
-        action.startTimestamp = timestamp;
-        action.stop(false);
+ActionList.prototype.restart = function(t) {
+    for (let action = this.actionHead; action; action = action.next) {
+        action.t = t;
+        action.unset(Action.HIDE_FLAG);
     }
 }
 
-ActionList.prototype.finish = function() {
-    for (let action = this.actionList; action; action = action.next) {
-        if (action.hidden() || action.stopped()) continue;
-        action.finish();
+ActionList.prototype.forceToFinish = function() {
+    for (let action = this.actionHead; action; action = action.next) {
+        if (action.is(Action.HIDE_FLAG | Action.STOP_FLAG)) continue;
+        action.forceToFinish();
     }
 }
 
 ActionList.prototype.finished = function() {
-    for (let action = this.actionList; action; action = action.next)
-        if (!action.hidden() && !action.stopped()) return false;
+    for (let action = this.actionHead; action; action = action.next)
+        if (!action.is(Action.HIDE_FLAG) && !action.is(Action.STOP_FLAG)) return false;
     return true;
 }
 
 ActionList.prototype.rollback = function() {
     const other = new ActionList();
     let maxTimestamp = 0;
-    const actionList = [];
-    for (let action = this.actionList; action; action = action.next) {
-        if (action.hidden()) continue;
+    const actionHead = [];
+    for (let action = this.actionHead; action; action = action.next) {
+        if (action.is(Action.HIDE_FLAG)) continue;
         maxTimestamp = Math.max(maxTimestamp, action.r);
-        actionList.push(action);
+        actionHead.push(action);
     }
-    for (let i = actionList.length - 1; i >= 0; i--) {
-        const action = actionList[i];
+    for (let i = actionHead.length - 1; i >= 0; i--) {
+        const action = actionHead[i];
         const newAction = action.clone();
         newAction.l = maxTimestamp - action.r;
         newAction.r = maxTimestamp - action.l;
@@ -178,8 +150,8 @@ ActionList.prototype.rollback = function() {
 
 ActionList.prototype.replay = function() {
     const other = new ActionList();
-    for (let action = this.actionList; action; action = action.next) {
-        if (action.hidden()) continue;
+    for (let action = this.actionHead; action; action = action.next) {
+        if (action.is(Action.HIDE_FLAG)) continue;
         const newAction = action.clone();
         other.push(newAction);
     } 
@@ -189,24 +161,22 @@ ActionList.prototype.replay = function() {
 ActionList.prototype.debug = function() {
     console.log("---------------Action List debug---------------")
     let used = 0;
-    for (let action = this.actionList; action; action = action.next) {
-        if (action.hidden()) continue;
-        console.log(action.log(), action);
+    for (let action = this.actionHead; action; action = action.next) {
+        if (action.is(Action.HIDE_FLAG)) continue;
+        console.log(action.toString(), action);
         used++;
     }
-    console.log("input action count =", this.actionCount, 
-                "used action count =", used,
-                "rate =", used / this.actionCount);
+    console.log("input action count =", this.totalCount, 
+                "used action count =", this.validCount,
+                "rate =", this.validCount / this.totalCount);
     console.log("---------------Action List debug---------------");
     console.log("");
 }
 
 ActionList.prototype.updateWindowSize = function() {
-    for (let action = this.actionList; action; action = action.next) {
-        if (action.hidden()) {
-            continue;
-        }
-        if (!action.hidden() && KEY_RELTAED_TO_SIZE.has(action.channel)) {
+    for (let action = this.actionHead; action; action = action.next) {
+        if (action.is(Action.HIDE_FLAG)) continue;
+        if (KEY_RELTAED_TO_SIZE.has(action.channel)) {
             const owner = action.owner;
             if ("opacity" in owner && (owner._.nake || owner._.BASE_MATHJAX) && IsVisble(owner)) {
                 const x = owner.x();

@@ -19,9 +19,11 @@ let SDNodeID = 0;
 export function SDNode(parent, layer = undefined) {
     SDNodeID++;
 
+    // this.is_not_ready = true;
     this.id     = SDNodeID;
     this.member = new SDMember();
     this._      = {
+        ready:    false,  // only when ready = true, the action can impact the node
         layer:    undefined,
         layers:   {},
         parent:   undefined,
