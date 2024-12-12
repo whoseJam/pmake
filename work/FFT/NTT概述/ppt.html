@@ -6,7 +6,7 @@
     <section>
         <h2>NTT</h2>
         <p>在我们推导FFT的时候，用到了复数单位根，帮助我们对多项式的奇偶项做分治</p>
-        <p class="fragment">熟悉<b>接口</b>这个概念的同学都知道，如果有两个不同的对象，它们的某部分行为是一致的，某个过程需要基于这部分行为做操作，那么这个过程既可以作用于前一个对象，又可以作用于后一个对象</p>
+        <p class="fragment">熟悉<b>接口</b>这个概念的同学都知道，如果有两个不同的对象，它们的某部分行为是一致的，某个过程<b>需要且仅需要</b>基于这部分行为做操作，那么这个过程对这两个不同对象都是成立的</p>
         <p class="fragment">单位根对应的接口是 $w_n$，需要满足：</p>
         <ul>
             <li class="fragment">$w_{n}^{n}=1$</li>
@@ -17,13 +17,13 @@
     </section>
     <section>
         <h2>原根</h2>
-        <p>对于一个数字 $P$，如果 $g$ 是 $P$ 的原根，则我们需要保证：
+        <p>对于一个数字 $P$，如果 $g$ 是 $P$ 的原根，则有：
             $$
             g^1,g^2,g^3,...,g^{\varphi(P)}
             $$
             在模 $P$ 意义下互不相同
         </p>
-        <p class="fragment quote">在NTT中我们通常只考虑 $P$ 为质数的情况，所以就变成了要保证：
+        <p class="fragment quote">在NTT中我们通常只考虑 $P$ 为质数的情况，所以就变成了有：
             $$
             g^1,g^2,g^3,...,g^{P-1}
             $$
@@ -56,7 +56,7 @@
                 void FFT(Complex a[], int len, int flg) {
                     // 一些前置操作......
                     for (int i = 0; i < len; i <<= 1) {
-                        Complex w = {sin(2 * PI / i), cos(2 * PI / i)};
+                        Complex w = {cos(flg*(2*PI)/(2*i)), sin(flg*(2*PI)/(2*i))};
                         // 预处理 w 的 1,2,3,...,i-1 次方
                         for (int j = 0; j < n; j += (i << 1))
                             for (int k = 0; k < i; k++) {
@@ -75,7 +75,7 @@
                 void NTT(int a[], int len, int flg) {
                     // 一些前置操作......
                     for (int i = 0; i < len; i <<= 1) {
-                        int w = Fpow(g, (P - 1) / i);
+                        int w = Fpow(flg == 1 ? g : Inv(g), (P - 1) / (2 * i));
                         // 预处理 w 的 1,2,3,...,i-1 次方
                         for (int j = 0; j < n; j += (i << 1))
                             for (int k = 0; k < i; k++) {
