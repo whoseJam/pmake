@@ -224,6 +224,53 @@
         </div>
     </section>
 
+    <section>
+        <h2>普通生成函数与卡特兰数</h2>
+        <p>
+            $$
+            \begin{cases}
+            h_n=\sum_{i=0}^{n-1}h_{i}h_{n-i-1} \\
+            h_0=h_1=1
+            \end{cases}
+            $$
+        </p>
+        <p class="fragment">设其对应的生成函数为 $H(x)$</p>
+        <p class="fragment math-fragment">
+            $$
+            \begin{aligned}
+            H(x)&=\sum_{i=0}^{\infty}h_ix^i \\
+            H^2(x)&=\sum_{i=0}^{\infty}x_i\sum_{j=0}^ih_jh{i-j} \\
+            &=\sum_{i=0}^{\infty}h_{i+1}x^i
+            \end{aligned}
+            $$
+        </p>
+        <p class="fragment math-fragment">
+            $$
+            \begin{aligned}
+            H(x)&=1+xH^2(x) \\
+            H(x)&=\frac{1-\sqrt{1-4x} }{2x}
+            \end{aligned}
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>普通生成函数与卡特兰数</h2>
+        <p>$$H(x)=\frac{1-\sqrt{1-4x} }{2x}$$</p>
+        <p class="fragment math-fragment" style="font-size: 20px;">
+            $$
+            \begin{aligned}
+            (1+x)^a &= 1+\frac{a}{1}x+\frac{a(a-1)}{2!}x^2+...+\frac{a(a-1)...(a-n+1)}{n!}x^n \\
+            \sqrt{1-4x} &=(1-4x)^{\frac{1}{2} }=1+\sum_{n\ge 1}\frac{\frac{1}{2}\frac{-1}{2}\frac{-3}{2}...\frac{-(2n-3)}{2} }{n!}(-4x)^n \\
+            &=1+\sum_{n\ge 1}\frac{(-1)^{n-1} }{2^n} \frac{1\cdot 3...(2n-3)}{n!}(-4x)^n  \\
+            &=1+\sum_{n\ge 1}\frac{(-1)^{n-1} }{2^n} \frac{2^{n-1}(n-1)!}{2^{n-1}(n-1)!} \frac{1\cdot 3...(2n-3)}{n!}(-4x)^n \\
+            &=1-\sum_{n\ge 1}\frac{(2n-2)!}{n!(n-1)!}2x^n \\
+            H(x)&=\frac{1}{2x}\sum_{n\ge 1}\frac{(2n-2)!}{n!(n-1)!}2x^n \\
+            &=\sum_{n\ge 0}\frac{(2n)!}{(n+1)!n!}x^n=\sum_{n\ge 0}\frac{C_{2n}^n}{n+1}x^n
+            \end{aligned}
+            $$
+        </p>
+    </section>
+
     <!-- <section>
         <h2>size函数</h2>
         <p>在组合计数时，我们往往需要求满足某个条件的组合对象的数量</p>

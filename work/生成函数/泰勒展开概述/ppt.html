@@ -25,11 +25,17 @@
         <h2>泰勒展开</h2>
         <p>这种不断让多项式的 $k$ 阶导和曲线的 $k$ 阶导相等，从而让多项式逼近曲线的方法，就叫泰勒展开，我们称之为对曲线做泰勒展开</p>
         <p class="fragment">我们讨论更一般的情况，假设我想要用多项式 $F$ 拟合曲线 $f$，并且在 $x=0$ 处做展开</p>
-        <p class="fragment">不妨设 $F(x)=a_0+a^1x^1+a_2x^2+...$</p>
-        <div class="fragment">$$F(0)=a_0=f(0)\ \Rightarrow\ a_0=f(0)$$</div>
-        <div class="fragment">$$F'(0)=a_1=f(1)\ \Rightarrow\ a_0=f'(0)$$</div>
-        <div class="fragment">$$F''(0)=a_2\cdot 2!=f(2)\ \Rightarrow\ a_2=\frac{f''(0)}{2!}$$</div>
-        <div class="fragment">$$F'''(0)=a_2\cdot 3!=f(3)\ \Rightarrow\ a_3=\frac{f'''(0)}{3!}$$</div>
+        <p class="fragment">不妨设 $F(x)=a_0+a_1x^1+a_2x^2+...$</p>
+        <p class="fragment math-fragment">
+            $$
+            \begin{aligned}
+            F(0)=a_0=f(0) &\Rightarrow a_0=\tfrac{f(0)}{0!} \\
+            F'(0)=a_1=f(1) &\Rightarrow a_0=\tfrac{f'(0)}{1!} \\
+            F''(0)=a_2\cdot 2!=f(2) &\Rightarrow a_2=\tfrac{f''(0)}{2!} \\
+            F'''(0)=a_2\cdot 3!=f(3) &\Rightarrow a_3=\tfrac{f'''(0)}{3!}
+            \end{aligned}
+            $$
+        </p>
         <p class="fragment">
             $$
             F(x)=\sum_{i=0}^{\infty}\frac{f^{(i)}(0)}{i!}x^i
