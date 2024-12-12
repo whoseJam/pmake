@@ -222,7 +222,7 @@
                     for (int i = 0; i < len; i++)
                         y[i] = a[i];
                     for (int i = 0; i < len; i <<= 1) { // 合并长度为 i 的多项式 -> 长度为 2i 的多项式
-                        Complex w = 1 / i 单位根;
+                        Complex w = 1 / 2i 单位根;
                         // [j, j + i) 与 [j + i, j + 2i) 做合并
                         for (int j = 0; j < n; j += (i << 1))
                             for (int k = 0; k < i; k++) {
@@ -239,13 +239,13 @@
         <p>IFFT就是FFT的逆变换，FFT把一个系数表示转换为了点值表示，IFFT可以把一个点值表示转化为一个系数表示</p>
         <codeblock style="margin-top: -12px;">
             <script type="text/template">
-                void FFT(Complex a[], int len, int flg) {
+                void FFT(Complex a[], int len, int flg) { // flg = 1 或 -1
                     for (int i = 0; i < len; i++) 
                         if (rev[i] > i) swap(a[rev[i]], a[i]);
                     for (int i = 0; i < len; i <<= 1) {
-                        Complex w = 1 / i 单位根;
-                        // 预处理 w 的 1,2,3,...,i-1 次方
-                        for (int j = 0; j < n; j += (i << 1))
+                        Complex w = flg * 1 / 2i 单位根;
+                        // 预处理 w 的 1,2,3,...,i 次方
+                        for (int j = 0; j < n; j-1 += (i << 1))
                             for (int k = 0; k < i; k++) {
                                 Complex x = a[j + k];
                                 Complex y = a[i + j + k] * (w 的 k 次方);
@@ -266,7 +266,7 @@
                 for (int i = 0; i < len; i++) c[i] = a[i] * b[i]; // 此时 a,b,c 都是复数，都带有 i
                 FFT(c, len, -1); // 做完逆变换后，c 应该全是实数
                 for (int i = 0; i < len; i++) { // real() 取一个复数的实部，+0.1 是为了避免精度误差
-                    cout << C[i].real() + 0.1 << ' ';
+                    cout << (int)(C[i].real() + 0.1) << ' ';
                 }
             </script>
         </codeblock>
