@@ -1,4 +1,6 @@
 import { Animate } from "@/Animate/Animate";
+import { SDNode } from "@/Node/SDNode";
+import { SVGNode } from "@/Renderer/SVG/SVGNode";
 
 function easeInOut(t) {
     return 0.5 * (1 - Math.cos(Math.PI * t));
@@ -64,7 +66,8 @@ Action.prototype.ownerIsReady = function() {
     if (this.channel === "appear") return true;
     if (this.channel === "moveTo") return true;
     if (this.channel === "remove") return true;
-    return this.owner._.ready;
+    if (this.owner instanceof SDNode) return this.owner._.ready;
+    else return true;
 }
 
 Action.prototype.is = function(flag) {
