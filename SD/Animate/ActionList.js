@@ -195,6 +195,7 @@ ActionList.prototype.updateWindowSize = function() {
 function IsVisble(element) {
     if (element && "opacity" in element) {
         if (element.opacity() === 0) return false;
+        if (element._ && element._.parent) return IsVisble(element._.parent);
         return IsVisble(element.parent);
     }
     return true;
