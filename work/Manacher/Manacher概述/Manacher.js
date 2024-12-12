@@ -6,17 +6,14 @@ const data = "aaaaabaa";
 const str = new sd.Array(svg);
 const p = sd.make1d(100, 1);
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     for (let i = 0; i < data.length; i++) {
         str.push(data[i]);
     }
     str.cx(600).cy(300);
-}
+})
 
-async function main() {
+sd.main(async () => {
     await sd.pause();
     str.startAnimate();
     str.freeze();
@@ -58,7 +55,7 @@ async function main() {
         }
     
 
-        while (str.text(i + p[i]) == str.text(i - p[i])) {
+        while (i + p[i] <= str.end() && str.text(i + p[i]) == str.text(i - p[i])) {
             p[i]++;
             await sd.pause();
             expand(i, curBound, 60);
@@ -68,15 +65,16 @@ async function main() {
             Max = i + p[i];
             pos = i;
             await sd.pause();
-            pPos.startAnimate().moveTo(i).endAnimate();
-            str.startAnimate().update().endAnimate();
+            str.startAnimate();
+            pPos.moveTo(i);
+            str.endAnimate();
             expand(i, posBound, 40);
         }
         
         await sd.pause();
         curBound.startAnimate().opacity(0).remove();
     }
-}
+})
 
 function drawBound(i, gap) {
     const l = str.element(i - p[i] + 1);
