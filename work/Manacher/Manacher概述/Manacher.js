@@ -1,102 +1,58 @@
 import * as sd from "@/sd";
+import { Manacher } from "../_/Manacher";
 
 const svg = sd.svg();
 // const data = "abbabbabaaaba";
 const data = "aaaaabaa";
 const str = new sd.Array(svg);
-const p = sd.make1d(100, 1);
+const pos = sd.Pointer(str, "pos", "b", 15, 20, 3);
+const idx = sd.Pointer(str, "i", "b", 15, 40, 3);
+const mirror = sd.Brace(str);
+const mirrorCenter = sd.Brace(str);
+const current = sd.Brace(str);
 
 sd.init(() => {
-    for (let i = 0; i < data.length; i++) {
-        str.push(data[i]);
-    }
+    str.pushArray(data);
     str.cx(600).cy(300);
 })
 
 sd.main(async () => {
-    await sd.pause();
-    str.startAnimate();
-    str.freeze();
-    str.insert(0, "{");
-    str.insert(1, "#");
-    for (let i = 1; i < data.length; i++) {
-        str.insert(i * 2 + 1, "#");
-    }
-    str.push("#").push("}").cx(600)
-    str.unfreeze().endAnimate();
-    await sd.pause();
-
-    let Max = 0, pos = 0;
-
-    const pPos = sd.Pointer(str, "pos", "b", 10, 30);
-    const pI = sd.Pointer(str, "i", "b", 10, 60);
-    let posBound = drawBound(0, 40);
-
-    pPos.startAnimate().moveTo(0).endAnimate();
-    for (let i = 1; i < str.length(); i++) {
-        await sd.pause();
-        str.startAnimate();
-        pI.moveTo(i);
-        str.update().endAnimate();
-        await sd.pause();
-        
-        let lastBound = null;
-        if (Max > i) {
+    await Manacher(str, {
+        OnIMoveTo: OnIMoveTo,
+        OnCheckMirrorSymmetry: OnCheckMirrorSymmetry,
+        OnILengthInitialized: OnILengthUpdated,
+        OnILengthExtended: OnILengthUpdated,
+        OnMirrorSymmetryCenterUpdated: OnMirrorSymmetryCenterUpdated,
+        OnILengthCalcFinished: async () => {
             await sd.pause();
-            lastBound = drawBound(pos * 2 - i, 20);
-            p[i] = Math.min(p[pos * 2 - i], Max - i);
-        } else p[i] = 1;
-        await sd.pause();
-
-        let curBound = drawBound(i, 60);
-        if (lastBound) {
-            await sd.pause();
-            lastBound.startAnimate().opacity(0).remove();
+            mirror.startAnimate().opacity(0).endAnimate();
+            current.startAnimate().opacity(0).endAnimate();
         }
-    
-
-        while (i + p[i] <= str.end() && str.text(i + p[i]) == str.text(i - p[i])) {
-            p[i]++;
-            await sd.pause();
-            expand(i, curBound, 60);
-        }
-        
-        if (Max < i + p[i]) {
-            Max = i + p[i];
-            pos = i;
-            await sd.pause();
-            str.startAnimate();
-            pPos.moveTo(i);
-            str.endAnimate();
-            expand(i, posBound, 40);
-        }
-        
-        await sd.pause();
-        curBound.startAnimate().opacity(0).remove();
-    }
+    });
 })
 
-function drawBound(i, gap) {
-    const l = str.element(i - p[i] + 1);
-    const r = str.element(i + p[i] - 1);
-    const minX = l.x();
-    const maxX = r.mx();
-    return new sd.BraceCurve(svg)
-        .target(minX, str.my() + gap)
-        .source(maxX, str.my() + gap)
-        .opacity(0)
-        .startAnimate()
-        .opacity(1)
-        .endAnimate();
+async function OnIMoveTo(i) {
+    await sd.pause();
+    str.startAnimate();
+    idx.moveTo(i);
+    str.endAnimate();
 }
 
-function expand(i, bound, gap) {
-    const l = str.element(i - p[i] + 1);
-    const r = str.element(i + p[i] - 1);
-    const minX = l.x();
-    const maxX = r.mx();
-    bound.startAnimate()
-        .target(minX, str.my() + gap)
-        .source(maxX, str.my() + gap)
-        .endAnimate();
+async function OnCheckMirrorSymmetry(center, length) {
+    await sd.pause();
+    mirror.startAnimate().brace(center - length + 1, center + length - 1, "b", 5).endAnimate();
+    current.after(mirror).brace(center - length + 1, center + length - 1, "b", 5);
+}
+
+async function OnILengthUpdated(i, length) {
+    await sd.pause();
+    current.startAnimate().brace(i - length + 1, i + length - 1, "b", 15).endAnimate();
+}
+
+async function OnMirrorSymmetryCenterUpdated(center, length) {
+    await sd.pause();
+    str.startAnimate();
+    pos.moveTo(center);
+    mirrorCenter.brace(center - length + 1, center + length - 1);
+    str.endAnimate();
 }
