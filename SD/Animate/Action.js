@@ -45,12 +45,14 @@ Action.prototype.tick = function(t) {
         const k1 = this.is(Action.FIRST_CALL_FLAG) ? 0 : (t > this.r) ? 1 : k0;
         this.callback(k1);
         if (k1 === 1) this.set(Action.STOP_FLAG);
+        this.unset(Action.FIRST_CALL_FLAG);
     } else {
         const k1 = this.is(Action.FIRST_CALL_FLAG) ? 0 : 1;
         this.callback(k1);
         if (k1 === 1) this.set(Action.STOP_FLAG);
+        this.unset(Action.FIRST_CALL_FLAG);
+        if (k1 === 0) this.tick(t);
     }
-    this.unset(Action.FIRST_CALL_FLAG);
 }
 
 Action.prototype.forceToFinish = function() {
