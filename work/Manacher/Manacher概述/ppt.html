@@ -18,7 +18,7 @@
                 // Max 指向 pos 对应回文串右端 +1 的位置
                 void Manacher(const string & s) {
                     int Max = 0, pos = 0;
-                    for (int i = 1; i < s.length(); i++) {
+                    for (int i = 1; i < s.length() - 1; i++) {
                         if (Max > i) p[i] = min(p[pos * 2 - i], Max - i);
                         else p[i] = 1;
                         while (s[i + p[i]] == s[i - p[i]]) p[i]++;

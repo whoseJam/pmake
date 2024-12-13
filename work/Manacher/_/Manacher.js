@@ -39,11 +39,7 @@ export async function Manacher(str, args) {
     str.endAnimate();
 
     let max = 0, pos = 0;
-
-    if (OnIMoveTo) {
-        await OnIMoveTo(str.start());
-    }
-    for (let i = str.start() + 1; i <= str.end(); i++) {
+    for (let i = str.start() + 1; i <= str.end() - 1; i++) {
         if (OnIMoveTo) {
             await OnIMoveTo(i);
         }
