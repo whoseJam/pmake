@@ -227,7 +227,7 @@
             <script type="text/template">
                 void FFT(Complex a[], int len) {
                     // 把每个 a[i] 换到自己该在的位置上
-                    for (int i = 0; i < len; i = i * 2) { // 合并长度为 i 的多项式 -> 长度为 2i 的多项式
+                    for (int i = 1; i < len; i = i * 2) { // 合并长度为 i 的多项式 -> 长度为 2i 的多项式
                         Complex w = 2i 次单位根;
                         // [j, j + i) 与 [j + i, j + 2i) 做合并
                         for (int j = 0; j < n; j += (i * 2))
