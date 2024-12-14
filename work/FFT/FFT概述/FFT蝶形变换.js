@@ -5,58 +5,58 @@ const C = sd.color();
 const R = sd.rule();
 const EN = sd.enter();
 const n = 8;
-const arr = new sd.Array(svg).resize(n);
+const logN = 3;
+const arr = new sd.ValueArray(svg);
+const rev = sd.make1d(100);
 let id = 0;
 
 sd.init(() => {
     for (let i = 0; i < n; i++) {
-        arr.element(i).value(new sd.Mathjax(arr, `a_{${i}}`), R.centerOnly());
-        arr.value(i).rank = i;
+        rev[i] = (rev[i >> 1] >> 1) | ((i & 1) << logN - 1);
+        const box = new sd.Box(arr).value(new sd.Mathjax(arr, `a_{${i}}`), R.centerOnly());
+        arr.push(box);
+        box.position = i;
+        box.rank = rev[i];
     }
 })
 
 sd.main(async () => {
-    await Solve(arr, 50);
-})
-
-async function Solve(arr, gap) {
-    const myId = ++id;
-    if (arr.length() === 1) {
-        arr.value(0).startAnimate().transformMath(`y^{\\small(${myId}\\small)}_{${arr.value(0).rank}}`).triggerRule().endAnimate();
-        return;
-    }
-
     await sd.pause();
-    const n = arr.length();
-    const f0 = new sd.Array(svg);
-    const f1 = new sd.Array(svg);
-    f0.x(arr.x() - gap).y(arr.my() + 40);
-    f1.x(arr.cx() + gap).y(arr.my() + 40);
-
+    arr.startAnimate().sort((a, b) => a.rank - b.rank).endAnimate();
+    await sd.pause();
+    const cx = arr.cx();
+    arr.startAnimate().elementWidth(60).cx(cx).endAnimate();
+    const dx = (arr.elementWidth() - 40) / 2;
+    
+    await sd.pause();
     for (let i = 0; i < n; i++) {
-        const math = new sd.Mathjax(svg, arr.value(i).math()).center(arr.value(i).center());
-        math.rank = arr.value(i).rank;
-        if (!(i & 1)) {
-            f0.startAnimate();
-            f0.push();
-            f0.lastElement().value(math.onEnter(EN.moveTo()), R.centerOnly());
-            f0.endAnimate();
-        } else {
-            f1.startAnimate();
-            f1.push();
-            f1.lastElement().value(math.onEnter(EN.moveTo()), R.centerOnly());
-            f1.endAnimate();
+        const box = arr.element(i);
+        box.value().startAnimate().transformMath(`y^{\\small(${0}\\small)}_{${box.position}}`).triggerRule().endAnimate();
+    }
+    for (let i = 1; i < n; i <<= 1) {
+        for (let j = 0; j < n; j += (i * 2)) {
+            await sd.pause();
+            const tmp = new sd.Array(svg).resize(i * 2).start(j);
+            tmp.my(arr.y() - 60).cx((arr.element(j).x() + arr.element(j + 2 * i - 1).mx())/ 2);
+            tmp.opacity(0).startAnimate().opacity(1).endAnimate();
+            for (let k = 0; k < i; k++) {
+                await sd.pause();
+                sd.Link(arr.element(j + k), tmp.element(j + k), sd.Line, "cx", "y", "cx", "my").startAnimate().pointStoT().endAnimate().arrow();
+                sd.Link(arr.element(i + j + k), tmp.element(j + k), sd.Line, "cx", "y", "cx", "my").startAnimate().pointStoT().endAnimate().arrow();
+                sd.Link(arr.element(j + k), tmp.element(i + j + k), sd.Line, "cx", "y", "cx", "my").startAnimate().pointStoT().endAnimate().arrow();
+                sd.Link(arr.element(i + j + k), tmp.element(i + j + k), sd.Line, "cx", "y", "cx", "my").startAnimate().pointStoT().endAnimate().arrow();
+                await sd.pause();
+                const box1 = arr.element(j + k);
+                const box2 = arr.element(i + j + k);
+                box1.value().startAnimate().transformMath(`y^{\\small(${Math.log2(i) + 1}\\small)}_{${box1.position}}`).triggerRule().endAnimate();
+                box2.value().startAnimate().transformMath(`y^{\\small(${Math.log2(i) + 1}\\small)}_{${box2.position}}`).triggerRule().endAnimate();
+            }
+            await sd.pause();
+            tmp.startAnimate().dy(60).opacity(0).endAnimate();
+            for (let k = 0; k < i; k++) {
+                arr.element(j + k).startAnimate().dx(dx * i).endAnimate();
+                arr.element(i + j + k).startAnimate().dx(-dx * i).endAnimate();
+            }
         }
     }
-
-    await Solve(f0, gap / 2);
-    await Solve(f1, gap / 2);
-
-    await sd.pause();
-    const n2 = n / 2;
-    for (let i = 0; i < n; i++) {
-        sd.Link(f0.element(i % n2), arr.element(i), sd.Line, "cx", "y", "cx", "my").startAnimate().pointStoT().endAnimate().arrow();
-        sd.Link(f1.element(i % n2), arr.element(i), sd.Line, "cx", "y", "cx", "my").startAnimate().pointStoT().endAnimate().arrow();
-        arr.value(i).after(300).startAnimate().transformMath(`y^{\\small(${myId}\\small)}_{${arr.value(i).rank}}`).triggerRule().endAnimate();
-    }
-}
+})
