@@ -6,7 +6,7 @@ const n = 10;
 const i = 7;
 const str = " accbabbaac"
 const banned = "c";
-const arr = new sd.Array(svg).resize(n).start(1);
+const arr = new sd.Array(svg).x(100).y(200).resize(n).start(1);
 
 sd.init(() => {
     sd.Pointer(arr, "i", "b", 3, 20, 3).moveTo(i);
@@ -16,7 +16,7 @@ sd.init(() => {
 sd.main(async () => {
     await sd.pause();
     for (let j = 1; j < i; j++) {
-        sd.Link(arr.element(j), arr.element(i), sd.Curve, "cx", "y", "cx", "y").bending(-0.5).startAnimate().pointStoT().endAnimate().arrow();
+        sd.Link(arr.element(j), arr.element(i), sd.Curve, "cx", "y", "cx", "y").bending(-0.5).startAnimate(1000).pointStoT().endAnimate().arrow();
     }
     await sd.pause();
     arr.startAnimate();
