@@ -1,0 +1,28 @@
+<section>
+    <section>
+        <h1>绝世好题</h1>
+    </section>
+    <problem data-problemset="luogu" data-problemid="P4310"></problem>
+    <section>
+        <h2>绝世好题</h2>
+        <p>容易写出 $O(n^2)$ 的状态转移方程</p>
+        <p>
+            $$
+            f(i)=\mathop{max}\limits_{j\lt i,b_j&b_i\ne 0}\{f(j)\}+1
+            $$
+        </p>
+        <p class="fragment">稍微思考一下，发现我们只需要对每一个二进制位保存一下最大的 $f(j)$ 即可</p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                for (int i = 1; i <= n; i++) {
+                    for (int k = 0; k < 31; k++) {
+                        if ((a[i] >> k) & 1) f[i] = max(f[i], Maxf[k] + 1);
+                    }
+                    for (int k = 0; k < 31; k++) {
+                        if ((a[i] >> k) & 1) Maxf[k] = max(Maxf[k], f[i]);
+                    }
+                }
+            </script>
+        </codeblock>
+    </section>
+</section>
