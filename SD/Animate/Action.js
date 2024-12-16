@@ -69,6 +69,7 @@ Action.prototype.ownerIsReady = function() {
     if (this.channel === "appear") return true;
     if (this.channel === "moveTo") return true;
     if (this.channel === "remove") return true;
+    if (this.channel === "opacity") return true;
     if (Check.isTypeOfSDNode(this.owner)) return this.owner._.ready;
     else return true;
 }
