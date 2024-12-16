@@ -137,7 +137,6 @@ function GetBoundingBox(iframe) {
  */
 function SetAnimationSize(iframe, box) {
     const rate = GetRate(iframe);
-    const boundingBox = GetBoundingBox(iframe);
     const viewBoxDelta = GetViewBoxDelta(iframe);
     const delta = {
         x: 0,
@@ -157,8 +156,6 @@ function SetAnimationSize(iframe, box) {
         box.y + delta.y,
         box.width + delta.width,
         box.height + delta.height,
-        boundingBox.width,
-        boundingBox.height,
         rate
     );
 }

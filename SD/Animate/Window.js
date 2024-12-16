@@ -28,13 +28,14 @@ function lastMainFrame() {
     if (window.SHOULD_FLUSH) {
         Message.notifyParent(); // set the animation size of parent window
         if (window.SHOULD_EXPORT) {
-            RootSvg.setViewBox(
-                window.SVG_MINX,
-                window.SVG_MINY,
-                window.SVG_MAXX - window.SVG_MINX,
-                window.SVG_MAXY - window.SVG_MINY,
-                window.IFRAME_RATE
-            );
+            throw new Error("Not Implemented Yet");
+            // RootSvg.setViewBox(
+            //     window.SVG_MINX,
+            //     window.SVG_MINY,
+            //     window.SVG_MAXX - window.SVG_MINX,
+            //     window.SVG_MAXY - window.SVG_MINY,
+            //     window.IFRAME_RATE
+            // );
         } else {
             window.location.reload();
         }

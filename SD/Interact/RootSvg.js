@@ -54,7 +54,10 @@ export class RootSvg {
         if (currentDate > targetDate) return;
         const con = new HTMLNode(undefined, document.body, "div");
         const svg = new SVGNode(undefined, con, "svg");
-        
+        con.nake().style["width"] = "100%";
+        con.nake().style["height"] = "100%";
+        con.nake().style["position"] = "absolute";
+
         svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
         if (window.self === window.top) {
             svg.setAttribute("viewBox", "0 0 1200 600");
@@ -70,7 +73,7 @@ export class RootSvg {
         DefineArrows();
     }
 
-    static setViewBox(x, y, width, height, parentWidth, parentHeight, rate) {
+    static setViewBox(x, y, width, height, rate) {
         const svg = this.svg;
         /*
             |-----------W-----------|
@@ -101,13 +104,8 @@ export class RootSvg {
         const W = mX > X ? mX - X : 1200;
         const H = mY > Y ? my - Y : 600;
         svg.setAttribute("viewBox", `${X} ${Y} ${W} ${H + 1}`);
-        if (W / H <= parentWidth / parentHeight) {
-            svg.setAttribute("width", `${100 * (W / H) / (parentWidth / parentHeight) - 2}%`);
-            svg.setAttribute("height", "98%");
-        } else {
-            svg.setAttribute("width", "98%");
-            svg.setAttribute("height", `${100 * (H / W) / (parentHeight / parentWidth) - 2}%`);
-        }
+        svg.nake().style["width"] = "100%";
+        svg.nake().style["height"] = "97%";
         UpdateWindowRate(svg, W, H);
         svg.setAttribute("opacity", 1);
     }
