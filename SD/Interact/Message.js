@@ -22,8 +22,6 @@ export class Message {
         }
 
         window.SetViewBox = function(x, y, width, height, parentWidth, parentHeight, rate) {
-            console.log("iframe width =", window.IFRAME_WIDTH, "parent width=", parentWidth);
-            console.log("iframe height =", window.IFRAME_HEIGHT, "parent height=", parentHeight);
             RootSvg.setViewBox(x, y, width, height, parentWidth, parentHeight, rate);
         }
 

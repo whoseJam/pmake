@@ -69,8 +69,17 @@ Action.prototype.ownerIsReady = function() {
     if (this.channel === "appear") return true;
     if (this.channel === "moveTo") return true;
     if (this.channel === "remove") return true;
-    if (this.channel === "opacity") return true;
-    if (Check.isTypeOfSDNode(this.owner)) return this.owner._.ready;
+    if (this.r - this.l < 1) return true;
+    if (Check.isTypeOfSDNode(this.owner)) {
+        if (this.readyCount === undefined) {
+            if (this.owner._.ready) return true;
+            this.readyCount = 0;
+            return false;
+        } else {
+            if (this.owner._.ready) return (++this.readyCount) >= 3;
+            return false;
+        }
+    }
     else return true;
 }
 

@@ -61,8 +61,8 @@ export class RootSvg {
         svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
         if (window.self === window.top) {
             svg.setAttribute("viewBox", "0 0 1200 600");
-            svg.setAttribute("width", "100%");
-            svg.setAttribute("height", "100%");
+            svg.nake().style["width"] = "100%";
+            svg.nake().style["height"] = "95%";
         } else {
             svg.setAttribute("opacity", 0);
         }
@@ -105,7 +105,7 @@ export class RootSvg {
         const H = mY > Y ? my - Y : 600;
         svg.setAttribute("viewBox", `${X} ${Y} ${W} ${H + 1}`);
         svg.nake().style["width"] = "100%";
-        svg.nake().style["height"] = "97%";
+        svg.nake().style["height"] = "95%";
         UpdateWindowRate(svg, W, H);
         svg.setAttribute("opacity", 1);
     }

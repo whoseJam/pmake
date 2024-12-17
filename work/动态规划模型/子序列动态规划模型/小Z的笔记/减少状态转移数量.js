@@ -16,7 +16,7 @@ sd.init(() => {
 sd.main(async () => {
     await sd.pause();
     for (let j = 1; j < i; j++) {
-        sd.Link(arr.element(j), arr.element(i), sd.Curve, "cx", "y", "cx", "y").bending(-0.5).startAnimate(1000).pointStoT().endAnimate().arrow();
+        sd.Link(arr.element(j), arr.element(i), sd.Curve, "cx", "y", "cx", "y").bending(-0.5).startAnimate().pointStoT().endAnimate().arrow();
     }
     await sd.pause();
     arr.startAnimate();
