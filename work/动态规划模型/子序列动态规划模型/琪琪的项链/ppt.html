@@ -12,24 +12,6 @@
     </section>
     <section>
         <h2>琪琪的项链</h2>
-        <p>对于 $30\%$ 的数据，$n\le 8$</p>
-        <p class="fragment">每颗珠子可选可不选，搜出所有全部可能性，塞进一个set里面去重，即可知道方案数</p>
-        <codeblock class="fragment">
-            <script type="text/template">
-                void Dfs(int dep) {
-                    if (dep == n + 1) {
-                        ull hash = encode();
-                        S.insert(hash);
-                        return;
-                    }
-                    mark[dep] = 1; Dfs(dep + 1);
-                    mark[dep] = 0; Dfs(dep + 1);
-                }
-            </script>
-        </codeblock>
-    </section>
-    <section>
-        <h2>琪琪的项链</h2>
         <p>对于 $50\%$ 的数据，$n\le 1000$ 且只有两种颜色</p>
         <iframe data-animation="./项链2类颜色.js" class="fragment"
             style="width: 1000px; height: 60px;"></iframe>

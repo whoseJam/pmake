@@ -15,7 +15,7 @@ export function Aside(parent, aside, location = "lc", gap = 5) {
     aside.member.new("location", location);
     aside.member.new("asideGap", gap);
 
-    aside.attachUpdate(() => {
+    aside.beforeUpdate(() => {
         if (aside.member.hasChanged("location") ||
             aside.member.hasChanged("asideGap")) {
             aside.triggerRule();

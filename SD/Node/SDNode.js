@@ -12,7 +12,6 @@ import { SVGNode } from "@/Renderer/SVG/SVGNode";
 import { Vector } from "@/Math/Vector";
 
 import { Check } from "@/Utility/Check";
-import { Interp } from "@/Animate/Interp";
 
 let SDNodeID = 0;
 

@@ -5,12 +5,23 @@
     <problem data-problemset="luogu" data-problemid="P4310"></problem>
     <section>
         <h2>绝世好题</h2>
+        <p>给定一个长度为 $n$ 的数列 $\{a_i\}$，从 $\{a_i\}$ 选出子序列 $\{b_i\}$，要求 $\{b_i\}$ 满足
+            $$
+            b_i\& b_{i-1}\ne 0
+            $$
+        </p>
+        <p class="fragment">求 $\{b_i\}$ 的最长长度</p>
+    </section>
+    <section>
+        <h2>绝世好题</h2>
         <p>容易写出 $O(n^2)$ 的状态转移方程</p>
         <p>
             $$
             f(i)=\mathop{max}\limits_{j\lt i,b_j\&b_i\ne 0}\{f(j)\}+1
             $$
         </p>
+        <iframe data-animation="./状态转移.js"
+            style="width: 1000px; height: 200px;"></iframe>
         <p class="fragment">稍微思考一下，发现我们只需要对每一个二进制位保存一下最大的 $f(j)$ 即可</p>
         <codeblock class="fragment">
             <script type="text/template">
