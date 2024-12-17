@@ -8,7 +8,7 @@
         <p>容易写出 $O(n^2)$ 的状态转移方程</p>
         <p>
             $$
-            f(i)=\mathop{max}\limits_{j\lt i,b_j&b_i\ne 0}\{f(j)\}+1
+            f(i)=\mathop{max}\limits_{j\lt i,b_j\&b_i\ne 0}\{f(j)\}+1
             $$
         </p>
         <p class="fragment">稍微思考一下，发现我们只需要对每一个二进制位保存一下最大的 $f(j)$ 即可</p>
