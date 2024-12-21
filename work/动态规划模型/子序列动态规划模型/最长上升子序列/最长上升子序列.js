@@ -13,8 +13,8 @@ sd.init(() => {
 
 sd.main(async () => {
     await sd.pause();
-    const pi = sd.Pointer(arr, "i");
-    const pj = sd.Pointer(arr, "j");
+    const pi = sd.Pointer(arr, "i", "b", 3, 20, 3);
+    const pj = sd.Pointer(arr, "j", "b", 3, 20, 3);
     
     for (let i = 0; i < data.length; i++) {
         await sd.pause();

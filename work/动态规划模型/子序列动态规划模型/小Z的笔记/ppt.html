@@ -5,13 +5,21 @@
     <problem data-problemset="luogu" data-problemid="P2187"></problem>
     <section>
         <h2>小Z的笔记</h2>
-        <p>对于 $10\%$ 的数据，$M=0$</p>
-        <p class="fragment">答案显然是 $0$</p>
+        <p>给出一个<b>禁止字典</b>，字典中的单词都是长度恰好为 $2$ 的字符串</p>
+        <p class="fragment">给出一个字符串序列</p>
+        <p class="fragment">你需要从字符串序列中删掉一些字符，使之不包含任何一个出现在<b>禁止字典</b>中的单词</p>
+        <p class="fragment">求至少需要删掉多少个字符</p>
     </section>
     <section>
         <h2>小Z的笔记</h2>
-        <p>对于 $30\%$ 的数据，$N\le 1000$</p>
-        <p class="fragment">设 $f(i)$ 表示考虑前 $i$ 个字母，至少需要擦掉多少个，才能使得整个笔记合法</p>
+        <p class="quote">为什么这个题是一个子序列模型？</p>
+        <iframe data-animation="./子序列模型.js"
+            style="width: 1000px; height: 150px;"></iframe>
+        <p class="fragment">由于禁用字典内的单词长度恰好为 $2$，所以我们只需要保证子序列相邻两项不构成<b>禁用单词</b>即可</p>
+    </section>
+    <section>
+        <h2>小Z的笔记</h2>
+        <p>设 $f(i)$ 表示子序列末尾字符为 $a_i$，至少需要擦掉多少个，才能使得整个子序列合法<span class="fragment">（不出现禁用单词）</span></p>
         <iframe data-animation="./状态转移.js" class="fragment"
             style="width: 1000px; height: 200px;"></iframe>
         <p class="fragment">
@@ -19,12 +27,11 @@
             f(i)=\mathop{min}\limits_{\begin{aligned}j&\lt i\\ a_ja_i&合法\end{aligned} }\{f(j)+i-j-1\}
             $$
         </p>
-        <p class="fragment">时间复杂度 $O(N^2)$</p>
+        <p class="fragment quote">如何优化呢？</p>
     </section>
     <section>
         <h2>小Z的笔记</h2>
-        <p>对于 $100\%$ 的数据，$N\le 10^5$</p>
-        <p class="fragment" style="margin-top: -10px; font-size: 20px;">
+        <p style="margin-top: -10px; font-size: 20px;">
             $$
             f(i)=\mathop{min}\limits_{\begin{aligned}j&\lt i\\ a_ja_i&合法\end{aligned} }\{f(j)+i-j-1\}
             $$

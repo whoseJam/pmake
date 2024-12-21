@@ -16,10 +16,10 @@
         <p>设 $f(i)$ 表示以 $a_i$ 为结尾的最长上升子序列的长度</p>
         <p class="fragment">
             $$
-            f(i)=\mathop{max}_{1\le j\le i,a_j\lt a_i}\{f(j)\}+1
+            f(i)=\mathop{max}_{\begin{aligned}j&\le i\\ a_j&\lt a_i\end{aligned}}\{f(j)\}+1
             $$
         </p>
         <iframe data-animation="./最长上升子序列.js" class="fragment"
-            style="width: 1000px; height: 500px;"></iframe>
+            style="width: 1000px; height: 450px;"></iframe>
     </section>
 </section>
