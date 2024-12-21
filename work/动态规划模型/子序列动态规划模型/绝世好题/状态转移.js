@@ -1,4 +1,5 @@
 import * as sd from "@/sd";
+import { BucketOptimize } from "../_/BucketOptimize";
 
 const svg = sd.svg();
 const C = sd.color();
@@ -28,15 +29,60 @@ sd.main(async () => {
     pj.startAnimate().moveTo(null).endAnimate();
     pi.startAnimate().moveTo(null).endAnimate();
     await sd.pause();
-    for (let i = 0; i < data.length; i++) {
-        const stk = new sd.Stack(svg).elementWidth(15).elementHeight(15);
-        for (let j = 0; j < logV; j++) stk.push(arr.text(i)[j]);
-        arr.element(i).startAnimate().childAs("stk", stk.onEnter(EN.appear()), R.aside("tc")).endAnimate();
+    await BucketOptimize(arr, data.length - 1, {
+        OnCreateFirstBucket: OnCreateFirstBucket,
+        OnCreateBucket: OnCreateBucket,
+        OnUpdateBucket: OnUpdateBucket,
+        OnUpdateCurrent: OnUpdateCurrent
+    });
+})
+
+async function OnUpdateBucket(arr, j) {
+    const firstBucket = global.firstBucket;
+    const currentBucket = arr.element(j).child("stk");
+    const links = [];
+    await sd.pause();
+    for (let i = 0; i < logV; i++) {
+        if (currentBucket.text(i) === "1") {
+            const link = sd.Link(currentBucket.element(i), firstBucket.element(i)).startAnimate().pointStoT().endAnimate().arrow();
+            links.push(link);
+        }
     }
     await sd.pause();
-    const stk = new sd.Stack(svg).elementWidth(15).elementHeight(15).resize(3);
-    stk.cx(arr.element(0).child("stk").cx() - 40).my(arr.y() - 5).opacity(0).startAnimate().opacity(1).endAnimate();
-})
+    links.forEach(link => {
+        link.startAnimate().fadeStoT().endAnimate().remove();
+    });
+}
+
+async function OnUpdateCurrent(arr, i) {
+    const firstBucket = global.firstBucket;
+    const currentBucket = arr.element(i).child("stk");
+    const links = [];
+    await sd.pause();
+    for (let i = 0; i < logV; i++) {
+        if (currentBucket.text(i) === "1") {
+            const link = sd.Link(firstBucket.element(i), currentBucket.element(i)).startAnimate().pointStoT().endAnimate().arrow();
+            links.push(link);
+        }
+    }
+    await sd.pause();
+    links.forEach(link => {
+        link.startAnimate().fadeStoT().endAnimate().remove();
+    });
+}
+
+async function OnCreateFirstBucket(arr, cx) {
+    const stk = new sd.Stack(svg).elementWidth(15).elementHeight(15).resize(logV);
+    stk.cx(cx).my(arr.y() - 5).opacity(0).startAnimate().opacity(1).endAnimate();
+    global.firstBucket = stk;
+}
+
+async function OnCreateBucket(arr, i) {
+    const element = arr.element(i);
+    const stk = new sd.Stack(svg).elementWidth(15).elementHeight(15).resize(logV);
+    for (let i = 0; i < logV; i++) stk.value(i, element.text()[i]);
+    element.startAnimate().childAs("stk", stk.onEnter(EN.appear()), R.aside("tc", 5)).endAnimate();
+}
 
 function CastToBinStr(x) {
     let ans = "";
