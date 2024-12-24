@@ -13,8 +13,8 @@ export class BaseGraph extends SDNode {
     newNodeFromExistElement(id: number|string, element: SDNode): this;
     newLink(sourceId: number|string, targetId: number|string): this;
     newLink(sourceId: number|string, targetId: number|string, value: any): this;
-    newLinkFromExistValue(id: number|string, value: SDNode): this;
-    newLinkFromExistElement(id: number|string, element: SDNode): this;
+    newLinkFromExistValue(sourceId: number|string, targetId: number|string, value: SDNode): this;
+    newLinkFromExistElement(sourceId: number|string, targetId: number|string, element: SDNode): this;
 
     element(id: number|string): SDNode;
     element(sourceId: number|string, targetId: number|string): SDNode;

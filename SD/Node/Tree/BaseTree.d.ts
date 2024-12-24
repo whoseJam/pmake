@@ -11,8 +11,8 @@ export class BaseTree extends SDNode {
     newNodeFromExistElement(id: number|string, element: SDNode): this;
     newLink(sourceId: number|string, targetId: number|string): this;
     newLink(sourceId: number|string, targetId: number|string, value: any): this;
-    newLinkFromExistValue(id: number|string, value: SDNode): this;
-    newLinkFromExistElement(id: number|string, element: SDNode): this;
+    newLinkFromExistValue(sourceId: number|string, targetId: number|string, value: SDNode): this;
+    newLinkFromExistElement(sourceId: number|string, targetId: number|string, element: SDNode): this;
 
     element(node: number|string|SDNode): SDNode;
     element(source: number|string|SDNode, target: number|string|SDNode): SDNode;

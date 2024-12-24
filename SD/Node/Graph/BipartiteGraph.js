@@ -35,6 +35,14 @@ BipartiteGraph.prototype.newNode = function(id, value, setNo) {
     return this;
 }
 
+BipartiteGraph.prototype.newNodeFromExistElement = function(id, value, setNo) {
+    const element = value;
+    element.onEnter(Enter.moveTo());
+    element.setNo = setNo;
+    this.newNodeByBaseGraph(id, element);
+    return this;
+}
+
 BipartiteGraph.prototype.newLink                 = GridGraph.prototype.newLink;
 BipartiteGraph.prototype.newLinkFromExistValue   = GridGraph.prototype.newLinkFromExistValue;
 BipartiteGraph.prototype.newLinkFromExistElement = GridGraph.prototype.newLinkFromExistElement;
