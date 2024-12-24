@@ -28,6 +28,7 @@ export { Array }      from "./Node/Array/Array";
 export { Stack }      from "./Node/Array/Stack";
 export { VarList }    from "./Node/Array/VarList";
 export { BarArray }   from "./Node/Array/BarArray";
+export { BaseArary }  from "./Node/Array/BaseArray";
 export { ValueArray } from "./Node/Array/ValueArray";
 export { ValueStack } from "./Node/Array/ValueStack";
 

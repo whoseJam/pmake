@@ -1,30 +1,75 @@
 import * as sd from "@/sd";
+import { BucketOptimize } from "../_/BucketOptimize";
 
 const svg = sd.svg();
 const C = sd.color();
-const n = 10;
-const i = 7;
-const str = " accbabbaac"
-const banned = "c";
-const arr = new sd.Array(svg).x(100).y(200).resize(n).start(1);
+const charset = "cba";
+const str = "accbabbaac";
+const banned = [
+    "cb",
+    "ab",
+    "ac"
+];
+const arr = new sd.Array(svg).x(100).y(200).start(1);
 
 sd.init(() => {
-    sd.Pointer(arr, "i", "b", 3, 20, 3).moveTo(i);
-    sd.Brace(arr).brace(1, i, "b").value("合法");
+    arr.pushArray(str);
 })
 
 sd.main(async () => {
     await sd.pause();
-    for (let j = 1; j < i; j++) {
-        sd.Link(arr.element(j), arr.element(i), sd.Curve, "cx", "y", "cx", "y").bending(-0.5).startAnimate().pointStoT().endAnimate().arrow();
+    await BucketOptimize(arr, str.length, {
+        OnCreateFirstBucket: OnCreateFirstBucket,
+        OnCreateBucket: OnCreateBucket,
+        OnUpdateBucket: OnUpdateBucket,
+        OnUpdateCurrent: OnUpdateCurrent
+    })
+})
+
+async function OnCreateFirstBucket(arr, cx) {
+    const stk = new sd.Stack(svg).elementWidth(15).elementHeight(15).resize(charset.length);
+    stk.cx(cx).my(arr.y() - 5);
+    for (let i = 0; i < charset.length; i++) {
+        sd.Label(stk.element(i), charset[i], "lc", 10, 3);
+    }
+    stk.opacity(0).startAnimate().opacity(1).endAnimate();
+    global.firstBucket = stk;
+}
+
+async function OnCreateBucket(arr, i) {
+    const element = arr.element(i);
+    const dist = (arr.text(i).charCodeAt(0) - "a".charCodeAt(0)) * 15 + 6.3;
+    element.label = sd.Label(element, arr.text(i), "tc", 10, dist).opacity(0).startAnimate().opacity(1).endAnimate();
+}
+
+async function OnUpdateBucket(arr, j) {
+    await sd.pause();
+    const firstBucket = global.firstBucket;
+    const current = arr.element(j).label;
+    const link = sd.Link(current, firstBucket.element(charIndex(arr.text(j))));
+    link.startAnimate().pointStoT().endAnimate().arrow();
+    await sd.pause();
+    link.startAnimate().fadeStoT().endAnimate().remove();
+}
+
+async function OnUpdateCurrent(arr, i) {
+    await sd.pause();
+    const firstBucket = global.firstBucket;
+    const current = arr.element(i).label;
+    const links = [];
+    for (let i = 0; i < charset.length; i++) {
+        const link = sd.Link(firstBucket.element(i), current);
+        link.startAnimate().pointStoT().endAnimate().arrow();
+        links.push(link);        
     }
     await sd.pause();
-    arr.startAnimate();
-    for (let j = 1; j <= n; j++) arr.value(j, str[j]);
-    arr.endAnimate();
+    links.forEach(link => {
+        link.startAnimate().fadeStoT().endAnimate().remove();
+    });
+}
 
-    await sd.pause();
-    arr.startAnimate();
-    for (let j = 1; j <= i; j++) arr.color(j, (str[j] === banned) ? C.red : C.green);
-    arr.endAnimate();
-})
+function charIndex(a) {
+    if (a === "a") return 2;
+    if (a === "b") return 1;
+    return 0;
+}

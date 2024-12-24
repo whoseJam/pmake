@@ -20,7 +20,7 @@
         <p class="fragment">那么转移成立与否只和前一个划分的末尾在哪有关</p>
         <p class="fragment">
             $$
-            f(i)=\sum_{\begin{aligned}j&\lt i\\a_ja_{j+1}...a_{i}&是m的倍数\end{aligned} }f(j)
+            f(i)=\sum_{\begin{aligned}j&\lt i\\a_{j+1}...a_{i}&是m的倍数\end{aligned} }f(j)
             $$
         </p>
     </section>
@@ -46,8 +46,8 @@
         <p class="math-fragment">
             $$
             \begin{aligned}
-            f(i)&=\sum_{\begin{aligned}j&\lt i\\a_ja_{j+1}...a_{i}&是m的倍数\end{aligned} }f(j) \\
-            &=\sum_{\begin{aligned}j\lt i&\\s_{i}-10^{i-j+1}s_{j-1}&\equiv 0(\mathop{mod} m)\end{aligned} }f(j)
+            f(i)&=\sum_{\begin{aligned}j&\lt i\\a_{j+1}...a_{i}&是m的倍数\end{aligned} }f(j) \\
+            &=\sum_{\begin{aligned}j\lt i&\\s_{i}-10^{i-j}s_{j}\equiv &0(\mathop{mod} m)\end{aligned} }f(j)
             \end{aligned}
             $$
         </p>
@@ -56,8 +56,8 @@
         <p class="fragment math-fragment">
             $$
             \begin{aligned}
-            s_{i}-10^{i-j+1}s_{j-1}&\equiv 0(\mathop{mod} m) \\
-            s_i&\equiv 10^{i-j+1}s_{j-1}(\mathop{mod}m)
+            s_{i}-10^{i-j}s_{j}&\equiv 0(\mathop{mod} m) \\
+            s_i&\equiv 10^{i-j}s_{j}(\mathop{mod}m)
             \end{aligned}
             $$
         </p>
@@ -68,7 +68,7 @@
             $$
             \begin{cases}
             f(i)=\sum_{j\lt i\\j满足一定条件}f(j) \\
-            s_i\equiv 10^{i-j+1}s_{j-1}(\mathop{mod}m)
+            s_i\equiv 10^{i-j}s_{j}(\mathop{mod}m)
             \end{cases}
             $$
         </p>
@@ -79,7 +79,7 @@
             <script type="text/template">
                 int totalF = 1;
                 for (int i = 1; i <= n; i++) {
-                    if (s[i] == 0) f[i] = 0;
+                    if (s[i] != 0) f[i] = 0;
                     else f[i] = totalF;
                     totalF += f[i];
                 }
