@@ -1,16 +1,18 @@
-import { Exit }   from "@/Node/SDNode/Exit";
 import { SDNode } from "@/Node/SDNode";
-
-import { Cast }          from "@/Utility/Cast";
-import { Check }         from "@/Utility/Check";
+import { Exit as EX } from "@/Node/SDNode/Exit";
+import { Cast } from "@/Utility/Cast";
+import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
+import { Factory } from "@/Utility/Factory";
 
 export function BaseArray(parent) {
     SDNode.call(this, parent);
 
-    this.member.new("start", 0);
-    this.member.new("elements", []);
-    
+    this.vars.merge({
+        start: 0,
+        elements: []
+    });
+
     this._.BASE_ARRAY = true;
 }
 
@@ -18,134 +20,131 @@ BaseArray.prototype = {
     ...SDNode.prototype
 };
 
-BaseArray.prototype.x     = SDNode.OrdinaryGSet("x", "setByEqual");
-BaseArray.prototype.y     = SDNode.OrdinaryGSet("y", "setByEqual");
-BaseArray.prototype.start = SDNode.OrdinaryGSet("start", "set");
-BaseArray.prototype.updateList = [
-    ...BaseArray.prototype.updateList
-];
+BaseArray.prototype.x = Factory.handlerLowPrecise("x");
+BaseArray.prototype.y = Factory.handlerLowPrecise("y");
+BaseArray.prototype.start = Factory.handler("start");
 
-BaseArray.prototype.length = function(size) {
+BaseArray.prototype.length = function (size) {
     if (size === undefined) {
-        const elements = this.member.get("elements");
+        const elements = this.vars.elements;
         return elements.length;
     }
     size = Cast.castToNumber(size);
     let currentLength = this.length();
     while (currentLength < size) { this.push(); currentLength++; }
-    while (currentLength > size) { this.pop();  currentLength--; }
+    while (currentLength > size) { this.pop(); currentLength--; }
     return this;
 }
 
-BaseArray.prototype.resize = function(size) {
+BaseArray.prototype.resize = function (size) {
     this.length(size);
     return this;
 }
 
-BaseArray.prototype.end = function() {
+BaseArray.prototype.end = function () {
     return this.start() + this.length() - 1;
 }
 
-BaseArray.prototype.idx = function(id) {
+BaseArray.prototype.idx = function (id) {
     return id - this.start();
 }
 
-BaseArray.prototype.element = function(id) {
-    const elements = this.member.get("elements");
+BaseArray.prototype.element = function (id) {
+    const elements = this.vars.elements;
     const i = this.idx(id);
     if (0 <= i && i < elements.length)
         return elements[i];
     ErrorLauncher.outOfRangeError(id);
 }
 
-BaseArray.prototype.elements = function() {
-    const elements = this.member.get("elements");
+BaseArray.prototype.elements = function () {
+    const elements = this.vars.elements;
     return [...elements];
 }
 
-BaseArray.prototype.firstElement = function() {
+BaseArray.prototype.firstElement = function () {
     return this.element(this.start());
 }
 
-BaseArray.prototype.lastElement = function() {
+BaseArray.prototype.lastElement = function () {
     return this.element(this.end());
 }
 
-BaseArray.prototype.forEachElement = function(callback) {
-    const elements = this.member.get("elements");
+BaseArray.prototype.forEachElement = function (callback) {
+    const elements = this.vars.elements;
     elements.forEach((element, id) => {
         callback(element, id);
     });
     return this;
 }
 
-BaseArray.prototype.insertByBaseArray = function(id, element) {
-    const elements = this.member.get("elements");
-    elements.splice(this.idx(id), 0, element);
-    this.childAs(element);
-    this.member.dirty("elements");
-    this.tryUpdate();
+BaseArray.prototype.insertByBaseArray = function (id, element) {
+    const elements = this.vars.elements;
+    element.triggerEnter(this, () => {
+        console.log("this=", this);
+        this.childAs(element);
+        console.log("touch elements", elements, element);
+        elements.splice(this.idx(id), 0, element);
+    });
     return this;
 }
 
-BaseArray.prototype.push = function(value = null) {
+BaseArray.prototype.push = function (value = null) {
     this.insert(this.end() + 1, value);
     return this;
 }
 
-BaseArray.prototype.pushArray = function(array) {
+BaseArray.prototype.pushArray = function (array) {
     for (let i = 0; i < array.length; i++)
         this.push(array[i]);
     return this;
 }
 
-BaseArray.prototype.pushFromExistValue = function(value) {
+BaseArray.prototype.pushFromExistValue = function (value) {
     this.insertFromExistValue(this.end() + 1, value);
     return this;
 }
 
-BaseArray.prototype.pushFromExistElement = function(value) {
+BaseArray.prototype.pushFromExistElement = function (value) {
     this.insertFromExistElement(this.end() + 1, value);
     return this;
 }
 
-BaseArray.prototype.eraseByBaseArray = function(id) {
+BaseArray.prototype.eraseByBaseArray = function (id) {
     const element = this.element(id);
-    const elements = this.member.get("elements");
+    const elements = this.vars.elements;
     elements.splice(this.idx(id), 1);
     this.eraseChild(element);
-    this.member.dirty("elements");
-    this.tryUpdate();
     return this;
 }
 
-BaseArray.prototype.pop = function() {
+BaseArray.prototype.pop = function () {
     this.erase(this.end());
     return this;
 }
 
-BaseArray.prototype.erase = function(id) {
+BaseArray.prototype.erase = function (id) {
     const element = this.element(id);
-    element.onExit(Exit.naive(this, element));
+    element.onExit(EX.fade());
     this.eraseByBaseArray(id);
     return this;
 }
 
-BaseArray.prototype.dropElement = function(id) {
+BaseArray.prototype.dropElement = function (id) {
     const element = this.element(id);
     this.eraseByBaseArray(id);
     return element;
 }
 
-BaseArray.prototype.dropFirstElement = function() {
+BaseArray.prototype.dropFirstElement = function () {
     return this.dropElement(this.start());
 }
 
-BaseArray.prototype.dropLastElement = function() {
+BaseArray.prototype.dropLastElement = function () {
     return this.dropElement(this.end());
 }
 
-BaseArray.prototype.dropValue = function(id) {
+BaseArray.prototype.dropValue = function (id) {
     const element = this.element(id);
     this.eraseByBaseArray(id);
     const value = element.after(this.delay()).drop();
@@ -153,19 +152,19 @@ BaseArray.prototype.dropValue = function(id) {
     return value;
 }
 
-BaseArray.prototype.text = function(id, text) {
+BaseArray.prototype.text = function (id, text) {
     if (text === undefined) return this.value(id).text();
     this.value(id).text(text);
     return this;
 }
 
-BaseArray.prototype.intValue = function(id) {
+BaseArray.prototype.intValue = function (id) {
     const value = this.value(id);
     if (value === undefined) return 0;
     return +this.value(id).text();
 }
 
-BaseArray.prototype.opacity = function() {
+BaseArray.prototype.opacity = function () {
     const args = arguments;
     switch (args.length) {
         case 0:
@@ -180,7 +179,7 @@ BaseArray.prototype.opacity = function() {
     }
 }
 
-BaseArray.prototype.value = function() {
+BaseArray.prototype.value = function () {
     const args = arguments;
     switch (args.length) {
         case 1:
@@ -193,11 +192,11 @@ BaseArray.prototype.value = function() {
     }
 }
 
-BaseArray.prototype.color = function() {
+BaseArray.prototype.color = function () {
     const args = arguments;
     switch (args.length) {
         case 1:
-            if (typeof(args[0]) === "number") return this.element(args[0]).color();
+            if (typeof (args[0]) === "number") return this.element(args[0]).color();
             this.forEachElement(element => element.color(args[0]));
             return this;
         case 2:
@@ -212,10 +211,8 @@ BaseArray.prototype.color = function() {
     }
 }
 
-BaseArray.prototype.sort = function(comparator = (a, b) => a.intValue() - b.intValue()) {
-    const elements = this.member.get("elements");
+BaseArray.prototype.sort = function (comparator = (a, b) => a.intValue() - b.intValue()) {
+    const elements = this.vars.elements;
     elements.sort(comparator);
-    this.member.dirty("elements");
-    this.tryUpdate();
     return this;
 }

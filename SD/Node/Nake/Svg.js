@@ -1,8 +1,7 @@
 import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
-
-import { SDNode }   from "@/Node/SDNode";
 import { BaseNake } from "@/Node/Nake/BaseNake";
+import { SDNode } from "@/Node/SDNode";
 
 function GetViewBox(svgElement, getter) {
     const x = svgElement.member[getter]("viewX");
@@ -36,16 +35,16 @@ Svg.prototype = {
     ...BaseNake.prototype
 };
 
-Svg.prototype.layer = function() {
+Svg.prototype.layer = function () {
     return this._.nake;
 }
 
-Svg.prototype.x      = SDNode.OrdinaryGSet("x", "setByEqual");
-Svg.prototype.y      = SDNode.OrdinaryGSet("y", "setByEqual");
-Svg.prototype.width  = SDNode.OrdinaryGSet("width", "setByEqual");
+Svg.prototype.x = SDNode.OrdinaryGSet("x", "setByEqual");
+Svg.prototype.y = SDNode.OrdinaryGSet("y", "setByEqual");
+Svg.prototype.width = SDNode.OrdinaryGSet("width", "setByEqual");
 Svg.prototype.height = SDNode.OrdinaryGSet("height", "setByEqual");
 
-Svg.prototype.viewBox = function(x, y, width, height) {
+Svg.prototype.viewBox = function (x, y, width, height) {
     if (arguments.length === 0) {
         return {
             x: this.member.get("viewX"),
@@ -72,10 +71,10 @@ Svg.prototype.updateList = [
     SDNode.OrdinaryUpdate("y", Interp.numberInterp),
     SDNode.OrdinaryUpdate("width", Interp.numberInterp),
     SDNode.OrdinaryUpdate("height", Interp.numberInterp),
-    function() {
-        if (this.member.hasChanged("viewX") || 
+    function () {
+        if (this.member.hasChanged("viewX") ||
             this.member.hasChanged("viewY") ||
-            this.member.hasChanged("viewWidth") || 
+            this.member.hasChanged("viewWidth") ||
             this.member.hasChanged("viewHeight")) {
             new Action(
                 this.delay(),

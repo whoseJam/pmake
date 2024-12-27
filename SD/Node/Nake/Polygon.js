@@ -1,9 +1,7 @@
 import { Action } from "@/Animate/Action";
 
-import { SDNode }   from "@/Node/SDNode";
 import { BaseNake } from "@/Node/Nake/BaseNake";
 import { Color as C } from "@/Utility/Color";
-import { reactive } from "../SDNode/SDValue";
 import { Factory } from "@/Utility/Factory";
 
 export function Polygon(parent, points = []) {
@@ -13,13 +11,13 @@ export function Polygon(parent, points = []) {
 
     this.vars.fill = C.white;
     this.vars.stroke = C.black;
-    this.vars.merge(reactive({
+    this.vars.merge({
         x: 0,
         y: 0,
         width: 0,
         height: 0,
         points: points
-    }));
+    });
 
     this.vars.associate("points", (newPoints, oldPoints) => {
         const duration = this.duration();
@@ -28,7 +26,7 @@ export function Polygon(parent, points = []) {
             this.delay(),
             this.delay() + this.duration(),
             oldPoints, newPoints,
-            function(t) {
+            function (t) {
                 if (t === 0) {
                     if (duration === 0) {
                         snap.attr({ points: this.target });
@@ -53,25 +51,25 @@ Polygon.prototype = {
 
 Polygon.prototype.points = Factory.handler("points");
 
-Polygon.prototype.x = function(x) {
+Polygon.prototype.x = function (x) {
     if (x === undefined) return this.vars.x;
     this.points(UpdatePoints(vars, x - vars.x, 0));
     return this;
 }
 
-Polygon.prototype.y = function(y) {
+Polygon.prototype.y = function (y) {
     if (y === undefined) return this.vars.y;
     this.points(UpdatePoints(vars, 0, y - vars.y));
     return this;
 }
 
-Polygon.prototype.width = function(width) {
+Polygon.prototype.width = function (width) {
     if (width === undefined) return this.vars.width;
     this.points(UpdatePointsWidth(vars, width));
     return this;
 }
 
-Polygon.prototype.height = function(height) {
+Polygon.prototype.height = function (height) {
     if (height === undefined) return this.vars.height;
     this.points(UpdatePointsHeight(vars, height));
     return this;

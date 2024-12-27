@@ -1,17 +1,11 @@
-import { Interp }  from "@/Animate/Interp";
 import { Context } from "@/Animate/Context";
-
-import { SDNode }   from "@/Node/SDNode";
+import { Interp } from "@/Animate/Interp";
 import { BaseNake } from "@/Node/Nake/BaseNake";
-
-import { PointAtPathByRate } from "@/Rule/Path";
-
-import { Cast }       from "@/Utility/Cast";
-import { Color as C } from "@/Utility/Color";
-import { reactive } from "../SDNode/SDValue";
-import { Factory } from "@/Utility/Factory";
 import { Enter as EN } from "@/Node/SDNode/Enter";
-import { effect } from "../SDNode/SDValue";
+import { effect } from "@/Node/SDNode/SDValue";
+import { Cast } from "@/Utility/Cast";
+import { Color as C } from "@/Utility/Color";
+import { Factory } from "@/Utility/Factory";
 
 export function BaseLine(parent, tag) {
     BaseNake.call(this, parent, tag);
@@ -20,17 +14,17 @@ export function BaseLine(parent, tag) {
     this.vars.strokeOpacity = 1;
     this.vars.strokeWidth = 1;
     this.vars.stroke = C.black;
-    this.vars.merge(reactive({
+    this.vars.merge({
         markerStart: "",
         markerMid: "",
         markerEnd: "",
         value: undefined
-    }));
+    });
 
     this.vars.associate("markerStart", Factory.action(this, this._.nake, "marker-start", Interp.stringInterp));
     this.vars.associate("markerMid", Factory.action(this, this._.nake, "marker-mid", Interp.stringInterp));
     this.vars.associate("markerEnd", Factory.action(this, this._.nake, "marker-end", Interp.stringInterp));
-    
+
     this._.BASE_LINE = true;
 }
 
@@ -43,7 +37,7 @@ BaseLine.prototype.markerMid = HandlerMarker("markerMid");
 BaseLine.prototype.markerEnd = HandlerMarker("markerEnd");
 
 function HandlerMarker(key) {
-    return function(marker) {
+    return function (marker) {
         if (marker === undefined) return this.vars[key];
         marker = (marker !== "") ? `url(#${marker})` : "";
         this.vars[key] = marker;
@@ -51,23 +45,23 @@ function HandlerMarker(key) {
     }
 }
 
-BaseLine.prototype.arrow = function(flag = true) {
+BaseLine.prototype.arrow = function (flag = true) {
     this.markerEnd(flag ? "arrow" : "");
     return this;
 }
 
-BaseLine.prototype.revArrow = function(flag = true) {
+BaseLine.prototype.revArrow = function (flag = true) {
     this.markerStart(flag ? "arrowReverse" : "");
     return this;
 }
 
-BaseLine.prototype.doubleArrow = function(flag = true) {
+BaseLine.prototype.doubleArrow = function (flag = true) {
     this.arrow(flag);
     this.revArrow(flag);
     return this;
 }
 
-BaseLine.prototype.pointStoT = function() {
+BaseLine.prototype.pointStoT = function () {
     const len = this.totalLength();
     const context = new Context(this);
     this.startAnimate(context.tillc(0, 0));
@@ -77,7 +71,7 @@ BaseLine.prototype.pointStoT = function() {
     return this;
 }
 
-BaseLine.prototype.pointTtoS = function() {
+BaseLine.prototype.pointTtoS = function () {
     const len = this.totalLength();
     const context = new Context(this);
     this.startAnimate(context.tillc(0, 0));
@@ -89,7 +83,7 @@ BaseLine.prototype.pointTtoS = function() {
     return this;
 }
 
-BaseLine.prototype.fadeStoT = function() {
+BaseLine.prototype.fadeStoT = function () {
     const len = this.totalLength();
     const context = new Context(this);
     this.startAnimate(context.tillc(0, 0));
@@ -101,7 +95,7 @@ BaseLine.prototype.fadeStoT = function() {
     return this;
 }
 
-BaseLine.prototype.fadeTtoS = function() {
+BaseLine.prototype.fadeTtoS = function () {
     const len = this.totalLength();
     const context = new Context(this);
     this.startAnimate(context.tillc(0, 0));
@@ -111,7 +105,7 @@ BaseLine.prototype.fadeTtoS = function() {
     return this;
 }
 
-BaseLine.prototype.source = function(x, y) {
+BaseLine.prototype.source = function (x, y) {
     if (arguments.length === 0) {
         return [this.x1(), this.y1()];
     } else if (arguments.length === 1) {
@@ -122,7 +116,7 @@ BaseLine.prototype.source = function(x, y) {
     return this;
 }
 
-BaseLine.prototype.target = function(x, y) {
+BaseLine.prototype.target = function (x, y) {
     if (arguments.length === 0) {
         return [this.x2(), this.y2()];
     } else if (arguments.length === 1) {
@@ -133,7 +127,7 @@ BaseLine.prototype.target = function(x, y) {
     return this;
 }
 
-BaseLine.prototype.x = function(x) {
+BaseLine.prototype.x = function (x) {
     const x1 = this.x1();
     const x2 = this.x2();
     const ox = Math.min(x1, x2);
@@ -143,7 +137,7 @@ BaseLine.prototype.x = function(x) {
     return this;
 }
 
-BaseLine.prototype.y = function(y) {
+BaseLine.prototype.y = function (y) {
     const y1 = this.y1();
     const y2 = this.y2();
     const oy = Math.min(y1, y2);
@@ -153,7 +147,7 @@ BaseLine.prototype.y = function(y) {
     return this;
 }
 
-BaseLine.prototype.width = function(width) {
+BaseLine.prototype.width = function (width) {
     const x1 = this.x1();
     const x2 = this.x2();
     if (width === undefined) return Math.abs(x1 - x2);
@@ -162,7 +156,7 @@ BaseLine.prototype.width = function(width) {
     return this;
 }
 
-BaseLine.prototype.height = function(height) {
+BaseLine.prototype.height = function (height) {
     const y1 = this.y1();
     const y2 = this.y2();
     if (height === undefined) return Math.abs(y1 - y2);
@@ -171,7 +165,7 @@ BaseLine.prototype.height = function(height) {
     return this;
 }
 
-BaseLine.prototype.value = function(value, rule) {
+BaseLine.prototype.value = function (value, rule) {
     const oldValue = this.child("value");
     if (value === undefined) {
         return oldValue;
@@ -195,7 +189,7 @@ BaseLine.prototype.value = function(value, rule) {
     return this;
 }
 
-BaseLine.prototype.valueRule = function(rule) {
+BaseLine.prototype.valueRule = function (rule) {
     const value = this.child("value");
     this.member.setAndFlush("rule", rule);
     if (value) {
@@ -204,7 +198,7 @@ BaseLine.prototype.valueRule = function(rule) {
     }
 }
 
-BaseLine.prototype.intValue = function() {
+BaseLine.prototype.intValue = function () {
     const value = this.child("value");
     return !value ? 0 : +value.text();
 }

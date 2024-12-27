@@ -1,10 +1,8 @@
 import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
-
 import { Dom } from "@/Dom/Dom";
-
-import { SDNode }   from "@/Node/SDNode";
 import { BaseNake } from "@/Node/Nake/BaseNake";
+import { SDNode } from "@/Node/SDNode";
 
 export function Fragment(parent, html = "") {
     BaseNake.call(this, parent, "g");
@@ -26,12 +24,12 @@ Fragment.prototype = {
     ...BaseNake.prototype
 };
 
-Fragment.prototype.x        = SDNode.OrdinaryGSet("x", "setByEqual");
-Fragment.prototype.y        = SDNode.OrdinaryGSet("y", "setByEqual");
-Fragment.prototype.width    = SDNode.OrdinaryGSet("width", "setByEqual");
-Fragment.prototype.height   = SDNode.OrdinaryGSet("height", "setByEqual");
+Fragment.prototype.x = SDNode.OrdinaryGSet("x", "setByEqual");
+Fragment.prototype.y = SDNode.OrdinaryGSet("y", "setByEqual");
+Fragment.prototype.width = SDNode.OrdinaryGSet("width", "setByEqual");
+Fragment.prototype.height = SDNode.OrdinaryGSet("height", "setByEqual");
 Fragment.prototype.fragment = SDNode.OrdinaryGSet("html", "set");
-Fragment.prototype.html     = SDNode.OrdinaryGSet("html", "set");
+Fragment.prototype.html = SDNode.OrdinaryGSet("html", "set");
 Fragment.prototype.updateList = [
     ...Fragment.prototype.updateList,
     update
@@ -63,9 +61,9 @@ function update() {
     }
     if (this.member.get("snapshot") &&
         (this.member.hasChanged("x") ||
-        this.member.hasChanged("y") || 
-        this.member.hasChanged("width") ||
-        this.member.hasChanged("height"))) {
+            this.member.hasChanged("y") ||
+            this.member.hasChanged("width") ||
+            this.member.hasChanged("height"))) {
         const snapshot = this.member.get("snapshot");
         const x = this.member.get("x");
         const y = this.member.get("y");
@@ -80,7 +78,7 @@ function update() {
         new Action(
             this.delay(),
             this.delay() + this.duration(),
-            this.member.oldValue("transform"), 
+            this.member.oldValue("transform"),
             this.member.get("transform"),
             Interp.matrixInterp(this._.nake, "transform"),
             this, "transform"
@@ -93,7 +91,7 @@ function update() {
     }
 }
 
-Fragment.init = function() {
+Fragment.init = function () {
     Fragment.helper = Dom.createSVGElement("g");
     Dom.getByID("1").append(Fragment.helper);
     Fragment.helper.setAttribute("opacity", 0);
@@ -103,7 +101,7 @@ Fragment.init = function() {
  * @param {string} html 
  * @returns {{x: number, y: number, width: number, height: number}}
  */
-Fragment.getBox = function(html) {
+Fragment.getBox = function (html) {
     Fragment.helper.innerHTML = html;
     return Fragment.helper.getBBox();
 }
@@ -124,7 +122,7 @@ Fragment.getBox = function(html) {
  *  by: number
  * }}
  */
-Fragment.getMatrix = function(sx, sy, dx, dy, bx, by) {
+Fragment.getMatrix = function (sx, sy, dx, dy, bx, by) {
     return {
         a: sx, b: 0, c: 0, d: sy,
         e: sx * dx + (1 - sx) * (bx + dx),

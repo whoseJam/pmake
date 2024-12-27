@@ -1,22 +1,19 @@
-import { CircleBackground } from "@/Rule/Background";
-
-import { SDNode }      from "@/Node/SDNode";
-import { Circle }      from "@/Node/Nake/Circle";
 import { BaseElement } from "@/Node/Element/BaseElement";
+import { Circle } from "@/Node/Nake/Circle";
+import { Rule as R } from "@/Rule/Rule";
 import { Factory } from "@/Utility/Factory";
-import { reactive } from "../SDNode/SDValue";
 
 export function Vertex(parent, value) {
     BaseElement.call(this, parent);
 
     this.type("Vertex");
 
-    this.vars.merge(reactive({
+    this.vars.merge({
         r: 20
-    }));
+    });
 
-    this.childAs("background", new Circle(this.layer("background")), CircleBackground());
-    
+    this.childAs("background", new Circle(this.layer("background")), R.circleBackground());
+
     this.value(value);
 }
 

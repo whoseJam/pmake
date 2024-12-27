@@ -1,11 +1,8 @@
 import { Interp } from "@/Animate/Interp";
-
-import { SDNode }   from "@/Node/SDNode";
 import { BaseNake } from "@/Node/Nake/BaseNake";
-
-import { reactive }       from "@/Node/SDNode/SDValue";
-import { Factory } from "@/Utility/Factory";
+import { SDNode } from "@/Node/SDNode";
 import { Color as C } from "@/Utility/Color";
+import { Factory } from "@/Utility/Factory";
 
 export function Circle(parent) {
     BaseNake.call(this, parent, "circle");
@@ -14,11 +11,11 @@ export function Circle(parent) {
 
     this.vars.fill = C.white;
     this.vars.stroke = C.black;
-    this.vars.merge(reactive({
+    this.vars.merge({
         r: 20,
         cx: 20,
         cy: 20
-    }));
+    });
 
     this.vars.associate("r", Factory.action(this, this._.nake, "r", Interp.numberInterp));
     this.vars.associate("cx", Factory.action(this, this._.nake, "cx", Interp.numberInterp));
@@ -41,22 +38,22 @@ Circle.prototype.updateList = [
 ];
 Circle.prototype.inRange = SDNode.InRange("circle");
 
-Circle.prototype.x = function(x) {
+Circle.prototype.x = function (x) {
     if (x === undefined) return this.cx() - this.r();
     return this.cx(x - this.x() + this.cx());
 }
 
-Circle.prototype.y = function(y) {
+Circle.prototype.y = function (y) {
     if (y === undefined) return this.cy() - this.r();
     return this.cy(y - this.y() + this.cy());
 }
 
-Circle.prototype.width = function(width) {
+Circle.prototype.width = function (width) {
     if (width === undefined) return this.r() * 2;
     return this.r(width / 2);
 }
 
-Circle.prototype.height = function(height) {
+Circle.prototype.height = function (height) {
     if (height === undefined) return this.r() * 2;
     return this.r(height / 2);
 }

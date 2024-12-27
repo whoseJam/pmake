@@ -1,10 +1,11 @@
 
 export function Background() {
-    return function(parent, child) {
+    return function (parent, child) {
         const x = parent.x();
         const y = parent.y();
         const width = parent.width();
         const height = parent.height();
+        console.log("background rule parent.x=", x, "child=", child);
         child.width(width);
         child.height(height);
         child.x(x).y(y);
@@ -12,7 +13,7 @@ export function Background() {
 }
 
 export function CircleBackground() {
-    return function(parent, child) {
+    return function (parent, child) {
         const x = parent.x();
         const y = parent.y();
         const r = parent.r();

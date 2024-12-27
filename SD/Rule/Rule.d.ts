@@ -13,6 +13,7 @@ import { PointAtPathByRate }   from "@/Rule/Path";
 import { PointAtPathByLength } from "@/Rule/Path";
 
 export type RuleType = (parent: SDNode, child: SDNode) => void;
+export type SDRule = (parent: SDNode, child: SDNode) => void;
 
 export class Rule {
     static aside = Aside;

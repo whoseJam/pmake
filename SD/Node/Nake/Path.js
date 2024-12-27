@@ -3,8 +3,8 @@ import { Action } from "@/Animate/Action";
 import { BaseLine } from "@/Node/Nake/BaseLine";
 
 import { Dom } from "@/Dom/Dom";
-import { reactive } from "../SDNode/SDValue";
 import { Factory } from "@/Utility/Factory";
+import { reactive } from "../SDNode/SDValue";
 
 export function Path(parent) {
     BaseLine.call(this, parent, "path");
@@ -26,7 +26,7 @@ export function Path(parent) {
             this.delay(),
             this.delay() + this.duration(),
             oldD, newD,
-            function(t) {
+            function (t) {
                 if (t === 0) {
                     if (duration === 0) {
                         snap.attr({ d: this.target });
@@ -51,25 +51,25 @@ Path.prototype = {
     ...BaseLine.prototype
 };
 
-Path.prototype.at = function(k) {
+Path.prototype.at = function (k) {
     return Path.getPointByRate(this.vars.d, k);
 }
 
-Path.prototype.getPointAtLength = function(length) {
+Path.prototype.getPointAtLength = function (length) {
     return Path.getPointAtLength(this.vars.d, length);
 }
 
-Path.prototype.totalLength = function() {
+Path.prototype.totalLength = function () {
     return Path.getTotalLength(this.vars.d);
 }
 
-Path.prototype.x = function(x) {
+Path.prototype.x = function (x) {
     if (x === undefined) return this.vars.x;
     this.d(move(this.vars.d, x - this.vars.x, 0));
     return this;
 }
 
-Path.prototype.y = function(y) {
+Path.prototype.y = function (y) {
     if (y === undefined) return this.vars.y;
     this.d(move(this.vars.d, 0, y - this.vars.y));
     return this;
@@ -77,10 +77,10 @@ Path.prototype.y = function(y) {
 
 Path.prototype.d = Factory.handler("d");
 
-Path.prototype.width = function() { return this.vars.width; }
-Path.prototype.height = function() { return this.vars.height; }
+Path.prototype.width = function () { return this.vars.width; }
+Path.prototype.height = function () { return this.vars.height; }
 
-Path.init = function() {
+Path.init = function () {
     Path.helper = Dom.createSVGElement("path");
     Dom.getByID("1").append(Path.helper);
     Path.helper.setAttribute("stroke-opacity", 0);
@@ -91,7 +91,7 @@ Path.init = function() {
  * @param {string} d 
  * @returns {{x: number, y: number, width: number, height: number}}
  */
-Path.pathToBox = function(d) {
+Path.pathToBox = function (d) {
     Path.helper.setAttribute("d", d);
     return Path.helper.getBBox();
 }
@@ -101,12 +101,12 @@ Path.pathToBox = function(d) {
  * @param {number} length 
  * @returns {[number, number]}
  */
-Path.getPointAtLength = function(d, length) {
+Path.getPointAtLength = function (d, length) {
     try {
         Path.helper.setAttribute("d", d);
         const point = Path.helper.getPointAtLength(length);
         return [point.x, point.y];
-    } catch(e) {
+    } catch (e) {
         return [0, 0];
     }
 }
@@ -116,13 +116,13 @@ Path.getPointAtLength = function(d, length) {
  * @param {number} k 
  * @returns {[number, number]}
  */
-Path.getPointByRate = function(d, k) {
+Path.getPointByRate = function (d, k) {
     try {
         Path.helper.setAttribute("d", d);
         const length = Path.helper.getTotalLength() * k;
         const point = Path.helper.getPointAtLength(length);
         return [point.x, point.y];
-    } catch(e) {
+    } catch (e) {
         return [0, 0];
     }
 }
@@ -131,11 +131,11 @@ Path.getPointByRate = function(d, k) {
  * @param {string} d 
  * @returns {number}
  */
-Path.getTotalLength = function(d) {
+Path.getTotalLength = function (d) {
     try {
         Path.helper.setAttribute("d", d);
         return Path.helper.getTotalLength();
-    } catch(e) {
+    } catch (e) {
         return 0;
     }
 }
@@ -146,12 +146,12 @@ function move(d, dx, dy) {
     let i = 0;
     function alphabeta(ch) {
         return ("A" <= ch && ch <= "Z") ||
-               ("a" <= ch && ch <= "z");
+            ("a" <= ch && ch <= "z");
     }
     function valid(ch) {
         return alphabeta(ch) ||
-               ("0" <= ch && ch <= "9") || 
-               (ch === ".") || (ch === "-");
+            ("0" <= ch && ch <= "9") ||
+            (ch === ".") || (ch === "-");
     }
     function read() {
         let ans = "";
@@ -169,7 +169,7 @@ function move(d, dx, dy) {
     while (i < d.length) {
         let flag = read();
         if (i >= d.length) break;
-        switch(flag) {
+        switch (flag) {
             case "M":
                 x = read();
                 y = read();

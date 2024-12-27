@@ -44,7 +44,6 @@ export class Enter {
             element.opacity(0);
             element.attachTo(this.layer(layer));
             move();
-            element.update();
             element.startAnimate(this);
             element.opacity(1);
         }
@@ -52,10 +51,10 @@ export class Enter {
 
     static moveTo(layer) {
         return function(element, move) {
-            console.log("this.delay=", this.delay());
             element.after(this.delay());
             element.attachTo(svg());
             element.startAnimate(this);
+            move();
             element.attachTo(this.layer(layer));
             element.opacity(1);
         }

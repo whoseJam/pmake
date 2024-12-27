@@ -1,5 +1,4 @@
-import { SDNode }  from "@/Node/SDNode";
-import { D3Layer } from "@/Node/SDNode/D3Layer";
+import { SDNode } from "@/Node/SDNode";
 
 type viewBox = {
     x: number,
@@ -9,7 +8,7 @@ type viewBox = {
 };
 
 export class Svg extends SDNode {
-    constructor(parent: SDNode|D3Layer);
+    constructor(parent: SDNode);
 
     /**
      * 获取该节点的viewBox

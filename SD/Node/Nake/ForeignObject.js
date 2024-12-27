@@ -1,8 +1,7 @@
 import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
-
-import { SDNode }   from "@/Node/SDNode";
 import { BaseNake } from "@/Node/Nake/BaseNake";
+import { SDNode } from "@/Node/SDNode";
 
 export function ForeignObject(parent) {
     BaseNake.call(this, parent, "foreignObject");
@@ -25,12 +24,12 @@ ForeignObject.prototype = {
     ...BaseNake.prototype
 };
 
-ForeignObject.prototype.x      = SDNode.OrdinaryGSet("x", "setByEqual");
-ForeignObject.prototype.y      = SDNode.OrdinaryGSet("y", "setByEqual");
-ForeignObject.prototype.width  = SDNode.OrdinaryGSet("width", "setByEqual");
+ForeignObject.prototype.x = SDNode.OrdinaryGSet("x", "setByEqual");
+ForeignObject.prototype.y = SDNode.OrdinaryGSet("y", "setByEqual");
+ForeignObject.prototype.width = SDNode.OrdinaryGSet("width", "setByEqual");
 ForeignObject.prototype.height = SDNode.OrdinaryGSet("height", "setByEqual");
-ForeignObject.prototype.html   = SDNode.OrdinaryGSet("html", "set");
-ForeignObject.prototype.dom    = SDNode.OrdinaryGSet("dom", "set");
+ForeignObject.prototype.html = SDNode.OrdinaryGSet("html", "set");
+ForeignObject.prototype.dom = SDNode.OrdinaryGSet("dom", "set");
 
 ForeignObject.prototype.updateList = [
     ...ForeignObject.prototype.updateList,

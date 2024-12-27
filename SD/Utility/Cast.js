@@ -10,15 +10,15 @@ export class Cast {
     static castToSDNode(parent, any, id) {
         if (any === null || any === undefined) {
             if (id !== undefined) {
-                return new Text(parent, id);
+                return new Text(parent, id).opacity(0);
             }
             return null;
         }
         if (typeof(any) === "function") {
-            return any(parent);
+            return any(parent).opacity(0);
         }
         if (typeof(any) === "string" || typeof(any) === "number") {
-            return new Text(parent, any);
+            return new Text(parent, any).opacity(0);
         }
         return any;
     }

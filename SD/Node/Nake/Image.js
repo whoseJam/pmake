@@ -1,7 +1,5 @@
 import { Interp } from "@/Animate/Interp";
-
-import { BaseNake }       from "@/Node/Nake/BaseNake";
-import { reactive }       from "@/Node/SDNode/SDValue";
+import { BaseNake } from "@/Node/Nake/BaseNake";
 import { Factory } from "@/Utility/Factory";
 
 export function Image(parent) {
@@ -9,7 +7,7 @@ export function Image(parent) {
 
     this.type("Image");
 
-    this.vars = reactive({
+    this.vars.merge({
         x: 0,
         y: 0,
         width: 40,

@@ -1,5 +1,5 @@
-import { SDNode }   from "@/Node/SDNode";
 import { BaseNake } from "@/Node/Nake/BaseNake";
+import { SDNode } from "@/Node/SDNode";
 
 export class BaseLine extends BaseNake {
     constructor(parent: SDNode, tag: string);
@@ -11,9 +11,9 @@ export class BaseLine extends BaseNake {
     markerEnd(): string;
     markerEnd(marker: string): this;
 
-    arrow(flag: boolean|undefined|null): this;
-    revArrow(flag: boolean|undefined|null): this;
-    doubleArrow(flag: boolean|undefined|null): this;
+    arrow(flag: boolean | undefined | null): this;
+    revArrow(flag: boolean | undefined | null): this;
+    doubleArrow(flag: boolean | undefined | null): this;
 
     pointStoT(): this;
     pointTtoS(): this;
@@ -37,23 +37,7 @@ export class BaseLine extends BaseNake {
     y2(): number;
     y2(y: number): this;
 
-    /**
-     * 获取线上的k分位点
-     * @param {number} k
-     * @returns {[number, number]}
-     */
     at(k: number): Vector;
-
-    /**
-     * 获取线上距离起点长度length的点
-     * @param {number} length 
-     * @returns {[number, number]}
-     */
     getPointAtLength(length: number): Vector;
-
-    /**
-     * 获取线的总长
-     * @returns {number}
-     */
     totalLength(): number;
 }

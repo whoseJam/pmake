@@ -3,6 +3,7 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const C = sd.color();
 const R = sd.rule();
+const EN = sd.enter();
 const box = new sd.Box(svg).cx(600).cy(300).value(new sd.Circle(svg));
 
 main();
@@ -17,7 +18,7 @@ async function main() {
     await sd.pause();
     for (let i = 0; i < str.length; i++) {
         let t = str[i];
-        box.startAnimate().valueFromExist(t).endAnimate();
+        box.startAnimate().value(t.onEnter(EN.moveTo())).endAnimate();
     }
 
     await sd.pause();
