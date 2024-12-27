@@ -1,3 +1,5 @@
+import { RenderNode } from "@/Renderer/RenderNode";
+import { SDNode } from "../SDNode";
 
 export class SDValue {
     constructor(value: any);
@@ -35,3 +37,7 @@ export class SDValue {
      */
     hasChanged(): boolean;
 }
+
+export function reactive<T>(object: T): T & {
+    associate(key: string, func: any)
+};

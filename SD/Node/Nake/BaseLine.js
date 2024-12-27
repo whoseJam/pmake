@@ -6,27 +6,31 @@ import { BaseNake } from "@/Node/Nake/BaseNake";
 
 import { PointAtPathByRate } from "@/Rule/Path";
 
-import { Cast } from "@/Utility/Cast";
+import { Cast }       from "@/Utility/Cast";
+import { Color as C } from "@/Utility/Color";
+import { reactive } from "../SDNode/SDValue";
+import { Factory } from "@/Utility/Factory";
+import { Enter as EN } from "@/Node/SDNode/Enter";
+import { effect } from "../SDNode/SDValue";
 
 export function BaseLine(parent, tag) {
     BaseNake.call(this, parent, tag);
 
-    this.member.setAndFlush("fill-opacity", 0);
-    this.member.setAndFlush("stroke-opacity", 1);
-    this.member.setAndFlush("stroke-width", 1);
-    this.member.setAndFlush("stroke", "#000000");
-    this.member.new("marker-start", "");
-    this.member.new("marker-mid", "");
-    this.member.new("marker-end", "");
-    this.member.new("value", undefined);
-    this.member.new("rule", undefined);
+    this.vars.fillOpacity = 0;
+    this.vars.strokeOpacity = 1;
+    this.vars.strokeWidth = 1;
+    this.vars.stroke = C.black;
+    this.vars.merge(reactive({
+        markerStart: "",
+        markerMid: "",
+        markerEnd: "",
+        value: undefined
+    }));
 
-    const nake = this._.nake;
-    nake.setAttribute("fill-opacity", this.member.get("fill-opacity"));
-    nake.setAttribute("stroke-opacity", this.member.get("stroke-opacity"));
-    nake.setAttribute("stroke-width", this.member.get("stroke-width"));
-    nake.setAttribute("stroke", this.member.get("stroke"));
-
+    this.vars.associate("markerStart", Factory.action(this, this._.nake, "marker-start", Interp.stringInterp));
+    this.vars.associate("markerMid", Factory.action(this, this._.nake, "marker-mid", Interp.stringInterp));
+    this.vars.associate("markerEnd", Factory.action(this, this._.nake, "marker-end", Interp.stringInterp));
+    
     this._.BASE_LINE = true;
 }
 
@@ -34,24 +38,15 @@ BaseLine.prototype = {
     ...BaseNake.prototype
 };
 
-BaseLine.prototype.markerStart = MarkerGSet("marker-start");
-BaseLine.prototype.markerMid   = MarkerGSet("marker-mid");
-BaseLine.prototype.markerEnd   = MarkerGSet("marker-end");
-BaseLine.prototype.updateList = [
-    ...BaseLine.prototype.updateList,
-    SDNode.OrdinaryUpdate("marker-start", Interp.stringInterp),
-    SDNode.OrdinaryUpdate("marker-mid", Interp.stringInterp),
-    SDNode.OrdinaryUpdate("marker-end", Interp.stringInterp)
-];
+BaseLine.prototype.markerStart = HandlerMarker("markerStart");
+BaseLine.prototype.markerMid = HandlerMarker("markerMid");
+BaseLine.prototype.markerEnd = HandlerMarker("markerEnd");
 
-function MarkerGSet(key) {
+function HandlerMarker(key) {
     return function(marker) {
-        if (marker === undefined) {
-            return this.member.get(key);
-        }
+        if (marker === undefined) return this.vars[key];
         marker = (marker !== "") ? `url(#${marker})` : "";
-        this.member.set(key, marker);
-        this.tryUpdate();
+        this.vars[key] = marker;
         return this;
     }
 }
@@ -181,8 +176,8 @@ BaseLine.prototype.value = function(value, rule) {
     if (value === undefined) {
         return oldValue;
     }
-    rule = rule ? rule : 
-           this.member.get("rule") ? this.member.get("rule") : PointAtPathByRate(0.5, "cx", "cy");
+    // rule = rule ? rule : 
+    //        this.member.get("rule") ? this.member.get("rule") : PointAtPathByRate(0.5, "cx", "cy");
     value = Cast.castToSDNode(this, value);
 
     if (oldValue) {
@@ -191,17 +186,12 @@ BaseLine.prototype.value = function(value, rule) {
     if (!value) {
         return this;
     }
-    value._.enter = (element, move) => {
-        element.attachTo(this);
-        element.after(this);
-        element.opacity(0);
-        move();
-        element.update();
-        element.startAnimate(this);
-        element.opacity(1);
-    };
-    this._.children.push("value", value, rule);
-    this.tryUpdate();
+    value.onEnter(EN.appear());
+    this.childAs("value", value);
+    effect(() => {
+        value.cx(this.cx());
+        value.cy(this.cy());
+    })
     return this;
 }
 

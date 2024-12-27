@@ -1,5 +1,5 @@
-import { Exit }   from "@/Node/SDNode/Exit";
-import { Enter }  from "@/Node/SDNode/Enter";
+import { Exit as EX }   from "@/Node/SDNode/Exit";
+import { Enter as EN }  from "@/Node/SDNode/Enter";
 import { SDNode } from "@/Node/SDNode";
 
 import { CenterFixAspect } from "@/Rule/Center";
@@ -7,12 +7,21 @@ import { CenterFixAspect } from "@/Rule/Center";
 import { Cast }          from "@/Utility/Cast";
 import { Check }         from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
+import { reactive } from "../SDNode/SDValue";
+import { Factory } from "@/Utility/Factory";
 
 export function BaseElement(parent) {
     SDNode.call(this, parent);
     
     this.newLayer("background");
 
+    this.vars.merge(reactive({
+        x: 0,
+        y: 0,
+        width: 40,
+        height: 40,
+        rate: 1.2
+    }));
     this.member.new("x", 0);
     this.member.new("y", 0);
     this.member.new("width", 40);
@@ -38,11 +47,11 @@ BaseElement.prototype.updateList = [
     }
 ]
 
-BaseElement.prototype.x             = SDNode.ordinaryGetterAndSetter("x", "setByEqual");
-BaseElement.prototype.y             = SDNode.ordinaryGetterAndSetter("y", "setByEqual");
-BaseElement.prototype.width         = SDNode.ordinaryGetterAndSetter("width", "setByEqual");
-BaseElement.prototype.height        = SDNode.ordinaryGetterAndSetter("height", "setByEqual");
-BaseElement.prototype.rate          = SDNode.ordinaryGetterAndSetter("rate", "setByDqual");
+BaseElement.prototype.x = Factory.handlerLowPrecise("x");
+BaseElement.prototype.y = Factory.handlerLowPrecise("y");
+BaseElement.prototype.width = Factory.handlerLowPrecise("width");
+BaseElement.prototype.height = Factory.handlerLowPrecise("height");
+BaseElement.prototype.rate = Factory.handlerLowPrecise("rate");
 BaseElement.prototype.color         = BackgroundGSet("color");
 BaseElement.prototype.fill          = BackgroundGSet("fill");
 BaseElement.prototype.fillOpacity   = BackgroundGSet("fillOpacity");
@@ -63,7 +72,7 @@ BaseElement.prototype.text = function() {
 
 BaseElement.prototype.drop = function() {
     const value = this.child("value");
-    value.onExit(Exit.drop());
+    value.onExit(EX.drop());
     this.eraseChild(value);
     return value;
 }
@@ -81,8 +90,8 @@ BaseElement.prototype.value = function(value, rule) {
     if (Check.isFalseType(value)) return this;
     rule = GetValueRule.call(this, rule);
     value = Cast.castToSDNode(this, value);
-    if (!value.onEnter()) value.onEnter(Enter.appear());
-    if (!value.onExit()) value.onExit(Exit.fade());
+    if (!value.onEnter()) value.onEnter(EN.appear());
+    if (!value.onExit()) value.onExit(EX.fade());
     this.childAs("value", value, rule);
     return this;
 }
@@ -90,8 +99,9 @@ BaseElement.prototype.value = function(value, rule) {
 BaseElement.prototype.valueFromExist = function(value, rule) {
     if (this.hasChild("value")) this.eraseChild("value");
     rule = GetValueRule.call(this, rule);
-    value.onEnter(Enter.moveTo());
-    if (!value.onExit()) value.onExit(Exit.fade());
+    value.onEnter(EN.moveTo());
+    if (!value.onExit()) value.onExit(EX.fade());
+    value.triggerEnter();
     this.childAs("value", value, rule);
     return this;
 }

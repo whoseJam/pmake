@@ -52,11 +52,11 @@ export class Enter {
 
     static moveTo(layer) {
         return function(element, move) {
+            console.log("this.delay=", this.delay());
             element.after(this.delay());
             element.attachTo(svg());
             element.startAnimate(this);
             element.attachTo(this.layer(layer));
-            move();
             element.opacity(1);
         }
     }

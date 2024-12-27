@@ -1,23 +1,38 @@
 import { Interp } from "@/Animate/Interp";
 
-import { Text }    from "@/Node/Nake/Text";
-import { SDNode }  from "@/Node/SDNode";
+import { Text }           from "@/Node/Nake/Text";
+import { SDNode }         from "@/Node/SDNode";
+import { reactive }       from "@/Node/SDNode/SDValue";
+import { Factory } from "@/Utility/Factory";
+
 import { SVGNode } from "@/Renderer/SVG/SVGNode";
 
-import { Check } from "@/Utility/Check";
+import { Check }      from "@/Utility/Check";
+import { Color as C } from "@/Utility/Color";
 
 export function BaseNake(parent, tag) {
     SDNode.call(this, parent);
-    
-    this.member.new("fill", "#000000");
-    this.member.new("fill-opacity", 1);
-    this.member.new("stroke", "#ffffff");
-    this.member.new("stroke-opacity", 1);
-    this.member.new("stroke-width", 1);
-    this.member.new("stroke-dashoffset", 0);
-    this.member.new("stroke-dasharray", [1, 0]);
+
+    this.vars.merge(reactive({
+        fill: C.black,
+        fillOpacity: 1,
+        stroke: C.white,
+        strokeOpacity: 1,
+        strokeWidth: 1,
+        strokeDashOffset: 0,
+        strokeDashArray: [1, 0]
+    }));
 
     this._.nake = new SVGNode(this, this._.layer, tag);
+
+    this.vars.associate("fill", Factory.action(this, this._.nake, "fill", Interp.colorInterp));
+    this.vars.associate("stroke", Factory.action(this, this._.nake, "stroke", Interp.colorInterp));
+    this.vars.associate("fillOpacity", Factory.action(this, this._.nake, "fill-opacity", Interp.numberInterp));
+    this.vars.associate("strokeOpacity", Factory.action(this, this._.nake, "stroke-opacity", Interp.numberInterp));
+    this.vars.associate("strokeWidth", Factory.action(this, this._.nake, "stroke-width", Interp.numberInterp));
+    this.vars.associate("strokeDashOffset", Factory.action(this, this._.nake, "stroke-dashoffset", Interp.numberInterp));
+    this.vars.associate("strokeDashArray", Factory.action(this, this._.nake, "stroke-dasharray", Interp.arrayInterp));
+
     this._.BASE_NAKE = true;
 }
 
@@ -25,42 +40,20 @@ BaseNake.prototype = {
     ...SDNode.prototype
 }
 
-BaseNake.prototype.fill             = SDNode.OrdinaryGSet("fill", "set");
-BaseNake.prototype.fillOpacity      = SDNode.OrdinaryGSet("fill-opacity", "setByDqual");
-BaseNake.prototype.stroke           = SDNode.OrdinaryGSet("stroke", "set");
-BaseNake.prototype.strokeOpacity    = SDNode.OrdinaryGSet("stroke-opacity", "setByDqual");
-BaseNake.prototype.strokeWidth      = SDNode.OrdinaryGSet("stroke-width", "setByDqual");
-BaseNake.prototype.strokeDashOffset = SDNode.OrdinaryGSet("stroke-dashoffset", "setByEqual");
-BaseNake.prototype.strokeDashArray  = SDNode.OrdinaryGSet("stroke-dasharray", "set");
+BaseNake.prototype.fill = Factory.handler("fill");
+BaseNake.prototype.stroke = Factory.handler("stroke");
+BaseNake.prototype.fillOpacity = Factory.handlerMediumPrecise("fillOpacity");
+BaseNake.prototype.strokeOpacity = Factory.handlerMediumPrecise("strokeOpacity");
+BaseNake.prototype.strokeWidth = Factory.handlerMediumPrecise("strokeWidth");
+BaseNake.prototype.strokeDashOffset = Factory.handlerMediumPrecise("strokeDashOffset");
+BaseNake.prototype.strokeDashArray = Factory.handler("strokeDashArray");
 
 BaseNake.prototype.color = function(color) {
-    if (color === undefined) {
-        return {
-            main: this.fill(),
-            border: this.stroke()
-        };
-    }
+    if (color === undefined) return { main: this.fill(), border: this.stroke() };
     if (typeof(color) === "string") {
         this.fill(color);
-        if (this instanceof Text) {
-            this.stroke(color);
-        } else if (Check.isTypeOfLine(this)) {
-            this.stroke(color);
-        }
-    } else {
-        this.fill(color.main);
-        this.stroke(color.border);
-    }
+        if (this instanceof Text) this.stroke(color);
+        else if (Check.isTypeOfLine(this)) this.stroke(color);
+    } else this.fill(color.main).stroke(color.border);
     return this;
 }
-
-BaseNake.prototype.updateList = [
-    ...BaseNake.prototype.updateList,
-    SDNode.OrdinaryUpdate("fill", Interp.colorInterp),
-    SDNode.OrdinaryUpdate("fill-opacity", Interp.numberInterp),
-    SDNode.OrdinaryUpdate("stroke", Interp.colorInterp),
-    SDNode.OrdinaryUpdate("stroke-opacity", Interp.numberInterp),
-    SDNode.OrdinaryUpdate("stroke-width", Interp.numberInterp),
-    SDNode.OrdinaryUpdate("stroke-dashoffset", Interp.numberInterp),
-    SDNode.OrdinaryUpdate("stroke-dasharray", Interp.arrayInterp)
-];

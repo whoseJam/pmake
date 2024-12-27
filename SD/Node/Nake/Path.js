@@ -3,93 +3,29 @@ import { Action } from "@/Animate/Action";
 import { BaseLine } from "@/Node/Nake/BaseLine";
 
 import { Dom } from "@/Dom/Dom";
+import { reactive } from "../SDNode/SDValue";
+import { Factory } from "@/Utility/Factory";
 
 export function Path(parent) {
     BaseLine.call(this, parent, "path");
 
     this.type("Path");
 
-    this.member.new("x", 0);
-    this.member.new("y", 0);
-    this.member.new("width", 0);
-    this.member.new("height", 0);
-    this.member.new("d", "M 0, 0 L 0, 0");
+    this.vars.merge(reactive({
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+        d: "M0,0L0,0"
+    }));
 
-    const nake = this._.nake;
-    nake.setAttribute("d", this.member.get("d"));
-}
-
-Path.prototype = {
-    ...BaseLine.prototype
-};
-
-Path.prototype.updateList = [
-    ...Path.prototype.updateList,
-    update
-];
-
-Path.prototype.at = function(k) {
-    return Path.getPointByRate(this.member.get("d"), k);
-}
-
-Path.prototype.getPointAtLength = function(length) {
-    return Path.getPointAtLength(this.member.get("d"), length);
-}
-
-Path.prototype.totalLength = function() {
-    return Path.getTotalLength(this.member.get("d"));
-}
-
-Path.prototype.x = function(x) {
-    if (x === undefined) {
-        return this.member.get("x");
-    }
-    this.member.setByEqual("x", x);
-    this.d(move(
-        this.member.get("d"),
-        x - this.member.get("x"),
-        0));
-    return this;
-}
-
-Path.prototype.y = function(y) {
-    if (y === undefined) {
-        return this.member.get("y");
-    }
-    this.member.setByEqual("y", y);
-    this.d(move(
-        this.member.get("d"),
-        0,
-        y - this.member.get("y")));
-    return this;
-}
-
-Path.prototype.d = function(d) {
-    if (d === undefined) {
-        return this.member.get("d");
-    }
-    this.member.set("d", d);
-    this.tryUpdate();
-    return this;
-}
-
-Path.prototype.width = function(width) {
-    return this.member.get("width");
-}
-
-Path.prototype.height = function(height) {
-    return this.member.get("height");
-}
-
-function update() {
-    if (this.member.hasChanged("d")) {
+    this.vars.associate("d", (newD, oldD) => {
         const duration = this.duration();
         const snap = Snap(this._.nake.nake());
         const t = new Action(
             this.delay(),
             this.delay() + this.duration(),
-            this.member.oldValue("d"),
-            this.member.get("d"),
+            oldD, newD,
             function(t) {
                 if (t === 0) {
                     if (duration === 0) {
@@ -101,14 +37,48 @@ function update() {
             },
             this, "d"
         );
-        const box = Path.pathToBox(this.member.get("d"));
-        this.member.setAndFlush("x", box.x);
-        this.member.setAndFlush("y", box.y);
-        this.member.setAndFlush("width", box.width);
-        this.member.setAndFlush("height", box.height);
-        this.member.flush("d");
-    }
+        const box = Path.pathToBox(newD);
+        this.vars.x = box.x;
+        this.vars.y = box.y;
+        this.vars.width = box.width;
+        this.vars.height = box.height;
+    })
+
+    this._.nake.setAttribute("d", this.vars.d);
 }
+
+Path.prototype = {
+    ...BaseLine.prototype
+};
+
+Path.prototype.at = function(k) {
+    return Path.getPointByRate(this.vars.d, k);
+}
+
+Path.prototype.getPointAtLength = function(length) {
+    return Path.getPointAtLength(this.vars.d, length);
+}
+
+Path.prototype.totalLength = function() {
+    return Path.getTotalLength(this.vars.d);
+}
+
+Path.prototype.x = function(x) {
+    if (x === undefined) return this.vars.x;
+    this.d(move(this.vars.d, x - this.vars.x, 0));
+    return this;
+}
+
+Path.prototype.y = function(y) {
+    if (y === undefined) return this.vars.y;
+    this.d(move(this.vars.d, 0, y - this.vars.y));
+    return this;
+}
+
+Path.prototype.d = Factory.handler("d");
+
+Path.prototype.width = function() { return this.vars.width; }
+Path.prototype.height = function() { return this.vars.height; }
 
 Path.init = function() {
     Path.helper = Dom.createSVGElement("path");

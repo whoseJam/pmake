@@ -1,41 +1,43 @@
 import { Interp } from "@/Animate/Interp";
 
-import { SDNode }   from "@/Node/SDNode";
-import { BaseNake } from "@/Node/Nake/BaseNake";
+import { Color as C } from "@/Utility/Color";
+
+import { BaseNake }       from "@/Node/Nake/BaseNake";
+import { reactive }       from "@/Node/SDNode/SDValue";
+import { Factory } from "@/Utility/Factory";
 
 export function Rect(parent) {
     BaseNake.call(this, parent, "rect");
 
     this.type("Rect");
-    this.member.new("x", 0);
-    this.member.new("y", 0);
-    this.member.new("width", 40);
-    this.member.new("height", 40);
-    this.member.setAndFlush("fill", "#ffffff");
-    this.member.setAndFlush("stroke", "#000000");
 
-    const nake = this._.nake;
-    nake.setAttribute("fill", this.member.get("fill"));
-    nake.setAttribute("stroke", this.member.get("stroke"));
-    nake.setAttribute("x", this.member.get("x"));
-    nake.setAttribute("y", this.member.get("y"));
-    nake.setAttribute("width", this.member.get("width"));
-    nake.setAttribute("height", this.member.get("height"));
+    this.vars.merge(reactive({
+        x: 0,
+        y: 0,
+        width: 40,
+        height: 40
+    }));
+    this.vars.fill = C.white;
+    this.vars.stroke = C.black;
+
+    this.vars.associate("x", Factory.action(this, this._.nake, "x", Interp.numberInterp));
+    this.vars.associate("y", Factory.action(this, this._.nake, "y", Interp.numberInterp));
+    this.vars.associate("width", Factory.action(this, this._.nake, "width", Interp.numberInterp));
+    this.vars.associate("height", Factory.action(this, this._.nake, "height", Interp.numberInterp));
+
+    this._.nake.setAttribute("fill", this.vars.fill);
+    this._.nake.setAttribute("stroke", this.vars.stroke);
+    this._.nake.setAttribute("x", this.vars.x);
+    this._.nake.setAttribute("y", this.vars.y);
+    this._.nake.setAttribute("width", this.vars.width);
+    this._.nake.setAttribute("height", this.vars.height);
 }
 
 Rect.prototype = {
     ...BaseNake.prototype
 }
 
-Rect.prototype.x      = SDNode.OrdinaryGSet("x", "setByEqual");
-Rect.prototype.y      = SDNode.OrdinaryGSet("y", "setByEqual");
-Rect.prototype.width  = SDNode.OrdinaryGSet("width", "setByEqual");
-Rect.prototype.height = SDNode.OrdinaryGSet("height", "setByEqual");
-
-Rect.prototype.updateList = [
-    ...Rect.prototype.updateList,
-    SDNode.OrdinaryUpdate("x", Interp.numberInterp),
-    SDNode.OrdinaryUpdate("y", Interp.numberInterp),
-    SDNode.OrdinaryUpdate("width", Interp.numberInterp),
-    SDNode.OrdinaryUpdate("height", Interp.numberInterp)
-];
+Rect.prototype.x = Factory.handlerLowPrecise("x");
+Rect.prototype.y = Factory.handlerLowPrecise("y");
+Rect.prototype.width = Factory.handlerLowPrecise("width");
+Rect.prototype.height = Factory.handlerLowPrecise("height");

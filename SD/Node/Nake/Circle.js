@@ -3,63 +3,60 @@ import { Interp } from "@/Animate/Interp";
 import { SDNode }   from "@/Node/SDNode";
 import { BaseNake } from "@/Node/Nake/BaseNake";
 
+import { reactive }       from "@/Node/SDNode/SDValue";
+import { Factory } from "@/Utility/Factory";
+import { Color as C } from "@/Utility/Color";
+
 export function Circle(parent) {
     BaseNake.call(this, parent, "circle");
 
     this.type("Circle");
-    this.member.new("cx", 20);
-    this.member.new("cy", 20);
-    this.member.new("r", 20);
-    this.member.setAndFlush("fill", "#ffffff");
-    this.member.setAndFlush("stroke", "#000000");
 
-    const nake = this._.nake;
-    nake.setAttribute("fill", this.member.get("fill"));
-    nake.setAttribute("stroke", this.member.get("stroke"));
-    nake.setAttribute("cx", this.member.get("cx"));
-    nake.setAttribute("cy", this.member.get("cy"));
-    nake.setAttribute("r", this.member.get("r"));
+    this.vars.fill = C.white;
+    this.vars.stroke = C.black;
+    this.vars.merge(reactive({
+        r: 20,
+        cx: 20,
+        cy: 20
+    }));
+
+    this.vars.associate("r", Factory.action(this, this._.nake, "r", Interp.numberInterp));
+    this.vars.associate("cx", Factory.action(this, this._.nake, "cx", Interp.numberInterp));
+    this.vars.associate("cy", Factory.action(this, this._.nake, "cy", Interp.numberInterp));
+
+    this._.nake.setAttribute("cx", this.vars.cx);
+    this._.nake.setAttribute("cy", this.vars.cy);
+    this._.nake.setAttribute("r", this.vars.r);
 }
 
 Circle.prototype = {
     ...BaseNake.prototype
 };
 
-Circle.prototype.cx = SDNode.OrdinaryGSet("cx", "setByEqual");
-Circle.prototype.cy = SDNode.OrdinaryGSet("cy", "setByEqual");
-Circle.prototype.r  = SDNode.OrdinaryGSet("r", "setByEqual");
+Circle.prototype.r = Factory.handlerLowPrecise("r");
+Circle.prototype.cx = Factory.handlerLowPrecise("cx");
+Circle.prototype.cy = Factory.handlerLowPrecise("cy");
 Circle.prototype.updateList = [
-    ...Circle.prototype.updateList,
-    SDNode.OrdinaryUpdate("cx", Interp.numberInterp),
-    SDNode.OrdinaryUpdate("cy", Interp.numberInterp),
-    SDNode.OrdinaryUpdate("r", Interp.numberInterp)
+    ...Circle.prototype.updateList
 ];
 Circle.prototype.inRange = SDNode.InRange("circle");
 
 Circle.prototype.x = function(x) {
-    if (x === undefined) {
-        return this.cx() - this.r();
-    }
+    if (x === undefined) return this.cx() - this.r();
     return this.cx(x - this.x() + this.cx());
 }
 
 Circle.prototype.y = function(y) {
-    if (y === undefined) {
-        return this.cy() - this.r();
-    }
+    if (y === undefined) return this.cy() - this.r();
     return this.cy(y - this.y() + this.cy());
 }
 
 Circle.prototype.width = function(width) {
-    if (width === undefined) {
-        return this.r() * 2;
-    }
+    if (width === undefined) return this.r() * 2;
     return this.r(width / 2);
 }
 
 Circle.prototype.height = function(height) {
-    if (height === undefined) {
-        return this.r() * 2;
-    }
+    if (height === undefined) return this.r() * 2;
     return this.r(height / 2);
 }

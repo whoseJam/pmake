@@ -12,6 +12,9 @@ import { SVGNode } from "@/Renderer/SVG/SVGNode";
 import { Vector } from "@/Math/Vector";
 
 import { Check } from "@/Utility/Check";
+import { reactive } from "@/Node/SDNode/SDValue";
+import { Factory } from "@/Utility/Factory";
+import { effect } from "./SDNode/SDValue";
 
 let SDNodeID = 0;
 
@@ -53,7 +56,27 @@ export function SDNode(parent, layer = undefined) {
 
     }
 
-    this.member.new("opacity", 1);
+    this.vars = reactive({
+        opacity: 1
+    });
+
+    this.vars.associate("opacity", (newOpacity, oldOpacity) => {
+        const self = this;
+        const layer = this._.layer;
+        new Action(
+            this.delay(),
+            this.delay() + this.duration(),
+            oldOpacity, newOpacity,
+            function(t) {
+                const k = this.source + (this.target - this.source) * t;
+                layer.setAttribute("opacity", k);
+                if (t === 1 && !self._.clickableCalled) {
+                    layer.setAttribute("pointer-events", k === 0 ? "none" : "auto");
+                }
+            },
+            this, "opacity"
+        );
+    })
     
     this._.BASE_SDNODE = true;
 }
@@ -179,11 +202,7 @@ SDNode.prototype.childAs = function() {
     const args = [...arguments];
     const child = args.filter(arg => Check.isTypeOfSDNode(arg))[0];
     if (child._.parent !== this && !child.onEnter()) child.attachTo(this);
-    const rule = args[args.indexOf(child) + 1];
     this._.children.push(args[0], args[1], args[2]);
-    // TODO: 当使用 fromExist 的时候，这里使用 rule 会有问题
-    // if (rule) rule(this, child);
-    this.tryUpdate();
     return this;
 }
 
@@ -198,7 +217,7 @@ SDNode.prototype.delay        = SDNode.forwardWithReturn("animate", "delay");
 SDNode.prototype.after        = SDNode.forward("animate", "after");
 SDNode.prototype.duration     = SDNode.forwardWithReturn("animate", "duration");
 
-SDNode.prototype.opacity = SDNode.OrdinaryGSet("opacity", "setByDqual");
+SDNode.prototype.opacity = Factory.handlerMediumPrecise("opacity");
 SDNode.prototype.inRange = SDNode.InRange("rect");
 SDNode.prototype.remove  = function() { this._.layer.remove(); }
 
@@ -213,44 +232,7 @@ SDNode.prototype.mx     = Location.maxiumLocation("x", "width");
 SDNode.prototype.my     = Location.maxiumLocation("y", "height");
 SDNode.prototype.dx     = Location.moveLocation("x");
 SDNode.prototype.dy     = Location.moveLocation("y");
-
-SDNode.prototype.update       = SDNode.forward("updater", "update");
-SDNode.prototype.updating     = SDNode.forwardWithReturn("updater", "updating");
-SDNode.prototype.preUpdate    = SDNode.forward("updater", "preUpdate");
-SDNode.prototype.postUpdate   = SDNode.forward("updater", "postUpdate");
-SDNode.prototype.tryUpdate    = SDNode.forward("updater", "tryUpdate");
-SDNode.prototype.pendUpdate   = SDNode.forward("updater", "pendUpdate");
-SDNode.prototype.beforeUpdate = SDNode.forward("updater", "beforeUpdate");
-SDNode.prototype.afterUpdate  = SDNode.forward("updater", "afterUpdate");
-SDNode.prototype.attachUpdate = SDNode.forward("updater", "attachUpdate");
-SDNode.prototype.removeUpdate = SDNode.forward("updater", "removeUpdate");
-SDNode.prototype.tryMove      = SDNode.forward("updater", "tryMove");
-SDNode.prototype.freeze       = SDNode.forward("updater", "freeze");
-SDNode.prototype.unfreeze     = SDNode.forward("updater", "unfreeze");
-SDNode.prototype.freezing     = SDNode.forwardWithReturn("updater", "freezing");
-SDNode.prototype.updateList = [
-    function() {
-        const self = this;
-        const layer = this._.layer;
-        if (this.member.hasChanged("opacity")) {
-            new Action(
-                this.delay(),
-                this.delay() + this.duration(),
-                this.member.oldValue("opacity"),
-                this.member.get("opacity"),
-                function(t) {
-                    const k = this.source + (this.target - this.source) * t;
-                    layer.setAttribute("opacity", k);
-                    if (t === 1 && !self._.clickableCalled) {
-                        layer.setAttribute("pointer-events", k === 0 ? "none" : "auto");
-                    }
-                },
-                this, "opacity"
-            )
-            this.member.flush("opacity");
-        }
-    }
-];
+SDNode.prototype.updateList = [];
 
 SDNode.prototype.drag       = SDNode.forward("interact", "drag");
 SDNode.prototype.clickable  = function(type) {
@@ -263,14 +245,16 @@ SDNode.prototype.onDblClick = SDNode.forward("interact", "onDblClick");
 
 SDNode.prototype.rule = function(rule) {
     if (rule === undefined) return this._.rule;
-    this._.rule = rule;
+    this._.rule = effect(() => {
+        rule(this._.parent, this);
+    });
     return this;
 }
 
 SDNode.prototype.triggerRule = function() {
-    if (!this._.rule) return this;
-    this._.rule(this._.parent, this);
-    return this;
+    // if (!this._.rule) return this;
+    // this._.rule(this._.parent, this);
+    // return this;
 }
 
 SDNode.prototype.onEnter = function(enter) {

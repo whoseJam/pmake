@@ -100,3 +100,5 @@ export { enter } from "./Node/SDNode/Enter.js";
 export { PathPen } from "./Utility/PathPen.js";
 
 export { CONTINUE_FRAME }    from "./Animate/Window";
+
+export { effect } from "./Node/SDNode/SDValue";
