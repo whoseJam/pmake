@@ -1,8 +1,9 @@
-import { Rect }      from "@/Node/Nake/Rect";
-import { Array }     from "@/Node/Array/Array";
-import { Enter }     from "@/Node/SDNode/Enter";
-import { SDNode }    from "@/Node/SDNode";
+import { Array } from "@/Node/Array/Array";
 import { BaseArray } from "@/Node/Array/BaseArray";
+import { Rect } from "@/Node/Nake/Rect";
+import { Enter as EN } from "@/Node/SDNode/Enter";
+import { effect } from "@/Node/SDNode/SDValue";
+import { Factory } from "@/Utility/Factory";
 
 export function BarArray(parent) {
     BaseArray.call(this, parent);
@@ -10,86 +11,66 @@ export function BarArray(parent) {
     this.type("BarArray");
     this.newLayer("elements");
 
-    this.member.new("x", 0);
-    this.member.new("y", 0);
-    this.member.new("elementWidth", 40);
-    this.member.new("elementHeight", 40);
-    this.member.new("height", 0);
+    this.vars.merge({
+        x: 0,
+        y: 0,
+        elementWidth: 40,
+        elementHeight: 40,
+        height: 0
+    });
+
+    this._.updater = effect(() => {
+        const y = this.my();
+        let maxHeight = 0;
+        this.vars.elements.forEach((element, i) => {
+            element.width(this.elementWidth());
+            element.height(this.elementHeight() * element.value());
+            element.x(this.x() + i * this.elementWidth());
+            element.my(y);
+            maxHeight = Math.max(maxHeight, this.elementHeight() * element.value());
+        });
+        this.vars.height = maxHeight;
+        this.vars.y = y - maxHeight;
+    });
 }
-    
+
 BarArray.prototype = {
     ...BaseArray.prototype
 };
 
-BarArray.prototype.elementWidth  = SDNode.OrdinaryGSet("elementWidth", "setByEqual");
-BarArray.prototype.elementHeight = SDNode.OrdinaryGSet("elementHeight", "setByEqual");
-BarArray.prototype.updateList = [
-    ...BarArray.prototype.updateList,
-    update
-];
+BarArray.prototype.elementWidth = Factory.handlerLowPrecise("elementWidth");
+BarArray.prototype.elementHeight = Factory.handlerLowPrecise("elementHeight");
 
-BarArray.prototype.intValue = function(idx) {
+BarArray.prototype.intValue = function (idx) {
     return this.value(idx);
 }
 
-BarArray.prototype.width  = Array.prototype.width;
-BarArray.prototype.height = function(height) {
-    if (height === undefined) return this.member.get("height");
-    const elements = this.member.get("elements");
-    let maxValue = 1;
-    for (let element of elements) maxValue = Math.max(maxValue, element.value());
+BarArray.prototype.width = Array.prototype.width;
+BarArray.prototype.height = function (height) {
+    if (height === undefined) return this.vars.height;
+    const elements = this.vars.elements;
+    let maxValue = Math.max(1, elements.reduce((maxValue, element) => Math.max(maxValue, element.value())));
     this.elementHeight(height / maxValue);
     return this;
 }
 
-BarArray.prototype.insert = function(index, value) {
+BarArray.prototype.insert = function (index, value) {
     value = +value;
-    if (typeof(value) !== "number") throw new Error("Invalid Arguments");
-    const element = new Rect(this.layer("elements"));
-    element.member.new("barArrayValue", value);
-    element.value = function(value) {
-        if (value === undefined) return this.member.get("barArrayValue");
-        this.member.setAndFlush("barArrayValue", value);
+    if (typeof (value) !== "number") throw new Error("Invalid Arguments");
+    const element = new Rect(this.layer("elements")).opacity(0);
+    element.vars.value = value;
+    element.value = function (value) {
+        if (value === undefined) return this.vars.value;
+        this.vars.value = value;
         const baseline = this.my();
         this.height(value * this.parent.elementHeight());
         this.my(baseline);
         return this;
     }
-    element.intValue = function() {
+    element.intValue = function () {
         return this.value();
     }
-    element.onEnter(Enter.ordinary(this, "elements"));
+    element.onEnter(EN.appear("elements"));
     this.insertByBaseArray(index, element);
     return this;
-}
-
-function update() {
-    if (this.member.hasChanged("x") ||
-        this.member.hasChanged("y") ||
-        this.member.hasChanged("elementWidth") ||
-        this.member.hasChanged("elementHeight") ||
-        this.member.hasChanged("elements")) {
-        let x = this.x();
-        const y = this.my();
-        const elementWidth = this.elementWidth();
-        const elementHeight = this.elementHeight();
-        const elements = this.member.get("elements");
-        let maxHeight = 0;
-        for (let element of elements) {
-            const height = element.value() * elementHeight;
-            this.tryMove(element, () => {
-                element.width(elementWidth);
-                element.height(height);
-                element.x(x).my(y);
-            })
-            maxHeight = Math.max(maxHeight, height);
-            x += elementWidth;
-        }
-        this.member.setAndFlush("height", maxHeight);
-        this.member.setAndFlush("y", y - maxHeight);
-        this.member.flush("x");
-        this.member.flush("elementWidth");
-        this.member.flush("elementHeight");
-        this.member.flush("elements");
-    }
 }

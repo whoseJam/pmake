@@ -9,32 +9,27 @@ export function CenterOnly() {
 
 export function CenterFixAspect(rate = 1.2) {
     return function(parent, child) {
-        const cx = parent.cx();
-        const cy = parent.cy();
-        const width = parent.width();
-        const height = parent.height();
-        const cwidth = child.width();
-        const cheight = child.height();
-        if (cwidth !== 0 && cheight !== 0) {
-            const k = Math.min(width / cwidth / rate, height / cheight / rate);
-            child.width(cwidth * k);
-            child.height(cheight * k);
-        }
-        child.cx(cx);
-        child.cy(cy);
+        const cx = parent.cx(), w = parent.width();
+        const cy = parent.cy(), h = parent.height()
+        const cw = child.width(), kw = w / cw / rate;
+        const ch = child.height(), kh = h / ch / rate;
+        const k = Math.min(kw, kh);
+        child.width(cw * k);
+        child.height(ch * k);
+        child.x(cx - cw * k / 2);
+        child.y(cy - ch * k / 2);
     }
 }
 
 export function Center(rate = 1.2) {
     return function(parent, child) {
-        let cx = parent.cx();
-        let cy = parent.cy();
-        let width = parent.width();
-        let height = parent.height();
-        child.width(width / rate);
-        child.height(height / rate);
-        child.cx(cx);
-        child.cy(cy);
+        const cx = parent.cx(), w = parent.width();
+        const cy = parent.cy(), h = parent.height();
+        const cw = w / rate;
+        const ch = h / rate;
+        child.width(cw).height(ch);
+        child.x(cx - cw / 2);
+        child.y(cy - ch / 2);
     }
 }
 

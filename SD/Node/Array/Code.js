@@ -1,11 +1,9 @@
-import { Rect }      from "@/Node/Nake/Rect";
-import { Enter }     from "@/Node/SDNode/Enter";
-import { SDNode }    from "@/Node/SDNode";
-import { BaseArray } from "@/Node/Array/BaseArray";
-
 import { Context } from "@/Animate/Context";
-
-import { Cast }  from "@/Utility/Cast";
+import { BaseArray } from "@/Node/Array/BaseArray";
+import { Rect } from "@/Node/Nake/Rect";
+import { SDNode } from "@/Node/SDNode";
+import { Enter } from "@/Node/SDNode/Enter";
+import { Cast } from "@/Utility/Cast";
 import { Color } from "@/Utility/Color";
 
 export function Code(parent, source = undefined) {
@@ -26,7 +24,7 @@ export function Code(parent, source = undefined) {
         "focus",
         new Rect(this).color(Color.BLUE).opacity(0),
         (parent, child) => {
-            if (typeof(parent.l()) !== "number") return;
+            if (typeof (parent.l()) !== "number") return;
             const elementL = parent.element(parent.l());
             const elementR = parent.element(parent.r());
             child.x(elementL.x());
@@ -52,7 +50,7 @@ Code.prototype.updateList = [
     update
 ];
 
-Code.prototype.width = function(width) {
+Code.prototype.width = function (width) {
     if (width === undefined) {
         return this.member.get("width");
     }
@@ -61,7 +59,7 @@ Code.prototype.width = function(width) {
     return this;
 }
 
-Code.prototype.height = function(height) {
+Code.prototype.height = function (height) {
     if (height === undefined) {
         return this.member.get("height");
     }
@@ -70,14 +68,14 @@ Code.prototype.height = function(height) {
     return this;
 }
 
-Code.prototype.insert = function(index, value = "") {
+Code.prototype.insert = function (index, value = "") {
     const element = Cast.castToSDNode(this.layer("elements"), value);
     element.onEnter(Enter.ordinary(this, "elements"));
     this.insertByBaseArray(index, element);
     return this;
 }
 
-Code.prototype.code = function(source) {
+Code.prototype.code = function (source) {
     for (let i = this.end(); i >= this.start(); i--)
         this.erase(i);
     let ans = "";
@@ -91,7 +89,7 @@ Code.prototype.code = function(source) {
     return this;
 }
 
-Code.prototype.focus = function(l, r) {
+Code.prototype.focus = function (l, r) {
     const focus = this.child("focus");
     if (l === null) {
         this.member.setAndFlush("l", null);
@@ -117,15 +115,15 @@ Code.prototype.focus = function(l, r) {
     return this;
 }
 
-Code.prototype.l = function() {
+Code.prototype.l = function () {
     return this.member.get("l");
 }
 
-Code.prototype.r = function() {
+Code.prototype.r = function () {
     return this.member.get("r");
 }
 
-Code.prototype.value = function() {
+Code.prototype.value = function () {
     return this.element.apply(this, arguments);
 }
 

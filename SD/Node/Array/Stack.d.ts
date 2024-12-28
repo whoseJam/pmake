@@ -1,5 +1,5 @@
-import { SDNode }    from "@/Node/SDNode";
 import { BaseArray } from "@/Node/Array/BaseArray";
+import { SDNode } from "@/Node/SDNode";
 
 export class Stack extends BaseArray {
     constructor(parent: SDNode);

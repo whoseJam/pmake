@@ -5,7 +5,6 @@ export function Background() {
         const y = parent.y();
         const width = parent.width();
         const height = parent.height();
-        console.log("background rule parent.x=", x, "child=", child);
         child.width(width);
         child.height(height);
         child.x(x).y(y);

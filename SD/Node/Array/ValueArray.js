@@ -1,70 +1,47 @@
-import { Array }  from "@/Node/Array/Array";
-import { Enter }  from "@/Node/SDNode/Enter";
-import { SDNode } from "@/Node/SDNode";
-
+import { Array } from "@/Node/Array/Array";
+import { Enter as EN } from "@/Node/SDNode/Enter";
+import { effect, uneffect } from "@/Node/SDNode/SDValue";
 import { Cast } from "@/Utility/Cast";
+import { Factory } from "@/Utility/Factory";
 
 export function ValueArray(parent) {
     Array.call(this, parent);
 
     this.type("ValueArray");
 
-    this.member.new("align", "cy");
+    this.vars.merge({
+        align: "cy"
+    });
+
+    uneffect(this._.updater);
+
+    this._.updater = effect(() => {
+        const align = this.align();
+        this.vars.elements.forEach((element, i) => {
+            element.cx(this.x() + this.elementWidth() * (i + 0.5));
+            element[align](this[align]());
+        });
+    });
 }
 
 ValueArray.prototype = {
     ...Array.prototype
 };
 
-ValueArray.prototype.align = SDNode.OrdinaryGSet("align", "set");
+ValueArray.prototype.align = Factory.handler("align");
 
-ValueArray.prototype.updateList = [
-    ...Array.prototype.updateList.slice(0, -1),
-    update
-];
-
-ValueArray.prototype.insert = function(index, value) {
+ValueArray.prototype.insert = function (id, value) {
     const element = Cast.castToSDNode(this.layer("elements"), value);
-    element.onEnter(Enter.ordinary(this, "elements"))
-    this.insertByBaseArray(index, element);
+    element.onEnter(EN.appear("elements"))
+    this.insertByBaseArray(id, element);
     return this;
 }
 
-ValueArray.prototype.insertFromExistValue = function(index, value) {
+ValueArray.prototype.insertFromExistValue = function (id, value) {
     const element = value;
-    element.onEnter(Enter.fromExist(this, "elements"));
-    this.insertByBaseArray(index, element);
+    element.onEnter(EN.moveTo("elements"));
+    this.insertByBaseArray(id, element);
     return this;
 }
 
-ValueArray.prototype.insertFromExistElement = function(index, value) {
-    return this.insertFromExistValue(index, value);
-}
-
-function update() {
-    if (this.member.hasChanged("x") ||
-        this.member.hasChanged("y") ||
-        this.member.hasChanged("elementWidth") ||
-        this.member.hasChanged("elementHeight") ||
-        this.member.hasChanged("elements") ||
-        this.member.hasChanged("align")) {
-        let x = this.x();
-        const align = this.align();
-        const y = this[align]();
-        const elementWidth = this.elementWidth();
-        const elements = this.member.get("elements");
-        for (let element of elements) {
-            this.tryMove(element, () => {
-                element.cx(x + elementWidth / 2)
-                element[align](y);
-            });
-            x += elementWidth;
-        }
-        this.member.flush("x");
-        this.member.flush("y");
-        this.member.flush("elementWidth");
-        this.member.flush("elementHeight");
-        this.member.flush("elements");
-        this.member.flush("align");
-    }
-}
+ValueArray.prototype.insertFromExistElement = ValueArray.prototype.insertFromExistValue;

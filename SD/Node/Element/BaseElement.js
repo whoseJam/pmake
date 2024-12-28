@@ -29,12 +29,7 @@ BaseElement.prototype = {
     ...SDNode.prototype
 };
 
-BaseElement.prototype.x = function (x) {
-    if (x === undefined) return this.vars.x;
-    console.log("set element x=", x);
-    this.vars.x = x;
-    return this;
-}
+BaseElement.prototype.x = Factory.handlerLowPrecise("x");
 BaseElement.prototype.y = Factory.handlerLowPrecise("y");
 BaseElement.prototype.width = Factory.handlerLowPrecise("width");
 BaseElement.prototype.height = Factory.handlerLowPrecise("height");
@@ -102,5 +97,7 @@ function BackgroundHandler(key) {
 }
 
 function GetValueRule(vars, rule) {
-    return rule ? rule : CenterFixAspect(vars.rate);
+    // return CenterOnly();
+    return CenterFixAspect(1.2);
+    // return rule ? rule : CenterFixAspect(vars.rate);
 }

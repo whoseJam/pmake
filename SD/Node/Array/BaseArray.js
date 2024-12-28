@@ -81,9 +81,8 @@ BaseArray.prototype.forEachElement = function (callback) {
 BaseArray.prototype.insertByBaseArray = function (id, element) {
     const elements = this.vars.elements;
     element.triggerEnter(this, () => {
-        console.log("this=", this);
+        console.log("insert element=", element);
         this.childAs(element);
-        console.log("touch elements", elements, element);
         elements.splice(this.idx(id), 0, element);
     });
     return this;
@@ -114,6 +113,7 @@ BaseArray.prototype.eraseByBaseArray = function (id) {
     const element = this.element(id);
     const elements = this.vars.elements;
     elements.splice(this.idx(id), 1);
+    console.log("erase element=", element);
     this.eraseChild(element);
     return this;
 }

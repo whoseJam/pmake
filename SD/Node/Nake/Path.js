@@ -1,23 +1,20 @@
 import { Action } from "@/Animate/Action";
-
-import { BaseLine } from "@/Node/Nake/BaseLine";
-
 import { Dom } from "@/Dom/Dom";
+import { BaseLine } from "@/Node/Nake/BaseLine";
 import { Factory } from "@/Utility/Factory";
-import { reactive } from "../SDNode/SDValue";
 
 export function Path(parent) {
     BaseLine.call(this, parent, "path");
 
     this.type("Path");
 
-    this.vars.merge(reactive({
+    this.vars.merge({
         x: 0,
         y: 0,
         width: 0,
         height: 0,
         d: "M0,0L0,0"
-    }));
+    });
 
     this.vars.associate("d", (newD, oldD) => {
         const duration = this.duration();

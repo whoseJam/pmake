@@ -4,11 +4,19 @@ const svg = sd.svg();
 const C = sd.color();
 const R = sd.rule();
 const EN = sd.enter();
-const box = new sd.Box(svg).cx(600).cy(300).value(new sd.Circle(svg));
 
-main();
+sd.init(() => {
+
+})
+
+sd.main(TestTextCenter);
+
+async function TestTextCenter() {
+    const box = new sd.Box(svg).center(600, 300).value("a");
+}
 
 async function main() {
+    const box = new sd.Box(svg).cx(600).cy(300).value(new sd.Circle(svg));
     await sd.pause();
     let txt = "helloworld", str = [];
     for (let i = 0; i < txt.length; i++) {

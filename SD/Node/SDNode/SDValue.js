@@ -1,9 +1,40 @@
+import { Check } from "@/Utility/Check";
+
+class EffectQueue {
+    constructor(name) {
+        this.label = `in${name}Queue`;
+        this.queue = [];
+    }
+
+    pushFront(effect) {
+        effect[this.label] = true;
+        this.queue.unshift(effect);
+    }
+
+    pushBack(effect) {
+        effect[this.label] = true;
+        this.queue.push(effect);
+    }
+
+    execute() {
+        while (this.queue.length > 0) {
+            const effect = this.queue[0];
+            // console.log("execute effect=", effect.tag);
+            this.queue.shift();
+            effect();
+            flushDirty(effect);
+            effect[this.label] = false;
+        }
+    }
+}
+
 const proxiesMap = new WeakMap();
 const effectsMap = new WeakMap();
 const objectsMap = new WeakMap();
 let globalAllowDAGUpdate = true;
 let globalFreeze = 0;
-let globalEffectQueue = [];
+const localEffectQueue = new EffectQueue("Local");
+const globalEffectQueue = new EffectQueue("Global");
 let globalActiveEffect = undefined;
 
 class EffectManager {
@@ -41,16 +72,18 @@ class EffectManager {
     }
 
     handleNewOutput(oldOut) {
-        // console.log(oldOut, this.out);
-        // this.out.forEach(link => {
-        //     for (let i = 0; i < oldOut.length; i++) {
-        //         if (oldOut[i].key === link.key && oldOut[i].object === link.object) return;
-        //     }
-        //     console.log("attach update=", link.object, link.key);
-        //     setTimeout(() => {
-        //         triggerDAGUpdate(link.object, link.key);
-        //     }, 0);
-        // })
+        this.out.forEach(link => {
+            for (let i = 0; i < oldOut.length; i++) {
+                if (link.key === oldOut[i].key && link.object === oldOut[i].object) return;
+            }
+            const objectManager = objectsMap.get(link.object);
+            const outEffectsSet = objectManager.outputEffects(link.key);
+            outEffectsSet.forEach(effect => {
+                if (effect[localEffectQueue.label]) return;
+                // console.log("push effect =", effect.tag);
+                localEffectQueue.pushFront(effect);
+            })
+        })
     }
 }
 
@@ -105,14 +138,8 @@ function flushDirty(effect) {
 }
 
 function triggerGlobalEffectQueue() {
-    console.log("trigger global effect queue = ", globalEffectQueue)
     globalAllowDAGUpdate = false;
-    globalEffectQueue.forEach(effect => {
-        effect();
-        flushDirty(effect);
-        effect.inGlobalQueue = false;
-    });
-    globalEffectQueue = [];
+    globalEffectQueue.execute();
     globalAllowDAGUpdate = true;
 }
 
@@ -133,21 +160,9 @@ export function reactive(object) {
     let associated = {};
     const proxy = new Proxy(object, {
         get: function (object, key, receiver) {
-            // if (!!target[key] && !!target[key].bind) {
-            //     // 使用 bind 绑定 this 指向
-            //     return target[key].bind(target);
-            // } else {
-            //     return target[key];
-            // }
             traceInput(object, key);
-
-            // let value;
-            // if (!!object[key] && !!object[key].bind) {
-            //     value = Reflect.get(object, key, receiver).bind(object);
-            // } else {
-            //     value = Reflect.get(object, key, receiver);
-            // }
             const value = Reflect.get(object, key, receiver);
+            if (Check.isTypeOfSDNode(value)) return value;
             if (typeof (value) === "object") {
                 return reactive(value);
             }
@@ -186,28 +201,32 @@ export function reactive(object) {
     return proxy;
 }
 
-export function effect(effect, info) {
+export function effect(innerEffect, tag) {
     const effectFn = () => {
-        console.log("trigger effect=", effect, info);
-        if (globalActiveEffect !== undefined) {
-            // throw new Error("Nested Effect");
-        }
         globalActiveEffect = effectFn;
         const effectManager = effectsMap.get(effectFn);
         const out = effectManager.out;
         effectManager.clear();
-        effect();
+        innerEffect();
         effectManager.handleNewOutput(out);
         globalActiveEffect = undefined;
-        console.log("finish effect");
-        console.log("");
     };
-    effectFn.innerEffect = effect;
     effectsMap.set(effectFn, new EffectManager(effectFn));
-    // globalAllowDAGUpdate = false;
-    effectFn();
-    // globalAllowDAGUpdate = true;
+    // console.log("start init");
+    globalAllowDAGUpdate = false;
+    localEffectQueue.pushBack(effectFn);
+    effectFn.tag = tag ? tag : innerEffect;
+    localEffectQueue.execute();
+    globalAllowDAGUpdate = true;
+    // console.log("end init");
+    // checkEffect(effectFn);
+    // console.log("");
     return effectFn;
+}
+
+export function object(proxy) {
+    if (proxiesMap.get(proxy)) return proxiesMap.get(proxy);
+    return proxy;
 }
 
 export function uneffect(effect) {
@@ -239,9 +258,8 @@ function traceOutput(object, key) {
 }
 
 function triggerDAGUpdate(object, key, freeze) {
-    // if (!globalAllowDAGUpdate) return;
+    if (!globalAllowDAGUpdate) return;
     globalAllowDAGUpdate = false;
-    const effectQueue = [];
     function collectTriggeredEffect(object, key) {
         const objectManager = objectsMap.get(object);
         objectManager.dirty(key, true);
@@ -251,10 +269,11 @@ function triggerDAGUpdate(object, key, freeze) {
                 if (effect.inLocalQueue) return;
                 effect.inLocalQueue = true;
             } else {
-                if (effect.inLocalQueue || effect.inGlobalQueue) return;
-                effect.inLocalQueue = true;
+                throw new Error("Not Implemented Yet");
+                // if (effect.inLocalQueue || effect.inGlobalQueue) return;
+                // effect.inLocalQueue = true;
             }
-            effectQueue.push(effect);
+            localEffectQueue.pushBack(effect);
             const effectManager = effectsMap.get(effect);
             effectManager.out.forEach(link => {
                 collectTriggeredEffect(link.object, link.key);
@@ -263,19 +282,14 @@ function triggerDAGUpdate(object, key, freeze) {
     }
     collectTriggeredEffect(object, key);
     if (freeze === 0) {
-        console.log("effect Queue=", effectQueue, effectQueue.length);
-        effectQueue.forEach(effect => {
-            effect();
-            flushDirty(effect);
-            effect.inLocalQueue = false;
-        });
-        console.log("end");
+        localEffectQueue.execute();
     } else {
-        effectQueue.forEach(effect => {
-            effect.inGlobalQueue = true;
-            effect.inLocalQueue = false;
-        });
-        globalEffectQueue = [...effectQueue, ...globalEffectQueue];
+        throw new Error("Not Implemented Yet");
+        // effectQueue.forEach(effect => {
+        //     effect.inGlobalQueue = true;
+        //     effect.inLocalQueue = false;
+        // });
+        // globalEffectQueue = [...effectQueue, ...globalEffectQueue];
     }
     globalAllowDAGUpdate = true;
 }
@@ -287,3 +301,36 @@ export function checkEffect(effect) {
     console.log(effectManager.out);
     console.log("");
 }
+
+
+// const box = reactive({
+//     w: 40,
+//     h: 40,
+//     name: "box"
+// });
+// const text = reactive({
+//     w: 20,
+//     h: 20,
+//     f: 20,
+//     name: "text"
+// });
+
+// const e1 = effect(() => {
+//     console.log("e1 start effect");
+//     text.w = text.f;
+//     text.h = text.f;
+// }, "e1")
+
+// const e2 = effect(() => {
+//     console.log("e2 start effect");
+//     const w = box.w;
+//     const h = box.h;
+//     const cw = text.w;
+//     const ch = text.h;
+//     const kw = w / cw / 1.2;
+//     const kh = h / ch / 1.2;
+//     text.f = Math.min(kw * cw, kh * ch);
+// }, "e2")
+// checkEffect(e1);
+// checkEffect(e2);
+// console.log(box, text);

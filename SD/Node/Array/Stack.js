@@ -1,6 +1,7 @@
-import { Array }     from "@/Node/Array/Array";
-import { SDNode }    from "@/Node/SDNode";
+import { Array } from "@/Node/Array/Array";
 import { BaseArray } from "@/Node/Array/BaseArray";
+import { effect } from "@/Node/SDNode/SDValue";
+import { Factory } from "@/Utility/Factory";
 
 export function Stack(parent) {
     BaseArray.call(this, parent);
@@ -8,61 +9,36 @@ export function Stack(parent) {
     this.type("Stack");
     this.newLayer("elements");
 
-    this.member.new("x", 0);
-    this.member.new("y", 0);
-    this.member.new("elementWidth", 40);
-    this.member.new("elementHeight", 40);
+    this.vars.merge({
+        x: 0,
+        y: 0,
+        elementWidth: 40,
+        elementHeight: 40
+    });
+
+    this._.updater = effect(() => {
+        this.vars.elements.forEach((element, i) => {
+            element.width(this.elementWidth());
+            element.height(this.elementHeight());
+            element.x(this.x());
+            element.y(this.y() + i * this.elementHeight());
+        });
+    });
 }
 
 Stack.prototype = {
     ...BaseArray.prototype
 };
 
-Stack.prototype.elementWidth  = SDNode.OrdinaryGSet("elementWidth", "setByEqual");
-Stack.prototype.elementHeight = SDNode.OrdinaryGSet("elementHeight", "setByEqual");
-Stack.prototype.insert                 = Array.prototype.insert;
-Stack.prototype.insertFromExistValue   = Array.prototype.insertFromExistValue;
+Stack.prototype.elementWidth = Factory.handlerLowPrecise("elementWidth");
+Stack.prototype.elementHeight = Factory.handlerLowPrecise("elementHeight");
+Stack.prototype.insert = Array.prototype.insert;
+Stack.prototype.insertFromExistValue = Array.prototype.insertFromExistValue;
 Stack.prototype.insertFromExistElement = Array.prototype.insertFromExistElement;
-Stack.prototype.updateList = [
-    ...Stack.prototype.updateList,
-    update
-];
-
-Stack.prototype.width = function(width) {
-    return this.elementWidth(width);
-}
-
-Stack.prototype.height = function(height) {
+Stack.prototype.width = Stack.prototype.elementWidth;
+Stack.prototype.height = function (height) {
     if (height === undefined) return this.elementHeight() * this.length();
     const length = Math.max(this.length(), 1);
     this.elementHeight(height / length);
     return this;
 }
-
-function update() {
-    if (this.member.hasChanged("x") ||
-        this.member.hasChanged("y") || 
-        this.member.hasChanged("elementWidth") ||
-        this.member.hasChanged("elementHeight") ||
-        this.member.hasChanged("elements")) {
-        const x = this.x();
-        let y = this.y();
-        const elementWidth = this.elementWidth();
-        const elementHeight = this.elementHeight();
-        const elements = this.member.get("elements");
-        for (let element of elements) {
-            this.tryMove(element, () => {
-                element.width(elementWidth);
-                element.height(elementHeight);
-                element.x(x).y(y);
-            });
-            y += elementHeight;
-        }
-        this.member.flush("x");
-        this.member.flush("y");
-        this.member.flush("elementWidth");
-        this.member.flush("elementHeight");
-        this.member.flush("elements");
-    }
-}
-

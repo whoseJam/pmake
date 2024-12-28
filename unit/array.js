@@ -26,7 +26,7 @@ async function TestTwoArrayMoveValue() {
 
 async function main() {
     const arr = new sd.Array(svg).x(800).y(100);
-    arr.push(1);
+    arr.push(1).push(2).push(3);
     await sd.pause();
     arr.startAnimate()
     arr.insert(1, "+2");

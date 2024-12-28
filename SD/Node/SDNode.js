@@ -168,6 +168,7 @@ SDNode.InRange = function (mode) {
 }
 
 SDNode.prototype.type = function (type) {
+    if (type === undefined) return this._.layer.getAttribute("type");
     this._.layer.setAttribute("type", type);
     return this;
 }
@@ -243,7 +244,7 @@ SDNode.prototype.rule = function (rule) {
     if (rule === undefined) return this._.rule;
     this._.rule = effect(() => {
         rule(this._.parent, this);
-    }, this);
+    }, this.type() + "-rule");
     return this;
 }
 
@@ -298,3 +299,6 @@ SDNode.prototype.title = function (title) {
     titleElment.setAttribute("innerHTML", title);
     return this;
 }
+
+SDNode.prototype.freeze = function() { return this;};
+SDNode.prototype.unfreeze = function() { return this;};

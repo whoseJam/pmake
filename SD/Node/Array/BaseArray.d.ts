@@ -1,6 +1,5 @@
-import { Color } from "@/Utility/Color";
-
 import { SDNode } from "@/Node/SDNode";
+import { Color } from "@/Utility/Color";
 
 export class BaseArray extends SDNode {
     constructor(parent: SDNode);
@@ -14,7 +13,7 @@ export class BaseArray extends SDNode {
     resize(length: number): this;
 
     idx(id: number): number;
-    
+
     element(id: number): SDNode;
     elements(): Array<SDNode>;
     lastElement(): SDNode;
@@ -28,10 +27,10 @@ export class BaseArray extends SDNode {
     pushArray(array: Array<any>): this;
     pushFromExistValue(value: SDNode): this;
     pushFromExistElement(element: SDNode): this;
-    
+
     pop(): this;
     erase(id: number): this;
-    
+
     dropElement(id: number): SDNode;
     dropFirstElement(id: number): SDNode;
     dropLastElement(id: number): SDNode;

@@ -7,11 +7,7 @@ export function Box(parent, value) {
 
     this.type("Box");
 
-    const background = new Rect(this.layer("background"))
-
-    this.vars.background = background;
-
-    this.childAs("background", background, R.background());
+    this.childAs("background", new Rect(this.layer("background")), R.background());
 
     this.value(value);
 }

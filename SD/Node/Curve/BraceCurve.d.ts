@@ -1,5 +1,5 @@
-import { SDNode }    from "@/Node/SDNode";
 import { BaseCurve } from "@/Node/Curve/BaseCurve";
+import { SDNode } from "@/Node/SDNode";
 
 export class BraceCurve extends BaseCurve {
     constructor(parent: SDNode);

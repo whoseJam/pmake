@@ -1,9 +1,11 @@
-import { Array }   from "@/Node/Array/Array";
-import { SDNode }  from "@/Node/SDNode";
+import { Array } from "@/Node/Array/Array";
+import { SDNode } from "@/Node/SDNode";
+
+type Align = "y" | "cy" | "my";
 
 export class ValueArray extends Array {
     constructor(parent: SDNode);
 
-    align(): "y"|"cy"|"my";
-    align(align: "y"|"cy"|"my"): this;
+    align(): Align;
+    align(align: Align): this;
 }
