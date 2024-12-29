@@ -17,7 +17,7 @@ export function BraceCurve(parent) {
         const vs = this.source();
         const vt = this.target();
         const vc = V.numberMul(V.add(vs, vt), 0.5)
-        const d = V.numberMul(V.norm(V.sub(vt, vs)), this.member.get("bending"));
+        const d = V.numberMul(V.norm(V.sub(vt, vs)), this.bending());
         const dl = V.rotate(d, -Math.PI / 2);
         const p1 = V.add(vs, dl);
         const p2 = V.add(p1, d);
@@ -27,9 +27,10 @@ export function BraceCurve(parent) {
         const c = V.add(c2, dl);
         const p4 = V.add(vt, dl);
         const p3 = V.sub(p4, d);
-        const pen = new PathPen().MoveTo(vs).Quad(p1, p2)
-            .LinkTo(c1).Quad(c2, c).Quad(c2, c3)
-            .LinkTo(p3).Quad(p4, vt);
+        const pen = new PathPen();
+        pen.MoveTo(vs).Quad(p1, p2);
+        pen.LinkTo(c1).Quad(c2, c).Quad(c2, c3);
+        pen.LinkTo(p3).Quad(p4, vt);
         this.d(pen.toString());
     });
 }

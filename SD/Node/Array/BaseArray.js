@@ -45,16 +45,16 @@ BaseArray.prototype.end = function () {
     return this.start() + this.length() - 1;
 }
 
-BaseArray.prototype.idx = function (id) {
-    return id - this.start();
+BaseArray.prototype.idx = function (i) {
+    return i - this.start();
 }
 
-BaseArray.prototype.element = function (id) {
+BaseArray.prototype.element = function (i) {
     const elements = this.vars.elements;
-    const i = this.idx(id);
-    if (0 <= i && i < elements.length)
-        return elements[i];
-    ErrorLauncher.outOfRangeError(id);
+    const id = this.idx(i);
+    if (0 <= id && id < elements.length)
+        return elements[id];
+    ErrorLauncher.outOfRangeError(i);
 }
 
 BaseArray.prototype.elements = function () {
@@ -72,18 +72,17 @@ BaseArray.prototype.lastElement = function () {
 
 BaseArray.prototype.forEachElement = function (callback) {
     const elements = this.vars.elements;
-    elements.forEach((element, id) => {
-        callback(element, id);
+    elements.forEach((element, i) => {
+        callback(element, i);
     });
     return this;
 }
 
-BaseArray.prototype.insertByBaseArray = function (id, element) {
+BaseArray.prototype.insertByBaseArray = function (i, element) {
     const elements = this.vars.elements;
     element.triggerEnter(this, () => {
-        console.log("insert element=", element);
         this.childAs(element);
-        elements.splice(this.idx(id), 0, element);
+        elements.splice(this.idx(i), 0, element);
     });
     return this;
 }
@@ -109,11 +108,10 @@ BaseArray.prototype.pushFromExistElement = function (value) {
     return this;
 }
 
-BaseArray.prototype.eraseByBaseArray = function (id) {
-    const element = this.element(id);
+BaseArray.prototype.eraseByBaseArray = function (i) {
+    const element = this.element(i);
     const elements = this.vars.elements;
-    elements.splice(this.idx(id), 1);
-    console.log("erase element=", element);
+    elements.splice(this.idx(i), 1);
     this.eraseChild(element);
     return this;
 }
@@ -123,16 +121,16 @@ BaseArray.prototype.pop = function () {
     return this;
 }
 
-BaseArray.prototype.erase = function (id) {
-    const element = this.element(id);
+BaseArray.prototype.erase = function (i) {
+    const element = this.element(i);
     element.onExit(EX.fade());
-    this.eraseByBaseArray(id);
+    this.eraseByBaseArray(i);
     return this;
 }
 
-BaseArray.prototype.dropElement = function (id) {
-    const element = this.element(id);
-    this.eraseByBaseArray(id);
+BaseArray.prototype.dropElement = function (i) {
+    const element = this.element(i);
+    this.eraseByBaseArray(i);
     return element;
 }
 
@@ -144,24 +142,24 @@ BaseArray.prototype.dropLastElement = function () {
     return this.dropElement(this.end());
 }
 
-BaseArray.prototype.dropValue = function (id) {
-    const element = this.element(id);
-    this.eraseByBaseArray(id);
+BaseArray.prototype.dropValue = function (i) {
+    const element = this.element(i);
+    this.eraseByBaseArray(i);
     const value = element.after(this.delay()).drop();
     element.startAnimate(this).opacity(0).remove();
     return value;
 }
 
-BaseArray.prototype.text = function (id, text) {
-    if (text === undefined) return this.value(id).text();
-    this.value(id).text(text);
+BaseArray.prototype.text = function (i, text) {
+    if (text === undefined) return this.value(i).text();
+    this.value(i).text(text);
     return this;
 }
 
-BaseArray.prototype.intValue = function (id) {
-    const value = this.value(id);
+BaseArray.prototype.intValue = function (i) {
+    const value = this.value(i);
     if (value === undefined) return 0;
-    return +this.value(id).text();
+    return +this.value(i).text();
 }
 
 BaseArray.prototype.opacity = function () {

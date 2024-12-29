@@ -49,15 +49,15 @@ Path.prototype = {
 };
 
 Path.prototype.at = function (k) {
-    return Path.getPointByRate(this.vars.d, k);
+    return Path.getPointByRate(this.d(), k);
 }
 
 Path.prototype.getPointAtLength = function (length) {
-    return Path.getPointAtLength(this.vars.d, length);
+    return Path.getPointAtLength(this.d(), length);
 }
 
 Path.prototype.totalLength = function () {
-    return Path.getTotalLength(this.vars.d);
+    return Path.getTotalLength(this.d());
 }
 
 Path.prototype.x = function (x) {

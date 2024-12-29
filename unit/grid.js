@@ -12,7 +12,8 @@ sd.init(() => {
             code++;
         }
     }
-    sd.Focus(grid).focus();
+    console.log(grid.n(), grid.m());
+    // sd.Focus(grid).focus();
 })
 
 sd.main(async () => {

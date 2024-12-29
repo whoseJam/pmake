@@ -1,8 +1,10 @@
 import { SDNode } from "@/Node/SDNode";
 
+type Location = "tl" | "tc" | "tr" | "lt" | "lc" | "lb" | "bl" | "bc" | "br" | "rt" | "rc" | "rb";
+
 export class CompAside {
-    location(): "tl"|"tc"|"tr"|"lt"|"lc"|"lb"|"bl"|"bc"|"br"|"rt"|"rc"|"rb";
-    location(location: "tl"|"tc"|"tr"|"lt"|"lc"|"lb"|"bl"|"bc"|"br"|"rt"|"rc"|"rb"): this;
+    location(): Location;
+    location(location: Location): this;
     gap(): number;
     gap(gap: number): this;
 }
@@ -18,6 +20,6 @@ export class CompAside {
 export function Aside<T>(
     parent: SDNode,
     aside: T,
-    location: "tl"|"tc"|"tr"|"lt"|"lc"|"lb"|"bl"|"bc"|"br"|"rt"|"rc"|"rb",
+    location: Location,
     gap: number
 ): CompAside & T;

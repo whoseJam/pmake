@@ -20,6 +20,8 @@ sd.main(async () => {
     await sd.pause();
     brace1.startAnimate().value("hello").endAnimate();
     await sd.pause();
+    brace1.value().startAnimate().width(100).endAnimate();
+    await sd.pause();
     brace1.startAnimate().brace(3, 7).endAnimate();
     await sd.pause();
     brace1.startAnimate().valueGap(20).endAnimate();

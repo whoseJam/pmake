@@ -1,6 +1,6 @@
 
 export function CenterOnly() {
-    return function(parent, child) {
+    return function (parent, child) {
         const cx = parent.cx();
         const cy = parent.cy();
         child.cx(cx).cy(cy);
@@ -8,7 +8,7 @@ export function CenterOnly() {
 }
 
 export function CenterFixAspect(rate = 1.2) {
-    return function(parent, child) {
+    return function (parent, child) {
         const cx = parent.cx(), w = parent.width();
         const cy = parent.cy(), h = parent.height()
         const cw = child.width(), kw = w / cw / rate;
@@ -16,13 +16,12 @@ export function CenterFixAspect(rate = 1.2) {
         const k = Math.min(kw, kh);
         child.width(cw * k);
         child.height(ch * k);
-        child.x(cx - cw * k / 2);
-        child.y(cy - ch * k / 2);
+        child.cx(cx).cy(cy);
     }
 }
 
 export function Center(rate = 1.2) {
-    return function(parent, child) {
+    return function (parent, child) {
         const cx = parent.cx(), w = parent.width();
         const cy = parent.cy(), h = parent.height();
         const cw = w / rate;
@@ -34,7 +33,7 @@ export function Center(rate = 1.2) {
 }
 
 export function TriangleCenterFixAspect(rate = 1.2) {
-    return function(parent, child) {
+    return function (parent, child) {
         let width = parent.width();
         let height = parent.height();
         let cwidth = child.width();

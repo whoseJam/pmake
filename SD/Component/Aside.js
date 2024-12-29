@@ -1,31 +1,19 @@
-import { SDNode } from "@/Node/SDNode";
-import { Aside as AsideRuleFactory } from "@/Rule/Aside";
+import { Aside as AsideRule } from "@/Rule/Aside";
+import { Factory } from "@/Utility/Factory";
 
-let asideID = 0;
-
-function AsideRule(parent, child) {
-    const location  = child.member.getAndFlush("location");
-    const gap = child.member.getAndFlush("asideGap");
-    const rule = AsideRuleFactory(location, gap);
-    rule(parent, child);
-}
+let ID = 0;
 
 export function Aside(parent, aside, location = "lc", gap = 5) {
-    
-    aside.member.new("location", location);
-    aside.member.new("asideGap", gap);
+    aside.vars.location = location;
+    aside.vars.gap = gap;
 
-    aside.beforeUpdate(() => {
-        if (aside.member.hasChanged("location") ||
-            aside.member.hasChanged("asideGap")) {
-            aside.triggerRule();
-        }
+    aside.location = Factory.handler("location");
+    aside.gap = Factory.handlerMediumPrecise("asideGap");
+
+    parent.childAs(`aside_${++ID}`, aside, function (parent, child) {
+        const rule = AsideRule(child.vars.location, child.vars.gap);
+        rule(parent, child);
     });
-
-    aside.location = SDNode.OrdinaryGSet("location", "set");
-    aside.gap = SDNode.OrdinaryGSet("asideGap", "setByDqual");
-
-    parent.childAs(`aside_${++asideID}`, aside, AsideRule);
 
     return aside;
 }

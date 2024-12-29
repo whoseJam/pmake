@@ -19,7 +19,6 @@ class EffectQueue {
     execute() {
         while (this.queue.length > 0) {
             const effect = this.queue[0];
-            // console.log("execute effect=", effect.tag);
             this.queue.shift();
             effect();
             flushDirty(effect);
@@ -64,26 +63,41 @@ class EffectManager {
         this.in.push({ object, key });
     }
 
-    pushOutput(object, key) {
+    pushOutput(object, key, value) {
         for (let i = 0; i < this.out.length; i++) {
-            if (this.out[i].key === key && this.out[i].object === object) return;
+            if (this.out[i].key === key && this.out[i].object === object) {
+                this.out[i].value = value;
+                return;
+            }
         }
-        this.out.push({ object, key });
+        this.out.push({ object, key, value });
     }
 
     handleNewOutput(oldOut) {
         this.out.forEach(link => {
-            for (let i = 0; i < oldOut.length; i++) {
-                if (link.key === oldOut[i].key && link.object === oldOut[i].object) return;
+            let isNewOutput = true, oldValue = undefined;
+            for (let i = 0; i < oldOut.length && isNewOutput; i++) {
+                if (link.key === oldOut[i].key && link.object === oldOut[i].object) {
+                    isNewOutput = false;
+                    oldValue = oldOut[i].value;
+                }
             }
-            const objectManager = objectsMap.get(link.object);
-            const outEffectsSet = objectManager.outputEffects(link.key);
-            outEffectsSet.forEach(effect => {
-                if (effect[localEffectQueue.label]) return;
-                // console.log("push effect =", effect.tag);
-                localEffectQueue.pushFront(effect);
-            })
-        })
+            if (isNewOutput) {
+                const objectManager = objectsMap.get(link.object);
+                const outEffectsSet = objectManager.outputEffects(link.key);
+                outEffectsSet.forEach(effect => {
+                    if (effect[localEffectQueue.label]) return;
+                    localEffectQueue.pushFront(effect);
+                });
+            } else if (link.value !== oldValue) {
+                const objectManager = objectsMap.get(link.object);
+                const outEffectsSet = objectManager.outputEffects(link.key);
+                outEffectsSet.forEach(effect => {
+                    if (effect[localEffectQueue.label]) return;
+                    localEffectQueue.pushFront(effect);
+                });
+            }
+        });
     }
 }
 
@@ -171,7 +185,7 @@ export function reactive(object) {
         set: function (object, key, value, receiver) {
             if (proxiesMap.get(object)) object = proxiesMap.get(object);
             if (proxiesMap.get(value)) value = proxiesMap.get(value);
-            traceOutput(object, key);
+            traceOutput(object, key, value);
             if (associated[key]) {
                 associated[key](value, Reflect.get(object, key, receiver));
             }
@@ -212,15 +226,11 @@ export function effect(innerEffect, tag) {
         globalActiveEffect = undefined;
     };
     effectsMap.set(effectFn, new EffectManager(effectFn));
-    // console.log("start init");
     globalAllowDAGUpdate = false;
     localEffectQueue.pushBack(effectFn);
     effectFn.tag = tag ? tag : innerEffect;
     localEffectQueue.execute();
     globalAllowDAGUpdate = true;
-    // console.log("end init");
-    // checkEffect(effectFn);
-    // console.log("");
     return effectFn;
 }
 
@@ -249,10 +259,10 @@ function traceInput(object, key) {
     objectManager.pushOutput(key, globalActiveEffect);
 }
 
-function traceOutput(object, key) {
+function traceOutput(object, key, value) {
     if (!globalActiveEffect) return;
     const effectManager = effectsMap.get(globalActiveEffect);
-    effectManager.pushOutput(object, key);
+    effectManager.pushOutput(object, key, value);
     const objectManager = objectsMap.get(object);
     objectManager.pushInput(key, globalActiveEffect);
 }
@@ -295,42 +305,9 @@ function triggerDAGUpdate(object, key, freeze) {
 }
 
 export function checkEffect(effect) {
-    console.log("effect=", effect);
+    console.log("effect=", effect.tag);
     const effectManager = effectsMap.get(effect);
     console.log(effectManager.in);
     console.log(effectManager.out);
     console.log("");
 }
-
-
-// const box = reactive({
-//     w: 40,
-//     h: 40,
-//     name: "box"
-// });
-// const text = reactive({
-//     w: 20,
-//     h: 20,
-//     f: 20,
-//     name: "text"
-// });
-
-// const e1 = effect(() => {
-//     console.log("e1 start effect");
-//     text.w = text.f;
-//     text.h = text.f;
-// }, "e1")
-
-// const e2 = effect(() => {
-//     console.log("e2 start effect");
-//     const w = box.w;
-//     const h = box.h;
-//     const cw = text.w;
-//     const ch = text.h;
-//     const kw = w / cw / 1.2;
-//     const kh = h / ch / 1.2;
-//     text.f = Math.min(kw * cw, kh * ch);
-// }, "e2")
-// checkEffect(e1);
-// checkEffect(e2);
-// console.log(box, text);

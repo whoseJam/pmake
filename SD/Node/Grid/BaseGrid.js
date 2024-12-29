@@ -1,15 +1,19 @@
 import { SDNode } from "@/Node/SDNode";
+import { ErrorLauncher } from "@/Utility/ErrorLauncher";
+import { Factory } from "@/Utility/Factory";
 
 export function BaseGrid(parent) {
     SDNode.call(this, parent);
 
-    this.member.new("n", 0);
-    this.member.new("m", 0);
-    this.member.new("x", 0);
-    this.member.new("y", 0);
-    this.member.new("startN", 0);
-    this.member.new("startM", 0);
-    this.member.new("elements", []);
+    this.vars.merge({
+        n: 0,
+        m: 0,
+        x: 0,
+        y: 0,
+        startN: 0,
+        startM: 0,
+        elements: []
+    });
 
     this._.BASE_GRID = true;
 }
@@ -18,106 +22,103 @@ BaseGrid.prototype = {
     ...SDNode.prototype
 };
 
-BaseGrid.prototype.startN = SDNode.OrdinaryGSet("startN", "set");
-BaseGrid.prototype.startM = SDNode.OrdinaryGSet("startM", "set");
+BaseGrid.prototype.startN = Factory.handler("startN");
+BaseGrid.prototype.startM = Factory.handler("startM");
 
-BaseGrid.prototype.endN = function() {
+BaseGrid.prototype.endN = function () {
     return this.startN() + this.n() - 1;
 }
 
-BaseGrid.prototype.endM = function(idx) {
+BaseGrid.prototype.endM = function (idx) {
     if (idx === undefined) return this.startM() + this.m() - 1;
-    let elems = this.member.get("elements");
-    return this.startM() + elems[this.idxN(idx)].length - 1;
+    const elements = this.vars.elements;
+    return this.startM() + elements[this.idxN(idx)].length - 1;
 }
 
-BaseGrid.prototype.idxN = function(idx) {
+BaseGrid.prototype.idxN = function (idx) {
     return idx - this.startN();
 }
 
-BaseGrid.prototype.idxM = function(idx) {
+BaseGrid.prototype.idxM = function (idx) {
     return idx - this.startM();
 }
 
-BaseGrid.prototype.n = function(n) {
-    let on = this.member.get("n");
+BaseGrid.prototype.n = function (n) {
+    let on = this.vars.n;
     if (n === undefined) return on;
     while (on < n) { this.pushRow(); on++; }
     while (on > n) { this.popRow(); on--; }
     return this;
 }
 
-BaseGrid.prototype.m = function(m) {
-    let om = this.member.get("m");
+BaseGrid.prototype.m = function (m) {
+    let om = this.vars.m;
     if (m === undefined) return om;
     while (om < m) { this.pushCol(); om++; }
     while (om > m) { this.popCol(); om--; }
     return this;
 }
 
-BaseGrid.prototype.getM = function(idx) {
+BaseGrid.prototype.getM = function (idx) {
     return this.endM() - this.startM() + 1;
 }
 
-BaseGrid.prototype.insertByBaseGrid = function(i, j, element) {
+BaseGrid.prototype.insertByBaseGrid = function (i, j, element) {
     const ri = this.idxN(i);
     const rj = this.idxM(j);
-    const elements = this.member.get("elements");
-    while (elements.length <= ri) elements.push([]);
-    elements[ri].splice(rj, 0, element);
-    this._.children.push(element);
-    this.member.set("n", elements.length);
-    this.member.set("m", Math.max(elements[ri].length, this.member.get("m")));
-    this.member.dirty("elements");
-    this.tryUpdate();
+    const elements = this.vars.elements;
+    element.triggerEnter(this, () => {
+        while (elements.length <= ri) elements.push([]);
+        elements[ri].splice(rj, 0, element);
+        this.childAs(element);
+        this.vars.n = elements.length;
+        this.vars.m = Math.max(elements[ri].length, this.vars.m);
+    });
     return this;
 }
 
-BaseGrid.prototype.eraseByBaseGrid = function(i, j) {
+BaseGrid.prototype.eraseByBaseGrid = function (i, j) {
     const element = this.element(i, j);
     const ri = this.idxN(i);
     const rj = this.idxM(j);
-    const elements = this.member.get("elements");
+    const elements = this.vars.elements;
     elements[ri].splice(rj, 1);
-    this._.children.erase(element);
+    this.eraseChild(element);
     let m = 0;
     for (let i = 0; i < elements.length; i++) m = Math.max(m, elements[i].length);
-    this.member.set("n", elements.length);
-    this.member.set("m", m);
-    this.member.dirty("elements");
-    this.tryUpdate();
+    this.vars.n = elements.length;
+    this.vars.m = m;
     return this;
 }
 
-BaseGrid.prototype.pushCol = function(rows) {
+BaseGrid.prototype.pushCol = function (rows) {
     let l = this.startN();
     let r = (rows === undefined) ? this.endN() : l + rows - 1;
     for (let i = l; i <= r; i++) {
         this.insert(i, this.endM(i) + 1, null);
     }
-    if (l > r) { this._.m++; }
+    if (l > r) { this.vars.m++; }
     return this;
 }
 
-BaseGrid.prototype.pushRow = function(cols) {
+BaseGrid.prototype.pushRow = function (cols) {
     let n = this.endN() + 1;
     let l = this.startM();
     let r = (cols === undefined) ? this.endM() : l + cols - 1;
     for (let j = l; j <= r; j++)
         this.insert(n, j, null);
     if (l > r) {
-        this.member.set("n", this.member.get("n") + 1);
-        this.member.get("elements").push([]);
+        this.vars.n++;
+        this.vars.elements.push([]);
     }
     return this;
 }
 
-BaseGrid.prototype.element = function(i, j) {
-    let elems = this.member.get("elements");
-    return elems[this.idxN(i)][this.idxM(j)];
+BaseGrid.prototype.element = function (i, j) {
+    return this.vars.elements[this.idxN(i)][this.idxM(j)];
 }
 
-BaseGrid.prototype.value = function(arg0, arg1, arg2) {
+BaseGrid.prototype.value = function (arg0, arg1, arg2) {
     if (arguments.length === 2) {
         const element = this.element(arg0, arg1);
         if (!element) {
@@ -137,18 +138,14 @@ BaseGrid.prototype.value = function(arg0, arg1, arg2) {
     throw new Error("Invalid Arguments");
 }
 
-BaseGrid.prototype.intValue = function(i, j) {
+BaseGrid.prototype.intValue = function (i, j) {
     const value = this.value(i, j);
-    if (!value) {
-        return 0;
-    }
-    if ("text" in value) {
-        return +value.text();
-    }
-    throw new Error(`Element ${i} ${j} Cannot Cast To Int`);
+    if (!value) return 0;
+    if (!value.text) ErrorLauncher.invalidInvoke("intValue");
+    return +value.text();
 }
 
-BaseGrid.prototype.opacity = function(arg0, arg1, arg2) {
+BaseGrid.prototype.opacity = function (arg0, arg1, arg2) {
     if (arguments.length === 0) {
         return SDNode.prototype.opacity.call(this);
     }
@@ -175,7 +172,7 @@ BaseGrid.prototype.opacity = function(arg0, arg1, arg2) {
     throw new Error("Invalid Arguments");
 }
 
-BaseGrid.prototype.color = function(arg0, arg1, arg2) {
+BaseGrid.prototype.color = function (arg0, arg1, arg2) {
     if (arguments.length === 1) {
         const elements = this.member.get("elements");
         elements.forEach(row => {
@@ -205,8 +202,8 @@ BaseGrid.prototype.color = function(arg0, arg1, arg2) {
 }
 
 
-BaseGrid.prototype.forEachElement = function(callback) {
-    const elements = this.member.get("elements");
+BaseGrid.prototype.forEachElement = function (callback) {
+    const elements = this.vars.elements;
     elements.forEach((row, rowId) => {
         row.forEach((col, colId) => {
             callback(col, rowId + this.startN(), colId + this.startM());

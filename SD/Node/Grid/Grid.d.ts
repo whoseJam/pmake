@@ -1,11 +1,14 @@
-import { SDNode }   from "@/Node/SDNode";
 import { BaseGrid } from "@/Node/Grid/BaseGrid";
+import { SDNode } from "@/Node/SDNode";
+
+type Axis = "row" | "col";
+type Align = "x" | "y" | "mx" | "my";
 
 export class Grid extends BaseGrid {
     constructor(parent: SDNode);
 
-    axis(): "row"|"col";
-    axis(axis: "row"|"col"): this;
-    align(): "x"|"y"|"mx"|"my";
-    align(align: "x"|"y"|"mx"|"my"): this;
+    axis(): Axis;
+    axis(axis: Axis): this;
+    align(): Align;
+    align(align: Align): this;
 }

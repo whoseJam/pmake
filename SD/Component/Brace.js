@@ -1,23 +1,19 @@
 import { Context } from "@/Animate/Context";
-
+import { BraceCurve } from "@/Node/Curve/BraceCurve";
+import { Enter as EN } from "@/Node/SDNode/Enter";
 import { PointAtPathByRate } from "@/Rule/Path";
-
-import { Cast }  from "@/Utility/Cast";
+import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
+import { Factory } from "@/Utility/Factory";
 
-import { Exit }       from "@/Node/SDNode/Exit";
-import { Enter }      from "@/Node/SDNode/Enter";
-import { SDNode }     from "@/Node/SDNode";
-import { BraceCurve } from "@/Node/Curve/BraceCurve"
-
-let braceID = 0;
+let ID = 0;
 
 function BraceRule(parent, child) {
-    const element1 = child.member.getAndFlush("braceElement1");
-    const element2 = child.member.getAndFlush("braceElement2");
+    const element1 = child.vars.braceElement1;
+    const element2 = child.vars.braceElement2;
     if (!element1 || !element2) return;
-    const location = child.member.getAndFlush("location");
-    const gap = child.member.getAndFlush("braceGap");
+    const location = child.vars.location;
+    const gap = child.vars.braceGap;
 
     if (location === "b" || location === "t") {
         const minx = Math.min(element1.x(), element2.x());
@@ -47,82 +43,77 @@ function BraceRule(parent, child) {
 }
 
 function LabelRule(parent, child) {
-    const location = parent.member.getAndFlush("location");
-    const gap = parent.member.getAndFlush("valueGap");
+    const gap = parent.valueGap();
     const rule = {
         "t": PointAtPathByRate(0.5, "cx", "my", 0, -gap),
         "b": PointAtPathByRate(0.5, "cx", "y", 0, gap),
         "l": PointAtPathByRate(0.5, "mx", "cy", -gap, 0),
         "r": PointAtPathByRate(0.5, "x", "cy", gap, 0)
-    }[location];
+    }[parent.location()];
     if (rule) rule(parent, child);
 }
 
 export function Brace(parent) {
     const brace = new BraceCurve(parent).opacity(0);
-    const name = `brace_${++braceID}`;
+    const name = `brace_${++ID}`;
 
-    brace.member.new("braceElement1", undefined);
-    brace.member.new("braceElement2", undefined);
-    brace.member.new("location", undefined);
-    brace.member.new("braceGap", 5);
-    brace.member.new("valueGap", 5);
-
-    brace.beforeUpdate(() => {
-        if (brace.member.hasChanged("braceElement1") ||
-            brace.member.hasChanged("braceElement2") ||
-            brace.member.hasChanged("location") ||
-            brace.member.hasChanged("braceGap")) {
-            brace.triggerRule();
-        }
+    brace.vars.merge({
+        braceElement1: undefined,
+        braceElement2: undefined,
+        location: undefined,
+        braceGap: 5,
+        valueGap: 5
     });
 
-    brace.brace = function(l, r, location = "t", gap = 5) {
+    brace.brace = function (l, r, location = "t", gap = 5) {
+        let context;
+        if (this.opacity() === 0) {
+            context = new Context(this);
+            this.startAnimate(context.tillc(0, 0));
+        }
+
         if (Check.isTypeOfSDNode(l) && Check.isTypeOfSDNode(r)) {
             if (!parent.childAs) { // 这是全局的 brace，需要手动管理规则回调
-                const element1 = this.member.get("braceElement1");
-                const element2 = this.member.get("braceElement2");
+                const element1 = this.vars.braceElement1;
+                const element2 = this.vars.braceElement2;
                 if (element1) element1.eraseChild(name);
                 if (element2) element2.eraseChild(name);
                 l.childAs(name, this);
                 r.childAs(name, this);
             }
-            this.member.set("braceElement1", l);
-            this.member.set("braceElement2", r);
+            this.vars.braceElement1 = l;
+            this.vars.braceElement2 = r;
         } else if (Check.isTypeOfArray(parent)) {
-            this.member.set("braceElement1", parent.element(l));
-            this.member.set("braceElement2", parent.element(r));
+            this.vars.braceElement1 = parent.element(l);
+            this.vars.braceElement2 = parent.element(r);
         } else if (Check.isTypeOfGrid(parent)) {
             throw new Error("Not Implemented Yet");
         }
-        if (this.member.get("location") === undefined || (arguments.length >= 3))
-            this.member.set("location", location);
-        if (this.member.get("braceGap") === undefined || (arguments.length >= 4))
-            this.member.set("braceGap", gap);
-        
+        if (this.vars.location === undefined || (arguments.length >= 3))
+            this.vars.location = location;
+        if (this.vars.braceGap === undefined || (arguments.length >= 4))
+            this.vars.braceGap = gap;
+
         if (this.opacity() === 0) {
-            const context = new Context(this);
-            this.startAnimate(context.tillc(0, 0));
-            this.update();
             this.startAnimate(context.tillc(0, 1));
             this.opacity(1);
-        } else {
-            this.update();
         }
         return this;
     }
 
-    brace.location = SDNode.OrdinaryGSet("location", "set");
-    brace.braceGap = SDNode.OrdinaryGSet("braceGap", "setByEqual");
-    brace.valueGap = SDNode.OrdinaryGSet("valueGap", "setByEqual");
+    brace.location = Factory.handler("location");
+    brace.braceGap = Factory.handlerLowPrecise("braceGap");
+    brace.valueGap = Factory.handlerLowPrecise("valueGap");
 
-    brace.value = function(value, gap = 5) {
-        this.member.set("valueGap", gap);
-        Exit.ordinary(this, "value");
+    brace.value = function (value, gap = 5) {
+        if (value === undefined) return this.child("value");
+        this.vars.valueGap = gap;
+        this.eraseChild("value");
         const element = Cast.castToSDNode(this, value);
-        element.member.new("location", undefined);
-        element.onEnter(Enter.ordinary(this));
-        this.childAs("value", element, LabelRule);
+        element.onEnter(EN.appear());
+        element.triggerEnter(() => {
+            this.childAs("value", element, LabelRule);
+        });
         return this;
     }
 

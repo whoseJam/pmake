@@ -9,7 +9,7 @@ sd.init(() => {
 
 })
 
-sd.main(TestTextCenter);
+sd.main(main);
 
 async function TestTextCenter() {
     const box = new sd.Box(svg).center(600, 300).value("a");

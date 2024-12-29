@@ -46,7 +46,7 @@ export class Children {
      * @returns {number|string}
      */
     push(childName, child, rule) {
-        if (typeof(childName) !== "string" && typeof(childName) !== "number") {
+        if (typeof (childName) !== "string" && typeof (childName) !== "number") {
             childName = ++id;
             child = arguments[0];
             rule = arguments[1] ? arguments[1] : undefined;
@@ -67,7 +67,7 @@ export class Children {
      */
     erase(child) {
         let childName = child;
-        if (typeof(child) !== "string" && typeof(child) !== "number") {
+        if (typeof (child) !== "string" && typeof (child) !== "number") {
             for (let id in this.children)
                 if (this.children[id] === child) {
                     childName = id;
@@ -75,6 +75,7 @@ export class Children {
                 }
         }
         child = this.children[childName];
+        if (child === undefined) return undefined;
         child.triggerExit();
         delete this.children[childName];
         return child;
@@ -82,7 +83,7 @@ export class Children {
 
     has(child) {
         let childName = child;
-        if (typeof(child) !== "string" && typeof(child) !== "number") {
+        if (typeof (child) !== "string" && typeof (child) !== "number") {
             for (let id in this.children)
                 if (this.children[id] === child) {
                     childName = id;
