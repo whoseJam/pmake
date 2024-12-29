@@ -1,118 +1,46 @@
-import { trim } from "@/Utility/Trim";
-import { Cast } from "@/Utility/Cast";
-
 import { mapTo } from "@/Math/Math";
-
-import { Enter }     from "@/Node/SDNode/Enter";
 import { BaseGraph } from "@/Node/Graph/BaseGraph";
-
-import { graphlib as DAGLib }  from "dagre";
-import { layout as DAGLayout } from "dagre";
+import { Enter as EN } from "@/Node/SDNode/Enter";
+import { effect } from "@/Node/SDNode/SDValue";
+import { Cast } from "@/Utility/Cast";
+import { Factory } from "@/Utility/Factory";
+import { trim } from "@/Utility/Trim";
+import { layout as DAGLayout, graphlib as DAGLib } from "dagre";
 
 export function DAG(parent) {
     BaseGraph.call(this, parent);
 
     this.type("DAG");
-    this.member.new("r", 20);
-    this.member.new("graph", new DAGLib.Graph());
-    this.member.new("rankDir", "TB");
-    this.member.new("align", undefined);
 
-    this.member.new("updateNodeSize", (element) => {
-        if ("r" in element) {
-            const r = this.member.get("r");
-            element.r(r);
-        }
-    })
+    this.vars.merge({
+        rankDir: "TB",
+        align: undefined
+    });
     
-    const graph = this.member.get("graph");
+    const graph = new DAGLib.Graph();
     graph.setGraph({ rankdir: "TB" });
     graph.setDefaultEdgeLabel(function() { return {}; });
-}
+    this._.graph = graph;
 
-DAG.prototype = {
-    ...BaseGraph.prototype
-};
-
-DAG.prototype.align   = DAGGSet("align", "align");
-DAG.prototype.rankDir = DAGGSet("rankDir", "rankdir");
-
-DAG.prototype.updateList = [
-    ...DAG.prototype.updateList,
-    update
-];
-
-DAG.prototype.newNode = function(id, value) {
-    const element = new this._.nodeType(this.layer("nodes"));
-    element.value(Cast.castToSDNode(element, value, id));
-    element.onEnter(Enter.ordinary(this));
-    const graph = this.member.get("graph");
-    graph.setNode(id, {});
-    this.newNodeByBaseGraph(id, element);
-    return this;
-}
-
-DAG.prototype.newLink = function(sourceId, targetId, value) {
-    const element = new this._.linkType(this.layer("links"));
-    element.value(value);
-    element.onEnter(Enter.ordinary(this));
-    const graph = this.member.get("graph");
-    graph.setEdge(sourceId, targetId);
-    this.newLinkByBaseGraph(sourceId, targetId, element);
-    return this;
-}
-
-function DAGGSet(key, keyInDagre) {
-    return function(value) {
-        if (value === undefined) {
-            return this.member.get(key);
-        }
-        this.member.setAndFlush(key, value);
-        const graph = this.member.get("graph");
-        const dict = {};
-        dict[keyInDagre] = value;
-        graph.setGraph(dict);
-        this.tryUpdate();
-        return this;
-    }
-}
-
-function update() {
-    const graph = this.member.get("graph");
-    DAGLayout(graph);
-    const box = GetBoxOfDAG(graph);
-
-    const convertXInner = mapTo(
-        box.x,
-        box.width,
-        this.member.get("x"),
-        this.member.get("width")
-    );
-    const convertYInner = mapTo(
-        box.y,
-        box.height,
-        this.member.get("y"),
-        this.member.get("height")
-    );
-    const convertX = node => convertXInner(node.x);
-    const convertY = node => convertYInner(node.y);
-    const updateSize = this.member.get("updateNodeSize");
-    graph.nodes().forEach(nodeId => {
-        const node = this.findNodeById(nodeId);
-        const layout = graph.node(nodeId);
-        this.tryMove(node, () => {
-            updateSize(node);
-            node.cx(convertX(layout));
-            node.cy(convertY(layout));
+    this._.updater = effect(() => {
+        graph.setGraph({
+            align: this.align(),
+            rankdir: this.rankDir()
         });
-    });
-    graph.edges().forEach(linkInfo => {
-        const sourceId = linkInfo.v;
-        const targetId = linkInfo.w;
-        const link = this.findLinkById(sourceId, targetId);
-        const source = this.findNodeById(sourceId);
-        const target = this.findNodeById(targetId);
-        this.tryMove(link, () => {
+        DAGLayout(graph);
+        const box = GetBoxOfDAG(graph);
+        const mapperX = mapTo(box.x, box.width, this.x(), this.width());
+        const mapperY = mapTo(box.y, box.height, this.y(), this.height());
+        const convertX = node => mapperX(node.x);
+        const convertY = node => mapperY(node.y);
+        const convert = node => [convertX(node), convertY(node)];
+        this.forEachNodes((node, nodeId) => {
+            const layout = graph.node(nodeId);
+            node.center(convert(layout));
+        });
+        this.forEachLinks((link, sourceId, targetId) => {
+            const source = this.findNodeById(sourceId);
+            const target = this.findNodeById(targetId);
             link.source(source.center());
             link.target(target.center());
             trim(link, source, target);
@@ -120,7 +48,32 @@ function update() {
     });
 }
 
-function GetBoxOfDAG(graph) {
+DAG.prototype = {
+    ...BaseGraph.prototype
+};
+
+DAG.prototype.align = Factory.handler("align");
+DAG.prototype.rankDir = Factory.handler("rankDir");
+
+DAG.prototype.newNode = function(id, value) {
+    const element = new this._.nodeType(this.layer("nodes"));
+    element.value(Cast.castToSDNode(element, value, id));
+    element.onEnterDefault(EN.appear("nodes"));
+    this._.graph.setNode(id, {});
+    this.newNodeByBaseGraph(id, element);
+    return this;
+}
+
+DAG.prototype.newLink = function(sourceId, targetId, value) {
+    const element = new this._.linkType(this.layer("links"));
+    element.value(value);
+    element.onEnterDefault(EN.appear("links"));
+    this._.graph.setEdge(sourceId, targetId);
+    this.newLinkByBaseGraph(sourceId, targetId, element);
+    return this;
+}
+
+export function GetBoxOfDAG(graph) {
     let x, mx, y, my;
     graph.nodes().forEach(function(info) {
         const layout = graph.node(info);
@@ -134,12 +87,6 @@ function GetBoxOfDAG(graph) {
             my = Math.max(my, layout.y);
         }
     })
-    if (x === undefined)
-        x = mx = y = my = 0;
-    return {
-        x: x,
-        y: y,
-        width: mx - x,
-        height: my - y
-    };
+    if (x === undefined) x = mx = y = my = 0;
+    return { x, y, width: mx - x, height: my - y };
 }

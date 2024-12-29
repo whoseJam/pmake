@@ -1,9 +1,8 @@
 import { Animate } from "@/Animate/Animate";
 
-import { Message } from "@/Interact/Message";
-import { RootSvg } from "@/Interact/RootSvg";
-import { Status } from "@/Interact/Status";
 import { Device } from "@/Interact/Device";
+import { Message } from "@/Interact/Message";
+import { Status } from "@/Interact/Status";
 
 window.CURRENT_FRAME = 0;
 window.MAXIMUM_FRAME = 0;

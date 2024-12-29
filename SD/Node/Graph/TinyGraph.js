@@ -1,18 +1,33 @@
-import { trim } from "@/Utility/Trim";
-import { Cast } from "@/Utility/Cast";
-
-import { Enter }     from "@/Node/SDNode/Enter";
 import { BaseGraph } from "@/Node/Graph/BaseGraph";
 import { GridGraph } from "@/Node/Graph/GridGraph";
+import { Enter as EN } from "@/Node/SDNode/Enter";
+import { effect } from "@/Node/SDNode/SDValue";
+import { Cast } from "@/Utility/Cast";
+import { trim } from "@/Utility/Trim";
 
 export function TinyGraph(parent) {
     BaseGraph.call(this, parent);
 
     this.type("TinyGraph");
 
-    this.member.new("r", 20);
-
-    return this;
+    this._.updater = effect(() => {
+        const nodes = this.vars.nodes;
+        switch (nodes.length) {
+            case 1: update1.call(this, nodes); break;
+            case 2: update2.call(this, nodes); break;
+            case 3: update3.call(this, nodes); break;
+            case 4: update4.call(this, nodes); break;
+            case 5: update5.call(this, nodes); break;
+            case 6: update6.call(this, nodes); break;
+        }
+        this.forEachLinks((link, sourceId, targetId) => {
+            const source = this.findNodeById(sourceId);
+            const target = this.findNodeById(targetId);
+            link.source(source.center());
+            link.target(target.center());
+            trim(link, source, target);
+        });
+    });
 }
 
 TinyGraph.prototype = {
@@ -21,91 +36,56 @@ TinyGraph.prototype = {
 
 TinyGraph.prototype.newLink = GridGraph.prototype.newLink;
 
-TinyGraph.prototype.updateList = [
-    ...TinyGraph.prototype.updateList,
-    update_update
-];
-
 TinyGraph.prototype.newNode = function(id, value) {
     const element = new this._.nodeType(this.layer("nodes"));
     element.value(Cast.castToSDNode(element, value, id));
-    element.onEnter(Enter.ordinary(this));
+    element.onEnter(EN.appear("nodes"));
     this.newNodeByBaseGraph(id, element);
     return this;
 }
 
-function update_update() {
-    const nodes = this.member.get("nodes");
-    const links = this.member.get("links");
-    if (nodes.length === 1) update1.call(this, nodes);
-    if (nodes.length === 2) update2.call(this, nodes);
-    if (nodes.length === 3) update3.call(this, nodes);
-    if (nodes.length === 4) update4.call(this, nodes);
-    if (nodes.length === 5) update5.call(this, nodes);
-    if (nodes.length === 6) update6.call(this, nodes);
-    if (nodes.length >= 7) throw new Error("Cannot Process Graph With count(Nodes) >= 7");
-    for (let link of links) {
-        const sourceId = this.sourceId(link);
-        const targetId = this.targetId(link);
-        const source = this.findNodeById(sourceId);
-        const target = this.findNodeById(targetId);
-        this.tryMove(link, () => {
-            link.source(source.center());
-            link.target(target.center());
-            trim(link, source, target);
-        });
-    }
-}
-
-function update(node, move) {
-    if (node._.enter) {
-        node._.enter(node, move);
-        node._.enter = undefined;
-    } else move();
-}
-
 function update1(nodes) {
-    update.call(this, nodes[0], () => nodes[0].cx(this.cx()).cy(this.cy()));
+    nodes[0].cx(this.cx()).cy(this.cy());
 }
 
 function update2(nodes) {
     const w = this.width() / 4;
-    update.call(this, nodes[0], () => nodes[0].cx(this.x() + w).cy(this.cy()));
-    update.call(this, nodes[1], () => nodes[1].cx(this.mx() - w).cy(this.cy()));
+    nodes[0].cx(this.x() + w).cy(this.cy());
+    nodes[1].cx(this.mx() - w).cy(this.cy());
 }
 
 function update3(nodes) {
     const w = this.width() / 4;
     const h = this.height() / 4;
-    update.call(this, nodes[0], () => nodes[0].cx(this.cx()).cy(this.y() + h));
-    update.call(this, nodes[1], () => nodes[1].cx(this.x() + w).cy(this.my() - h));
-    update.call(this, nodes[2], () => nodes[2].cx(this.mx() - w).cy(this.my() - h));
+    nodes[0].cx(this.cx()).cy(this.y() + h);
+    nodes[1].cx(this.x() + w).cy(this.my() - h);
+    nodes[2].cx(this.mx() - w).cy(this.my() - h);
 }
 
 function update4(nodes) {
     const w = this.width() / 4;
     const h = this.height() / 4;
-    update.call(this, nodes[0], () => nodes[0].cx(this.x() + w).cy(this.y() + h));
-    update.call(this, nodes[1], () => nodes[1].cx(this.x() + w).cy(this.my() - h));
-    update.call(this, nodes[2], () => nodes[2].cx(this.mx() - w).cy(this.my() - h));
-    update.call(this, nodes[3], () => nodes[3].cx(this.mx() - w).cy(this.y() + h));
+    nodes[0].cx(this.x() + w).cy(this.y() + h);
+    nodes[1].cx(this.x() + w).cy(this.my() - h);
+    nodes[2].cx(this.mx() - w).cy(this.my() - h);
+    nodes[3].cx(this.mx() - w).cy(this.y() + h);
 }
 
 function update5(nodes) {
-    update.call(this, nodes[0], () => nodes[0].cx(this.x()).cy(this.y()));
-    update.call(this, nodes[1], () => nodes[1].cx(this.x()).cy(this.my()));
-    update.call(this, nodes[2], () => nodes[2].cx(this.mx()).cy(this.my()));
-    update.call(this, nodes[3], () => nodes[3].cx(this.mx()).cy(this.y()));
-    update.call(this, nodes[4], () => nodes[4].cx(this.cx()).cy(this.cy()));
+    nodes[0].cx(this.x()).cy(this.y());
+    nodes[1].cx(this.x()).cy(this.my());
+    nodes[2].cx(this.mx()).cy(this.my());
+    nodes[3].cx(this.mx()).cy(this.y());
+    nodes[4].cx(this.cx()).cy(this.cy());
 }
 
 function update6(nodes) {
-    const w = this.member.get("width") / 4;
-    const h = this.member.get("height") / 4;
-    update.call(this, nodes[0], () => nodes[0].cx(this.cx()).cy(this.y() + h / 2));
-    update.call(this, nodes[1], () => nodes[1].cx(this.x() + w / 2).cy(this.y() + h));
-    update.call(this, nodes[2], () => nodes[2].cx(this.x() + w / 2).cy(this.my() - h));
-    update.call(this, nodes[3], () => nodes[3].cx(this.cx()).cy(this.my() - h / 2));
-    update.call(this, nodes[4], () => nodes[4].cx(this.mx() - w / 2).cy(this.my() - h));
-    update.call(this, nodes[5], () => nodes[5].cx(this.mx() - w / 2).cy(this.y() + h));
+    const w = this.width() / 4;
+    const h = this.height() / 4;
+    nodes[0].cx(this.cx()).cy(this.y() + h / 2);
+    nodes[1].cx(this.x() + w / 2).cy(this.y() + h);
+    nodes[2].cx(this.x() + w / 2).cy(this.my() - h);
+    nodes[3].cx(this.cx()).cy(this.my() - h / 2);
+    nodes[4].cx(this.mx() - w / 2).cy(this.my() - h);
+    nodes[5].cx(this.mx() - w / 2).cy(this.y() + h);
 }

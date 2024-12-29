@@ -1,5 +1,5 @@
-import { Enter }     from "@/Node/SDNode/Enter";
 import { GridGraph } from "@/Node/Graph/GridGraph";
+import { Enter as EN } from "@/Node/SDNode/Enter";
 
 export function ValueGridGraph(parent) {
     GridGraph.call(this, parent);
@@ -11,21 +11,21 @@ ValueGridGraph.prototype = {
     ...GridGraph.prototype
 };
 
-ValueGridGraph.prototype.newNode = function(gid, value) {
+ValueGridGraph.prototype.newNode = function(id, value) {
     const sidToPos = this._.sidToPos;
     const element = value;
     sidToPos[element.id] = { x: this._.curN, y: this._.curM };
-    element.onEnter(Enter.ordinary(this, "nodes"));
-    this.newNodeByBaseGraph(gid, element);
+    element.onEnter(EN.appear("nodes"));
+    this.newNodeByBaseGraph(id, element);
     return this;
 }
 
-ValueGridGraph.prototype.newNodeFromExistElement = function(gid, value) {
+ValueGridGraph.prototype.newNodeFromExistElement = function(id, value) {
     const sidToPos = this._.sidToPos;
     const element = value;
     sidToPos[element.id] = { x: this._.curN, y: this._.curM };
-    element.onEnter(Enter.fromExist(this, "nodes"));
-    this.newNodeByBaseGraph(gid, element);
+    element.onEnter(EN.moveTo("nodes"));
+    this.newNodeByBaseGraph(id, element);
     return this;
 }
 
