@@ -1,69 +1,67 @@
+import { effect, uneffect } from "@/Node/SDNode/SDValue";
 import { BinaryTree } from "@/Node/Tree/BinaryTree";
-
 import { trim } from "@/Utility/Trim";
 
 export function Splay(parent) {
     BinaryTree.call(this, parent);
 
     this.type("Splay");
+
+    uneffect(this._.updater);
+    this._.updater = effect(() => {
+        SplayLayout.call(this, "vertical");
+    });
 }
 
 Splay.prototype = {
     ...BinaryTree.prototype
 };
 
-Splay.prototype.updateList = [
-    ...BinaryTree.prototype.updateList.slice(0, -1),
-    update
-];
-
-function update() {
-    let root;
-    const sidToChildren = this._.sidToChildren;
-    try {
-        root = this.stratify();
-        if (!root) return this;
-    } catch (e) {
-        return this;
-    }
-    const maxY = this.member.get("y");
+function SplayLayout(mode) {
+    const biChildren = this._.biChildren;
+    const roots = this.findNodes(node => this.father(node) === undefined);
+    if (roots.length > 1) return;
+    const root = roots[0];
+    if (!root) return;
+    let maxDepth = 0;
+    const convertX = (mode === "vertical") ?
+        (rank, gap, depth) => this.x() + (rank + 1) * gap :
+        (rank, gap, depth) => this.x() + this.layerWidth() * depth;
+    const convertY = (mode === "horizontal") ?
+        (rank, gap, depth) => this.y() + (rank + 1) * gap :
+        (rank, gap, depth) => this.y() + this.layerHeight() * depth;
+    const convert = (rank, gap, depth) => [convertX(rank, gap, depth), convertY(rank, gap, depth)];
     const sequence = [];
-    const realX = (rank, gap) => this.x() + (rank + 1) * gap;
-    const realY = (depth) => this.y() + this.layerHeight() * depth;
-    const dfs = (u) => {
-        u.children.sort((a, b) => {
-            return a.dir - b.dir;
-        });
-        console.assert(u.children.length <= 2);
-        const lcId = sidToChildren[u.data.id][0];
-        const rcId = sidToChildren[u.data.id][1];
-        let lc = u.children.find(child => this.nodeId(child.data) === lcId);
-        let rc = u.children.find(child => this.nodeId(child.data) === rcId);
-        if (lc) dfs(lc);
-        sequence.push(u);
-        if (rc) dfs(rc);
+    const dfs = (current, depth) => {
+        maxDepth = Math.max(maxDepth, depth);
+        const lc = biChildren[this.element(current).id][0];
+        const rc = biChildren[this.element(current).id][1];
+        if (lc) dfs(this.element(lc), depth + 1);
+        sequence.push([current, depth]);
+        if (rc) dfs(this.element(rc), depth + 1);
     }
-    dfs(root);
-    const width = this.member.get("width");
-    const gap = width / (sequence.length + 1);
-    for (let [idx, u] of sequence.entries()) {
-        const x = realX(idx, gap);
-        const y = realY(u.depth);
-        const node = u.data;
-        this.tryMove(node, () => {
-            node.cx(x).cy(y);
+    dfs(root, 1);
+
+    if (mode === "vertical") {
+        this.vars.height = maxDepth * this.layerHeight();
+    } else {
+        this.vars.width = maxDepth * this.layerWidth();
+    }
+
+    const gap = (mode === "vertical" ? this.width() : this.height()) / (sequence.length + 1);
+    for (let [idx, info] of sequence.entries()) {
+        const node = info[0];
+        this.tryUpdate(node, () => {
+            node.center(convert(idx, gap, info[1]));
         });
     }
-    const links = this.member.get("links");
-    for (let link of links) {
-        const src = this.findNodeById(this.sourceId(link));
-        const tgt = this.findNodeById(this.targetId(link));
-        this.tryMove(link, () => {
-            link.source(src.cx(), src.cy());
-            link.target(tgt.cx(), tgt.cy());
-            trim(link, src, tgt);
-        });
-    }
-    this.member.setAndFlush("height", maxY - this.member.get("y"));
-    return this;
+    this.forEachLink((link, sourceId, targetId) => {
+        const source = this.findNodeById(sourceId);
+        const target = this.findNodeById(targetId);
+        this.tryUpdate(link, () => {
+            link.source(source.center());
+            link.target(target.center());
+            trim(link, source, target);
+        })
+    });
 }

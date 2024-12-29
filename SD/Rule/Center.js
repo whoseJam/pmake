@@ -27,8 +27,7 @@ export function Center(rate = 1.2) {
         const cw = w / rate;
         const ch = h / rate;
         child.width(cw).height(ch);
-        child.x(cx - cw / 2);
-        child.y(cy - ch / 2);
+        child.cx(cx).cy(cy);
     }
 }
 

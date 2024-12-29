@@ -20,10 +20,7 @@ export function BaseTree(parent) {
     this._.sdnodesMap = {}; // SDNode id -> { node: SDNode, id: TreeID } | { link: SDNode, sourceId: TreeID, targetId: TreeID }
     this._.nodesMap = {};   // TreeID -> SDNode
     this._.linksMap = new Map();   // TreeID -> SDNode
-    this._.sidToNodes = {}; // id of SDNode -> { node: SDNode, key: id on Tree }
-    this._.sidToLinks = {}; // id of SDNode -> { link: SDNode, source: id on Tree, target: id on Tree }
-    this._.tidToNodes = {}; // id on Tree -> { node: SDNode, key: id of SDNode }
-    this._.updated = {};
+    this._.updates = [];
 
     this._.BASE_TREE = true;
 }
@@ -251,12 +248,22 @@ BaseTree.prototype.children = function (node) {
     return this.outLinks(node).map(link => this.target(link));
 }
 
+BaseTree.prototype.tryUpdate = function (element, update) {
+    if (element.onEnter()) {
+        this._.updates.push(() => {
+            element.triggerEnter(this, update);
+        });
+    } else update();
+}
+
 BaseTree.prototype.newNodeByBaseTree = function (id, element) {
     id = String(id);
     this._.sdnodesMap[element.id] = { node: element, id };
     this._.nodesMap[id] = element;
     this.childAs(element);
     this.vars.nodes.push(element);
+    this._.updates.forEach(update => update());
+    this._.updates = [];
     return this;
 }
 
@@ -266,6 +273,8 @@ BaseTree.prototype.newLinkByBaseTree = function (sourceId, targetId, element) {
     this._.linksMap.set([sourceId, targetId], element);
     this.childAs(element);
     this.vars.links.push(element);
+    this._.updates.forEach(update => update());
+    this._.updates = [];
     return this;
 }
 
@@ -285,7 +294,6 @@ BaseTree.prototype.root = function (id, value) {
 }
 
 BaseTree.prototype.link = function (sourceId, targetId, value) {
-    console.log("find source id=", sourceId, this.findNodeById(sourceId));
     if (!this.findNodeById(targetId)) this.newNode(targetId);
     if (!this.findNodeById(sourceId)) this.newNode(sourceId);
     this.newLink(sourceId, targetId, value);

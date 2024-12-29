@@ -1,36 +1,31 @@
-import { Tree }     from "@/Node/Tree/Tree";
-import { Enter }    from "@/Node/SDNode/Enter";
-import { D3Layout } from "@/Node/Tree/Tree";
+import { Enter as EN } from "@/Node/SDNode/Enter";
+import { effect, uneffect } from "@/Node/SDNode/SDValue";
+import { D3Layout, Tree } from "@/Node/Tree/Tree";
 
 export function ValueTree(parent) {
     Tree.call(this, parent);
 
     this.type("ValueTree");
+
+    uneffect(this._.updater);
+    this._.updater = effect(() => {
+        D3Layout.apply(this, [
+            "vertical",
+            node => [node.x + this.x(), node.y + this.y()],
+            () => { }
+        ]);
+    })
 }
 
 ValueTree.prototype = {
     ...Tree.prototype
 };
 
-ValueTree.prototype.updateList = [
-    ...Tree.prototype.updateList.slice(0, -1),
-    update
-];
-
-ValueTree.prototype.newNode = function(id, value) {
+ValueTree.prototype.newNode = function (id, value) {
     const element = value;
-    element.onEnter(Enter.ordinary(this, "nodes"));
+    element.onEnter(EN.appear("nodes"));
     this.newNodeByBaseTree(id, element);
     return this;
 }
 
 ValueTree.prototype.newNodeFromExistValue = Tree.prototype.newNodeFromExistElement;
-
-function update() {
-    D3Layout.apply(this, [
-        "vertical",
-        node => node.x + this.x(),
-        node => node.y + this.y(),
-        () => {}
-    ]);
-}

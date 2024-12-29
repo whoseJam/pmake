@@ -1,13 +1,25 @@
-import { D3Layout }       from "@/Node/Tree/Tree";
-import { ValueTree }      from "@/Node/Tree/ValueTree";
+import { effect, uneffect } from "@/Node/SDNode/SDValue";
 import { HorizontalTree } from "@/Node/Tree/HorizontalTree";
+import { D3Layout } from "@/Node/Tree/Tree";
+import { ValueTree } from "@/Node/Tree/ValueTree";
 
 export function HorizontalValueTree(parent) {
     HorizontalTree.call(this, parent);
 
     this.type("HorizontalValueTree");
 
-    this.member.new("layerWidth", 60);
+    this.vars.merge({
+        layerWidth: 60
+    });
+
+    uneffect(this._.updater);
+    this._.updater = effect(() => {
+        D3Layout.apply(this, [
+            "horizontal",
+            node => [node.y + this.x(), node.x + this.y()],
+            () => { }
+        ]);
+    })
 }
 
 HorizontalValueTree.prototype = {
@@ -15,17 +27,3 @@ HorizontalValueTree.prototype = {
 };
 
 HorizontalValueTree.prototype.newNode = ValueTree.prototype.newNode;
-
-HorizontalValueTree.prototype.updateList = [
-    ...HorizontalValueTree.prototype.updateList.slice(0, -1),
-    update
-];
-
-function update() {
-    D3Layout.apply(this, [
-        "horizontal",
-        node => node.y + this.x(),
-        node => node.x + this.y(),
-        () => {}
-    ]);
-}
