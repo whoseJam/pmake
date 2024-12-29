@@ -1,8 +1,7 @@
+import { Enter } from "@/Node/SDNode/Enter";
+import { Tree } from "@/Node/Tree/Tree";
 import { Cast } from "@/Utility/Cast";
 import { trim } from "@/Utility/Trim";
-
-import { Tree }  from "@/Node/Tree/Tree";
-import { Enter } from "@/Node/SDNode/Enter";
 
 export function BinaryTree(parent) {
     Tree.call(this, parent);
@@ -21,60 +20,59 @@ BinaryTree.prototype.updateList = [
     update
 ];
 
-BinaryTree.prototype.newNode = function(tid, value) {
-    tid = String(tid);
+BinaryTree.prototype.newNode = function (id, value) {
+    id = String(id);
     const sidToChildren = this._.sidToChildren;
     const element = new this._.nodeType(this.layer("nodes"));
     sidToChildren[element.id] = [undefined, undefined];
-    element.value(Cast.castToSDNode(element, value, tid));
-    element.onEnter(Enter.ordinary(this, "nodes"));
-    this.newNodeByBaseTree(tid, element);
+    element.value(Cast.castToSDNode(element, value, id));
+    element.onEnter(Enter.appear("nodes"));
+    this.newNodeByBaseTree(id, element);
     return this;
 }
 
-BinaryTree.prototype.newLink = function(sourceTid, targetTid, direction, value = null) {
-    sourceTid = String(sourceTid);
-    targetTid = String(targetTid);
+BinaryTree.prototype.newLink = function (sourceId, targetId, direction, value = null) {
+    [sourceId, targetId] = [String(sourceId), String(targetId)];
     const sidToChildren = this._.sidToChildren;
-    sidToChildren[this.element(sourceTid).id][direction] = targetTid;
+    sidToChildren[this.element(sourceId).id][direction] = targetId;
     const element = new this._.linkType(this.layer("links"));
     if (value !== null) element.value(value);
-    element.onEnter(Enter.ordinary(this, "links"));
-    this.newLinkByBaseTree(sourceTid, targetTid, element);
+    element.onEnter(Enter.appear("links"));
+    this.newLinkByBaseTree(sourceId, targetId, element);
     return this;
 }
 
-BinaryTree.prototype.leftChild = function(sourceTid, targetTid, value = null) {
+BinaryTree.prototype.leftChild = function (sourceId, targetId, value = null) {
     if (arguments.length === 1) {
         const sidToChildren = this._.sidToChildren;
-        return this.findNodeById(sidToChildren[this.element(sourceTid).id][0]);
+        return this.findNodeById(sidToChildren[this.element(sourceId).id][0]);
     }
-    if (!this.findNodeById(sourceTid)) this.newNode(sourceTid);
-    if (!this.findNodeById(targetTid)) this.newNode(targetTid);
-    this.newLink(sourceTid, targetTid, 0, value);
+    if (!this.findNodeById(sourceId)) this.newNode(sourceId);
+    if (!this.findNodeById(targetId)) this.newNode(targetId);
+    this.newLink(sourceId, targetId, 0, value);
     return this;
 }
 
-BinaryTree.prototype.rightChild = function(sourceTid, targetTid, value = null) {
+BinaryTree.prototype.rightChild = function (sourceId, targetId, value = null) {
     if (arguments.length === 1) {
         const sidToChildren = this._.sidToChildren;
-        return this.findNodeById(sidToChildren[this.element(sourceTid).id][1]);
+        return this.findNodeById(sidToChildren[this.element(sourceId).id][1]);
     }
-    if (!this.findNodeById(sourceTid)) this.newNode(sourceTid);
-    if (!this.findNodeById(targetTid)) this.newNode(targetTid);
-    this.newLink(sourceTid, targetTid, 1, value);
+    if (!this.findNodeById(sourceId)) this.newNode(sourceId);
+    if (!this.findNodeById(targetId)) this.newNode(targetId);
+    this.newLink(sourceId, targetId, 1, value);
     return this;
 }
 
-BinaryTree.prototype.leftChildId = function(node) {
+BinaryTree.prototype.leftChildId = function (node) {
     return this.nodeId(this.leftChild(node));
 }
 
-BinaryTree.prototype.rightChildId = function(node) {
+BinaryTree.prototype.rightChildId = function (node) {
     return this.nodeId(this.rightChild(node));
 }
 
-BinaryTree.prototype.link = function(x, y, dir, value = null) {
+BinaryTree.prototype.link = function (x, y, dir, value = null) {
     if (dir === 0) this.leftChild(x, y, value);
     else this.rightChild(x, y, value);
     return this;
@@ -92,8 +90,8 @@ export function binaryTreeLayout(mode) {
     const root = this.root();
     if (!root) return this;
     let maxDepth = 0;
-    const realX = (mode === "vertical") ? 
-        (rank, gap, depth) => this.x() + (rank * 2 + 1) * gap : 
+    const realX = (mode === "vertical") ?
+        (rank, gap, depth) => this.x() + (rank * 2 + 1) * gap :
         (rank, gap, depth) => this.x() + this.layerWidth() * depth;
     const realY = (mode === "horizontal") ?
         (rank, gap, depth) => this.y() + (rank * 2 + 1) * gap :
@@ -109,19 +107,16 @@ export function binaryTreeLayout(mode) {
         if (sidToChildren[current.id][0]) dfs(this.element(sidToChildren[current.id][0]), rank * 2, gap / 2, depth + 1);
         if (sidToChildren[current.id][1]) dfs(this.element(sidToChildren[current.id][1]), rank * 2 + 1, gap / 2, depth + 1);
     }
-    const gap = ((mode === "vertical") ? this.member.get("width") : this.member.get("height")) / 2;
+    const gap = ((mode === "vertical") ? this.width() : this.height()) / 2;
     dfs(root, 0, gap, 0);
-    
-    const links = this.member.get("links");
+
+    const links = this.vars.links;
     for (let link of links) {
         const src = this.findNodeById(this.sourceId(link));
         const tgt = this.findNodeById(this.targetId(link));
-        this.tryMove(link, () => {
-            link.source(src.cx(), src.cy());
-            link.target(tgt.cx(), tgt.cy());
-            trim(link, src, tgt);
-        });
+        link.source(src.cx(), src.cy());
+        link.target(tgt.cx(), tgt.cy());
+        trim(link, src, tgt);
     }
-    if (mode === "vertical") this.member.setAndFlush("height", maxDepth * this.layerHeight());
-    else                     this.member.setAndFlush("width" , maxDepth * this.layerWidth());
+    this.vars[mode === "vertical" ? "height" : "width"] = maxDepth * this[mode === "vertical" ? "layerHeight" : "layerWidth"];
 }

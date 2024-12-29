@@ -1,4 +1,4 @@
-import { SDNode }   from "@/Node/SDNode";
+import { SDNode } from "@/Node/SDNode";
 import { BaseTree } from "@/Node/Tree/BaseTree";
 
 export class BoxTree extends BaseTree {

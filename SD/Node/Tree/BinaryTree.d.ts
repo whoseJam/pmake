@@ -1,17 +1,20 @@
-import { SDNode }   from "@/Node/SDNode";
-import { D3Layer }  from "@/Node/SDNode/D3Layer";
+import { SDNode } from "@/Node/SDNode";
+import { D3Layer } from "@/Node/SDNode/D3Layer";
 import { BaseTree } from "@/Node/Tree/BaseTree";
 
+type InputID = number | string;
+type InputNode = InputID | SDNode;
+
 export class BinaryTree extends BaseTree {
-    constructor(parent: SDNode|D3Layer);
+    constructor(parent: SDNode | D3Layer);
 
-    leftChild(parentId: number|string): SDNode;
-    leftChild(parentId: number|string, childId: number|string): this;
-    leftChild(parentId: number|string, childId: number|string, value: any): this;
-    leftChildId(tid: number|string|SDNode): string;
+    leftChild(parentId: InputID, childId: InputID): this;
+    leftChild(parentId: InputID, childId: InputID, value: any): this;
+    leftChild(node: InputNode);
+    leftChildId(node: InputNode): string;
 
-    rightChild(parentId: number|string): SDNode;
-    rightChild(parentId: number|string, childId: number|string): this;
-    rightChild(parentId: number|string, childId: number|string, value: any): this;
-    rightChildId(tid: number|string|SDNode): string;
+    rightChild(parentId: InputID, childId: InputID): this;
+    rightChild(parentId: InputID, childId: InputID, value: any): this;
+    rightChild(node: InputNode): SDNode;
+    rightChildId(node: InputNode): string;
 }

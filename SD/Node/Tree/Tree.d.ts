@@ -1,4 +1,4 @@
-import { SDNode }   from "@/Node/SDNode";
+import { SDNode } from "@/Node/SDNode";
 import { BaseTree } from "@/Node/Tree/BaseTree";
 
 export class Tree extends BaseTree {
@@ -11,8 +11,8 @@ export class Tree extends BaseTree {
 }
 
 export function D3Layout(
-    mode: "vertical"|"horizontal",
-    transX: (node: {x: number, y: number}) => number,
-    transY: (node: {x: number, y: number}) => number,
+    mode: "vertical" | "horizontal",
+    transX: (node: { x: number, y: number }) => number,
+    transY: (node: { x: number, y: number }) => number,
     setSize: (node: SDNode, limit: number) => void
 );

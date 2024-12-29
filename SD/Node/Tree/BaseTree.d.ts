@@ -1,87 +1,75 @@
+import { SDNode } from "@/Node/SDNode";
 import { Color } from "@/Utility/Color";
 
-import { SDNode } from "@/Node/SDNode";
+type InputID = number | string;
+type InputNode = InputID | SDNode;
 
 export class BaseTree extends SDNode {
     constructor(parent: SDNode);
 
-    newNode(id: number|string): this;
-    newNode(id: number|string, value: any): this;
-    newNodeFromExistValue(id: number|string, value: SDNode): this;
-    newNodeFromExistElement(id: number|string, element: SDNode): this;
-    newLink(sourceId: number|string, targetId: number|string): this;
-    newLink(sourceId: number|string, targetId: number|string, value: any): this;
-    newLinkFromExistValue(sourceId: number|string, targetId: number|string, value: SDNode): this;
-    newLinkFromExistElement(sourceId: number|string, targetId: number|string, element: SDNode): this;
-
-    element(node: number|string|SDNode): SDNode;
-    element(source: number|string|SDNode, target: number|string|SDNode): SDNode;
-
-    value(node: number|string|SDNode): SDNode;
-    value(node: number|string|SDNode, value: any): this;
-    value(source: number|string|SDNode, target: number|string|SDNode): SDNode;
-    value(source: number|string|SDNode, target: number|string|SDNode, value: any): this;
-
+    newNode(id: InputID): this;
+    newNode(id: InputID, value: any): this;
+    newNodeFromExistValue(id: InputID, value: SDNode): this;
+    newNodeFromExistElement(id: InputID, element: SDNode): this;
+    newLink(sourceId: InputID, targetId: InputID): this;
+    newLink(sourceId: InputID, targetId: InputID, value: any): this;
+    newLinkFromExistValue(sourceId: InputID, targetId: InputID, value: SDNode): this;
+    newLinkFromExistElement(sourceId: InputID, targetId: InputID, element: SDNode): this;
+    element(node: InputID | SDNode): SDNode;
+    element(source: InputID | SDNode, target: InputID | SDNode): SDNode;
+    value(node: InputID | SDNode): SDNode;
+    value(node: InputID | SDNode, value: any): this;
+    value(source: InputID | SDNode, target: InputID | SDNode): SDNode;
+    value(source: InputID | SDNode, target: InputID | SDNode, value: any): this;
     opacity(): number;
     opacity(opacity: number): this;
-    opacity(id: number|string): number;
-    opacity(id: number|string, opacity: number): this;
-    opacity(sourceId: number|string, targetId: number|string): number;
-    opacity(sourceId: number|string, targetId: number|string, opacity: number): this;
-
+    opacity(id: InputID): number;
+    opacity(id: InputID, opacity: number): this;
+    opacity(sourceId: InputID, targetId: InputID): number;
+    opacity(sourceId: InputID, targetId: InputID, opacity: number): this;
     color(color: Color): this;
-    color(tid: number|string): Color;
-    color(tid: number|string, color: Color): this;
-    color(sourceId: number|string, targetId: number|string): Color;
-    color(sourceId: number|string, targetId: number|string, color: Color): this;
-
-    stratify(): any;
-
-    findNodeById(tid: number|string): SDNode|undefined;
-    findLinkById(sourceId: number|string, targetId: number|string): SDNode|undefined;
-
-    father(node: number|string|SDNode): SDNode|undefined;
-    father(link: SDNode): SDNode|undefined;
-    fatherId(node: number|string|SDNode): string;
-    ancestor(node: number|string|SDNode, kth: number): SDNode|undefined;
-    ancestorId(node: number|string|SDNode, kth: number): string;
-
-
+    color(tid: InputID): Color;
+    color(tid: InputID, color: Color): this;
+    color(sourceId: InputID, targetId: InputID): Color;
+    color(sourceId: InputID, targetId: InputID, color: Color): this;
+    findNode(condition: (node: SDNode, id: string) => boolean): SDNode | undefined;
+    findNodes(condition: (node: SDNode, id: string) => boolean): Array<SDNode>;
+    findLink(condition: (link: SDNode, sourceId: string, targetId: string) => boolean): SDNode | undefined;
+    findLinks(condition: (link: SDNode, sourceId: string, targetId: string) => boolean): Array<SDNode>;
+    findNodeById(tid: InputID): SDNode | undefined;
+    findLinkById(sourceId: InputID, targetId: InputID): SDNode | undefined;
+    inLink(node: InputNode): SDNode | undefined;
+    outLinks(node: InputNode): Array<SDNode>;
+    stratify();
+    father(node: InputNode): SDNode | undefined;
+    fatherId(node: InputNode): string;
+    ancestor(node: InputNode, kth: number): SDNode | undefined;
+    ancestorId(node: InputNode, kth: number): string;
     depth(): number;
-    depth(tid: number|string): number;
-
-    lca(x: number|string|SDNode, y: number|string|SDNode): SDNode;
-    lcaId(x: number|string|SDNode, y: number|string|SDNode): string;
-
-    children(tid: number|string): Array<SDNode>;
-    children(node: SDNode): Array<SDNode>;
-
+    depth(node: InputNode): number;
+    lca(x: InputNode, y: InputNode): SDNode;
+    lcaId(x: InputNode, y: InputNode): string;
+    children(id: InputNode): Array<SDNode>;
     root(): SDNode;
-    root(tid: number|string): this;
-    root(tid: number|string, value: any): this;
-
-    link(sourceId: number|string, targetId: number|string): this;
-    link(sourceId: number|string, targetId: number|string, value: any): this;
-
-    cut(sourceId: number|string, targetId: number|string): this;
-
-    text(tid: number|string): string;
-    text(sourceId: number|string, targetId: number|string): string;
-
-    intValue(tid: number|string): number;
-    intValue(sourceId: number|string, targetId: number|string): number;
-
-    nodesOnPath(source: number|string|SDNode, target: number|string|SDNode): Array<SDNode>;
-    linksOnPath(source: number|string|SDNode, target: number|string|SDNode): Array<SDNode>;
-    forEachNodesOnPath(sourceId: number|string, targetId: number|string, callback: (node: SDNode, id: string) => void): this;
-    forEachLinksOnPath(sourceId: number|string, targetId: number|string, callback: (link: SDNode, sourceId: string, targetId: string) => void): this;
-    forEachNodes(callback: (node: SDNode, tid: string) => void): this;
-    forEachLinks(callback: (link: SDNode, sourceId: string, targetId: string) => void): this;
-
+    root(id: InputID): this;
+    root(id: InputID, value: any): this;
+    link(sourceId: InputID, targetId: InputID): this;
+    link(sourceId: InputID, targetId: InputID, value: any): this;
+    cut(sourceId: InputID, targetId: InputID): this;
+    text(tid: InputID): string;
+    text(sourceId: InputID, targetId: InputID): string;
+    intValue(tid: InputID): number;
+    intValue(sourceId: InputID, targetId: InputID): number;
+    nodesOnPath(source: InputID | SDNode, target: InputID | SDNode): Array<SDNode>;
+    linksOnPath(source: InputID | SDNode, target: InputID | SDNode): Array<SDNode>;
+    forEachNodeOnPath(sourceId: InputID, targetId: InputID, callback: (node: SDNode, id: string) => void): this;
+    forEachLinkOnPath(sourceId: InputID, targetId: InputID, callback: (link: SDNode, sourceId: string, targetId: string) => void): this;
+    forEachNode(callback: (node: SDNode, tid: string) => void): this;
+    forEachLink(callback: (link: SDNode, sourceId: string, targetId: string) => void): this;
     rootId(): string;
-    nodeId(node: number|string|SDNode): string|undefined;
-    sourceId(link: SDNode): string|undefined;
-    targetId(link: SDNode): string|undefined;
-    source(link: SDNode): SDNode;
-    target(link: SDNode): SDNode;
+    nodeId(node: InputNode): string | undefined;
+    sourceId(link: SDNode): string | undefined;
+    targetId(link: SDNode): string | undefined;
+    source(link: SDNode): SDNode | undefined;
+    target(link: SDNode): SDNode | undefined;
 }
