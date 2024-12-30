@@ -16,10 +16,20 @@ class EffectQueue {
         this.queue.push(effect);
     }
 
+    transfer(other) {
+        for (let i = this.queue.length - 1; i >= 0; i--) {
+            const effect = this.queue[i];
+            effect[this.label] = false;
+            effect[other.label] = true;
+            other.pushFront(effect);
+        }
+    }
+
     execute() {
         while (this.queue.length > 0) {
             const effect = this.queue[0];
             this.queue.shift();
+            console.log("effect=", effect.tag);
             effect();
             flushDirty(effect);
             effect[this.label] = false;
@@ -152,6 +162,7 @@ function flushDirty(effect) {
 }
 
 function triggerGlobalEffectQueue() {
+    console.log("trigger global effect queue");
     globalAllowDAGUpdate = false;
     globalEffectQueue.execute();
     globalAllowDAGUpdate = true;
@@ -279,9 +290,8 @@ function triggerDAGUpdate(object, key, freeze) {
                 if (effect.inLocalQueue) return;
                 effect.inLocalQueue = true;
             } else {
-                throw new Error("Not Implemented Yet");
-                // if (effect.inLocalQueue || effect.inGlobalQueue) return;
-                // effect.inLocalQueue = true;
+                if (effect.inLocalQueue || effect.inGlobalQueue) return;
+                effect.inLocalQueue = true;
             }
             localEffectQueue.pushBack(effect);
             const effectManager = effectsMap.get(effect);
@@ -294,12 +304,8 @@ function triggerDAGUpdate(object, key, freeze) {
     if (freeze === 0) {
         localEffectQueue.execute();
     } else {
-        throw new Error("Not Implemented Yet");
-        // effectQueue.forEach(effect => {
-        //     effect.inGlobalQueue = true;
-        //     effect.inLocalQueue = false;
-        // });
-        // globalEffectQueue = [...effectQueue, ...globalEffectQueue];
+        console.log("transfer -> global");
+        localEffectQueue.transfer(globalEffectQueue);
     }
     globalAllowDAGUpdate = true;
 }
