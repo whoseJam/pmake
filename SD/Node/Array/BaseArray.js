@@ -8,6 +8,8 @@ import { Factory } from "@/Utility/Factory";
 export function BaseArray(parent) {
     SDNode.call(this, parent);
 
+    this.newLayer("elements");
+
     this.vars.merge({
         start: 0,
         elements: []

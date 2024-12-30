@@ -7,7 +7,6 @@ export function Stack(parent) {
     BaseArray.call(this, parent);
 
     this.type("Stack");
-    this.newLayer("elements");
 
     this.vars.merge({
         x: 0,

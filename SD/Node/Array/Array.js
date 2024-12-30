@@ -8,7 +8,6 @@ export function Array(parent) {
     BaseArray.call(this, parent);
 
     this.type("Array");
-    this.newLayer("elements");
 
     this.vars.merge({
         x: 0,

@@ -7,7 +7,6 @@ export function Pile(parent) {
     BaseArray.call(this, parent);
 
     this.type("Pile");
-    this.newLayer("elements");
 
     this.vars.merge({
         x: 0,

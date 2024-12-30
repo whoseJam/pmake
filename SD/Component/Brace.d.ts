@@ -1,19 +1,19 @@
-import { SDNode } from "@/Node/SDNode";
+import { BraceCurve } from "@/Node/Curve/BraceCurve";
 
-interface BraceType extends SDNode {
-    brace(l: number, r: number, location: "b" | "t", gap: number): this;
-    brace(t: number, b: number, location: "l" | "r", gap: number): this;
+type Location = "l" | "r" | "b" | "t";
+
+class CompBrace {
+    brace(l: number, r: number, location: Location, gap: number): this;
     l(): number;
     l(l: number): this;
     r(): number;
     r(r: number): this;
-    location(): "b" | "t" | "l" | "r";
-    location(location: "b" | "t" | "l" | "r"): this;
+    location(): Location;
+    location(location: Location): this;
     braceGap(): number;
     braceGap(gap: number): this;
     valueGap(): number;
     valueGap(gap: number): this;
-
     value(value: SDNode): this;
 }
 
@@ -21,4 +21,4 @@ interface BraceType extends SDNode {
  * 创建一个花括号
  * @param parent
  */
-export function Brace(parent: SDNode): BraceType;
+export function Brace(parent: SDNode): CompBrace & BraceCurve;
