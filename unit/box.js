@@ -26,7 +26,12 @@ async function main() {
     await sd.pause();
     for (let i = 0; i < str.length; i++) {
         let t = str[i];
-        box.startAnimate().value(t.onEnter(EN.moveTo())).endAnimate();
+        box.startAnimate().value(
+            t.onEnter((element) => {
+                element.after(box);
+                element.startAnimate();
+            })
+        ).endAnimate();
     }
 
     await sd.pause();
