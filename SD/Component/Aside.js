@@ -8,7 +8,7 @@ export function Aside(parent, aside, location = "lc", gap = 5) {
     aside.vars.gap = gap;
 
     aside.location = Factory.handler("location");
-    aside.gap = Factory.handlerMediumPrecise("asideGap");
+    aside.gap = Factory.handlerLowPrecise("asideGap");
 
     parent.childAs(`aside_${++ID}`, aside, function (parent, child) {
         const rule = AsideRule(child.vars.location, child.vars.gap);

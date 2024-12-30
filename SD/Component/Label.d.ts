@@ -1,22 +1,47 @@
-import { SDNode } from "SD/Node/SDNode";
+import { Mathjax } from "@/Node/Text/Mathjax";
+import { SDNode } from "@/Node/SDNode";
 
-type LocationType = "lt"|"lc"|"lb"|"tl"|"tc"|"tr"|"bl"|"bc"|"br"|"rt"|"rc"|"rb";
+type Location =
+    | "lt"
+    | "lc"
+    | "lb"
+    | "tl"
+    | "tc"
+    | "tr"
+    | "bl"
+    | "bc"
+    | "br"
+    | "rt"
+    | "rc"
+    | "rb";
 
-interface LabelComponent extends SDNode {
-    location(): LocationType;
-    location(location: LocationType): this;
+class CompLabel {
+    location(): Location;
+    location(location: Location): this;
     gap(): number;
     gap(gap: number): this;
 }
 
 /**
  * 构建一个标签
- * @param parent 
+ * @param parent
  * @param text 标签的文本
- * @param position 标签相对于父节点的位置 
+ * @param position 标签相对于父节点的位置
  * @param fontSize 标签字体大小
  * @param gap 标签到父组件的间距
  */
-export function Label(parent: any, text: string, location: LocationType, fontSize: number, gap: number): LabelComponent;
+export function Label(
+    parent: SDNode,
+    text: string,
+    location: Location,
+    fontSize: number,
+    gap: number,
+): CompLabel & Text;
 
-export function MathjaxLabel(parent: any, text: string, location: LocationType, fontSize: number, gap: number): LabelComponent;
+export function MathjaxLabel(
+    parent: SDNode,
+    text: string,
+    location: Location,
+    fontSize: number,
+    gap: number,
+): CompLabel & Mathjax;

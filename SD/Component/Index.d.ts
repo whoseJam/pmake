@@ -1,9 +1,11 @@
-import { SDNode }    from "@/Node/SDNode";
+import { SDNode } from "@/Node/SDNode";
 import { BaseArray } from "@/Node/Array/BaseArray";
 
+type Location = "t" | "b" | "l" | "r";
+
 interface IndexComponent extends BaseArray {
-    location(): "t"|"b"|"l"|"r";
-    location(location: "t"|"b"|"l"|"r"): this;
+    location(): Location;
+    location(location: Location): this;
     fontSize(): number;
     fontSize(fontSize: number): this;
     gap(): number;
@@ -12,14 +14,14 @@ interface IndexComponent extends BaseArray {
 
 /**
  * 创建一个索引
- * @param parent 
+ * @param parent
  * @param location
  * @param fontSize 指定索引字体大小，默认为 15
  * @param gap 指定索引到父节点的距离，默认为 3
  */
 export function Index(
     parent: SDNode,
-    location: "t"|"b"|"l"|"r",
+    location: Location,
     fontSize: number,
-    gap: number
+    gap: number,
 ): SDNode;

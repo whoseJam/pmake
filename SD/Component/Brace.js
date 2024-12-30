@@ -45,10 +45,10 @@ function BraceRule(parent, child) {
 function LabelRule(parent, child) {
     const gap = parent.valueGap();
     const rule = {
-        "t": PointAtPathByRate(0.5, "cx", "my", 0, -gap),
-        "b": PointAtPathByRate(0.5, "cx", "y", 0, gap),
-        "l": PointAtPathByRate(0.5, "mx", "cy", -gap, 0),
-        "r": PointAtPathByRate(0.5, "x", "cy", gap, 0)
+        t: PointAtPathByRate(0.5, "cx", "my", 0, -gap),
+        b: PointAtPathByRate(0.5, "cx", "y", 0, gap),
+        l: PointAtPathByRate(0.5, "mx", "cy", -gap, 0),
+        r: PointAtPathByRate(0.5, "x", "cy", gap, 0),
     }[parent.location()];
     if (rule) rule(parent, child);
 }
@@ -62,44 +62,43 @@ export function Brace(parent) {
         braceElement2: undefined,
         location: undefined,
         braceGap: 5,
-        valueGap: 5
+        valueGap: 5,
     });
 
     brace.brace = function (l, r, location = "t", gap = 5) {
-        let context;
-        if (this.opacity() === 0) {
-            context = new Context(this);
-            this.startAnimate(context.tillc(0, 0));
-        }
-
-        if (Check.isTypeOfSDNode(l) && Check.isTypeOfSDNode(r)) {
-            if (!parent.childAs) { // 这是全局的 brace，需要手动管理规则回调
-                const element1 = this.vars.braceElement1;
-                const element2 = this.vars.braceElement2;
-                if (element1) element1.eraseChild(name);
-                if (element2) element2.eraseChild(name);
-                l.childAs(name, this);
-                r.childAs(name, this);
+        const update = () => {
+            if (Check.isTypeOfSDNode(l) && Check.isTypeOfSDNode(r)) {
+                if (!parent.childAs) {
+                    // 这是全局的 brace，需要手动管理规则回调
+                    const element1 = this.vars.braceElement1;
+                    const element2 = this.vars.braceElement2;
+                    if (element1) element1.eraseChild(name);
+                    if (element2) element2.eraseChild(name);
+                    l.childAs(name, this);
+                    r.childAs(name, this);
+                }
+                this.vars.braceElement1 = l;
+                this.vars.braceElement2 = r;
+            } else if (Check.isTypeOfArray(parent)) {
+                this.vars.braceElement1 = parent.element(l);
+                this.vars.braceElement2 = parent.element(r);
+            } else if (Check.isTypeOfGrid(parent)) {
+                throw new Error("Not Implemented Yet");
             }
-            this.vars.braceElement1 = l;
-            this.vars.braceElement2 = r;
-        } else if (Check.isTypeOfArray(parent)) {
-            this.vars.braceElement1 = parent.element(l);
-            this.vars.braceElement2 = parent.element(r);
-        } else if (Check.isTypeOfGrid(parent)) {
-            throw new Error("Not Implemented Yet");
-        }
-        if (this.vars.location === undefined || (arguments.length >= 3))
-            this.vars.location = location;
-        if (this.vars.braceGap === undefined || (arguments.length >= 4))
-            this.vars.braceGap = gap;
-
+            if (this.vars.location === undefined || arguments.length >= 3)
+                this.vars.location = location;
+            if (this.vars.braceGap === undefined || arguments.length >= 4)
+                this.vars.braceGap = gap;
+        };
         if (this.opacity() === 0) {
+            const context = new Context(this);
+            this.startAnimate(context.tillc(0, 0));
+            update();
             this.startAnimate(context.tillc(0, 1));
             this.opacity(1);
-        }
+        } else update();
         return this;
-    }
+    };
 
     brace.location = Factory.handler("location");
     brace.braceGap = Factory.handlerLowPrecise("braceGap");
@@ -115,7 +114,7 @@ export function Brace(parent) {
             this.childAs("value", element, LabelRule);
         });
         return this;
-    }
+    };
 
     if (parent.childAs) parent.childAs(name, brace, BraceRule);
     else brace.rule(BraceRule);
