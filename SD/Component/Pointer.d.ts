@@ -1,12 +1,10 @@
-import { SDNode } from "SD/Node/SDNode";
+import { Line } from "@/Node/Nake/Line";
+import { SDNode } from "@/Node/SDNode";
 
-interface PointerType extends SDNode {
+class CompPointer {
     moveTo(): this;
-
     moveTo(index: number): this;
-
     moveTo(i: number, j: number): this;
-
     moveTo(element: SDNode): this;
 }
 
@@ -20,10 +18,10 @@ interface PointerType extends SDNode {
  * @param textGap 指针标签与指针的距离，默认为10
  */
 export function Pointer(
-    parent: any,
+    parent: SDNode,
     label: string,
     direction: "b" | "t" | "l" | "r",
     pointerGap: number,
     length: number,
     textGap: number,
-): PointerType;
+): CompPointer & Line;

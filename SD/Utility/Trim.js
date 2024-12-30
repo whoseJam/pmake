@@ -25,7 +25,6 @@ export function trim(link, source, target) {
     const t = trimTarget(link, target);
     const ls = link.at(s);
     const lt = link.at(t);
-    console.log("trim ls=", s, ls, "lt=", t, lt, "d=", link.d());
     link.freeze();
     link.source(ls);
     link.target(lt);

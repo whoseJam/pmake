@@ -17,16 +17,28 @@ sd.main(async () => {
     await sd.pause();
     const pA = sd.Pointer(arr, "a", "t");
     const pB = sd.Pointer(arr, "b", "t");
-    pA.startAnimate().moveTo(1).endAnimate();
-    pB.startAnimate().moveTo(1).endAnimate();
+    arr.startAnimate();
+    pA.moveTo(1);
+    pB.moveTo(1);
+    arr.endAnimate();
     await sd.pause();
-    pB.startAnimate().moveTo(5).endAnimate();
+    arr.startAnimate();
+    pB.moveTo(5);
+    arr.endAnimate();
     await sd.pause();
-    pA.startAnimate().moveTo(8).endAnimate();
+    arr.startAnimate();
+    pA.moveTo(8);
+    arr.endAnimate();
     await sd.pause();
-    pB.startAnimate().moveTo(8).endAnimate();
+    arr.startAnimate();
+    pB.moveTo(8);
+    arr.endAnimate();
     await sd.pause();
-    pA.startAnimate().moveTo(tree.element(1)).endAnimate();
+    arr.startAnimate();
+    pA.moveTo(tree.element(1))
+    arr.endAnimate();
     await sd.pause();
-    pB.startAnimate().moveTo(tree.element(1)).endAnimate();
+    arr.startAnimate();
+    pB.moveTo(tree.element(1));
+    arr.endAnimate();
 })

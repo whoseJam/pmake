@@ -28,6 +28,7 @@ class EffectQueue {
     }
 
     execute() {
+        currentEffectQueue = this;
         while (this.queue.length > 0) {
             const effect = this.queue[0];
             this.queue.shift();
@@ -35,6 +36,7 @@ class EffectQueue {
             flushDirty(effect);
             effect[this.label] = false;
         }
+        currentEffectQueue = undefined;
     }
 }
 
@@ -45,6 +47,7 @@ let globalAllowDAGUpdate = true;
 let globalFreeze = 0;
 const localEffectQueue = new EffectQueue("Local");
 const globalEffectQueue = new EffectQueue("Global");
+let currentEffectQueue = undefined;
 let globalActiveEffect = undefined;
 
 function HasChanged(oldValue, newValue) {
@@ -103,8 +106,8 @@ class EffectManager {
                 const objectManager = objectsMap.get(link.object);
                 const outEffectsSet = objectManager.outputEffects(link.key);
                 outEffectsSet.forEach(effect => {
-                    if (effect[localEffectQueue.label]) return;
-                    localEffectQueue.pushFront(effect);
+                    if (effect[currentEffectQueue.label]) return;
+                    currentEffectQueue.pushFront(effect);
                 });
             }
         });
@@ -237,10 +240,12 @@ export function effect(innerEffect, tag) {
     };
     effectsMap.set(effectFn, new EffectManager(effectFn));
     globalAllowDAGUpdate = false;
+    currentEffectQueue = localEffectQueue;
     localEffectQueue.pushBack(effectFn);
     effectFn.tag = tag ? tag : innerEffect;
     localEffectQueue.execute();
     globalAllowDAGUpdate = true;
+    currentEffectQueue = undefined;
     return effectFn;
 }
 
