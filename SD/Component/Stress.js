@@ -1,7 +1,7 @@
 import { Context } from "@/Animate/Context";
 
 export function Stress(parent) {
-    parent.stress = function(rate = 1.2) {
+    parent.stress = function (rate = 1.2) {
         const cx = this.cx();
         const cy = this.cy();
         const width = this.width();
@@ -16,6 +16,6 @@ export function Stress(parent) {
         this.cx(cx).cy(cy);
         context.recover();
         return this;
-    }
+    };
     return parent;
 }

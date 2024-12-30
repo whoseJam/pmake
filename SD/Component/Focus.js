@@ -1,19 +1,15 @@
 import { Rect } from "@/Node/Nake/Rect";
-
 import { Context } from "@/Animate/Context";
-
-import { color } from "@/Utility/Color";
+import { Color as C } from "@/Utility/Color";
 import { Check } from "@/Utility/Check";
-import { SDNode } from "@/Node/SDNode";
+import { Factory } from "@/Utility/Factory";
 
-const C = color();
-
-let focusID = 0;
+let ID = 0;
 
 function FocusRule(parent, child) {
-    const focusCount = child.member.getAndFlush("focusCount");
-    const focusRate = child.member.getAndFlush("focusRate");
-    const focusGap = child.member.getAndFlush("focusGap");
+    const focusCount = child.vars.focusCount;
+    const focusRate = child.vars.focusRate;
+    const focusGap = child.vars.focusGap;
     function focus(x, y, width, height, rate) {
         if (focusRate !== undefined) {
             const w = width * rate;
@@ -34,19 +30,22 @@ function FocusRule(parent, child) {
         }
     }
     if (focusCount === 0) {
-        child.member.flush("focusElement1");
-        child.member.flush("focusElement2");
         child.opacity(0);
     } else if (focusCount === 1) {
-        const element = child.member.getAndFlush("focusElement1");
-        child.member.flush("focusElement2");
-        focus(element.x(), element.y(), element.width(), element.height(), focusRate);
+        const element = child.vars.focusElement1;
+        focus(
+            element.x(),
+            element.y(),
+            element.width(),
+            element.height(),
+            focusRate,
+        );
     } else {
-        const element1 = child.member.getAndFlush("focusElement1");
-        const element2 = child.member.getAndFlush("focusElement2");
-        const x  = Math.min(element1. x(), element2. x());
+        const element1 = child.vars.focusElement1;
+        const element2 = child.vars.focusElement2;
+        const x = Math.min(element1.x(), element2.x());
         const mx = Math.max(element1.mx(), element2.mx());
-        const y  = Math.min(element1. y(), element2. y());
+        const y = Math.min(element1.y(), element2.y());
         const my = Math.max(element1.my(), element2.my());
         focus(x, y, mx - x, my - y, focusRate);
     }
@@ -58,73 +57,69 @@ export function Focus(parent) {
     focus.stroke(C.red);
     focus.strokeWidth(3);
 
-    focus.member.new("focusElement1", undefined);
-    focus.member.new("focusElement2", undefined);
-    focus.member.new("focusRate", undefined);
-    focus.member.new("focusGap", undefined);
-    focus.member.new("focusCount", 0);
-
-    focus.beforeUpdate(() => {
-        if (focus.member.hasChanged("focusElement1") ||
-            focus.member.hasChanged("focusElement2") ||
-            focus.member.hasChanged("focusCount")) {
-            focus.triggerRule();
-        }
+    focus.vars.merge({
+        focusElement1: undefined,
+        focusElement2: undefined,
+        focusRate: undefined,
+        focusGap: undefined,
+        focusCount: 0,
     });
-    
-    focus.focus = function(arg0, arg1, arg2, arg3) {
-        if (arguments.length === 0) {
-            this.member.set("focusElement1", parent);
-            this.member.set("focusElement2", undefined);
-            this.member.set("focusCount", 1);
-        } else if (arguments.length === 1) {
-            if (Check.isFalseType(arg0)) {
-                this.member.set("focusElement1", undefined);
-                this.member.set("focusElement2", undefined);
-                this.member.set("focusCount", 0);
-                this.opacity(0);
-                return this;
-            } else {
-                this.member.set("focusElement1", typeof(arg0) === "object" ? arg0 : parent.element(arg0));
-                this.member.set("focusElement2", undefined);
-                this.member.set("focusCount", 1);
+
+    focus.focus = function (arg0, arg1, arg2, arg3) {
+        const args = arguments;
+        const update = () => {
+            if (args.length === 0) {
+                this.vars.focusElement1 = parent;
+                this.vars.focusElement2 = undefined;
+                this.vars.focusCount = 1;
+            } else if (arguments.length === 1) {
+                if (Check.isFalseType(arg0)) {
+                    this.vars.focusElement1 = undefined;
+                    this.vars.focusElement2 = undefined;
+                    this.vars.focusCount = 0;
+                    this.opacity(0);
+                    return this;
+                } else {
+                    this.vars.focusElement1 =
+                        typeof arg0 === "object" ? arg0 : parent.element(arg0);
+                    this.vars.focusElement2 = undefined;
+                    this.vars.focusCount = 1;
+                }
+            } else if (arguments.length === 2) {
+                if (Check.isTypeOfSDNode(arg0) && Check.isTypeOfSDNode(arg1)) {
+                    this.vars.focusElement1 = arg0;
+                    this.vars.focusElement2 = arg1;
+                    this.vars.focusCount = 2;
+                } else if (Check.isTypeOfGrid(parent)) {
+                    this.vars.focusElement1 = parent.element(arg0, arg1);
+                    this.vars.focusElement2 = undefined;
+                    this.vars.focusCount = 1;
+                } else {
+                    this.vars.focusElement1 = parent.element(arg0);
+                    this.vars.focusElement2 = parent.element(arg1);
+                    this.vars.focusCount = 2;
+                }
+            } else if (arguments.length === 4) {
+                this.vars.focusElement1 = parent.element(arg0, arg1);
+                this.vars.focusElement2 = parent.element(arg2, arg3);
+                this.vars.focusCount = 2;
             }
-        } else if (arguments.length === 2) {
-            if (Check.isTypeOfSDNode(arg0) && Check.isTypeOfSDNode(arg1)) {
-                this.member.set("focusElement1", arg0);
-                this.member.set("focusElement2", arg1);
-                this.member.set("focusCount", 2);
-            } else if (Check.isTypeOfGrid(parent)) {
-                this.member.set("focusElement1", parent.element(arg0, arg1));
-                this.member.set("focusElement2", undefined);
-                this.member.set("focusCount", 1);
-            } else {
-                this.member.set("focusElement1", parent.element(arg0));
-                this.member.set("focusElement2", parent.element(arg1));
-                this.member.set("focusCount", 2);
-            }
-        } else if (arguments.length === 4) {
-            this.member.set("focusElement1", parent.element(arg0, arg1));
-            this.member.set("focusElement2", parent.element(arg2, arg3));
-            this.member.set("focusCount", 2);
-        }
+        };
 
         if (this.opacity() === 0) {
             const context = new Context(this);
             this.startAnimate(context.tillc(0, 0));
-            this.update();
+            update();
             this.startAnimate(context.tillc(0, 1));
             this.opacity(1);
-        } else {
-            this.update();
-        }
+        } else update();
         return this;
-    }
+    };
 
-    focus.gap = SDNode.OrdinaryGSet("focusGap", "setByDqual");
-    focus.rate = SDNode.OrdinaryGSet("focusRate", "setByDqual");
+    focus.gap = Factory.handlerLowPrecise("focusGap");
+    focus.rate = Factory.handlerMediumPrecise("focusRate");
 
-    if (parent.childAs) parent.childAs(`focus_${++focusID}`, focus, FocusRule);
+    if (parent.childAs) parent.childAs(`focus_${++ID}`, focus, FocusRule);
     else focus.rule(FocusRule);
     return focus;
 }

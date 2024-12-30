@@ -1,13 +1,15 @@
-import { Line }            from "SD/Node/Nake/Line";
-import { Curve }           from "SD/Node/Curve/Curve";
-import { SDNode }          from "SD/Node/SDNode";
-import { Bezier }          from "SD/Node/Curve/Bezier";
-import { VHBezier }        from "SD/Node/Curve/VHBezier";
-import { BraceCurve }      from "SD/Node/Curve/BraceCurve";
-import { CircleCurve }     from "SD/Node/Curve/CircleCurve";
-import { FixedPointCurve } from "SD/Node/Curve/FixedPointCurve";
+import { Line } from "@/Node/Nake/Line";
+import { Curve } from "@/Node/Curve/Curve";
+import { SDNode } from "@/Node/SDNode";
+import { Bezier } from "@/Node/Curve/Bezier";
+import { VHBezier } from "@/Node/Curve/VHBezier";
+import { BraceCurve } from "@/Node/Curve/BraceCurve";
+import { CircleCurve } from "@/Node/Curve/CircleCurve";
+import { FixedPointCurve } from "@/Node/Curve/FixedPointCurve";
+import { BaseCurve } from "@/Node/Curve/BaseCurve";
 
-import { BaseCurve } from "SD/Node/Curve/BaseCurve";
+type XLocation = "x" | "cx" | "mx";
+type YLocation = "y" | "cy" | "my";
 
 export class BaseLink extends BaseCurve {
     constructor(parent: SDNode);
@@ -16,21 +18,21 @@ export class BaseLink extends BaseCurve {
     sourceElement(element: SDNode): this;
     targetElement(): SDNode;
     targetElement(element: SDNode): this;
-    sourceXLocation(): "x"|"cx"|"mx";
-    sourceXLocation(location: "x"|"cx"|"mx"): this;
-    sourceYLocation(): "y"|"cy"|"my";
-    sourceYLocation(location: "y"|"cy"|"my"): this;
-    targetXLocation(): "x"|"cx"|"mx";
-    targetXLocation(location: "x"|"cx"|"mx"): this;
-    targetYLocation(): "y"|"cy"|"my";
-    targetYLocation(location: "y"|"cy"|"my"): this;
+    sourceXLocation(): XLocation;
+    sourceXLocation(location: XLocation): this;
+    sourceYLocation(): YLocation;
+    sourceYLocation(location: YLocation): this;
+    targetXLocation(): XLocation;
+    targetXLocation(location: XLocation): this;
+    targetYLocation(): YLocation;
+    targetYLocation(location: YLocation): this;
 }
 
 /**
  * 连接两个元素，并返回一条线
- * 
+ *
  * 如果发现修改线属性后，发生位置偏移，请调用 triggerRule() 重新计算位置
- * 
+ *
  * @param sourceElement 第一个元素
  * @param targetElement 第二个元素
  * @param linkClass 连接类
@@ -42,9 +44,16 @@ export class BaseLink extends BaseCurve {
 export function Link(
     sourceElement: SDNode,
     targetElement: SDNode,
-    linkClass: Line|Curve|Bezier|BraceCurve|CircleCurve|FixedPointCurve|VHBezier,
-    sourceXLocation: "x"|"cx"|"mx",
-    sourceYLocation: "y"|"cy"|"my",
-    targetXLocation: "x"|"cx"|"mx",
-    targetYLocation: "y"|"cy"|"my"
+    linkClass:
+        | Line
+        | Curve
+        | Bezier
+        | BraceCurve
+        | CircleCurve
+        | FixedPointCurve
+        | VHBezier,
+    sourceXLocation: "x" | "cx" | "mx",
+    sourceYLocation: "y" | "cy" | "my",
+    targetXLocation: "x" | "cx" | "mx",
+    targetYLocation: "y" | "cy" | "my",
 ): BaseLink;

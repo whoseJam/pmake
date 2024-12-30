@@ -1,7 +1,6 @@
 import { SDNode } from "SD/Node/SDNode";
 
 interface PointerType extends SDNode {
-
     moveTo(): this;
 
     moveTo(index: number): this;
@@ -21,9 +20,10 @@ interface PointerType extends SDNode {
  * @param textGap 指针标签与指针的距离，默认为10
  */
 export function Pointer(
-    parent: any, 
-    label: string, 
-    direction: "b"|"t"|"l"|"r", 
+    parent: any,
+    label: string,
+    direction: "b" | "t" | "l" | "r",
     pointerGap: number,
     length: number,
-    textGap: number): PointerType;
+    textGap: number,
+): PointerType;

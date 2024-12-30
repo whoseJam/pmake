@@ -1,16 +1,16 @@
 import { Mathjax } from "@/Node/Text/Mathjax";
 import { Text } from "@/Node/Nake/Text";
-import { SDNode } from "@/Node/SDNode";
+import { Factory } from "@/Utility/Factory";
 
 function isMathjax(str) {
     const label = String(str).trim();
-    return (label.startsWith("$") && label.endsWith("$") && label.length >= 2);
+    return label.startsWith("$") && label.endsWith("$") && label.length >= 2;
 }
 
 function LabelRule(parent, child) {
-    const location = child.member.getAndFlush("location");
-    const gap = child.member.getAndFlush("labelGap");
-    if (location === "lt")      child.mx(parent.x() - gap).y(parent.y());
+    const location = child.vars.location;
+    const gap = child.vars.labelGap;
+    if (location === "lt") child.mx(parent.x() - gap).y(parent.y());
     else if (location === "lc") child.mx(parent.x() - gap).cy(parent.cy());
     else if (location === "lb") child.mx(parent.x() - gap).my(parent.my());
     else if (location === "tl") child.my(parent.y() - gap).x(parent.x());
@@ -25,28 +25,31 @@ function LabelRule(parent, child) {
 }
 
 export function Label(parent, text, location = "lc", fontSize = 20, gap = 10) {
-    const label = (typeof(text) === "string" || typeof(text) === "number") ?
-                    new (isMathjax(text) ? Mathjax : Text)(parent, text) : text;
-    label["fontSize" in label ? "fontSize": "height"](fontSize);
+    let label = undefined;
+    if (typeof text === "string" || typeof text === "number") {
+        if (isMathjax(text)) label = new Mathjax(parent, text);
+        else label = new Text(parent, text);
+    } else label = text;
 
-    label.attachUpdate(() => {
-        if (label.member.hasChanged("location") ||
-            label.member.hasChanged("labelGap")) {
-            label.triggerRule();
-        }
+    label.fontSize(fontSize);
+    label.vars.merge({
+        location: location,
+        labelGap: gap,
     });
-
-    label.member.new("location", location);
-    label.member.new("labelGap", gap);
-
-    label.location = SDNode.OrdinaryGSet("location", "set");
-    label.gap = SDNode.OrdinaryGSet("labelGap", "setByDqual");
+    label.location = Factory.handler("location");
+    label.gap = Factory.handlerLowPrecise("labelGap");
 
     parent.childAs(`label_${label.text()}`, label, LabelRule);
 
     return label;
 }
 
-export function MathjaxLabel(parent, text, location = "lc", fontSize = 20, gap = 10) {
+export function MathjaxLabel(
+    parent,
+    text,
+    location = "lc",
+    fontSize = 20,
+    gap = 10,
+) {
     return Label(parent, new Mathjax(parent, text), location, fontSize, gap);
 }
