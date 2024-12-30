@@ -1,8 +1,7 @@
 import { Vector as V } from "@/Math/Vector";
-import { BaseCurve } from "@/Node/Curve/BaseCurve";
-import { Factory } from "@/Utility/Factory";
+import { BaseCurve, HandlerCurve } from "@/Node/Curve/BaseCurve";
+import { effect } from "@/Node/SDNode/SDValue";
 import { PathPen } from "@/Utility/PathPen";
-import { effect } from "../SDNode/SDValue";
 
 export function Curve(parent) {
     BaseCurve.call(this, parent);
@@ -32,4 +31,4 @@ Curve.prototype = {
     ...BaseCurve.prototype
 };
 
-Curve.prototype.bending = Factory.handlerMediumPrecise("bending");
+Curve.prototype.bending = HandlerCurve("bending");

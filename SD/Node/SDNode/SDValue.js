@@ -1,5 +1,7 @@
 import { Check } from "@/Utility/Check";
 
+let cnt = 0;
+
 class EffectQueue {
     constructor(name) {
         this.label = `in${name}Queue`;
@@ -29,7 +31,6 @@ class EffectQueue {
         while (this.queue.length > 0) {
             const effect = this.queue[0];
             this.queue.shift();
-            console.log("effect=", effect.tag);
             effect();
             flushDirty(effect);
             effect[this.label] = false;
@@ -45,6 +46,12 @@ let globalFreeze = 0;
 const localEffectQueue = new EffectQueue("Local");
 const globalEffectQueue = new EffectQueue("Global");
 let globalActiveEffect = undefined;
+
+function HasChanged(oldValue, newValue) {
+    if (typeof oldValue === "number" && typeof newValue === "number") {
+        return Math.abs(oldValue - newValue) > 1e-2;
+    } return oldValue === newValue;
+}
 
 class EffectManager {
     constructor(effect) {
@@ -92,14 +99,7 @@ class EffectManager {
                     oldValue = oldOut[i].value;
                 }
             }
-            if (isNewOutput) {
-                const objectManager = objectsMap.get(link.object);
-                const outEffectsSet = objectManager.outputEffects(link.key);
-                outEffectsSet.forEach(effect => {
-                    if (effect[localEffectQueue.label]) return;
-                    localEffectQueue.pushFront(effect);
-                });
-            } else if (link.value !== oldValue) {
+            if (isNewOutput || HasChanged(oldValue, link.value)) {
                 const objectManager = objectsMap.get(link.object);
                 const outEffectsSet = objectManager.outputEffects(link.key);
                 outEffectsSet.forEach(effect => {
@@ -162,7 +162,6 @@ function flushDirty(effect) {
 }
 
 function triggerGlobalEffectQueue() {
-    console.log("trigger global effect queue");
     globalAllowDAGUpdate = false;
     globalEffectQueue.execute();
     globalAllowDAGUpdate = true;
@@ -304,7 +303,6 @@ function triggerDAGUpdate(object, key, freeze) {
     if (freeze === 0) {
         localEffectQueue.execute();
     } else {
-        console.log("transfer -> global");
         localEffectQueue.transfer(globalEffectQueue);
     }
     globalAllowDAGUpdate = true;

@@ -6,6 +6,6 @@
     "quoteProps": "consistent",
     "arrowParens": "avoid",
     "bracketSpacing": true,
-    "trailingComma": "all",
+    "trailingComma": "es5",
     "printWidth": 1000000
 }

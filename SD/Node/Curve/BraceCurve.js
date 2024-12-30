@@ -1,7 +1,6 @@
 import { Vector as V } from "@/Math/Vector";
-import { BaseCurve } from "@/Node/Curve/BaseCurve";
+import { BaseCurve, HandlerCurve } from "@/Node/Curve/BaseCurve";
 import { effect } from "@/Node/SDNode/SDValue";
-import { Factory } from "@/Utility/Factory";
 import { PathPen } from "@/Utility/PathPen";
 
 export function BraceCurve(parent) {
@@ -10,7 +9,7 @@ export function BraceCurve(parent) {
     this.type("BraceCurve");
 
     this.vars.merge({
-        bending: 5
+        bending: 5,
     });
 
     this._.updater = effect(() => {
@@ -39,4 +38,4 @@ BraceCurve.prototype = {
     ...BaseCurve.prototype
 };
 
-BraceCurve.prototype.bending = Factory.handlerMediumPrecise("bending");
+BraceCurve.prototype.bending = HandlerCurve("bending");

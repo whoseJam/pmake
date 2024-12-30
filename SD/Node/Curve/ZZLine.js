@@ -1,7 +1,6 @@
 import { Vector as V } from "@/Math/Vector";
-import { BaseCurve } from "@/Node/Curve/BaseCurve";
+import { BaseCurve, HandlerCurve } from "@/Node/Curve/BaseCurve";
 import { effect } from "@/Node/SDNode/SDValue";
-import { Factory } from "@/Utility/Factory";
 import { PathPen } from "@/Utility/PathPen";
 
 export function ZZLine(parent) {
@@ -46,5 +45,5 @@ ZZLine.prototype = {
     ...BaseCurve.prototype
 };
 
-ZZLine.prototype.bending = Factory.handlerMediumPrecise("bending");
-ZZLine.prototype.location = Factory.handler("location");
+ZZLine.prototype.bending = HandlerCurve("bending");
+ZZLine.prototype.location = HandlerCurve("location");

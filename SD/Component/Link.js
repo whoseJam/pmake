@@ -1,24 +1,14 @@
-import { Line } from "@/Node/Nake/Line";
 import { svg } from "@/Interact/RootSvg";
-import { trim } from "@/Utility/Trim";
+import { Line } from "@/Node/Nake/Line";
 import { effect } from "@/Node/SDNode/SDValue";
 import { Factory } from "@/Utility/Factory";
+import { trim } from "@/Utility/Trim";
 
 let ID = 0;
 
-export function Link(
-    sourceElement,
-    targetElement,
-    linkType = Line,
-    sourceXLocation = "cx",
-    sourceYLocation = "cy",
-    targetXLocation = "cx",
-    targetYLocation = "cy",
-    callback = () => {},
-) {
+export function Link(sourceElement, targetElement, linkType = Line, sourceXLocation = "cx", sourceYLocation = "cy", targetXLocation = "cx", targetYLocation = "cy") {
     const link = new linkType(svg());
     const name = `link_${++ID}`;
-    callback(link);
 
     link.vars.merge({
         element1: sourceElement,
@@ -30,14 +20,17 @@ export function Link(
     });
 
     effect(() => {
-        link.source(
-            link.vars.element1[link.vars.xlocation1](),
-            link.vars.element1[link.vars.ylocation1](),
-        );
-        link.target(
-            link.vars.element2[link.vars.xlocation2](),
-            link.vars.element2[link.vars.ylocation2](),
-        );
+        if (link.vars.update) link.vars.update = false;
+        const element1 = link.vars.element1;
+        const element2 = link.vars.element2;
+        console.log(element1[link.vars.xlocation1](), element1[link.vars.ylocation1]())
+        console.log(element2[link.vars.xlocation2](), element2[link.vars.ylocation2]())
+        link.source(element1[link.vars.xlocation1](), element1[link.vars.ylocation1]());
+        link.target(element2[link.vars.xlocation2](), element2[link.vars.ylocation2]());
+    });
+    effect(() => {
+        const element1 = link.vars.element1;
+        const element2 = link.vars.element2;
         trim(link, element1, element2);
     });
 
@@ -45,7 +38,7 @@ export function Link(
         if (element === undefined) return this.vars.element1;
         this.vars.element1.eraseChild(name);
         this.vars.element1 = element;
-        element.childAs(name, this, LinkRule);
+        element.childAs(name, this);
         return this;
     };
 
@@ -53,7 +46,7 @@ export function Link(
         if (element === undefined) return this.vars.element2;
         this.vars.element2.eraseChild(name);
         this.vars.element2 = element;
-        element.childAs(name, this, LinkRule);
+        element.childAs(name, this);
         return this;
     };
 
@@ -62,7 +55,7 @@ export function Link(
     link.targetXLocation = Factory.handler("xlocation2");
     link.targetYLocation = Factory.handler("ylocation2");
 
-    sourceElement.childAs(name, link, LinkRule);
-    targetElement.childAs(name, link, LinkRule);
+    sourceElement.childAs(name, link);
+    targetElement.childAs(name, link);
     return link;
 }

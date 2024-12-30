@@ -3,10 +3,10 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 
 sd.init(() => {
-    
+
 })
 
-sd.main(TestBasic);
+sd.main(TestPropertyChangeAfterLink);
 
 async function TestPropertyChangeAfterLink() {
     const v1 = new sd.Vertex(svg).center(100, 100);
@@ -22,7 +22,7 @@ async function TestBasic() {
     sd.Link(arr.element(1), arr.element(5), sd.Curve);
     await sd.pause();
     sd.Link(arr.element(3), arr.element(8), sd.CircleCurve);
-    
+
     await sd.pause();
     const bx1 = new sd.Box(svg).x(100).y(100);
     const bx2 = new sd.Box(svg).x(300).y(400);
@@ -38,5 +38,5 @@ async function TestBasic() {
     const v2 = new sd.Vertex(svg).x(800).y(100);
     const line1 = sd.Link(v1, v2, sd.Curve);
     await sd.pause();
-    line1.startAnimate().bending(-0.5).triggerRule().endAnimate();
+    line1.startAnimate().bending(-0.5).endAnimate();
 }

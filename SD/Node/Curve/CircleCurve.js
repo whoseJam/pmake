@@ -1,6 +1,5 @@
-import { BaseCurve } from "@/Node/Curve/BaseCurve";
+import { BaseCurve, HandlerCurve } from "@/Node/Curve/BaseCurve";
 import { effect } from "@/Node/SDNode/SDValue";
-import { Factory } from "@/Utility/Factory";
 import { PathPen } from "@/Utility/PathPen";
 
 export function CircleCurve(parent) {
@@ -27,4 +26,4 @@ CircleCurve.prototype = {
     ...BaseCurve.prototype
 };
 
-CircleCurve.prototype.r = Factory.handlerLowPrecise("r");
+CircleCurve.prototype.r = HandlerCurve("r");

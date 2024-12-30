@@ -1,5 +1,5 @@
-import { Mathjax } from "@/Node/Text/Mathjax";
 import { Text } from "@/Node/Nake/Text";
+import { Mathjax } from "@/Node/Text/Mathjax";
 import { Factory } from "@/Utility/Factory";
 
 function isMathjax(str) {
@@ -44,12 +44,6 @@ export function Label(parent, text, location = "lc", fontSize = 20, gap = 10) {
     return label;
 }
 
-export function MathjaxLabel(
-    parent,
-    text,
-    location = "lc",
-    fontSize = 20,
-    gap = 10,
-) {
+export function MathjaxLabel(parent, text, location = "lc", fontSize = 20, gap = 10,) {
     return Label(parent, new Mathjax(parent, text), location, fontSize, gap);
 }

@@ -9,7 +9,8 @@ export function BaseCurve(parent) {
         x1: 0,
         y1: 0,
         x2: 40,
-        y2: 40
+        y2: 40,
+        update: false
     });
 
     this._.BASE_CURVE = true;
@@ -19,10 +20,10 @@ BaseCurve.prototype = {
     ...Path.prototype
 };
 
-BaseCurve.prototype.x1 = Factory.handlerLowPrecise("x1");
-BaseCurve.prototype.y1 = Factory.handlerLowPrecise("y1");
-BaseCurve.prototype.x2 = Factory.handlerLowPrecise("x2");
-BaseCurve.prototype.y2 = Factory.handlerLowPrecise("y2");
+BaseCurve.prototype.x1 = Factory.handler("x1");
+BaseCurve.prototype.y1 = Factory.handler("y1");
+BaseCurve.prototype.x2 = Factory.handler("x2");
+BaseCurve.prototype.y2 = Factory.handler("y2");
 
 BaseCurve.prototype.dx = function (dx) {
     this.freeze();
@@ -38,4 +39,13 @@ BaseCurve.prototype.dy = function (dy) {
     this.target(V.add(this.target(), [0, dy]));
     this.unfreeze();
     return this;
+}
+
+export function HandlerCurve(key) {
+    return function (value) {
+        if (value === undefined) return this.vars[key];
+        this.vars[key] = value;
+        this.vars.update = true;
+        return this;
+    }
 }

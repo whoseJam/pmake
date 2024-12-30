@@ -1,19 +1,7 @@
-import { Mathjax } from "@/Node/Text/Mathjax";
 import { SDNode } from "@/Node/SDNode";
+import { Mathjax } from "@/Node/Text/Mathjax";
 
-type Location =
-    | "lt"
-    | "lc"
-    | "lb"
-    | "tl"
-    | "tc"
-    | "tr"
-    | "bl"
-    | "bc"
-    | "br"
-    | "rt"
-    | "rc"
-    | "rb";
+type Location = "lt" | "lc" | "lb" | "tl" | "tc" | "tr" | "bl" | "bc" | "br" | "rt" | "rc" | "rb";
 
 class CompLabel {
     location(): Location;

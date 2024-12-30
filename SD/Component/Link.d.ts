@@ -1,12 +1,12 @@
-import { Line } from "@/Node/Nake/Line";
-import { Curve } from "@/Node/Curve/Curve";
-import { SDNode } from "@/Node/SDNode";
+import { BaseCurve } from "@/Node/Curve/BaseCurve";
 import { Bezier } from "@/Node/Curve/Bezier";
-import { VHBezier } from "@/Node/Curve/VHBezier";
 import { BraceCurve } from "@/Node/Curve/BraceCurve";
 import { CircleCurve } from "@/Node/Curve/CircleCurve";
+import { Curve } from "@/Node/Curve/Curve";
 import { FixedPointCurve } from "@/Node/Curve/FixedPointCurve";
-import { BaseCurve } from "@/Node/Curve/BaseCurve";
+import { VHBezier } from "@/Node/Curve/VHBezier";
+import { Line } from "@/Node/Nake/Line";
+import { SDNode } from "@/Node/SDNode";
 
 type XLocation = "x" | "cx" | "mx";
 type YLocation = "y" | "cy" | "my";
@@ -44,16 +44,9 @@ export class BaseLink extends BaseCurve {
 export function Link(
     sourceElement: SDNode,
     targetElement: SDNode,
-    linkClass:
-        | Line
-        | Curve
-        | Bezier
-        | BraceCurve
-        | CircleCurve
-        | FixedPointCurve
-        | VHBezier,
-    sourceXLocation: "x" | "cx" | "mx",
-    sourceYLocation: "y" | "cy" | "my",
-    targetXLocation: "x" | "cx" | "mx",
-    targetYLocation: "y" | "cy" | "my",
+    linkClass: Line | Curve | Bezier | BraceCurve | CircleCurve | FixedPointCurve | VHBezier,
+    sourceXLocation: XLocation,
+    sourceYLocation: YLocation,
+    targetXLocation: XLocation,
+    targetYLocation: YLocation
 ): BaseLink;
