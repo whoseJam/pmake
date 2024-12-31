@@ -1,4 +1,0 @@
-#1102.最近公共祖先：https://www.luogu.com.cn/problem/P3379
-#888.距离查询：http://poj.org/problem?id=1986
-仓鼠找sugar：https://www.luogu.com.cn/problem/P3398
-AandBandLectureRooms：https://www.luogu.com.cn/problem/CF519E
