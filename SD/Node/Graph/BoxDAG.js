@@ -13,7 +13,7 @@ export function BoxDAG(parent) {
 
     this.vars.merge({
         elementWidth: 40,
-        elementHeight: 40
+        elementHeight: 40,
     });
 
     this._.nodeType = Box;
@@ -23,7 +23,7 @@ export function BoxDAG(parent) {
     this._.updater = effect(() => {
         graph.setGraph({
             align: this.align(),
-            rankdir: this.rankDir()
+            rankdir: this.rankDir(),
         });
         DAGLayout(graph);
         const box = GetBoxOfDAG(graph);
@@ -32,13 +32,13 @@ export function BoxDAG(parent) {
         const convertX = node => mapperX(node.x);
         const convertY = node => mapperY(node.y);
         const convert = node => [convertX(node), convertY(node)];
-        this.forEachNodes((node, nodeId) => {
+        this.forEachNode((node, nodeId) => {
             const layout = graph.node(nodeId);
             node.width(this.elementWidth());
             node.height(this.elementHeight());
             node.center(convert(layout));
         });
-        this.forEachLinks((link, sourceId, targetId) => {
+        this.forEachLink((link, sourceId, targetId) => {
             const source = this.findNodeById(sourceId);
             const target = this.findNodeById(targetId);
             link.source(source.center());
@@ -48,9 +48,8 @@ export function BoxDAG(parent) {
     });
 }
 
-
 BoxDAG.prototype = {
-    ...DAG.prototype
+    ...DAG.prototype,
 };
 
 BoxDAG.prototype.elementWidth = Factory.handlerLowPrecise("elementWidth");

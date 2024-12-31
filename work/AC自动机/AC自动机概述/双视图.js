@@ -7,18 +7,9 @@ const svg = sd.svg();
 const C = sd.color();
 const R = sd.rule();
 const ac = new sd.Tree(svg).layerHeight(70);
-const data = [
-    "ababa",
-    "babb"
-];
+const data = ["ababa", "babb"];
 
-const links = [
-    { type: sd.Line },
-    { u: 2, v: 1, type: sd.Curve, props: { bending: -0.3 } },
-    { u: 7, v: 1, type: sd.Curve, props: { bending: 0.3 } },
-    { u: 6, v: 4, type: sd.Curve, props: { bending: -0.3 } },
-    { u: 10, v: 7, type: sd.Curve, props: { bending: 0.3 } },
-];
+const links = [{ type: sd.Line }, { u: 2, v: 1, type: sd.Curve, props: { bending: -0.3 } }, { u: 7, v: 1, type: sd.Curve, props: { bending: 0.3 } }, { u: 6, v: 4, type: sd.Curve, props: { bending: -0.3 } }, { u: 10, v: 7, type: sd.Curve, props: { bending: 0.3 } }];
 
 function CreateLink(u, v) {
     for (let i = 1; i < links.length; i++) {
@@ -36,21 +27,21 @@ function CreateLink(u, v) {
 sd.init(async () => {
     BuildTrieTreeSync(ac, data);
     BuildFailTreeSync(ac, {
-        OnLink: OnLink
+        OnLink: OnLink,
     });
-})
+});
 
 sd.main(async () => {
     await sd.pause(sd.CONTINUE_FRAME);
-    ac.forEachNodes((node, id) => {
+    ac.forEachNode((node, id) => {
         if (node.cx() < ac.cx()) {
             sd.Label(node, node.str, "lc", 20, 3).opacity(0).startAnimate().opacity(1).endAnimate();
         } else {
             sd.Label(node, node.str, "rc", 20, 3).opacity(0).startAnimate().opacity(1).endAnimate();
         }
-    })
+    });
 
-    ac.forEachNodes((node, id) => {
+    ac.forEachNode((node, id) => {
         node.onClick(() => {
             sd.inter(async () => {
                 let f = id;
@@ -66,8 +57,8 @@ sd.main(async () => {
                     f = ac.element(f).fail;
                     ac.startAnimate().color(f, C.white).endAnimate();
                 }
-            })
-        })
+            });
+        });
         node.onDblClick(() => {
             sd.inter(async () => {
                 let f = id;
@@ -76,15 +67,13 @@ sd.main(async () => {
                     f = ac.fatherId(f);
                     path.push(f);
                 }
-                for (let i = path.length - 1; i >= 0; i--)
-                    ac.startAnimate().color(path[i], C.green).endAnimate();
+                for (let i = path.length - 1; i >= 0; i--) ac.startAnimate().color(path[i], C.green).endAnimate();
                 await sd.pause();
-                for (let i = path.length - 1; i >= 0; i--)
-                    ac.startAnimate().color(path[i], C.white).endAnimate();
-            })
-        })
-    })
-})
+                for (let i = path.length - 1; i >= 0; i--) ac.startAnimate().color(path[i], C.white).endAnimate();
+            });
+        });
+    });
+});
 
 function OnLink(nodeU, nodeV, u, v) {
     const line = CreateLink(u, v);

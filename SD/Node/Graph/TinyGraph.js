@@ -13,14 +13,26 @@ export function TinyGraph(parent) {
     this._.updater = effect(() => {
         const nodes = this.vars.nodes;
         switch (nodes.length) {
-            case 1: update1.call(this, nodes); break;
-            case 2: update2.call(this, nodes); break;
-            case 3: update3.call(this, nodes); break;
-            case 4: update4.call(this, nodes); break;
-            case 5: update5.call(this, nodes); break;
-            case 6: update6.call(this, nodes); break;
+            case 1:
+                update1.call(this, nodes);
+                break;
+            case 2:
+                update2.call(this, nodes);
+                break;
+            case 3:
+                update3.call(this, nodes);
+                break;
+            case 4:
+                update4.call(this, nodes);
+                break;
+            case 5:
+                update5.call(this, nodes);
+                break;
+            case 6:
+                update6.call(this, nodes);
+                break;
         }
-        this.forEachLinks((link, sourceId, targetId) => {
+        this.forEachLink((link, sourceId, targetId) => {
             const source = this.findNodeById(sourceId);
             const target = this.findNodeById(targetId);
             link.source(source.center());
@@ -31,18 +43,18 @@ export function TinyGraph(parent) {
 }
 
 TinyGraph.prototype = {
-    ...BaseGraph.prototype
+    ...BaseGraph.prototype,
 };
 
 TinyGraph.prototype.newLink = GridGraph.prototype.newLink;
 
-TinyGraph.prototype.newNode = function(id, value) {
+TinyGraph.prototype.newNode = function (id, value) {
     const element = new this._.nodeType(this.layer("nodes"));
     element.value(Cast.castToSDNode(element, value, id));
     element.onEnter(EN.appear("nodes"));
     this.newNodeByBaseGraph(id, element);
     return this;
-}
+};
 
 function update1(nodes) {
     nodes[0].cx(this.cx()).cy(this.cy());

@@ -9,32 +9,52 @@ const graphs = {
         n: 4,
         x: 0,
         y: 0,
-        links: [[1, 2], [2, 3], [3, 4], [4, 1], [1, 3]]
+        links: [
+            [1, 2],
+            [2, 3],
+            [3, 4],
+            [4, 1],
+            [1, 3],
+        ],
     },
     2: {
         n: 3,
         x: 1,
         y: 0,
-        links: [[1, 2], [2, 3], [3, 1]],
+        links: [
+            [1, 2],
+            [2, 3],
+            [3, 1],
+        ],
     },
     3: {
         n: 1,
         x: 0.5,
         y: 0.5,
-        links: []
+        links: [],
     },
     4: {
         n: 3,
         x: 0,
         y: 1,
-        links: [[1, 2], [2, 3], [3, 1]]
+        links: [
+            [1, 2],
+            [2, 3],
+            [3, 1],
+        ],
     },
     5: {
         n: 4,
         x: 1,
         y: 1,
-        links: [[1, 2], [2, 3], [3, 4], [4, 1], [2, 4]]
-    }
+        links: [
+            [1, 2],
+            [2, 3],
+            [3, 4],
+            [4, 1],
+            [2, 4],
+        ],
+    },
 };
 const externLinks = [
     [[1, 3], [3, 1], sd.Line, {}],
@@ -42,8 +62,8 @@ const externLinks = [
     [[3, 1], [4, 2], sd.Line, {}],
     [[3, 1], [5, 2], sd.Curve, {}],
     [[1, 4], [4, 1], sd.Line, {}],
-    [[4, 3], [5, 4], sd.Line, {}]
-]
+    [[4, 3], [5, 4], sd.Line, {}],
+];
 
 sd.init(() => {
     for (let id in graphs) {
@@ -51,19 +71,17 @@ sd.init(() => {
         grid.at(graphs[id].x, graphs[id].y).newNode(id, graphs[id].graph);
     }
     externLinks.forEach(link => {
-        link[3].link = sd.Link(
-            grid.element(link[0][0]).element(link[0][1]),
-            grid.element(link[1][0]).element(link[1][1]),
-            link[2]
-        ).arrow();
-
-    })
-})
+        link[3].link = sd.Link(grid.element(link[0][0]).element(link[0][1]), grid.element(link[1][0]).element(link[1][1]), link[2]).arrow();
+    });
+});
 
 sd.main(async () => {
     await sd.pause();
     for (let i = 1; i <= 5; i++) {
-        grid.element(i).startAnimate().color(colorList[i - 1]).endAnimate();
+        grid.element(i)
+            .startAnimate()
+            .color(colorList[i - 1])
+            .endAnimate();
     }
     await sd.pause();
     for (let i = 1; i <= 5; i++) {
@@ -87,12 +105,12 @@ sd.main(async () => {
         l.sourceElement(graphs[link[0][0]].circle);
         l.targetElement(graphs[link[1][0]].circle);
         l.endAnimate();
-    })
-})
+    });
+});
 
 function Compress(graph) {
     graph.startAnimate();
-    graph.forEachNodes((node) => node.r(10));
+    graph.forEachNode(node => node.r(10));
     const center = graph.center();
     graph.scale(0.5);
     graph.center(center);

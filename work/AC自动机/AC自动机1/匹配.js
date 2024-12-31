@@ -1,8 +1,8 @@
 import * as sd from "@/sd";
 
-import { MatchOnACMachine }  from "../_/MatchOnACMachine";
-import { BuildTrieTreeSync } from "../_/BuildTrieTreeSync";
 import { BuildFailTreeSync } from "../_/BuildFailTreeSync";
+import { BuildTrieTreeSync } from "../_/BuildTrieTreeSync";
+import { MatchOnACMachine } from "../_/MatchOnACMachine";
 
 const svg = sd.svg();
 const C = sd.color();
@@ -14,20 +14,9 @@ const arr = new sd.Array(svg).pushArray(target);
 const pointer = sd.Pointer(arr);
 const focus = sd.Focus(ac);
 const brace = sd.Brace(arr);
-const data = [
-    "aba",
-    "ba",
-    "aa",
-    "bb"
-];
+const data = ["aba", "ba", "aa", "bb"];
 
-const links = [
-    { type: sd.Line },
-    { u: 2, v: 1, type: sd.Curve, props: { bending: -0.3 } },
-    { u: 5, v: 1, type: sd.Curve, props: { bending: 0.3} },
-    { u: 7, v: 2, type: sd.Curve, props: { bending: -0.3 } },
-    { u: 8, v: 5, type: sd.Curve, props: { bending: 0.3 } }
-];
+const links = [{ type: sd.Line }, { u: 2, v: 1, type: sd.Curve, props: { bending: -0.3 } }, { u: 5, v: 1, type: sd.Curve, props: { bending: 0.3 } }, { u: 7, v: 2, type: sd.Curve, props: { bending: -0.3 } }, { u: 8, v: 5, type: sd.Curve, props: { bending: 0.3 } }];
 
 function CreateLink(u, v) {
     for (let i = 1; i < links.length; i++) {
@@ -46,27 +35,26 @@ sd.init(async () => {
     BuildTrieTreeSync(ac, data);
     BuildFailTreeSync(ac, { OnLink: OnLink });
 
-    ac.forEachNodes((node, id) => {
+    ac.forEachNode((node, id) => {
         if (id === "1") return;
-        if (node.cx() < ac.father(node).cx() ||
-           (node.cx() === ac.father(node).cx() && node.cx() < ac.cx())) {
+        if (node.cx() < ac.father(node).cx() || (node.cx() === ac.father(node).cx() && node.cx() < ac.cx())) {
             sd.Label(node, node.str, "lc");
         } else {
             sd.Label(node, node.str, "rc");
         }
-    })
+    });
     arr.x(ac.mx()).cy(ac.cy());
 
-    ac.forEachNodes((node, id) => {
+    ac.forEachNode((node, id) => {
         let marked = false;
         node.onClick(() => {
             if (marked) return;
             sd.inter(async () => {
                 node.startAnimate().color(C.green).endAnimate();
-            })
-        })
-    })
-})
+            });
+        });
+    });
+});
 
 sd.main(async () => {
     await MatchOnACMachine(ac, arr, {
@@ -74,9 +62,9 @@ sd.main(async () => {
         OnStartMatchAt: OnStartMatchAt,
         OnFailJumpTo: OnFailJumpTo,
         OnMatchExtended: OnMatchExtended,
-        OnMatchFailed: OnMatchFailed
+        OnMatchFailed: OnMatchFailed,
     });
-})
+});
 
 async function OnFocusNode(u) {
     await sd.pause();
@@ -94,7 +82,10 @@ async function OnFailJumpTo(nextFail, prevFail, i) {
     if (nextFail) {
         await sd.pause();
         focus.startAnimate().focus(nextFail).endAnimate();
-        brace.startAnimate().brace(i - nextLength + 1, i - 1).endAnimate();
+        brace
+            .startAnimate()
+            .brace(i - nextLength + 1, i - 1)
+            .endAnimate();
         arr.startAnimate();
         arr.color(i - prevLength + 1, i - nextLength, C.white);
         arr.color(i, C.red);
@@ -107,7 +98,10 @@ async function OnMatchExtended(u, i) {
     const length = ac.depth(u) - 3;
     focus.startAnimate().focus(u).endAnimate();
     ac.startAnimate().color(u, C.green).endAnimate();
-    brace.startAnimate().brace(i - length - 1, i).endAnimate();
+    brace
+        .startAnimate()
+        .brace(i - length - 1, i)
+        .endAnimate();
     arr.startAnimate().color(i, C.green).endAnimate();
 
     await sd.pause();

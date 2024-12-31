@@ -1,6 +1,6 @@
 import * as sd from "@/sd";
 
-import { BuildTrieGraph }    from "../_/BuildTrieGraph";
+import { BuildTrieGraph } from "../_/BuildTrieGraph";
 import { BuildTrieTreeSync } from "../_/BuildTrieTreeSync";
 
 const svg = sd.svg();
@@ -9,29 +9,10 @@ const R = sd.rule();
 const V = sd.vec();
 const ac = new sd.Tree(svg).layerHeight(70);
 const focus = new sd.Focus(ac);
-const data = [
-    "abab",
-    "babb"
-];
+const data = ["abab", "babb"];
 
-const links1 = [
-    { type: sd.Line },
-    { u: 2, v: 2, type: sd.CircleCurve, props: { r: 30 } },
-    { u: 6, v: 6, type: sd.CircleCurve, props: { r: 30 } },
-    { u: 3, v: 6, type: sd.Line, props: { dy: 3 } },
-    { u: 7, v: 2, type: sd.Line, props: { dy: 3 } },
-    { u: 4, v: 2, type: sd.Curve, props: { bending: -0.5 } },
-    { u: 5, v: 4, type: sd.Curve, props: {} },
-    { u: 9, v: 7, type: sd.Curve, props: {} },
-    { u: 9, v: 6, type: sd.Curve, props: { bending: 0.5, dx: 3 } }
-
-];
-const links2 = [
-    { type: sd.Line },
-    { u: 2, v: 1, type: sd.Curve, props: { bending: -0.3 } },
-    { u: 6, v: 1, type: sd.Curve, props: { bending: 0.3 } },
-    { u: 9, v: 6, type: sd.Curve, props: { bending: 0.5 } }
-]
+const links1 = [{ type: sd.Line }, { u: 2, v: 2, type: sd.CircleCurve, props: { r: 30 } }, { u: 6, v: 6, type: sd.CircleCurve, props: { r: 30 } }, { u: 3, v: 6, type: sd.Line, props: { dy: 3 } }, { u: 7, v: 2, type: sd.Line, props: { dy: 3 } }, { u: 4, v: 2, type: sd.Curve, props: { bending: -0.5 } }, { u: 5, v: 4, type: sd.Curve, props: {} }, { u: 9, v: 7, type: sd.Curve, props: {} }, { u: 9, v: 6, type: sd.Curve, props: { bending: 0.5, dx: 3 } }];
+const links2 = [{ type: sd.Line }, { u: 2, v: 1, type: sd.Curve, props: { bending: -0.3 } }, { u: 6, v: 1, type: sd.Curve, props: { bending: 0.3 } }, { u: 9, v: 6, type: sd.Curve, props: { bending: 0.5 } }];
 
 function CreateLink(links, nodeU, nodeV, u, v) {
     for (let i = 1; i < links.length; i++) {
@@ -52,29 +33,29 @@ sd.init(() => {
     BuildTrieTreeSync(ac, data, {
         OnLink: (nodeU, nodeV, u, v) => {
             ac.element(u, v).arrow();
-        }
+        },
     });
-})
+});
 
 sd.main(async () => {
     await BuildTrieGraph(ac, "ab", {
         OnLink: OnLink,
-        OnFocusParent: async (parent) => {
+        OnFocusParent: async parent => {
             await sd.pause();
             focus.startAnimate().focus(parent).endAnimate();
         },
-        OnFocusChild: async (child) => {
+        OnFocusChild: async child => {
             await sd.pause();
             ac.startAnimate().color(child, C.blue).endAnimate();
         },
-        OnRemoveFocusChild: async (child) => {
+        OnRemoveFocusChild: async child => {
             await sd.pause();
             ac.startAnimate().color(child, C.white).endAnimate();
-        }
+        },
     });
     await sd.pause();
     focus.startAnimate().focus(null).endAnimate();
-})
+});
 
 async function OnLink(nodeU, nodeV, u, v, character) {
     if (character) {
@@ -99,11 +80,10 @@ async function OnLink(nodeU, nodeV, u, v, character) {
         sd.trim(line, nodeU, nodeV);
         line.opacity(0).startAnimate().opacity(1).endAnimate();
     }
-    
 }
 
 function CreatePath(u, length, color = C.black) {
-    return new sd.Path(svg).d(CreatePathD(u, length).toString()).stroke(color).strokeWidth(2).update();
+    return new sd.Path(svg).d(CreatePathD(u, length).toString()).stroke(color).strokeWidth(2);
 }
 
 function CreatePathD(u, length) {

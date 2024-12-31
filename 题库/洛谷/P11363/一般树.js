@@ -10,7 +10,7 @@ const links1 = [
     [1, 4],
     [4, 8],
     [4, 9],
-    [4, 10]
+    [4, 10],
 ];
 const links2 = [
     [2, 5],
@@ -18,7 +18,7 @@ const links2 = [
     [2, 7],
     [6, 11],
     [6, 12],
-    [6, 13]
+    [6, 13],
 ];
 let rootLink;
 
@@ -34,19 +34,19 @@ sd.init(() => {
         tree2.value(link[0], link[1], new sd.Rect(svg).width(20).height(20));
     });
     rootLink = sd.Link(tree1.root(), tree2.root()).value(new sd.Rect(svg).width(20).height(20).color(C.orange));
-})
+});
 
 sd.main(async () => {
     await sd.pause();
-    tree1.forEachNodes((node, i) => {
+    tree1.forEachNode((node, i) => {
         const children = tree1.children(i);
         if (children.length === 0) return;
         if (tree1.father(node)) tree1.value(tree1.fatherId(node), i).startAnimate().strokeWidth(2).stroke(C.red).endAnimate();
     });
-    tree2.forEachNodes((node, i) => {
+    tree2.forEachNode((node, i) => {
         const children = tree2.children(i);
         if (children.length === 0) return;
         if (tree2.father(node)) tree2.value(tree2.fatherId(node), i).startAnimate().strokeWidth(2).stroke(C.red).endAnimate();
     });
     rootLink.value().startAnimate().strokeWidth(2).stroke(C.red).endAnimate();
-})
+});

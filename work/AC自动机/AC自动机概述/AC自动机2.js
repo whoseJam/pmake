@@ -1,7 +1,7 @@
 import * as sd from "@/sd";
 
+import { BuildFailTree } from "../_/BuildFailTree";
 import { BuildTrieTreeSync } from "../_/BuildTrieTreeSync";
-import { BuildFailTree }     from "../_/BuildFailTree";
 
 const svg = sd.svg();
 const C = sd.color();
@@ -9,20 +9,12 @@ const R = sd.rule();
 const ac = new sd.Tree(svg).layerHeight(70);
 const parentFocus = sd.Focus(ac);
 const failFocus = sd.Focus(ac);
-const data = [
-    "abab",
-    "babb"
-];
+const data = ["abab", "babb"];
 
 let failChainU;
 let failChainV;
 
-const links = [
-    { type: sd.Line },
-    { u: 2, v: 1, type: sd.Curve, props: { bending: -0.3 } },
-    { u: 6, v: 1, type: sd.Curve, props: { bending: 0.3 } },
-    { u: 9, v: 6, type: sd.Curve, props: { bending: 0.3 } },
-];
+const links = [{ type: sd.Line }, { u: 2, v: 1, type: sd.Curve, props: { bending: -0.3 } }, { u: 6, v: 1, type: sd.Curve, props: { bending: 0.3 } }, { u: 9, v: 6, type: sd.Curve, props: { bending: 0.3 } }];
 
 function CreateLink(u, v) {
     for (let i = 1; i < links.length; i++) {
@@ -39,37 +31,41 @@ function CreateLink(u, v) {
 
 sd.init(() => {
     BuildTrieTreeSync(ac, data);
-})
+});
 
 sd.main(async () => {
     await sd.pause();
-    ac.forEachNodes((node, idx) => {
+    ac.forEachNode((node, idx) => {
         if (idx === "1") return;
-        sd.Label(node, node.str, node.cx() < ac.root().cx() ? "lc" : "rc", 20, 3).opacity(0).startAnimate().opacity(1).endAnimate();
+        sd.Label(node, node.str, node.cx() < ac.root().cx() ? "lc" : "rc", 20, 3)
+            .opacity(0)
+            .startAnimate()
+            .opacity(1)
+            .endAnimate();
     });
 
     await BuildFailTree(ac, {
         OnLink: OnLink,
-        OnFocusParent: async (parent) => {
+        OnFocusParent: async parent => {
             await sd.pause();
             parentFocus.startAnimate().focus(parent).endAnimate();
             failFocus.focus(null).after(parentFocus).focus(parent);
         },
-        OnFocusChild: async (child) => {
+        OnFocusChild: async child => {
             await sd.pause();
             ac.startAnimate().color(child, C.blue).endAnimate();
         },
-        OnRemoveFocusChild: async (child) => {
+        OnRemoveFocusChild: async child => {
             await sd.pause();
             ac.startAnimate().color(child, C.white).endAnimate();
         },
-        OnFailJumpTo: OnFailJumpTo
+        OnFailJumpTo: OnFailJumpTo,
     });
 
     await sd.pause();
     parentFocus.startAnimate().focus(null).endAnimate();
     failFocus.startAnimate().focus(null).endAnimate();
-})
+});
 
 async function OnFailJumpTo(fail, parent, first) {
     await sd.pause();
@@ -113,7 +109,7 @@ async function OnLink(nodeU, nodeV, u, v) {
 }
 
 function CreatePath(u, length, color = C.black) {
-    return new sd.Path(svg).d(CreatePathD(u, length).toString()).stroke(color).strokeWidth(2).update();
+    return new sd.Path(svg).d(CreatePathD(u, length).toString()).stroke(color).strokeWidth(2);
 }
 
 function CreatePathD(u, length) {
