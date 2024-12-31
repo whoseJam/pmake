@@ -1,4 +1,4 @@
-import { SDNode }  from "@/Node/SDNode";
+import { SDNode } from "@/Node/SDNode";
 import { TeXAtom } from "@/Node/Text/TeXAtom";
 
 export class Mathjax extends SDNode {

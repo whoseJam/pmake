@@ -2,45 +2,33 @@ import { Action } from "@/Animate/Action";
 
 import { Dom } from "@/Dom/Dom";
 
-const SHAPE_TAG = new Set([
-    "circle",
-    "ellipse",
-    "foreignObject",
-    "fragment",
-    "image",
-    "line",
-    "path",
-    "rect",
-    "svg",
-    "text"
-]);
+const SHAPE_TAG = new Set(["circle", "ellipse", "foreignObject", "fragment", "image", "line", "path", "rect", "svg", "text"]);
 
 let SVGNodeID = 0;
 
 function AppearOrRemove(element, owner) {
-    return function(t) {
+    return function (t) {
         if (t !== 1) return;
         if (this.target) {
             this.target.append(element);
             requestAnimationFrame(() => {
                 owner._.ready = true;
             });
-        }
-        else {
+        } else {
             element.remove();
             requestAnimationFrame(() => {
                 owner._.ready = false;
             });
         }
-    }
+    };
 }
 
 export class SVGNode {
     constructor(parent, layer, tag) {
         this.parent = parent;
         this.layer = layer;
-        if (typeof(tag) === "string") {
-            this.element = Dom.createSVGElement(tag, this.id = ++SVGNodeID);
+        if (typeof tag === "string") {
+            this.element = Dom.createSVGElement(tag, (this.id = ++SVGNodeID));
             this.tag = tag;
             this.appear();
         } else {
@@ -65,12 +53,14 @@ export class SVGNode {
         new Action(
             this.parent.delay() + this.parent.duration(),
             this.parent.delay() + this.parent.duration(),
-            Snap(this.layer.nake()), Snap(layer.nake()),
-            function(t) {
+            Snap(this.layer.nake()),
+            Snap(layer.nake()),
+            function (t) {
                 if (t !== 1) return;
                 this.target.append(element);
             },
-            this, "moveTo"
+            this,
+            "moveTo"
         );
         this.layer = layer;
     }
@@ -80,30 +70,12 @@ export class SVGNode {
             this.layer.nake().appendChild(this.nake());
             return;
         }
-        new Action(
-            this.parent.delay() + this.parent.duration(),
-            this.parent.delay() + this.parent.duration(),
-            undefined, Snap(this.layer.nake()),
-            AppearOrRemove(Snap(this.nake()), this.parent),
-            this, "appear"
-        );
-        new Action(
-            this.parent.delay() + this.parent.duration(),
-            this.parent.delay() + this.parent.duration(),
-            0, 1,
-            () => {},
-            this.parent, "opacity"
-        );
+        new Action(this.parent.delay() + this.parent.duration(), this.parent.delay() + this.parent.duration(), undefined, Snap(this.layer.nake()), AppearOrRemove(Snap(this.nake()), this.parent), this, "appear");
+        new Action(this.parent.delay() + this.parent.duration(), this.parent.delay() + this.parent.duration(), 0, 1, () => {}, this.parent, "opacity");
     }
 
     remove() {
-        new Action(
-            this.parent.delay() + this.parent.duration(),
-            this.parent.delay() + this.parent.duration(),
-            Snap(this.layer.nake()), undefined,
-            AppearOrRemove(Snap(this.nake()), this.parent),
-            this, "remove"
-        );
+        new Action(this.parent.delay() + this.parent.duration(), this.parent.delay() + this.parent.duration(), Snap(this.layer.nake()), undefined, AppearOrRemove(Snap(this.nake()), this.parent), this, "remove");
     }
 
     setAttribute(key, value) {

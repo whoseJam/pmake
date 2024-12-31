@@ -50,10 +50,9 @@ const globalEffectQueue = new EffectQueue("Global");
 let currentEffectQueue = undefined;
 let globalActiveEffect = undefined;
 
-function HasChanged(oldValue, newValue) {
-    if (typeof oldValue === "number" && typeof newValue === "number") {
-        return Math.abs(oldValue - newValue) > 1e-2;
-    } return oldValue === newValue;
+function hasChanged(oldValue, newValue) {
+    if (typeof oldValue === "number" && typeof newValue === "number") return Math.abs(oldValue - newValue) > 1e-2;
+    return oldValue !== newValue;
 }
 
 class EffectManager {
@@ -95,14 +94,15 @@ class EffectManager {
 
     handleNewOutput(oldOut) {
         this.out.forEach(link => {
-            let isNewOutput = true, oldValue = undefined;
+            let isNewOutput = true,
+                oldValue = undefined;
             for (let i = 0; i < oldOut.length && isNewOutput; i++) {
                 if (link.key === oldOut[i].key && link.object === oldOut[i].object) {
                     isNewOutput = false;
                     oldValue = oldOut[i].value;
                 }
             }
-            if (isNewOutput || HasChanged(oldValue, link.value)) {
+            if (isNewOutput || hasChanged(oldValue, link.value)) {
                 const objectManager = objectsMap.get(link.object);
                 const outEffectsSet = objectManager.outputEffects(link.key);
                 outEffectsSet.forEach(effect => {
@@ -161,7 +161,7 @@ function flushDirty(effect) {
     effectManager.out.forEach(link => {
         const objectManager = objectsMap.get(link.object);
         objectManager.dirty(link.key, false);
-    })
+    });
 }
 
 function triggerGlobalEffectQueue() {
@@ -190,7 +190,7 @@ export function reactive(object) {
             traceInput(object, key);
             const value = Reflect.get(object, key, receiver);
             if (Check.isTypeOfSDNode(value)) return value;
-            if (typeof (value) === "object") {
+            if (typeof value === "object") {
                 return reactive(value);
             }
             return value;
@@ -200,31 +200,38 @@ export function reactive(object) {
             if (proxiesMap.get(value)) value = proxiesMap.get(value);
             traceOutput(object, key, value);
             if (associated[key]) {
-                associated[key](value, Reflect.get(object, key, receiver));
+                const newValue = value;
+                const oldValue = Reflect.get(object, key, receiver);
+                if (hasChanged(newValue, oldValue)) {
+                    associated[key].forEach(callback => {
+                        callback(newValue, oldValue);
+                    });
+                }
             }
             Reflect.set(object, key, value, receiver);
             triggerDAGUpdate(object, key, freeze + globalFreeze);
             return true;
-        }
+        },
     });
     proxiesMap.set(proxy, object);
     objectsMap.set(object, new ObjectManager(proxy));
     object.associate = function (key, callback) {
         if (arguments.length === 0) return associated;
-        associated[key] = callback;
-    }
+        if (!associated[key]) associated[key] = [];
+        associated[key].push(callback);
+    };
     object.merge = function (otherObject) {
         for (let key in otherObject) {
             object[key] = otherObject[key];
         }
-    }
+    };
     object.freeze = function () {
         freeze++;
-    }
+    };
     object.unfreeze = function () {
         freeze--;
         if (freeze === 0) triggerGlobalEffectQueue();
-    }
+    };
     return proxy;
 }
 

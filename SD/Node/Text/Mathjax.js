@@ -1,188 +1,195 @@
-import { Dom } from "@/Dom/Dom";
-
 import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
-
-import { SVGNode } from "@/Renderer/SVG/SVGNode";
-
-import { PathPen } from "@/Utility/PathPen";
-
-import { SDNode }  from "@/Node/SDNode";
-import { TeXAtom } from "@/Node/Text/TeXAtom";
-
+import { Dom } from "@/Dom/Dom";
 import { svg } from "@/Interact/RootSvg";
+import { SDNode } from "@/Node/SDNode";
+import { TeXAtom } from "@/Node/Text/TeXAtom";
+import { SVGNode } from "@/Renderer/SVG/SVGNode";
 import { Cast } from "@/Utility/Cast";
+import { Color as C } from "@/Utility/Color";
+import { Factory } from "@/Utility/Factory";
+import { PathPen } from "@/Utility/PathPen";
 
 export function Mathjax(parent, text) {
     SDNode.call(this, parent);
 
     this.type("Mathjax");
 
-    this.member.new("x", 0);
-    this.member.new("y", 0);
-    this.member.new("width-20", 0);
-    this.member.new("height-20", 0);
-    this.member.new("text", "");
-    this.member.new("font-size", 20);
-    this.member.new("elements", []);
-    this.member.new("stroke", "#000000");
-    this.member.new("fill", "#000000");
+    this.vars.merge({
+        x: 0,
+        y: 0,
+        width20: 0,
+        height20: 0,
+        text: "",
+        fontSize: 20,
+        elements: [],
+        stroke: C.black,
+        fill: C.black,
+    });
 
-    this._.layer.setAttribute("font-size", 20);
-    this._.math = undefined;
-    this._.lastMath = undefined;
+    this.vars.associate("fontSize", Factory.action(this, this._.layer, "font-size", Interp.numberInterp));
+    this.vars.associate("x", mathjaxPositionUpdate(this, "x", "cur", "offsetX"));
+    this.vars.associate("x", mathjaxPositionUpdate(this, "x", "lst", "offsetX"));
+    this.vars.associate("y", mathjaxPositionUpdate(this, "y", "cur", "offsetY"));
+    this.vars.associate("y", mathjaxPositionUpdate(this, "y", "lst", "offsetY"));
+    this.vars.associate("fill", mathjaxUpdate(this, "fill", "cur", Interp.colorInterp));
+    this.vars.associate("fill", mathjaxUpdate(this, "fill", "lst", Interp.colorInterp));
+    this.vars.associate("stroke", mathjaxUpdate(this, "stroke", "cur", Interp.colorInterp));
+    this.vars.associate("stroke", mathjaxUpdate(this, "stroke", "lst", Interp.colorInterp));
 
-    if (typeof(text) === "string" || typeof(text) === "number") this.math(text);
+    this._.layer.setAttribute("font-size", this.vars.fontSize);
+    this._.cur = undefined;
+    this._.lst = undefined;
+
+    if (typeof text === "string" || typeof text === "number") this.math(text);
 
     this._.BASE_MATHJAX = true;
 }
 
 Mathjax.prototype = {
-    ...SDNode.prototype
+    ...SDNode.prototype,
 };
 
-Mathjax.prototype.updateList = [
-    ...Mathjax.prototype.updateList,
-    SDNode.OrdinaryUpdate("font-size", Interp.numberInterp, "layer"),
-    MathjaxPositionUpdate("x", "offsetX"),
-    MathjaxPositionUpdate("y", "offsetY"),
-    MathjaxColorUpdate("fill"),
-    MathjaxColorUpdate("stroke")
-];
+Mathjax.prototype.x = Factory.handler("x");
+Mathjax.prototype.y = Factory.handler("y");
+Mathjax.prototype.fontSize = Factory.handler("fontSize");
+Mathjax.prototype.width = mathjaxLength("width");
+Mathjax.prototype.height = mathjaxLength("height");
+Mathjax.prototype.fill = Factory.handler("fill");
+Mathjax.prototype.stroke = Factory.handler("stroke");
+Mathjax.prototype.color = TeXAtom.prototype.color;
 
-Mathjax.prototype.x        = SDNode.OrdinaryGSet("x", "setByEqual");
-Mathjax.prototype.y        = SDNode.OrdinaryGSet("y", "setByEqual");
-Mathjax.prototype.fontSize = SDNode.OrdinaryGSet("font-size", "setByEqual");
-Mathjax.prototype.width    = MathjaxLength("width");
-Mathjax.prototype.height   = MathjaxLength("height");
-Mathjax.prototype.fill     = SDNode.OrdinaryGSet("fill", "set");
-Mathjax.prototype.stroke   = SDNode.OrdinaryGSet("stroke", "set");
-Mathjax.prototype.color    = TeXAtom.prototype.color;
+Mathjax.prototype.element = function (id) {
+    return this.vars.elements[id];
+};
 
-Mathjax.prototype.element  = function(idx) {
-    return this.member.get("elements")[idx];
-}
+Mathjax.prototype.text = function () {
+    return this.vars.text;
+};
 
-Mathjax.prototype.text = function() {
-    return this.member.get("text");
-}
-
-Mathjax.prototype.math = function(text) {
+Mathjax.prototype.math = function (text) {
     if (text === undefined) return this.text();
     text = String(text);
     if (text.startsWith("$")) text = text.slice(1, -1);
-    this.member.setAndFlush("text", text);
+    this.vars.text = text;
 
     const newMath = new SVGNode(this, this._.layer, MathJax.tex2svg(text).children[0]);
     newMath.offsetX = 0;
     newMath.offsetY = 0;
 
-    const oldMath = this._.math;
-    this._.lastMath = oldMath;
-    this._.math = newMath;
+    const oldMath = this._.cur;
+    this._.lst = oldMath;
+    this._.cur = newMath;
 
-    UpdateThisAndSVG.call(this, newMath);
-    BuildTeXAtom.call(this);
+    updateThisAndSvg(this, newMath);
+    buildTeXAtom(this, newMath);
     oldMath?.remove();
     return this;
-}
+};
 
-Mathjax.prototype.transformMath = function(text, hint) {
+Mathjax.prototype.transformMath = function (text, hint) {
     if (text.startsWith("$")) text = text.slice(1, -1);
-    this.member.setAndFlush("text", text);
-    
+    this.vars.text = text;
+
     const newMath = new SVGNode(this, this._.layer, MathJax.tex2svg(text).children[0]);
     newMath.offsetX = 0;
     newMath.offsetY = 0;
 
-    const oldMath = this._.math;
-    this._.lastMath = oldMath;
-    this._.math = newMath;
+    const oldMath = this._.cur;
+    this._.lst = oldMath;
+    this._.cur = newMath;
 
-    UpdateThisAndSVG.call(this, newMath);
-    TransformMathjax.call(this, oldMath, newMath, hint);
-    BuildTeXAtom.call(this);
+    updateThisAndSvg(this, newMath);
+    transformMathjax(this, oldMath, newMath, hint);
+    buildTeXAtom(this, newMath);
     oldMath?.remove();
     return this;
-}
+};
 
-Mathjax.prototype.transformMathFrom = function(text, math, hint) {
+Mathjax.prototype.transformMathFrom = function (text, math, hint) {
     if (text.startsWith("$")) text = text.slice(1, -1);
-    this.member.setAndFlush("text", text);
+    this.vars.text = text;
 
     const newMath = new SVGNode(this, this._.layer, MathJax.tex2svg(text).children[0]);
     newMath.offsetX = 0;
     newMath.offsetY = 0;
 
-    const oldMath = this._.math;
-    this._.lastMath = oldMath;
-    this._.math = newMath;
+    const oldMath = this._.cur;
+    this._.lst = oldMath;
+    this._.cur = newMath;
 
-    UpdateThisAndSVG.call(this, newMath);
-    TransformMathjaxFrom.call(this, oldMath, newMath, math.map(math => math._.math), hint);
-    BuildTeXAtom.call(this);
+    updateThisAndSvg(this, newMath);
+    transformMathjaxFrom(
+        this,
+        oldMath,
+        newMath,
+        math.map(math => math._.math),
+        hint
+    );
+    buildTeXAtom(this, newMath);
     oldMath?.remove();
     math.forEach(math => math.startAnimate(this).remove());
     return this;
-}
+};
 
-Mathjax.prototype.createMath = function(index) {
-    const element = this.member.get("elements")[index];
+Mathjax.prototype.createMath = function (id) {
+    const element = this.element(id);
     const mathjax = new Mathjax(svg());
-    const newMath = new SVGNode(mathjax, mathjax._.layer, CloneMathjax(element._.nake.nake()));
-    mathjax._.math = newMath;
-    UpdateThatAndSVG.call(mathjax, newMath, this);
+    const newMath = new SVGNode(mathjax, mathjax._.layer, cloneMathjax(element._.nake.nake()));
+    mathjax._.cur = newMath;
+    updateThatAndSvg(mathjax, newMath, this);
     return mathjax;
-}
+};
 
-
-function TransformMathjax(oldSvg, newSvg, hint) {
-    TransformSVG.call(this, oldSvg, newSvg, true);
-    const [oldPaths, oldAtomMath] = ParseMathjax(oldSvg, true);
-    const [newPaths, newAtomMath] = ParseMathjax(newSvg, false);
+function transformMathjax(mathjax, oldSvg, newSvg, hint) {
+    transformSvg(mathjax, oldSvg, newSvg, true);
+    const [oldPaths, oldAtomMath] = parseMathjax(oldSvg, true);
+    const [newPaths, newAtomMath] = parseMathjax(newSvg, false);
     for (let source in hint) {
         const target = hint[source];
         if (!oldAtomMath[+source]) continue;
         if (!newAtomMath[+target]) continue;
-        TransformPath.call(this, oldSvg, oldAtomMath[+source], newSvg, newAtomMath[+target]);
-        oldAtomMath[+source].forEach(path => path.isDeleted = true);
-        newAtomMath[+target].forEach(path => path.isDeleted = true);
+        transformPath(mathjax, oldSvg, oldAtomMath[+source], newSvg, newAtomMath[+target]);
+        oldAtomMath[+source].forEach(path => (path.isDeleted = true));
+        newAtomMath[+target].forEach(path => (path.isDeleted = true));
     }
-    TransformPath.apply(this, [
-        oldSvg, 
-        oldPaths.filter(path => !path.isDeleted), 
-        newSvg, 
+    transformPath(
+        mathjax,
+        oldSvg,
+        oldPaths.filter(path => !path.isDeleted),
+        newSvg,
         newPaths.filter(path => !path.isDeleted)
-    ]);
+    );
 }
 
-function TransformMathjaxFrom(oldMath, newMath, otherMath, hint) {
-    TransformSVG.call(this, oldMath, newMath, true);
+function transformMathjaxFrom(mathjax, oldMath, newMath, otherMath, hint) {
+    transformSvg(mathjax, oldMath, newMath, true);
     const otherPaths = [];
     for (let i = 0; i < otherMath.length; i++) {
-        TransformSVG.call(this, otherMath[i], newMath, false);
-        otherPaths.push(ParseMathjax(otherMath[i], true));
+        transformSvg(mathjax, otherMath[i], newMath, false);
+        otherPaths.push(parseMathjax(otherMath[i], true));
     }
-    const [oldPaths, oldAtomMath] = ParseMathjax(oldMath, true);
-    const [newPaths, newAtomMath] = ParseMathjax(newMath, false);
+    const [oldPaths, oldAtomMath] = parseMathjax(oldMath, true);
+    const [newPaths, newAtomMath] = parseMathjax(newMath, false);
     for (let source in hint) {
-        const A = (+source) - 1;
+        const A = +source - 1;
         const B = +hint[source];
         if (!otherPaths[A]) continue;
         if (!newAtomMath[B]) continue;
-        TransformPath.call(this, otherMath[A], otherPaths[A][0], newMath, newAtomMath[B]);
-        newAtomMath[B].forEach(path => path.isDeleted = true);
+        transformPath(mathjax, otherMath[A], otherPaths[A][0], newMath, newAtomMath[B]);
+        newAtomMath[B].forEach(path => (path.isDeleted = true));
     }
-    TransformPath.apply(this, [
-        oldMath, 
-        oldPaths.filter(path => !path.isDeleted), 
-        newMath, 
+    transformPath(
+        mathjax,
+        oldMath,
+        oldPaths.filter(path => !path.isDeleted),
+        newMath,
         newPaths.filter(path => !path.isDeleted),
         true
-    ]);
+    );
 }
 
-function CloneMathjax(element) {
+function cloneMathjax(element) {
     let root = Dom.deepClone(element);
     while (Dom.parent(element)) {
         const parent = Dom.parent(element);
@@ -202,7 +209,7 @@ function CloneMathjax(element) {
     return root;
 }
 
-function CreatePath(current, matrix, defs) {
+function createPath(current, matrix, defs) {
     const path = Dom.createSVGElement("path");
     path.setAttribute("transform", `matrix(${matrix.a}, ${matrix.b}, ${matrix.c}, ${matrix.d}, ${matrix.e}, ${matrix.f})`);
     if (Dom.tagName(current) === "rect") {
@@ -222,27 +229,21 @@ function CreatePath(current, matrix, defs) {
     return path;
 }
 
-function MultiplyMatrix(matrix1, matrix2) {
-    const a1 = matrix1.a, a2 = matrix2.a;
-    const b1 = matrix1.b, b2 = matrix2.b;
-    const c1 = matrix1.c, c2 = matrix2.c;
-    const d1 = matrix1.d, d2 = matrix2.d;
-    const e1 = matrix1.e, e2 = matrix2.e;
-    const f1 = matrix1.f, f2 = matrix2.f;
+function multiply(matrix1, matrix2) {
     return {
-        a: a1 * a2 + c1 * b2,
-        b: b1 * a2 + d1 * b2,
-        c: a1 * c2 + c1 * d2,
-        d: b1 * c2 + d1 * d2,
-        e: a1 * e2 + c1 * f2 + e1,
-        f: b1 * e2 + d1 * f2 + f1
+        a: matrix1.a * matrix2.a + matrix1.c * matrix2.b,
+        b: matrix1.b * matrix2.a + matrix1.d * matrix2.b,
+        c: matrix1.a * matrix2.c + matrix1.c * matrix2.d,
+        d: matrix1.b * matrix2.c + matrix1.d * matrix2.d,
+        e: matrix1.a * matrix2.e + matrix1.c * matrix2.f + matrix1.e,
+        f: matrix1.b * matrix2.e + matrix1.d * matrix2.f + matrix1.f,
     };
 }
 
-function ParseMathjax(svg, replace) {
-    const defs = svg.nake().children[0];             // <defs>
+function parseMathjax(svg, replace) {
+    const defs = svg.nake().children[0]; // <defs>
     const root = svg.nake().children[1].children[0]; // <g data-mml-node='math'>
-    
+
     const elements = [];
     const removeList = [];
     const atomMath = {};
@@ -250,17 +251,17 @@ function ParseMathjax(svg, replace) {
     let allocatedAtomID = 0;
     function dfs(current, matrix) {
         for (let i = 0; i < current.transform.baseVal.length; i++) {
-            matrix = MultiplyMatrix(matrix, current.transform.baseVal[i].matrix);
+            matrix = multiply(matrix, current.transform.baseVal[i].matrix);
         }
         if (!Dom.tagName(current)) return;
         let lastAtomID = currentAtomID;
         if (current.getAttribute("data-mml-node") === "TeXAtom") {
-            atomMath[currentAtomID = ++allocatedAtomID] = [];
+            atomMath[(currentAtomID = ++allocatedAtomID)] = [];
         }
         if (Dom.tagName(current) === "defs") return;
         if (Dom.tagName(current) === "path") return;
         if (Dom.tagName(current) === "rect" || Dom.tagName(current) === "use") {
-            const path = CreatePath(current, matrix, defs);
+            const path = createPath(current, matrix, defs);
             if (replace) removeList.push(current);
             if (currentAtomID) atomMath[currentAtomID].push(path);
             elements.push(path);
@@ -281,53 +282,41 @@ function ParseMathjax(svg, replace) {
     return [elements, atomMath];
 }
 
-function TransformSVG(oldSvg, newSvg, selfSvg) {
-    new Action(
-        this.delay(),
-        this.delay() + this.duration(),
-        oldSvg.getAttribute("width"), newSvg.getAttribute("width"),
-        Interp.exLengthInterp(oldSvg, "width"),
-        oldSvg, "width"
-    );
-    new Action(
-        this.delay(),
-        this.delay() + this.duration(),
-        oldSvg.getAttribute("height"), newSvg.getAttribute("height"),
-        Interp.exLengthInterp(oldSvg, "height"),
-        oldSvg, "height"
-    );
-    new Action(
-        this.delay(),
-        this.delay() + this.duration(),
-        Cast.castToViewBox(oldSvg.getAttribute("viewBox")),
-        Cast.castToViewBox(newSvg.getAttribute("viewBox")),
-        Interp.boxInterp(oldSvg, "viewBox"),
-        oldSvg, "viewBox"
-    );
-    const x = selfSvg ? this.x() - oldSvg.offsetX : oldSvg.getAttribute("x");
-    const y = selfSvg ? this.y() - oldSvg.offsetY : oldSvg.getAttribute("y");
-    new Action(
-        this.delay(),
-        this.delay() + this.duration(),
-        x, newSvg.getAttribute("x"),
-        Interp.numberInterp(oldSvg, "x"),
-        oldSvg, "x"
-    );
-    new Action(
-        this.delay(),
-        this.delay() + this.duration(),
-        y, newSvg.getAttribute("y"),
-        Interp.numberInterp(oldSvg, "y"),
-        oldSvg, "y"
-    );
+function transformSvg(mathjax, oldSvg, newSvg, selfSvg) {
+    const l = mathjax.delay(),
+        r = mathjax.delay() + mathjax.duration();
+    new Action(l, r, oldSvg.getAttribute("width"), newSvg.getAttribute("width"), Interp.exLengthInterp(oldSvg, "width"), oldSvg, "width");
+    new Action(l, r, oldSvg.getAttribute("height"), newSvg.getAttribute("height"), Interp.exLengthInterp(oldSvg, "height"), oldSvg, "height");
+    new Action(l, r, Cast.castToViewBox(oldSvg.getAttribute("viewBox")), Cast.castToViewBox(newSvg.getAttribute("viewBox")), Interp.boxInterp(oldSvg, "viewBox"), oldSvg, "viewBox");
+    const x = selfSvg ? mathjax.x() - oldSvg.offsetX : oldSvg.getAttribute("x");
+    const y = selfSvg ? mathjax.y() - oldSvg.offsetY : oldSvg.getAttribute("y");
+    new Action(l, r, x, newSvg.getAttribute("x"), Interp.numberInterp(oldSvg, "x"), oldSvg, "x");
+    new Action(l, r, y, newSvg.getAttribute("y"), Interp.numberInterp(oldSvg, "y"), oldSvg, "y");
 }
-
-function FillOldPaths(oldPaths, length, oldRoot) {
+// for (let i = 0; i < newPaths.length; i++) {
+//     const matrix = newPaths[i].transform.baseVal[0].matrix;
+//     const source = { a: 0, b: 0, c: 0, d: 0, e: target.e, f: target.f };
+//     const oldPath = Dom.createSVGElement("path");
+//     oldPath.setAttribute("d", newPaths[i].getAttribute("d"));
+//     oldRoot.append(oldPath);
+//     new Action(l, r, source, matrix, Interp.matrixInterp(oldPath, "transform"), oldPath, "transform");
+// }
+function fillOldPaths(oldPaths, newPaths, oldRoot) {
+    const length = newPaths.length;
     const tmpPaths = [];
     const add = length - oldPaths.length;
     const gap = Math.floor(oldPaths.length / add);
     let currentAdd = 0;
-    if (gap > 0) {
+    if (oldPaths.length === 0) {
+        for (let i = newPaths.length - 1; i >= 0; i--) {
+            const matrix = newPaths[i].transform.baseVal[0].matrix;
+            const path = Dom.createSVGElement("path");
+            path.setAttribute("d", newPaths[i].getAttribute("d"));
+            path.setAttribute("transform", `matrix(0,0,0,0,${matrix.e},${matrix.f})`);
+            oldRoot.append(path);
+            tmpPaths.push(path);
+        }
+    } else if (gap > 0) {
         for (let i = oldPaths.length - 1; i >= 0; i--) {
             if ((oldPaths.length - 1 - i) % gap === 0 && currentAdd < add) {
                 const path = Dom.createSVGElement("path");
@@ -358,7 +347,8 @@ function FillOldPaths(oldPaths, length, oldRoot) {
     return tmpPaths.reverse();
 }
 
-function FillNewPaths(newPaths, length) {
+function fillNewPaths(newPaths, oldPaths) {
+    const length = oldPaths.length;
     const tmpPaths = [];
     const add = length - newPaths.length;
     const gap = Math.floor(newPaths.length / add);
@@ -384,195 +374,111 @@ function FillNewPaths(newPaths, length) {
     return tmpPaths.reverse();
 }
 
-function TransformPath(oldSvg, oldPaths, newSvg, newPaths) {
+function transformPath(mathjax, oldSvg, oldPaths, newSvg, newPaths) {
     const oldRoot = oldSvg.nake().children[1].children[0];
-    if (oldPaths.length < newPaths.length) oldPaths = FillOldPaths(oldPaths, newPaths.length, oldRoot);
-    if (oldPaths.length > newPaths.length) newPaths = FillNewPaths(newPaths, oldPaths.length);
-    const duration = this.duration();
-    
-    for (let i = 0; i < oldPaths.length; i++) {
-        if (!newPaths[i]) {
-            const matrix = oldPaths[i].transform.baseVal[0].matrix;
-            new Action(
-                this.delay(),
-                this.delay() + this.duration(),
-                oldPaths[i].transform.baseVal[0].matrix,
-                { a: 0, b: 0, c: 0, d: 0, e: matrix.e, f: matrix.f },
-                Interp.matrixInterp(oldPaths[i], "transform"),
-                oldPaths[i], "transform"
-            );
+    if (oldPaths.length < newPaths.length) oldPaths = fillOldPaths(oldPaths, newPaths, oldRoot);
+    if (oldPaths.length > newPaths.length) newPaths = fillNewPaths(newPaths, oldPaths);
+    const duration = mathjax.duration();
+    const l = mathjax.delay();
+    const r = l + duration;
+
+    oldPaths.forEach((oldPath, i) => {
+        const newPath = newPaths[i];
+        if (!newPath) {
+            if (true) {
+                const source = oldPath.transform.baseVal[0].matrix;
+                const target = { a: 0, b: 0, c: 0, d: 0, e: source.e, f: source.f };
+                new Action(l, r, source, target, Interp.matrixInterp(oldPath, "transform"), oldPath, "transform");
+            }
         } else {
-            new Action(
-                this.delay(),
-                this.delay() + this.duration(),
-                oldPaths[i].transform.baseVal[0].matrix,
-                newPaths[i].transform.baseVal[0].matrix,
-                Interp.matrixInterp(oldPaths[i], "transform"),
-                oldPaths[i], "transform"
-            );
-            if (oldPaths[i].character && oldPaths[i].character === newPaths[i].character) continue;
-            const snap = Snap(oldPaths[i]);
-            new Action(
-                this.delay(),
-                this.delay() + this.duration(),
-                oldPaths[i].getAttribute("d"),
-                newPaths[i].getAttribute("d"),
-                function(t) {
+            if (true) {
+                const source = oldPath.transform.baseVal[0].matrix;
+                const target = newPath.transform.baseVal[0].matrix;
+                new Action(l, r, source, target, Interp.matrixInterp(oldPath, "transform"), oldPath, "transform");
+            }
+            if (!oldPath.character || oldPath.character !== newPath.character) {
+                const snap = Snap(oldPath);
+                const source = oldPath.getAttribute("d");
+                const target = newPath.getAttribute("d");
+                const interp = function (t) {
                     if (t === 0) {
-                        if (duration === 0) {
-                            snap.attr({ d: this.target });
-                        } else {
-                            snap.animate({ d: this.target }, duration, mina.easeinout);
-                        }
-                    } else if (t === 1) {
-                        setTimeout(() => { snap.attr({ d: this.target }); }, 50);
-                    }
-                },
-                oldPaths[i], "d"
-            );
+                        if (duration === 0) snap.attr({ d: this.target });
+                        else snap.animate({ d: this.target }, duration, mina.easeinout);
+                    } else if (t === 1 && duration > 0) setTimeout(() => snap.attr({ d: this.target }), 50);
+                };
+                new Action(l, r, source, target, interp, oldPath, "d");
+            }
         }
-    }
-    if (oldPaths.length === 0) {
-        for (let i = 0; i < newPaths.length; i++) {
-            const matrix = newPaths[i].transform.baseVal[0].matrix;
-            const path = Dom.createSVGElement("path");
-            path.setAttribute("d", newPaths[i].getAttribute("d"));
-            oldRoot.append(path);
-            new Action(
-                this.delay(),
-                this.delay() + this.duration(),
-                { a: 0, b: 0, c: 0, d: 0, e: matrix.e, f: matrix.f },
-                matrix,
-                Interp.matrixInterp(path, "transform"),
-                path, "transform"
-            );
-        }
-    }
-}
-
-function BuildTeXAtom() {
-    const elements = [];
-    const svg = this._.math.nake();
-    const root = svg.children[1].children[0];
-    const atoms = svg.querySelectorAll("g[data-mml-node='TeXAtom']");
-    elements.push(new TeXAtom(this, new SVGNode(this, undefined, root)));
-    atoms.forEach(atom => {
-        elements.push(new TeXAtom(this, new SVGNode(this, undefined, atom)));
     });
-    this.member.setAndFlush("elements", elements);
 }
 
-Mathjax.init = function() {
+function buildTeXAtom(mathjax, svg) {
+    const elements = [];
+    const root = svg.nake().children[1].children[0];
+    const atoms = [...svg.nake().querySelectorAll("g[data-mml-node='TeXAtom']")];
+    elements.push(new TeXAtom(mathjax, new SVGNode(mathjax, undefined, root)));
+    atoms.forEach(atom => elements.push(new TeXAtom(mathjax, new SVGNode(mathjax, undefined, atom))));
+    mathjax.vars.elements = elements;
+}
+
+Mathjax.init = function () {
     Mathjax.helper = Dom.createSVGElement("g");
     Dom.getByID("1").append(Mathjax.helper);
     Mathjax.helper.setAttribute("opacity", 0);
     Mathjax.helper.setAttribute("font-size", 20);
+};
+
+function updateThisAndSvg(mathjax, svg) {
+    const box = getBox(svg.nake());
+    mathjax.vars.width20 = box.width;
+    mathjax.vars.height20 = box.height;
+    svg.setAttribute("x", mathjax.x() - svg.offsetX);
+    svg.setAttribute("y", mathjax.y() - svg.offsetY);
+    svg.nake().children[1].setAttribute("fill", mathjax.fill());
 }
 
-/**
- * 基于 svg 更新 width-20 和 height-20
- * 
- * 基于当前元素更新 svg 的位置信息
- * @param {SVGElement} svg 
- */
-function UpdateThisAndSVG(svg) {
-    const box = GetBox(svg.nake());
-    this.member.setAndFlush("width-20", box.width);
-    this.member.setAndFlush("height-20", box.height);
-    svg.setAttribute("x", this.x() - svg.offsetX);
-    svg.setAttribute("y", this.y() - svg.offsetY);
-    svg.nake().children[1].setAttribute("fill", this.fill());
-}
-
-function UpdateThatAndSVG(svg, from) {
-    const box = GetBox(svg.nake());
-    this.member.setAndFlush("width-20", box.width);
-    this.member.setAndFlush("height-20", box.height);
-    this.member.setAndFlush("x", box.x + from.x());
-    this.member.setAndFlush("y", box.y + from.y());
+function updateThatAndSvg(mathjax, svg, from) {
+    const box = getBox(svg.nake());
+    mathjax.vars.width20 = box.width;
+    mathjax.vars.height20 = box.height;
+    mathjax.vars.x = box.x + from.x();
+    mathjax.vars.y = box.y + from.y();
     svg.offsetX = box.x;
     svg.offsetY = box.y;
     svg.setAttribute("x", from.x());
     svg.setAttribute("y", from.y());
 }
 
-/**
- * 获取 svg 元素的边界框
- * @param {SVGElement} svg 
- * @returns {{x: number, y: number, width: number, height: number}}
- */
-function GetBox(svg) {
+function getBox(svg) {
     Mathjax.helper.append(svg);
     const box = Mathjax.helper.getBBox();
     svg.remove();
     return box;
 }
 
-function MathjaxPositionUpdate(key, offsetKey) {
-    return function() {
-        if (this.member.hasChanged(key)) {
-            if (this._.math) {
-                new Action(
-                    this.delay(),
-                    this.delay() + this.duration(),
-                    this.member.oldValue(key) - this._.math[offsetKey],
-                    this.member.get(key),
-                    Interp.numberInterp(this._.math, key),
-                    this._.math, key
-                );
-                this._.math[offsetKey] = 0;
-            }
-            if (this._.lastMath) {
-                new Action(
-                    this.delay(),
-                    this.delay() + this.duration(),
-                    this.member.oldValue(key) - this._.lastMath[offsetKey],
-                    this.member.get(key),
-                    Interp.numberInterp(this._.lastMath, key),
-                    this._.lastMath, key
-                );
-                this._.lastMath[offsetKey] = 0;
-            }
-            this.member.flush(key);
-        }
-    }
+function mathjaxPositionUpdate(node, key, attrName, offsetName) {
+    return function (newValue, oldValue) {
+        if (!node._[attrName]) return;
+        const object = node._[attrName];
+        new Action(node.delay(), node.delay() + node.duration(), oldValue - object[offsetName], newValue, Interp.numberInterp(object, key), object, key);
+    };
 }
 
-function MathjaxColorUpdate(key) {
-    return function() {
-        if (this.member.hasChanged(key)) {
-            if (this._.math) {
-                new Action(
-                    this.delay(),
-                    this.delay() + this.duration(),
-                    this.member.oldValue(key),
-                    this.member.get(key),
-                    Interp.colorInterp(this._.math.nake().children[1], key),
-                    this._.math, key
-                );
-            }
-            if (this._.lastMath) {
-                new Action(
-                    this.delay(),
-                    this.delay() + this.duration(),
-                    this.member.oldValue(key),
-                    this.member.get(key),
-                    Interp.colorInterp(this._.lastMath.nake().children[1], key),
-                    this._.lastMath, key
-                );
-            }
-            this.member.flush(key);
-        }
-    }
+function mathjaxUpdate(node, key, attrName, interp) {
+    return function (newValue, oldValue) {
+        if (!node._[attrName]) return;
+        const object = node._[attrName];
+        new Action(node.delay(), node.delay() + node.duration(), oldValue, newValue, interp(object, key), object, key);
+    };
 }
 
-function MathjaxLength(key) {
-    return function(length) {
-        const length20 = this.member.get(`${key}-20`);
-        const fontSize = this.member.get("font-size");
-        if (length === undefined) return length20 * fontSize / 20;
+function mathjaxLength(key) {
+    return function (length) {
+        const length20 = this.vars[`${key}20`];
+        const fontSize = this.fontSize();
+        if (length === undefined) return (length20 * fontSize) / 20;
         if (length20 === 0) return this;
-        this.fontSize(20 * length / length20);
+        this.fontSize((20 * length) / length20);
         return this;
-    }
+    };
 }
