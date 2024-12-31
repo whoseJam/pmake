@@ -1,5 +1,6 @@
 import { BaseNake } from "@/Node/Nake/BaseNake";
 import { SDNode } from "@/Node/SDNode";
+import { SDRule } from "@/Rule/Rule";
 
 export class BaseLine extends BaseNake {
     constructor(parent: SDNode, tag: string);
@@ -22,11 +23,11 @@ export class BaseLine extends BaseNake {
 
     source(): [number, number];
     source(vector: [number, number]): this;
-    source(x: number, y: number): this
+    source(x: number, y: number): this;
 
     target(): [number, number];
-    target(vector: [number, number]): this
-    target(x: number, y: number): this
+    target(vector: [number, number]): this;
+    target(x: number, y: number): this;
 
     x1(): number;
     x1(x: number): this;
@@ -40,4 +41,13 @@ export class BaseLine extends BaseNake {
     at(k: number): Vector;
     getPointAtLength(length: number): Vector;
     totalLength(): number;
+
+    text(): string;
+    drop(): this;
+    intValue(): number;
+    value(): SDNode;
+    value(value: SDNode): this;
+    value(value: SDNode, rule: SDRule): this;
+    valueFromExist(value: SDNode): this;
+    valueFromExist(value: SDNode, rule: SDRule): this;
 }

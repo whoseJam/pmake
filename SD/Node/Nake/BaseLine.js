@@ -2,9 +2,11 @@ import { Context } from "@/Animate/Context";
 import { Interp } from "@/Animate/Interp";
 import { BaseNake } from "@/Node/Nake/BaseNake";
 import { Enter as EN } from "@/Node/SDNode/Enter";
-import { effect } from "@/Node/SDNode/SDValue";
+import { Exit as EX } from "@/Node/SDNode/Exit";
 import { Cast } from "@/Utility/Cast";
+import { Check } from "@/Utility/Check";
 import { Color as C } from "@/Utility/Color";
+import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 
 export function BaseLine(parent, tag) {
@@ -18,7 +20,7 @@ export function BaseLine(parent, tag) {
         markerStart: "",
         markerMid: "",
         markerEnd: "",
-        value: undefined
+        value: undefined,
     });
 
     this.vars.associate("markerStart", Factory.action(this, this._.nake, "marker-start", Interp.stringInterp));
@@ -29,7 +31,7 @@ export function BaseLine(parent, tag) {
 }
 
 BaseLine.prototype = {
-    ...BaseNake.prototype
+    ...BaseNake.prototype,
 };
 
 BaseLine.prototype.markerStart = HandlerMarker("markerStart");
@@ -39,27 +41,27 @@ BaseLine.prototype.markerEnd = HandlerMarker("markerEnd");
 function HandlerMarker(key) {
     return function (marker) {
         if (marker === undefined) return this.vars[key];
-        marker = (marker !== "") ? `url(#${marker})` : "";
+        marker = marker !== "" ? `url(#${marker})` : "";
         this.vars[key] = marker;
         return this;
-    }
+    };
 }
 
 BaseLine.prototype.arrow = function (flag = true) {
     this.markerEnd(flag ? "arrow" : "");
     return this;
-}
+};
 
 BaseLine.prototype.revArrow = function (flag = true) {
     this.markerStart(flag ? "arrowReverse" : "");
     return this;
-}
+};
 
 BaseLine.prototype.doubleArrow = function (flag = true) {
     this.arrow(flag);
     this.revArrow(flag);
     return this;
-}
+};
 
 BaseLine.prototype.pointStoT = function () {
     const len = this.totalLength();
@@ -69,7 +71,7 @@ BaseLine.prototype.pointStoT = function () {
     this.startAnimate(context.tillc(0, 1));
     this.strokeDashArray([len, 0]);
     return this;
-}
+};
 
 BaseLine.prototype.pointTtoS = function () {
     const len = this.totalLength();
@@ -81,7 +83,7 @@ BaseLine.prototype.pointTtoS = function () {
     this.strokeDashArray([len, 0]);
     this.strokeDashOffset(0);
     return this;
-}
+};
 
 BaseLine.prototype.fadeStoT = function () {
     const len = this.totalLength();
@@ -93,7 +95,7 @@ BaseLine.prototype.fadeStoT = function () {
     this.strokeDashArray([0, len]);
     this.strokeDashOffset(-len);
     return this;
-}
+};
 
 BaseLine.prototype.fadeTtoS = function () {
     const len = this.totalLength();
@@ -103,7 +105,7 @@ BaseLine.prototype.fadeTtoS = function () {
     this.startAnimate(context.tillc(0, 1));
     this.strokeDashArray([0, len]);
     return this;
-}
+};
 
 BaseLine.prototype.source = function (x, y) {
     if (arguments.length === 0) {
@@ -114,7 +116,7 @@ BaseLine.prototype.source = function (x, y) {
     }
     this.freeze().x1(x).y1(y).unfreeze();
     return this;
-}
+};
 
 BaseLine.prototype.target = function (x, y) {
     if (arguments.length === 0) {
@@ -125,7 +127,7 @@ BaseLine.prototype.target = function (x, y) {
     }
     this.freeze().x2(x).y2(y).unfreeze();
     return this;
-}
+};
 
 BaseLine.prototype.x = function (x) {
     const x1 = this.x1();
@@ -133,9 +135,12 @@ BaseLine.prototype.x = function (x) {
     const ox = Math.min(x1, x2);
     if (x === undefined) return ox;
     const dx = x - ox;
-    this.freeze().x1(x1 + dx).x2(x2 + dx).unfreeze();
+    this.freeze()
+        .x1(x1 + dx)
+        .x2(x2 + dx)
+        .unfreeze();
     return this;
-}
+};
 
 BaseLine.prototype.y = function (y) {
     const y1 = this.y1();
@@ -143,9 +148,12 @@ BaseLine.prototype.y = function (y) {
     const oy = Math.min(y1, y2);
     if (y === undefined) return oy;
     const dy = y - oy;
-    this.freeze().y1(y1 + dy).y2(y2 + dy).unfreeze();
+    this.freeze()
+        .y1(y1 + dy)
+        .y2(y2 + dy)
+        .unfreeze();
     return this;
-}
+};
 
 BaseLine.prototype.width = function (width) {
     const x1 = this.x1();
@@ -154,7 +162,7 @@ BaseLine.prototype.width = function (width) {
     if (x1 < x2) this.x2(x1 + width);
     else this.x1(x2 + width);
     return this;
-}
+};
 
 BaseLine.prototype.height = function (height) {
     const y1 = this.y1();
@@ -163,42 +171,41 @@ BaseLine.prototype.height = function (height) {
     if (y1 < y2) this.y2(y1 + height);
     else this.y1(y2 + height);
     return this;
-}
+};
 
-BaseLine.prototype.value = function (value, rule) {
-    const oldValue = this.child("value");
-    if (value === undefined) {
-        return oldValue;
-    }
-    // rule = rule ? rule : 
-    //        this.member.get("rule") ? this.member.get("rule") : PointAtPathByRate(0.5, "cx", "cy");
-    value = Cast.castToSDNode(this, value);
-
-    if (oldValue) {
-        oldValue.opacity(0).remove();
-    }
-    if (!value) {
-        return this;
-    }
-    value.onEnter(EN.appear());
-    this.childAs("value", value);
-    effect(() => {
-        value.cx(this.cx());
-        value.cy(this.cy());
-    })
-    return this;
-}
-
-BaseLine.prototype.valueRule = function (rule) {
+BaseLine.prototype.text = function () {
     const value = this.child("value");
-    this.member.setAndFlush("rule", rule);
-    if (value) {
-        value._.rule = rule;
-        this.tryUpdate();
-    }
-}
+    if (!value) return "";
+    if (!value.text) ErrorLauncher.invalidInvoke("text");
+    return value.text();
+};
+
+BaseLine.prototype.drop = function () {
+    const value = this.child("value");
+    value.onExit(EX.drop());
+    this.eraseChild(value);
+    return value;
+};
 
 BaseLine.prototype.intValue = function () {
-    const value = this.child("value");
-    return !value ? 0 : +value.text();
+    const value = this.value();
+    if (!value) return 0;
+    if (!value.text) ErrorLauncher.invalidInvoke("intValue");
+    return +value.text();
+};
+
+BaseLine.prototype.value = function (value, rule) {
+    if (arguments.length === 0) return this.child("value");
+    if (this.hasChild("value")) this.eraseChild("value");
+    if (Check.isFalseType(value)) return this;
+    rule = getValueRule(this.vars, rule);
+    value = Cast.castToSDNode(this, value);
+    value.onEnterDefault(EN.appear());
+    value.onExitDefault(EX.fade());
+    value.triggerEnter(this, () => this.childAs("value", value, rule));
+    return this;
+};
+
+function getValueRule(vars, rule) {
+    return rule ? rule : PointAtPathByRate(0.5, "cx", "cy");
 }
