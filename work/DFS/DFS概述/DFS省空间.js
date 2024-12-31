@@ -9,7 +9,7 @@ const links = [
     [2, 4],
     [2, 5],
     [3, 6],
-    [3, 7]
+    [3, 7],
 ];
 
 sd.init(() => {
@@ -25,18 +25,18 @@ sd.init(() => {
 
 sd.main(async () => {
     const focus = sd.Focus(tree);
-    const dfs = async function(x) {
-        const children = tree.childrenOnTree(x);
+    const dfs = async function (x) {
+        const children = tree.children(x);
         await sd.pause();
         focus.startAnimate().focus(x).endAnimate();
         for (let i = 0; i < children.length; i++) {
-            await dfs(children[i].nodeId);
+            await dfs(tree.nodeId(children[i]));
             await sd.pause();
             focus.startAnimate().focus(x).endAnimate();
         }
-    }
+    };
     await dfs(1);
-})
+});
 
 function makeGrid() {
     const grid = new sd.Grid(svg).elementWidth(20).elementHeight(20).n(3).m(3).startN(1).startM(1);

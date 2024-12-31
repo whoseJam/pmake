@@ -11,7 +11,7 @@ const links = [
     [6, 7],
     [3, 8],
     [3, 9],
-    [1, 9]
+    [1, 9],
 ];
 const vis = sd.make1d(40);
 
@@ -19,19 +19,18 @@ sd.init(() => {
     links.forEach(link => {
         graph.link(link[0], link[1]);
     });
-})
+});
 
 sd.main(async () => {
-    const dfs = async (u) => {
+    const dfs = async u => {
         vis[u] = 1;
         await sd.pause();
         graph.startAnimate().color(u, C.blue).endAnimate();
-        graph.forEachOutNodesSync(u, async (node) => {
-            const v = node.nodeId;
-            if (!vis[v]) {
-                await dfs(v);
-            }
-        }, "undirect");
+        const nodes = graph.outNodes(u, "undirect");
+        for (let node of nodes) {
+            const v = graph.nodeId(node);
+            if (!vis[v]) await dfs(v);
+        }
     };
     dfs(1);
-})
+});

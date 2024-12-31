@@ -2,7 +2,7 @@ import { SDNode } from "@/Node/SDNode";
 import { Color } from "@/Utility/Color";
 
 type InputID = number | string;
-type InputNode = InputID | SDNode;
+type InputNode = InputNode;
 
 export class BaseTree extends SDNode {
     constructor(parent: SDNode);
@@ -15,12 +15,12 @@ export class BaseTree extends SDNode {
     newLink(sourceId: InputID, targetId: InputID, value: any): this;
     newLinkFromExistValue(sourceId: InputID, targetId: InputID, value: SDNode): this;
     newLinkFromExistElement(sourceId: InputID, targetId: InputID, element: SDNode): this;
-    element(node: InputID | SDNode): SDNode;
-    element(source: InputID | SDNode, target: InputID | SDNode): SDNode;
-    value(node: InputID | SDNode): SDNode;
-    value(node: InputID | SDNode, value: any): this;
-    value(source: InputID | SDNode, target: InputID | SDNode): SDNode;
-    value(source: InputID | SDNode, target: InputID | SDNode, value: any): this;
+    element(node: InputNode): SDNode;
+    element(source: InputNode, target: InputNode): SDNode;
+    value(node: InputNode): SDNode;
+    value(node: InputNode, value: any): this;
+    value(source: InputNode, target: InputNode): SDNode;
+    value(source: InputNode, target: InputNode, value: any): this;
     opacity(): number;
     opacity(opacity: number): this;
     opacity(id: InputID): number;
@@ -60,8 +60,8 @@ export class BaseTree extends SDNode {
     text(sourceId: InputID, targetId: InputID): string;
     intValue(tid: InputID): number;
     intValue(sourceId: InputID, targetId: InputID): number;
-    nodesOnPath(source: InputID | SDNode, target: InputID | SDNode): Array<SDNode>;
-    linksOnPath(source: InputID | SDNode, target: InputID | SDNode): Array<SDNode>;
+    nodesOnPath(source: InputNode, target: InputNode): Array<SDNode>;
+    linksOnPath(source: InputNode, target: InputNode): Array<SDNode>;
     forEachNodeOnPath(sourceId: InputID, targetId: InputID, callback: (node: SDNode, id: string) => void): this;
     forEachLinkOnPath(sourceId: InputID, targetId: InputID, callback: (link: SDNode, sourceId: string, targetId: string) => void): this;
     forEachNode(callback: (node: SDNode, tid: string) => void): this;

@@ -295,5 +295,6 @@ SDNode.prototype.freeze = function () {
 
 SDNode.prototype.unfreeze = function () {
     this.vars.unfreeze();
+    if (this._.updates) this._.updates.forEach(update => update());
     return this;
 };

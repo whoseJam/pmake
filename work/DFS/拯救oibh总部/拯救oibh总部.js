@@ -5,22 +5,36 @@ const I = sd.input();
 const C = sd.color();
 const n = 4;
 const m = 5;
-const data = I.readCharMatrix(`
+const data = I.readCharMatrix(
+    `
 00000
 00*00
 0*0*0
-00*00`, n, m)
+00*00`,
+    n,
+    m
+);
 const grid = new sd.Grid(svg).n(n).m(m).startN(1).startM(1);
 const vis = sd.make2d(20, 20);
 
-init();
-main();
+sd.init(() => {
+    for (let i = 1; i <= n; i++) for (let j = 1; j <= m; j++) grid.value(i, j, data[i][j]);
+});
 
-function init() {
-    for (let i = 1; i <= n; i++)
-        for (let j = 1; j <= m; j++)
-            grid.value(i, j, data[i][j]);
-}
+sd.main(async () => {
+    await sd.pause();
+    const focus = sd.Focus(grid);
+    let t = 0;
+    for (let i = 1; i <= n; i++) {
+        for (let j = 1; j <= m; j++) {
+            await sd.pause();
+            focus.startAnimate().focus(i, j).endAnimate();
+            if (data[i][j] != "0" || vis[i][j]) continue;
+            await sd.pause();
+            dfs(i, j, C.rand());
+        }
+    }
+});
 
 function dfs(x, y, col) {
     vis[x][y] = 1;
@@ -34,21 +48,6 @@ function dfs(x, y, col) {
             if (!vis[tx][ty]) {
                 dfs(tx, ty, col);
             }
-        }
-    }
-}
-
-async function main() {
-    await sd.pause();
-    const focus = sd.Focus(grid);
-    let t = 0;
-    for (let i = 1; i <= n; i++) {
-        for (let j = 1; j <= m; j++) {
-            await sd.pause();
-            focus.startAnimate().focus(i, j).endAnimate();
-            if (data[i][j] != "0" || vis[i][j]) continue;
-            await sd.pause();
-            dfs(i, j, C.rand());
         }
     }
 }

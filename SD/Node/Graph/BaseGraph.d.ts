@@ -2,68 +2,61 @@ import { SDNode } from "@/Node/SDNode";
 import { SDColor } from "@/Utility/Color";
 
 type GraphMode = "direct" | "undirect";
+type InputID = InputID;
+type InputNode = InputID | SDNode;
 
 export class BaseGraph extends SDNode {
     constructor(parent: SDNode);
 
-    newNode(id: number | string): this;
-    newNode(id: number | string, value: any): this;
-    newNodeFromExistValue(id: number | string, value: SDNode): this;
-    newNodeFromExistElement(id: number | string, element: SDNode): this;
-    newLink(sourceId: number | string, targetId: number | string): this;
-    newLink(sourceId: number | string, targetId: number | string, value: any): this;
-    newLinkFromExistValue(sourceId: number | string, targetId: number | string, value: SDNode): this;
-    newLinkFromExistElement(sourceId: number | string, targetId: number | string, element: SDNode): this;
-
-    element(id: number | string): SDNode;
-    element(sourceId: number | string, targetId: number | string): SDNode;
-
-    value(id: number | string): SDNode;
-    value(id: number | string, value: any): this;
-    value(sourceId: number | string, targetId: number | string): SDNode;
-    value(sourceId: number | string, targetId: number | string, value: any): this;
-
+    newNode(id: InputID): this;
+    newNode(id: InputID, value: any): this;
+    newNodeFromExistValue(id: InputID, value: SDNode): this;
+    newNodeFromExistElement(id: InputID, element: SDNode): this;
+    newLink(sourceId: InputID, targetId: InputID): this;
+    newLink(sourceId: InputID, targetId: InputID, value: any): this;
+    newLinkFromExistValue(sourceId: InputID, targetId: InputID, value: SDNode): this;
+    newLinkFromExistElement(sourceId: InputID, targetId: InputID, element: SDNode): this;
+    element(node: InputNode): SDNode;
+    element(source: InputNode, target: InputNode): SDNode;
+    value(node: InputNode): SDNode;
+    value(node: InputNode, value: any): this;
+    value(source: InputNode, target: InputNode): SDNode;
+    value(source: InputNode, target: InputNode, value: any): this;
     opacity(): number;
     opacity(opacity: number): this;
-    opacity(id: number | string): number;
-    opacity(id: number | string, opacity: number): this;
-    opacity(sourceId: number | string, targetId: number | string): number;
-    opacity(sourceId: number | string, targetId: number | string, opacity: number): this;
-
+    opacity(id: InputID): number;
+    opacity(id: InputID, opacity: number): this;
+    opacity(sourceId: InputID, targetId: InputID): number;
+    opacity(sourceId: InputID, targetId: InputID, opacity: number): this;
     color(color: SDColor): this;
-    color(id: number | string): SDColor;
-    color(id: number | string, color: SDColor): this;
-    color(sourceId: number | string, targetId: number | string): SDColor;
-    color(sourceId: number | string, targetId: number | string, color: SDColor): this;
-
-    findNodeById(id: number | string): SDNode;
-    findLinkById(sourceId: number | string, targetId: number | string): SDNode;
-
-    inLinks(id: number | string, mode: GraphMode): Array<SDNode>;
-    outLinks(id: number | string, mode: GraphMode): Array<SDNode>;
-
-    inNodes(id: number | string, mode: GraphMode): Array<SDNode>;
-    inNodes(id: number | string): Array<SDNode>;
-    inNodesId(id: number | string): Array<string>;
-    outNodes(id: number | string, mode: GraphMode): Array<SDNode>;
-    outNodes(id: number | string): Array<SDNode>;
-    outNodesId(id: number | string): Array<string>;
-
-    link(sourceId: number | string, targetId: number | string): this;
-    cut(sourceId: number | string, targetId: number | string): this;
-
+    color(id: InputID): SDColor;
+    color(id: InputID, color: SDColor): this;
+    color(sourceId: InputID, targetId: InputID): SDColor;
+    color(sourceId: InputID, targetId: InputID, color: SDColor): this;
+    findNodeById(id: InputID): SDNode;
+    findLinkById(sourceId: InputID, targetId: InputID): SDNode;
+    inLinks(id: InputID, mode: GraphMode): Array<SDNode>;
+    outLinks(id: InputID, mode: GraphMode): Array<SDNode>;
+    inNodes(id: InputID, mode: GraphMode): Array<SDNode>;
+    inNodes(id: InputID): Array<SDNode>;
+    inNodesId(id: InputID): Array<string>;
+    outNodes(id: InputID, mode: GraphMode): Array<SDNode>;
+    outNodes(id: InputID): Array<SDNode>;
+    outNodesId(id: InputID): Array<string>;
+    link(sourceId: InputID, targetId: InputID): this;
+    cut(sourceId: InputID, targetId: InputID): this;
     sourceId(link: SDNode): string;
     targetId(link: SDNode): string;
     nodeId(node: SDNode): string;
-
     nodesId(): Array<string>;
-
-    toNode(link: SDNode, sourceId: number | string): string;
-    toNodeId(link: SDNode, sourceId: number | string): string;
-
+    toNode(link: SDNode, sourceId: InputID): string;
+    toNodeId(link: SDNode, sourceId: InputID): string;
     links(): Array<SDNode>;
     nodes(): Array<SDNode>;
-
     forEachNode(callback: (node: SDNode, id: string) => void): this;
     forEachLink(callback: (link: SDNode, sourceId: string, targetId: string) => void): this;
+    forEachInNode(node: InputNode, mode: GraphMode, callback: (node: SDNode, id: string) => void): this;
+    forEachInLink(node: InputNode, mode: GraphMode, callback: (link: SDNode, sourceId: string, targetId: string) => void): this;
+    forEachOutNode(node: InputNode, mode: GraphMode, callback: (node: SDNode, id: string) => void): this;
+    forEachOutLink(node: InputNode, mode: GraphMode, callback: (link: SDNode, sourceId: string, targetId: string) => void): this;
 }

@@ -15,7 +15,7 @@ const links = [
     [6, 2],
     [4, 8],
     [5, 7],
-    [7, 9]
+    [7, 9],
 ];
 let cnt = 1;
 
@@ -41,8 +41,7 @@ sd.init(() => {
     initNode(1);
 });
 
-sd.main(async() => {
-});
+sd.main(async () => {});
 
 function initNode(x) {
     const node = tree.element(x);
@@ -50,17 +49,17 @@ function initNode(x) {
     node.onClick(() => {
         tree.freeze();
         let childCount = 0;
-        graph.forEachOutNodes(originId, outNode => {
+        graph.forEachOutNode(originId, "direct", outNode => {
             const newNodeId = ++cnt;
             tree.newNode(newNodeId, outNode.nodeId);
             tree.link(x, newNodeId);
             tree.element(x, newNodeId).arrow();
             initNode(newNodeId);
             childCount++;
-        }, "direct");
+        });
         if (childCount === 0) {
             tree.color(x, C.orange);
         }
         tree.unfreeze();
-    })
+    });
 }

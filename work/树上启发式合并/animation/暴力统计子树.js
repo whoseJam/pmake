@@ -5,13 +5,17 @@ const C = sd.color();
 const tree = new sd.Tree(svg);
 const n = 12;
 const links = [
-    [1, 2], [1, 3],
-    [2, 4], [2, 5], [2, 6],
+    [1, 2],
+    [1, 3],
+    [2, 4],
+    [2, 5],
+    [2, 6],
     [3, 7],
     [5, 8],
     [6, 9],
-    [7, 10], [7, 11],
-    [8, 12]
+    [7, 10],
+    [7, 11],
+    [8, 12],
 ];
 
 init();
@@ -22,7 +26,7 @@ function init() {
     links.forEach(link => {
         tree.link(link[0], link[1]);
     });
-    tree.width(400).cx(600).cy(300)
+    tree.width(400).cx(600).cy(300);
 }
 
 async function main() {
@@ -31,9 +35,13 @@ async function main() {
         await sd.pause();
         focus.startAnimate().focus(i).endAnimate();
         await sd.pause();
-        tree.startAnimate(); add(i); tree.endAnimate();
+        tree.startAnimate();
+        add(i);
+        tree.endAnimate();
         await sd.pause();
-        tree.startAnimate(); clear(i); tree.endAnimate();
+        tree.startAnimate();
+        clear(i);
+        tree.endAnimate();
         await sd.pause();
         focus.startAnimate().focus(null).endAnimate();
     }
@@ -42,16 +50,16 @@ async function main() {
 
 function add(u) {
     tree.color(u, C.green);
-    const children = tree.childrenOnTree(u);
+    const children = tree.children(u);
     children.forEach(child => {
         add(child.nodeId);
-    })
+    });
 }
 
 function clear(u) {
     tree.color(u, C.white);
-    const children = tree.childrenOnTree(u);
+    const children = tree.children(u);
     children.forEach(child => {
         clear(child.nodeId);
-    })
+    });
 }

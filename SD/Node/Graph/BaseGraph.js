@@ -190,3 +190,27 @@ BaseGraph.prototype.forEachLink = function (callback) {
     this.links().forEach(link => callback(link, this.sourceId(link), this.targetId(link)));
     return this;
 };
+
+BaseGraph.prototype.forEachInNode = function (node, mode, callback) {
+    this.inNodes(node, mode).forEach(node => {
+        callback(node, this.nodeId(node));
+    });
+};
+
+BaseGraph.prototype.forEachInLink = function (node, mode, callback) {
+    this.inLinks(node, mode).forEach(link => {
+        callback(link, this.sourceId(link), this.targetId(link));
+    });
+};
+
+BaseGraph.prototype.forEachOutNode = function (node, mode, callback) {
+    this.outNodes(node, mode).forEach(node => {
+        callback(node, this.nodeId(node));
+    });
+};
+
+BaseGraph.prototype.forEachOutLink = function (node, mode, callback) {
+    this.outLinks(node, mode).forEach(link => {
+        callback(link, this.sourceId(link), this.targetId(link));
+    });
+};
