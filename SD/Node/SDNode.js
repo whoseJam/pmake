@@ -22,7 +22,7 @@ export function SDNode(parent, layer = undefined) {
     // this.is_not_ready = true;
     this.id = SDNodeID;
     this._ = {
-        ready: false,  // only when ready = true, the action can impact the node
+        ready: false, // only when ready = true, the action can impact the node
         layer: undefined,
         layers: {},
         parent: undefined,
@@ -49,11 +49,10 @@ export function SDNode(parent, layer = undefined) {
             // appear later, layer is undefined
             this._.layer = new SVGNode(this, undefined, layer);
         }
-
     }
 
     this.vars = reactive({
-        opacity: 1
+        opacity: 1,
     });
 
     this.vars.associate("opacity", (newOpacity, oldOpacity) => {
@@ -62,7 +61,8 @@ export function SDNode(parent, layer = undefined) {
         new Action(
             this.delay(),
             this.delay() + this.duration(),
-            oldOpacity, newOpacity,
+            oldOpacity,
+            newOpacity,
             function (t) {
                 const k = this.source + (this.target - this.source) * t;
                 layer.setAttribute("opacity", k);
@@ -70,9 +70,10 @@ export function SDNode(parent, layer = undefined) {
                     layer.setAttribute("pointer-events", k === 0 ? "none" : "auto");
                 }
             },
-            this, "opacity"
+            this,
+            "opacity"
         );
-    })
+    });
 
     this._.BASE_SDNODE = true;
 }
@@ -83,14 +84,14 @@ SDNode.forward = function (comp, func) {
         component[func].apply(component, arguments);
         return this;
     };
-}
+};
 
 SDNode.forwardWithReturn = function (comp, func) {
     return function () {
         const component = this._[comp];
         return component[func].apply(component, arguments);
     };
-}
+};
 
 SDNode.ordinaryGetterAndSetter = function (key, mode) {
     return function (value) {
@@ -101,7 +102,7 @@ SDNode.ordinaryGetterAndSetter = function (key, mode) {
         this.tryUpdate();
         return this;
     };
-}
+};
 
 SDNode.OrdinaryGSet = function (key, mode) {
     return function (value) {
@@ -111,44 +112,30 @@ SDNode.OrdinaryGSet = function (key, mode) {
         this.member[mode](key, value);
         this.tryUpdate();
         return this;
-    }
-}
+    };
+};
 
 SDNode.ordinaryUpdate = function (key, interp, target, attr) {
     const targetKey = target ? target : "nake";
     const interpKey = attr ? attr : key;
     return function () {
         if (this.member.hasChanged(key)) {
-            new Action(
-                this.delay(),
-                this.delay() + this.duration(),
-                this.member.oldValue(key),
-                this.member.get(key),
-                interp(this._[targetKey], interpKey),
-                this, key
-            );
+            new Action(this.delay(), this.delay() + this.duration(), this.member.oldValue(key), this.member.get(key), interp(this._[targetKey], interpKey), this, key);
             this.member.flush(key);
         }
-    }
-}
+    };
+};
 
 SDNode.OrdinaryUpdate = function (key, interp, target, attr) {
     const targetKey = target ? target : "nake";
     const interpKey = attr ? attr : key;
     return function () {
         if (this.member.hasChanged(key)) {
-            new Action(
-                this.delay(),
-                this.delay() + this.duration(),
-                this.member.oldValue(key),
-                this.member.get(key),
-                interp(this._[targetKey], interpKey),
-                this, key
-            );
+            new Action(this.delay(), this.delay() + this.duration(), this.member.oldValue(key), this.member.get(key), interp(this._[targetKey], interpKey), this, key);
             this.member.flush(key);
         }
-    }
-}
+    };
+};
 
 SDNode.InRange = function (mode) {
     if (mode === "circle") {
@@ -156,33 +143,32 @@ SDNode.InRange = function (mode) {
             const center = [this.cx(), this.cy()];
             const length = Vector.getIns().length(Vector.getIns().sub(vec, center));
             return length <= this.r();
-        }
+        };
     } else if (mode === "rect") {
         return function (vec) {
-            return (this.x() <= vec[0] && vec[0] <= this.mx() &&
-                this.y() <= vec[1] && vec[1] <= this.my());
-        }
+            return this.x() <= vec[0] && vec[0] <= this.mx() && this.y() <= vec[1] && vec[1] <= this.my();
+        };
     } else {
         throw new Error(`Unknown Mode ${mode}`);
     }
-}
+};
 
 SDNode.prototype.type = function (type) {
     if (type === undefined) return this._.layer.getAttribute("type");
     this._.layer.setAttribute("type", type);
     return this;
-}
+};
 
 SDNode.prototype.layer = function (name) {
     return name === undefined ? this._.layer : this._.layers[name];
-}
+};
 
 SDNode.prototype.newLayer = function (name) {
     const layer = new SVGNode(this, this._.layer, "g");
     this._.layers[name] = layer;
     layer.setAttribute("layer", name);
     return this;
-}
+};
 
 SDNode.prototype.attachTo = function (parent) {
     if (Check.isTypeOfSDNode(parent)) {
@@ -193,7 +179,7 @@ SDNode.prototype.attachTo = function (parent) {
         this._.layer.moveTo(parent);
     }
     return this;
-}
+};
 
 SDNode.prototype.childAs = function () {
     const args = [...arguments];
@@ -201,7 +187,7 @@ SDNode.prototype.childAs = function () {
     if (child._.parent !== this && !child.onEnter()) child.attachTo(this);
     this._.children.push(args[0], args[1], args[2]);
     return this;
-}
+};
 
 SDNode.prototype.child = SDNode.forwardWithReturn("children", "child");
 SDNode.prototype.hasChild = SDNode.forwardWithReturn("children", "has");
@@ -216,7 +202,9 @@ SDNode.prototype.duration = SDNode.forwardWithReturn("animate", "duration");
 
 SDNode.prototype.opacity = Factory.handlerMediumPrecise("opacity");
 SDNode.prototype.inRange = SDNode.InRange("rect");
-SDNode.prototype.remove = function () { this._.layer.remove(); }
+SDNode.prototype.remove = function () {
+    this._.layer.remove();
+};
 
 SDNode.prototype.scale = Location.scale;
 SDNode.prototype.pos = Location.position;
@@ -236,7 +224,7 @@ SDNode.prototype.clickable = function (type) {
     this._.layer.setAttribute("pointer-events", Check.isFalseType(type) ? "none" : "auto");
     this._.clickableCalled = true;
     return this;
-}
+};
 SDNode.prototype.onClick = SDNode.forward("interact", "onClick");
 SDNode.prototype.onDblClick = SDNode.forward("interact", "onDblClick");
 
@@ -246,24 +234,24 @@ SDNode.prototype.rule = function (rule) {
         rule(this._.parent, this);
     }, this.type() + "-rule");
     return this;
-}
+};
 
 SDNode.prototype.triggerRule = function () {
     // if (!this._.rule) return this;
     // this._.rule(this._.parent, this);
     // return this;
-}
+};
 
 SDNode.prototype.onEnter = function (enter) {
     if (enter === undefined) return this._.enter;
     this._.enter = enter;
     return this;
-}
+};
 
 SDNode.prototype.onEnterDefault = function (enter) {
     if (!this._.enter) this._.enter = enter;
     return this;
-}
+};
 
 SDNode.prototype.triggerEnter = function (move) {
     if (!this._.enter) return this;
@@ -274,31 +262,38 @@ SDNode.prototype.triggerEnter = function (move) {
     }
     this._.enter = undefined;
     return this;
-}
+};
 
 SDNode.prototype.onExit = function (exit) {
     if (exit === undefined) return this._.exit;
     this._.exit = exit;
     return this;
-}
+};
 
 SDNode.prototype.onExitDefault = function (exit) {
     if (!this._.exit) this._.exit = exit;
     return this;
-}
+};
 
 SDNode.prototype.triggerExit = function () {
     if (!this._.exit) return this;
     this._.exit.call(this._.parent, this);
     this._.exit = undefined;
     return this;
-}
+};
 
 SDNode.prototype.title = function (title) {
     const titleElment = new SVGNode(this, this._.layer, "title");
     titleElment.setAttribute("innerHTML", title);
     return this;
-}
+};
 
-SDNode.prototype.freeze = function() { return this;};
-SDNode.prototype.unfreeze = function() { return this;};
+SDNode.prototype.freeze = function () {
+    this.vars.freeze();
+    return this;
+};
+
+SDNode.prototype.unfreeze = function () {
+    this.vars.unfreeze();
+    return this;
+};

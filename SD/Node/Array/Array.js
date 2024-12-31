@@ -13,7 +13,7 @@ export function Array(parent) {
         x: 0,
         y: 0,
         elementWidth: 40,
-        elementHeight: 40
+        elementHeight: 40,
     });
 
     this._.updater = effect(() => {
@@ -27,8 +27,8 @@ export function Array(parent) {
 }
 
 Array.prototype = {
-    ...BaseArray.prototype
-}
+    ...BaseArray.prototype,
+};
 
 Array.prototype.elementWidth = Factory.handlerLowPrecise("elementWidth");
 Array.prototype.elementHeight = Factory.handlerLowPrecise("elementHeight");
@@ -37,7 +37,7 @@ Array.prototype.width = function (width) {
     const length = this.length() ? this.length() : 1;
     this.elementWidth(width / length);
     return this;
-}
+};
 Array.prototype.height = Array.prototype.elementHeight;
 
 Array.prototype.insert = function (id, value) {
@@ -46,7 +46,7 @@ Array.prototype.insert = function (id, value) {
     element.onEnter(EN.appear("elements"));
     this.insertByBaseArray(id, element);
     return this;
-}
+};
 
 Array.prototype.insertFromExistValue = function (id, value) {
     const element = new Box(this.layer("elements")).opacity(0);
@@ -54,11 +54,11 @@ Array.prototype.insertFromExistValue = function (id, value) {
     this.insertByBaseArray(id, element);
     element.value(value.onEnter(EN.moveTo()));
     return this;
-}
+};
 
 Array.prototype.insertFromExistElement = function (id, value) {
     const element = value;
     element.onEnter(EN.moveTo("elements"));
     this.insertByBaseArray(id, element);
     return this;
-}
+};

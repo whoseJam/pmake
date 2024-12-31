@@ -7,7 +7,7 @@ const arr = new sd.Array(svg).x(100).y(100);
 
 sd.init(() => {
     data.forEach(value => arr.push(value));
-})
+});
 
 sd.main(async () => {
     await sd.pause();
@@ -16,7 +16,7 @@ sd.main(async () => {
     for (let i = 0; i < data.length; i++) {
         group.push({
             element: arr.element(0),
-            value: arr.intValue(0)
+            value: arr.intValue(0),
         });
         arr.dropElement(0);
     }
@@ -32,16 +32,18 @@ sd.main(async () => {
     const focus = sd.Focus(arr);
     for (let l = 0, r; l < data.length; l = r + 1) {
         r = l;
-        while (r + 1 < data.length && arr.intValue(r + 1) === arr.intValue(l))
-            r++;
+        while (r + 1 < data.length && arr.intValue(r + 1) === arr.intValue(l)) r++;
         await sd.pause();
         focus.startAnimate().focus(l, r).endAnimate();
         if (l - 1 >= 0) {
             await sd.pause();
-            focusFront.startAnimate().focus(0, l - 1).endAnimate();
+            focusFront
+                .startAnimate()
+                .focus(0, l - 1)
+                .endAnimate();
         }
         await sd.pause();
         focus.startAnimate().focus(null).endAnimate();
         focusFront.startAnimate().focus(null).endAnimate();
     }
-})
+});

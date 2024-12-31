@@ -25,6 +25,7 @@ class EffectQueue {
             effect[other.label] = true;
             other.pushFront(effect);
         }
+        this.queue = [];
     }
 
     execute() {
@@ -165,6 +166,7 @@ function flushDirty(effect) {
 }
 
 function triggerGlobalEffectQueue() {
+    if (!globalAllowDAGUpdate) return;
     globalAllowDAGUpdate = false;
     globalEffectQueue.execute();
     globalAllowDAGUpdate = true;
@@ -179,7 +181,12 @@ export function unfreeze() {
     if (globalFreeze === 0) triggerGlobalEffectQueue();
 }
 
-export function reactive(object) {
+function shouldTriggerUpdate(object, key) {
+    if (Array.isArray(object)) return key === "length";
+    return true;
+}
+
+export function reactive(object, father = undefined) {
     if (objectsMap.has(object)) {
         return objectsMap.get(object).proxy;
     }
@@ -191,7 +198,7 @@ export function reactive(object) {
             const value = Reflect.get(object, key, receiver);
             if (Check.isTypeOfSDNode(value)) return value;
             if (typeof value === "object") {
-                return reactive(value);
+                return reactive(value, object);
             }
             return value;
         },
@@ -209,7 +216,7 @@ export function reactive(object) {
                 }
             }
             Reflect.set(object, key, value, receiver);
-            triggerDAGUpdate(object, key, freeze + globalFreeze);
+            if (shouldTriggerUpdate(object, key)) triggerDAGUpdate(object, key, object.freezing() + globalFreeze);
             return true;
         },
     });
@@ -228,6 +235,10 @@ export function reactive(object) {
     object.freeze = function () {
         freeze++;
     };
+    object.freezing = function () {
+        if (father) return father.freezing() + freeze;
+        return freeze;
+    };
     object.unfreeze = function () {
         freeze--;
         if (freeze === 0) triggerGlobalEffectQueue();
@@ -237,6 +248,9 @@ export function reactive(object) {
 
 export function effect(innerEffect, tag) {
     const effectFn = () => {
+        if (globalActiveEffect) {
+            throw new Error("Fuck");
+        }
         globalActiveEffect = effectFn;
         const effectManager = effectsMap.get(effectFn);
         const out = effectManager.out;
@@ -247,12 +261,10 @@ export function effect(innerEffect, tag) {
     };
     effectsMap.set(effectFn, new EffectManager(effectFn));
     globalAllowDAGUpdate = false;
-    currentEffectQueue = localEffectQueue;
     localEffectQueue.pushBack(effectFn);
     effectFn.tag = tag ? tag : innerEffect;
     localEffectQueue.execute();
     globalAllowDAGUpdate = true;
-    currentEffectQueue = undefined;
     return effectFn;
 }
 
@@ -298,11 +310,11 @@ function triggerDAGUpdate(object, key, freeze) {
         const outEffectsSet = objectManager.outputEffects(key);
         outEffectsSet.forEach(effect => {
             if (freeze === 0) {
-                if (effect.inLocalQueue) return;
-                effect.inLocalQueue = true;
+                if (effect[localEffectQueue.label]) return;
+                effect[localEffectQueue.label] = true;
             } else {
-                if (effect.inLocalQueue || effect.inGlobalQueue) return;
-                effect.inLocalQueue = true;
+                if (effect[localEffectQueue.label] || effect[globalEffectQueue.label]) return;
+                effect[localEffectQueue.label] = true;
             }
             localEffectQueue.pushBack(effect);
             const effectManager = effectsMap.get(effect);
