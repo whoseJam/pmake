@@ -2,10 +2,10 @@
     <section>
         <h1>过河卒</h1>
     </section>
-    <problem data-src="http://43.143.204.105/problem/955"></problem>
+    <problem data-problemset="luogu" data-problemid="P1002"></problem>
     <section>
         <h2>过河卒</h2>
-        <picture data-source="./image/过河卒.png"></picture>
+        <picture data-source="./过河卒.png"></picture>
         <p>给定一张象棋图（上面某位置放了一匹<b>不会移动的</b>敌对马），现在一个<b>过河卒</b>想要从 $(1,1)$ 走到 $(n,m)$ 点，要求：</p>
         <ul>
             <li class="fragment">只能向下或者向右行走</li>
@@ -15,18 +15,20 @@
     </section>
     <section>
         <h2>过河卒</h2>
-        <iframe data-animation="./animation/过河卒.html"
+        <p>容易发现又是一个客体在二维空间中移动，不过新增了少许移动规则</p>
+        <iframe data-animation="./过河卒.js"
             style="width: 1000px; height: 300px;"></iframe>
         <p class="fragment">
             设 $f(i,j)$ 表示从起点走到 $(i,j)$ 的方案数
         </p>
         <p class="fragment">
-            若 $(i,j)$ 不是马能攻击到的点，则：
             $$
-            f(i,j)=f(i-1,j)+f(i,j-1)
+            f(i,j)=\begin{cases}
+            f(i,j)=f(i-1,j)+f(i,j-1) & (i,j) 不能被马攻击到 \\
+            0 & (i,j) 能被马攻击到
+            \end{cases}
             $$
         </p>
-        <p class="fragment">否则，$f(i,j)=0$</p>
     </section>
     <section>
         <h2>过河卒</h2>

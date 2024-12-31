@@ -12,14 +12,14 @@ export function BaseGrid(parent) {
         y: 0,
         startN: 0,
         startM: 0,
-        elements: []
+        elements: [],
     });
 
     this._.BASE_GRID = true;
 }
 
 BaseGrid.prototype = {
-    ...SDNode.prototype
+    ...SDNode.prototype,
 };
 
 BaseGrid.prototype.startN = Factory.handler("startN");
@@ -27,41 +27,53 @@ BaseGrid.prototype.startM = Factory.handler("startM");
 
 BaseGrid.prototype.endN = function () {
     return this.startN() + this.n() - 1;
-}
+};
 
 BaseGrid.prototype.endM = function (idx) {
     if (idx === undefined) return this.startM() + this.m() - 1;
     const elements = this.vars.elements;
     return this.startM() + elements[this.idxN(idx)].length - 1;
-}
+};
 
 BaseGrid.prototype.idxN = function (idx) {
     return idx - this.startN();
-}
+};
 
 BaseGrid.prototype.idxM = function (idx) {
     return idx - this.startM();
-}
+};
 
 BaseGrid.prototype.n = function (n) {
     let on = this.vars.n;
     if (n === undefined) return on;
-    while (on < n) { this.pushRow(); on++; }
-    while (on > n) { this.popRow(); on--; }
+    while (on < n) {
+        this.pushRow();
+        on++;
+    }
+    while (on > n) {
+        this.popRow();
+        on--;
+    }
     return this;
-}
+};
 
 BaseGrid.prototype.m = function (m) {
     let om = this.vars.m;
     if (m === undefined) return om;
-    while (om < m) { this.pushCol(); om++; }
-    while (om > m) { this.popCol(); om--; }
+    while (om < m) {
+        this.pushCol();
+        om++;
+    }
+    while (om > m) {
+        this.popCol();
+        om--;
+    }
     return this;
-}
+};
 
 BaseGrid.prototype.getM = function (idx) {
     return this.endM() - this.startM() + 1;
-}
+};
 
 BaseGrid.prototype.insertByBaseGrid = function (i, j, element) {
     const ri = this.idxN(i);
@@ -75,7 +87,7 @@ BaseGrid.prototype.insertByBaseGrid = function (i, j, element) {
         this.vars.m = Math.max(elements[ri].length, this.vars.m);
     });
     return this;
-}
+};
 
 BaseGrid.prototype.eraseByBaseGrid = function (i, j) {
     const element = this.element(i, j);
@@ -89,34 +101,35 @@ BaseGrid.prototype.eraseByBaseGrid = function (i, j) {
     this.vars.n = elements.length;
     this.vars.m = m;
     return this;
-}
+};
 
 BaseGrid.prototype.pushCol = function (rows) {
     let l = this.startN();
-    let r = (rows === undefined) ? this.endN() : l + rows - 1;
+    let r = rows === undefined ? this.endN() : l + rows - 1;
     for (let i = l; i <= r; i++) {
         this.insert(i, this.endM(i) + 1, null);
     }
-    if (l > r) { this.vars.m++; }
+    if (l > r) {
+        this.vars.m++;
+    }
     return this;
-}
+};
 
 BaseGrid.prototype.pushRow = function (cols) {
     let n = this.endN() + 1;
     let l = this.startM();
-    let r = (cols === undefined) ? this.endM() : l + cols - 1;
-    for (let j = l; j <= r; j++)
-        this.insert(n, j, null);
+    let r = cols === undefined ? this.endM() : l + cols - 1;
+    for (let j = l; j <= r; j++) this.insert(n, j, null);
     if (l > r) {
         this.vars.n++;
         this.vars.elements.push([]);
     }
     return this;
-}
+};
 
 BaseGrid.prototype.element = function (i, j) {
     return this.vars.elements[this.idxN(i)][this.idxM(j)];
-}
+};
 
 BaseGrid.prototype.value = function (arg0, arg1, arg2) {
     if (arguments.length === 2) {
@@ -136,14 +149,14 @@ BaseGrid.prototype.value = function (arg0, arg1, arg2) {
     }
     console.log(arguments);
     throw new Error("Invalid Arguments");
-}
+};
 
 BaseGrid.prototype.intValue = function (i, j) {
     const value = this.value(i, j);
     if (!value) return 0;
     if (!value.text) ErrorLauncher.invalidInvoke("intValue");
     return +value.text();
-}
+};
 
 BaseGrid.prototype.opacity = function (arg0, arg1, arg2) {
     if (arguments.length === 0) {
@@ -170,15 +183,15 @@ BaseGrid.prototype.opacity = function (arg0, arg1, arg2) {
     }
     console.log(arguments);
     throw new Error("Invalid Arguments");
-}
+};
 
 BaseGrid.prototype.color = function (arg0, arg1, arg2) {
     if (arguments.length === 1) {
-        const elements = this.member.get("elements");
+        const elements = this.vars.elements;
         elements.forEach(row => {
             row.forEach(col => {
                 col.color(arg0);
-            })
+            });
         });
         return this;
     }
@@ -199,8 +212,7 @@ BaseGrid.prototype.color = function (arg0, arg1, arg2) {
     }
     console.log(arguments);
     throw new Error("无效的参数");
-}
-
+};
 
 BaseGrid.prototype.forEachElement = function (callback) {
     const elements = this.vars.elements;
@@ -210,4 +222,4 @@ BaseGrid.prototype.forEachElement = function (callback) {
         });
     });
     return this;
-}
+};

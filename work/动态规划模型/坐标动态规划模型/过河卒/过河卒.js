@@ -1,15 +1,13 @@
 import * as sd from "@/sd";
 
-let svg = sd.svg();
-let C = sd.color();
-let d = makeDp();
+const svg = sd.svg();
+const C = sd.color();
+const d = makeDp();
 
-main();
-
-async function main() {
+sd.main(async () => {
     await sd.pause();
     await d.dp();
-}
+})
 
 function makeDp() {
     let self = {};
@@ -42,7 +40,7 @@ function makeDp() {
                 if (j-1 >= 1 && mp.value(i, j-1).text) ans += +mp.value(i, j-1).text(), mp.color(i, j-1, C.blue);
                 mp.endAnimate();
                 await sd.pause();
-                mp.value(i, j, ans);
+                mp.startAnimate().value(i, j, ans).endAnimate();
                 await sd.pause();
                 mp.startAnimate().color(C.white).endAnimate();
             }
