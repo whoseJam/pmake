@@ -3,6 +3,7 @@ import { Interp } from "@/Animate/Interp";
 import { BaseNake } from "@/Node/Nake/BaseNake";
 import { Enter as EN } from "@/Node/SDNode/Enter";
 import { Exit as EX } from "@/Node/SDNode/Exit";
+import { Rule as R } from "@/Rule/Rule";
 import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
 import { Color as C } from "@/Utility/Color";
@@ -207,5 +208,5 @@ BaseLine.prototype.value = function (value, rule) {
 };
 
 function getValueRule(vars, rule) {
-    return rule ? rule : PointAtPathByRate(0.5, "cx", "cy");
+    return rule ? rule : R.pointAtPathByRate(0.5, "cx", "cy");
 }
