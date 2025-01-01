@@ -23,8 +23,6 @@ export function Link(sourceElement, targetElement, linkType = Line, sourceXLocat
         if (link.vars.update) link.vars.update = false;
         const element1 = link.vars.element1;
         const element2 = link.vars.element2;
-        console.log(element1[link.vars.xlocation1](), element1[link.vars.ylocation1]())
-        console.log(element2[link.vars.xlocation2](), element2[link.vars.ylocation2]())
         link.source(element1[link.vars.xlocation1](), element1[link.vars.ylocation1]());
         link.target(element2[link.vars.xlocation2](), element2[link.vars.ylocation2]());
     });
