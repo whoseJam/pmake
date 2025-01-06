@@ -92,16 +92,16 @@ ActionList.prototype.filter = function (condition) {
     this.actionTail = prevAction;
 };
 
-ActionList.prototype.tick = function (t) {
+ActionList.prototype.tick = function (t, dt) {
     this.t = t;
     for (let action = this.actionHead; action; action = action.next) {
         if (action.is(Action.HIDE_FLAG | Action.STOP_FLAG)) continue;
-        if (!action.ownerIsReady()) {
-            action.t = t;
+        if (action.ownerIsCreated() && !action.ownerIsReady()) {
+            action.skipping += dt;
             continue;
         }
         if (!action.t) action.t = t;
-        const duration = this.t - action.t;
+        const duration = this.t - action.t + action.skipping;
         action.tick(duration);
     }
 };

@@ -1,4 +1,3 @@
-
 interface Attributable {
     setAttribute: (key: string, value: any) => void;
 }

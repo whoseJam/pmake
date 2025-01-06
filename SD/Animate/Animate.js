@@ -1,5 +1,5 @@
 import { ActionList } from "@/Animate/ActionList";
-
+import { Status } from "@/Interact/Status";
 import { Status } from "@/Interact/Status";
 
 export class Animate {
@@ -9,10 +9,11 @@ export class Animate {
     static currentActionList = new ActionList();
 
     static tick(t) {
+        const dt = t - this.currentTimestamp;
         this.currentTimestamp = t;
         const currentActionList = this.currentActionList;
         if (window.SHOULD_FLUSH) return;
-        currentActionList.tick(t);
+        currentActionList.tick(t, dt);
         requestAnimationFrame(Animate.tick.bind(Animate));
     }
 
@@ -43,8 +44,7 @@ export class Animate {
 
     static rollbackFrame() {
         const nextFrame = window.CURRENT_FRAME;
-        if (nextFrame === window.MAXIMUM_FRAME)
-            this.historyActionList[nextFrame] = this.currentActionList;
+        if (nextFrame === window.MAXIMUM_FRAME) this.historyActionList[nextFrame] = this.currentActionList;
         if (nextFrame < 0) return; // no frame to rollback
         window.CURRENT_FRAME--;
         if (!this.historyActionList[nextFrame]) {

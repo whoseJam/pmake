@@ -1,10 +1,10 @@
-
 export class Action {
     static STOP_FLAG = 1 << 0;
     static HIDE_FLAG = 1 << 1;
     static FIRST_CALL_FLAG = 1 << 2;
 
-    constructor(l: number, r: number, source: any, target: any, callback: (t: number) => void, owner: any, channel: string, flag: boolean);
+    constructor(other: Action);
+    constructor(l: number, r: number, source: any, target: any, callback: (t: number) => void, owner: any, channel: string);
 
     is(flag: number): void;
     set(flag: number): void;

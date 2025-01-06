@@ -1,17 +1,16 @@
 import { Animate } from "@/Animate/Animate";
-import { SDNode } from "@/Node/SDNode";
-import { SVGNode } from "@/Renderer/SVG/SVGNode";
 import { Check } from "@/Utility/Check";
 
 function easeInOut(t) {
     return 0.5 * (1 - Math.cos(Math.PI * t));
 }
 
-Action.STOP_FLAG       = 1 << 0;
-Action.HIDE_FLAG       = 1 << 1;
+Action.STOP_FLAG = 1 << 0;
+Action.HIDE_FLAG = 1 << 1;
 Action.FIRST_CALL_FLAG = 1 << 2;
 
 export function Action(l, r, source, target, callback, owner = window, channel = "default") {
+    this.skipping = 0;
     if (arguments.length === 1) {
         const other = arguments[0];
         this.l = other.l;
@@ -39,11 +38,11 @@ export function Action(l, r, source, target, callback, owner = window, channel =
     }
 }
 
-Action.prototype.tick = function(t) {
+Action.prototype.tick = function (t) {
     if (t < this.l) return;
     if (this.l < this.r - 1) {
         const k0 = easeInOut((t - this.l) / (this.r - this.l));
-        const k1 = this.is(Action.FIRST_CALL_FLAG) ? 0 : (t > this.r) ? 1 : k0;
+        const k1 = this.is(Action.FIRST_CALL_FLAG) ? 0 : t > this.r ? 1 : k0;
         this.callback(k1);
         if (k1 === 1) this.set(Action.STOP_FLAG);
         this.unset(Action.FIRST_CALL_FLAG);
@@ -54,18 +53,18 @@ Action.prototype.tick = function(t) {
         this.unset(Action.FIRST_CALL_FLAG);
         if (k1 === 0) this.tick(t);
     }
-}
+};
 
-Action.prototype.forceToFinish = function() {
+Action.prototype.forceToFinish = function () {
     this.tick(this.r + 5);
     if (!this.is(Action.STOP_FLAG)) this.tick(this.r + 5);
-}
+};
 
-Action.prototype.toString = function() {
+Action.prototype.toString = function () {
     return `[${this.l}, ${this.r}] channel=${this.channel} source=${this.source} target=${this.target} id=${this.owner.id} frame=${this.frame}`;
-}
+};
 
-Action.prototype.ownerIsReady = function() {
+Action.prototype.ownerIsReady = function () {
     if (this.channel === "appear") return true;
     if (this.channel === "moveTo") return true;
     if (this.channel === "remove") return true;
@@ -76,25 +75,31 @@ Action.prototype.ownerIsReady = function() {
             this.readyCount = 0;
             return false;
         } else {
-            if (this.owner._.ready) return (++this.readyCount) >= 3;
+            if (this.owner._.ready) return ++this.readyCount >= 3;
             return false;
         }
-    }
-    else return true;
-}
+    } else return true;
+};
 
-Action.prototype.is = function(flag) {
+Action.prototype.ownerIsCreated = function () {
+    if (this.channel === "appear") return true;
+    if (this.channel === "moveTo") return true;
+    if (this.channel === "remove") return true;
+    return this.owner._.created;
+};
+
+Action.prototype.is = function (flag) {
     return (this.flag & flag) != 0;
-}
+};
 
-Action.prototype.set = function(flag) {
+Action.prototype.set = function (flag) {
     this.flag |= flag;
-}
+};
 
-Action.prototype.unset = function(flag) {
+Action.prototype.unset = function (flag) {
     this.flag &= ~flag;
-}
+};
 
-Action.prototype.clone = function() {
+Action.prototype.clone = function () {
     return new Action(this);
-}
+};

@@ -11,11 +11,13 @@ function AppearOrRemove(element, owner) {
         if (t !== 1) return;
         if (this.target) {
             this.target.append(element);
+            owner._.created = true;
             requestAnimationFrame(() => {
                 owner._.ready = true;
             });
         } else {
             element.remove();
+            owner._.created = false;
             requestAnimationFrame(() => {
                 owner._.ready = false;
             });

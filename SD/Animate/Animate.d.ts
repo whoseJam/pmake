@@ -1,4 +1,4 @@
-import { Action } from "./Action";
+import { Action } from "@/Animate/Action";
 
 export class Animate {
     static tick(t: number);

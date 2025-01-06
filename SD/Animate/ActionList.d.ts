@@ -13,12 +13,12 @@ export class ActionList {
     flushHidden(): void;
     filter(condition: (action: Action) => boolean): void;
 
-    tick(t: number): void;
+    tick(t: number, dt: number): void;
     restart(t: number): void;
 
     forceToFinish(): void;
     finished(): boolean;
-    
+
     rollback(): ActionList;
     replay(): ActionList;
 }
