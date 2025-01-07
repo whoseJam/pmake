@@ -1,6 +1,5 @@
 import { ActionList } from "@/Animate/ActionList";
 import { Status } from "@/Interact/Status";
-import { Status } from "@/Interact/Status";
 
 export class Animate {
     static lastTickFlag = false;

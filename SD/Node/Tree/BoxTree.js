@@ -12,27 +12,27 @@ export function BoxTree(parent) {
 
     this.vars.merge({
         elementWidth: 60,
-        elementHeight: 40
+        elementHeight: 40,
     });
 
     uneffect(this._.updater);
     this._.updater = effect(() => {
         const w = this.elementWidth();
         const h = this.elementHeight();
-        D3Layout.apply(this, [
+        D3Layout.call(
+            this,
             "vertical",
-            node => node.x + this.x(),
-            node => node.y + this.y(),
+            node => [node.x + this.x(), node.y + this.y()],
             (node, limit) => {
                 node.width(Math.min(w, limit / 1.5));
                 node.height(Math.min(h, limit / 1.5));
             }
-        ]);
+        );
     });
 }
 
 BoxTree.prototype = {
-    ...Tree.prototype
+    ...Tree.prototype,
 };
 
 BoxTree.prototype.elementWidth = Factory.handlerLowPrecise("elementWidth");
