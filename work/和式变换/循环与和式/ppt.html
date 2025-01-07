@@ -30,117 +30,176 @@
     </section>
     <section>
         <h2>$\sum$ 与循环</h2>
-        <div style="display: flex;">
-            <codeblock>
-                <script type="text/template">
-                    int Solve() {
-                        for (int i = 1; i <= n; i++) ans += i * i;
-                        return ans;
-                    }
-                </script>
-            </codeblock>
-            <p class="fragment">
-                $$
-                \sum_{i=1}^n i^2
-                $$
-            </p>
+        <div style="display: flex; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; justify-content: space-around; flex-grow: 1;">
+                <codeblock style="width: 70%;">
+                    <script type="text/template">
+                        int Solve() {
+                            for (int i = 1; i <= n; i++) ans += i * i;
+                            return ans;
+                        }
+                    </script>
+                </codeblock>
+                <p class="fragment" style="flex-grow: 1;">
+                    $$
+                    \sum_{i=1}^n i^2
+                    $$
+                </p>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-around; flex-grow: 1;">
+                <codeblock class="fragment" style="width: 70%;">
+                    <script type="text/template">
+                        int Solve() {
+                            for (int i = n; i <= 2 * n; i++) ans += (i - n + 1);
+                            return ans;
+                        }
+                    </script>
+                </codeblock>
+                <p class="fragment" style="flex-grow: 1;">
+                    $$
+                    \sum_{i=n}^{2n} (i-n+1)
+                    $$
+                </p>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-around; flex-grow: 1;">
+                <codeblock class="fragment" style="width: 70%;">
+                    <script type="text/template">
+                        int Solve() {
+                            for (int i = 2; i <= n; i += 2) ans += i;
+                            return ans;
+                        }
+                    </script>
+                </codeblock>
+                <p class="fragment" style="flex-grow: 1;">
+                    $$
+                    \sum_{1\le i\le n\\ i为偶数}^n i
+                    $$
+                </p>
+            </div>
         </div>
     </section>
     <section>
-        <h2>和式</h2>
+        <h2>$\sum$ 与循环</h2>
+        <div style="display: flex; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; justify-content: space-around; flex-grow: 1;">
+                <codeblock style="width: 70%;">
+                    <script type="text/template">
+                        int Solve() {
+                            for (int i = 1; i <= n; i++)
+                                if (isPrime(i)) ans += i * i;
+                            return ans;
+                        }
+                    </script>
+                </codeblock>
+                <p class="fragment" style="flex-grow: 1;">
+                    $$
+                    \sum_{1\le i\le n}^n i^2[i是质数]
+                    $$
+                </p>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-around; flex-grow: 1;">
+                <codeblock class="fragment" style="width: 70%;">
+                    <script type="text/template">
+                        int Solve() {
+                            for (int i = 1; i <= n; i++)
+                                if (n % i == 0) ans += i;
+                            return ans;
+                        }
+                    </script>
+                </codeblock>
+                <p class="fragment" style="flex-grow: 1;">
+                    $$
+                    \sum_{1\le i\le n}^n i[i|n]=\sum_{i|n}i
+                    $$
+                </p>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-around; flex-grow: 1;">
+                <codeblock class="fragment" style="width: 70%;">
+                    <script type="text/template">
+                        int Solve() {
+                            for (int i = 1; i <= n; i++) ans += G(i);
+                            return ans;
+                        }
+                    </script>
+                </codeblock>
+                <p class="fragment" style="flex-grow: 1;">
+                    $$
+                    \sum_{i=1}^n G(i)
+                    $$
+                </p>
+            </div>
+        </div>
+    </section>
+    <section>
+        <h2>求和的基本形式</h2>
+        <p>正式地，我们引出求和的基本形式</p>
         <p>
             $$
-            \sum_{i=1}^n F(i)
+            \sum_{k\in K}F(k)
             $$
         </p>
-        <codeblock class="fragment">
-            <script type="text/template">
-                int Solve() {
-                    int ans = 0;
-                    for (int i = 1; i <= n; i++)
-                        ans += F(i);
-                    return ans;
-                }
-            </script>
-        </codeblock>
+        <ul>
+            <li class="fragment">$K$ 是一个<b style="color: red;">可枚举</b>的集合</li>
+            <li class="fragment">$k$ 是集合中的一个元素<span class="fragment">，或者站在程序员的角度，可以把 $k$ 看作一个<b style="color: red;">循环变量</b></span></li>
+            <li class="fragment">$F(k)$ 是任意一个关于 $k$ 的函数</li>
+        </ul>
+        <p class="fragment">这里的求和可以很具体...</p>
+        <p class="fragment quote">欲计算 $1$ 到 $n$ 中的数字的立方和，则答案可被表示为 $answer=\sum_{1\le i\le n}^ni^3$</p>
+        <p class="fragment">也可以很抽象...</p>
+        <p class="fragment quote">欲统计一个商场里面盛放的项链的总价值，则答案可以被表示为 $answer=\sum_{项链L\in 商场}value(L)$</p>
+        <p class="fragment quote">如何统计一个商场里面盛放的项链的总数量呢？</p>
     </section>
     <section>
         <h2>和式</h2>
         <p>循环可以嵌套，那么和式也可以嵌套</p>
-        <codeblock class="fragment">
-            <script type="text/template">
-                int Solve() {
-                    int ans = 1;
-                    for (int i = 1; i <= n; i++) {
-                        for (int j = 1; j <= m; j++) {
-                            ans += a[i][j];
+        <div style="display: flex; flex-wrap: wrap;">
+            <div style="display: flex; align-items: center; justify-content: space-around; flex-grow: 1;">
+                <codeblock style="width: 70%;">
+                    <script type="text/template">
+                        int Solve() {
+                            for (int i = 1; i <= n; i++)
+                                for (int j = 1; j <= m; j++) ans += a[i][j];
+                            return ans;
                         }
-                    }
-                    return ans;
-                }
-            </script>
-        </codeblock>
-        <p class="fragment">
-            $$
-            \sum_{i=1}^n\sum_{j=1}^m a_{i,j}
-            $$
-        </p>
-    </section>
-    <section>
-        <h2>和式</h2>
-        <p>
-            $$
-            \sum_{i=1}^n\sum_{j=1}^m(i+j)^2
-            $$
-        </p>
-        <codeblock class="fragment">
-            <script type="text/template">
-                int Solve() {
-                    int ans = 1;
-                    for (int i = 1; i <= n; i++) {
-                        for (int j = 1; j <= m; j++) {
-                            ans += (i + j) * (i + j);
+                    </script>
+                </codeblock>
+                <p class="fragment" style="flex-grow: 1;">
+                    $$
+                    \sum_{i=1}^n\sum_{j=1}^m a_{i,j}
+                    $$
+                </p>
+            </div>
+            <div style="display: flex; align-items: center; justify-content: space-around; flex-grow: 1;">
+                <codeblock style="width: 70%;">
+                    <script type="text/template">
+                        int Solve() {
+                            for (int i = 1; i <= n; i++)
+                                for (int j = 1; j <= m; j++)
+                                    ans += (i + j) * (i + j);
+                            return ans;
                         }
-                    }
-                    return ans;
-                }
-            </script>
-        </codeblock>
+                    </script>
+                </codeblock>
+                <p class="fragment" style="flex-grow: 1;">
+                    $$
+                    \sum_{i=1}^n\sum_{j=1}^m(i+j)^2
+                    $$
+                </p>
+            </div>
+        </div>
     </section>
     <section>
-        <h2>和式</h2>
-        <codeblock>
-            <script type="text/template">
-                int Solve() {
-                    int ans = 1;
-                    for (int i = 1; i <= n; i++) {
-                        if (isPrime(i)) ans += i;
-                    }
-                    return ans;
-                }
-            </script>
-        </codeblock>
-        <p class="fragment">
-            $$
-            \sum_{1\le i\le n, i是质数}i
-            $$
-        </p>
-        <p class="fragment">
-            $$
-            \sum_{1\le i\le n}i[isPrime(i)]
-            $$
-        </p>
+        <h2>为什么我们需要 $\sum$</h2>
+        <p>我们现在已经有能力把循环写成和式了，那么为什么我们需要 $\sum$ 呢？为什么我不直接写代码计算答案呢？</p>
     </section>
     <section>
-        <h2>循环与和式</h2>
-        <picture data-source="./循环.png"></picture>
+        <h2>分离逻辑和代码</h2>
+        <iframe data-animation="./分离逻辑代码.js"
+            style="width: 1000px; height: 400px;"></iframe>
+        <p>同一份<b style="color: red;">逻辑</b>可以有不同的<b style="color: red;">实现</b></p>
     </section>
     <section>
-        <h2>循环与和式</h2>
-        <picture data-source="./分离逻辑和代码.png"></picture>
-    </section>
-    <section>
-        <h2>循环与和式</h2>
+        <h2>利用数学工具</h2>
         <p>我们可以利用已有的数学结论，对逻辑进行化简</p>
         <p class="fragment">
             $$

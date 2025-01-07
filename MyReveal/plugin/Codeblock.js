@@ -13,13 +13,15 @@ function Init(reveal) {
     const script = element.querySelector("script");
     let lang = element.getAttribute("lang");
     if (!lang) lang = "cpp";
-    
+
+    // const div = document.createElement("div");
     const pre = document.createElement("pre");
     const code = document.createElement("code");
     pre.className = element.className;
     code.setAttribute("data-trim", "");
     code.setAttribute("data-line-numbers", "");
     code.setAttribute("class", lang);
+    // div.append(pre);
     pre.append(code);
     code.append(script);
 
