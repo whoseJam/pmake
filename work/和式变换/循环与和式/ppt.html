@@ -4,27 +4,47 @@
         <p>$\sum$</p>
     </section>
     <section>
-        <h2>和式</h2>
-        <p>
-            $$
-            \sum_{i=1}^n i
-            $$
-        </p>
-        <codeblock class="fragment">
+        <h2>$1$ 到 $n$ 的和</h2>
+        <p>在编程语言中，求和是简单的</p>
+        <codeblock>
             <script type="text/template">
                 int Solve() {
-                    for (int i = 1; i <= n; i++) {
-                        ans += i;
-                    }
+                    for (int i = 1; i <= n; i++) ans += i;
                     return ans;
                 }
             </script>
         </codeblock>
+        <p class="fragment">在数学上，有一个与之等效的替代...</p>
+        <div class="fragment quote">
+            Wait a minute，想想一下我们应该如何设计一种<b style="color: red;">书写简单</b>，<b style="color: purple;">效果和循环等价</b>的符号呢？
+            <ul>
+                <li class="fragment">首先，这种符号得有能力描述循环的<b>上下限</b></li>
+                <li class="fragment">其次，这种符号得有能力描述循环的<b>内容</b></li>
+        </div>
         <p class="fragment">
             $$
-            \sum_{1\le i\le n} i
+            \sum_{i=1}^n i
             $$
         </p>
+        <p class="fragment">看上去没问题，我们来检验一下 $\sum$ 是否和循环的表达能力一样强</p>
+    </section>
+    <section>
+        <h2>$\sum$ 与循环</h2>
+        <div style="display: flex;">
+            <codeblock>
+                <script type="text/template">
+                    int Solve() {
+                        for (int i = 1; i <= n; i++) ans += i * i;
+                        return ans;
+                    }
+                </script>
+            </codeblock>
+            <p class="fragment">
+                $$
+                \sum_{i=1}^n i^2
+                $$
+            </p>
+        </div>
     </section>
     <section>
         <h2>和式</h2>
