@@ -85,7 +85,8 @@ Action.prototype.ownerIsCreated = function () {
     if (this.channel === "appear") return true;
     if (this.channel === "moveTo") return true;
     if (this.channel === "remove") return true;
-    return this.owner._.created;
+    if (Check.isTypeOfSDNode(this.owner)) return this.owner._.created;
+    return true;
 };
 
 Action.prototype.is = function (flag) {
