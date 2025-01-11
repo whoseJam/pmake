@@ -9,14 +9,10 @@ export class Action {
     is(flag: number): void;
     set(flag: number): void;
     unset(flag: number): void;
-
     tick(t: number): void;
-
     forceToFinish(): void;
-
     toString(): string;
-
     ownerIsReady(): boolean;
-
+    ownerIsCreated(): boolean;
     clone(): Action;
 }

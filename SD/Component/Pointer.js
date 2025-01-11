@@ -20,7 +20,7 @@ function PointerRule(parent, pointer) {
     if (!element) return;
     const direction = pointer.direction();
     const gap = pointer.gap();
-    const pointers = pointerMap[element.id].filter(p => (p.direction() === direction && (p.opacity() !== 0 || p === pointer)));
+    const pointers = pointerMap[element.id].filter(p => p.direction() === direction && (p.opacity() !== 0 || p === pointer));
     pointers.sort((a, b) => a.id - b.id);
     for (let i = 0; i < pointers.length; i++) {
         const k = (i + 1) / (pointers.length + 1);
@@ -48,7 +48,7 @@ export function Pointer(parent, label, direction = "b", gap = 10, length = 50) {
         element: undefined,
         priority: 1,
         direction: direction,
-        gap: gap
+        gap: gap,
     });
 
     pointer.direction = Factory.handler("direction");
@@ -77,6 +77,11 @@ export function Pointer(parent, label, direction = "b", gap = 10, length = 50) {
             }
             this.vars.unfreeze();
         };
+        if (Check.isFalseType(arg0)) {
+            this.vars.element = undefined;
+            this.opacity(0);
+            return this;
+        }
         if (this.opacity() === 0) {
             const context = new Context(this);
             this.startAnimate(context.tillc(0, 0));
