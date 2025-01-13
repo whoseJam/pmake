@@ -35,7 +35,9 @@ export async function LCA(tree, x, y, args) {
         if (onCheckJump) await onCheckJump(x, kth);
         if (tree.depth(kth) >= tree.depth(y)) {
             if (onJump) await onJump(x, kth);
+            x = kth;
         }
+        if (tree.depth(x) === tree.depth(y)) break;
     }
     if (x === y) {
         return x;
@@ -48,6 +50,12 @@ export async function LCA(tree, x, y, args) {
         if (onCheckJumpTogether) await onCheckJumpTogether(x, kx, y, ky);
         if (kx !== ky) {
             if (onJumpTogether) await onJumpTogether(x, kx, y, ky);
+            x = kx;
+            y = ky;
         }
     }
+    if (onJumpTogether) {
+        await onJumpTogether(x, tree.fatherId(x), y, tree.fatherId(y));
+    }
+    return tree.fatherId(x);
 }

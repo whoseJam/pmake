@@ -38,44 +38,20 @@
     </section>
     <section>
         <h2>LCA预处理</h2>
-        <p>我们把每个点的 $1,2,4,8,16,32......$ 级祖先先保存下来，方便之后在树上做<b>大跳</b></p>
-        <p class="fragment">预处理出来每个节点的 $2^j$ 倍祖先，设 $u$ 的 $i$ 级祖先为 $fa_{u,i}$</p>
-        <iframe data-animation="./LCA预处理.js" class="fragment"
-            style="width: 1000px; height: 300px;"></iframe>
-    </section>
-    <section>
-        <h2>LCA预处理</h2>
-        <p>一个节点的 $2^i$ 级祖先，应该等于其 $2^{i-1}$ 级祖先的 $2^{i-1}$ 级祖先</p>
-        <div class="fragment quote">
-            <h3>解释</h3>
-            <div style="display: flex;">
-                <div style="width: 70%;">
-                    <ul>
-                        <li class="fragment">$u$ 的二级祖先等于 $u$ 一级祖先的一级祖先</li>
-                        <li class="fragment">$u$ 的四级祖先等于 $u$ 二级祖先的二级祖先</li>
-                        <li class="fragment">$u$ 的八级祖先等于 $u$ 四级祖先的四级祖先</li>
-                        <li class="fragment">......</li>
-                    </ul>
-                    <codeblock class="fragment">
-                        <script type="text/template">
-                            // u：当前遍历的节点
-                            // f：当前节点的直接父节点
-                            // d：当前节点的深度
-                            void Dfs(int u, int f, int d) {
-                                fa[u][0] = f; dep[u] = d;
-                                for (int i = 1; i <= lim; i++)
-                                    fa[u][i] = fa[fa[u][i-1]][i-1];
-                                for (u 的所有子节点 v) {
-                                    Dfs(v, u, d + 1);
-                                }
-                            }
-                        </script>
-                    </codeblock>
-                </div>
-                <iframe data-animation="./LCA预处理递推.js"
-                    style="width: 40%; height: 350px;"></iframe>
-            </div>
+        <p>我们把每个点的 $1,2,4,8,16,32......$ 级祖先先保存下来，方便之后在树上做<b>大跳</b><span class="fragment" data-fragment-index="0">，预处理出来每个节点的 $2^j$ 倍祖先，设 $u$ 的 $i$ 级祖先为 $fa_{u,i}$</span></p>
+        <div style="display: flex; justify-content: space-around; align-items: center;">
+            <iframe data-animation="./LCA预处理.js" class="fragment" data-fragment-index="1"
+                style="width: 60%; height: 340px;"></iframe>
+            <iframe data-animation="./LCA预处理递推.js" class="fragment" data-fragment-index="4"
+                style="width: 35%; height: 340px;"></iframe>
         </div>
+        <p class="fragment quote" data-fragment-index="2">如何快速计算一个节点的 $2^i$ 级祖先呢？<span class="fragment" data-fragment-index="3">$u$ 的 $2^{i}$ 级祖先，应该等于其 $2^{i-1}$ 级祖先的 $2^{i-1}$ 级祖先</span></p>
+        <codeblock class="fragment" data-fragment-index="5">
+            <script type="text/template">
+                fa[u][0] = u 的直接父节点;
+                for (int i = 1; i <= log2(n); i++) fa[u][i] = fa[fa[u][i - 1]][i - 1];
+            </script>
+        </codeblock>
     </section>
     <section>
         <h2>倍增</h2>
