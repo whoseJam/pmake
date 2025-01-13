@@ -11,7 +11,6 @@ export function ActionList() {
 }
 
 ActionList.prototype.push = function (action) {
-    console.log(action.toString(), action);
     this.totalCount++;
     this.trim(action);
     this.pushWithoutTrim(action);

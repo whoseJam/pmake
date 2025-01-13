@@ -2,7 +2,7 @@ import { SDNode } from "@/Node/SDNode";
 import { Color } from "@/Utility/Color";
 
 type InputID = number | string;
-type InputNode = InputNode;
+type InputNode = InputID | SDNode;
 
 export class BaseTree extends SDNode {
     constructor(parent: SDNode);
