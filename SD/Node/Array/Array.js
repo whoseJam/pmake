@@ -36,7 +36,6 @@ Array.prototype = {
         this.elementWidth(width / length);
         return this;
     },
-    height: Array.prototype.elementHeight,
     insert: function (id, value) {
         const element = new Box(this.layer("elements")).opacity(0);
         element.value(value);
@@ -58,3 +57,5 @@ Array.prototype = {
         return this;
     },
 };
+
+Array.prototype.height = Array.prototype.elementHeight;
