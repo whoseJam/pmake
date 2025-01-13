@@ -1,7 +1,69 @@
 import { Action } from "@/Animate/Action";
-import { Dom } from "@/Dom/Dom";
+import { svg } from "@/Interact/RootSvg";
 import { BaseLine } from "@/Node/Nake/BaseLine";
-import { Factory } from "@/Utility/Factory";
+
+let globalPath = undefined;
+
+function interp(l, r, snap) {
+    return function (t) {
+        if (t !== 0) return;
+        if (l === r) snap.attr({ d: this.target });
+        else snap.animate({ d: this.target }, r - l, mina.easeinout);
+    };
+}
+
+function pathInterp(node, attr) {
+    return function (newValue, oldValue) {
+        const l = node.delay();
+        const r = node.delay() + node.duration();
+        const snap = Snap(attr.nake());
+        new Action(l, r, oldValue, newValue, interp(l, r, snap), node, "d");
+    };
+}
+
+function createPath() {
+    if (globalPath === undefined) {
+        globalPath = svg().append("path");
+        globalPath.setAttribute("fill-opacity", 0);
+        globalPath.setAttribute("stroke-opacity", 0);
+    }
+}
+
+function pathToBox(d) {
+    createPath();
+    globalPath.setAttribute("d", d);
+    return globalPath.nake().getBBox();
+}
+
+function getPointAtLength(d, length) {
+    try {
+        globalPath.setAttribute("d", d);
+        const point = globalPath.getPointAtLength(length);
+        return [point.x, point.y];
+    } catch (e) {
+        return [0, 0];
+    }
+}
+
+function getPointByRate(d, k) {
+    try {
+        globalPath.setAttribute("d", d);
+        const length = globalPath.nake().getTotalLength() * k;
+        const point = globalPath.nake().getPointAtLength(length);
+        return [point.x, point.y];
+    } catch (e) {
+        return [0, 0];
+    }
+}
+
+function getTotalLength(d) {
+    try {
+        globalPath.setAttribute("d", d);
+        return globalPath.nake().getTotalLength();
+    } catch (e) {
+        return 0;
+    }
+}
 
 export function Path(parent) {
     BaseLine.call(this, parent, "path");
@@ -13,147 +75,64 @@ export function Path(parent) {
         y: 0,
         width: 0,
         height: 0,
-        d: "M0,0L0,0"
+        d: "M0,0L0,0",
     });
 
-    this.vars.associate("d", (newD, oldD) => {
-        const duration = this.duration();
-        const snap = Snap(this._.nake.nake());
-        const t = new Action(
-            this.delay(),
-            this.delay() + this.duration(),
-            oldD, newD,
-            function (t) {
-                if (t === 0) {
-                    if (duration === 0) {
-                        snap.attr({ d: this.target });
-                    } else {
-                        snap.animate({ d: this.target }, duration, mina.easeinout);
-                    }
-                }
-            },
-            this, "d"
-        );
-        const box = Path.pathToBox(newD);
-        this.vars.x = box.x;
-        this.vars.y = box.y;
-        this.vars.width = box.width;
-        this.vars.height = box.height;
-    })
+    this.vars.associate("d", pathInterp(this, this._.nake));
 
     this._.nake.setAttribute("d", this.vars.d);
 }
 
 Path.prototype = {
-    ...BaseLine.prototype
+    ...BaseLine.prototype,
+    at: function (k) {
+        return getPointByRate(this.d(), k);
+    },
+    getPointAtLength: function (length) {
+        return getPointAtLength(this.d(), length);
+    },
+    totalLength: function () {
+        return getTotalLength(this.d());
+    },
+    x: function (x) {
+        if (x === undefined) return this.vars.x;
+        this.d(move(this.vars.d, x - this.vars.x, 0));
+        return this;
+    },
+    y: function (y) {
+        if (y === undefined) return this.vars.y;
+        this.d(move(this.vars.d, 0, y - this.vars.y));
+        return this;
+    },
+    d: function (d) {
+        if (d === undefined) return this.vars.d;
+        this.vars.d = d;
+        const box = pathToBox(d);
+        this.vars.x = box.x;
+        this.vars.y = box.y;
+        this.vars.width = box.width;
+        this.vars.height = box.height;
+        return this;
+    },
+    width: function () {
+        return this.vars.width;
+    },
+    height: function () {
+        return this.vars.height;
+    },
 };
-
-Path.prototype.at = function (k) {
-    return Path.getPointByRate(this.d(), k);
-}
-
-Path.prototype.getPointAtLength = function (length) {
-    return Path.getPointAtLength(this.d(), length);
-}
-
-Path.prototype.totalLength = function () {
-    return Path.getTotalLength(this.d());
-}
-
-Path.prototype.x = function (x) {
-    if (x === undefined) return this.vars.x;
-    this.d(move(this.vars.d, x - this.vars.x, 0));
-    return this;
-}
-
-Path.prototype.y = function (y) {
-    if (y === undefined) return this.vars.y;
-    this.d(move(this.vars.d, 0, y - this.vars.y));
-    return this;
-}
-
-Path.prototype.d = Factory.handler("d");
-
-Path.prototype.width = function () { return this.vars.width; }
-Path.prototype.height = function () { return this.vars.height; }
-
-Path.init = function () {
-    Path.helper = Dom.createSVGElement("path");
-    Dom.getByID("1").append(Path.helper);
-    Path.helper.setAttribute("stroke-opacity", 0);
-    Path.helper.setAttribute("fill-opacity", 0);
-}
-
-/**
- * @param {string} d 
- * @returns {{x: number, y: number, width: number, height: number}}
- */
-Path.pathToBox = function (d) {
-    Path.helper.setAttribute("d", d);
-    return Path.helper.getBBox();
-}
-
-/**
- * @param {string} d 
- * @param {number} length 
- * @returns {[number, number]}
- */
-Path.getPointAtLength = function (d, length) {
-    try {
-        Path.helper.setAttribute("d", d);
-        const point = Path.helper.getPointAtLength(length);
-        return [point.x, point.y];
-    } catch (e) {
-        return [0, 0];
-    }
-}
-
-/**
- * @param {string} d 
- * @param {number} k 
- * @returns {[number, number]}
- */
-Path.getPointByRate = function (d, k) {
-    try {
-        Path.helper.setAttribute("d", d);
-        const length = Path.helper.getTotalLength() * k;
-        const point = Path.helper.getPointAtLength(length);
-        return [point.x, point.y];
-    } catch (e) {
-        return [0, 0];
-    }
-}
-
-/**
- * @param {string} d 
- * @returns {number}
- */
-Path.getTotalLength = function (d) {
-    try {
-        Path.helper.setAttribute("d", d);
-        return Path.helper.getTotalLength();
-    } catch (e) {
-        return 0;
-    }
-}
-
-Path.move = move;
 
 function move(d, dx, dy) {
     let i = 0;
     function alphabeta(ch) {
-        return ("A" <= ch && ch <= "Z") ||
-            ("a" <= ch && ch <= "z");
+        return ("A" <= ch && ch <= "Z") || ("a" <= ch && ch <= "z");
     }
     function valid(ch) {
-        return alphabeta(ch) ||
-            ("0" <= ch && ch <= "9") ||
-            (ch === ".") || (ch === "-");
+        return alphabeta(ch) || ("0" <= ch && ch <= "9") || ch === "." || ch === "-";
     }
     function read() {
         let ans = "";
-        while (i < d.length && !valid(d[i]))
-            i++;
+        while (i < d.length && !valid(d[i])) i++;
         while (i < d.length && valid(d[i])) {
             if (ans.length > 0 && alphabeta(ans[0]) !== alphabeta(d[i])) break;
             if (ans.length > 0 && alphabeta(ans[0])) break;
@@ -162,7 +141,18 @@ function move(d, dx, dy) {
         if (alphabeta(ans[0])) return ans;
         return +ans;
     }
-    let ans = "", x1, y1, x2, y2, x, y, rx, ry, D, f0, f1;
+    let ans = "",
+        x1,
+        y1,
+        x2,
+        y2,
+        x,
+        y,
+        rx,
+        ry,
+        D,
+        f0,
+        f1;
     while (i < d.length) {
         let flag = read();
         if (i >= d.length) break;
@@ -170,44 +160,32 @@ function move(d, dx, dy) {
             case "M":
                 x = read();
                 y = read();
-                ans = ans + "M "
-                    + (x + dx) + " "
-                    + (y + dy) + " ";
+                ans = ans + "M " + (x + dx) + " " + (y + dy) + " ";
                 break;
             case "L":
                 x = read();
                 y = read();
-                ans = ans + "L "
-                    + (x + dx) + " "
-                    + (y + dy) + " ";
+                ans = ans + "L " + (x + dx) + " " + (y + dy) + " ";
                 break;
             case "H":
                 x = read();
-                ans = ans + "H "
-                    + (x + dx) + " ";
+                ans = ans + "H " + (x + dx) + " ";
                 break;
             case "V":
                 y = read();
-                ans = ans + "V "
-                    + (y + dy) + " ";
+                ans = ans + "V " + (y + dy) + " ";
                 break;
             case "Q":
                 x1 = read();
                 y1 = read();
                 x = read();
                 y = read();
-                ans = ans + "Q "
-                    + (x1 + dx) + " "
-                    + (y1 + dy) + " "
-                    + (x + dx) + " "
-                    + (y + dy) + " ";
+                ans = ans + "Q " + (x1 + dx) + " " + (y1 + dy) + " " + (x + dx) + " " + (y + dy) + " ";
                 break;
             case "T":
                 x = read();
                 y = read();
-                ans = ans + "T "
-                    + (x + dx) + " "
-                    + (y + dy) + " ";
+                ans = ans + "T " + (x + dx) + " " + (y + dy) + " ";
                 break;
             case "C":
                 x1 = read();
@@ -216,24 +194,14 @@ function move(d, dx, dy) {
                 y2 = read();
                 x = read();
                 y = read();
-                ans = ans + "C "
-                    + (x1 + dx) + " "
-                    + (y1 + dy) + " "
-                    + (x2 + dx) + " "
-                    + (y2 + dy) + " "
-                    + (x + dx) + " "
-                    + (y + dy) + " ";
+                ans = ans + "C " + (x1 + dx) + " " + (y1 + dy) + " " + (x2 + dx) + " " + (y2 + dy) + " " + (x + dx) + " " + (y + dy) + " ";
                 break;
             case "S":
                 x2 = read();
                 y2 = read();
                 x = read();
                 y = read();
-                ans = ans + "S "
-                    + (x2 + dx) + " "
-                    + (y2 + dy) + " "
-                    + (x + dx) + " "
-                    + (y + dy) + " ";
+                ans = ans + "S " + (x2 + dx) + " " + (y2 + dy) + " " + (x + dx) + " " + (y + dy) + " ";
                 break;
             case "A":
                 rx = read();
@@ -243,9 +211,7 @@ function move(d, dx, dy) {
                 f1 = read();
                 x = read();
                 y = read();
-                ans = ans + "A " + rx + " " + ry + " " + D + " " + f0 + " " + f1 + " "
-                    + (x + dx) + " "
-                    + (y + dy) + " ";
+                ans = ans + "A " + rx + " " + ry + " " + D + " " + f0 + " " + f1 + " " + (x + dx) + " " + (y + dy) + " ";
                 break;
             case "Z":
                 ans = ans + "Z ";

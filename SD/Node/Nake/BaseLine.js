@@ -33,13 +33,153 @@ export function BaseLine(parent, tag) {
 
 BaseLine.prototype = {
     ...BaseNake.prototype,
+    markerStart: handlerMarker("markerStart"),
+    markerMid: handlerMarker("markerMid"),
+    markerEnd: handlerMarker("markerEnd"),
+    arrow: function (flag = true) {
+        this.markerEnd(flag ? "arrow" : "");
+        return this;
+    },
+    revArrow: function (flag = true) {
+        this.markerStart(flag ? "arrowReverse" : "");
+        return this;
+    },
+    doubleArrow: function (flag = true) {
+        this.arrow(flag).revArrow(flag);
+        return this;
+    },
+    pointStoT: function () {
+        const len = this.totalLength();
+        const context = new Context(this);
+        this.startAnimate(context.tillc(0, 0));
+        this.strokeDashArray([0, len]);
+        this.startAnimate(context.tillc(0, 1));
+        this.strokeDashArray([len, 0]);
+        return this;
+    },
+    pointTtoS: function () {
+        const len = this.totalLength();
+        const context = new Context(this);
+        this.startAnimate(context.tillc(0, 0));
+        this.strokeDashArray([len, len]);
+        this.strokeDashOffset(-len);
+        this.startAnimate(context.tillc(0, 1));
+        this.strokeDashArray([len, 0]);
+        this.strokeDashOffset(0);
+        return this;
+    },
+    fadeStoT: function () {
+        const len = this.totalLength();
+        const context = new Context(this);
+        this.startAnimate(context.tillc(0, 0));
+        this.strokeDashArray([len, len]);
+        this.strokeDashOffset(0);
+        this.startAnimate(context.tillc(0, 1));
+        this.strokeDashArray([0, len]);
+        this.strokeDashOffset(-len);
+        return this;
+    },
+    fadeTtoS: function () {
+        const len = this.totalLength();
+        const context = new Context(this);
+        this.startAnimate(context.tillc(0, 0));
+        this.strokeDashArray([len, 0]);
+        this.startAnimate(context.tillc(0, 1));
+        this.strokeDashArray([0, len]);
+        return this;
+    },
+    source: function (x, y) {
+        if (arguments.length === 0) {
+            return [this.x1(), this.y1()];
+        } else if (arguments.length === 1) {
+            const point = arguments[0];
+            return this.source(point[0], point[1]);
+        }
+        this.freeze().x1(x).y1(y).unfreeze();
+        return this;
+    },
+    target: function (x, y) {
+        if (arguments.length === 0) {
+            return [this.x2(), this.y2()];
+        } else if (arguments.length === 1) {
+            const point = arguments[0];
+            return this.target(point[0], point[1]);
+        }
+        this.freeze().x2(x).y2(y).unfreeze();
+        return this;
+    },
+    x: function (x) {
+        const x1 = this.x1();
+        const x2 = this.x2();
+        const ox = Math.min(x1, x2);
+        if (x === undefined) return ox;
+        const dx = x - ox;
+        this.freeze();
+        this.x1(x1 + dx);
+        this.x2(x2 + dx);
+        this.unfreeze();
+        return this;
+    },
+    y: function (y) {
+        const y1 = this.y1();
+        const y2 = this.y2();
+        const oy = Math.min(y1, y2);
+        if (y === undefined) return oy;
+        const dy = y - oy;
+        this.freeze();
+        this.y1(y1 + dy);
+        this.y2(y2 + dy);
+        this.unfreeze();
+        return this;
+    },
+    width: function (width) {
+        const x1 = this.x1();
+        const x2 = this.x2();
+        if (width === undefined) return Math.abs(x1 - x2);
+        if (x1 < x2) this.x2(x1 + width);
+        else this.x1(x2 + width);
+        return this;
+    },
+    height: function (height) {
+        const y1 = this.y1();
+        const y2 = this.y2();
+        if (height === undefined) return Math.abs(y1 - y2);
+        if (y1 < y2) this.y2(y1 + height);
+        else this.y1(y2 + height);
+        return this;
+    },
+    text: function () {
+        const value = this.child("value");
+        if (!value) return "";
+        if (!value.text) ErrorLauncher.invalidInvoke("text");
+        return value.text();
+    },
+    drop: function () {
+        const value = this.child("value");
+        value.onExit(EX.drop());
+        this.eraseChild(value);
+        return value;
+    },
+    intValue: function () {
+        const value = this.value();
+        if (!value) return 0;
+        if (!value.text) ErrorLauncher.invalidInvoke("intValue");
+        return +value.text();
+    },
+    value: function (value, rule) {
+        if (arguments.length === 0) return this.child("value");
+        if (this.hasChild("value")) this.eraseChild("value");
+        if (Check.isFalseType(value)) return this;
+        rule = getValueRule(this.vars, rule);
+        value = Cast.castToSDNode(this, value);
+        value.onEnterDefault(EN.appear());
+        value.onExitDefault(EX.fade());
+        value.triggerEnter(this, () => this.childAs("value", value, rule));
+        return this;
+    },
 };
 
-BaseLine.prototype.markerStart = HandlerMarker("markerStart");
-BaseLine.prototype.markerMid = HandlerMarker("markerMid");
-BaseLine.prototype.markerEnd = HandlerMarker("markerEnd");
-
-function HandlerMarker(key) {
+function handlerMarker(key) {
     return function (marker) {
         if (marker === undefined) return this.vars[key];
         marker = marker !== "" ? `url(#${marker})` : "";
@@ -47,165 +187,6 @@ function HandlerMarker(key) {
         return this;
     };
 }
-
-BaseLine.prototype.arrow = function (flag = true) {
-    this.markerEnd(flag ? "arrow" : "");
-    return this;
-};
-
-BaseLine.prototype.revArrow = function (flag = true) {
-    this.markerStart(flag ? "arrowReverse" : "");
-    return this;
-};
-
-BaseLine.prototype.doubleArrow = function (flag = true) {
-    this.arrow(flag);
-    this.revArrow(flag);
-    return this;
-};
-
-BaseLine.prototype.pointStoT = function () {
-    const len = this.totalLength();
-    const context = new Context(this);
-    this.startAnimate(context.tillc(0, 0));
-    this.strokeDashArray([0, len]);
-    this.startAnimate(context.tillc(0, 1));
-    this.strokeDashArray([len, 0]);
-    return this;
-};
-
-BaseLine.prototype.pointTtoS = function () {
-    const len = this.totalLength();
-    const context = new Context(this);
-    this.startAnimate(context.tillc(0, 0));
-    this.strokeDashArray([len, len]);
-    this.strokeDashOffset(-len);
-    this.startAnimate(context.tillc(0, 1));
-    this.strokeDashArray([len, 0]);
-    this.strokeDashOffset(0);
-    return this;
-};
-
-BaseLine.prototype.fadeStoT = function () {
-    const len = this.totalLength();
-    const context = new Context(this);
-    this.startAnimate(context.tillc(0, 0));
-    this.strokeDashArray([len, len]);
-    this.strokeDashOffset(0);
-    this.startAnimate(context.tillc(0, 1));
-    this.strokeDashArray([0, len]);
-    this.strokeDashOffset(-len);
-    return this;
-};
-
-BaseLine.prototype.fadeTtoS = function () {
-    const len = this.totalLength();
-    const context = new Context(this);
-    this.startAnimate(context.tillc(0, 0));
-    this.strokeDashArray([len, 0]);
-    this.startAnimate(context.tillc(0, 1));
-    this.strokeDashArray([0, len]);
-    return this;
-};
-
-BaseLine.prototype.source = function (x, y) {
-    if (arguments.length === 0) {
-        return [this.x1(), this.y1()];
-    } else if (arguments.length === 1) {
-        const point = arguments[0];
-        return this.source(point[0], point[1]);
-    }
-    this.freeze().x1(x).y1(y).unfreeze();
-    return this;
-};
-
-BaseLine.prototype.target = function (x, y) {
-    if (arguments.length === 0) {
-        return [this.x2(), this.y2()];
-    } else if (arguments.length === 1) {
-        const point = arguments[0];
-        return this.target(point[0], point[1]);
-    }
-    this.freeze().x2(x).y2(y).unfreeze();
-    return this;
-};
-
-BaseLine.prototype.x = function (x) {
-    const x1 = this.x1();
-    const x2 = this.x2();
-    const ox = Math.min(x1, x2);
-    if (x === undefined) return ox;
-    const dx = x - ox;
-    this.freeze()
-        .x1(x1 + dx)
-        .x2(x2 + dx)
-        .unfreeze();
-    return this;
-};
-
-BaseLine.prototype.y = function (y) {
-    const y1 = this.y1();
-    const y2 = this.y2();
-    const oy = Math.min(y1, y2);
-    if (y === undefined) return oy;
-    const dy = y - oy;
-    this.freeze()
-        .y1(y1 + dy)
-        .y2(y2 + dy)
-        .unfreeze();
-    return this;
-};
-
-BaseLine.prototype.width = function (width) {
-    const x1 = this.x1();
-    const x2 = this.x2();
-    if (width === undefined) return Math.abs(x1 - x2);
-    if (x1 < x2) this.x2(x1 + width);
-    else this.x1(x2 + width);
-    return this;
-};
-
-BaseLine.prototype.height = function (height) {
-    const y1 = this.y1();
-    const y2 = this.y2();
-    if (height === undefined) return Math.abs(y1 - y2);
-    if (y1 < y2) this.y2(y1 + height);
-    else this.y1(y2 + height);
-    return this;
-};
-
-BaseLine.prototype.text = function () {
-    const value = this.child("value");
-    if (!value) return "";
-    if (!value.text) ErrorLauncher.invalidInvoke("text");
-    return value.text();
-};
-
-BaseLine.prototype.drop = function () {
-    const value = this.child("value");
-    value.onExit(EX.drop());
-    this.eraseChild(value);
-    return value;
-};
-
-BaseLine.prototype.intValue = function () {
-    const value = this.value();
-    if (!value) return 0;
-    if (!value.text) ErrorLauncher.invalidInvoke("intValue");
-    return +value.text();
-};
-
-BaseLine.prototype.value = function (value, rule) {
-    if (arguments.length === 0) return this.child("value");
-    if (this.hasChild("value")) this.eraseChild("value");
-    if (Check.isFalseType(value)) return this;
-    rule = getValueRule(this.vars, rule);
-    value = Cast.castToSDNode(this, value);
-    value.onEnterDefault(EN.appear());
-    value.onExitDefault(EX.fade());
-    value.triggerEnter(this, () => this.childAs("value", value, rule));
-    return this;
-};
 
 function getValueRule(vars, rule) {
     return rule ? rule : R.pointAtPathByRate(0.5, "cx", "cy");

@@ -1,4 +1,3 @@
-
 export class Context {
     constructor(parent: any);
 
@@ -14,11 +13,14 @@ export class Context {
      * @param l 左端时间戳百分比
      * @param r 右端时间戳百分比
      */
-    tillc(l: number, r: number): {
+    tillc(
+        l: number,
+        r: number
+    ): {
         animate: {
-            delay: () => number,
-            duration: () => number
-        }
+            delay: () => number;
+            duration: () => number;
+        };
     };
 
     recover(): void;

@@ -9,5 +9,4 @@ export class RenderNode {
     appear();
     remove();
     setAttribute(key: string, value: any);
-    getParent(): SDNode;
 }

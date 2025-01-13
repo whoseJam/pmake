@@ -14,7 +14,7 @@ export function Ellipse(parent) {
         rx: 20,
         ry: 20,
         cx: 20,
-        cy: 20
+        cy: 20,
     });
 
     this.vars.associate("rx", Factory.action(this, this._.nake, "rx", Interp.numberInterp));
@@ -29,30 +29,25 @@ export function Ellipse(parent) {
 }
 
 Ellipse.prototype = {
-    ...BaseNake.prototype
+    ...BaseNake.prototype,
+    cx: Factory.handlerLowPrecise("cx"),
+    cy: Factory.handlerLowPrecise("cy"),
+    rx: Factory.handlerLowPrecise("rx"),
+    ry: Factory.handlerLowPrecise("ry"),
+    x: function (x) {
+        if (x === undefined) return this.cx() - this.rx();
+        return this.cx(x - this.x() + this.cx());
+    },
+    y: function (y) {
+        if (y === undefined) return this.cy() - this.ry();
+        return this.cy(y - this.y() + this.cy());
+    },
+    width: function (width) {
+        if (width === undefined) return this.rx() * 2;
+        return this.rx(width / 2);
+    },
+    height: function (height) {
+        if (height === undefined) return this.ry() * 2;
+        return this.ry(height / 2);
+    },
 };
-
-Ellipse.prototype.cx = Factory.handlerLowPrecise("cx");
-Ellipse.prototype.cy = Factory.handlerLowPrecise("cy");
-Ellipse.prototype.rx = Factory.handlerLowPrecise("rx");
-Ellipse.prototype.ry = Factory.handlerLowPrecise("ry");
-
-Ellipse.prototype.x = function (x) {
-    if (x === undefined) return this.cx() - this.rx();
-    return this.cx(x - this.x() + this.cx());
-}
-
-Ellipse.prototype.y = function (y) {
-    if (y === undefined) return this.cy() - this.ry();
-    return this.cy(y - this.y() + this.cy());
-}
-
-Ellipse.prototype.width = function (width) {
-    if (width === undefined) return this.rx() * 2;
-    return this.rx(width / 2);
-}
-
-Ellipse.prototype.height = function (height) {
-    if (height === undefined) return this.ry() * 2;
-    return this.ry(height / 2);
-}

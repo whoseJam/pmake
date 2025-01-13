@@ -1,10 +1,9 @@
 import { Context } from "@/Animate/Context";
 
-import { Text }      from "@/Node/Nake/Text";
-import { Code }      from "@/Node/Array/Code";
-import { Enter }     from "@/Node/SDNode/Enter";
-import { SDNode }    from "@/Node/SDNode";
 import { BaseArray } from "@/Node/Array/BaseArray";
+import { Code } from "@/Node/Array/Code";
+import { Text } from "@/Node/Nake/Text";
+import { Enter } from "@/Node/SDNode/Enter";
 
 export function VarList(parent) {
     BaseArray.call(this, parent);
@@ -19,20 +18,17 @@ export function VarList(parent) {
     this.member.new("dx", 40);
 }
 
-VarList.prototype = { 
-    ...BaseArray.prototype
+VarList.prototype = {
+    ...BaseArray.prototype,
 };
 
-VarList.prototype.fontSize = SDNode.OrdinaryGSet("font-size", "setByEqual"); 
+// VarList.prototype.fontSize = SDNode.OrdinaryGSet("font-size", "setByEqual");
 
-VarList.prototype.width  = Code.prototype.width;
+VarList.prototype.width = Code.prototype.width;
 VarList.prototype.height = Code.prototype.height;
-VarList.prototype.updateList = [
-    ...VarList.prototype.updateList,
-    update
-];
+// VarList.prototype.updateList = [...VarList.prototype.updateList, update];
 
-VarList.prototype.put = function(key, value) {
+VarList.prototype.put = function (key, value) {
     const stringValue = value === Infinity ? "inf" : value;
     const elements = this.member.get("elements");
     for (let element of elements) {
@@ -54,42 +50,37 @@ VarList.prototype.put = function(key, value) {
     element.onEnter(Enter.ordinary(this));
     this.insertByBaseArray(this.end() + 1, element);
     return this;
-}
+};
 
-VarList.prototype.get = function(key) {
+VarList.prototype.get = function (key) {
     const elements = this.member.get("elements");
-    for (let element of elements)
-        if (element.key == key) return element.value;
+    for (let element of elements) if (element.key == key) return element.value;
     return undefined;
-}
+};
 
-VarList.prototype.element = function(key) {
+VarList.prototype.element = function (key) {
     const elements = this.member.get("elements");
-    for (let element of elements)
-        if (element.key == key) return element;
+    for (let element of elements) if (element.key == key) return element;
     throw new Error("Value Not Found In VarList");
-}
+};
 
-VarList.prototype.inc = function(key) {
+VarList.prototype.inc = function (key) {
     this.put(key, this.get(key) + 1);
     return this;
-}
+};
 
-VarList.prototype.dec = function(key) {
+VarList.prototype.dec = function (key) {
     this.put(key, this.get(key) - 1);
     return this;
-}
+};
 
-VarList.prototype.incBy = function(key, delta) {
+VarList.prototype.incBy = function (key, delta) {
     this.put(key, this.get(key) + delta);
     return this;
-}
+};
 
 function update() {
-    if (this.member.hasChanged("x") ||
-        this.member.hasChanged("y") ||
-        this.member.hasChanged("font-size") ||
-        this.member.hasChanged("elements")) {
+    if (this.member.hasChanged("x") || this.member.hasChanged("y") || this.member.hasChanged("font-size") || this.member.hasChanged("elements")) {
         const x = this.member.get("x");
         let y = this.member.get("y");
         let width = 0;

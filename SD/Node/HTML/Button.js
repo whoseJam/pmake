@@ -1,6 +1,3 @@
-import { Interp } from "@/Animate/Interp";
-
-import { SDNode }   from "@/Node/SDNode";
 import { BaseHTML } from "@/Node/HTML/BaseHTML";
 import { HTMLNode } from "@/Renderer/HTML/HTMLNode";
 
@@ -14,11 +11,9 @@ export function Button(parent) {
 
     this.member.new("text", "点击");
     this.member.new("onClick", undefined);
-    
+
     this.dom(
-        <button
-            style={{ width: "90%", height: "90%", top: "50%", left: "50%" }}
-            onClick={ ButtonCallback.bind(this) }>
+        <button style={{ width: "90%", height: "90%", top: "50%", left: "50%" }} onClick={ButtonCallback.bind(this)}>
             点击
         </button>
     );
@@ -29,17 +24,14 @@ export function Button(parent) {
 }
 
 Button.prototype = {
-    ...BaseHTML.prototype
+    ...BaseHTML.prototype,
 };
 
-Button.prototype.text = SDNode.OrdinaryGSet("text", "set");
+// Button.prototype.text = SDNode.OrdinaryGSet("text", "set");
 
-Button.prototype.onClick = function(callback) {
+Button.prototype.onClick = function (callback) {
     this.member.setAndFlush("onClick", callback);
     return this;
-}
+};
 
-Button.prototype.updateList = [
-    ...Button.prototype.updateList,
-    SDNode.OrdinaryUpdate("text", Interp.innerHTMLInterp, "button", "innerHTML")
-]
+// Button.prototype.updateList = [...Button.prototype.updateList, SDNode.OrdinaryUpdate("text", Interp.innerHTMLInterp, "button", "innerHTML")];

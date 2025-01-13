@@ -7,9 +7,8 @@ import { Location } from "@/Node/SDNode/Location";
 
 import { SVGNode } from "@/Renderer/SVG/SVGNode";
 
-import { Vector } from "@/Math/Vector";
-
 import { reactive } from "@/Node/SDNode/SDValue";
+import { createRenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
 import { effect } from "./SDNode/SDValue";
@@ -35,14 +34,14 @@ export function SDNode(parent, layer = undefined) {
         // parent is SDNode
         this._.parent = parent;
         if (!layer) {
-            this._.layer = new SVGNode(this, parent.layer(), "g");
+            this._.layer = createRenderNode(this, parent.layer(), "g");
         } else {
             // appear later, layer is undefined
-            this._.layer = new SVGNode(this, undefined, layer);
+            this._.layer = createRenderNode(this, undefined, layer);
         }
     } else {
         // parent is RenderNode
-        this._.parent = parent.getParent();
+        this._.parent = parent.parent;
         if (!layer) {
             this._.layer = new SVGNode(this, parent, "g");
         } else {
@@ -93,66 +92,6 @@ SDNode.forwardWithReturn = function (comp, func) {
     };
 };
 
-SDNode.ordinaryGetterAndSetter = function (key, mode) {
-    return function (value) {
-        if (value === undefined) {
-            return this.member.get(key);
-        }
-        this.member[mode](key, value);
-        this.tryUpdate();
-        return this;
-    };
-};
-
-SDNode.OrdinaryGSet = function (key, mode) {
-    return function (value) {
-        if (value === undefined) {
-            return this.member.get(key);
-        }
-        this.member[mode](key, value);
-        this.tryUpdate();
-        return this;
-    };
-};
-
-SDNode.ordinaryUpdate = function (key, interp, target, attr) {
-    const targetKey = target ? target : "nake";
-    const interpKey = attr ? attr : key;
-    return function () {
-        if (this.member.hasChanged(key)) {
-            new Action(this.delay(), this.delay() + this.duration(), this.member.oldValue(key), this.member.get(key), interp(this._[targetKey], interpKey), this, key);
-            this.member.flush(key);
-        }
-    };
-};
-
-SDNode.OrdinaryUpdate = function (key, interp, target, attr) {
-    const targetKey = target ? target : "nake";
-    const interpKey = attr ? attr : key;
-    return function () {
-        if (this.member.hasChanged(key)) {
-            new Action(this.delay(), this.delay() + this.duration(), this.member.oldValue(key), this.member.get(key), interp(this._[targetKey], interpKey), this, key);
-            this.member.flush(key);
-        }
-    };
-};
-
-SDNode.InRange = function (mode) {
-    if (mode === "circle") {
-        return function (vec) {
-            const center = [this.cx(), this.cy()];
-            const length = Vector.getIns().length(Vector.getIns().sub(vec, center));
-            return length <= this.r();
-        };
-    } else if (mode === "rect") {
-        return function (vec) {
-            return this.x() <= vec[0] && vec[0] <= this.mx() && this.y() <= vec[1] && vec[1] <= this.my();
-        };
-    } else {
-        throw new Error(`Unknown Mode ${mode}`);
-    }
-};
-
 SDNode.prototype.type = function (type) {
     if (type === undefined) return this._.layer.getAttribute("type");
     this._.layer.setAttribute("type", type);
@@ -201,7 +140,9 @@ SDNode.prototype.after = SDNode.forward("animate", "after");
 SDNode.prototype.duration = SDNode.forwardWithReturn("animate", "duration");
 
 SDNode.prototype.opacity = Factory.handlerMediumPrecise("opacity");
-SDNode.prototype.inRange = SDNode.InRange("rect");
+SDNode.prototype.inRange = function (vec) {
+    return this.x() <= vec[0] && vec[0] <= this.mx() && this.y() <= vec[1] && vec[1] <= this.my();
+};
 SDNode.prototype.remove = function () {
     this._.layer.remove();
 };
@@ -234,12 +175,6 @@ SDNode.prototype.rule = function (rule) {
         rule(this._.parent, this);
     }, this.type() + "-rule");
     return this;
-};
-
-SDNode.prototype.triggerRule = function () {
-    // if (!this._.rule) return this;
-    // this._.rule(this._.parent, this);
-    // return this;
 };
 
 SDNode.prototype.onEnter = function (enter) {

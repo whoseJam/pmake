@@ -3,7 +3,7 @@ import { Text } from "@/Node/Nake/Text";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 export function SelectValidValue(value1, value2) {
-    return value1 === undefined || value1 === null? value2 : value1;
+    return value1 === undefined || value1 === null ? value2 : value1;
 }
 
 export class Cast {
@@ -14,10 +14,11 @@ export class Cast {
             }
             return null;
         }
-        if (typeof(any) === "function") {
+        if (typeof any === "function") {
             return any(parent).opacity(0);
         }
-        if (typeof(any) === "string" || typeof(any) === "number") {
+        if (typeof any === "string" || typeof any === "number") {
+            console.log("cast to sdnode parent=", parent);
             return new Text(parent, any).opacity(0);
         }
         return any;
@@ -36,7 +37,7 @@ export class Cast {
     }
 
     static castToArray(value) {
-        if (typeof(value) === "number") return [value];
+        if (typeof value === "number") return [value];
         return value;
     }
 
@@ -48,7 +49,7 @@ export class Cast {
     }
 
     static castToViewBox(object) {
-        if (typeof(object) === "string") {
+        if (typeof object === "string") {
             const args = object.split(" ");
             return { x: +args[0], y: +args[1], width: +args[2], height: +args[3] };
         } else {

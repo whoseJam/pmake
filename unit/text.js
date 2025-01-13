@@ -7,9 +7,7 @@ let r = new sd.Rect(svg).fillOpacity(0);
 let obj = new sd.Text(svg, "Hello").cx(600).cy(300).fontSize(40);
 r.x(obj.x()).y(obj.y()).width(obj.width()).height(obj.height());
 
-sd.init(() => {
-
-})
+sd.init(() => {});
 
 sd.main(async () => {
     await sd.pause();
@@ -31,7 +29,7 @@ sd.main(async () => {
     await sd.pause();
     test(`obj.startAnimate().strokeDashArray([5, 0]).endAnimate();`);
     await sd.pause();
-})
+});
 
 function test(code) {
     board.text(code);

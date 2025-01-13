@@ -2,13 +2,14 @@ import * as sd from "@/sd";
 
 const svg = sd.svg();
 const C = sd.color();
-const s = new sd.Svg(svg);
-new sd.Rect(s).color(C.red);
+const view = new sd.View(svg);
+const box = new sd.Rect(view).color(C.red);
 
-main();
+sd.init(() => {});
 
-async function main() {
+sd.main(async () => {
     await sd.pause();
-    s.startAnimate().viewBox(-5, -5, 100, 100).endAnimate();
+    view.push(box);
     await sd.pause();
-}
+    view.startAnimate().viewBox(-5, -5, 100, 100).endAnimate();
+});

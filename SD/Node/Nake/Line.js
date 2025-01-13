@@ -12,7 +12,7 @@ export function Line(parent) {
         x1: 0,
         y1: 0,
         x2: 40,
-        y2: 40
+        y2: 40,
     });
 
     this.vars.associate("x1", Factory.action(this, this._.nake, "x1", Interp.numberInterp));
@@ -27,29 +27,25 @@ export function Line(parent) {
 }
 
 Line.prototype = {
-    ...BaseLine.prototype
+    ...BaseLine.prototype,
+    x1: Factory.handlerLowPrecise("x1"),
+    y1: Factory.handlerLowPrecise("y1"),
+    x2: Factory.handlerLowPrecise("x2"),
+    y2: Factory.handlerLowPrecise("y2"),
+    at: function (k) {
+        const v1 = this.source();
+        const v2 = this.target();
+        const d = V.sub(v2, v1);
+        return V.add(v1, V.numberMul(d, k));
+    },
+    getPointAtLength: function (length) {
+        const total = this.totalLength();
+        const k = length / total;
+        return this.at(k);
+    },
+    totalLength: function () {
+        const v1 = this.source();
+        const v2 = this.target();
+        return V.length(V.sub(v1, v2));
+    },
 };
-
-Line.prototype.x1 = Factory.handlerLowPrecise("x1");
-Line.prototype.y1 = Factory.handlerLowPrecise("y1");
-Line.prototype.x2 = Factory.handlerLowPrecise("x2");
-Line.prototype.y2 = Factory.handlerLowPrecise("y2");
-
-Line.prototype.at = function (k) {
-    const v1 = this.source();
-    const v2 = this.target();
-    const d = V.sub(v2, v1);
-    return V.add(v1, V.numberMul(d, k));
-}
-
-Line.prototype.getPointAtLength = function (length) {
-    const total = this.totalLength();
-    const k = length / total;
-    return this.at(k);
-}
-
-Line.prototype.totalLength = function () {
-    const v1 = this.source();
-    const v2 = this.target();
-    return V.length(V.sub(v1, v2));
-}

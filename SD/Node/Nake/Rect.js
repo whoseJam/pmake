@@ -1,8 +1,6 @@
 import { Interp } from "@/Animate/Interp";
-
-import { Color as C } from "@/Utility/Color";
-
 import { BaseNake } from "@/Node/Nake/BaseNake";
+import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
 
 export function Rect(parent) {
@@ -16,7 +14,7 @@ export function Rect(parent) {
         x: 0,
         y: 0,
         width: 40,
-        height: 40
+        height: 40,
     });
 
     this.vars.associate("x", Factory.action(this, this._.nake, "x", Interp.numberInterp));
@@ -31,10 +29,9 @@ export function Rect(parent) {
 }
 
 Rect.prototype = {
-    ...BaseNake.prototype
-}
-
-Rect.prototype.x = Factory.handlerLowPrecise("x");
-Rect.prototype.y = Factory.handlerLowPrecise("y");
-Rect.prototype.width = Factory.handlerLowPrecise("width");
-Rect.prototype.height = Factory.handlerLowPrecise("height");
+    ...BaseNake.prototype,
+    x: Factory.handlerLowPrecise("x"),
+    y: Factory.handlerLowPrecise("y"),
+    width: Factory.handlerLowPrecise("width"),
+    height: Factory.handlerLowPrecise("height"),
+};

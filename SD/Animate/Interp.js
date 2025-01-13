@@ -1,5 +1,17 @@
-import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
+
+function castHexToRGB(hex) {
+    hex = hex.replace("#", "");
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    return { r: r, g: g, b: b };
+}
+
+function castToArray(value) {
+    if (typeof value === "number") return [value];
+    return value;
+}
 
 export class Interp {
     static exLengthInterp(attrs, key) {
@@ -22,8 +34,8 @@ export class Interp {
 
     static colorInterp(owner, prop) {
         return function (t) {
-            const fRGB = Check.isTypeOfString(this.source) ? Cast.castHexToRGB(this.source) : this.source;
-            const tRGB = Check.isTypeOfString(this.target) ? Cast.castHexToRGB(this.target) : this.target;
+            const fRGB = Check.isTypeOfString(this.source) ? castHexToRGB(this.source) : this.source;
+            const tRGB = Check.isTypeOfString(this.target) ? castHexToRGB(this.target) : this.target;
             const r = fRGB.r * (1 - t) + tRGB.r * t;
             const g = fRGB.g * (1 - t) + tRGB.g * t;
             const b = fRGB.b * (1 - t) + tRGB.b * t;
@@ -47,8 +59,8 @@ export class Interp {
 
     static arrayInterp(owner, prop) {
         return function (t) {
-            const A = Cast.castToArray(this.source);
-            const B = Cast.castToArray(this.target);
+            const A = castToArray(this.source);
+            const B = castToArray(this.target);
             const len = Math.max(A.length, B.length);
             const ans = [];
             for (let i = 0; i < len; i++) {
@@ -81,10 +93,10 @@ export class Interp {
         return function (t) {
             const A = this.source;
             const B = this.target;
-            const x = A.viewX * (1 - t) + B.viewX * t;
-            const y = A.viewY * (1 - t) + B.viewY * t;
-            const width = A.viewWidth * (1 - t) + B.viewWidth * t;
-            const height = A.viewHeight * (1 - t) + B.viewHeight * t;
+            const x = A.x * (1 - t) + B.x * t;
+            const y = A.y * (1 - t) + B.y * t;
+            const width = A.width * (1 - t) + B.width * t;
+            const height = A.height * (1 - t) + B.height * t;
             attrs.setAttribute(key, `${x} ${y} ${width} ${height}`);
         };
     }
