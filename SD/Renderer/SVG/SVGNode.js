@@ -62,9 +62,8 @@ SVGNode.prototype = {
         }
     },
     moveTo(render) {
-        const element = this.nake();
         const t = this.parent.delay() + this.parent.duration();
-        new Action(t, t, this.render, render, moveTo(element), this, "moveTo");
+        new Action(t, t, this.render, render, moveTo(this), this, "moveTo");
         this.render = render;
     },
     appear() {
