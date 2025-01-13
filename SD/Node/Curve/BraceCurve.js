@@ -1,5 +1,5 @@
 import { Vector as V } from "@/Math/Vector";
-import { BaseCurve, HandlerCurve } from "@/Node/Curve/BaseCurve";
+import { BaseCurve, curveHandler } from "@/Node/Curve/BaseCurve";
 import { effect } from "@/Node/SDNode/SDValue";
 import { PathPen } from "@/Utility/PathPen";
 
@@ -15,7 +15,7 @@ export function BraceCurve(parent) {
     this._.updater = effect(() => {
         const vs = this.source();
         const vt = this.target();
-        const vc = V.numberMul(V.add(vs, vt), 0.5)
+        const vc = V.numberMul(V.add(vs, vt), 0.5);
         const d = V.numberMul(V.norm(V.sub(vt, vs)), this.bending());
         const dl = V.rotate(d, -Math.PI / 2);
         const p1 = V.add(vs, dl);
@@ -35,7 +35,6 @@ export function BraceCurve(parent) {
 }
 
 BraceCurve.prototype = {
-    ...BaseCurve.prototype
+    ...BaseCurve.prototype,
+    bending: curveHandler("bending"),
 };
-
-BraceCurve.prototype.bending = HandlerCurve("bending");

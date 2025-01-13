@@ -10,42 +10,39 @@ export function BaseCurve(parent) {
         y1: 0,
         x2: 40,
         y2: 40,
-        update: false
+        update: false,
     });
 
     this._.BASE_CURVE = true;
 }
 
 BaseCurve.prototype = {
-    ...Path.prototype
+    ...Path.prototype,
+    x1: Factory.handler("x1"),
+    y1: Factory.handler("y1"),
+    x2: Factory.handler("x2"),
+    y2: Factory.handler("y2"),
+    dx: function (dx) {
+        this.freeze();
+        this.source(V.add(this.source(), [dx, 0]));
+        this.target(V.add(this.target(), [dx, 0]));
+        this.unfreeze();
+        return this;
+    },
+    dy: function (dy) {
+        this.freeze();
+        this.source(V.add(this.source(), [0, dy]));
+        this.target(V.add(this.target(), [0, dy]));
+        this.unfreeze();
+        return this;
+    },
 };
 
-BaseCurve.prototype.x1 = Factory.handler("x1");
-BaseCurve.prototype.y1 = Factory.handler("y1");
-BaseCurve.prototype.x2 = Factory.handler("x2");
-BaseCurve.prototype.y2 = Factory.handler("y2");
-
-BaseCurve.prototype.dx = function (dx) {
-    this.freeze();
-    this.source(V.add(this.source(), [dx, 0]));
-    this.target(V.add(this.target(), [dx, 0]));
-    this.unfreeze();
-    return this;
-}
-
-BaseCurve.prototype.dy = function (dy) {
-    this.freeze();
-    this.source(V.add(this.source(), [0, dy]));
-    this.target(V.add(this.target(), [0, dy]));
-    this.unfreeze();
-    return this;
-}
-
-export function HandlerCurve(key) {
+export function curveHandler(key) {
     return function (value) {
         if (value === undefined) return this.vars[key];
         this.vars[key] = value;
         this.vars.update = true;
         return this;
-    }
+    };
 }

@@ -11,7 +11,10 @@ export function VHBezier(parent) {
     this._.updater = effect(() => {
         const v1 = [this.x1(), this.y1()];
         const v2 = [this.x2(), this.y2()];
-        let d = V.sub(v2, v1), p1, p2, pm;
+        let d = V.sub(v2, v1);
+        let p1;
+        let p2;
+        let pm;
         pm = V.add(v1, V.numberMul(d, 0.5));
         if (d[0] < d[1]) {
             p1 = [v1[0], v1[1] + d[1] * 0.5];
@@ -22,9 +25,9 @@ export function VHBezier(parent) {
         }
         const pen = new PathPen().MoveTo(v1).Quad(p1, pm).Quad(p2, v2);
         this.d(pen.toString());
-    })
+    });
 }
 
 VHBezier.prototype = {
-    ...BaseCurve.prototype
+    ...BaseCurve.prototype,
 };
