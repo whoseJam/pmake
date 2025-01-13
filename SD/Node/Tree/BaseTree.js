@@ -366,4 +366,10 @@ BaseTree.prototype = {
         if (!this._.sdnodesMap[link.id]) return undefined;
         return this.element(this._.sdnodesMap[link.id].targetId);
     },
+    nodes: function () {
+        return [...this.vars.links];
+    },
+    links: function () {
+        return [...this.vars.links];
+    },
 };

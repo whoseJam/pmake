@@ -72,4 +72,6 @@ export class BaseTree extends SDNode {
     targetId(link: SDNode): string | undefined;
     source(link: SDNode): SDNode | undefined;
     target(link: SDNode): SDNode | undefined;
+    nodes(): Array<SDNode>;
+    links(): Array<SDNode>;
 }
