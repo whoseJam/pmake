@@ -1,7 +1,5 @@
 import { Check } from "@/Utility/Check";
 
-let cnt = 0;
-
 class EffectQueue {
     constructor(name) {
         this.label = `in${name}Queue`;

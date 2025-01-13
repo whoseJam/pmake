@@ -18,7 +18,6 @@ export class Cast {
             return any(parent).opacity(0);
         }
         if (typeof any === "string" || typeof any === "number") {
-            console.log("cast to sdnode parent=", parent);
             return new Text(parent, any).opacity(0);
         }
         return any;

@@ -60,78 +60,71 @@ export function Code(parent, source = undefined) {
 
 Code.prototype = {
     ...BaseArray.prototype,
-};
-
-Code.prototype.fontSize = Factory.handler("fontSize");
-
-Code.prototype.width = function (width) {
-    if (width === undefined) return this.vars.width;
-    const k = width / this.vars.width;
-    this.fontSize(this.fontSize() * k);
-    return this;
-};
-
-Code.prototype.height = function (height) {
-    if (height === undefined) return this.vars.height;
-    const k = height / this.vars.height;
-    this.fontSize(this.fontSize() * k);
-    return this;
-};
-
-Code.prototype.insert = function (index, value = "") {
-    const element = Cast.castToSDNode(this.layer("elements"), value);
-    element.onEnter(EN.appear("elements"));
-    this.insertByBaseArray(index, element);
-    return this;
-};
-
-Code.prototype.code = function (source) {
-    for (let i = this.end(); i >= this.start(); i--) this.erase(i);
-    let ans = "";
-    for (let i = 0; i < source.length; i++) {
-        if (source[i] === "\n") {
-            if (ans != "") this.push(ans);
-            ans = "";
-        } else ans += source[i];
-    }
-    if (ans.length > 0) this.push(ans);
-    return this;
-};
-
-Code.prototype.focus = function (l, r) {
-    const focus = this.child("focus");
-    if (Check.isFalseType(l)) {
-        this.freeze();
-        this.vars.l = undefined;
-        this.vars.r = undefined;
-        this.unfreeze();
-        focus.opacity(0);
+    fontSize: Factory.handler("fontSize"),
+    width: function (width) {
+        if (width === undefined) return this.vars.width;
+        const k = width / this.vars.width;
+        this.fontSize(this.fontSize() * k);
         return this;
-    } else if (arguments.length === 1) return focus(arguments[0], arguments[1]);
-    const update = () => {
-        this.freeze();
-        this.vars.l = l;
-        this.vars.r = r;
-        this.unfreeze();
-    };
-    if (focus.opacity() === 0) {
-        const context = new Context(focus);
-        focus.startAnimate(context.tillc(0, 0));
-        update();
-        focus.startAnimate(context.tillc(0, 1));
-        focus.opacity(1);
-    } else update();
-    return this;
-};
-
-Code.prototype.l = function () {
-    return this.vars.l;
-};
-
-Code.prototype.r = function () {
-    return this.vars.r;
-};
-
-Code.prototype.value = function () {
-    return this.element.apply(this, arguments);
+    },
+    height: function (height) {
+        if (height === undefined) return this.vars.height;
+        const k = height / this.vars.height;
+        this.fontSize(this.fontSize() * k);
+        return this;
+    },
+    insert: function (id, value = "") {
+        const element = Cast.castToSDNode(this.layer("elements"), value);
+        element.onEnter(EN.appear("elements"));
+        this.insertByBaseArray(id, element);
+        return this;
+    },
+    code: function (source) {
+        for (let i = this.end(); i >= this.start(); i--) this.erase(i);
+        let ans = "";
+        for (let i = 0; i < source.length; i++) {
+            if (source[i] === "\n") {
+                if (ans != "") this.push(ans);
+                ans = "";
+            } else ans += source[i];
+        }
+        if (ans.length > 0) this.push(ans);
+        return this;
+    },
+    focus: function (l, r) {
+        const focus = this.child("focus");
+        if (Check.isFalseType(l)) {
+            this.freeze();
+            this.vars.l = undefined;
+            this.vars.r = undefined;
+            this.unfreeze();
+            focus.opacity(0);
+            return this;
+        } else if (arguments.length === 1) return this.focus(l, l);
+        if (focus.opacity() === 0) {
+            const context = new Context(focus);
+            focus.startAnimate(context.tillc(0, 0));
+            this.freeze();
+            this.vars.l = l;
+            this.vars.r = r;
+            this.unfreeze();
+            focus.startAnimate(context.tillc(0, 1));
+            focus.opacity(1);
+        } else {
+            this.freeze();
+            this.vars.l = l;
+            this.vars.r = r;
+            this.unfreeze();
+        }
+        return this;
+    },
+    l: function () {
+        return this.vars.l;
+    },
+    r: function () {
+        return this.vars.r;
+    },
+    value: function () {
+        return this.element.apply(this, arguments);
+    },
 };

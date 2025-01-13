@@ -29,6 +29,6 @@ export class BaseElement extends SDNode {
     value(): SDNode;
     value(value: SDNode): this;
     value(value: SDNode, rule: SDRule): this;
-    valueFromExist(value: SDNode)
+    valueFromExist(value: SDNode);
     valueFromExist(value: SDNode, rule: SDRule): this;
 }

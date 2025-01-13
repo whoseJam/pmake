@@ -46,7 +46,7 @@ export class BaseArray extends SDNode {
     opacity(id: number, opacity: number): this;
 
     value(id: number): SDNode;
-    value(id: number, value: SDNode): this
+    value(id: number, value: SDNode): this;
 
     color(color: Color): this;
     color(id: number): Color;

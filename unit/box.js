@@ -5,20 +5,13 @@ const C = sd.color();
 const R = sd.rule();
 const EN = sd.enter();
 
-sd.init(() => {
+sd.init(() => {});
 
-})
-
-sd.main(main);
-
-async function TestTextCenter() {
-    const box = new sd.Box(svg).center(600, 300).value("a");
-}
-
-async function main() {
+sd.main(async () => {
     const box = new sd.Box(svg).cx(600).cy(300).value(new sd.Circle(svg));
     await sd.pause();
-    let txt = "helloworld", str = [];
+    let txt = "helloworld",
+        str = [];
     for (let i = 0; i < txt.length; i++) {
         str.push(new sd.Text(svg, txt[i]).x(Math.random() * 1200).y(Math.random() * 600));
     }
@@ -26,12 +19,7 @@ async function main() {
     await sd.pause();
     for (let i = 0; i < str.length; i++) {
         let t = str[i];
-        box.startAnimate().value(
-            t.onEnter((element) => {
-                element.after(box);
-                element.startAnimate();
-            })
-        ).endAnimate();
+        box.startAnimate().value(t.onEnter(EN.moveTo())).endAnimate();
     }
 
     await sd.pause();
@@ -62,5 +50,8 @@ async function main() {
     await sd.pause();
     const e7 = b7.drop();
     b8.after(b7).startAnimate().valueFromExist(e7).endAnimate();
-    await sd.pause();
+});
+
+async function TestTextCenter() {
+    const box = new sd.Box(svg).center(600, 300).value("a");
 }

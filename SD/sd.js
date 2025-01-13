@@ -28,7 +28,6 @@ export { Pile } from "./Node/Array/Pile.js";
 export { Stack } from "./Node/Array/Stack.js";
 export { ValueArray } from "./Node/Array/ValueArray.js";
 export { ValueStack } from "./Node/Array/ValueStack.js";
-export { VarList } from "./Node/Array/VarList.js";
 
 export { Coord } from "./Node/Coord/Coord.js";
 

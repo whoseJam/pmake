@@ -12,7 +12,7 @@ export function Pile(parent) {
         x: 0,
         my: 0,
         elementWidth: 40,
-        elementHeight: 40
+        elementHeight: 40,
     });
 
     this._.updater = effect(() => {
@@ -26,25 +26,24 @@ export function Pile(parent) {
 }
 
 Pile.prototype = {
-    ...BaseArray.prototype
+    ...BaseArray.prototype,
+    y: function (y) {
+        if (y === undefined) return this.my() - this.height();
+        this.my(y + this.height());
+        return this;
+    },
+    my: Factory.handlerLowPrecise("my"),
+    elementWidth: Factory.handlerLowPrecise("elementWidth"),
+    elementHeight: Factory.handlerLowPrecise("elementHeight"),
+    insert: Array.prototype.insert,
+    insertFromExistValue: Array.prototype.insertFromExistValue,
+    insertFromExistElement: Array.prototype.insertFromExistElement,
+    height: function (height) {
+        if (height === undefined) return this.elementHeight() * this.length();
+        const length = Math.max(this.length(), 1);
+        this.elementHeight(height / length);
+        return this;
+    },
 };
 
-Pile.prototype.y = function (y) {
-    if (y === undefined) return this.my() - this.height();
-    this.my(y + this.height());
-    return this;
-}
-
-Pile.prototype.my = Factory.handlerLowPrecise("my");
-Pile.prototype.elementWidth = Factory.handlerLowPrecise("elementWidth");
-Pile.prototype.elementHeight = Factory.handlerLowPrecise("elementHeight");
-Pile.prototype.insert = Array.prototype.insert;
-Pile.prototype.insertFromExistValue = Array.prototype.insertFromExistValue;
-Pile.prototype.insertFromExistElement = Array.prototype.insertFromExistElement;
 Pile.prototype.width = Pile.prototype.elementWidth;
-Pile.prototype.height = function (height) {
-    if (height === undefined) return this.elementHeight() * this.length();
-    const length = Math.max(this.length(), 1);
-    this.elementHeight(height / length);
-    return this;
-}

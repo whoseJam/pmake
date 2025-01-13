@@ -1,16 +1,15 @@
 import { Dom } from "@/Dom/Dom";
-
 import { Check } from "@/Utility/Check";
 
 export function Interact(parent) {
     this.parent = parent;
-    
+
     this.onClickCb = undefined;
     this.onDblClickCb = undefined;
     this.clickTimeout = undefined;
 }
 
-Interact.prototype.onClick = function(callback) {
+Interact.prototype.onClick = function (callback) {
     const nake = this.parent._.layer.nake();
     Dom.removeEventListener(nake, "click", this.onClickCb);
     this.onClickCb = () => {
@@ -21,9 +20,9 @@ Interact.prototype.onClick = function(callback) {
     };
     Dom.addEventListener(nake, "click", this.onClickCb);
     return this;
-}
+};
 
-Interact.prototype.onDblClick = function(callback) {
+Interact.prototype.onDblClick = function (callback) {
     const nake = this.parent._.layer.nake();
     Dom.removeEventListener(nake, "dblclick", this.onDblClickCb);
     this.onDblClickCb = () => {
@@ -32,9 +31,9 @@ Interact.prototype.onDblClick = function(callback) {
     };
     Dom.addEventListener(nake, "dblclick", this.onDblClickCb);
     return this;
-}
+};
 
-Interact.prototype.drag = function(arg) {
+Interact.prototype.drag = function (arg) {
     const nake = this.parent._.layer.nake();
     if (Check.isFalseType(arg)) {
         Snap(nake).undrag();
@@ -44,25 +43,28 @@ Interact.prototype.drag = function(arg) {
     let currentY = 0;
     let lastDx = 0;
     let lastDy = 0;
-    Snap(nake).drag(function(dx, dy) {
-        let screenDx = (dx - lastDx) / window.RATE;
-        let screenDy = (dy - lastDy) / window.RATE;
-        if (typeof(arg) === "function") {
-            [screenDx, screenDy] = arg(screenDx, screenDy);
+    Snap(nake).drag(
+        function (dx, dy) {
+            let screenDx = (dx - lastDx) / window.RATE;
+            let screenDy = (dy - lastDy) / window.RATE;
+            if (typeof arg === "function") {
+                [screenDx, screenDy] = arg(screenDx, screenDy);
+            }
+            lastDx = dx;
+            lastDy = dy;
+            currentX += screenDx;
+            currentY += screenDy;
+            const transform = `matrix(1,0,0,1,${currentX},${currentY})`;
+            nake.setAttribute("transform", transform);
+        },
+        function () {
+            if (nake.transform.baseVal.length > 0) {
+                currentX = nake.transform.baseVal.getItem(0).matrix.e;
+                currentY = nake.transform.baseVal.getItem(0).matrix.f;
+                lastDx = 0;
+                lastDy = 0;
+            }
         }
-        lastDx = dx;
-        lastDy = dy;
-        currentX += screenDx;
-        currentY += screenDy;
-        const transform = `matrix(1,0,0,1,${currentX},${currentY})`;
-        nake.setAttribute("transform", transform);
-    }, function() {
-        if (nake.transform.baseVal.length > 0) {
-            currentX = nake.transform.baseVal.getItem(0).matrix.e;
-            currentY = nake.transform.baseVal.getItem(0).matrix.f;
-            lastDx = 0;
-            lastDy = 0;
-        }
-    });
+    );
     return this;
-}
+};

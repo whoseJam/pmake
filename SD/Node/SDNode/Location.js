@@ -1,4 +1,3 @@
-
 export class Location {
     static scale(scale) {
         const width = this.width();
@@ -27,35 +26,35 @@ export class Location {
     }
 
     static kQuantileLocation(locator, size) {
-        return function(k) {
+        return function (k) {
             return this[locator]() + k * this[size]();
-        }
+        };
     }
 
     static centerLocation(locator, size) {
-        return function(x) {
+        return function (x) {
             if (x === undefined) {
                 return this[locator]() + this[size]() / 2;
             }
             this[locator](x - this[size]() / 2);
             return this;
-        }
+        };
     }
 
     static maxiumLocation(locator, size) {
-        return function(mx) {
+        return function (mx) {
             if (mx === undefined) {
                 return this[locator]() + this[size]();
             }
             this[locator](mx - this[size]());
             return this;
-        }
+        };
     }
 
     static moveLocation(locator) {
-        return function(d) {
+        return function (d) {
             this[locator](this[locator]() + d);
             return this;
-        }
+        };
     }
-} 
+}

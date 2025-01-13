@@ -54,8 +54,6 @@ function parseText(text) {
 export function Text(parent, text = "") {
     BaseNake.call(this, parent, "text");
 
-    console.log("this.layer=", this._.layer);
-
     this.type("Text");
 
     this.vars.fill = C.black;

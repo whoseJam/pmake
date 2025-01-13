@@ -12,11 +12,11 @@ function interp(l, r, snap) {
     };
 }
 
-function pathInterp(node, attr) {
+function pathInterp(node, attrs) {
     return function (newValue, oldValue) {
         const l = node.delay();
         const r = node.delay() + node.duration();
-        const snap = Snap(attr.nake());
+        const snap = Snap(attrs.nake());
         new Action(l, r, oldValue, newValue, interp(l, r, snap), node, "d");
     };
 }

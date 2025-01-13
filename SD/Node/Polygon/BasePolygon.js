@@ -7,5 +7,5 @@ export function BasePolygon(parent, points) {
 }
 
 BasePolygon.prototype = {
-    ...Polygon.prototype
+    ...Polygon.prototype,
 };

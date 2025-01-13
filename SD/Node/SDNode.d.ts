@@ -15,11 +15,11 @@ export class SDNode {
     layer(name: string): RenderNode;
     attachTo(layer: SDNode): this;
     attachTo(layer: RenderNode): this;
-    
-    childAs(name: string, child: SDNode, rule: Rule): this
-    childAs(name: string, child: SDNode): this
+
+    childAs(name: string, child: SDNode, rule: Rule): this;
+    childAs(name: string, child: SDNode): this;
     childAs(child: SDNode, rule: Rule): this;
-    childAs(child: SDNode): this
+    childAs(child: SDNode): this;
 
     child(name: string): SDNode;
 
@@ -40,7 +40,7 @@ export class SDNode {
     opacity(): number;
     opacity(opacity: number): this;
     inRange(point: [number, number]): boolean;
-    remove(): void
+    remove(): void;
 
     x(): number;
     x(x: number): this;
@@ -83,10 +83,10 @@ export class SDNode {
     freezing(): boolean;
 
     drag(type: true): this;
-    drag(type: false|null|undefined)
+    drag(type: false | null | undefined);
     drag(onDrag: (dx: number, dy: number) => [number, number]): this;
     clickable(type: true): this;
-    clickable(type: false|null|undefined);
+    clickable(type: false | null | undefined);
     onClick(onClick: (node: this) => void): this;
     onDblClick(onClick: (node: this) => void): this;
 
@@ -94,10 +94,10 @@ export class SDNode {
     rule(rule: (parent: SDNode, child: SDNode) => void): this;
     triggerRule(): this;
     onEnter(enter: (element: SDNode, move: () => void) => void): this;
-    onEnter(): (element: SDNode) => void|undefined;
+    onEnter(): (element: SDNode) => void | undefined;
     triggerEnter(): this;
     onExit(exit: (element: SDNode) => void): this;
-    onExit(): (element: SDNode) => void|undefined;
+    onExit(): (element: SDNode) => void | undefined;
     triggerExit(): this;
 
     title(title: string): this;

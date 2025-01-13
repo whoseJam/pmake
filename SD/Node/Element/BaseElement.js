@@ -27,67 +27,60 @@ export function BaseElement(parent) {
 
 BaseElement.prototype = {
     ...SDNode.prototype,
+    x: Factory.handlerLowPrecise("x"),
+    y: Factory.handlerLowPrecise("y"),
+    width: Factory.handlerLowPrecise("width"),
+    height: Factory.handlerLowPrecise("height"),
+    rate: Factory.handlerLowPrecise("rate"),
+    color: backgroundHandler("color"),
+    fill: backgroundHandler("fill"),
+    fillOpacity: backgroundHandler("fillOpacity"),
+    stroke: backgroundHandler("stroke"),
+    strokeOpacity: backgroundHandler("strokeOpacity"),
+    strokeWidth: backgroundHandler("strokeWidth"),
+    background: function () {
+        return this.vars.background;
+    },
+    text: function () {
+        const value = this.child("value");
+        if (!value) return "";
+        if (!value.text) ErrorLauncher.invalidInvoke("text");
+        return value.text();
+    },
+    drop: function () {
+        const value = this.child("value");
+        value.onExit(EX.drop());
+        this.eraseChild(value);
+        return value;
+    },
+    intValue: function () {
+        const value = this.value();
+        if (!value) return 0;
+        if (!value.text) ErrorLauncher.invalidInvoke("intValue");
+        return +value.text();
+    },
+    value: function (value, rule) {
+        if (arguments.length === 0) return this.child("value");
+        if (this.hasChild("value")) this.eraseChild("value");
+        if (Check.isFalseType(value)) return this;
+        rule = getValueRule(this.vars, rule);
+        value = Cast.castToSDNode(this, value);
+        value.onEnterDefault(EN.appear());
+        value.onExitDefault(EX.fade());
+        value.triggerEnter(this, () => this.childAs("value", value, rule));
+        return this;
+    },
+    valueFromExist: function (value, rule) {
+        if (this.hasChild("value")) this.eraseChild("value");
+        rule = getValueRule(this.vars, rule);
+        value.onEnter(EN.moveTo());
+        value.onExitDefault(EX.fade());
+        value.triggerEnter(this, () => this.childAs("value", value, rule));
+        return this;
+    },
 };
 
-BaseElement.prototype.x = Factory.handlerLowPrecise("x");
-BaseElement.prototype.y = Factory.handlerLowPrecise("y");
-BaseElement.prototype.width = Factory.handlerLowPrecise("width");
-BaseElement.prototype.height = Factory.handlerLowPrecise("height");
-BaseElement.prototype.rate = Factory.handlerLowPrecise("rate");
-BaseElement.prototype.color = BackgroundHandler("color");
-BaseElement.prototype.fill = BackgroundHandler("fill");
-BaseElement.prototype.fillOpacity = BackgroundHandler("fillOpacity");
-BaseElement.prototype.stroke = BackgroundHandler("stroke");
-BaseElement.prototype.strokeOpacity = BackgroundHandler("strokeOpacity");
-BaseElement.prototype.strokeWidth = BackgroundHandler("strokeWidth");
-
-BaseElement.prototype.background = function () {
-    return this.vars.background;
-};
-
-BaseElement.prototype.text = function () {
-    const value = this.child("value");
-    if (!value) return "";
-    if (!value.text) ErrorLauncher.invalidInvoke("text");
-    return value.text();
-};
-
-BaseElement.prototype.drop = function () {
-    const value = this.child("value");
-    value.onExit(EX.drop());
-    this.eraseChild(value);
-    return value;
-};
-
-BaseElement.prototype.intValue = function () {
-    const value = this.value();
-    if (!value) return 0;
-    if (!value.text) ErrorLauncher.invalidInvoke("intValue");
-    return +value.text();
-};
-
-BaseElement.prototype.value = function (value, rule) {
-    if (arguments.length === 0) return this.child("value");
-    if (this.hasChild("value")) this.eraseChild("value");
-    if (Check.isFalseType(value)) return this;
-    rule = getValueRule(this.vars, rule);
-    value = Cast.castToSDNode(this, value);
-    value.onEnterDefault(EN.appear());
-    value.onExitDefault(EX.fade());
-    value.triggerEnter(this, () => this.childAs("value", value, rule));
-    return this;
-};
-
-BaseElement.prototype.valueFromExist = function (value, rule) {
-    if (this.hasChild("value")) this.eraseChild("value");
-    rule = getValueRule(this.vars, rule);
-    value.onEnter(EN.moveTo());
-    value.onExitDefault(EX.fade());
-    value.triggerEnter(this, () => this.childAs("value", value, rule));
-    return this;
-};
-
-function BackgroundHandler(key) {
+function backgroundHandler(key) {
     return function (value) {
         const background = this.child("background");
         if (value === undefined) return background[key]();

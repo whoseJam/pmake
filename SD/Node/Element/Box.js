@@ -13,5 +13,5 @@ export function Box(parent, value) {
 }
 
 Box.prototype = {
-    ...BaseElement.prototype
+    ...BaseElement.prototype,
 };

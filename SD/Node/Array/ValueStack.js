@@ -9,11 +9,10 @@ export function ValueStack(parent) {
     this.type("ValueStack");
 
     this.vars.merge({
-        align: "cx"
+        align: "cx",
     });
 
     uneffect(this._.updater);
-
     this._.updater = effect(() => {
         const align = this.align();
         this.vars.elements.forEach((element, i) => {
@@ -24,10 +23,9 @@ export function ValueStack(parent) {
 }
 
 ValueStack.prototype = {
-    ...Stack.prototype
+    ...Stack.prototype,
+    align: Factory.handler("align"),
+    insert: ValueArray.prototype.insert,
+    insertFromExistValue: ValueArray.prototype.insertFromExistValue,
+    insertFromExistElement: ValueArray.prototype.insertFromExistElement,
 };
-
-ValueStack.prototype.align = Factory.handler("align");
-ValueStack.prototype.insert = ValueArray.prototype.insert;
-ValueStack.prototype.insertFromExistValue = ValueArray.prototype.insertFromExistValue;
-ValueStack.prototype.insertFromExistElement = ValueArray.prototype.insertFromExistElement;

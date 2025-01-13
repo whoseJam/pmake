@@ -17,8 +17,8 @@ export function Array(parent) {
     });
 
     this._.updater = effect(() => {
-        this.vars.elements.forEach((element, i) => {
-            element.x(this.x() + i * this.elementWidth());
+        this.vars.elements.forEach((element, id) => {
+            element.x(this.x() + id * this.elementWidth());
             element.y(this.y());
             element.width(this.elementWidth());
             element.height(this.elementHeight());
@@ -28,37 +28,33 @@ export function Array(parent) {
 
 Array.prototype = {
     ...BaseArray.prototype,
-};
-
-Array.prototype.elementWidth = Factory.handlerLowPrecise("elementWidth");
-Array.prototype.elementHeight = Factory.handlerLowPrecise("elementHeight");
-Array.prototype.width = function (width) {
-    if (width === undefined) return this.elementWidth() * this.length();
-    const length = this.length() ? this.length() : 1;
-    this.elementWidth(width / length);
-    return this;
-};
-Array.prototype.height = Array.prototype.elementHeight;
-
-Array.prototype.insert = function (id, value) {
-    const element = new Box(this.layer("elements")).opacity(0);
-    element.value(value);
-    element.onEnter(EN.appear("elements"));
-    this.insertByBaseArray(id, element);
-    return this;
-};
-
-Array.prototype.insertFromExistValue = function (id, value) {
-    const element = new Box(this.layer("elements")).opacity(0);
-    element.onEnter(EN.appear("elements"));
-    this.insertByBaseArray(id, element);
-    element.value(value.onEnter(EN.moveTo()));
-    return this;
-};
-
-Array.prototype.insertFromExistElement = function (id, value) {
-    const element = value;
-    element.onEnter(EN.moveTo("elements"));
-    this.insertByBaseArray(id, element);
-    return this;
+    elementWidth: Factory.handlerLowPrecise("elementWidth"),
+    elementHeight: Factory.handlerLowPrecise("elementHeight"),
+    width: function (width) {
+        if (width === undefined) return this.elementWidth() * this.length();
+        const length = this.length() ? this.length() : 1;
+        this.elementWidth(width / length);
+        return this;
+    },
+    height: Array.prototype.elementHeight,
+    insert: function (id, value) {
+        const element = new Box(this.layer("elements")).opacity(0);
+        element.value(value);
+        element.onEnter(EN.appear("elements"));
+        this.insertByBaseArray(id, element);
+        return this;
+    },
+    insertFromExistValue: function (id, value) {
+        const element = new Box(this.layer("elements")).opacity(0);
+        element.onEnter(EN.appear("elements"));
+        this.insertByBaseArray(id, element);
+        element.value(value.onEnter(EN.moveTo()));
+        return this;
+    },
+    insertFromExistElement: function (id, value) {
+        const element = value;
+        element.onEnter(EN.moveTo("elements"));
+        this.insertByBaseArray(id, element);
+        return this;
+    },
 };

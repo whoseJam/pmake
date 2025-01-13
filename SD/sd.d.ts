@@ -26,7 +26,6 @@ export { Pile } from "./Node/Array/Pile";
 export { Stack } from "./Node/Array/Stack";
 export { ValueArray } from "./Node/Array/ValueArray";
 export { ValueStack } from "./Node/Array/ValueStack";
-export { VarList } from "./Node/Array/VarList";
 
 export { Coord } from "./Node/Coord/Coord";
 

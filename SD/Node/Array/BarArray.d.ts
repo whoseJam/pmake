@@ -1,5 +1,5 @@
-import { SDNode }    from "SD/Node/SDNode";
-import { BaseArray } from "SD/Node/Array/BaseArray";
+import { BaseArray } from "@/Node/Array/BaseArray";
+import { SDNode } from "@/Node/SDNode";
 
 export class BarArray extends BaseArray {
     constructor(parent: SDNode);

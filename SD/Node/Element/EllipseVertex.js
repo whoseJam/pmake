@@ -13,5 +13,5 @@ export function EllipseVertex(parent, value) {
 }
 
 EllipseVertex.prototype = {
-    ...BaseElement.prototype
+    ...BaseElement.prototype,
 };

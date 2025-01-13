@@ -1,25 +1,36 @@
 import { Action } from "@/Animate/Action";
-
 import { Animate } from "@/Node/SDNode/Animate";
 import { Children } from "@/Node/SDNode/Children";
 import { Interact } from "@/Node/SDNode/Interact";
 import { Location } from "@/Node/SDNode/Location";
-
-import { SVGNode } from "@/Renderer/SVG/SVGNode";
-
-import { reactive } from "@/Node/SDNode/SDValue";
+import { effect, reactive } from "@/Node/SDNode/SDValue";
 import { createRenderNode } from "@/Renderer/RenderNode";
+import { SVGNode } from "@/Renderer/SVG/SVGNode";
 import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
-import { effect } from "./SDNode/SDValue";
 
-let SDNodeID = 0;
+let id = 0;
+
+function interp(node, l, r, attrs) {
+    return function (t) {
+        const k = this.source + (this.target - this.source) * t;
+        attrs.setAttribute("opacity", k);
+        if (t === 1 && !node._.clickableCalled) {
+            attrs.setAttribute("pointer-events", k === 0 ? "none" : "auto");
+        }
+    };
+}
+
+function opacityInterp(node, attrs) {
+    return function (newValue, oldValue) {
+        const l = node.delay();
+        const r = node.delay() + node.duration();
+        new Action(l, r, oldValue, newValue, interp(node, l, r, attrs), node, "opacity");
+    };
+}
 
 export function SDNode(parent, layer = undefined) {
-    SDNodeID++;
-
-    // this.is_not_ready = true;
-    this.id = SDNodeID;
+    this.id = ++id;
     this._ = {
         ready: false, // only when ready = true, the action can impact the node
         layer: undefined,
@@ -54,43 +65,25 @@ export function SDNode(parent, layer = undefined) {
         opacity: 1,
     });
 
-    this.vars.associate("opacity", (newOpacity, oldOpacity) => {
-        const self = this;
-        const layer = this._.layer;
-        new Action(
-            this.delay(),
-            this.delay() + this.duration(),
-            oldOpacity,
-            newOpacity,
-            function (t) {
-                const k = this.source + (this.target - this.source) * t;
-                layer.setAttribute("opacity", k);
-                if (t === 1 && !self._.clickableCalled) {
-                    layer.setAttribute("pointer-events", k === 0 ? "none" : "auto");
-                }
-            },
-            this,
-            "opacity"
-        );
-    });
+    this.vars.associate("opacity", opacityInterp(this, this._.layer));
 
     this._.BASE_SDNODE = true;
 }
 
-SDNode.forward = function (comp, func) {
+function forward(comp, func) {
     return function () {
         const component = this._[comp];
         component[func].apply(component, arguments);
         return this;
     };
-};
+}
 
-SDNode.forwardWithReturn = function (comp, func) {
+function forwardWithReturn(comp, func) {
     return function () {
         const component = this._[comp];
         return component[func].apply(component, arguments);
     };
-};
+}
 
 SDNode.prototype.type = function (type) {
     if (type === undefined) return this._.layer.getAttribute("type");
@@ -128,108 +121,96 @@ SDNode.prototype.childAs = function () {
     return this;
 };
 
-SDNode.prototype.child = SDNode.forwardWithReturn("children", "child");
-SDNode.prototype.hasChild = SDNode.forwardWithReturn("children", "has");
-SDNode.prototype.eraseChild = SDNode.forwardWithReturn("children", "erase");
-
-SDNode.prototype.startAnimate = SDNode.forward("animate", "startAnimate");
-SDNode.prototype.endAnimate = SDNode.forward("animate", "endAnimate");
-SDNode.prototype.isAnimating = SDNode.forwardWithReturn("animate", "isAnimating");
-SDNode.prototype.delay = SDNode.forwardWithReturn("animate", "delay");
-SDNode.prototype.after = SDNode.forward("animate", "after");
-SDNode.prototype.duration = SDNode.forwardWithReturn("animate", "duration");
-
-SDNode.prototype.opacity = Factory.handlerMediumPrecise("opacity");
-SDNode.prototype.inRange = function (vec) {
-    return this.x() <= vec[0] && vec[0] <= this.mx() && this.y() <= vec[1] && vec[1] <= this.my();
-};
-SDNode.prototype.remove = function () {
-    this._.layer.remove();
-};
-
-SDNode.prototype.scale = Location.scale;
-SDNode.prototype.pos = Location.position;
-SDNode.prototype.center = Location.center;
-SDNode.prototype.kx = Location.kQuantileLocation("x", "width");
-SDNode.prototype.ky = Location.kQuantileLocation("y", "height");
-SDNode.prototype.cx = Location.centerLocation("x", "width");
-SDNode.prototype.cy = Location.centerLocation("y", "height");
-SDNode.prototype.mx = Location.maxiumLocation("x", "width");
-SDNode.prototype.my = Location.maxiumLocation("y", "height");
-SDNode.prototype.dx = Location.moveLocation("x");
-SDNode.prototype.dy = Location.moveLocation("y");
-SDNode.prototype.updateList = [];
-
-SDNode.prototype.drag = SDNode.forward("interact", "drag");
-SDNode.prototype.clickable = function (type) {
-    this._.layer.setAttribute("pointer-events", Check.isFalseType(type) ? "none" : "auto");
-    this._.clickableCalled = true;
-    return this;
-};
-SDNode.prototype.onClick = SDNode.forward("interact", "onClick");
-SDNode.prototype.onDblClick = SDNode.forward("interact", "onDblClick");
-
-SDNode.prototype.rule = function (rule) {
-    if (rule === undefined) return this._.rule;
-    this._.rule = effect(() => {
-        rule(this._.parent, this);
-    }, this.type() + "-rule");
-    return this;
-};
-
-SDNode.prototype.onEnter = function (enter) {
-    if (enter === undefined) return this._.enter;
-    this._.enter = enter;
-    return this;
-};
-
-SDNode.prototype.onEnterDefault = function (enter) {
-    if (!this._.enter) this._.enter = enter;
-    return this;
-};
-
-SDNode.prototype.triggerEnter = function (move) {
-    if (!this._.enter) return this;
-    if (arguments.length === 2) {
-        this._.enter.call(arguments[0], this, arguments[1]);
-    } else {
-        this._.enter.call(this._.parent, this, move);
-    }
-    this._.enter = undefined;
-    return this;
-};
-
-SDNode.prototype.onExit = function (exit) {
-    if (exit === undefined) return this._.exit;
-    this._.exit = exit;
-    return this;
-};
-
-SDNode.prototype.onExitDefault = function (exit) {
-    if (!this._.exit) this._.exit = exit;
-    return this;
-};
-
-SDNode.prototype.triggerExit = function () {
-    if (!this._.exit) return this;
-    this._.exit.call(this._.parent, this);
-    this._.exit = undefined;
-    return this;
-};
-
-SDNode.prototype.title = function (title) {
-    const titleElment = new SVGNode(this, this._.layer, "title");
-    titleElment.setAttribute("innerHTML", title);
-    return this;
-};
-
-SDNode.prototype.freeze = function () {
-    this.vars.freeze();
-    return this;
-};
-
-SDNode.prototype.unfreeze = function () {
-    this.vars.unfreeze();
-    if (this._.updates) this._.updates.forEach(update => update());
-    return this;
+SDNode.prototype = {
+    ...SDNode.prototype,
+    child: forwardWithReturn("children", "child"),
+    hasChild: forwardWithReturn("children", "has"),
+    eraseChild: forwardWithReturn("children", "erase"),
+    startAnimate: forward("animate", "startAnimate"),
+    endAnimate: forward("animate", "endAnimate"),
+    isAnimating: forwardWithReturn("animate", "isAnimating"),
+    delay: forwardWithReturn("animate", "delay"),
+    after: forward("animate", "after"),
+    duration: forwardWithReturn("animate", "duration"),
+    opacity: Factory.handlerMediumPrecise("opacity"),
+    inRange: function (vec) {
+        return this.x() <= vec[0] && vec[0] <= this.mx() && this.y() <= vec[1] && vec[1] <= this.my();
+    },
+    remove: function () {
+        this._.layer.remove();
+    },
+    scale: Location.scale,
+    pos: Location.position,
+    center: Location.center,
+    kx: Location.kQuantileLocation("x", "width"),
+    ky: Location.kQuantileLocation("y", "height"),
+    cx: Location.centerLocation("x", "width"),
+    cy: Location.centerLocation("y", "height"),
+    mx: Location.maxiumLocation("x", "width"),
+    my: Location.maxiumLocation("y", "height"),
+    dx: Location.moveLocation("x"),
+    dy: Location.moveLocation("y"),
+    drag: forward("interact", "drag"),
+    clickable: function (type) {
+        this._.layer.setAttribute("pointer-events", Check.isFalseType(type) ? "none" : "auto");
+        this._.clickableCalled = true;
+        return this;
+    },
+    onClick: forward("interact", "onClick"),
+    onDblClick: forward("interact", "onDblClick"),
+    rule: function (rule) {
+        if (rule === undefined) return this._.rule;
+        this._.rule = effect(() => {
+            rule(this._.parent, this);
+        }, this.type() + "-rule");
+        return this;
+    },
+    onEnter: function (enter) {
+        if (enter === undefined) return this._.enter;
+        this._.enter = enter;
+        return this;
+    },
+    onEnterDefault: function (enter) {
+        if (!this._.enter) this._.enter = enter;
+        return this;
+    },
+    triggerEnter: function (move) {
+        if (!this._.enter) return this;
+        if (arguments.length === 2) {
+            this._.enter.call(arguments[0], this, arguments[1]);
+        } else {
+            this._.enter.call(this._.parent, this, move);
+        }
+        this._.enter = undefined;
+        return this;
+    },
+    onExit: function (exit) {
+        if (exit === undefined) return this._.exit;
+        this._.exit = exit;
+        return this;
+    },
+    onExitDefault(exit) {
+        if (!this._.exit) this._.exit = exit;
+        return this;
+    },
+    triggerExit: function () {
+        if (!this._.exit) return this;
+        this._.exit.call(this._.parent, this);
+        this._.exit = undefined;
+        return this;
+    },
+    title: function () {
+        const titleElment = new SVGNode(this, this._.layer, "title");
+        titleElment.setAttribute("innerHTML", title);
+        return this;
+    },
+    freeze() {
+        this.vars.freeze();
+        return this;
+    },
+    unfreeze() {
+        this.vars.unfreeze();
+        if (this._.updates) this._.updates.forEach(update => update()); // Tree
+        return this;
+    },
 };

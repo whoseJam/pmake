@@ -2,11 +2,7 @@ import * as sd from "@/sd";
 
 const svg = sd.svg();
 const C = sd.color();
-const elementTypes = [
-    sd.Vertex,
-    sd.Box,
-    sd.EllipseVertex
-];
+const elementTypes = [sd.Vertex, sd.Box, sd.EllipseVertex];
 const elements = [];
 
 sd.init(() => {
@@ -15,7 +11,7 @@ sd.init(() => {
         element.cx(i * 100 + 100).cy(100);
         elements.push(element);
     }
-})
+});
 
 sd.main(async () => {
     await sd.pause();
@@ -34,9 +30,9 @@ sd.main(async () => {
     for (let i = 0; i <= 10; i++) {
         elements[i % elements.length].startAnimate().valueFromExist(rands[i]).endAnimate();
     }
-    
+
     await sd.pause();
     for (let i = 0; i <= 10; i++) {
         elements[i % elements.length].startAnimate().value(i).endAnimate();
     }
-})
+});

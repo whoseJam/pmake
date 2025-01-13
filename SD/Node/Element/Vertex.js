@@ -9,7 +9,7 @@ export function Vertex(parent, value) {
     this.type("Vertex");
 
     this.vars.merge({
-        r: 20
+        r: 20,
     });
 
     this.childAs("background", new Circle(this.layer("background")), R.circleBackground());
@@ -18,10 +18,9 @@ export function Vertex(parent, value) {
 }
 
 Vertex.prototype = {
-    ...BaseElement.prototype
+    ...BaseElement.prototype,
+    r: Factory.handlerLowPrecise("r"),
+    width: Circle.prototype.width,
+    height: Circle.prototype.height,
+    inRange: Circle.prototype.inRange,
 };
-
-Vertex.prototype.r = Factory.handlerLowPrecise("r");
-Vertex.prototype.width = Circle.prototype.width;
-Vertex.prototype.height = Circle.prototype.height;
-Vertex.prototype.inRange = Circle.prototype.inRange;
