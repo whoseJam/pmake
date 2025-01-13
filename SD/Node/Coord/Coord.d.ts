@@ -1,5 +1,5 @@
-import { Line }   from "@/Node/Nake/Line";
-import { Path }   from "@/Node/Nake/Path";
+import { Line } from "@/Node/Nake/Line";
+import { Path } from "@/Node/Nake/Path";
 import { SDNode } from "@/Node/SDNode";
 
 class SDFunction {
@@ -41,9 +41,9 @@ export class Coord extends SDNode {
     trim(source: [number, number], target: [number, number]): [[number, number], [number, number], boolean];
     trim(source: [number, number], k: number): [[number, number], [number, number], boolean];
 
-    draw(name: number|string, func: (x: number) => number): Path & SDFunction;
-    drawLine(name: number|string, k: number, point: [number, number]): Line & SDFunction;
-    drawLine(name: number|string, k: number, x: number, y: number): Line & SDFunction;
+    draw(name: number | string, func: (x: number) => number): Path & SDFunction;
+    drawLine(name: number | string, k: number, point: [number, number]): Line & SDFunction;
+    drawLine(name: number | string, k: number, x: number, y: number): Line & SDFunction;
 
     at(x: number, y: number): [number, number];
     at(vec: [number, number]): [number, number];

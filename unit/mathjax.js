@@ -4,7 +4,7 @@ const svg = sd.svg();
 const C = sd.color();
 const T = 500;
 
-sd.main(Test0);
+sd.main(Test10);
 
 async function Test0() {
     const math = new sd.Mathjax(svg, "").x(100).y(100);

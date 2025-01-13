@@ -4,11 +4,30 @@ import { Dom } from "@/Dom/Dom";
 import { svg } from "@/Interact/RootSvg";
 import { SDNode } from "@/Node/SDNode";
 import { TeXAtom } from "@/Node/Text/TeXAtom";
+import { createRenderNode } from "@/Renderer/RenderNode";
 import { SVGNode } from "@/Renderer/SVG/SVGNode";
 import { Cast } from "@/Utility/Cast";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
 import { PathPen } from "@/Utility/PathPen";
+
+let globalMathjax = undefined;
+
+function createMathjax() {
+    if (globalMathjax === undefined) {
+        globalMathjax = svg().append("g");
+        globalMathjax.setAttribute("opacity", 0);
+        globalMathjax.setAttribute("font-size", 20);
+    }
+}
+
+function getBox(svg) {
+    createMathjax();
+    globalMathjax.append(svg);
+    const box = globalMathjax.nake().getBBox();
+    svg.remove();
+    return box;
+}
 
 export function Mathjax(parent, text) {
     SDNode.call(this, parent);
@@ -48,23 +67,20 @@ export function Mathjax(parent, text) {
 
 Mathjax.prototype = {
     ...SDNode.prototype,
-};
-
-Mathjax.prototype.x = Factory.handler("x");
-Mathjax.prototype.y = Factory.handler("y");
-Mathjax.prototype.fontSize = Factory.handler("fontSize");
-Mathjax.prototype.width = mathjaxLength("width");
-Mathjax.prototype.height = mathjaxLength("height");
-Mathjax.prototype.fill = Factory.handler("fill");
-Mathjax.prototype.stroke = Factory.handler("stroke");
-Mathjax.prototype.color = TeXAtom.prototype.color;
-
-Mathjax.prototype.element = function (id) {
-    return this.vars.elements[id];
-};
-
-Mathjax.prototype.text = function () {
-    return this.vars.text;
+    x: Factory.handler("x"),
+    y: Factory.handler("y"),
+    fontSize: Factory.handler("fontSize"),
+    width: mathjaxLength("width"),
+    height: mathjaxLength("height"),
+    fill: Factory.handler("fill"),
+    stroke: Factory.handler("stroke"),
+    color: TeXAtom.prototype.color,
+    element: function (id) {
+        return this.vars.elements[id];
+    },
+    text: function () {
+        return this.vars.text;
+    },
 };
 
 Mathjax.prototype.math = function (text) {
@@ -73,7 +89,7 @@ Mathjax.prototype.math = function (text) {
     if (text.startsWith("$")) text = text.slice(1, -1);
     this.vars.text = text;
 
-    const newMath = new SVGNode(this, this._.layer, MathJax.tex2svg(text).children[0]);
+    const newMath = createRenderNode(this, this._.layer, MathJax.tex2svg(text).children[0]);
     newMath.offsetX = 0;
     newMath.offsetY = 0;
 
@@ -91,7 +107,7 @@ Mathjax.prototype.transformMath = function (text, hint) {
     if (text.startsWith("$")) text = text.slice(1, -1);
     this.vars.text = text;
 
-    const newMath = new SVGNode(this, this._.layer, MathJax.tex2svg(text).children[0]);
+    const newMath = createRenderNode(this, this._.layer, MathJax.tex2svg(text).children[0]);
     newMath.offsetX = 0;
     newMath.offsetY = 0;
 
@@ -110,7 +126,7 @@ Mathjax.prototype.transformMathFrom = function (text, math, hint) {
     if (text.startsWith("$")) text = text.slice(1, -1);
     this.vars.text = text;
 
-    const newMath = new SVGNode(this, this._.layer, MathJax.tex2svg(text).children[0]);
+    const newMath = createRenderNode(this, this._.layer, MathJax.tex2svg(text).children[0]);
     newMath.offsetX = 0;
     newMath.offsetY = 0;
 
@@ -123,7 +139,7 @@ Mathjax.prototype.transformMathFrom = function (text, math, hint) {
         this,
         oldMath,
         newMath,
-        math.map(math => math._.math),
+        math.map(math => math._.cur),
         hint
     );
     buildTeXAtom(this, newMath);
@@ -135,7 +151,7 @@ Mathjax.prototype.transformMathFrom = function (text, math, hint) {
 Mathjax.prototype.createMath = function (id) {
     const element = this.element(id);
     const mathjax = new Mathjax(svg());
-    const newMath = new SVGNode(mathjax, mathjax._.layer, cloneMathjax(element._.nake.nake()));
+    const newMath = createRenderNode(mathjax, mathjax._.layer, cloneMathjax(element._.nake.nake()));
     mathjax._.cur = newMath;
     updateThatAndSvg(mathjax, newMath, this);
     return mathjax;
@@ -293,14 +309,7 @@ function transformSvg(mathjax, oldSvg, newSvg, selfSvg) {
     new Action(l, r, x, newSvg.getAttribute("x"), Interp.numberInterp(oldSvg, "x"), oldSvg, "x");
     new Action(l, r, y, newSvg.getAttribute("y"), Interp.numberInterp(oldSvg, "y"), oldSvg, "y");
 }
-// for (let i = 0; i < newPaths.length; i++) {
-//     const matrix = newPaths[i].transform.baseVal[0].matrix;
-//     const source = { a: 0, b: 0, c: 0, d: 0, e: target.e, f: target.f };
-//     const oldPath = Dom.createSVGElement("path");
-//     oldPath.setAttribute("d", newPaths[i].getAttribute("d"));
-//     oldRoot.append(oldPath);
-//     new Action(l, r, source, matrix, Interp.matrixInterp(oldPath, "transform"), oldPath, "transform");
-// }
+
 function fillOldPaths(oldPaths, newPaths, oldRoot) {
     const length = newPaths.length;
     const tmpPaths = [];
@@ -421,13 +430,6 @@ function buildTeXAtom(mathjax, svg) {
     mathjax.vars.elements = elements;
 }
 
-Mathjax.init = function () {
-    Mathjax.helper = Dom.createSVGElement("g");
-    Dom.getByID("1").append(Mathjax.helper);
-    Mathjax.helper.setAttribute("opacity", 0);
-    Mathjax.helper.setAttribute("font-size", 20);
-};
-
 function updateThisAndSvg(mathjax, svg) {
     const box = getBox(svg.nake());
     mathjax.vars.width20 = box.width;
@@ -447,13 +449,6 @@ function updateThatAndSvg(mathjax, svg, from) {
     svg.offsetY = box.y;
     svg.setAttribute("x", from.x());
     svg.setAttribute("y", from.y());
-}
-
-function getBox(svg) {
-    Mathjax.helper.append(svg);
-    const box = Mathjax.helper.getBBox();
-    svg.remove();
-    return box;
 }
 
 function mathjaxPositionUpdate(node, key, attrName, offsetName) {

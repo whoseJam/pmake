@@ -20,206 +20,169 @@ export function BaseGrid(parent) {
 
 BaseGrid.prototype = {
     ...SDNode.prototype,
-};
-
-BaseGrid.prototype.startN = Factory.handler("startN");
-BaseGrid.prototype.startM = Factory.handler("startM");
-
-BaseGrid.prototype.endN = function () {
-    return this.startN() + this.n() - 1;
-};
-
-BaseGrid.prototype.endM = function (idx) {
-    if (idx === undefined) return this.startM() + this.m() - 1;
-    const elements = this.vars.elements;
-    return this.startM() + elements[this.idxN(idx)].length - 1;
-};
-
-BaseGrid.prototype.idxN = function (idx) {
-    return idx - this.startN();
-};
-
-BaseGrid.prototype.idxM = function (idx) {
-    return idx - this.startM();
-};
-
-BaseGrid.prototype.n = function (n) {
-    let on = this.vars.n;
-    if (n === undefined) return on;
-    while (on < n) {
-        this.pushRow();
-        on++;
-    }
-    while (on > n) {
-        this.popRow();
-        on--;
-    }
-    return this;
-};
-
-BaseGrid.prototype.m = function (m) {
-    let om = this.vars.m;
-    if (m === undefined) return om;
-    while (om < m) {
-        this.pushCol();
-        om++;
-    }
-    while (om > m) {
-        this.popCol();
-        om--;
-    }
-    return this;
-};
-
-BaseGrid.prototype.getM = function (idx) {
-    return this.endM() - this.startM() + 1;
-};
-
-BaseGrid.prototype.insertByBaseGrid = function (i, j, element) {
-    const ri = this.idxN(i);
-    const rj = this.idxM(j);
-    const elements = this.vars.elements;
-    element.triggerEnter(this, () => {
-        while (elements.length <= ri) elements.push([]);
-        elements[ri].splice(rj, 0, element);
-        this.childAs(element);
-        this.vars.n = elements.length;
-        this.vars.m = Math.max(elements[ri].length, this.vars.m);
-    });
-    return this;
-};
-
-BaseGrid.prototype.eraseByBaseGrid = function (i, j) {
-    const element = this.element(i, j);
-    const ri = this.idxN(i);
-    const rj = this.idxM(j);
-    const elements = this.vars.elements;
-    elements[ri].splice(rj, 1);
-    this.eraseChild(element);
-    let m = 0;
-    for (let i = 0; i < elements.length; i++) m = Math.max(m, elements[i].length);
-    this.vars.n = elements.length;
-    this.vars.m = m;
-    return this;
-};
-
-BaseGrid.prototype.pushCol = function (rows) {
-    let l = this.startN();
-    let r = rows === undefined ? this.endN() : l + rows - 1;
-    for (let i = l; i <= r; i++) {
-        this.insert(i, this.endM(i) + 1, null);
-    }
-    if (l > r) {
-        this.vars.m++;
-    }
-    return this;
-};
-
-BaseGrid.prototype.pushRow = function (cols) {
-    let n = this.endN() + 1;
-    let l = this.startM();
-    let r = cols === undefined ? this.endM() : l + cols - 1;
-    for (let j = l; j <= r; j++) this.insert(n, j, null);
-    if (l > r) {
-        this.vars.n++;
-        this.vars.elements.push([]);
-    }
-    return this;
-};
-
-BaseGrid.prototype.element = function (i, j) {
-    return this.vars.elements[this.idxN(i)][this.idxM(j)];
-};
-
-BaseGrid.prototype.value = function (arg0, arg1, arg2) {
-    if (arguments.length === 2) {
-        const element = this.element(arg0, arg1);
-        if (!element) {
-            throw new Error(`Element ${arg0} ${arg1} Do Not Exists`);
-        }
-        return element.value();
-    }
-    if (arguments.length === 3) {
-        const element = this.element(arg0, arg1);
-        if (!element) {
-            throw new Error(`Element ${arg0} ${arg1} Do Not Exists`);
-        }
-        element.value(arg2);
-        return this;
-    }
-    console.log(arguments);
-    throw new Error("Invalid Arguments");
-};
-
-BaseGrid.prototype.intValue = function (i, j) {
-    const value = this.value(i, j);
-    if (!value) return 0;
-    if (!value.text) ErrorLauncher.invalidInvoke("intValue");
-    return +value.text();
-};
-
-BaseGrid.prototype.opacity = function (arg0, arg1, arg2) {
-    if (arguments.length === 0) {
-        return SDNode.prototype.opacity.call(this);
-    }
-    if (arguments.length === 1) {
-        SDNode.prototype.opacity.call(this, arg0);
-        return this;
-    }
-    if (arguments.length === 2) {
-        const element = this.element(arg0, arg1);
-        if (!element) {
-            throw new Error(`Element ${arg0} ${arg1} Do Not Exists`);
-        }
-        return element.opacity();
-    }
-    if (arguments.length === 2) {
-        const element = this.element(arg0, arg1);
-        if (!element) {
-            throw new Error(`Element ${arg0} ${arg1} Do Not Exists`);
-        }
-        element.opacity(arg2);
-        return this;
-    }
-    console.log(arguments);
-    throw new Error("Invalid Arguments");
-};
-
-BaseGrid.prototype.color = function (arg0, arg1, arg2) {
-    if (arguments.length === 1) {
+    startN: Factory.handler("startN"),
+    startM: Factory.handler("startM"),
+    endN: function () {
+        return this.startN() + this.n() - 1;
+    },
+    endM: function (idx) {
+        if (idx === undefined) return this.startM() + this.m() - 1;
         const elements = this.vars.elements;
-        elements.forEach(row => {
-            row.forEach(col => {
-                col.color(arg0);
+        return this.startM() + elements[this.idxN(idx)].length - 1;
+    },
+    idxN: function (idx) {
+        return idx - this.startN();
+    },
+    idxM: function (idx) {
+        return idx - this.startM();
+    },
+    n: function (n) {
+        let on = this.vars.n;
+        if (n === undefined) return on;
+        while (on < n) {
+            this.pushRow();
+            on++;
+        }
+        while (on > n) {
+            this.popRow();
+            on--;
+        }
+        return this;
+    },
+    m: function (m) {
+        let om = this.vars.m;
+        if (m === undefined) return om;
+        while (om < m) {
+            this.pushCol();
+            om++;
+        }
+        while (om > m) {
+            this.popCol();
+            om--;
+        }
+        return this;
+    },
+    insertByBaseGrid: function (rowId, colId, element) {
+        const ri = this.idxN(rowId);
+        const rj = this.idxM(colId);
+        const elements = this.vars.elements;
+        element.triggerEnter(this, () => {
+            while (elements.length <= ri) elements.push([]);
+            elements[ri].splice(rj, 0, element);
+            this.childAs(element);
+            this.vars.n = elements.length;
+            this.vars.m = Math.max(elements[ri].length, this.vars.m);
+        });
+        return this;
+    },
+    eraseByBaseGrid: function (rowId, colId) {
+        const element = this.element(rowId, colId);
+        const ri = this.idxN(rowId);
+        const rj = this.idxM(colId);
+        const elements = this.vars.elements;
+        elements[ri].splice(rj, 1);
+        this.eraseChild(element);
+        let m = 0;
+        for (let i = 0; i < elements.length; i++) m = Math.max(m, elements[i].length);
+        this.vars.n = elements.length;
+        this.vars.m = m;
+        return this;
+    },
+    pushCol(rows) {
+        const l = this.startN();
+        const r = rows === undefined ? this.endN() : l + rows - 1;
+        for (let i = l; i <= r; i++) this.insert(i, this.endM(i) + 1, null);
+        if (l > r) this.vars.m++;
+        return this;
+    },
+    pushRow(cols) {
+        let n = this.endN() + 1;
+        let l = this.startM();
+        let r = cols === undefined ? this.endM() : l + cols - 1;
+        for (let j = l; j <= r; j++) this.insert(n, j, null);
+        if (l > r) {
+            this.vars.n++;
+            this.vars.elements.push([]);
+        }
+        return this;
+    },
+    element: function (rowId, colId) {
+        [rowId, colId] = [this.idxN(rowId), this.idxM(colId)];
+        if (0 <= rowId && rowId < this.vars.elements.length) {
+            if (0 <= colId && colId < this.vars.elements[rowId].length) {
+                return this.vars.elements[rowId][colId];
+            }
+            ErrorLauncher.outOfRangeError(colId);
+        }
+        ErrorLauncher.outOfRangeError(rowId);
+    },
+    value: function () {
+        const args = arguments;
+        switch (args.length) {
+            case 2: {
+                const element = this.element(args[0], args[1]);
+                return element.value();
+            }
+            case 3: {
+                const element = this.element(args[0], args[1]);
+                element.value(args[2]);
+                return this;
+            }
+            default:
+                ErrorLauncher.invalidArguments();
+        }
+    },
+    intValue: function (rowId, colId) {
+        const value = this.value(rowId, colId);
+        if (!value) return 0;
+        if (!value.text) ErrorLauncher.invalidInvoke("intValue");
+        return +value.text();
+    },
+    opacity: function () {
+        const args = arguments;
+        switch (args.length) {
+            case 0:
+                return SDNode.prototype.opacity.call(this);
+            case 1:
+                return SDNode.prototype.opacity.call(this, args[1]);
+            case 2: {
+                const element = this.element(args[0], args[1]);
+                return element.opacity();
+            }
+            case 3: {
+                const element = this.element(args[0], args[1]);
+                element.opacity(args[2]);
+                return this;
+            }
+            default:
+                ErrorLauncher.invalidArguments();
+        }
+    },
+    color: function () {
+        const args = arguments;
+        switch (args.length) {
+            case 1:
+                this.forEachElement(element => element.color(args[0]));
+                return this;
+            case 2: {
+                const element = this.element(args[0], args[1]);
+                return element.color();
+            }
+            case 3: {
+                const element = this.element(args[0], args[1]);
+                element.color(args[2]);
+                return this;
+            }
+            default:
+                ErrorLauncher.invalidArguments();
+        }
+    },
+    forEachElement: function (callback) {
+        this.vars.elements.forEach((row, rowId) => {
+            row.forEach((element, colId) => {
+                callback(element, rowId + this.startN(), colId + this.startM());
             });
         });
         return this;
-    }
-    if (arguments.length === 2) {
-        const element = this.element(arg0, arg1);
-        if (!element) {
-            throw new Error(`Element ${arg0} ${arg1} Do Not Exists`);
-        }
-        return element.color();
-    }
-    if (arguments.length === 3) {
-        const element = this.element(arg0, arg1);
-        if (!element) {
-            throw new Error(`Element ${arg0} ${arg1} Do Not Exists`);
-        }
-        element.color(arg2);
-        return this;
-    }
-    console.log(arguments);
-    throw new Error("无效的参数");
-};
-
-BaseGrid.prototype.forEachElement = function (callback) {
-    const elements = this.vars.elements;
-    elements.forEach((row, rowId) => {
-        row.forEach((col, colId) => {
-            callback(col, rowId + this.startN(), colId + this.startM());
-        });
-    });
-    return this;
+    },
 };

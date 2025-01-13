@@ -1,11 +1,9 @@
+import { Context } from "@/Animate/Context";
+import { Vector as V } from "@/Math/Vector";
 import { Line } from "@/Node/Nake/Line";
 import { Path } from "@/Node/Nake/Path";
 import { SDNode } from "@/Node/SDNode";
-
-import { Context } from "@/Animate/Context";
 import { PathPen } from "@/Utility/PathPen";
-
-import { Vector as V } from "@/Math/Vector";
 
 function XAxisRule(parent, child) {
     const Y = parent.member.get("view-y");

@@ -19,17 +19,17 @@ export function Grid(parent) {
         width: 0,
         height: 0,
         main: "row",
-        align: "x"
+        align: "x",
     });
 
     this._.updater = effect(() => {
         const dict = {
-            "x": this.x(),
-            "y": this.y(),
-            "mx": this.mx(),
-            "my": this.my(),
-            "lx": this.elementWidth(),
-            "ly": this.elementHeight()
+            x: this.x(),
+            y: this.y(),
+            mx: this.mx(),
+            my: this.my(),
+            lx: this.elementWidth(),
+            ly: this.elementHeight(),
         };
         const elements = this.vars.elements;
         const main = this.axis();
@@ -48,46 +48,41 @@ export function Grid(parent) {
                 element[auxiLabel](dict[auxiLabel] + auxiFlag * j * dict[`l${auxiAxis}`]);
             }
         }
-    })
+    });
 }
 
 Grid.prototype = {
-    ...BaseGrid.prototype
+    ...BaseGrid.prototype,
+    x: Factory.handlerLowPrecise("x"),
+    y: Factory.handlerLowPrecise("y"),
+    elementWidth: Factory.handlerLowPrecise("elementWidth"),
+    elementHeight: Factory.handlerLowPrecise("elementHeight"),
+    axis: Factory.handlerLowPrecise("main"),
+    align: Factory.handlerLowPrecise("align"),
+    width: function (width) {
+        const label = this.vars.main === "row" ? "m" : "n";
+        if (width === undefined) return this[label]() * this.elementWidth();
+        const length = this[label]() ? this[label]() : 1;
+        this.elementWidth(width / length);
+        return this;
+    },
+    height: function (height) {
+        const label = this.vars.main === "row" ? "n" : "m";
+        if (height === undefined) return this[label]() * this.elementHeight();
+        const length = this[label]() ? this[label]() : 1;
+        this.elementHeight(height / length);
+        return this;
+    },
+    insert: function (rowId, colId, value) {
+        const element = new Box(this.layer("elements"), value).opacity(0);
+        element.onEnter(EN.appear("elements"));
+        this.insertByBaseGrid(rowId, colId, element);
+        return this;
+    },
+    erase: function (rowId, colId) {
+        const element = this.element(rowId, colId);
+        element.onExit(EX.fade());
+        this.eraseByBaseGrid(rowId, colId);
+        return this;
+    },
 };
-
-Grid.prototype.x = Factory.handlerLowPrecise("x");
-Grid.prototype.y = Factory.handlerLowPrecise("y");
-Grid.prototype.elementWidth = Factory.handlerLowPrecise("elementWidth");
-Grid.prototype.elementHeight = Factory.handlerLowPrecise("elementHeight");
-Grid.prototype.axis = Factory.handlerLowPrecise("main");
-Grid.prototype.align = Factory.handlerLowPrecise("align");
-
-Grid.prototype.width = function (width) {
-    const label = this.vars.main === "row" ? "m" : "n";
-    if (width === undefined) return this[label]() * this.elementWidth();
-    const length = this[label]() ? this[label]() : 1;
-    this.elementWidth(width / length);
-    return this;
-}
-
-Grid.prototype.height = function (height) {
-    const label = this.vars.main === "row" ? "n" : "m";
-    if (height === undefined) return this[label]() * this.elementHeight();
-    const length = this[label]() ? this[label]() : 1;
-    this.elementHeight(height / length);
-    return this;
-}
-
-Grid.prototype.insert = function (i, j, value) {
-    const element = new Box(this.layer("elements"), value).opacity(0);
-    element.onEnter(EN.appear("elements"));
-    this.insertByBaseGrid(i, j, element);
-    return this;
-}
-
-Grid.prototype.erase = function (i, j) {
-    const element = this.element(i, j);
-    element.onExit(EX.fade());
-    this.eraseByBaseGrid(i, j);
-    return this;
-}

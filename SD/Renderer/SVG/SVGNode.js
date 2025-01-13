@@ -6,14 +6,15 @@ const SHAPE_TAG = new Set(["circle", "ellipse", "foreignObject", "fragment", "im
 
 function appendAndRemove(svgNode, owner) {
     return function (t) {
-        if (t !== 1) return;
         if (this.target) {
+            if (t !== 1) return;
             this.target.append(svgNode);
             owner._.created = true;
             requestAnimationFrame(() => {
                 owner._.ready = true;
             });
         } else {
+            if (t !== 0) return;
             svgNode.element.remove();
             owner._.created = false;
             requestAnimationFrame(() => {

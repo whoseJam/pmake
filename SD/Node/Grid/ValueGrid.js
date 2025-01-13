@@ -8,7 +8,6 @@ export function ValueGrid(parent) {
     this.type("ValueGrid");
 
     uneffect(this._.updater);
-
     this._.updater = effect(() => {
         const x = this.x();
         const y = this.y();
@@ -25,16 +24,15 @@ export function ValueGrid(parent) {
                 });
             }
         }
-    })
+    });
 }
 
 ValueGrid.prototype = {
-    ...Grid.prototype
+    ...Grid.prototype,
+    insert: function (rowId, colId, value) {
+        const element = value;
+        element.onEnterDefault(EN.appear("elements"));
+        this.insertByBaseGrid(rowId, colId, element);
+        return this;
+    },
 };
-
-ValueGrid.prototype.insert = function (i, j, value) {
-    const element = value;
-    element.onEnterDefault(EN.appear("elements"));
-    this.insertByBaseGrid(i, j, element);
-    return this;
-}
