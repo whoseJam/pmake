@@ -1,6 +1,6 @@
 import { BaseArray } from "@/Node/Array/BaseArray";
+import { Enter as EN } from "@/Node/Core/Enter";
 import { Text } from "@/Node/Nake/Text";
-import { Enter as EN } from "@/Node/SDNode/Enter";
 import { Aside } from "@/Rule/Aside";
 import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
@@ -12,9 +12,9 @@ function GetIndexedBox(parent, location, index, start) {
     const y = parent.y();
     const elementWidth = parent.elementWidth();
     const elementHeight = parent.elementHeight();
-    let minX = (location === "t" || location === "b") ? x + elementWidth * (index - start) : x;
+    let minX = location === "t" || location === "b" ? x + elementWidth * (index - start) : x;
     if (Check.isTypeOfGrid(parent) && location === "r") minX = x + elementWidth * (parent.m() - 1);
-    let minY = (location === "l" || location === "r") ? y + elementHeight * (index - start) : y;
+    let minY = location === "l" || location === "r" ? y + elementHeight * (index - start) : y;
     if (Check.isTypeOfGrid(parent) && location === "b") minY = y + elementHeight * (parent.n() - 1);
     return {
         x: () => minX,
@@ -22,19 +22,19 @@ function GetIndexedBox(parent, location, index, start) {
         mx: () => minX + elementWidth,
         y: () => minY,
         cy: () => minY + elementHeight / 2,
-        my: () => minY + elementHeight
-    }
+        my: () => minY + elementHeight,
+    };
 }
 
 function GetIndexStart(parent, location) {
     if (Check.isTypeOfGrid(parent)) {
-        return (location === "t" || location === "b") ? parent.startM() : parent.startN();
+        return location === "t" || location === "b" ? parent.startM() : parent.startN();
     } else return parent.start();
 }
 
 function GetIndexLength(parent, location) {
     if (Check.isTypeOfGrid(parent)) {
-        return (location === "t" || location === "b") ? parent.m() : parent.n();
+        return location === "t" || location === "b" ? parent.m() : parent.n();
     } else return parent.length();
 }
 
@@ -53,7 +53,7 @@ function IndexRule(parent, index) {
 
     const indexes = {};
     const elements = index.vars.elements;
-    elements.forEach((element) => {
+    elements.forEach(element => {
         indexes[element.intValue()] = element;
     });
 
@@ -86,7 +86,7 @@ export function Index(parent, location = "t", fontSize = 15, gap = 3) {
     index.vars.merge({
         gap: gap,
         location: location,
-        fontSize: fontSize
+        fontSize: fontSize,
     });
 
     index.gap = Factory.handlerLowPrecise("gap");

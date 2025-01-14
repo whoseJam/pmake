@@ -1,6 +1,6 @@
 import { Vector as V } from "@/Math/Vector";
+import { effect } from "@/Node/Core/Reactive";
 import { BaseCurve } from "@/Node/Curve/BaseCurve";
-import { effect } from "@/Node/SDNode/SDValue";
 import { PathPen } from "@/Utility/PathPen";
 
 export function Bezier(parent) {
@@ -23,5 +23,5 @@ export function Bezier(parent) {
 }
 
 Bezier.prototype = {
-    ...BaseCurve.prototype
+    ...BaseCurve.prototype,
 };

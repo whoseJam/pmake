@@ -1,5 +1,5 @@
+import { Exit as EX } from "@/Node/Core/Exit";
 import { SDNode } from "@/Node/SDNode";
-import { Exit as EX } from "@/Node/SDNode/Exit";
 import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";

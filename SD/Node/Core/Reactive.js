@@ -1,5 +1,10 @@
 import { Check } from "@/Utility/Check";
 
+/**
+ * 总共有两种类型的 EffectQueue（name 有两种可能性）
+ * - globalEffectQueue：用于保存因为 freeze 而推迟作用的 effect
+ * - localEffectQueue：用于保存立刻生效的 effect
+ */
 class EffectQueue {
     constructor(name) {
         this.label = `in${name}Queue`;
@@ -39,13 +44,13 @@ class EffectQueue {
     }
 }
 
-const proxiesMap = new WeakMap();
-const effectsMap = new WeakMap();
-const objectsMap = new WeakMap();
-let globalAllowDAGUpdate = true;
-let globalFreeze = 0;
+const proxiesMap = new WeakMap(); // proxy -> object
+const effectsMap = new WeakMap(); // effect -> EffectManager
+const objectsMap = new WeakMap(); // object -> ObjectManager
 const localEffectQueue = new EffectQueue("Local");
 const globalEffectQueue = new EffectQueue("Global");
+let globalAllowDAGUpdate = true;
+let globalFreeze = 0;
 let currentEffectQueue = undefined;
 let globalActiveEffect = undefined;
 

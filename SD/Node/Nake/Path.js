@@ -38,7 +38,7 @@ function pathToBox(d) {
 function getPointAtLength(d, length) {
     try {
         globalPath.setAttribute("d", d);
-        const point = globalPath.getPointAtLength(length);
+        const point = globalPath.nake().getPointAtLength(length);
         return [point.x, point.y];
     } catch (e) {
         return [0, 0];

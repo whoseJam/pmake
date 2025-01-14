@@ -1,4 +1,4 @@
-import { effect, uneffect } from "@/Node/SDNode/SDValue";
+import { effect, uneffect } from "@/Node/Core/Reactive";
 import { BinaryTree } from "@/Node/Tree/BinaryTree";
 import { trim } from "@/Utility/Trim";
 
@@ -14,7 +14,7 @@ export function Splay(parent) {
 }
 
 Splay.prototype = {
-    ...BinaryTree.prototype
+    ...BinaryTree.prototype,
 };
 
 function SplayLayout(mode) {
@@ -24,12 +24,8 @@ function SplayLayout(mode) {
     const root = roots[0];
     if (!root) return;
     let maxDepth = 0;
-    const convertX = (mode === "vertical") ?
-        (rank, gap, depth) => this.x() + (rank + 1) * gap :
-        (rank, gap, depth) => this.x() + this.layerWidth() * depth;
-    const convertY = (mode === "horizontal") ?
-        (rank, gap, depth) => this.y() + (rank + 1) * gap :
-        (rank, gap, depth) => this.y() + this.layerHeight() * depth;
+    const convertX = mode === "vertical" ? (rank, gap, depth) => this.x() + (rank + 1) * gap : (rank, gap, depth) => this.x() + this.layerWidth() * depth;
+    const convertY = mode === "horizontal" ? (rank, gap, depth) => this.y() + (rank + 1) * gap : (rank, gap, depth) => this.y() + this.layerHeight() * depth;
     const convert = (rank, gap, depth) => [convertX(rank, gap, depth), convertY(rank, gap, depth)];
     const sequence = [];
     const dfs = (current, depth) => {
@@ -39,7 +35,7 @@ function SplayLayout(mode) {
         if (lc) dfs(this.element(lc), depth + 1);
         sequence.push([current, depth]);
         if (rc) dfs(this.element(rc), depth + 1);
-    }
+    };
     dfs(root, 1);
 
     if (mode === "vertical") {
@@ -62,6 +58,6 @@ function SplayLayout(mode) {
             link.source(source.center());
             link.target(target.center());
             trim(link, source, target);
-        })
+        });
     });
 }

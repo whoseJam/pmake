@@ -1,6 +1,6 @@
+import { Enter as EN } from "@/Node/Core/Enter";
+import { effect, uneffect } from "@/Node/Core/Reactive";
 import { Grid } from "@/Node/Grid/Grid";
-import { Enter as EN } from "@/Node/SDNode/Enter";
-import { effect, uneffect } from "@/Node/SDNode/SDValue";
 
 export function ValueGrid(parent) {
     Grid.call(this, parent);

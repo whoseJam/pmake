@@ -1,6 +1,6 @@
+import { Enter as EN } from "@/Node/Core/Enter";
+import { Exit as EX } from "@/Node/Core/Exit";
 import { SDNode } from "@/Node/SDNode";
-import { Enter as EN } from "@/Node/SDNode/Enter";
-import { Exit as EX } from "@/Node/SDNode/Exit";
 import { CenterFixAspect } from "@/Rule/Center";
 import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";

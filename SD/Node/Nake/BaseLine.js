@@ -1,8 +1,8 @@
 import { Context } from "@/Animate/Context";
 import { Interp } from "@/Animate/Interp";
+import { Enter as EN } from "@/Node/Core/Enter";
+import { Exit as EX } from "@/Node/Core/Exit";
 import { BaseNake } from "@/Node/Nake/BaseNake";
-import { Enter as EN } from "@/Node/SDNode/Enter";
-import { Exit as EX } from "@/Node/SDNode/Exit";
 import { Rule as R } from "@/Rule/Rule";
 import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";

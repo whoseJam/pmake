@@ -1,7 +1,7 @@
 import { mapTo } from "@/Math/Math";
+import { Enter as EN } from "@/Node/Core/Enter";
+import { effect } from "@/Node/Core/Reactive";
 import { BaseGraph } from "@/Node/Graph/BaseGraph";
-import { Enter as EN } from "@/Node/SDNode/Enter";
-import { effect } from "@/Node/SDNode/SDValue";
 import { Cast } from "@/Utility/Cast";
 import { Factory } from "@/Utility/Factory";
 import { trim } from "@/Utility/Trim";

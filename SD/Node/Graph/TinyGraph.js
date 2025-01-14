@@ -1,7 +1,7 @@
+import { Enter as EN } from "@/Node/Core/Enter";
+import { effect } from "@/Node/Core/Reactive";
 import { BaseGraph } from "@/Node/Graph/BaseGraph";
 import { GridGraph } from "@/Node/Graph/GridGraph";
-import { Enter as EN } from "@/Node/SDNode/Enter";
-import { effect } from "@/Node/SDNode/SDValue";
 import { Cast } from "@/Utility/Cast";
 import { trim } from "@/Utility/Trim";
 

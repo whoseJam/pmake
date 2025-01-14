@@ -1,6 +1,6 @@
+import { Enter as EN } from "@/Node/Core/Enter";
+import { effect } from "@/Node/Core/Reactive";
 import { BaseGraph } from "@/Node/Graph/BaseGraph";
-import { Enter as EN } from "@/Node/SDNode/Enter";
-import { effect } from "@/Node/SDNode/SDValue";
 import { Cast } from "@/Utility/Cast";
 import { Factory } from "@/Utility/Factory";
 import { trim } from "@/Utility/Trim";
@@ -13,7 +13,7 @@ export function GridGraph(parent) {
     this.vars.merge({
         r: 20,
         n: 1,
-        m: 1
+        m: 1,
     });
 
     this._.curN = 0;
@@ -22,8 +22,12 @@ export function GridGraph(parent) {
 
     this._.updater = effect(() => {
         const sidToPos = this._.sidToPos;
-        const x = this.x(), mx = this.mx(), W = (mx - x) / this.m();
-        const y = this.y(), my = this.my(), H = (my - y) / this.n();
+        const x = this.x(),
+            mx = this.mx(),
+            W = (mx - x) / this.m();
+        const y = this.y(),
+            my = this.my(),
+            H = (my - y) / this.n();
         const convertX = node => sidToPos[node.id].y * W + x;
         const convertY = node => sidToPos[node.id].x * H + y;
         const nodes = this.vars.nodes;
@@ -45,7 +49,7 @@ export function GridGraph(parent) {
 }
 
 GridGraph.prototype = {
-    ...BaseGraph.prototype
+    ...BaseGraph.prototype,
 };
 
 GridGraph.prototype.n = Factory.handler("n");
@@ -55,7 +59,7 @@ GridGraph.prototype.at = function (i, j) {
     this._.curN = i;
     this._.curM = j;
     return this;
-}
+};
 
 GridGraph.prototype.newNode = function (id, value) {
     const sidToPos = this._.sidToPos;
@@ -65,7 +69,7 @@ GridGraph.prototype.newNode = function (id, value) {
     element.onEnter(EN.appear("nodes"));
     this.newNodeByBaseGraph(id, element);
     return this;
-}
+};
 
 GridGraph.prototype.newNodeFromExistValue = function (id, value) {
     const sidToPos = this._.sidToPos;
@@ -75,7 +79,7 @@ GridGraph.prototype.newNodeFromExistValue = function (id, value) {
     this.newNodeByBaseGraph(id, element);
     element.value(value.onEnter(EN.moveTo()));
     return this;
-}
+};
 
 GridGraph.prototype.newNodeFromExistElement = function (id, value) {
     const sidToPos = this._.sidToPos;
@@ -84,7 +88,7 @@ GridGraph.prototype.newNodeFromExistElement = function (id, value) {
     element.onEnter(EN.moveTo("nodes"));
     this.newNodeByBaseGraph(id, element);
     return this;
-}
+};
 
 GridGraph.prototype.newLink = function (sourceId, targetId, value) {
     const element = new this._.linkType(this.layer("links"));
@@ -92,7 +96,7 @@ GridGraph.prototype.newLink = function (sourceId, targetId, value) {
     element.onEnter(EN.appear("links"));
     this.newLinkByBaseGraph(sourceId, targetId, element);
     return this;
-}
+};
 
 GridGraph.prototype.newLinkFromExistValue = function (sourceId, targetId, value) {
     const element = new this._.linkType(this.layer("links"));
@@ -100,11 +104,11 @@ GridGraph.prototype.newLinkFromExistValue = function (sourceId, targetId, value)
     this.newLinkByBaseGraph(sourceId, targetId, element);
     element.value(value.onEnter(EN.moveTo()));
     return this;
-}
+};
 
 GridGraph.prototype.newLinkFromExistElement = function (sourceId, targetId, value) {
     const element = value;
     element.onEnter(EN.moveTo("links"));
     this.newLinkByBaseGraph(sourceId, targetId, element);
     return this;
-}
+};

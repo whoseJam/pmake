@@ -1,8 +1,8 @@
+import { Enter as EN } from "@/Node/Core/Enter";
+import { Exit as EX } from "@/Node/Core/Exit";
+import { effect } from "@/Node/Core/Reactive";
 import { Box } from "@/Node/Element/Box";
 import { BaseGrid } from "@/Node/Grid/BaseGrid";
-import { Enter as EN } from "@/Node/SDNode/Enter";
-import { Exit as EX } from "@/Node/SDNode/Exit";
-import { effect } from "@/Node/SDNode/SDValue";
 import { Factory } from "@/Utility/Factory";
 
 export function Grid(parent) {

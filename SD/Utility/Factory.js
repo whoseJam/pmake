@@ -36,9 +36,13 @@ export class Factory {
         };
     }
 
-    static action(node, attr, key, interp) {
+    static action(node, attrs, key, interp) {
         return function (newValue, oldValue) {
-            new Action(node.delay(), node.delay() + node.duration(), oldValue, newValue, interp(attr, key), node, key);
+            if (global.ACTION_TICK !== 0) {
+                attrs.setAttribute(key, newValue);
+            } else {
+                new Action(node.delay(), node.delay() + node.duration(), oldValue, newValue, interp(attrs, key), node, key);
+            }
         };
     }
 }

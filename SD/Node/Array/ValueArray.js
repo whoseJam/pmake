@@ -1,6 +1,6 @@
 import { Array } from "@/Node/Array/Array";
-import { Enter as EN } from "@/Node/SDNode/Enter";
-import { effect, uneffect } from "@/Node/SDNode/SDValue";
+import { Enter as EN } from "@/Node/Core/Enter";
+import { effect, uneffect } from "@/Node/Core/Reactive";
 import { Cast } from "@/Utility/Cast";
 import { Factory } from "@/Utility/Factory";
 

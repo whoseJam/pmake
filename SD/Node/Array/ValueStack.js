@@ -1,6 +1,6 @@
 import { Stack } from "@/Node/Array/Stack";
 import { ValueArray } from "@/Node/Array/ValueArray";
-import { effect, uneffect } from "@/Node/SDNode/SDValue";
+import { effect, uneffect } from "@/Node/Core/Reactive";
 import { Factory } from "@/Utility/Factory";
 
 export function ValueStack(parent) {

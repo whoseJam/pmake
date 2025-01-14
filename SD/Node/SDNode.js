@@ -1,9 +1,9 @@
 import { Action } from "@/Animate/Action";
-import { Animate } from "@/Node/SDNode/Animate";
-import { Children } from "@/Node/SDNode/Children";
-import { Interact } from "@/Node/SDNode/Interact";
-import { Location } from "@/Node/SDNode/Location";
-import { effect, reactive } from "@/Node/SDNode/SDValue";
+import { Animate } from "@/Node/Core/Animate";
+import { Children } from "@/Node/Core/Children";
+import { Interact } from "@/Node/Core/Interact";
+import { Location } from "@/Node/Core/Location";
+import { effect, reactive } from "@/Node/Core/Reactive";
 import { createRenderNode } from "@/Renderer/RenderNode";
 import { SVGNode } from "@/Renderer/SVG/SVGNode";
 import { Check } from "@/Utility/Check";
@@ -11,7 +11,7 @@ import { Factory } from "@/Utility/Factory";
 
 let id = 0;
 
-function interp(node, l, r, attrs) {
+function interp(node, attrs) {
     return function (t) {
         const k = this.source + (this.target - this.source) * t;
         attrs.setAttribute("opacity", k);
@@ -25,7 +25,7 @@ function opacityInterp(node, attrs) {
     return function (newValue, oldValue) {
         const l = node.delay();
         const r = node.delay() + node.duration();
-        new Action(l, r, oldValue, newValue, interp(node, l, r, attrs), node, "opacity");
+        new Action(l, r, oldValue, newValue, interp(node, attrs), node, "opacity");
     };
 }
 

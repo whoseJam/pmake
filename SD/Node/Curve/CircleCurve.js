@@ -1,5 +1,5 @@
+import { effect } from "@/Node/Core/Reactive";
 import { BaseCurve, curveHandler } from "@/Node/Curve/BaseCurve";
-import { effect } from "@/Node/SDNode/SDValue";
 import { PathPen } from "@/Utility/PathPen";
 
 export function CircleCurve(parent) {

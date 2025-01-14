@@ -1,6 +1,6 @@
 import { Context } from "@/Animate/Context";
+import { Enter as EN } from "@/Node/Core/Enter";
 import { BraceCurve } from "@/Node/Curve/BraceCurve";
-import { Enter as EN } from "@/Node/SDNode/Enter";
 import { PointAtPathByRate } from "@/Rule/Path";
 import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
@@ -85,10 +85,8 @@ export function Brace(parent) {
             } else if (Check.isTypeOfGrid(parent)) {
                 throw new Error("Not Implemented Yet");
             }
-            if (this.vars.location === undefined || arguments.length >= 3)
-                this.vars.location = location;
-            if (this.vars.braceGap === undefined || arguments.length >= 4)
-                this.vars.braceGap = gap;
+            if (this.vars.location === undefined || arguments.length >= 3) this.vars.location = location;
+            if (this.vars.braceGap === undefined || arguments.length >= 4) this.vars.braceGap = gap;
         };
         if (this.opacity() === 0) {
             const context = new Context(this);

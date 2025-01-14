@@ -1,7 +1,7 @@
+import { Enter as EN } from "@/Node/Core/Enter";
+import { effect } from "@/Node/Core/Reactive";
 import { BaseGraph } from "@/Node/Graph/BaseGraph";
 import { GridGraph } from "@/Node/Graph/GridGraph";
-import { Enter as EN } from "@/Node/SDNode/Enter";
-import { effect } from "@/Node/SDNode/SDValue";
 import { Cast } from "@/Utility/Cast";
 import { trim } from "@/Utility/Trim";
 
@@ -14,7 +14,7 @@ export function BipartiteGraph(parent) {
         r: 20,
         rank: 0,
         width: 600,
-        height: 250
+        height: 250,
     });
 
     this._.updater = effect(() => {
@@ -32,10 +32,7 @@ export function BipartiteGraph(parent) {
         });
         const minX = this.x();
         const maxX = this.mx();
-        const gap = [
-            (maxX - minX) / (count[0] + 1),
-            (maxX - minX) / (count[1] + 1)
-        ];
+        const gap = [(maxX - minX) / (count[0] + 1), (maxX - minX) / (count[1] + 1)];
         const convertX = node => minX + gap[node.setNo] * currentIndex[node.setNo];
         for (let node of orderedNodes) {
             const x = convertX(node);
@@ -55,13 +52,13 @@ export function BipartiteGraph(parent) {
                 link.source(source.center());
                 link.target(target.center());
                 trim(link, source, target);
-            })
+            });
         }
-    })
+    });
 }
 
 BipartiteGraph.prototype = {
-    ...BaseGraph.prototype
+    ...BaseGraph.prototype,
 };
 
 BipartiteGraph.prototype.newNode = function (id, value, setNo) {
@@ -72,7 +69,7 @@ BipartiteGraph.prototype.newNode = function (id, value, setNo) {
     element.setNo = setNo;
     this.newNodeByBaseGraph(id, element);
     return this;
-}
+};
 
 BipartiteGraph.prototype.newNodeFromExistElement = function (id, value, setNo) {
     const element = value;
@@ -80,7 +77,7 @@ BipartiteGraph.prototype.newNodeFromExistElement = function (id, value, setNo) {
     element.setNo = setNo;
     this.newNodeByBaseGraph(id, element);
     return this;
-}
+};
 
 BipartiteGraph.prototype.newLink = GridGraph.prototype.newLink;
 BipartiteGraph.prototype.newLinkFromExistValue = GridGraph.prototype.newLinkFromExistValue;

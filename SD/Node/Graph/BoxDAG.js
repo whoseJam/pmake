@@ -1,7 +1,7 @@
 import { mapTo } from "@/Math/Math";
+import { effect, uneffect } from "@/Node/Core/Reactive";
 import { Box } from "@/Node/Element/Box";
 import { DAG, GetBoxOfDAG } from "@/Node/Graph/DAG";
-import { effect, uneffect } from "@/Node/SDNode/SDValue";
 import { Factory } from "@/Utility/Factory";
 import { trim } from "@/Utility/Trim";
 import { layout as DAGLayout } from "dagre";

@@ -120,6 +120,10 @@ function promiseOfLastMainFrame() {
     });
 }
 
+global.DEBUG = function () {
+    Animate.debug();
+};
+
 export function pause(frameType = 0) {
     if (window.SHOULD_FLUSH) {
         Animate.currentActionList.updateWindowSize();

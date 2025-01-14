@@ -1,7 +1,7 @@
 import { Interp } from "@/Animate/Interp";
 import { svg } from "@/Interact/RootSvg";
+import { effect } from "@/Node/Core/Reactive";
 import { BaseNake } from "@/Node/Nake/BaseNake";
-import { effect } from "@/Node/SDNode/SDValue";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
 

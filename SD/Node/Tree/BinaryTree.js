@@ -1,5 +1,5 @@
-import { Enter } from "@/Node/SDNode/Enter";
-import { effect, uneffect } from "@/Node/SDNode/SDValue";
+import { Enter } from "@/Node/Core/Enter";
+import { effect, uneffect } from "@/Node/Core/Reactive";
 import { Tree } from "@/Node/Tree/Tree";
 import { Cast } from "@/Utility/Cast";
 import { trim } from "@/Utility/Trim";
@@ -13,14 +13,12 @@ export function BinaryTree(parent) {
 
     uneffect(this._.updater);
     this._.updater = effect(() => {
-        BinaryTreeLayout.apply(this, [
-            "vertical"
-        ]);
+        BinaryTreeLayout.apply(this, ["vertical"]);
     });
 }
 
 BinaryTree.prototype = {
-    ...Tree.prototype
+    ...Tree.prototype,
 };
 
 BinaryTree.prototype.newNode = function (id, value) {
@@ -30,7 +28,7 @@ BinaryTree.prototype.newNode = function (id, value) {
     element.onEnter(Enter.appear("nodes"));
     this.newNodeByBaseTree(id, element);
     return this;
-}
+};
 
 BinaryTree.prototype.newLink = function (sourceId, targetId, type, value = null) {
     [sourceId, targetId] = [String(sourceId), String(targetId)];
@@ -40,7 +38,7 @@ BinaryTree.prototype.newLink = function (sourceId, targetId, type, value = null)
     element.onEnter(Enter.appear("links"));
     this.newLinkByBaseTree(sourceId, targetId, element);
     return this;
-}
+};
 
 BinaryTree.prototype.leftChild = function (sourceId, targetId, value = null) {
     if (arguments.length === 1) return this.findNodeById(this._.biChildren[this.element(sourceId).id][0]);
@@ -48,7 +46,7 @@ BinaryTree.prototype.leftChild = function (sourceId, targetId, value = null) {
     if (!this.findNodeById(targetId)) this.newNode(targetId);
     this.newLink(sourceId, targetId, 0, value);
     return this;
-}
+};
 
 BinaryTree.prototype.rightChild = function (sourceId, targetId, value = null) {
     if (arguments.length === 1) return this.findNodeById(this._.biChildren[this.element(sourceId).id][1]);
@@ -56,21 +54,21 @@ BinaryTree.prototype.rightChild = function (sourceId, targetId, value = null) {
     if (!this.findNodeById(targetId)) this.newNode(targetId);
     this.newLink(sourceId, targetId, 1, value);
     return this;
-}
+};
 
 BinaryTree.prototype.leftChildId = function (node) {
     return this.nodeId(this.leftChild(node));
-}
+};
 
 BinaryTree.prototype.rightChildId = function (node) {
     return this.nodeId(this.rightChild(node));
-}
+};
 
 BinaryTree.prototype.link = function (x, y, dir, value = null) {
     if (dir === 0) this.leftChild(x, y, value);
     else this.rightChild(x, y, value);
     return this;
-}
+};
 
 export function BinaryTreeLayout(mode) {
     const biChildren = this._.biChildren;
@@ -79,12 +77,8 @@ export function BinaryTreeLayout(mode) {
     const root = roots[0];
     if (!root) return;
     let maxDepth = 0;
-    const convertX = (mode === "vertical") ?
-        (rank, gap, depth) => this.x() + (rank * 2 + 1) * gap :
-        (rank, gap, depth) => this.x() + this.layerWidth() * depth;
-    const convertY = (mode === "horizontal") ?
-        (rank, gap, depth) => this.y() + (rank * 2 + 1) * gap :
-        (rank, gap, depth) => this.y() + this.layerHeight() * depth;
+    const convertX = mode === "vertical" ? (rank, gap, depth) => this.x() + (rank * 2 + 1) * gap : (rank, gap, depth) => this.x() + this.layerWidth() * depth;
+    const convertY = mode === "horizontal" ? (rank, gap, depth) => this.y() + (rank * 2 + 1) * gap : (rank, gap, depth) => this.y() + this.layerHeight() * depth;
     const convert = (rank, gap, depth) => [convertX(rank, gap, depth), convertY(rank, gap, depth)];
     const dfs = (current, rank, gap, depth) => {
         maxDepth = Math.max(maxDepth, depth);
@@ -93,8 +87,8 @@ export function BinaryTreeLayout(mode) {
         });
         if (biChildren[current.id][0]) dfs(this.element(biChildren[current.id][0]), rank * 2, gap / 2, depth + 1);
         if (biChildren[current.id][1]) dfs(this.element(biChildren[current.id][1]), rank * 2 + 1, gap / 2, depth + 1);
-    }
-    const gap = ((mode === "vertical") ? this.width() : this.height()) / 2;
+    };
+    const gap = (mode === "vertical" ? this.width() : this.height()) / 2;
     dfs(root, 0, gap, 0);
 
     if (mode === "vertical") {
@@ -115,19 +109,15 @@ export function BinaryTreeLayout(mode) {
 }
 
 /**
- * @param {"vertical"|"horizontal"} mode 
+ * @param {"vertical"|"horizontal"} mode
  */
 export function binaryTreeLayout(mode) {
     const sidToChildren = this._.sidToChildren;
     const root = this.root();
     if (!root) return this;
     let maxDepth = 0;
-    const realX = (mode === "vertical") ?
-        (rank, gap, depth) => this.x() + (rank * 2 + 1) * gap :
-        (rank, gap, depth) => this.x() + this.layerWidth() * depth;
-    const realY = (mode === "horizontal") ?
-        (rank, gap, depth) => this.y() + (rank * 2 + 1) * gap :
-        (rank, gap, depth) => this.y() + this.layerHeight() * depth;
+    const realX = mode === "vertical" ? (rank, gap, depth) => this.x() + (rank * 2 + 1) * gap : (rank, gap, depth) => this.x() + this.layerWidth() * depth;
+    const realY = mode === "horizontal" ? (rank, gap, depth) => this.y() + (rank * 2 + 1) * gap : (rank, gap, depth) => this.y() + this.layerHeight() * depth;
     const dfs = (current, rank, gap, depth) => {
         maxDepth = Math.max(maxDepth, depth);
         const x = realX(rank, gap, depth);
@@ -138,8 +128,8 @@ export function binaryTreeLayout(mode) {
         });
         if (sidToChildren[current.id][0]) dfs(this.element(sidToChildren[current.id][0]), rank * 2, gap / 2, depth + 1);
         if (sidToChildren[current.id][1]) dfs(this.element(sidToChildren[current.id][1]), rank * 2 + 1, gap / 2, depth + 1);
-    }
-    const gap = ((mode === "vertical") ? this.width() : this.height()) / 2;
+    };
+    const gap = (mode === "vertical" ? this.width() : this.height()) / 2;
     dfs(root, 0, gap, 0);
 
     const links = this.vars.links;

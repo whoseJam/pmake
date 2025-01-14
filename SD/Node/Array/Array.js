@@ -1,7 +1,7 @@
 import { BaseArray } from "@/Node/Array/BaseArray";
+import { Enter as EN } from "@/Node/Core/Enter";
+import { effect } from "@/Node/Core/Reactive";
 import { Box } from "@/Node/Element/Box";
-import { Enter as EN } from "@/Node/SDNode/Enter";
-import { effect } from "@/Node/SDNode/SDValue";
 import { Factory } from "@/Utility/Factory";
 
 export function Array(parent) {

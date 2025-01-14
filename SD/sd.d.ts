@@ -1,5 +1,6 @@
+export { Action } from "./Animate/Action";
+
 export { SDNode } from "./Node/SDNode";
-export { SDValue } from "./Node/SDNode/SDValue";
 
 export { Circle } from "./Node/Nake/Circle";
 export { Ellipse } from "./Node/Nake/Ellipse";
@@ -86,8 +87,8 @@ export { rand } from "./Utility/Random";
 export { trim } from "./Utility/Trim";
 export { init, int, inter, main, make1d, make2d } from "./Utility/Util";
 
-export { enter } from "./Node/SDNode/Enter";
-export { exit } from "./Node/SDNode/Exit";
+export { enter } from "./Node/Core/Enter";
+export { exit } from "./Node/Core/Exit";
 
 export { PathPen } from "./Utility/PathPen";
 

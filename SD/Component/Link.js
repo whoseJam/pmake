@@ -1,6 +1,6 @@
 import { svg } from "@/Interact/RootSvg";
+import { effect } from "@/Node/Core/Reactive";
 import { Line } from "@/Node/Nake/Line";
-import { effect } from "@/Node/SDNode/SDValue";
 import { Factory } from "@/Utility/Factory";
 import { trim } from "@/Utility/Trim";
 

@@ -1,5 +1,5 @@
+import { effect, uneffect } from "@/Node/Core/Reactive";
 import { Box } from "@/Node/Element/Box";
-import { effect, uneffect } from "@/Node/SDNode/SDValue";
 import { D3Layout, Tree } from "@/Node/Tree/Tree";
 import { Factory } from "@/Utility/Factory";
 

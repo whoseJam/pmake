@@ -1,6 +1,8 @@
 import { Animate } from "@/Animate/Animate";
 import { Check } from "@/Utility/Check";
 
+global.ACTION_TICK = 0;
+
 function easeInOut(t) {
     return 0.5 * (1 - Math.cos(Math.PI * t));
 }
@@ -41,6 +43,7 @@ export class Action {
 
     tick(t) {
         if (t < this.l) return;
+        global.ACTION_TICK++;
         if (this.l < this.r - 1) {
             const k0 = easeInOut((t - this.l) / (this.r - this.l));
             const k1 = this.is(Action.FIRST_CALL_FLAG) ? 0 : t > this.r ? 1 : k0;
@@ -54,6 +57,7 @@ export class Action {
             this.unset(Action.FIRST_CALL_FLAG);
             if (k1 === 0) this.tick(t);
         }
+        global.ACTION_TICK--;
     }
 
     forceToFinish() {
