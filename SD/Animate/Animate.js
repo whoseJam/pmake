@@ -6,12 +6,24 @@ export class Animate {
     static currentTimestamp = 0;
     static historyActionList = {};
     static currentActionList = new ActionList();
+    static shouldStop = false;
+
+    static stop() {
+        Animate.shouldStop = true;
+    }
+
+    static start() {
+        if (Animate.shouldStop) {
+            Animate.shouldStop = false;
+            requestAnimationFrame(Animate.tick.bind(Animate));
+        }
+    }
 
     static tick(t) {
         const dt = t - this.currentTimestamp;
         this.currentTimestamp = t;
         const currentActionList = this.currentActionList;
-        if (window.SHOULD_FLUSH) return;
+        if (window.SHOULD_FLUSH || Animate.shouldStop) return;
         currentActionList.tick(t, dt);
         requestAnimationFrame(Animate.tick.bind(Animate));
     }

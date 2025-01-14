@@ -1,11 +1,9 @@
 import { Animate } from "@/Animate/Animate";
-
 import { RootSvg } from "@/Interact/RootSvg";
 
 export class Message {
     static init() {
         window.Message = function (key, value) {
-            console.log("message key=", key, "value=", value);
             window[key] = value;
         };
 
@@ -23,7 +21,15 @@ export class Message {
             RootSvg.setViewBox(x, y, width, height, rate);
         };
 
-        window.window["SDAnimation"] = true;
+        window.StopAnimate = function () {
+            Animate.stop();
+        };
+
+        window.StartAnimate = function () {
+            Animate.start();
+        };
+
+        window.parent.postMessage("inited", "*");
     }
 
     static notifyParent() {

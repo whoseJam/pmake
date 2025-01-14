@@ -1,6 +1,8 @@
 import { Action } from "@/Animate/Action";
 
 export class Animate {
+    static start();
+    static stop();
     static tick(t: number);
 
     static finished(): boolean;
