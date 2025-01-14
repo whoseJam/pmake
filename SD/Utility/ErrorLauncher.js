@@ -1,4 +1,3 @@
-
 export class ErrorLauncher {
     static unknownKeyError(key) {
         throw new Error(`Unknown Key ${key}`);
@@ -23,8 +22,12 @@ export class ErrorLauncher {
     static nodeNotExists(id) {
         throw new Error(`Node (id = ${id}) Do Not Exists`);
     }
-    
+
     static linkNotExist(source, target) {
         throw new Error(`Link (source = ${source}, target = ${target}) Do Not Exists`);
+    }
+
+    static whatHappened() {
+        throw new Error("What Happened???");
     }
 }

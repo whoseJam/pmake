@@ -1,4 +1,17 @@
 import { Action } from "@/Animate/Action";
+import { setPrecise } from "@/Node/Core/Reactive";
+
+function lowPrecise(oldValue, newValue) {
+    return Math.abs(oldValue - newValue) >= 5;
+}
+
+function mediumPrecise(oldValue, newValue) {
+    return Math.abs(oldValue - newValue) >= 1e-1;
+}
+
+function highPrecise(oldValue, newValue) {
+    return Math.abs(oldValue - newValue) >= 1e-2;
+}
 
 export class Factory {
     static handler(key) {
@@ -12,7 +25,7 @@ export class Factory {
     static handlerLowPrecise(key) {
         return function (value) {
             if (value === undefined) return this.vars[key];
-            if (Math.abs(this.vars[key] - value) < 1) return this;
+            setPrecise(this.vars, key, lowPrecise);
             this.vars[key] = value;
             return this;
         };
@@ -21,7 +34,7 @@ export class Factory {
     static handlerMediumPrecise(key) {
         return function (value) {
             if (value === undefined) return this.vars[key];
-            if (Math.abs(this.vars[key] - value) < 1e-2) return this;
+            setPrecise(this.vars, key, mediumPrecise);
             this.vars[key] = value;
             return this;
         };
@@ -30,7 +43,7 @@ export class Factory {
     static handlerHighPrecise(key) {
         return function (value) {
             if (value === undefined) return this.vars[key];
-            if (Math.abs(this.vars[key] - value) < 1e-4) return this;
+            setPrecise(this.vars, key, highPrecise);
             this.vars[key] = value;
             return this;
         };

@@ -1,4 +1,5 @@
 import { Check } from "@/Utility/Check";
+import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 /**
  * 总共有两种类型的 EffectQueue（name 有两种可能性）
@@ -54,8 +55,13 @@ let globalFreeze = 0;
 let currentEffectQueue = undefined;
 let globalActiveEffect = undefined;
 
-function hasChanged(oldValue, newValue) {
-    if (typeof oldValue === "number" && typeof newValue === "number") return Math.abs(oldValue - newValue) > 1e-2;
+function hasChanged(oldValue, newValue, precise) {
+    if (typeof oldValue === "number" && typeof newValue === "number") {
+        if (typeof precise === "function") {
+            return precise(oldValue, newValue);
+        }
+        return Math.abs(oldValue - newValue) > 1e-2;
+    }
     return oldValue !== newValue;
 }
 
@@ -98,15 +104,16 @@ class EffectManager {
 
     handleNewOutput(oldOut) {
         this.out.forEach(link => {
-            let isNewOutput = true,
-                oldValue = undefined;
+            let isNewOutput = true;
+            let oldValue = undefined;
             for (let i = 0; i < oldOut.length && isNewOutput; i++) {
                 if (link.key === oldOut[i].key && link.object === oldOut[i].object) {
                     isNewOutput = false;
                     oldValue = oldOut[i].value;
                 }
             }
-            if (isNewOutput || hasChanged(oldValue, link.value)) {
+            const objectManager = objectsMap.get(link.object);
+            if (isNewOutput || hasChanged(oldValue, link.value, objectManager.precise.get(link.key))) {
                 const objectManager = objectsMap.get(link.object);
                 const outEffectsSet = objectManager.outputEffects(link.key);
                 outEffectsSet.forEach(effect => {
@@ -124,6 +131,7 @@ class ObjectManager {
         this.isDirty = new Map();
         this.inEffects = new Map();
         this.outEffects = new Map();
+        this.precise = new Map();
     }
 
     dirty(key, dirty) {
@@ -189,6 +197,12 @@ function shouldTriggerUpdate(object, key) {
     return true;
 }
 
+export function setPrecise(proxy, key, type) {
+    const object = proxiesMap.get(proxy);
+    const objectManager = objectsMap.get(object);
+    objectManager.precise.set(key, type);
+}
+
 export function reactive(object, father = undefined) {
     if (objectsMap.has(object)) {
         return objectsMap.get(object).proxy;
@@ -251,9 +265,7 @@ export function reactive(object, father = undefined) {
 
 export function effect(innerEffect, tag) {
     const effectFn = () => {
-        if (globalActiveEffect) {
-            throw new Error("Fuck");
-        }
+        if (globalActiveEffect) ErrorLauncher.whatHappened();
         globalActiveEffect = effectFn;
         const effectManager = effectsMap.get(effectFn);
         const out = effectManager.out;
@@ -335,10 +347,10 @@ function triggerDAGUpdate(object, key, freeze) {
     globalAllowDAGUpdate = true;
 }
 
-export function checkEffect(effect) {
-    console.log("effect=", effect.tag);
-    const effectManager = effectsMap.get(effect);
-    console.log(effectManager.in);
-    console.log(effectManager.out);
-    console.log("");
-}
+// export function checkEffect(effect) {
+//     console.log("effect=", effect.tag);
+//     const effectManager = effectsMap.get(effect);
+//     console.log(effectManager.in);
+//     console.log(effectManager.out);
+//     console.log("");
+// }
