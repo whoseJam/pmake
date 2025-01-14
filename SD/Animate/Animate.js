@@ -1,5 +1,5 @@
 import { ActionList } from "@/Animate/ActionList";
-import { Status } from "@/Interact/Status";
+import { Status as S } from "@/Interact/Status";
 
 export class Animate {
     static lastTickFlag = false;
@@ -7,41 +7,35 @@ export class Animate {
     static historyActionList = {};
     static currentActionList = new ActionList();
     static shouldStop = false;
-
+    static animationRequest = Animate.tick.bind(Animate);
     static stop() {
-        Animate.shouldStop = true;
+        this.shouldStop = true;
     }
-
     static start() {
-        if (Animate.shouldStop) {
-            Animate.shouldStop = false;
-            requestAnimationFrame(Animate.tick.bind(Animate));
+        if (this.shouldStop) {
+            this.shouldStop = false;
+            requestAnimationFrame(this.animationRequest);
         }
     }
-
     static tick(t) {
         const dt = t - this.currentTimestamp;
         this.currentTimestamp = t;
         const currentActionList = this.currentActionList;
-        if (window.SHOULD_FLUSH || Animate.shouldStop) return;
+        if (window.SHOULD_FLUSH || this.shouldStop) return;
         currentActionList.tick(t, dt);
-        requestAnimationFrame(Animate.tick.bind(Animate));
+        requestAnimationFrame(this.animationRequest);
     }
-
     static finished() {
         return this.currentActionList.finished();
     }
-
     static forceToFinish() {
         this.currentActionList.forceToFinish();
     }
-
     static push(action) {
         const currentActionList = this.currentActionList;
         action.t = this.currentTimestamp;
         currentActionList.push(action);
     }
-
     static startNewFrame() {
         const frame = ++window.CURRENT_FRAME;
         window.MAXIMUM_FRAME = Math.max(window.CURRENT_FRAME, window.MAXIMUM_FRAME);
@@ -50,9 +44,8 @@ export class Animate {
             this.historyActionList[lastFrame] = this.currentActionList;
         }
         this.currentActionList = new ActionList();
-        Status.updateFrameStatus();
+        S.updateFrameStatus();
     }
-
     static rollbackFrame() {
         const nextFrame = window.CURRENT_FRAME;
         if (nextFrame === window.MAXIMUM_FRAME) this.historyActionList[nextFrame] = this.currentActionList;
@@ -63,19 +56,17 @@ export class Animate {
         }
         this.currentActionList = this.historyActionList[nextFrame].rollback();
         this.currentActionList.restart();
-        Status.updateFrameStatus();
+        S.updateFrameStatus();
     }
-
     static replayFrame() {
         let frame = ++window.CURRENT_FRAME;
         this.currentActionList = this.historyActionList[frame].replay();
         this.currentActionList.restart();
-        Status.updateFrameStatus();
+        S.updateFrameStatus();
     }
-
     static debug() {
         this.currentActionList.debug();
     }
 }
 
-requestAnimationFrame(Animate.tick.bind(Animate));
+requestAnimationFrame(Animate.animationRequest);

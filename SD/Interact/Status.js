@@ -1,10 +1,8 @@
+import { Dom } from "@/Dom/Dom";
+import { Device as D } from "@/Interact/Device";
 import { render } from "react-dom";
 
-import { Device } from "@/Interact/Device";
-
-import { Dom } from "@/Dom/Dom";
-
-function ReloadTheWindow() {
+function reload() {
     window.parent.ResetAnimationSize(window.IFRAME_ID, window.IFRAME_URL);
     window.location.reload();
 }
@@ -17,7 +15,7 @@ export class Status {
                     <div id="frameStatus" style={{ width: "10px", height: "10px", borderRadius: "50%", backgroundColor: "green", translate: "5px 5px" }}></div>
                 </div>
                 <div style={{ width: "20px", height: "20px" }}>
-                    <i className="sync icon" onClick={ReloadTheWindow}></i>
+                    <i className="sync icon" onClick={reload}></i>
                 </div>
             </div>
         );
@@ -27,7 +25,7 @@ export class Status {
         Status.frameStatus = Dom.getByID("frameStatus");
 
         const wrapper = Dom.getByID("wrapper");
-        Device.getIns().onKeyDown("t", () => {
+        D.onKeyDown("t", () => {
             wrapper.style["opacity"] ^= 1;
         });
     }
