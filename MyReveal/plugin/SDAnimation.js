@@ -1,4 +1,4 @@
-import { GetLocationFromAncestor} from "../Inject";
+import { GetLocationFromAncestor } from "../Inject";
 
 function inDecktapeEnvironment() {
     const userAgent = navigator.userAgent.toLowerCase();
@@ -13,39 +13,31 @@ export function SDAnimation() {
 
 function OnBoxLoad(iframe, cache, url) {
     if (arguments.length === 3 && !cache[url].box) throw new Error(`cannot find box named ${url}`);
-    const box = (arguments.length === 2) ? cache : cache[url].box;
+    const box = arguments.length === 2 ? cache : cache[url].box;
     return () => {
-        GetMessage(iframe).Message("IFRAME_NAME", url);
+        GetMessage(iframe).Message("IFRAME_URL", url);
         GetMessage(iframe).Message("IFRAME_ID", iframe.id);
         SetAnimationSize(iframe, box);
-    }
+    };
 }
 
 function OnFlushLoad(iframe, url) {
     return () => {
         const outerBox = GetBoundingBox(iframe);
         const maxFrame = GetMaxFrame(iframe);
-        GetMessage(iframe).Flush(
-            iframe.id,
-            url,
-            outerBox.width,
-            outerBox.height,
-            GetRate(iframe),
-            needToExportAsPdf,
-            maxFrame
-        );
-    }
+        GetMessage(iframe).Flush(iframe.id, url, outerBox.width, outerBox.height, GetRate(iframe), needToExportAsPdf, maxFrame);
+    };
 }
 
 function Init(reveal) {
     const cache = {};
 
-    reveal.addEventListener("slidechanged", (event) => {
+    reveal.addEventListener("slidechanged", event => {
         const iframes = [...event.currentSlide.getElementsByTagName("iframe")];
         iframes.forEach(iframe => ProcessIframe(iframe, cache));
     });
 
-    reveal.on("fragmentshown", (event) => {
+    reveal.on("fragmentshown", event => {
         if (event.fragment.tagName === "iframe") {
             ProcessIframe(event.fragment, cache);
         }
@@ -55,12 +47,12 @@ function Init(reveal) {
         cache[url].box = new DOMRect(x, y, width, height);
         const iframe = document.getElementById(id);
         iframe.onload = OnBoxLoad(iframe, cache, url);
-    }
+    };
 
     window.ResetAnimationSize = (id, url) => {
         const iframe = document.getElementById(id);
         iframe.onload = OnBoxLoad(iframe, cache, url);
-    }
+    };
 }
 
 let iframeID = 0;
@@ -109,10 +101,8 @@ function GetMaxFrame(iframe) {
 }
 
 function GetMessage(iframe) {
-    if (!iframe.contentWindow)
-        return undefined;
-    if (iframe.contentWindow["SDAnimation"])
-        return iframe.contentWindow;
+    if (!iframe.contentWindow) return undefined;
+    if (iframe.contentWindow["SDAnimation"]) return iframe.contentWindow;
     return undefined;
 }
 
@@ -142,7 +132,7 @@ function SetAnimationSize(iframe, box) {
         x: 0,
         y: 0,
         width: 0,
-        height: 0
+        height: 0,
     };
     if (viewBoxDelta) {
         const tmp = viewBoxDelta.split(" ");
@@ -151,11 +141,5 @@ function SetAnimationSize(iframe, box) {
         delta.width = +tmp[2];
         delta.height = +tmp[3];
     }
-    GetMessage(iframe).SetViewBox(
-        box.x + delta.x,
-        box.y + delta.y,
-        box.width + delta.width,
-        box.height + delta.height,
-        rate
-    );
+    GetMessage(iframe).SetViewBox(box.x + delta.x, box.y + delta.y, box.width + delta.width, box.height + delta.height, rate);
 }
