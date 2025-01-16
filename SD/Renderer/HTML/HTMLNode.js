@@ -1,6 +1,8 @@
 import { Dom } from "@/Dom/Dom";
 import { RenderNode } from "@/Renderer/RenderNode";
 
+const innerHTMLKey = new Set(["innerHTML", "text"]);
+const callbackKey = new Set(["onclick", "onchange"]);
 const styleKey = new Set(["position", "left", "top", "pointer-events", "width", "height", "border", "overflow", "transform", "opacity"]);
 
 export function HTMLNode(parent, render, label) {
@@ -42,23 +44,27 @@ HTMLNode.prototype = {
         this.element.remove();
     },
     getAttribute(key) {
-        if (key === "innerHTML") {
+        if (innerHTMLKey.has(key)) {
             return this.element.innerHTML;
         } else if (key === "value") {
             return this.element.value;
         } else if (styleKey.has(key)) {
             return this.element.style[key];
+        } else if (callbackKey.has(key)) {
+            return this.element[key];
         } else {
             return this.element.getAttribute(key);
         }
     },
     setAttribute(key, value) {
-        if (key === "innerHTML") {
+        if (innerHTMLKey.has(key)) {
             this.element.innerHTML = value;
         } else if (key === "value") {
             this.element.value = value;
         } else if (styleKey.has(key)) {
             this.element.style[key] = value;
+        } else if (callbackKey.has(key)) {
+            this.element[key] =value;
         } else {
             this.element.setAttribute(key, value);
         }

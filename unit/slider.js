@@ -3,7 +3,7 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const div = sd.div();
 
-sd.main(TestSliderBoundaries);
+sd.main(TestSliderCallback);
 
 async function TestBasicSliderFunctionality() {
     const slider = new sd.Slider(div);

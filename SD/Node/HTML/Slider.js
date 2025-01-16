@@ -27,7 +27,7 @@ export function Slider(parent) {
     this._.nake.setAttribute("type", "range");
     this._.nake.setAttribute("min", 0);
     this._.nake.setAttribute("max", 10);
-    this._.nake.nake().onclick = sliderCallback.bind(this);
+    this._.nake.setAttribute("onchange", sliderCallback.bind(this));
 
     this.vars.associate("x", Factory.action(this, this._.layer, "left", Interp.pixelInterp));
     this.vars.associate("y", Factory.action(this, this._.layer, "top", Interp.pixelInterp));
