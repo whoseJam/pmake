@@ -1,5 +1,5 @@
 import { Action } from "@/Animate/Action";
-import { svg } from "@/Interact/RootSvg";
+import { svg } from "@/Interact/Root";
 import { BaseLine } from "@/Node/Nake/BaseLine";
 
 let globalPath = undefined;

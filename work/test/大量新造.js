@@ -4,9 +4,7 @@ const svg = sd.svg();
 const grid = new sd.Grid(svg);
 
 sd.init(() => {
-    grid.n(20).m(20);
-})
+    grid.n(5).m(5);
+});
 
-sd.main(async () => {
-    
-})
+sd.main(async () => {});

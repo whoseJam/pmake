@@ -1,4 +1,4 @@
-import { svg } from "@/Interact/RootSvg";
+import { svg } from "@/Interact/Root";
 
 export class Exit {
     static fade() {

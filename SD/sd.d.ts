@@ -76,7 +76,7 @@ export { Stress } from "./Component/Stress";
 
 // Singleton
 export { device } from "./Interact/Device";
-export { svg } from "./Interact/RootSvg";
+export { div, svg } from "./Interact/Root";
 export { vec } from "./Math/Vector";
 export { rule } from "./Rule/Rule";
 export { color } from "./Utility/Color";

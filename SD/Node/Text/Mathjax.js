@@ -1,7 +1,7 @@
 import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
 import { Dom } from "@/Dom/Dom";
-import { svg } from "@/Interact/RootSvg";
+import { svg } from "@/Interact/Root";
 import { SDNode } from "@/Node/SDNode";
 import { TeXAtom } from "@/Node/Text/TeXAtom";
 import { createRenderNode } from "@/Renderer/RenderNode";

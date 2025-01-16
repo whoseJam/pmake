@@ -54,10 +54,10 @@ export function SDNode(parent, layer = undefined) {
         // parent is RenderNode
         this._.parent = parent.parent;
         if (!layer) {
-            this._.layer = new SVGNode(this, parent, "g");
+            this._.layer = createRenderNode(this, parent, "g");
         } else {
             // appear later, layer is undefined
-            this._.layer = new SVGNode(this, undefined, layer);
+            this._.layer = createRenderNode(this, undefined, layer);
         }
     }
 

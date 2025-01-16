@@ -1,11 +1,11 @@
 import { Device } from "@/Interact/Device";
 import { Message } from "@/Interact/Message";
-import { RootSvg } from "@/Interact/RootSvg";
+import { Root } from "@/Interact/Root";
 import { Status } from "@/Interact/Status";
 
 export function init() {
-    RootSvg.init();
+    Root.init();
     Message.init();
-    Status.init();
     Device.init();
+    Status.init();
 }

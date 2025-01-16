@@ -76,7 +76,7 @@ export { Pointer } from "./Component/Pointer.js";
 export { Stress } from "./Component/Stress.js";
 
 export { device } from "./Interact/Device.js";
-export { svg } from "./Interact/RootSvg.js";
+export { div, svg } from "./Interact/Root.js";
 export { vec } from "./Math/Vector.js";
 export { rule } from "./Rule/Rule.js";
 export { color } from "./Utility/Color.js";

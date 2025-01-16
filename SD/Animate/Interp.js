@@ -22,7 +22,6 @@ export class Interp {
             attrs.setAttribute(key, current + "ex");
         };
     }
-
     static numberInterp(attrs, key) {
         return function (t) {
             const A = this.source;
@@ -31,33 +30,37 @@ export class Interp {
             attrs.setAttribute(key, current);
         };
     }
-
-    static colorInterp(owner, prop) {
+    static pixelInterp(attrs, key) {
+        return function (t) {
+            const A = this.source;
+            const B = this.target;
+            const current = A * (1 - t) + B * t;
+            attrs.setAttribute(key, `${current}px`);
+        };
+    }
+    static colorInterp(attrs, key) {
         return function (t) {
             const fRGB = Check.isTypeOfString(this.source) ? castHexToRGB(this.source) : this.source;
             const tRGB = Check.isTypeOfString(this.target) ? castHexToRGB(this.target) : this.target;
             const r = fRGB.r * (1 - t) + tRGB.r * t;
             const g = fRGB.g * (1 - t) + tRGB.g * t;
             const b = fRGB.b * (1 - t) + tRGB.b * t;
-            owner.setAttribute(prop, `rgb(${r}, ${g}, ${b})`);
+            attrs.setAttribute(key, `rgb(${r}, ${g}, ${b})`);
         };
     }
-
-    static stringInterp(owner, prop) {
+    static stringInterp(attrs, key) {
         return function (t) {
-            if (t === 1) owner.setAttribute(prop, this.target);
+            if (t === 1) attrs.setAttribute(key, this.target);
         };
     }
-
-    static innerHTMLInterp(owner) {
+    static innerHTMLInterp(attrs, key) {
         return function (t) {
             if (t === 1) {
-                owner.setAttribute("innerHTML", this.target);
+                attrs.setAttribute("innerHTML", this.target);
             }
         };
     }
-
-    static arrayInterp(owner, prop) {
+    static arrayInterp(attrs, key) {
         return function (t) {
             const A = castToArray(this.source);
             const B = castToArray(this.target);
@@ -69,11 +72,10 @@ export class Interp {
                 const v = va * (1 - t) + vb * t;
                 ans.push(v);
             }
-            owner.setAttribute(prop, ans);
+            attrs.setAttribute(key, ans);
         };
     }
-
-    static matrixInterp(owner, prop) {
+    static matrixInterp(attrs, key) {
         return function (t) {
             const A = this.source;
             const B = this.target;
@@ -85,10 +87,9 @@ export class Interp {
                 e: A.e * (1 - t) + B.e * t,
                 f: A.f * (1 - t) + B.f * t,
             };
-            owner.setAttribute(prop, `matrix(${current.a}, ${current.b}, ${current.c}, ${current.d}, ${current.e}, ${current.f})`);
+            attrs.setAttribute(key, `matrix(${current.a}, ${current.b}, ${current.c}, ${current.d}, ${current.e}, ${current.f})`);
         };
     }
-
     static viewBoxInterp(attrs, key) {
         return function (t) {
             const A = this.source;
@@ -100,7 +101,6 @@ export class Interp {
             attrs.setAttribute(key, `${x} ${y} ${width} ${height}`);
         };
     }
-
     static boxInterp(attrs, key) {
         return function (t) {
             const A = this.source;
@@ -112,20 +112,11 @@ export class Interp {
             attrs.setAttribute(key, `${x} ${y} ${width} ${height}`);
         };
     }
-
     static translateInterp(attrs, key) {
         return function (t) {
             const tx = this.source[0] + (this.target[0] - this.source[0]) * t;
             const ty = this.source[1] + (this.target[1] - this.source[1]) * t;
             attrs.setAttribute(key, `translate(${tx},${ty})`);
-        };
-    }
-
-    static childInterp(owner, prop) {
-        return function (t) {
-            if (t === 1) {
-                render(this.target, owner);
-            }
         };
     }
 }

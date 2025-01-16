@@ -5,6 +5,7 @@ interface Attributable {
 export class Interp {
     static exLengthInterp(attrs: Attributable, key: string): (t: number) => void;
     static numberInterp(attrs: Attributable, key: string): (t: number) => void;
+    static pixelInterp(attrs: Attributable, key: string): (t: number) => void;
     static colorInterp(attrs: Attributable, key: string): (t: number) => void;
     static stringInterp(attrs: Attributable, key: string): (t: number) => void;
     static innerHTMLInterp(attrs: Attributable, key: string): (t: number) => void;

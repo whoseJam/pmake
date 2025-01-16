@@ -1,5 +1,5 @@
 import { Animate } from "@/Animate/Animate";
-import { RootSvg } from "@/Interact/RootSvg";
+import { Root } from "@/Interact/Root";
 
 export class Message {
     static init() {
@@ -18,7 +18,7 @@ export class Message {
         };
 
         window.SetViewBox = function (x, y, width, height, rate) {
-            RootSvg.setViewBox(x, y, width, height, rate);
+            Root.setViewBox(x, y, width, height, rate);
         };
 
         window.StopAnimate = function () {

@@ -1,8 +1,8 @@
 import { Animate } from "@/Animate/Animate";
 
-import { Device } from "@/Interact/Device";
+import { Device as D } from "@/Interact/Device";
 import { Message } from "@/Interact/Message";
-import { Status } from "@/Interact/Status";
+import { Status as S } from "@/Interact/Status";
 
 window.CURRENT_FRAME = 0;
 window.MAXIMUM_FRAME = 0;
@@ -16,8 +16,8 @@ window.SVG_MINY = 600;
 window.SVG_MAXX = 0;
 window.SVG_MAXY = 0;
 
-Device.getIns().onKeyDown("n", nextFrame);
-Device.getIns().onKeyDown("p", prevFrame);
+D.onKeyDown("n", nextFrame);
+D.onKeyDown("p", prevFrame);
 
 function lastMainFrame() {
     if (window.SHOULD_EXPORT) {
@@ -51,7 +51,7 @@ function promiseOfFirstInterFrame() {
     if (window.IS_INTERACTING) throw new Error();
     if (window.MAXIMUM_FRAME !== window.CURRENT_FRAME) throw new Error();
     window.IS_INTERACTING = true;
-    Status.updateFrameStatus();
+    S.updateFrameStatus();
     return new Promise(function (resolve) {
         const fn = function () {
             if (window.IS_CONTINUING) return setTimeout(fn, 10); // 主流程的动画不可被打断
@@ -65,7 +65,7 @@ function promiseOfFirstInterFrame() {
 
 function promiseOfLastInterFrame() {
     window.IS_INTERACTING = false;
-    Status.updateFrameStatus();
+    S.updateFrameStatus();
     return 0;
 }
 
@@ -89,7 +89,7 @@ function promiseOfNormalFrame() {
 
 function promiseOfContinueFrame() {
     window.IS_CONTINUING = true;
-    Status.updateFrameStatus();
+    S.updateFrameStatus();
     return new Promise(function (resolve) {
         const fn = function () {
             if (window.SHOULD_FLUSH) {
@@ -98,7 +98,7 @@ function promiseOfContinueFrame() {
             }
             if (window.WHOSEJAM === 0) return setTimeout(fn, 10);
             window.IS_CONTINUING = false;
-            Status.updateFrameStatus();
+            S.updateFrameStatus();
             window.WHOSEJAM--;
             return resolve(0);
         };
