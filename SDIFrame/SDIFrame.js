@@ -88,14 +88,22 @@ class IFrameManager {
     }
 
     getViewBox(x, y, width, height) {
+        let viewBox = undefined;
         if (this.viewBox) {
-            return this.viewBox;
+            viewBox = this.viewBox;
         } else if (cache[this.url]) {
-            return cache[this.url];
+            viewBox = cache[this.url];
         } else if (arguments.length === 4) {
-            return { x, y, width, height };
+            viewBox = { x, y, width, height };
         }
-        throw new Error("View Box Information Not Found!");
+        if (viewBox === undefined) throw new Error("View Box Information Not Found!");
+        if (this.viewBoxDelta) {
+            viewBox.x += this.viewBoxDelta.x;
+            viewBox.y += this.viewBoxDelta.y;
+            viewBox.width += this.viewBoxDelta.width;
+            viewBox.height += this.viewBoxDelta.height;
+        }
+        return viewBox;
     }
 
     reload(x, y, width, height) {

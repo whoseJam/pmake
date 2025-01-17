@@ -14,7 +14,6 @@ export class Message {
             window.IFRAME_URL = url;
             window.IFRAME_RATE = rate;
             window.IFRAME_MAX_FRAME = maxFrame;
-            console.log("max frame=", window.IFRAME_MAX_FRAME);
             A.currentActionList.updateWindowSize();
         };
 
