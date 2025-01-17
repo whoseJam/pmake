@@ -25,7 +25,7 @@ function lastMainFrame() {
         if (window.SHOULD_EXPORT) {
             throw new Error("Not Implemented Yet");
         } else {
-            window.location.reload();
+            throw new Error("Reload Myself (Not an Error)");
         }
     }
 }
@@ -39,7 +39,7 @@ export const CONTINUE_FRAME = 4;
 function promiseOfFirstInterFrame() {
     if (window.IS_CONTINUING) throw new Error();
     if (window.IS_INTERACTING) throw new Error();
-    if (window.MAXIMUM_FRAME !== window.CURRENT_FRAME) throw new Error();
+    if (window.MAXIMUM_FRAME !== window.CURRENT_FRAME) throw new Error("Prevent Execution (Not an Error)");
     window.IS_INTERACTING = true;
     S.updateFrameStatus();
     return new Promise(function (resolve) {

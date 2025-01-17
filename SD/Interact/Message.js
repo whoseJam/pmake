@@ -1,4 +1,4 @@
-import { Animate } from "@/Animate/Animate";
+import { Animate as A } from "@/Animate/Animate";
 import { Root } from "@/Interact/Root";
 
 export class Message {
@@ -14,6 +14,7 @@ export class Message {
             window.IFRAME_URL = url;
             window.IFRAME_RATE = rate;
             window.IFRAME_MAX_FRAME = maxFrame;
+            console.log("max frame=", window.IFRAME_MAX_FRAME);
             Animate.currentActionList.updateWindowSize();
         };
 
@@ -22,11 +23,11 @@ export class Message {
         };
 
         window.StopAnimate = function () {
-            Animate.stop();
+            A.stop();
         };
 
         window.StartAnimate = function () {
-            Animate.start();
+            A.start();
         };
 
         window.parent.postMessage("inited", "*");

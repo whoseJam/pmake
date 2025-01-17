@@ -7,6 +7,7 @@
         <p>这一类动态规划要求我们对一类<b>有标号的资源</b>做分配</p>
         <p class="fragment">一般资源的数量不会很大<span class="fragment">——在 $20$ 左右的量级</span><span class="fragment">，这使得我们可以用一个二进制数去描述每个资源的分配情况</span></p>
         <iframe data-animation="./二进制与分配情况.js" class="fragment"
+            data-maxFrame="0"
             style="width: 1000px; height: 200px;"></iframe>
         <div class="fragment quote" style="display: flex;">
             <div style="width: 1000px;">
@@ -17,14 +18,9 @@
                     <li>如何检验某个元素是否存在？</li>
                 </ul>
             </div>
-            <div style="width: 1000px;">
-                <ul>
-                    <li class="fragment"><codeblock><script type="text/template">int All = (1 << n);</script></codeblock></li>
-                    <li class="fragment"><codeblock><script type="text/template">T = S & (~(1 << i));</script></codeblock></li>
-                    <li class="fragment"><codeblock><script type="text/template">T = S | (1 << i);</script></codeblock></li>
-                    <li class="fragment"><codeblock><script type="text/template">return ((S >> i) & 1) != 0;</script></codeblock></li>
-                </ul>
-            </div>
         </div>
+    </section>
+    <section>
+        <h2>构造大小为 $n$ 的全集</h2>
     </section>
 </section>
