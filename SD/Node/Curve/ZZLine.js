@@ -32,10 +32,7 @@ export function ZZLine(parent) {
         ds[index ^ 1] = dt[index ^ 1] = Math[operator](ds[index ^ 1], dt[index ^ 1]);
 
         const pen = new PathPen();
-        pen.MoveTo(s);
-        pen.LinkTo(ds);
-        pen.LinkTo(dt);
-        pen.LinkTo(t);
+        pen.MoveTo(s).LinkTo(ds).LinkTo(dt).LinkTo(t);
 
         this.d(pen.toString());
     });

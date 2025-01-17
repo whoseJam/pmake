@@ -7,7 +7,6 @@ export class Exit {
             element.remove();
         };
     }
-
     static drop(parent, child) {
         if (arguments.length === 2) {
             return function () {

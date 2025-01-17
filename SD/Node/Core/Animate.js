@@ -1,31 +1,31 @@
+import { ErrorLauncher } from "@/Utility/ErrorLauncher";
+
 export class Animate {
-    constructor(node) {
-        this.node = node;
+    constructor(parent) {
+        this.parent = parent;
         this.animating = false;
         this.frame = -1;
-        this.startTimestamp = 0;
-        this.endTimestamp = 0;
+        this.start = 0;
+        this.end = 0;
     }
-
-    animateCheck() {
+    check() {
         if (this.frame !== window.CURRENT_FRAME) {
             this.frame = window.CURRENT_FRAME;
-            this.startTimestamp = 0;
-            this.endTimestamp = 0;
+            this.start = 0;
+            this.end = 0;
             this.animating = false;
         }
     }
-
     startAnimate() {
-        this.animateCheck();
+        this.check();
         let l, r;
         if (arguments.length === 0) {
-            l = this.startTimestamp;
+            l = this.start;
             r = l + 300;
         } else if (arguments.length === 1) {
             const arg0 = arguments[0];
-            if (typeof(arg0) === "number") {
-                l = this.startTimestamp;
+            if (typeof arg0 === "number") {
+                l = this.start;
                 r = l + arg0;
             } else {
                 l = arg0.delay();
@@ -34,50 +34,38 @@ export class Animate {
         } else {
             const arg0 = arguments[0];
             const arg1 = arguments[1];
-            if (typeof(arg0) !== "number" || typeof(arg1) !== "number") throw new Error("Invalid Arguments");
+            if (typeof arg0 !== "number" || typeof arg1 !== "number") ErrorLauncher.invalidArguments();
             l = arg0;
             r = arg1;
         }
-        this.startTimestamp = l;
-        this.endTimestamp = r;
+        this.start = l;
+        this.end = r;
         this.animating = true;
-        const node = this.node;
-        node._.children.forEach(child => child.startAnimate(node));
+        this.parent._.children.forEach(child => child.startAnimate(this.parent));
     }
-
     endAnimate() {
-        this.animateCheck();
-        this.startTimestamp = this.endTimestamp;
-        const node = this.node;
-        node._.children.forEach(child => {
-            child.endAnimate();
-        });
+        this.check();
+        this.start = this.end;
+        this.parent._.children.forEach(child => child.endAnimate());
         this.animating = false;
     }
-
     after(delay) {
-        this.animateCheck();
-        if (typeof(delay) !== "number") delay = delay.delay();
-        this.startTimestamp = delay;
-        this.endTimestamp = delay;
-        const node = this.node;
-        node._.children.forEach(child => {
-            child.after(delay);
-        });
+        this.check();
+        if (typeof delay !== "number") delay = delay.delay();
+        this.start = delay;
+        this.end = delay;
+        this.parent._.children.forEach(child => child.after(delay));
     }
-
     delay() {
-        this.animateCheck();
-        return this.startTimestamp;
+        this.check();
+        return this.start;
     }
-
     duration() {
-        this.animateCheck();
-        return this.endTimestamp - this.startTimestamp;
+        this.check();
+        return this.end - this.start;
     }
-
     isAnimating() {
-        this.animateCheck();
+        this.check();
         return this.animating;
     }
 }

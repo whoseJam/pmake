@@ -11,17 +11,14 @@ class EffectQueue {
         this.label = `in${name}Queue`;
         this.queue = [];
     }
-
     pushFront(effect) {
         effect[this.label] = true;
         this.queue.unshift(effect);
     }
-
     pushBack(effect) {
         effect[this.label] = true;
         this.queue.push(effect);
     }
-
     transfer(other) {
         for (let i = this.queue.length - 1; i >= 0; i--) {
             const effect = this.queue[i];
@@ -31,7 +28,6 @@ class EffectQueue {
         }
         this.queue = [];
     }
-
     execute() {
         currentEffectQueue = this;
         while (this.queue.length > 0) {
@@ -71,7 +67,6 @@ class EffectManager {
         this.in = [];
         this.out = [];
     }
-
     clear() {
         this.in.forEach(link => {
             const objectManager = objectsMap.get(link.object);
@@ -84,14 +79,12 @@ class EffectManager {
         this.in = [];
         this.out = [];
     }
-
     pushInput(object, key) {
         for (let i = 0; i < this.in.length; i++) {
             if (this.in[i].key === key && this.in[i].object === object) return;
         }
         this.in.push({ object, key });
     }
-
     pushOutput(object, key, value) {
         for (let i = 0; i < this.out.length; i++) {
             if (this.out[i].key === key && this.out[i].object === object) {
@@ -101,7 +94,6 @@ class EffectManager {
         }
         this.out.push({ object, key, value });
     }
-
     handleNewOutput(oldOut) {
         this.out.forEach(link => {
             let isNewOutput = true;
@@ -133,22 +125,18 @@ class ObjectManager {
         this.outEffects = new Map();
         this.precise = new Map();
     }
-
     dirty(key, dirty) {
         if (dirty === undefined) return this.isDirty.get(key) ? true : false;
         this.isDirty.set(key, dirty);
     }
-
     inputEffects(key) {
         const inEffectsSet = this.inEffects.get(key);
         return inEffectsSet ? inEffectsSet : [];
     }
-
     outputEffects(key) {
         const outEffectsSet = this.outEffects.get(key);
         return outEffectsSet ? outEffectsSet : [];
     }
-
     pushInput(key, effect) {
         let inEffectsSet = this.inEffects.get(key);
         if (!inEffectsSet) {
@@ -157,7 +145,6 @@ class ObjectManager {
         }
         inEffectsSet.add(effect);
     }
-
     pushOutput(key, effect) {
         let outEffectsSet = this.outEffects.get(key);
         if (!outEffectsSet) {

@@ -1,96 +1,52 @@
-import { SDNode } from "@/Node/SDNode";
-
 let id = 0;
 
 export class Children {
-    constructor(node) {
-        /** @type {SDNode} */
-        this.node = node;
-        /** @type {Map<number|string, SDNode>} */
+    constructor(parent) {
+        this.parent = parent;
         this.children = {};
     }
-
-    /**
-     * @param {number|string} childName 
-     * @returns {SDNode}
-     */
-    child(childName) {
-        return this.children[childName];
+    child(name) {
+        return this.children[name];
     }
-
-
-    /**
-     * @param {(SDNode) => void} callback 
-     */
     forEach(callback) {
-        for (let id in this.children)
-            callback(this.children[id], id);
+        for (let id in this.children) callback(this.children[id], id);
     }
-
-    /**
-     * @overload
-     * @param {number|string} childName 
-     * @param {SDNode} child 
-     * @param {(SDNode, SDNode) => void} rule 
-     * @returns {number|string}
-     * @overload
-     * @param {number|string} childName
-     * @param {SDNode} child
-     * @returns {number|string}
-     * @overload
-     * @param {SDNode} child
-     * @param {(SDNode, SDNode) => void} rule
-     * @returns {number|string}
-     * @overload
-     * @param {SDNode} child
-     * @returns {number|string}
-     */
-    push(childName, child, rule) {
-        if (typeof (childName) !== "string" && typeof (childName) !== "number") {
-            childName = ++id;
+    push(name, child, rule) {
+        if (typeof name !== "string" && typeof name !== "number") {
+            name = ++id;
             child = arguments[0];
             rule = arguments[1] ? arguments[1] : undefined;
         }
-        child._.parent = this.node;
-        this.children[childName] = child;
+        child._.parent = this.parent;
+        this.children[name] = child;
         child.rule(rule);
-        return childName;
+        return name;
     }
-
-    /**
-     * @overload
-     * @param {number|string} child 
-     * @returns {SDNode}
-     * @overload
-     * @param {SDNode} child
-     * @returns {SDNode}
-     */
     erase(child) {
-        let childName = child;
-        if (typeof (child) !== "string" && typeof (child) !== "number") {
+        let name = child;
+        if (typeof child !== "string" && typeof child !== "number") {
             for (let id in this.children)
                 if (this.children[id] === child) {
-                    childName = id;
+                    name = id;
                     break;
                 }
         }
-        child = this.children[childName];
+        child = this.children[name];
         if (child === undefined) return undefined;
         child.triggerExit();
-        delete this.children[childName];
+        delete this.children[name];
         return child;
     }
-
     has(child) {
-        let childName = child;
-        if (typeof (child) !== "string" && typeof (child) !== "number") {
+        let name = child;
+        if (typeof child !== "string" && typeof child !== "number") {
             for (let id in this.children)
                 if (this.children[id] === child) {
-                    childName = id;
+                    name = id;
                     break;
                 }
         }
-        if (this.children[childName]) return true;
+        if (this.children[name]) return true;
         return false;
     }
 }

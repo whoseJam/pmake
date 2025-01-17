@@ -195,17 +195,14 @@ function pathRule(parent, child) {
         pen.LinkTo(target);
     }
     if (!child.opacity()) {
-        console.log("animation draw");
         const context = new Context(child);
         child.startAnimate(context.tillc(0, 0));
         child.opacity(1).d(pen.toString());
         child.startAnimate(context.tillc(0, 1));
-        console.log("l=", child.delay(), "r=", child.delay() + child.duration());
         child.unfreeze();
         child.pointStoT();
         child.freeze();
     } else {
-        console.log("direct draw");
         child.d(pen.toString());
     }
 }

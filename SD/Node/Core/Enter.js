@@ -11,7 +11,6 @@ export class Enter {
             element.opacity(1);
         };
     }
-
     static moveTo(layer) {
         return function (element, move) {
             element.after(this.delay());
