@@ -1,3 +1,4 @@
+import { div, svg } from "@/Interact/Root";
 import { HTMLNode } from "@/Renderer/HTML/HTMLNode";
 import { SVGNode } from "@/Renderer/SVG/SVGNode";
 
@@ -6,10 +7,17 @@ const HTMLLabel = new Set(["div", "input", "button", "label", "textarea"]);
 
 export function createRenderNode(parent, render, label) {
     if (SVGLabel.has(label)) {
-        return new SVGNode(parent, render, label);
+        if (SVGLabel.has(render.label)) {
+            return new SVGNode(parent, render, label);
+        } else {
+            return new SVGNode(parent, svg(), label);
+        }
     } else if (HTMLLabel.has(label)) {
-        console.log("create html node");
-        return new HTMLNode(parent, render, label);
+        if (HTMLLabel.has(render.label)) {
+            return new HTMLNode(parent, render, label);
+        } else {
+            return new HTMLNode(parent, div(), label);
+        }
     } else return new SVGNode(parent, render, label);
 }
 

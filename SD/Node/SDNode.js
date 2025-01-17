@@ -175,13 +175,9 @@ SDNode.prototype = {
         if (!this._.enter) this._.enter = enter;
         return this;
     },
-    triggerEnter: function (move) {
+    triggerEnter: function (parent, move) {
         if (!this._.enter) return this;
-        if (arguments.length === 2) {
-            this._.enter.call(arguments[0], this, arguments[1]);
-        } else {
-            this._.enter.call(this._.parent, this, move);
-        }
+        this._.enter.call(parent, this, move);
         this._.enter = undefined;
         return this;
     },

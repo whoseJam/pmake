@@ -3,7 +3,7 @@ import { BaseHTML } from "@/Node/HTML/BaseHTML";
 import { createRenderNode } from "@/Renderer/RenderNode";
 import { Factory } from "@/Utility/Factory";
 
-function sliderCallback(event) {
+function sliderCallback() {
     if (this._.onChange) this._.onChange(this.value());
 }
 
@@ -27,6 +27,7 @@ export function Slider(parent) {
     this._.nake.setAttribute("type", "range");
     this._.nake.setAttribute("min", 0);
     this._.nake.setAttribute("max", 10);
+    this._.nake.setAttribute("pointer-events", "auto");
     this._.nake.setAttribute("onchange", sliderCallback.bind(this));
 
     this.vars.associate("x", Factory.action(this, this._.layer, "left", Interp.pixelInterp));

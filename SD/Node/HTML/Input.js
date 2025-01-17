@@ -1,7 +1,7 @@
-import { BaseHTML } from "@/Node/HTML/BaseHTML";
-import { Factory } from "@/Utility/Factory";
 import { Interp } from "@/Animate/Interp";
+import { BaseHTML } from "@/Node/HTML/BaseHTML";
 import { createRenderNode } from "@/Renderer/RenderNode";
+import { Factory } from "@/Utility/Factory";
 
 function inputCallback() {
     if (this._.onChange) this._.onChange(this._.nake.getAttribute("value"));
@@ -16,7 +16,7 @@ export function Input(parent) {
         x: 0,
         y: 0,
         width: 120,
-        height: 25
+        height: 25,
     });
 
     this._.layer.setAttribute("width", "120px");
@@ -31,6 +31,7 @@ export function Input(parent) {
     this._.nake.setAttribute("height", "100%");
     this._.nake.setAttribute("type", "text");
     this._.nake.setAttribute("value", "");
+    this._.nake.setAttribute("pointer-events", "auto");
     this._.nake.setAttribute("onchange", inputCallback.bind(this));
 
     this.vars.associate("x", Factory.action(this, this._.layer, "left", Interp.pixelInterp));
@@ -59,5 +60,5 @@ Input.prototype = {
         if (value === undefined) return this._.nake.getAttribute("value");
         this._.nake.setAttribute("value", value);
         return this;
-    }
+    },
 };

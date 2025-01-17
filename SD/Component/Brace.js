@@ -108,7 +108,7 @@ export function Brace(parent) {
         this.eraseChild("value");
         const element = Cast.castToSDNode(this, value);
         element.onEnter(EN.appear());
-        element.triggerEnter(() => {
+        element.triggerEnter(this, () => {
             this.childAs("value", element, LabelRule);
         });
         return this;

@@ -1,9 +1,10 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
+const div = sd.div();
 const C = sd.color();
 const R = sd.rule();
-const coord = new sd.Coord(svg).viewX(-5).viewWidth(15).viewY(-5).viewHeight(15).width(600).height(300).cx(500).y(70);
+const coord = new sd.Coord(svg).viewBox(-5, -5, 15, 15).width(600).height(300).cx(500).y(70);
 const linksArr = new sd.Array(svg).y(coord.my() + 20);
 const nodesArr = new sd.Array(svg).y(linksArr.my() + 20);
 const line = new sd.Line(svg);
@@ -18,27 +19,31 @@ const data = [
     { x: 2, y: 8 },
     { x: 3, y: 0.5 },
     { x: 4, y: 2.5 },
-    { x: 5, y: 6.5 }
-]
+    { x: 5, y: 6.5 },
+];
 
-const slider = new sd.Slider(svg).min(-25).max(25).value(0).onChange((value) => {
-    K = value * 0.2;
-    sd.inter(async () => {
-        line.startAnimate();
-        UpdateLine(K);
-        line.endAnimate();
-    })
-});
+const slider = new sd.Slider(div)
+    .min(-25)
+    .max(25)
+    .value(0)
+    .onChange(value => {
+        K = value * 0.2;
+        sd.inter(async () => {
+            line.startAnimate();
+            UpdateLine(K);
+            line.endAnimate();
+        });
+    });
 
 sd.init(() => {
     BuildConvex();
     UpdateLine(0);
-})
+});
 
 sd.main(async () => {
     sd.Label(slider, "k");
     slider.width(200).mx(coord.mx()).my(coord.my());
-})
+});
 
 function Slope(a, b) {
     return (data[a].y - data[b].y) / (data[a].x - data[b].x);
@@ -47,7 +52,7 @@ function Slope(a, b) {
 let lastTarget = undefined;
 function UpdateLine(k) {
     line.source(coord.x(), coord.my()).target(coord.mx(), coord.my() - coord.width() * SlopeCoordToGlobal(k));
-    
+
     let target = 0;
     if (k <= Slope(convex[0], convex[1])) target = 0;
     if (k >= Slope(convex[convex.length - 1], convex[convex.length - 2])) target = convex.length - 1;
@@ -60,15 +65,17 @@ function UpdateLine(k) {
     }
 
     nodesArr.startAnimate();
-    if (typeof(lastTarget) === "number") nodesArr.color(lastTarget, C.white);
+    if (typeof lastTarget === "number") nodesArr.color(lastTarget, C.white);
     nodesArr.color(target, C.green);
     nodesArr.endAnimate();
 
     const id = convex[target];
     const rate = (coord.globalAt(data[id].x, data[id].y)[0] - coord.x()) / coord.width();
     const lineH = line.at(rate)[1];
-    const nodeH = (coord.globalAt(data[id].x, data[id].y)[1]);
-    line.startAnimate().dy(nodeH - lineH).endAnimate();
+    const nodeH = coord.globalAt(data[id].x, data[id].y)[1];
+    line.startAnimate()
+        .dy(nodeH - lineH)
+        .endAnimate();
 
     lastTarget = target;
 }
@@ -85,11 +92,11 @@ function BuildConvex() {
         convex.push(i);
     }
     for (let i = 0; i < convex.length; i++) {
-        nodesArr.push(`D${convex[i]+1}`);
+        nodesArr.push(`D${convex[i] + 1}`);
         CreateNode(convex[i]);
         if (i > 0) {
             const K = Slope(i - 1, i);
-            const L = CreateLink(convex[i-1], convex[i]);
+            const L = CreateLink(convex[i - 1], convex[i]);
             linksArr.push(new sd.Line(svg).source(L.source()).target(L.target()).stroke(C.red));
         }
     }
@@ -106,14 +113,16 @@ function CreateLink(a, b) {
 
 function CreateNode(x) {
     const item = data[x];
-    item.circle = new sd.Circle(coord).r(2).color(C.black).center(coord.globalAt(item.x, item.y)).strokeWidth(0).childAs(
-        new sd.Mathjax(coord, `(x_{${x+1}},y_{${x+1}})`).fontSize(20),
-        R.aside("tc", 2)
-    );
+    item.circle = new sd.Circle(coord)
+        .r(2)
+        .color(C.black)
+        .center(coord.globalAt(item.x, item.y))
+        .strokeWidth(0)
+        .childAs(new sd.Mathjax(coord, `(x_{${x + 1}},y_{${x + 1}})`).fontSize(20), R.aside("tc", 2));
 }
 
 function SlopeCoordToGlobal(k) {
     const a = coord.height() / coord.width();
     const b = coord.viewHeight() / coord.viewHeight();
-    return k * a / b;
+    return (k * a) / b;
 }

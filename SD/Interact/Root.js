@@ -81,6 +81,7 @@ export class Root {
             this.div.setAttribute("height", "100vh");
             this.div.setAttribute("overflow", "hidden");
             this.div.setAttribute("position", "relative");
+            this.div.setAttribute("pointer-events", "none");
             this.div = this.div.append("div");
             this.div.setAttribute("width", `${1200}px`);
             this.div.setAttribute("height", `${600}px`);

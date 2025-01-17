@@ -3,7 +3,7 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const C = sd.color();
 const R = sd.rule();
-const coord = new sd.Coord(svg).viewX(-5).viewWidth(15).viewY(-5).viewHeight(15).width(600).height(300).cx(500).y(70);
+const coord = new sd.Coord(svg).viewBox(-5, -5, 15, 15).width(600).height(300).cx(500).y(70);
 const linksArr = new sd.Array(svg).x(coord.x() + 20).y(coord.my() + 20);
 const nodesArr = new sd.Array(svg).x(coord.x()).y(linksArr.my() + 20);
 const convex = [];
@@ -16,11 +16,10 @@ const data = [
     { x: 2, y: 8 },
     { x: 3, y: 0.5 },
     { x: 4, y: 2.5 },
-    { x: 5, y: 6.5 }
-]
+    { x: 5, y: 6.5 },
+];
 
-sd.init(() => {
-})
+sd.init(() => {});
 
 sd.main(async () => {
     await sd.pause();
@@ -63,12 +62,12 @@ sd.main(async () => {
         linksArr.pushFromExistValue(cloneLink);
         linksArr.endAnimate();
         nodesArr.startAnimate();
-        nodesArr.push(`D${i+1}`);
+        nodesArr.push(`D${i + 1}`);
         nodesArr.endAnimate();
-        
+
         convex.push(i);
     }
-})
+});
 
 function Slope(a, b) {
     return (data[a].y - data[b].y) / (data[a].x - data[b].x);
@@ -84,8 +83,14 @@ function CreateLink(a, b) {
 
 function CreateNode(x) {
     const item = data[x];
-    item.circle = new sd.Circle(coord).r(2).color(C.black).center(coord.globalAt(item.x, item.y)).strokeWidth(0).childAs(
-        new sd.Mathjax(coord, `(x_{${x+1}},y_{${x+1}})`).fontSize(20),
-        R.aside("tc", 2)
-    ).opacity(0).startAnimate().opacity(1).endAnimate();
+    item.circle = new sd.Circle(coord)
+        .r(2)
+        .color(C.black)
+        .center(coord.globalAt(item.x, item.y))
+        .strokeWidth(0)
+        .childAs(new sd.Mathjax(coord, `(x_{${x + 1}},y_{${x + 1}})`).fontSize(20), R.aside("tc", 2))
+        .opacity(0)
+        .startAnimate()
+        .opacity(1)
+        .endAnimate();
 }

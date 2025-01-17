@@ -41,6 +41,8 @@ export class Action {
     }
     tick(t) {
         if (t < this.l) return;
+
+        global.action = this;
         global.ACTION_TICK++;
         if (this.l < this.r - 1) {
             const k0 = easeInOut((t - this.l) / (this.r - this.l));

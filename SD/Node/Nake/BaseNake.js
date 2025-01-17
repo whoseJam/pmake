@@ -6,7 +6,7 @@ import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
 
 export function BaseNake(parent, label) {
-    SDNode.call(this, parent);
+    SDNode.call(this, parent, undefined, "g");
 
     this.vars.merge({
         fill: C.black,

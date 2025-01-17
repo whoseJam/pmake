@@ -1,7 +1,7 @@
-import { BaseHTML } from "@/Node/HTML/BaseHTML";
-import { Factory } from "@/Utility/Factory";
 import { Interp } from "@/Animate/Interp";
+import { BaseHTML } from "@/Node/HTML/BaseHTML";
 import { createRenderNode } from "@/Renderer/RenderNode";
+import { Factory } from "@/Utility/Factory";
 
 function buttonCallback() {
     if (this._.onClick) this._.onClick();
@@ -16,7 +16,7 @@ export function Button(parent) {
         x: 0,
         y: 0,
         width: 60,
-        height: 25
+        height: 25,
     });
 
     this._.layer.setAttribute("width", "60px");
@@ -25,6 +25,7 @@ export function Button(parent) {
     this._.nake.setAttribute("width", "100%");
     this._.nake.setAttribute("height", "100%");
     this._.nake.setAttribute("text", "点击");
+    this._.nake.setAttribute("pointer-events", "auto");
     this._.nake.setAttribute("onclick", buttonCallback.bind(this));
 
     this.vars.associate("x", Factory.action(this, this._.layer, "left", Interp.pixelInterp));
@@ -48,5 +49,5 @@ Button.prototype = {
         if (value === undefined) return this._.nake.getAttribute("text");
         this._.nake.setAttribute("text", value);
         return this;
-    }
+    },
 };

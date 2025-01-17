@@ -43,8 +43,10 @@ Interact.prototype.drag = function (arg) {
     let currentY = 0;
     let lastDx = 0;
     let lastDy = 0;
+    console.log("set drag nake=", nake);
     Snap(nake).drag(
         function (dx, dy) {
+            console.log("dragging...", dx, dy);
             let screenDx = (dx - lastDx) / window.RATE;
             let screenDy = (dy - lastDy) / window.RATE;
             if (typeof arg === "function") {

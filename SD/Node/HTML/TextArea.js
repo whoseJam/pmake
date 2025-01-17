@@ -1,7 +1,7 @@
-import { BaseHTML } from "@/Node/HTML/BaseHTML";
-import { Factory } from "@/Utility/Factory";
 import { Interp } from "@/Animate/Interp";
+import { BaseHTML } from "@/Node/HTML/BaseHTML";
 import { createRenderNode } from "@/Renderer/RenderNode";
+import { Factory } from "@/Utility/Factory";
 
 function textareaCallback() {
     if (this._.onChange) this._.onChange(this._.nake.getAttribute("value"));
@@ -16,16 +16,17 @@ export function TextArea(parent) {
         x: 0,
         y: 0,
         width: 80,
-        height: 100
+        height: 100,
     });
 
     this._.layer.setAttribute("width", "80px");
     this._.layer.setAttribute("height", "100px");
-    
+
     this._.nake = createRenderNode(this, this._.layer, "textarea");
     this._.nake.setAttribute("width", "100%");
     this._.nake.setAttribute("height", "100%");
     this._.nake.setAttribute("value", "");
+    this._.nake.setAttribute("pointer-events", "auto");
     this._.nake.setAttribute("onchange", textareaCallback.bind(this));
 
     this.vars.associate("x", Factory.action(this, this._.layer, "left", Interp.pixelInterp));
@@ -49,5 +50,5 @@ TextArea.prototype = {
         if (value === undefined) return this._.nake.getAttribute("value");
         this._.nake.setAttribute("value", value);
         return this;
-    }
+    },
 };
