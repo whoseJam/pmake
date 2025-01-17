@@ -44,7 +44,7 @@ Button.prototype = {
         this._.onClick = callback;
         return this;
     },
-    text: function(value) {
+    text: function (value) {
         if (value === undefined) return this._.nake.getAttribute("text");
         this._.nake.setAttribute("text", value);
         return this;
