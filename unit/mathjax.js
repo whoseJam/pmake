@@ -4,18 +4,21 @@ const svg = sd.svg();
 const C = sd.color();
 const T = 500;
 
-sd.main(Test10);
+sd.main(Test9);
 
-async function Test0() {
-    const math = new sd.Mathjax(svg, "").x(100).y(100);
+async function Test11() {
+    const math1 = new sd.Mathjax(svg, "\\varphi").center(100, 100);
+    const math2 = new sd.Mathjax(svg, "\\sigma").center(150, 200).color(C.textBlue);
+    const math3 = new sd.Mathjax(svg, "\\omega").center(200, 100).color(C.red);
     await sd.pause();
-    math.startAnimate().transformMath("1234").endAnimate();
+    const math = new sd.Mathjax(svg).center(150, 150);
+    math.startAnimate().transformMathFrom("\\infty", [math1, math2, math3]).fontSize(40).endAnimate();
 }
 
 async function Test10() {
     const math = new sd.Mathjax(svg, "({x_i},{y_i})\\sum_{i=1}^{n}{(a+b)^{2}}").x(100).y(100);
     const m1 = math.createMath(5);
-    const rect = sd.Focus(svg).focus(m1);
+    sd.Focus(svg).focus(m1);
     await sd.pause();
     m1.startAnimate().dy(100).endAnimate();
     await sd.pause();
@@ -50,14 +53,14 @@ async function Test9() {
     await sd.pause();
     math.startAnimate().transformMath("\\sigma").fontSize(25).endAnimate();
     await sd.pause();
-    const final = new sd.Mathjax(svg, "").cx(125).cy(125).startAnimate(T).transformMathFrom("{\\infty}", [two, sum, math], { 1: 1, 2: 1, 3: 1 }).endAnimate();
+    const final = new sd.Mathjax(svg).cx(125).cy(125).startAnimate(T).transformMathFrom("{\\infty}", [two, sum, math]).endAnimate();
 }
 
 async function Test8() {
     await sd.pause();
     const math = new sd.Mathjax(svg, "\\frac{15}{20}").cx(300).cy(400);
     await sd.pause();
-    math.startAnimate(10000).transformMath("\\frac{3}{4}").cx(300).cy(400).endAnimate();
+    math.startAnimate().transformMath("\\frac{3}{4}").cx(300).cy(400).endAnimate();
 }
 
 async function Test7() {
@@ -139,4 +142,16 @@ async function Test1() {
 function getGCD(a, b) {
     if (!b) return a;
     return getGCD(b, a % b);
+}
+
+async function Test0() {
+    const math = new sd.Mathjax(svg, "").x(100).y(100);
+    await sd.pause();
+    math.startAnimate().transformMath("1234").fontSize(40).endAnimate();
+    await sd.pause();
+    math.startAnimate().transformMath("5678").fontSize(20).endAnimate();
+    await sd.pause();
+    math.startAnimate().transformMath("1234").color(C.blue).endAnimate();
+    await sd.pause();
+    math.startAnimate().color(C.purple).endAnimate();
 }

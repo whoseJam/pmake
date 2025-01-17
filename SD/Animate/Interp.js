@@ -27,9 +27,6 @@ export class Interp {
             const A = this.source;
             const B = this.target;
             const current = A * (1 - t) + B * t;
-            if (typeof(current) !== "number") {
-                console.log("this.action=", global.action.toString(), global.action);
-            }
             attrs.setAttribute(key, current);
         };
     }

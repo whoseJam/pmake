@@ -3,7 +3,7 @@ import { SDNode } from "@/Node/SDNode";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
 
-export function TeXAtom(parent, nake) {
+export function MathAtom(parent, nake) {
     SDNode.call(this, parent, nake);
 
     this.vars.merge({
@@ -18,16 +18,14 @@ export function TeXAtom(parent, nake) {
     this.vars.associate("stroke", Factory.action(this, this._.nake, "stroke", Interp.colorInterp));
 }
 
-TeXAtom.prototype = {
+MathAtom.prototype = {
     ...SDNode.prototype,
-};
-
-TeXAtom.prototype.fill = Factory.handler("fill");
-TeXAtom.prototype.stroke = Factory.handler("stroke");
-
-TeXAtom.prototype.color = function (color) {
-    if (color === undefined) return { main: this.fill(), border: this.stroke() };
-    if (typeof color === "string") this.fill(color);
-    else this.fill(color.main).stroke(color.border);
-    return this;
+    fill: Factory.handler("fill"),
+    stroke: Factory.handler("stroke"),
+    color: function (color) {
+        if (color === undefined) return { main: this.fill(), border: this.stroke() };
+        if (typeof color === "string") this.fill(color);
+        else this.fill(color.main).stroke(color.border);
+        return this;
+    },
 };

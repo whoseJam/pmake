@@ -57,6 +57,7 @@ export { Curve } from "./Node/Curve/Curve";
 export { VHBezier } from "./Node/Curve/VHBezier";
 export { ZZLine } from "./Node/Curve/ZZLine";
 
+export { MathAtom } from "./Node/Text/MathAtom";
 export { Mathjax } from "./Node/Text/Mathjax";
 
 export { Button } from "./Node/HTML/Button";
