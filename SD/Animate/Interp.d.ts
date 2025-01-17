@@ -8,10 +8,8 @@ export class Interp {
     static pixelInterp(attrs: Attributable, key: string): (t: number) => void;
     static colorInterp(attrs: Attributable, key: string): (t: number) => void;
     static stringInterp(attrs: Attributable, key: string): (t: number) => void;
-    static innerHTMLInterp(attrs: Attributable, key: string): (t: number) => void;
     static arrayInterp(attrs: Attributable, key: string): (t: number) => void;
     static matrixInterp(attrs: Attributable, key: string): (t: number) => void;
     static translateInterp(attrs: Attributable, key: string): (t: number) => void;
-    static viewBoxInterp(attrs: Attributable, key: string): (t: number) => void;
     static boxInterp(attrs: Attributable, key: string): (t: number) => void;
 }

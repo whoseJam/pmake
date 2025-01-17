@@ -10,15 +10,9 @@ class CompAside {
 }
 
 /**
- * 
- * @param parent 
+ * @param parent
  * @param aside
  * @param location 位置，默认为 lc
  * @param gap 间隔，默认为 5
  */
-export function Aside<T>(
-    parent: SDNode,
-    aside: T,
-    location: Location,
-    gap: number
-): CompAside & T;
+export function Aside<T>(parent: SDNode, aside: T, location: Location, gap: number): CompAside & T;

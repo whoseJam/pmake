@@ -74,7 +74,7 @@ export function Text(parent, text = "") {
         this.vars.width = box.width;
         this.vars.height = box.height;
     });
-    this.vars.associate("text", Factory.action(this, this._.nake, "innerHTML", Interp.innerHTMLInterp));
+    this.vars.associate("text", Factory.action(this, this._.nake, "text", Interp.stringInterp));
     this.vars.associate("fontSize", Factory.action(this, this._.nake, "font-size", Interp.numberInterp));
 
     this._.nake.setAttribute("text-anchor", "start");

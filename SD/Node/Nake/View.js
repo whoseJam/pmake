@@ -22,7 +22,7 @@ export function View(parent) {
     this.vars.associate("y", Factory.action(this, this._.nake, "y", Interp.numberInterp));
     this.vars.associate("width", Factory.action(this, this._.nake, "width", Interp.numberInterp));
     this.vars.associate("height", Factory.action(this, this._.nake, "height", Interp.numberInterp));
-    this.vars.associate("viewBox", Factory.action(this, this._.nake, "viewBox", Interp.viewBoxInterp));
+    this.vars.associate("viewBox", Factory.action(this, this._.nake, "viewBox", Interp.boxInterp));
 
     this._.nake.setAttribute("x", this.vars.x);
     this._.nake.setAttribute("y", this.vars.y);

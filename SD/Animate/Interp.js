@@ -53,13 +53,6 @@ export class Interp {
             if (t === 1) attrs.setAttribute(key, this.target);
         };
     }
-    static innerHTMLInterp(attrs, key) {
-        return function (t) {
-            if (t === 1) {
-                attrs.setAttribute("innerHTML", this.target);
-            }
-        };
-    }
     static arrayInterp(attrs, key) {
         return function (t) {
             const A = castToArray(this.source);
@@ -88,17 +81,6 @@ export class Interp {
                 f: A.f * (1 - t) + B.f * t,
             };
             attrs.setAttribute(key, `matrix(${current.a}, ${current.b}, ${current.c}, ${current.d}, ${current.e}, ${current.f})`);
-        };
-    }
-    static viewBoxInterp(attrs, key) {
-        return function (t) {
-            const A = this.source;
-            const B = this.target;
-            const x = A.x * (1 - t) + B.x * t;
-            const y = A.y * (1 - t) + B.y * t;
-            const width = A.width * (1 - t) + B.width * t;
-            const height = A.height * (1 - t) + B.height * t;
-            attrs.setAttribute(key, `${x} ${y} ${width} ${height}`);
         };
     }
     static boxInterp(attrs, key) {
