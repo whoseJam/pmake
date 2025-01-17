@@ -29,7 +29,7 @@ function opacityInterp(node, attrs) {
     };
 }
 
-export function SDNode(parent, layer = undefined) {
+export function SDNode(parent, layer = undefined, group = undefined) {
     this.id = ++id;
     this._ = {
         ready: false, // only when ready = true, the action can impact the node
@@ -40,12 +40,13 @@ export function SDNode(parent, layer = undefined) {
         children: new Children(this),
         interact: new Interact(this),
     };
+    group = group === undefined ? "g" : group;
 
     if (Check.isTypeOfSDNode(parent)) {
         // parent is SDNode
         this._.parent = parent;
         if (!layer) {
-            this._.layer = createRenderNode(this, parent.layer(), "g");
+            this._.layer = createRenderNode(this, parent.layer(), group);
         } else {
             // appear later, layer is undefined
             this._.layer = createRenderNode(this, undefined, layer);
@@ -54,7 +55,7 @@ export function SDNode(parent, layer = undefined) {
         // parent is RenderNode
         this._.parent = parent.parent;
         if (!layer) {
-            this._.layer = createRenderNode(this, parent, "g");
+            this._.layer = createRenderNode(this, parent, group);
         } else {
             // appear later, layer is undefined
             this._.layer = createRenderNode(this, undefined, layer);

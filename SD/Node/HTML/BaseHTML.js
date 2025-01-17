@@ -5,9 +5,8 @@ import React from "react";
 global.React = React;
 
 export function BaseHTML(parent) {
-    SDNode.call(this, parent);
-
-    this._.layer = createRenderNode(this, parent, "div");
+    SDNode.call(this, parent, "div");
+    
     this._.layer.setAttribute("position", "absolute");
     this._.layer.setAttribute("left", 0);
     this._.layer.setAttribute("top", 0);
