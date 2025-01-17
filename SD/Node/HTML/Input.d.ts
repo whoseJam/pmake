@@ -1,4 +1,4 @@
-import { SDNode }   from "@/Node/SDNode";
+import { SDNode } from "@/Node/SDNode";
 import { BaseHTML } from "@/Node/HTML/BaseHTML";
 
 export class Input extends BaseHTML {

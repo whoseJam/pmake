@@ -2,7 +2,7 @@ import { HTMLNode } from "@/Renderer/HTML/HTMLNode";
 import { SVGNode } from "@/Renderer/SVG/SVGNode";
 
 const SVGLabel = new Set(["circle", "ellipse", "image", "line", "path", "polygon", "rect", "text", "svg", "g", "marker", "defs"]);
-const HTMLLabel = new Set(["div", "input", "button"]);
+const HTMLLabel = new Set(["div", "input", "button", "label"]);
 
 export function createRenderNode(parent, render, label) {
     if (SVGLabel.has(label)) {

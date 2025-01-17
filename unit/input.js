@@ -1,13 +1,52 @@
 import * as sd from "@/sd";
 
-const svg = sd.svg();
+const div = sd.div();
 const C = sd.color();
 
-const i = new sd.Input(svg).x(100).y(100);
+sd.main(TestInputChaining);
 
-sd.main(async () => {
+async function TestBasicInputFunctionality() {
+    const input = new sd.Input(div);
     await sd.pause();
-    i.startAnimate().label("A").endAnimate();
+    input.x(100).y(100).width(150);
+    console.assert(input.x() === 100 && input.y() === 100 && input.width() === 150, "Position setting test failed");
     await sd.pause();
-    console.log("value =", i.value());
-})
+    input.value("测试输入");
+    console.assert(input.value() === "测试输入", "Value setting test failed");
+    console.log("Basic input functionality test passed");
+}
+
+async function TestInputAnimation() {
+    const input = new sd.Input(div);
+    await sd.pause();
+    input.startAnimate().x(200).y(200).width(150).value("动画输入框").endAnimate();
+    console.log("Input animation test passed");
+}
+
+async function TestInputCallback() {
+    const input = new sd.Input(div);
+    let callbackTriggered = false;
+    input.onChange((value) => {
+        callbackTriggered = true;
+        console.assert(value === "新值", "Callback value test failed");
+        console.log("onChange callback triggered with value:", value);
+    });
+    await sd.pause();
+    input._.nake.setAttribute("value", "新值");
+    input._.nake.getAttribute("onchange")();
+    console.assert(callbackTriggered, "Callback test failed");
+    console.log("Input callback test passed");
+}
+
+async function TestInputChaining() {
+    const input = new sd.Input(div);
+    await sd.pause();
+    input.x(150).y(150).width(150).value("链式调用").onChange((value) => console.log("Changed value:", value));
+    console.assert(
+        input.x() === 150 && 
+        input.y() === 150 && 
+        input.value() === "链式调用",
+        "Method chaining test failed"
+    );
+    console.log("Input chaining test passed");
+}
