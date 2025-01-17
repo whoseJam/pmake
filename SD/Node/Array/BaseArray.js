@@ -122,9 +122,7 @@ BaseArray.prototype = {
     },
     dropValue: function (id) {
         const element = this.element(id);
-        this.eraseByBaseArray(id);
         const value = element.after(this.delay()).drop();
-        element.startAnimate(this).opacity(0).remove();
         return value;
     },
     text: function (id, text) {

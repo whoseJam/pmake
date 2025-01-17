@@ -15,7 +15,7 @@ export class Message {
             window.IFRAME_RATE = rate;
             window.IFRAME_MAX_FRAME = maxFrame;
             console.log("max frame=", window.IFRAME_MAX_FRAME);
-            Animate.currentActionList.updateWindowSize();
+            A.currentActionList.updateWindowSize();
         };
 
         window.SetViewBox = function (x, y, width, height, rate) {
