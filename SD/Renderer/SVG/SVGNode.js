@@ -2,7 +2,7 @@ import { Action } from "@/Animate/Action";
 import { Dom } from "@/Dom/Dom";
 import { RenderNode } from "@/Renderer/RenderNode";
 
-const SHAPE_TAG = new Set(["circle", "ellipse", "foreignObject", "fragment", "image", "line", "path", "rect", "svg", "text", "polygon", "polyline"]);
+const shapeKey = new Set(["circle", "ellipse", "foreignObject", "fragment", "image", "line", "path", "rect", "svg", "text", "polygon", "polyline"]);
 
 function appendAndRemove(svgNode, owner) {
     return function (t) {
@@ -97,11 +97,13 @@ SVGNode.prototype = {
             this.element.style[key] = value;
         } else if (key === "viewBox" && typeof value === "object") {
             this.element.setAttribute(key, `${value.x} ${value.y} ${value.width} ${value.height}`);
+        } else if ((key === "stroke" || key === "fill") && typeof value === "object") {
+            this.element.setAttribute(key, `rgb(${value.r}, ${value.g}, ${value.b})`);
         } else {
             this.element.setAttribute(key, value);
         }
     },
     hasShape() {
-        return SHAPE_TAG.has(this.tag);
+        return shapeKey.has(this.tag);
     },
 };

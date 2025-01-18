@@ -45,7 +45,7 @@ export class Interp {
             const r = fRGB.r * (1 - t) + tRGB.r * t;
             const g = fRGB.g * (1 - t) + tRGB.g * t;
             const b = fRGB.b * (1 - t) + tRGB.b * t;
-            attrs.setAttribute(key, `rgb(${r}, ${g}, ${b})`);
+            attrs.setAttribute(key, { r, g, b });
         };
     }
     static stringInterp(attrs, key) {

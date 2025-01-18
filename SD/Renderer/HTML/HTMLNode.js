@@ -64,7 +64,7 @@ HTMLNode.prototype = {
         } else if (styleKey.has(key)) {
             this.element.style[key] = value;
         } else if (callbackKey.has(key)) {
-            this.element[key] =value;
+            this.element[key] = value;
         } else {
             this.element.setAttribute(key, value);
         }

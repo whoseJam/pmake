@@ -20,6 +20,6 @@ sd.main(async () => {
     rect.startAnimate().dx(100).endAnimate();
     rect.startAnimate().dy(100).endAnimate();
     rect.startAnimate().color(C.blue).endAnimate();
-    button.startAnimate().dx(500).endAnimate();
+    button.startAnimate().dx(100).endAnimate();
     button.startAnimate().dy(100).endAnimate();
 });

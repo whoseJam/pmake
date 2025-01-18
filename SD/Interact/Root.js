@@ -1,6 +1,6 @@
 import { HTMLNode } from "@/Renderer/HTML/HTMLNode";
 import { SVGNode } from "@/Renderer/SVG/SVGNode";
-
+import { ThreeNode } from "@/Renderer/Three/ThreeNode";
 import { Check } from "@/Utility/Check";
 
 const str0 = "0123456789-";
@@ -26,16 +26,13 @@ function defineArrows() {
 
 function updateDivViewBox(box) {
     const view = div();
-    const nake = view.nake();
-    console.log("window=", window.innerWidth, window.innerHeight);
-    console.log("container=", nake.clientWidth, nake.clientHeight);
     const width = window.innerWidth;
     const height = window.innerHeight;
-    let scaleX = width / box.width;
-    let scaleY = height / box.height;
-    let scale = Math.min(scaleX, scaleY);
-    let translateX = (width - box.width) / 2 - box.x * scale;
-    let translateY = (height - box.height) / 2 - box.y * scale;
+    const scaleX = width / box.width;
+    const scaleY = height / box.height;
+    const scale = Math.min(scaleX, scaleY);
+    const translateX = (width - box.width) / 2 - box.x * scale;
+    const translateY = (height - box.height) / 2 - box.y * scale;
     view.setAttribute("transform", `translate(${translateX}px, ${translateY}px) scale(${scale})`);
     view.setAttribute("width", `${box.width}px`);
     view.setAttribute("height", `${box.height}px`);
@@ -44,6 +41,28 @@ function updateDivViewBox(box) {
 function updateSVGViewBox(box) {
     const view = svg();
     view.setAttribute("viewBox", `${box.x} ${box.y} ${box.width} ${box.height}`);
+}
+
+function updateThreeViewBox(box) {
+    const view = three().nake();
+    const aspect = window.innerWidth / window.innerHeight;
+    const scaleX = window.innerWidth / box.width;
+    const scaleY = window.innerHeight / box.height;
+    const midPoint = box.width / box.height;
+    if (scaleX > scaleY) {
+        view.camera.left = -view.frustumSize * aspect;
+        view.camera.right = view.frustumSize * aspect;
+        view.camera.top = view.frustumSize;
+        view.camera.bottom = -view.frustumSize;
+    } else {
+        view.camera.left = -midPoint * view.frustumSize;
+        view.camera.right = midPoint * view.frustumSize;
+        view.camera.top = (midPoint * view.frustumSize) / aspect;
+        view.camera.bottom = (-midPoint * view.frustumSize) / aspect;
+    }
+    view.renderer.setSize(window.innerWidth, window.innerHeight);
+    view.renderer.setPixelRatio(window.devicePixelRatio);
+    view.camera.updateProjectionMatrix();
 }
 
 function updateWindowRate(box) {
@@ -68,7 +87,6 @@ export class Root {
         if (currentDate > targetDate) return;
 
         if (true) {
-            // create svg container
             this.svg = new HTMLNode(undefined, document.body, "div");
             this.svg.setAttribute("width", "100%");
             this.svg.setAttribute("height", "100%");
@@ -85,7 +103,7 @@ export class Root {
             this.div.setAttribute("width", "100vw");
             this.div.setAttribute("height", "100vh");
             this.div.setAttribute("overflow", "hidden");
-            this.div.setAttribute("position", "relative");
+            this.div.setAttribute("position", "absolute");
             this.div.setAttribute("pointer-events", "none");
             this.div = this.div.append("div");
             this.div.setAttribute("width", `${this.viewBox.width}px`);
@@ -94,13 +112,23 @@ export class Root {
                 updateDivViewBox(this.viewBox);
             });
         }
+
+        if (true) {
+            this.three = new ThreeNode(undefined, document.body, "three");
+            window.addEventListener("resize", () => {
+                updateThreeViewBox(this.viewBox);
+            });
+        }
+
         if (window.self === window.top) {
             updateSVGViewBox(this.viewBox);
             updateDivViewBox(this.viewBox);
+            updateThreeViewBox(this.viewBox);
             updateWindowRate(this.viewBox);
         } else {
             this.svg.setAttribute("opacity", 0);
             this.div.setAttribute("opacity", 0);
+            this.three.setAttribute("opacity", 0);
         }
     }
 
@@ -136,8 +164,10 @@ export class Root {
         this.viewBox = { x: X, y: Y, width: W, height: H + 1 };
         this.svg.setAttribute("opacity", 1);
         this.div.setAttribute("opacity", 1);
+        this.three.setAttribute("opacity", 1);
         updateSVGViewBox(this.viewBox);
         updateDivViewBox(this.viewBox);
+        updateThreeViewBox(this.viewBox);
         updateWindowRate(this.viewBox);
     }
 }
@@ -148,4 +178,8 @@ export function svg() {
 
 export function div() {
     return Root.div;
+}
+
+export function three() {
+    return Root.three;
 }

@@ -1,9 +1,9 @@
-import { SDNode }     from "@/Node/SDNode";
+import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 
 export class SVGNode extends RenderNode {
-    constructor(parent: SDNode, layer: RenderNode, tag: string);
-    constructor(parent: SDNode, layer: RenderNode, tag: SVGElement);
+    constructor(parent: SDNode, layer: RenderNode, label: string);
+    constructor(parent: SDNode, layer: RenderNode, label: SVGElement);
 
     nake(): SVGElement;
     append(tag: string): SVGNode;
