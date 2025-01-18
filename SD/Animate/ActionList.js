@@ -1,6 +1,6 @@
 import { Action } from "@/Animate/Action";
 
-const sizeKey = new Set(["x", "y", "cx", "cy", "width", "height", "d", "x1", "y1", "x2", "y2", "transform", "opacity", "font-size", "points"]);
+const sizeKey = new Set(["x", "y", "cx", "cy", "width", "height", "d", "x1", "y1", "x2", "y2", "transform", "opacity", "font-size", "points", "left", "top"]);
 
 function isVisible(element) {
     if (element && "opacity" in element) {

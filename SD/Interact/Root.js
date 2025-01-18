@@ -26,11 +26,16 @@ function defineArrows() {
 
 function updateDivViewBox(box) {
     const view = div();
-    let scaleX = window.innerWidth / box.width;
-    let scaleY = window.innerHeight / box.height;
+    const nake = view.nake();
+    console.log("window=", window.innerWidth, window.innerHeight);
+    console.log("container=", nake.clientWidth, nake.clientHeight);
+    const width = window.innerWidth;
+    const height = window.innerHeight;
+    let scaleX = width / box.width;
+    let scaleY = height / box.height;
     let scale = Math.min(scaleX, scaleY);
-    let translateX = (window.innerWidth - box.width) / 2 - box.x;
-    let translateY = (window.innerHeight - box.height) / 2 - box.y;
+    let translateX = (width - box.width) / 2 - box.x * scale;
+    let translateY = (height - box.height) / 2 - box.y * scale;
     view.setAttribute("transform", `translate(${translateX}px, ${translateY}px) scale(${scale})`);
     view.setAttribute("width", `${box.width}px`);
     view.setAttribute("height", `${box.height}px`);
@@ -83,8 +88,8 @@ export class Root {
             this.div.setAttribute("position", "relative");
             this.div.setAttribute("pointer-events", "none");
             this.div = this.div.append("div");
-            this.div.setAttribute("width", `${1200}px`);
-            this.div.setAttribute("height", `${600}px`);
+            this.div.setAttribute("width", `${this.viewBox.width}px`);
+            this.div.setAttribute("height", `${this.viewBox.height}px`);
             window.addEventListener("resize", () => {
                 updateDivViewBox(this.viewBox);
             });
@@ -100,7 +105,6 @@ export class Root {
     }
 
     static setViewBox(x, y, width, height, rate) {
-        this.viewBox = { x, y, width, height };
         /*
             |-----------W-----------|
             X           cX          mX
