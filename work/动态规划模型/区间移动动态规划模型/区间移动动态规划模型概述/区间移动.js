@@ -4,12 +4,13 @@ import { interactableIntervalMove } from "../_/InteractableIntervalMove";
 const svg = sd.svg();
 const C = sd.color();
 const n = 10;
-const arr = new sd.Array(svg);
+const arr = new sd.Array(svg).start(1);
 const start = 5;
 let gap = 5;
 
 sd.init(() => {
     arr.resize(n);
+    sd.Index(arr, "b");
     interactableIntervalMove(arr, start, { onMove });
 });
 

@@ -1,5 +1,4 @@
 import { Check } from "@/Utility/Check";
-import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 /**
  * 总共有两种类型的 EffectQueue（name 有两种可能性）
@@ -29,6 +28,7 @@ class EffectQueue {
         this.queue = [];
     }
     execute() {
+        let tmpCurrentQueue = currentEffectQueue;
         currentEffectQueue = this;
         while (this.queue.length > 0) {
             const effect = this.queue[0];
@@ -37,7 +37,7 @@ class EffectQueue {
             flushDirty(effect);
             effect[this.label] = false;
         }
-        currentEffectQueue = undefined;
+        currentEffectQueue = tmpCurrentQueue;
     }
 }
 
@@ -196,6 +196,7 @@ export function reactive(object, father = undefined) {
     }
     let freeze = 0;
     let associated = {};
+    let postAssociate = {};
     const proxy = new Proxy(object, {
         get: function (object, key, receiver) {
             traceInput(object, key);
@@ -210,16 +211,23 @@ export function reactive(object, father = undefined) {
             if (proxiesMap.get(object)) object = proxiesMap.get(object);
             if (proxiesMap.get(value)) value = proxiesMap.get(value);
             traceOutput(object, key, value);
+            const newValue = value;
+            const oldValue = Reflect.get(object, key, receiver);
             if (associated[key]) {
-                const newValue = value;
-                const oldValue = Reflect.get(object, key, receiver);
-                if (hasChanged(newValue, oldValue)) {
+                if (hasChanged(newValue, oldValue) || (Array.isArray(object) && key === "length")) {
                     associated[key].forEach(callback => {
                         callback(newValue, oldValue);
                     });
                 }
             }
             Reflect.set(object, key, value, receiver);
+            if (postAssociate[key]) {
+                if (hasChanged(newValue, oldValue) || (Array.isArray(object) && key === "length")) {
+                    postAssociate[key].forEach(callback => {
+                        callback(newValue, oldValue);
+                    });
+                }
+            }
             if (shouldTriggerUpdate(object, key)) triggerDAGUpdate(object, key, object.freezing() + globalFreeze);
             return true;
         },
@@ -228,8 +236,29 @@ export function reactive(object, father = undefined) {
     objectsMap.set(object, new ObjectManager(proxy));
     object.associate = function (key, callback) {
         if (arguments.length === 0) return associated;
-        if (!associated[key]) associated[key] = [];
-        associated[key].push(callback);
+        const keys = key.split(".");
+        for (let i = 0; i < keys.length; i++) {
+            if (i === keys.length - 1) {
+                if (!associated[keys[i]]) associated[keys[i]] = [];
+                associated[keys[i]].push(callback);
+            } else {
+                const str = keys.slice(i + 1).join(".");
+                proxy[keys[i]].associate(str, callback);
+            }
+        }
+    };
+    object.postAssociate = function (key, callback) {
+        if (arguments.length === 0) return postAssociate;
+        const keys = key.split(".");
+        for (let i = 0; i < keys.length; i++) {
+            if (i === keys.length - 1) {
+                if (!postAssociate[keys[i]]) postAssociate[keys[i]] = [];
+                postAssociate[keys[i]].push(callback);
+            } else {
+                const str = keys.slice(i + 1).join(".");
+                proxy[keys[i]].associate(str, callback);
+            }
+        }
     };
     object.merge = function (otherObject) {
         for (let key in otherObject) {
@@ -252,7 +281,14 @@ export function reactive(object, father = undefined) {
 
 export function effect(innerEffect, tag) {
     const effectFn = () => {
-        if (globalActiveEffect) ErrorLauncher.whatHappened();
+        let tmpGlobalActiveEffect = undefined;
+        let tmpCurrentQueue = undefined;
+        if (globalActiveEffect) {
+            tmpGlobalActiveEffect = globalActiveEffect;
+            tmpCurrentQueue = currentEffectQueue.queue;
+            globalActiveEffect = undefined;
+            currentEffectQueue.queue = [];
+        }
         globalActiveEffect = effectFn;
         const effectManager = effectsMap.get(effectFn);
         const out = effectManager.out;
@@ -260,6 +296,10 @@ export function effect(innerEffect, tag) {
         innerEffect();
         effectManager.handleNewOutput(out);
         globalActiveEffect = undefined;
+        if (tmpGlobalActiveEffect) {
+            globalActiveEffect = tmpGlobalActiveEffect;
+            currentEffectQueue.queue = tmpCurrentQueue;
+        }
     };
     effectsMap.set(effectFn, new EffectManager(effectFn));
     globalAllowDAGUpdate = false;

@@ -38,7 +38,6 @@ ThreeNode.prototype = {
         return this.element.getAttribute(key);
     },
     setAttribute(key, value) {
-        console.log("this.element=", this.element);
         this.element.setAttribute(key, value);
     },
 };
