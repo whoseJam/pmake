@@ -17,5 +17,16 @@
         <p>设 $f(l,r,0/1)$ 表示已经把 $[l,r]$ 这段区间的路灯关掉了，且目前关灯人位于区间左端点/右端点上，最少的耗电量是多少</p>
         <iframe data-animation="./状态转移.js"
             style="width: 1000px; height: 200px;"></iframe>
+        <p class="fragment">将这些路灯按照从左往右的顺序排列，设 $\{S_i\}$ 是这些路灯的<b style="color: purple;">功率前缀和</b>，$\{d_i\}$ 是这些路灯的<b>坐标</b></p>
+        <p class="fragment math-fragment">
+            $$
+            \begin{cases}
+            f(l,r,0)\stackrel{min}{\rightarrow} f(l-1,r,0)+(S_n-(S_r-S_{l-1}))(d_l-d_{l-1}) \\
+            f(l,r,0)\stackrel{min}{\rightarrow} f(l,r+1,1)+(S_n-(S_r-S_{l-1}))(d_{r+1}-d_{l}) \\
+            f(l,r,1)\stackrel{min}{\rightarrow} f(l-1,r,0)+(S_n-(S_r-S_{l-1}))(d_r-d_{l-1}) \\
+            f(l,r,1)\stackrel{min}{\rightarrow} f(l,r+1,0)+(S_n-(S_r-S_{l-1}))(d_{r+1}-d_r)
+            \end{cases}
+            $$
+        </p>
     </section>
 </section>

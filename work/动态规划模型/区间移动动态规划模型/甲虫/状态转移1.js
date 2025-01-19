@@ -3,7 +3,7 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const C = sd.color();
 const D = sd.device();
-const lights = [1, 2, 4, 5, 6, 8, 10];
+const waters = [1, 2, 4, 5, 6, 8, 10];
 const l = 2;
 const r = 5;
 const circles = [];
@@ -27,11 +27,11 @@ D.onKeyDown("d", () => {
 });
 
 sd.init(() => {
-    lights.forEach((light, id) => {
-        const circle = new sd.Circle(svg).center(pos(light)).color(l <= id && id <= r ? C.grey : C.yellow);
+    waters.forEach((water, id) => {
+        const circle = new sd.Circle(svg).center(pos(water)).color(l <= id && id <= r ? C.grey : C.textBlue);
         circles.push(circle);
     });
-    sd.Brace(svg).brace(circles[l], circles[r], "t").value("已关闭");
+    sd.Brace(svg).brace(circles[l], circles[r], "t").value("已喝");
     sd.Pointer(svg, "l", "t", 3, 20).moveTo(circles[l]);
     sd.Pointer(svg, "r", "t", 3, 20).moveTo(circles[r]);
 });
