@@ -1,18 +1,18 @@
 import * as sd from "@/sd";
 
 /**
- * @param {sd.Array} str 
+ * @param {sd.Array} str
  * @param {Array<number>} len
  * @param {Array<{location: string, gap: number}>} locations
  * @param {{
- *  OnTreeCreated: (tree: sd.HorizontalValueTree) => void
- * }} args 
+ *  onCreateTree: (tree: sd.HorizontalValueTree) => void
+ * }} args
  */
 export async function BuildFailTreeFromLen(str, len, locations, args) {
     const svg = sd.svg();
     const R = sd.rule();
     const EN = sd.enter();
-    const OnTreeCreated = args.OnTreeCreated;
+    const onCreateTree = args.onCreateTree;
 
     await sd.pause();
     const links = [];
@@ -24,14 +24,14 @@ export async function BuildFailTreeFromLen(str, len, locations, args) {
         links.push({
             link: link,
             fa: len[i],
-            u: i
+            u: i,
         });
     }
 
     await sd.pause();
     const tree = new sd.HorizontalValueTree(svg);
-    if (OnTreeCreated) {
-        await OnTreeCreated(tree);
+    if (onCreateTree) {
+        await onCreateTree(tree);
     }
 
     tree.freeze();
@@ -40,25 +40,30 @@ export async function BuildFailTreeFromLen(str, len, locations, args) {
         tree.newNodeFromExistElement(i, str.element(i));
         if (i > 0) {
             const link = links[i - 1];
-            link.link.startAnimate().bending(0).endAnimate();
             tree.newLinkFromExistElement(link.fa, link.u, link.link);
         }
     }
     tree.unfreeze();
+    sd.uneffect(tree._.updater);
+    tree.forEachLink((link, sourceId, targetId) => {
+        const source = tree.element(sourceId);
+        const target = tree.element(targetId);
+        link.bending(0);
+        link.source(source.center());
+        link.target(target.center());
+        sd.trim(link, source, target);
+    });
     tree.endAnimate();
 
     await sd.pause();
     let currentStr = "";
     for (let i = str.start(); i <= str.end(); i++) {
-         if (i >= 1) {
+        if (i >= 1) {
             currentStr = currentStr + str.text(i);
             const element = str.element(i);
             element.startAnimate();
-            element.childAs(
-                new sd.Text(svg, currentStr).onEnter(EN.appear()),
-                R.aside(locations[i].location, locations[i].gap)
-            );
+            element.childAs(new sd.Text(svg, currentStr).onEnter(EN.appear()), R.aside(locations[i].location, locations[i].gap));
             element.endAnimate();
         }
     }
-} 
+}

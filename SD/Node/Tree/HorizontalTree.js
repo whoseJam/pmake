@@ -16,7 +16,12 @@ export function HorizontalTree(parent) {
     uneffect(this._.updater);
     this._.updater = effect(() => {
         const r = this.vars.r;
-        D3Layout.apply(this, ["horizontal", node => node.y + this.x(), node => node.x + this.y(), (node, limit) => node.r(Math.min(r, limit / 2.1))]);
+        D3Layout.call(
+            this,
+            "horizontal",
+            node => [node.y + this.x(), node.x + this.y()],
+            (node, limit) => node.r(Math.min(r, limit / 2.1))
+        );
     });
 }
 

@@ -14,7 +14,12 @@ export function HorizontalValueTree(parent) {
 
     uneffect(this._.updater);
     this._.updater = effect(() => {
-        D3Layout.apply(this, ["horizontal", node => [node.y + this.x(), node.x + this.y()], () => {}]);
+        D3Layout.call(
+            this,
+            "horizontal",
+            node => [node.y + this.x(), node.x + this.y()],
+            () => {}
+        );
     });
 }
 

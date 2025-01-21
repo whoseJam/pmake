@@ -4,23 +4,16 @@ import { KMP } from "../_/KMP";
 
 const svg = sd.svg();
 const C = sd.color();
-const tString = "ABABCABAA";
-const s = new sd.Array(svg).pushArray(tString).start(1);
+const tString = "ABABC";
+const s = new sd.Array(svg).pushArray("ABABABABC").start(1);
 const t = new sd.Array(svg).pushArray(tString).start(1);
-const len = new sd.Array(svg).start(1);
 const ps = sd.Pointer(s, "", "b", 3, 20, 3);
 const pt = sd.Pointer(t, "", "b", 3, 20, 3);
-const ls = new sd.Line(svg).opacity(0);
-const lt = new sd.Line(svg).opacity(0);
 
 sd.init(() => {
-    t.y(80).dx(40);
-    sd.Label(s, "t");
+    t.y(80);
+    sd.Label(s, "s");
     sd.Label(t, "t");
-    len.resize(t.length());
-    t.childAs(len, function (parent, child) {
-        child.x(parent.x()).y(parent.my());
-    });
 });
 
 sd.main(async () => {
@@ -30,7 +23,6 @@ sd.main(async () => {
         onMatch,
         onFail,
         onJumpFail,
-        start: 2,
     });
 });
 
@@ -58,7 +50,6 @@ async function onPointerJMove(j) {
 
 async function onMatch(i, j) {
     await sd.pause();
-    len.startAnimate().value(i, j).endAnimate();
     s.startAnimate().color(i, C.green).endAnimate();
     t.startAnimate().color(j, C.green).endAnimate();
 }
@@ -69,20 +60,11 @@ async function onFail(i, j) {
         s.startAnimate().color(i, C.red).endAnimate();
         t.startAnimate().color(j, C.red).endAnimate();
     } else if (j === 0) {
-        len.startAnimate().value(i, 0).endAnimate();
         global.moveT = true;
     }
 }
 
 async function onJumpFail(i, j, len) {
-    if (len) {
-        await sd.pause();
-        updateLine(ls, s, i - len, i - 1);
-        updateLine(lt, t, 1, len);
-        await sd.pause();
-        ls.startAnimate().opacity(0).arrow(null).endAnimate();
-        lt.startAnimate().opacity(0).arrow(null).endAnimate();
-    }
     await sd.pause();
     const color = s.text(i) === t.text(len + 1) ? C.green : C.red;
     t.startAnimate()
@@ -103,11 +85,4 @@ async function onJumpFail(i, j, len) {
     t.startAnimate()
         .color(len + 1, color)
         .endAnimate();
-}
-
-function updateLine(line, str, l, r) {
-    line.opacity(1);
-    line.source(str.element(l).x(), str.y() - 5);
-    line.target(str.element(r).mx(), str.y() - 5);
-    line.startAnimate().pointStoT().endAnimate().arrow();
 }
