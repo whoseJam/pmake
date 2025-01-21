@@ -16,7 +16,9 @@ sd.init(() => {
         let tmp = 0;
         mathjax.element(i).onClick(() => {
             tmp = (tmp + 1) % colors.length;
-            mathjax.color(i, colors[tmp]);
+            sd.inter(async () => {
+                mathjax.startAnimate().color(i, colors[tmp]).endAnimate();
+            });
         });
     }
 });

@@ -8,6 +8,7 @@ import { createRenderNode } from "@/Renderer/RenderNode";
 import { SVGNode } from "@/Renderer/SVG/SVGNode";
 import { Cast } from "@/Utility/Cast";
 import { Color as C } from "@/Utility/Color";
+import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 import { PathPen } from "@/Utility/PathPen";
 
@@ -98,7 +99,21 @@ Mathjax.prototype = {
     height: mathjaxLength("height"),
     fill: Factory.handler("fill"),
     stroke: Factory.handler("stroke"),
-    color: MathAtom.prototype.color,
+    length: function () {
+        return this.vars.elements.length;
+    },
+    color: function () {
+        const args = arguments;
+        switch (args.length) {
+            case 1:
+                this.element(0).color(args[0]);
+                return this;
+            case 2:
+                this.element(args[0]).color(args[1]);
+                return this;
+        }
+        ErrorLauncher.invalidArguments();
+    },
     element: function (id) {
         return this.vars.elements[id];
     },
@@ -414,11 +429,16 @@ function transformPath(mathjax, oldSvg, oldPaths, newSvg, newPaths) {
 }
 
 function buildMathAtom(mathjax, svg) {
+    for (let i = 1; i <= mathjax.length(); i++) mathjax.eraseChild(mathjax.element(i));
     const elements = [];
     const root = svg.nake().children[1].children[0];
     const atoms = [...svg.nake().querySelectorAll("g[data-mml-node='TeXAtom']")];
     elements.push(new MathAtom(mathjax, new SVGNode(mathjax, undefined, root)));
-    atoms.forEach(atom => elements.push(new MathAtom(mathjax, new SVGNode(mathjax, undefined, atom))));
+    atoms.forEach(atom => {
+        const mathAtom = new MathAtom(mathjax, new SVGNode(mathjax, undefined, atom));
+        elements.push(mathAtom);
+        mathjax.childAs(mathAtom);
+    });
     mathjax.vars.elements = elements;
 }
 

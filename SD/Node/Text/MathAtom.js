@@ -11,6 +11,7 @@ export function MathAtom(parent, nake) {
         fill: C.black,
     });
 
+    this._.layer = nake;
     this._.nake = nake;
     this._.ready = true;
 
