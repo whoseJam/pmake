@@ -98,10 +98,12 @@ class IFrameManager {
         }
         if (viewBox === undefined) throw new Error("View Box Information Not Found!");
         if (this.viewBoxDelta) {
-            viewBox.x += this.viewBoxDelta.x;
-            viewBox.y += this.viewBoxDelta.y;
-            viewBox.width += this.viewBoxDelta.width;
-            viewBox.height += this.viewBoxDelta.height;
+            viewBox = {
+                x: viewBox.x + this.viewBoxDelta.x,
+                y: viewBox.y + this.viewBoxDelta.y,
+                width: viewBox.width + this.viewBoxDelta.width,
+                height: viewBox.height + this.viewBoxDelta.height,
+            };
         }
         return viewBox;
     }

@@ -3,7 +3,7 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const C = sd.color();
 const colorSet = [C.red, C.blue, C.green, C.yellow];
-const colors = "3110122331";
+const colors = "1122103300";
 const arr = new sd.Array(svg);
 const nodes = sd.make1d(colors.length);
 let first;
@@ -14,6 +14,8 @@ sd.init(() => {
     for (let i = 0; i < colors.length; i++) {
         arr.color(i, colorSet[+colors[i]]);
     }
+    sd.Pointer(arr, "l", "b", 3, 20).moveTo(0);
+    sd.Pointer(arr, "r", "b", 3, 20).moveTo(arr.length() - 1);
     arr.forEachElement(element => {
         element.onClick(() => {
             if (first === undefined) first = element;
