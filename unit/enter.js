@@ -6,11 +6,9 @@ const EN = sd.enter();
 const EX = sd.exit();
 const R = sd.rule();
 
-sd.init(() => {
+sd.init(() => {});
 
-})
-
-sd.main(TestEnterWhileAnimating)
+sd.main(TestBasic);
 
 async function TestEnterWhileAnimating() {
     const element = new sd.Box(svg).x(100).y(100).opacity(0);

@@ -41,16 +41,12 @@ sd.main(async () => {
     nodes.forEach(node => node.startAnimate().opacity(0).endAnimate().remove());
     links.forEach(link => link.startAnimate().opacity(0).endAnimate().remove());
     const leftRect = new sd.Rect(left).onEnter(enter);
-    leftRect.triggerEnter(left, () => {
-        left.startAnimate().childAs(leftRect, (parent, child) => {
-            child.x(parent.x()).y(parent.my()).width(parent.width());
-        });
+    left.startAnimate().childAs(leftRect, (parent, child) => {
+        child.x(parent.x()).y(parent.my()).width(parent.width());
     });
     const rightRect = new sd.Rect(right).onEnter(enter);
-    rightRect.triggerEnter(right, () => {
-        right.startAnimate().childAs(rightRect, (parent, child) => {
-            child.x(parent.x()).y(parent.my()).width(parent.width());
-        });
+    right.startAnimate().childAs(rightRect, (parent, child) => {
+        child.x(parent.x()).y(parent.my()).width(parent.width());
     });
     await sd.pause();
     leftRect.startAnimate().childAs(new sd.Text(leftRect, "?").onEnter(EN.appear()), R.centerOnly()).endAnimate();
@@ -73,11 +69,9 @@ sd.main(async () => {
 function enter(element, move) {
     element.height(0);
     element.attachTo(this.layer());
-    console.log("bef.", element.delay(), element.delay() + element.duration());
     move();
     element.startAnimate(this);
     element.height(100);
-    console.log("aft.", element.delay(), element.delay() + element.duration());
 }
 
 async function onCreateNode(l, r, fa, cx, y) {

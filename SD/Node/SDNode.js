@@ -117,8 +117,12 @@ SDNode.prototype.attachTo = function (parent) {
 SDNode.prototype.childAs = function () {
     const args = [...arguments];
     const child = args.filter(arg => Check.isTypeOfSDNode(arg))[0];
-    if (child._.parent !== this && !child.onEnter()) child.attachTo(this);
-    this._.children.push(args[0], args[1], args[2]);
+    const fn = () => {
+        if (child._.parent !== this && !child.onEnter()) child.attachTo(this);
+        this._.children.push(args[0], args[1], args[2]);
+    };
+    if (child.onEnter() && !child.entering()) child.triggerEnter(this, fn);
+    else fn();
     return this;
 };
 
@@ -177,9 +181,13 @@ SDNode.prototype = {
     },
     triggerEnter: function (parent, move) {
         if (!this._.enter) return this;
+        this._.entering = true;
         this._.enter.call(parent, this, move);
-        this._.enter = undefined;
+        this._.entering = this._.enter = undefined;
         return this;
+    },
+    entering() {
+        return this._.entering !== undefined;
     },
     onExit: function (exit) {
         if (exit === undefined) return this._.exit;
