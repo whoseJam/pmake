@@ -52,7 +52,6 @@ function parseText(text) {
 }
 
 export function Text(parent, text = "") {
-    console.log("create text =", text);
     BaseNake.call(this, parent, "text");
 
     this.type("Text");

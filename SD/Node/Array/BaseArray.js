@@ -50,6 +50,10 @@ BaseArray.prototype = {
     idx: function (i) {
         return i - this.start();
     },
+    indexOf: function (element) {
+        for (let i = this.start(); i <= this.end(); i++) if (this.element(i) === element) return i;
+        ErrorLauncher.whatHappened();
+    },
     element: function (i) {
         const elements = this.vars.elements;
         const id = this.idx(i);

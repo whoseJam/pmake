@@ -13,6 +13,7 @@ export class BaseArray extends SDNode {
     resize(length: number): this;
 
     idx(id: number): number;
+    indexOf(element: SDNode): number;
 
     element(id: number): SDNode;
     elements(): Array<SDNode>;

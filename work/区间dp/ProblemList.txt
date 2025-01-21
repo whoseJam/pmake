@@ -1,5 +1,5 @@
 合并类：
-#427.石子合并：https://www.luogu.com.cn/problem/P1880
+#427.石子合并：https://www.luogu.com.cn/problem/P1775
 #903.最优矩阵链乘：http://poj.org/problem?id=1651
 #121.能量项链：https://www.luogu.com.cn/problem/P1063
 
