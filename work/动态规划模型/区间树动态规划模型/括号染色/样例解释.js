@@ -23,4 +23,31 @@ sd.init(() => {
     }
 });
 
-sd.main(async () => {});
+sd.main(async () => {
+    await sd.pause();
+    // for (let i = 0; i < seq.length; i++) {
+    //     if (seq[i] === ")") continue;
+    //     const info = find(i);
+    //     const l = i;
+    //     const r = info[0];
+    //     const d = info[1];
+    //     const zz = new sd.ZZLine(mathjax);
+    //     zz.location("b").bending(d * 5);
+    //     zz.source(mathjax.element(l).pos("cx", "my"));
+    //     zz.target(mathjax.element(r).pos("cx", "my"));
+    //     zz.opacity(0).startAnimate().opacity(1).endAnimate();
+    // }
+});
+
+function find(x) {
+    let i = x;
+    let count = 1;
+    let mx = 1;
+    while (count > 0) {
+        i++;
+        if (seq[i] === "(") count++;
+        else count--;
+        mx = Math.max(mx, count);
+    }
+    return [i, mx];
+}

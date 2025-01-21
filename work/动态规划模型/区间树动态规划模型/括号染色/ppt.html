@@ -14,5 +14,55 @@
         <iframe data-animation="./样例解释.js"
             style="width: 1000px; height: 100px;"></iframe>
         <p class="fragment">求符合条件的染色方案数，对 $10^9+7$ 取模</p>
+        <p class="fragment quote">一个合法的括号序列，一定暗藏了一棵区间树——我们只需要把匹配的括号做一个连线就能看出来</p>
+    </section>
+    <section>
+        <h2>括号染色</h2>
+        <p>不妨设 $f_{l,r,cl,cr}$ 表示考虑 $[l,r]$ 这段区间，区间左端点被染成了 $cl$ 色，区间右端点被染成了 $cr$ 色，合法的染色方案数</p>
+        <p class="quote">这里的 $cl,cr\in\{0,1,2\}$，$0$ 对应不染色，$1$ 对应染为红色，$2$ 对应染为蓝色</p>
+        <div class="fragment">
+            <li>如果 $l+1=r$（在 $[l,r]$ 构成的括号序列合法的情况下），则一定是这样的情况</li>
+            <iframe data-animation="./状态转移1.js"
+                style="width: 1000px; height: 60px;"></iframe>
+            <span class="fragment">$$f_{l,r,1,0}=f_{l,r,0,1}=f_{l,r,2,0}=f_{l,r,0,2}=1$$</span>
+        </div>
+    </section>
+    <section>
+        <h2>括号染色</h2>
+        <li>如果 $l$ 端点和 $r$ 端点的括号是匹配的，则一定是这样的情况</li>
+        <iframe data-animation="./状态转移2.js"
+            style="width: 1000px; height: 60px;"></iframe>
+        <span class="fragment">
+            $$
+            \begin{aligned}
+            f_{l,r,1,0}&=\sum_{i,j,i\ne 1} f_{l+1,r-1,i,j} \\
+            f_{l,r,0,1}&=\sum_{i,j,j\ne 1} f_{l+1,r-1,i,j} \\
+            f_{l,r,2,0}&=\sum_{i,j,i\ne 2} f_{l+1,r-1,i,j} \\
+            f_{l,r,0,2}&=\sum_{i,j,j\ne 2} f_{l+1,r-1,i,j}
+            \end{aligned}
+            $$
+        </span>
+    </section>
+    <section>
+        <h2>括号染色</h2>
+        <li>如果 $l$ 端点和 $r$ 端点的括号不是匹配的，则一定是这样的情况</li>
+        <iframe data-animation="./状态转移3.js"
+            style="width: 1000px; height: 60px;"></iframe>
+        <p>设与 $l$ 端点处的左括号，匹配的右括号的位置为 $m$</p>
+        <span class="fragment">
+            $$
+            \begin{aligned}
+            f_{l,r,1,0}&=\sum_{i,j,k} f_{l,m,1,i}f_{m+1,r,j,k} \\
+            f_{l,r,0,1}&=\sum_{i,j,k} f_{l,m,0,i}f_{m+1,r,j,k} \\
+            f_{l,r,2,0}&=\sum_{i,j,k} f_{l,m,2,i}f_{m+1,r,j,k} \\
+            f_{l,r,0,2}&=\sum_{i,j,k} f_{l,m,0,i}f_{m+1,r,j,k}
+            \end{aligned}
+            $$
+        </span>
+        <p class="fragment">在枚举 $i,j,k$ 的时候，应该保证</p>
+        <ul>
+            <li class="fragment">颜色 $i$ 和 $l$ 处的括号的颜色加起来<b>恰有一个有效颜色</b></li>
+            <li class="fragment">颜色 $i$ 和颜色 $j$ 不相同</li>
+        </ul>
     </section>
 </section>
