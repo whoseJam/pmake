@@ -2,7 +2,7 @@
     <section>
         <h1>玉米田</h1>
     </section>
-    <problem data-src="http://43.143.204.105/problem/1002"></problem>
+    <problem data-problemset="luogu" data-problemid="P1879"></problem>
     <section>
         <h2>玉米田</h2>
         <iframe data-animation="./样例解释.js"
@@ -14,10 +14,10 @@
             <li>相邻的地里面不能同时种玉米</li>
         </ul>
         <p class="fragment">求<b>种玉米</b>的方案总数</p>
+        <p class="fragment">$m,n\le 12$</p>
     </section>
     <section>
         <h2>玉米田</h2>
-        <p>注意到 $m,n\le 12$</p>
         <p>我们可以把<b>某一行种玉米的情况</b>压缩为<b>一个状态</b>，再逐行考虑如何种玉米</p>
         <iframe data-animation="./状态定义.js"
             style="width: 1000px; height: 120px;"></iframe>
@@ -40,7 +40,12 @@
     </section>
     <section>
         <h2>玉米田</h2>
-        <p>设 $f(i,S)$ 表示种完前 $i$ 行的玉米，第 $i$ 行<b>种植状态</b>为 $S$ 的方案数</p>
+        <p>设 $f_{i,S}$ 表示种完前 $i$ 行的玉米，第 $i$ 行<b>种植状态</b>为 $S$ 的方案数</p>
+        <p class="fragment">
+            $$
+            f_{i,S} \stackrel{+}{\rightarrow} f_{i+1,T}, T\cap S=\emptyset
+            $$
+        </p>
         <p class="fragment">第 $1$ 行，只要合法就能种</p>
         <codeblock class="fragment">
             <script type="text/template">
@@ -51,12 +56,9 @@
         <codeblock class="fragment">
             <script type="text/template">
                 for (int i = 1; i < m; i++) {
-                    // 第 i 行的种植状态为 S
-                    for (int S: validS[i]) {
+                    for (int S: validS[i]) { // 第 i 行的种植状态为 S
                         if (!f[i][S]) continue;
-                        // 第 i + 1 行的种植状态为 T
-                        for (int T: validS[i + 1]) {
-                            // 不能有重叠
+                        for (int T: validS[i + 1]) { // 第 i + 1 行的种植状态为 T
                             if ((S & T) == 0) f[i + 1][T] = (f[i + 1][T] + f[i][S]) % Mod;
                         }
                     }

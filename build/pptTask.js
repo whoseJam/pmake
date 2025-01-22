@@ -1,8 +1,8 @@
-const fs                = require("fs");
-const gulp              = require("gulp");
-const path              = require("path");
-const webpack           = require("webpack-stream");
-const aniTask           = require("./aniTask");
+const fs = require("fs");
+const gulp = require("gulp");
+const path = require("path");
+const webpack = require("webpack-stream");
+const aniTask = require("./aniTask");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const colors = require("colors-console");
 
@@ -14,21 +14,21 @@ const animationList = [];
 defineEventListener("cpp", {
     onAdd: copyCPPFile,
     onChange: copyCPPFile,
-    onUnlink: cleanCPPFile
-})
+    onUnlink: cleanCPPFile,
+});
 defineEventListener("html|md|txt", {
     onAdd: copyFile,
     onChange: copyFile,
-    onUnlink: cleanFile
+    onUnlink: cleanFile,
 });
 defineEventListener("png|jpg|jpeg", {
     onAdd: copyImage,
     onChange: copyImage,
-    onUnlink: cleanFile
+    onUnlink: cleanFile,
 });
 defineEventListener("js", {
-    onAdd: function(path, destFolderPath) {
-        gulp.task(path, (done) => {
+    onAdd: function (path, destFolderPath) {
+        gulp.task(path, done => {
             return aniTask(path, destFolderPath, true);
         });
         if (shouldPutInAnimationList) {
@@ -37,8 +37,8 @@ defineEventListener("js", {
             gulp.task(path)();
         }
     },
-    onChange: function() {},
-    onUnlink: function() {}
+    onChange: function () {},
+    onUnlink: function () {},
 });
 
 module.exports = function PPTTask(sourceFileFolder, targetFileFolder) {
@@ -49,12 +49,13 @@ module.exports = function PPTTask(sourceFileFolder, targetFileFolder) {
         process.exit();
     }
 
-    gulp.task("ppt-task", (done) => {
-        return gulp.src(pptFilePath)
-                   .pipe(webpack(PPTConfiguration(pptFilePath)))
-                   .pipe(gulp.dest(targetFileFolder));
+    gulp.task("ppt-task", done => {
+        return gulp
+            .src(pptFilePath)
+            .pipe(webpack(PPTConfiguration(pptFilePath)))
+            .pipe(gulp.dest(targetFileFolder));
     });
-    
+
     let project = gulp.task("ppt-task");
 
     global.sourceFileFolder = sourceFileFolder;
@@ -77,7 +78,7 @@ module.exports = function PPTTask(sourceFileFolder, targetFileFolder) {
 
     if (global["w"]) {
         const watcher = gulp.watch(`${sourceFileFolder}/**`);
-        watcher.on("change", function(path) {
+        watcher.on("change", function (path) {
             path = path.replaceAll("\\", "/");
             const suffix = path.split(".").slice(-1)[0];
             if (!eventListener[suffix] || !eventListener[suffix].onChange) {
@@ -86,7 +87,7 @@ module.exports = function PPTTask(sourceFileFolder, targetFileFolder) {
             }
             eventListener[suffix].onChange(pathToOriginFile(path), pathToTargetFolder(path));
         });
-        watcher.on("add", function(path) {
+        watcher.on("add", function (path) {
             path = path.replaceAll("\\", "/");
             const suffix = path.split(".").slice(-1)[0];
             if (!eventListener[suffix] || !eventListener[suffix].onAdd) {
@@ -95,23 +96,25 @@ module.exports = function PPTTask(sourceFileFolder, targetFileFolder) {
             }
             eventListener[suffix].onAdd(pathToOriginFile(path), pathToTargetFolder(path));
         });
-        watcher.on("unlink", function(path) {
+        watcher.on("unlink", function (path) {
             path = path.replaceAll("\\", "/");
             const suffix = path.split(".").slice(-1)[0];
             if (!eventListener[suffix] || !eventListener[suffix].onUnlink) {
                 console.log(`文件 ${path} 的后缀名未定义 onUnlink 处理函数`);
+                return;
             }
             eventListener[suffix].onUnlink(pathToTargetFile(path));
         });
     }
 
     project();
-}
+};
 
 function relativePath(filePath) {
     const A = filePath.split("/");
     const B = sourceFileFolder.split("/");
-    let indexA = 0, indexB = 0;
+    let indexA = 0,
+        indexB = 0;
     while (indexA < A.length && A[indexA] === ".") indexA++;
     while (indexB < B.length && B[indexB] === ".") indexB++;
     while (indexA < A.length && indexB < B.length) {
@@ -145,8 +148,7 @@ function pathToFile(path) {
 }
 
 function copyFile(srcPath, destFolderPath) {
-    return gulp.src(srcPath)
-               .pipe(gulp.dest(destFolderPath));
+    return gulp.src(srcPath).pipe(gulp.dest(destFolderPath));
 }
 
 function copyCPPFile(srcPath, destFolderPath) {
@@ -154,8 +156,7 @@ function copyCPPFile(srcPath, destFolderPath) {
 }
 
 function copyImage(srcPath, destFolderPath) {
-    return gulp.src(srcPath, { encoding: false })
-               .pipe(gulp.dest(destFolderPath));
+    return gulp.src(srcPath, { encoding: false }).pipe(gulp.dest(destFolderPath));
 }
 
 function cleanFile(path) {
@@ -193,7 +194,7 @@ function cleanAllEmptyDirectories(path, level = 0) {
             fs.rmdirSync(path);
         }
     } else {
-        level !==0 && fs.rmdirSync(path);
+        level !== 0 && fs.rmdirSync(path);
     }
 }
 
@@ -207,7 +208,7 @@ function walk(directoryPath, callback) {
         } else if (stats.isDirectory()) {
             walk(filePath, callback);
         }
-    })
+    });
 }
 
 function defineEventListener(suffix, listener) {
@@ -221,35 +222,25 @@ function PPTConfiguration() {
     // pptFilePath: ./work/xxx/ppt.html
     const suffix = global["l"] ? "Local" : "Remote";
     return {
-        mode:  global["d"] ? "development" : "production",
+        mode: global["d"] ? "development" : "production",
         entry: `${global["projectRoot"]}/build/pptMain.js`,
         watch: global["w"] ? true : false,
         plugins: [
             new HtmlWebpackPlugin({
                 template: `${global["projectRoot"]}/build/pptIndex${suffix}.html`,
                 inject: "body",
-                scriptLoading: "blocking"
-            })
+                scriptLoading: "blocking",
+            }),
         ],
         module: {
             rules: [
-                {   test: /\.tsx?$/,
-                    use: ["ts-loader"]
-                },
-                {   test: /.html$/,
-                    use: ["html-loader"]
-                },
-                {   test: /\.(s[ac]ss|css)$/,
-                    use: [
-                        "style-loader",
-                        "css-loader",
-                        "sass-loader"
-                    ]
-                }
-            ]
+                { test: /\.tsx?$/, use: ["ts-loader"] },
+                { test: /.html$/, use: ["html-loader"] },
+                { test: /\.(s[ac]ss|css)$/, use: ["style-loader", "css-loader", "sass-loader"] },
+            ],
         },
         resolve: {
-            extensions: [".tsx", ".ts", ".js"]
-        }
-    }
+            extensions: [".tsx", ".ts", ".js"],
+        },
+    };
 }
