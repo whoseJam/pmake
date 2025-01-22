@@ -1,4 +1,4 @@
-import "../MyReveal/slide.css";
+import "../Reveal/slide.css";
 
 import { init } from "./Interact/Init.js";
 

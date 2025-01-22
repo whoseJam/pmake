@@ -1,7 +1,7 @@
-import "../MyReveal/plugin/reset.css";
-import "../MyReveal/plugin/reveal.css";
-import "../MyReveal/plugin/Chalkboard.css";
-import includeHTML from "../MyReveal/Inject";
+import "../Reveal/plugin/reset.css";
+import "../Reveal/plugin/reveal.css";
+import "../Reveal/plugin/Chalkboard.css";
+import includeHTML from "../Reveal/Inject";
 
 class ThemeManager {
     static AVAILABLE_THEMES = ["beige", "dracula", "serif", "simple", "sky", "solarized", "white"];
@@ -117,7 +117,7 @@ class ThemeManager {
         const link = document.createElement("link");
         link.rel = "stylesheet";
         link.type = "text/css";
-        link.href = `http://localhost:8080/${themeName}.css`;
+        link.href = `http://whosejam.site/${themeName}.css`;
         link.dataset.theme = themeName;
         document.head.appendChild(link);
         const selector = document.querySelector("#theme-selector select");

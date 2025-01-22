@@ -5,7 +5,7 @@ const path = require("path");
 
 async function themeTask(outputPath) {
     const autoprefixer = (await import("gulp-autoprefixer")).default;
-    const themePath = path.join(__dirname, "../MyReveal/css/theme");
+    const themePath = path.join(__dirname, "../Reveal/css/theme");
     const sourcePath = path.join(themePath, "source/**/*.scss");
 
     return gulp.src(sourcePath)

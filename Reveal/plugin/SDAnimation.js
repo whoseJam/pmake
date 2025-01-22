@@ -1,4 +1,4 @@
-import { configure, has, start, stop, update } from "../../SDIFrame/SDIFrame";
+import { configure, has, start, stop, update } from "../../IFrame/IFrame";
 import { GetLocationFromAncestor } from "../Inject";
 
 export function SDAnimation() {

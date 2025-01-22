@@ -1,11 +1,11 @@
 const gulp = require("gulp");
 
-const SDTask = require("./build/SDTask");
+const sd = require("./build/sd");
 const animation = require("./build/animation");
-const pptTask = require("./build/pptTask");
-const MyRevealTask = require("./build/MyRevealTask");
-const SDIFrameTask = require("./build/SDIFrameTask");
-const releaseTask = require("./build/releaseTask");
+const ppt = require("./build/ppt");
+const reveal = require("./build/reveal");
+const iframe = require("./build/iframe");
+const release = require("./build/release");
 const themeTask = require("./build/theme");
 const parser = require("./build/parser");
 
@@ -30,12 +30,12 @@ global["projectRoot"] = __dirname.replaceAll("\\", "/");
 
 parser.parseInput();
 
-gulp.task("SD", () => {
-    return SDTask(defaultPPTTargetFilePath);
+gulp.task("sd", () => {
+    return sd(defaultPPTTargetFilePath);
 });
 
-gulp.task("MyReveal", () => {
-    return MyRevealTask(defaultPPTTargetFilePath);
+gulp.task("reveal", () => {
+    return reveal(defaultPPTTargetFilePath);
 });
 
 gulp.task("theme", async () => {
@@ -46,8 +46,8 @@ gulp.task("animation", () => {
     return animation(global["i"], defaultAnimationTargetFilePath);
 });
 
-gulp.task("sd-iframe", () => {
-    return SDIFrameTask(defaultPPTTargetFilePath);
+gulp.task("iframe", () => {
+    return iframe(defaultPPTTargetFilePath);
 });
 
 gulp.task("release", done => {
@@ -56,18 +56,18 @@ gulp.task("release", done => {
         console.log(colors("cyan", "defaultReleaseFilePath") + "：发布包输出路径（例如 C:/Users/xxx/Desktop/release）");
         process.exit(1);
     }
-    return releaseTask(defaultReleaseFilePath, done);
+    return release(defaultReleaseFilePath, done);
 });
 
 gulp.task("ppt", done => {
     const inputPath = global["i"];
     const outputPath = global["o"] ? global["o"] : defaultPPTTargetFilePath;
     gulp.task("ppt-inner", function (done) {
-        pptTask(inputPath, outputPath);
+        ppt(inputPath, outputPath);
         done();
     });
     if (global["l"]) {
-        const result = gulp[global["w"] ? "parallel" : "series"]("ppt-inner", "SD", "MyReveal")();
+        const result = gulp[global["w"] ? "parallel" : "series"]("ppt-inner", "sd", "reveal")();
         done();
         return result;
     }
