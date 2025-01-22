@@ -1,6 +1,9 @@
+#!/usr/bin/env node
+
 const fs = require("fs");
 const gulp = require("gulp");
 const path = require("path");
+const parser = require("./parser");
 const webpack = require("webpack-stream");
 const animationTask = require("./animation");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
@@ -41,7 +44,7 @@ defineEventListener("js", {
     onUnlink: function () {},
 });
 
-module.exports = function PPTTask(sourceFileFolder, targetFileFolder) {
+function ppt(sourceFileFolder, targetFileFolder) {
     const pptFilePath = `${sourceFileFolder}/ppt.html`;
 
     if (!fs.existsSync(pptFilePath)) {
@@ -244,3 +247,25 @@ function PPTConfiguration() {
         },
     };
 }
+
+if (require.main === module) {
+    let defaultConfig;
+    try {
+        defaultConfig = require("../myconfig.json");
+    } catch (e) {
+        console.log(colors("red", "[error]未找到 myconfig.json 文件，请确保项目根目录下存在 myconfig.json 文件"));
+        process.exit(1);
+    }
+    global["projectRoot"] = path.resolve(__dirname, "..");
+    parser.parseInput();
+    const sourceFileFolder = global["i"];
+    const targetFileFolder = defaultConfig["defaultPPTTargetFilePath"];
+    if (!sourceFileFolder) {
+        console.log(colors("red", "[error]请提供源文件夹路径"));
+        console.log(colors("cyan", "用法: node ppt.js -s <源文件夹路径> [-t <目标文件夹路径>]"));
+        process.exit(1);
+    }
+    ppt(sourceFileFolder, targetFileFolder);
+}
+
+module.exports = ppt;

@@ -5,7 +5,8 @@
     "main": "sd.d.ts",
     "scripts": {},
     "bin": {
-        "animation": "./build/animation.js"
+        "animation": "./build/animation.js",
+        "ppt": "./build/ppt.js"
     },
     "repository": {
         "type": "",

@@ -59,19 +59,8 @@ gulp.task("release", done => {
     return release(defaultReleaseFilePath, done);
 });
 
-gulp.task("ppt", done => {
-    const inputPath = global["i"];
-    const outputPath = global["o"] ? global["o"] : defaultPPTTargetFilePath;
-    gulp.task("ppt-inner", function (done) {
-        ppt(inputPath, outputPath);
-        done();
-    });
-    if (global["l"]) {
-        const result = gulp[global["w"] ? "parallel" : "series"]("ppt-inner", "sd", "reveal")();
-        done();
-        return result;
-    }
-    return gulp.task("ppt-inner")(done);
+gulp.task("ppt", () => {
+    return ppt(global["s"] || defaultPPTTargetFilePath, defaultPPTTargetFilePath);
 });
 
 gulp.task("serve", done => {
