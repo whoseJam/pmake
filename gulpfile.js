@@ -1,11 +1,12 @@
 const gulp = require("gulp");
 
 const SDTask = require("./build/SDTask");
-const aniTask = require("./build/aniTask");
+const animation = require("./build/animation");
 const pptTask = require("./build/pptTask");
 const MyRevealTask = require("./build/MyRevealTask");
 const SDIFrameTask = require("./build/SDIFrameTask");
 const releaseTask = require("./build/releaseTask");
+const parser = require("./build/parser");
 
 const colors = require("colors-console");
 
@@ -22,58 +23,38 @@ try {
 
 const defaultAnimationTargetFilePath = defaultConfig["defaultAnimationTargetFilePath"];
 const defaultPPTTargetFilePath = defaultConfig["defaultPPTTargetFilePath"];
+const defaultReleaseFilePath = defaultConfig["defaultReleaseFilePath"];
 
 global["projectRoot"] = __dirname.replaceAll("\\", "/");
 
-function parseInput() {
-    const length = process.argv.length;
-    for (let i = 3; i < length; i++) {
-        const arg = process.argv[i];
-        if (arg.startsWith("-")) {
-            const key = arg.slice(1);
-            if (i + 1 < length && !process.argv[i + 1].startsWith("-")) {
-                const value = process.argv[i + 1];
-                global[key] = value;
-                i++;
-            } else global[key] = true;
-        }
-    }
-}
+parser.parseInput();
 
 gulp.task("SD", () => {
-    parseInput();
     return SDTask(defaultPPTTargetFilePath);
 });
 
 gulp.task("MyReveal", () => {
-    parseInput();
     return MyRevealTask(defaultPPTTargetFilePath);
 });
 
-gulp.task("ani", () => {
-    parseInput();
-    return aniTask(global["i"], defaultAnimationTargetFilePath);
+gulp.task("animation", () => {
+    return animation(global["i"], defaultAnimationTargetFilePath);
 });
 
-gulp.task("animation", gulp.parallel("SD", "ani"));
-
 gulp.task("sd-iframe", () => {
-    parseInput();
     return SDIFrameTask(defaultPPTTargetFilePath);
 });
 
-gulp.task("release", () => {
-    parseInput();
-    if (!defaultConfig.defaultReleaseFilePath) {
+gulp.task("release", done => {
+    if (!defaultReleaseFilePath) {
         console.log(colors("red", "[error]未找到 defaultReleaseFilePath 配置，请在 myconfig.json 中添加该配置项"));
         console.log(colors("cyan", "defaultReleaseFilePath") + "：发布包输出路径（例如 C:/Users/xxx/Desktop/release）");
         process.exit(1);
     }
-    return releaseTask(defaultConfig.defaultReleaseFilePath);
+    return releaseTask(defaultReleaseFilePath, done);
 });
 
 gulp.task("ppt", done => {
-    parseInput();
     const inputPath = global["i"];
     const outputPath = global["o"] ? global["o"] : defaultPPTTargetFilePath;
     gulp.task("ppt-inner", function (done) {

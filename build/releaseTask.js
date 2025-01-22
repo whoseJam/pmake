@@ -21,20 +21,35 @@ function convertImportPaths(content, filePath, targetPath) {
     return content;
 }
 
-function releaseTask(targetPath) {
-    return gulp.src(["SD/**/*", "!SD/**/*.js"], { base: "SD" })
-        .pipe(through.obj(function(file, enc, done) {
-            if (file.isNull()) {
-                return done(null, file);
-            }
-            if (file.isBuffer() && path.extname(file.path) === ".ts") {
-                const content = file.contents.toString();
-                const newContent = convertImportPaths(content, file.path, targetPath);
-                file.contents = Buffer.from(newContent);
-            }
-            done(null, file);
-        }))
-        .pipe(gulp.dest(targetPath));
+function releaseTask(targetPath, done) {
+    const processSD = () => {
+        return gulp.src(["SD/**/*.ts"], { base: "SD" })
+            .pipe(through.obj(function(file, enc, done) {
+                if (file.isNull()) {
+                    return done(null, file);
+                }
+                if (file.isBuffer() && path.extname(file.path) === ".ts") {
+                    const content = file.contents.toString();
+                    const newContent = convertImportPaths(content, file.path, targetPath);
+                    file.contents = Buffer.from(newContent);
+                }
+                done(null, file);
+            }))
+            .pipe(gulp.dest(targetPath));
+    };
+
+    const processBuild = () => {
+        return gulp.src(["./build/**/*"], { base: "." })
+            .pipe(gulp.dest(targetPath));
+    };
+
+    const processPackage = () => {
+        return gulp.src(["package.json"], { base: "." })
+            .pipe(gulp.dest(targetPath));
+    };
+
+    done();
+    return gulp.series(processSD, processBuild, processPackage)();
 }
 
 module.exports = releaseTask;

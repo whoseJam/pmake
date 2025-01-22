@@ -2,7 +2,7 @@ const fs = require("fs");
 const gulp = require("gulp");
 const path = require("path");
 const webpack = require("webpack-stream");
-const aniTask = require("./aniTask");
+const animationTask = require("./animation");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const colors = require("colors-console");
 
@@ -29,7 +29,7 @@ defineEventListener("png|jpg|jpeg", {
 defineEventListener("js", {
     onAdd: function (path, destFolderPath) {
         gulp.task(path, done => {
-            return aniTask(path, destFolderPath, true);
+            return animationTask(path, destFolderPath, true);
         });
         if (shouldPutInAnimationList) {
             animationList.push(path);
