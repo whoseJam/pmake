@@ -6,6 +6,7 @@ const pptTask = require("./build/pptTask");
 const MyRevealTask = require("./build/MyRevealTask");
 const SDIFrameTask = require("./build/SDIFrameTask");
 const releaseTask = require("./build/releaseTask");
+const themeTask = require("./build/theme");
 const parser = require("./build/parser");
 
 const colors = require("colors-console");
@@ -35,6 +36,10 @@ gulp.task("SD", () => {
 
 gulp.task("MyReveal", () => {
     return MyRevealTask(defaultPPTTargetFilePath);
+});
+
+gulp.task("theme", async () => {
+    return await themeTask(defaultPPTTargetFilePath);
 });
 
 gulp.task("animation", () => {
