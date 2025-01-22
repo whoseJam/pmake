@@ -5,6 +5,7 @@ const aniTask = require("./build/aniTask");
 const pptTask = require("./build/pptTask");
 const MyRevealTask = require("./build/MyRevealTask");
 const SDIFrameTask = require("./build/SDIFrameTask");
+const releaseTask = require("./build/releaseTask");
 
 const colors = require("colors-console");
 
@@ -59,6 +60,16 @@ gulp.task("animation", gulp.parallel("SD", "ani"));
 gulp.task("sd-iframe", () => {
     parseInput();
     return SDIFrameTask(defaultPPTTargetFilePath);
+});
+
+gulp.task("release", () => {
+    parseInput();
+    if (!defaultConfig.defaultReleaseFilePath) {
+        console.log(colors("red", "[error]未找到 defaultReleaseFilePath 配置，请在 myconfig.json 中添加该配置项"));
+        console.log(colors("cyan", "defaultReleaseFilePath") + "：发布包输出路径（例如 C:/Users/xxx/Desktop/release）");
+        process.exit(1);
+    }
+    return releaseTask(defaultConfig.defaultReleaseFilePath);
 });
 
 gulp.task("ppt", done => {
