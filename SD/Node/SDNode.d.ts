@@ -5,27 +5,21 @@ type EnterCallback = (element: SDNode, move: () => void) => void;
 export class SDNode {
     constructor(parent: SDNode);
     constructor(parent: SDNode, layer: RenderNode);
-
     type(type: string): this;
-
     layer(): RenderNode;
     layer(name: string): RenderNode;
-
     newLayer(name: string): this;
     layer(name: string): RenderNode;
     attachTo(layer: SDNode): this;
     attachTo(layer: RenderNode): this;
-
     childAs(name: string, child: SDNode, rule: Rule): this;
     childAs(name: string, child: SDNode): this;
     childAs(child: SDNode, rule: Rule): this;
     childAs(child: SDNode): this;
-
     child(name: string): SDNode;
-
+    hasChild(child: string | SDNode): SDNode;
     eraseChild(name: string): SDNode;
     eraseChild(child: SDNode): SDNode;
-
     startAnimate(duration: number): this;
     startAnimate(other: SDNode): this;
     startAnimate(start: number, end: number): this;
@@ -36,12 +30,10 @@ export class SDNode {
     after(delay: number): this;
     after(other: SDNode): this;
     duration(): number;
-
     opacity(): number;
     opacity(opacity: number): this;
     inRange(point: [number, number]): boolean;
     remove(): void;
-
     x(): number;
     x(x: number): this;
     y(): number;
@@ -67,21 +59,9 @@ export class SDNode {
     mx(mx: number): this;
     my(): number;
     my(my: number): this;
-
-    update(): this;
-    preUpdate(): this;
-    postUpdate(): this;
-    tryUpdate(): this;
-    pendUpdate(): this;
-    beforeUpdate(update: () => void): this;
-    afterUpdate(update: () => void): this;
-    attachUpdate(update: () => void): this;
-    removeUpdate(update: () => void): this;
-    tryMove(element: SDNode, move: () => void): this;
     freeze(): this;
     unfreeze(): this;
     freezing(): boolean;
-
     drag(type: true): this;
     drag(type: false | null | undefined);
     drag(onDrag: (dx: number, dy: number) => [number, number]): this;
@@ -89,16 +69,16 @@ export class SDNode {
     clickable(type: false | null | undefined);
     onClick(onClick: (node: this) => void): this;
     onDblClick(onClick: (node: this) => void): this;
-
     rule(): (parent: SDNode, child: SDNode) => void;
     rule(rule: (parent: SDNode, child: SDNode) => void): this;
-    triggerRule(): this;
     onEnter(enter: (element: SDNode, move: () => void) => void): this;
     onEnter(): (element: SDNode) => void | undefined;
+    onEnterDefault(enter: (element: SDNode, move: () => void) => void): this;
     triggerEnter(): this;
+    entering(): boolean;
     onExit(exit: (element: SDNode) => void): this;
     onExit(): (element: SDNode) => void | undefined;
+    onExitDefault(exit: (element: SDNode) => void): this;
     triggerExit(): this;
-
     title(title: string): this;
 }
