@@ -3,7 +3,7 @@ import { Animate } from "@/Node/Core/Animate";
 import { Children } from "@/Node/Core/Children";
 import { Interact } from "@/Node/Core/Interact";
 import { Location } from "@/Node/Core/Location";
-import { effect, reactive } from "@/Node/Core/Reactive";
+import { effect, reactive, uneffect } from "@/Node/Core/Reactive";
 import { createRenderNode } from "@/Renderer/RenderNode";
 import { SVGNode } from "@/Renderer/SVG/SVGNode";
 import { Check } from "@/Utility/Check";
@@ -39,6 +39,7 @@ export function SDNode(parent, layer = undefined, group = undefined) {
         animate: new Animate(this),
         children: new Children(this),
         interact: new Interact(this),
+        updaters: {},
     };
     group = group === undefined ? "g" : group;
 
@@ -218,4 +219,12 @@ SDNode.prototype = {
         if (this._.updates) this._.updates.forEach(update => update()); // Tree
         return this;
     },
+};
+
+SDNode.prototype.effect = function (name, callback) {
+    this._.updaters[name] = effect(callback);
+};
+
+SDNode.prototype.uneffect = function (name) {
+    uneffect(this._.updaters[name]);
 };

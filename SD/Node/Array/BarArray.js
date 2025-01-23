@@ -1,7 +1,6 @@
 import { Array } from "@/Node/Array/Array";
 import { BaseArray } from "@/Node/Array/BaseArray";
 import { Enter as EN } from "@/Node/Core/Enter";
-import { effect } from "@/Node/Core/Reactive";
 import { Rect } from "@/Node/Nake/Rect";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
@@ -19,7 +18,7 @@ export function BarArray(parent) {
         height: 0,
     });
 
-    this._.updater = effect(() => {
+    this.effect("barArray", () => {
         const y = this.my();
         let maxHeight = 0;
         this.vars.elements.forEach((element, i) => {

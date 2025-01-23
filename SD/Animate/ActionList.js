@@ -107,10 +107,7 @@ export class ActionList {
             if (!action.t) action.t = t;
             const duration = this.t - action.t + action.skipping;
             action.tick(duration);
-            if (action.is(Action.stopFlag)) {
-                console.log("skipping=", action.skipping);
-                this.stopCount++;
-            }
+            if (action.is(Action.stopFlag)) this.stopCount++;
         }
     }
     restart(t) {

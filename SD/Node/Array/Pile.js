@@ -1,6 +1,5 @@
 import { Array } from "@/Node/Array/Array";
 import { BaseArray } from "@/Node/Array/BaseArray";
-import { effect } from "@/Node/Core/Reactive";
 import { Factory } from "@/Utility/Factory";
 
 export function Pile(parent) {
@@ -15,7 +14,7 @@ export function Pile(parent) {
         elementHeight: 40,
     });
 
-    this._.updater = effect(() => {
+    this.effect("pile", () => {
         this.vars.elements.forEach((element, i) => {
             element.width(this.elementWidth());
             element.height(this.elementHeight());

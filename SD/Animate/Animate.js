@@ -27,7 +27,6 @@ export class Animate {
         const currentActionList = this.currentActionList;
         if (window.SHOULD_FLUSH || this.shouldStop) return;
         if (this.count || (currentActionList.enabled && !currentActionList.finished())) {
-            // console.log("--------------------------", this.count, "enable=", currentActionList.enabled, "finished=", currentActionList.finished());
             if (!currentActionList.enabled) {
                 currentActionList.enabled = true;
                 this.count--;

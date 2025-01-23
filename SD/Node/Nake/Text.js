@@ -1,6 +1,5 @@
 import { Interp } from "@/Animate/Interp";
 import { svg } from "@/Interact/Root";
-import { effect } from "@/Node/Core/Reactive";
 import { BaseNake } from "@/Node/Nake/BaseNake";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
@@ -69,7 +68,7 @@ export function Text(parent, text = "") {
 
     this.vars.associate("x", Factory.action(this, this._.nake, "x", Interp.numberInterp));
     this.vars.associate("y", Factory.action(this, this._.nake, "y", Interp.numberInterp));
-    effect(() => {
+    this.effect("box", () => {
         const box = fontSizeToBox(this.vars.text, this.vars.fontSize);
         this.vars.width = box.width;
         this.vars.height = box.height;

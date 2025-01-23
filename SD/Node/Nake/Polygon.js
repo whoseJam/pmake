@@ -1,5 +1,4 @@
 import { Action } from "@/Animate/Action";
-import { effect } from "@/Node/Core/Reactive";
 import { BaseNake } from "@/Node/Nake/BaseNake";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
@@ -52,7 +51,7 @@ export function Polygon(parent, points = []) {
     });
 
     this.vars.associate("points", polygenInterp(this, this._.nake));
-    effect(() => {
+    this.effect("box", () => {
         const box = pointsToBox(this.vars.points);
         this.vars.x = box.x;
         this.vars.y = box.y;

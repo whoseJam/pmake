@@ -1,6 +1,5 @@
 import { Array } from "@/Node/Array/Array";
 import { BaseArray } from "@/Node/Array/BaseArray";
-import { effect } from "@/Node/Core/Reactive";
 import { Factory } from "@/Utility/Factory";
 
 export function Stack(parent) {
@@ -15,7 +14,7 @@ export function Stack(parent) {
         elementHeight: 40,
     });
 
-    this._.updater = effect(() => {
+    this.effect("stack", () => {
         this.vars.elements.forEach((element, id) => {
             element.width(this.elementWidth());
             element.height(this.elementHeight());

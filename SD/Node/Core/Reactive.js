@@ -34,7 +34,6 @@ class EffectQueue {
             const effect = this.queue[0];
             this.queue.shift();
             effect();
-            flushDirty(effect);
             effect[this.label] = false;
         }
         currentEffectQueue = tmpCurrentQueue;
@@ -120,14 +119,9 @@ class EffectManager {
 class ObjectManager {
     constructor(proxy) {
         this.proxy = proxy;
-        this.isDirty = new Map();
         this.inEffects = new Map();
         this.outEffects = new Map();
         this.precise = new Map();
-    }
-    dirty(key, dirty) {
-        if (dirty === undefined) return this.isDirty.get(key) ? true : false;
-        this.isDirty.set(key, dirty);
     }
     inputEffects(key) {
         const inEffectsSet = this.inEffects.get(key);
@@ -153,14 +147,6 @@ class ObjectManager {
         }
         outEffectsSet.add(effect);
     }
-}
-
-function flushDirty(effect) {
-    const effectManager = effectsMap.get(effect);
-    effectManager.out.forEach(link => {
-        const objectManager = objectsMap.get(link.object);
-        objectManager.dirty(link.key, false);
-    });
 }
 
 function triggerGlobalEffectQueue() {
@@ -321,12 +307,6 @@ export function uneffect(effect) {
     effectManager.clear();
 }
 
-export function isDirty(proxy, key) {
-    const object = proxiesMap.get(proxy);
-    const objectManager = objectsMap.get(object);
-    return objectManager.dirty(key);
-}
-
 function traceInput(object, key) {
     if (!globalActiveEffect) return;
     const effectManager = effectsMap.get(globalActiveEffect);
@@ -348,7 +328,6 @@ function triggerDAGUpdate(object, key, freeze) {
     globalAllowDAGUpdate = false;
     function collectTriggeredEffect(object, key) {
         const objectManager = objectsMap.get(object);
-        objectManager.dirty(key, true);
         const outEffectsSet = objectManager.outputEffects(key);
         outEffectsSet.forEach(effect => {
             if (freeze === 0) {

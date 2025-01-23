@@ -1,6 +1,5 @@
 import { BaseArray } from "@/Node/Array/BaseArray";
 import { Enter as EN } from "@/Node/Core/Enter";
-import { effect } from "@/Node/Core/Reactive";
 import { Box } from "@/Node/Element/Box";
 import { Factory } from "@/Utility/Factory";
 
@@ -16,7 +15,7 @@ export function Array(parent) {
         elementHeight: 40,
     });
 
-    this._.updater = effect(() => {
+    this.effect("array", () => {
         this.vars.elements.forEach((element, id) => {
             element.x(this.x() + id * this.elementWidth());
             element.y(this.y());

@@ -1,6 +1,5 @@
 import { Stack } from "@/Node/Array/Stack";
 import { ValueArray } from "@/Node/Array/ValueArray";
-import { effect, uneffect } from "@/Node/Core/Reactive";
 import { Factory } from "@/Utility/Factory";
 
 export function ValueStack(parent) {
@@ -12,8 +11,8 @@ export function ValueStack(parent) {
         align: "cx",
     });
 
-    uneffect(this._.updater);
-    this._.updater = effect(() => {
+    this.uneffect("stack");
+    this.effect("valueStack", () => {
         const align = this.align();
         this.vars.elements.forEach((element, i) => {
             element.cy(this.y() + this.elementHeight() * (i + 0.5));

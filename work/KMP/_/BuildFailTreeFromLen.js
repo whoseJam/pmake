@@ -34,7 +34,7 @@ export async function BuildFailTreeFromLen(str, len, locations, args) {
         await onCreateTree(tree);
     }
 
-    tree.freeze();
+    sd.freeze();
     tree.startAnimate(2000);
     for (let i = str.start(); i <= str.end(); i++) {
         tree.newNodeFromExistElement(i, str.element(i));
@@ -43,9 +43,8 @@ export async function BuildFailTreeFromLen(str, len, locations, args) {
             tree.newLinkFromExistElement(link.fa, link.u, link.link);
         }
     }
-    tree.unfreeze();
+    sd.unfreeze();
     sd.uneffect(tree._.updater);
-    console.log("aaa");
     tree.forEachLink((link, sourceId, targetId) => {
         const source = tree.element(sourceId);
         const target = tree.element(targetId);

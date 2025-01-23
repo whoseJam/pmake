@@ -4,95 +4,78 @@ import { Text } from "@/Node/Nake/Text";
 import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
 
-let ID = 0;
 const pointerMap = {};
 
-function MakePointer(pointer, direction, length) {
-    if (direction === "t") pointer.source(0, 0).target(0, -length);
-    if (direction === "b") pointer.source(0, 0).target(0, length);
-    if (direction === "l") pointer.source(0, 0).target(-length, 0);
-    if (direction === "r") pointer.source(0, 0).target(length, 0);
-    pointer.arrow();
-}
-
-function PointerRule(parent, pointer) {
-    const element = pointer.vars.element;
-    if (!element) return;
-    const direction = pointer.direction();
-    const gap = pointer.gap();
-    const pointers = pointerMap[element.id].filter(p => p.direction() === direction && (p.opacity() !== 0 || p === pointer));
-    pointers.sort((a, b) => a.id - b.id);
-    for (let i = 0; i < pointers.length; i++) {
-        const k = (i + 1) / (pointers.length + 1);
-        if (direction === "t") pointers[i].cx(element.kx(k)).y(element.my() + gap);
-        if (direction === "b") pointers[i].cx(element.kx(k)).my(element.y() - gap);
-        if (direction === "l") pointers[i].cy(element.ky(k)).x(element.mx() + gap);
-        if (direction === "r") pointers[i].cy(element.ky(k)).mx(element.x() - gap);
-    }
-}
-
-function LabelRule(parent, label) {
+function labelRule(parent, child) {
     const direction = parent.direction();
     const gap = parent.gap();
-    if (direction === "t") label.cx(parent.cx()).y(parent.my() + gap);
-    if (direction === "b") label.cx(parent.cx()).my(parent.y() - gap);
-    if (direction === "l") label.cy(parent.cy()).x(parent.mx() + gap);
-    if (direction === "r") label.cy(parent.cy()).mx(parent.x() - gap);
+    if (direction === "t") child.cx(parent.cx()).y(parent.my() + gap);
+    if (direction === "b") child.cx(parent.cx()).my(parent.y() - gap);
+    if (direction === "l") child.cy(parent.cy()).x(parent.mx() + gap);
+    if (direction === "r") child.cy(parent.cy()).mx(parent.x() - gap);
 }
 
-export function Pointer(parent, label, direction = "b", gap = 10, length = 50) {
-    const pointer = new Line(parent).opacity(0);
-    MakePointer(pointer, direction, length);
+function addPointerMap(pointer, element) {
+    if (!pointerMap[element.id]) pointerMap[element.id] = [];
+    pointerMap[element.id].push(pointer);
+    pointer.vars.element = element;
+}
 
+function erasePointerMap(pointer) {
+    const element = pointer.vars.element;
+    if (!element) return;
+    pointerMap[element.id] = pointerMap[element.id].filter(p => p !== pointer);
+}
+
+export function Pointer(parent, label, direction = "b", gap = 3, length = 20) {
+    const pointer = new Line(parent).opacity(0).arrow();
     pointer.vars.merge({
         element: undefined,
-        priority: 1,
-        direction: direction,
-        gap: gap,
+        length,
+        direction,
+        gap,
     });
-
     pointer.direction = Factory.handler("direction");
-    pointer.gap = Factory.handler("gap");
-
-    pointer.childAs("label", new Text(pointer, label).fontSize(20), LabelRule);
-
-    pointer.moveTo = function (arg0, arg1) {
-        const args = arguments;
-        const update = () => {
-            this.vars.freeze();
-            const element1 = this.vars.element;
-            if (element1) pointerMap[element1.id] = pointerMap[element1.id].filter(p => p !== pointer);
-            switch (args.length) {
-                case 1:
-                    if (Check.isFalseType(arg0)) this.vars.element = undefined;
-                    else this.vars.element = Check.isTypeOfSDNode(arg0) ? arg0 : parent.element(arg0);
-                    break;
-                case 2:
-                    this.vars.element = parent.element(arg0, arg1);
-            }
-            const element2 = this.vars.element;
-            if (element2) {
-                if (!pointerMap[element2.id]) pointerMap[element2.id] = [];
-                pointerMap[element2.id].push(this);
-            }
-            this.vars.unfreeze();
-        };
-        if (Check.isFalseType(arg0)) {
-            this.vars.element = undefined;
+    pointer.length = Factory.handlerLowPrecise("length");
+    pointer.gap = Factory.handlerLowPrecise("gap");
+    pointer.moveTo = function (x, y) {
+        if (Check.isFalseType(x)) {
+            erasePointerMap(this);
+            pointer.vars.element = undefined;
             this.opacity(0);
             return this;
         }
-        if (this.opacity() === 0) {
+        if (arguments.length === 2) return this.moveTo(parent.element(x, y));
+        else if (arguments.length === 1 && !Check.isTypeOfSDNode(x)) return this.moveTo(parent.element(x));
+        erasePointerMap(this);
+        if (this.opacity() === 0 && this.duration() > 0) {
             const context = new Context(this);
             this.startAnimate(context.tillc(0, 0));
-            update();
+            addPointerMap(this, x);
             this.startAnimate(context.tillc(0, 1));
             this.opacity(1);
-        } else update();
+        } else {
+            addPointerMap(this, x);
+        }
         return this;
     };
-
-    if (parent.childAs) parent.childAs(`pointer_${++ID}`, pointer, PointerRule);
-    else pointer.rule(PointerRule);
+    pointer.effect("pointer", () => {
+        const element = pointer.vars.element;
+        if (!element) return;
+        const gap = pointer.gap();
+        const length = pointer.length();
+        const direction = pointer.direction();
+        const pointers = pointerMap[element.id].filter(p => p.direction() === direction && (p.opacity() !== 0 || p === pointer));
+        pointers.sort((a, b) => a.id - b.id);
+        for (let i = 0; i < pointers.length; i++) {
+            const k = (i + 1) / (pointers.length + 1);
+            if (direction === "t") pointers[i].source(element.kx(k), element.my() + gap + length).target(element.kx(k), element.my() + gap);
+            if (direction === "b") pointers[i].source(element.kx(k), element.y() - gap - length).target(element.kx(k), element.y() - gap);
+            if (direction === "l") pointers[i].source(element.x() - gap - length, element.ky(k)).target(element.x() - gap, element.ky(k));
+            if (direction === "r") pointers[i].source(element.mx() + gap + length, element.ky(k)).target(element.mx() + gap, element.ky(k));
+        }
+    });
+    pointer.childAs(new Text(pointer, label), labelRule);
+    if (Check.isTypeOfSDNode(parent)) parent.childAs(pointer);
     return pointer;
 }

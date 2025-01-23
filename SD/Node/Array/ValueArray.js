@@ -1,6 +1,5 @@
 import { Array } from "@/Node/Array/Array";
 import { Enter as EN } from "@/Node/Core/Enter";
-import { effect, uneffect } from "@/Node/Core/Reactive";
 import { Cast } from "@/Utility/Cast";
 import { Factory } from "@/Utility/Factory";
 
@@ -13,8 +12,8 @@ export function ValueArray(parent) {
         align: "cy",
     });
 
-    uneffect(this._.updater);
-    this._.updater = effect(() => {
+    this.uneffect("array");
+    this.effect("valueArray", () => {
         const align = this.align();
         this.vars.elements.forEach((element, id) => {
             element.cx(this.x() + this.elementWidth() * (id + 0.5));
