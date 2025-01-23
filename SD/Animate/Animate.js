@@ -8,6 +8,10 @@ export class Animate {
     static currentActionList = new ActionList();
     static shouldStop = false;
     static animationRequest = Animate.tick.bind(Animate);
+    static count = 0;
+    static trigger() {
+        this.count++;
+    }
     static stop() {
         this.shouldStop = true;
     }
@@ -22,7 +26,14 @@ export class Animate {
         this.currentTimestamp = t;
         const currentActionList = this.currentActionList;
         if (window.SHOULD_FLUSH || this.shouldStop) return;
-        currentActionList.tick(t, dt);
+        if (this.count || (currentActionList.enabled && !currentActionList.finished())) {
+            // console.log("--------------------------", this.count, "enable=", currentActionList.enabled, "finished=", currentActionList.finished());
+            if (!currentActionList.enabled) {
+                currentActionList.enabled = true;
+                this.count--;
+            }
+            currentActionList.tick(t, dt);
+        }
         requestAnimationFrame(this.animationRequest);
     }
     static finished() {

@@ -41,8 +41,6 @@ export class Action {
     }
     tick(t) {
         if (t < this.l) return;
-
-        global.action = this;
         global.ACTION_TICK++;
         if (this.l < this.r - 1) {
             const k0 = easeInOut((t - this.l) / (this.r - this.l));
@@ -72,14 +70,7 @@ export class Action {
         if (this.channel === "remove") return true;
         if (this.r - this.l < 1) return true;
         if (Check.isTypeOfSDNode(this.owner)) {
-            if (this.readyCount === undefined) {
-                if (this.owner._.ready) return true;
-                this.readyCount = 0;
-                return false;
-            } else {
-                if (this.owner._.ready) return ++this.readyCount >= 3;
-                return false;
-            }
+            return this.owner._.ready;
         } else return true;
     }
     ownerIsCreated() {

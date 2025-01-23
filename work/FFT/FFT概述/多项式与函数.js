@@ -2,11 +2,11 @@ import * as sd from "@/sd";
 
 const svg = sd.svg();
 const L = 10;
-const coord = new sd.Coord(svg).viewX(-L/2).viewY(-L/2).viewWidth(L).viewHeight(L);
+const coord = new sd.Coord(svg).viewBox(-L / 2, -L / 2, L, L);
 
 sd.init(() => {
     coord.width(300).height(250);
-})
+});
 
 sd.main(async () => {
     const focus = sd.Focus(svg);
@@ -17,16 +17,16 @@ sd.main(async () => {
     await sd.pause();
     focus.startAnimate().focus(mtA).endAnimate();
     coord.startAnimate();
-    const A = coord.draw(1, (x) => x**2 + 3*x + 2);
+    const A = coord.draw(1, x => x ** 2 + 3 * x + 2);
     coord.endAnimate();
     await sd.pause();
     focus.startAnimate().focus(mtB).endAnimate();
     coord.startAnimate();
-    const B = coord.draw(2, (x) => -0.5*x**2 + 1);
+    const B = coord.draw(2, x => -0.5 * x ** 2 + 1);
     coord.endAnimate();
     await sd.pause();
     focus.startAnimate().focus(mtC).endAnimate();
     coord.startAnimate();
-    const C = coord.draw(3, (x) => -x-3);
+    const C = coord.draw(3, x => -x - 3);
     coord.endAnimate();
-})
+});

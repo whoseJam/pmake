@@ -162,13 +162,13 @@ export class Root {
         const W = mX > X ? mX - X : 1200;
         const H = mY > Y ? my - Y : 600;
         this.viewBox = { x: X, y: Y, width: W, height: H + 1 };
-        this.svg.setAttribute("opacity", 1);
-        this.div.setAttribute("opacity", 1);
-        this.three.setAttribute("opacity", 1);
         updateSVGViewBox(this.viewBox);
         updateDivViewBox(this.viewBox);
         updateThreeViewBox(this.viewBox);
         updateWindowRate(this.viewBox);
+        this.svg.setAttribute("opacity", 1);
+        this.div.setAttribute("opacity", 1);
+        this.three.setAttribute("opacity", 1);
     }
 }
 

@@ -127,6 +127,7 @@ export function pause(frameType = 0) {
         }
     }
     // A.debug();
+    A.trigger();
     switch (frameType) {
         case FIRST_INTER_FRAME:
             return promiseOfFirstInterFrame();

@@ -19,6 +19,8 @@ export class ActionList {
         this.validCount = 0; // action (hide = false)
         this.totalCount = 0; // action (by push)
         this.actions = [];
+        this.enabled = false;
+        this.frame = window.CURRRENT_FRAME;
     }
     push(action) {
         this.totalCount++;
@@ -105,7 +107,10 @@ export class ActionList {
             if (!action.t) action.t = t;
             const duration = this.t - action.t + action.skipping;
             action.tick(duration);
-            if (action.is(Action.stopFlag)) this.stopCount++;
+            if (action.is(Action.stopFlag)) {
+                console.log("skipping=", action.skipping);
+                this.stopCount++;
+            }
         }
     }
     restart(t) {
@@ -118,11 +123,11 @@ export class ActionList {
         for (let action = this.actionHead; action; action = action.next) {
             if (action.is(Action.stopFlag)) continue;
             action.forceToFinish();
+            this.stopCount++;
         }
     }
     finished() {
-        for (let action = this.actionHead; action; action = action.next) if (!action.is(Action.stopFlag)) return false;
-        return true;
+        return this.stopCount === this.validCount;
     }
     rollback() {
         const other = new ActionList();
@@ -141,6 +146,7 @@ export class ActionList {
             newAction.target = action.source;
             other.push(newAction);
         }
+        other.enabled = true;
         return other;
     }
     replay() {
@@ -150,6 +156,7 @@ export class ActionList {
             const newAction = action.clone();
             other.push(newAction);
         }
+        other.enabled = true;
         return other;
     }
     debug() {

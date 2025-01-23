@@ -4,14 +4,10 @@ const svg = sd.svg();
 const C = sd.color();
 const R = sd.rule();
 const L = 10;
-const coord = new sd.Coord(svg)
-    .viewX(-L / 2)
-    .viewY(-L / 2)
-    .viewWidth(L)
-    .viewHeight(L);
+const coord = new sd.Coord(svg).viewBox(-L / 2, -L / 2, L, L);
 const arr = new sd.Array(svg);
-sd.Index(arr, "t");
 const dot = new sd.Array(svg);
+sd.Index(arr, "t");
 sd.Index(dot, "t");
 const colorList = [C.orange, C.red, C.green, C.blue];
 const sampleX = [-2, -1, 0, 1];
