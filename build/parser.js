@@ -1,4 +1,12 @@
+const colors = require("colors-console");
+
 let parsed = false;
+let config = undefined;
+
+const hints = {
+    "animationOutputPath": colors("cyan", "animationOutputPath") + "：动画默认输出路径（例如 C:/Users/xxx/Desktop/output）",
+    "pptOutputPath": colors("cyan", "pptOutputPath") + "：ppt默认输出路径（例如 C:/Users/xxx/Desktop/output/animation）",
+}
 
 module.exports = {
     parseInput() {
@@ -16,5 +24,20 @@ module.exports = {
                 } else global[key] = true;
             }
         }
+    },
+    parseConfig(key) {
+        if (config === undefined) {
+            try {
+                config = require("../myconfig.json");
+            } catch (e) {
+                fs.writeFileSync("myconfig.json", JSON.stringify({}, null, 4));
+            }
+        }
+        if (!config[key]) {
+            console.log(colors("red", `[error]未找到 ${key} 请检查配置`));
+            console.log(hints[key]);
+            process.exit(1);
+        }
+        return config[key];
     }
 }

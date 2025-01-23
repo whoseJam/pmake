@@ -80,7 +80,7 @@ if (require.main === module) {
     global["projectRoot"] = path.resolve(__dirname, "..");
     parser.parseInput();
     sourceFilePath = global["i"];
-    targetFilePath = defaultConfig["defaultAnimationTargetFilePath"];
+    targetFilePath = defaultConfig["animationOutputPath"];
     if (!sourceFilePath) {
         console.log(colors("red", "[error]请提供源文件路径"));
         console.log(colors("cyan", "用法: node aniTask.js <源文件路径> [目标路径]"));
