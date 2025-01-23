@@ -20,6 +20,7 @@ export function Link(sourceElement, targetElement, linkType = Line, sourceXLocat
     });
 
     effect(() => {
+        console.log("id=", link.id, "trigger effect");
         if (link.vars.update) link.vars.update = false;
         const element1 = link.vars.element1;
         const element2 = link.vars.element2;
