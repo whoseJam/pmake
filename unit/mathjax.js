@@ -6,6 +6,15 @@ const T = 500;
 
 sd.main(Test9);
 
+async function Test12() {
+    const math = new sd.Mathjax(svg, "a+b=c").center(100, 100);
+    await sd.pause();
+    math.startAnimate().color(C.textBlue).endAnimate();
+    console.log(math.color());
+    await sd.pause();
+    math.startAnimate().transformMath("k").endAnimate();
+}
+
 async function Test11() {
     const math1 = new sd.Mathjax(svg, "\\varphi").center(100, 100);
     const math2 = new sd.Mathjax(svg, "\\sigma").center(150, 200).color(C.textBlue);

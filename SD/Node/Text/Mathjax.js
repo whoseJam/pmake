@@ -67,9 +67,9 @@ export function Mathjax(parent, text) {
         fill: C.black,
     });
 
-    this.vars.associate("fontSize", (newFontSize, oldFontSize) => {
-        this._.ots.forEach(other => other.fontSize(newFontSize));
-        new Action(this.delay(), this.delay() + this.duration(), oldFontSize, newFontSize, Interp.numberInterp(this._.layer, "font-size"), this, "font-size");
+    this.vars.associate("fontSize", (newValue, oldValue) => {
+        this._.ots.forEach(other => other.fontSize(newValue));
+        new Action(this.delay(), this.delay() + this.duration(), oldValue, newValue, Interp.numberInterp(this._.layer, "font-size"), this, "font-size");
     });
     this.vars.associate("x", mathjaxPositionUpdate(this, "x", "cur", "offsetX"));
     this.vars.associate("x", mathjaxPositionUpdate(this, "x", "lst", "offsetX"));
@@ -105,8 +105,11 @@ Mathjax.prototype = {
     color: function () {
         const args = arguments;
         switch (args.length) {
+            case 0:
+                return { main: this.fill(), stroke: this.stroke() };
             case 1:
-                this.element(0).color(args[0]);
+                this.fill(args[0].main || args[0]);
+                this.stroke(args[0].border || args[0]);
                 return this;
             case 2:
                 this.element(args[0]).color(args[1]);
@@ -188,6 +191,7 @@ function createMath(id) {
     const newMath = createRenderNode(mathjax, mathjax._.layer, cloneMathjax(element._.nake.nake()));
     mathjax._.cur = newMath;
     updateThatAndSvg(mathjax, newMath, this);
+    buildMathAtom(mathjax, newMath);
     return mathjax;
 }
 
@@ -280,8 +284,10 @@ function parseMathjax(svg, replace) {
     const atoms = {};
     let currentAtomID = 0;
     let allocatedAtomID = 0;
-    function dfs(current, matrix) {
+    function dfs(current, matrix, fill, stroke) {
         for (let i = 0; i < current.transform.baseVal.length; i++) matrix = multiply(matrix, current.transform.baseVal[i].matrix);
+        if (current.getAttribute("fill")) fill = current.getAttribute("fill");
+        if (current.getAttribute("stroke")) stroke = current.getAttribute("stroke");
         if (!Dom.tagName(current)) return;
         let lastAtomID = currentAtomID;
         if (isMathAtom(current)) atoms[(currentAtomID = ++allocatedAtomID)] = [];
@@ -289,16 +295,19 @@ function parseMathjax(svg, replace) {
         if (Dom.tagName(current) === "path") return;
         if (Dom.tagName(current) === "rect" || Dom.tagName(current) === "use") {
             const path = createPath(current, matrix, defs);
+            path.setAttribute("fill", fill);
+            path.setAttribute("stroke", stroke);
+            console.log(stroke, fill);
             if (replace) removeList.push(current);
             if (currentAtomID) atoms[currentAtomID].push(path);
             elements.push(path);
             if (replace) root.append(path);
             return;
         }
-        for (let child of current.children) dfs(child, matrix);
+        for (let child of current.children) dfs(child, matrix, fill, stroke);
         if (isMathAtom(current)) currentAtomID = lastAtomID;
     }
-    dfs(root, { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 });
+    dfs(root, { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 }, C.black, C.black);
     removeList.forEach(item => item.remove());
     return [elements, atoms];
 }
@@ -432,8 +441,7 @@ function buildMathAtom(mathjax, svg) {
     for (let i = 1; i <= mathjax.length(); i++) mathjax.eraseChild(mathjax.element(i));
     const elements = [];
     const root = svg.nake().children[1].children[0];
-    const atoms = [...svg.nake().querySelectorAll("g[data-mml-node='TeXAtom']")];
-    elements.push(new MathAtom(mathjax, new SVGNode(mathjax, undefined, root)));
+    const atoms = [root, ...root.querySelectorAll("g[data-mml-node='TeXAtom']")];
     atoms.forEach(atom => {
         const mathAtom = new MathAtom(mathjax, new SVGNode(mathjax, undefined, atom));
         elements.push(mathAtom);
@@ -449,6 +457,7 @@ function updateThisAndSvg(mathjax, svg) {
     svg.setAttribute("x", mathjax.x() - svg.offsetX);
     svg.setAttribute("y", mathjax.y() - svg.offsetY);
     svg.nake().children[1].setAttribute("fill", mathjax.fill());
+    svg.nake().children[1].setAttribute("stroke", mathjax.stroke());
 }
 
 // mathjax.x(vars.x) = box.x
@@ -460,6 +469,8 @@ function updateThisAndSvg(mathjax, svg) {
 function updateThatAndSvg(mathjax, svg, from) {
     svg.setAttribute("x", from.x());
     svg.setAttribute("y", from.y());
+    svg.nake().children[1].setAttribute("fill", mathjax.fill());
+    svg.nake().children[1].setAttribute("stroke", mathjax.stroke());
     const box = getBox(svg.nake());
     svg.offsetX = box.x - from.x();
     svg.offsetY = box.y - from.y();
@@ -480,8 +491,8 @@ function mathjaxPositionUpdate(node, key, attrName, offsetName) {
 function mathjaxUpdate(node, key, attrName, interp) {
     return function (newValue, oldValue) {
         if (!node._[attrName]) return;
-        const object = node._[attrName].nake().children[1];
-        new Action(node.delay(), node.delay() + node.duration(), oldValue, newValue, interp(object, key), object, key);
+        const object = new SVGNode(node, undefined, node._[attrName].nake().children[1]);
+        const a = new Action(node.delay(), node.delay() + node.duration(), oldValue, newValue, interp(object, key), object, key);
     };
 }
 
