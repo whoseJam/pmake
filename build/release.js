@@ -48,8 +48,18 @@ function releaseTask(targetPath, done) {
             .pipe(gulp.dest(targetPath));
     };
 
+    const processReveal = () => {
+        return gulp.src([
+            "Reveal/plugin/reset.css",
+            "Reveal/plugin/reveal.css", 
+            "Reveal/plugin/Chalkboard.css",
+            "Reveal/Inject.js"
+        ], { base: "." })
+            .pipe(gulp.dest(targetPath));
+    };
+
     done();
-    return gulp.series(processSD, processBuild, processPackage)();
+    return gulp.series(processSD, processBuild, processPackage, processReveal)();
 }
 
 module.exports = releaseTask;

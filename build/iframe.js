@@ -1,12 +1,12 @@
 const gulp = require("gulp");
 const webpack = require("webpack-stream");
 
-module.exports = function SDIFrameTask(targetFilePath) {
-    const webpackConfiguration = SDIFrameConfiguration();
-    return gulp.src("./IFrame/IFrame.js").pipe(webpack(webpackConfiguration)).pipe(gulp.dest(targetFilePath));
+module.exports = function task(targetFilePath) {
+    const config = configuration();
+    return gulp.src("./IFrame/IFrame.js").pipe(webpack(config)).pipe(gulp.dest(targetFilePath));
 };
 
-function SDIFrameConfiguration() {
+function configuration() {
     return {
         mode: global["d"] ? "development" : "production",
         watch: global["w"] ? true : false,
