@@ -5,13 +5,17 @@ const I = sd.input();
 const n = 5;
 const m = 1;
 const arr = new sd.Array(svg).resize(n).start(1);
-const assign = I.readIntMatrix(`
-3 2`, m, 2);
+const assign = I.readIntMatrix(
+    `
+3 2`,
+    m,
+    2
+);
 const links = [];
 
 sd.init(() => {
     for (let i = 1; i < n; i++) {
-        const l = sd.Link(arr.element(i), arr.element(i + 1), sd.Curve, "cx", "y", "cx", "y").bending(-1).triggerRule();
+        const l = sd.Link(arr.element(i), arr.element(i + 1), sd.Curve, "cx", "y", "cx", "y").bending(-1);
         l.opacity(0.3).arrow();
         links.push(l);
     }
@@ -20,8 +24,6 @@ sd.init(() => {
     }
     sd.Label(arr, "x");
     sd.Index(arr, "b");
-})
+});
 
-sd.main(async () => {
-    
-})
+sd.main(async () => {});

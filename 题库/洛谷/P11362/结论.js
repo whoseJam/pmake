@@ -13,7 +13,7 @@ const links = [];
 
 sd.init(() => {
     for (let i = 1; i < n; i++) {
-        const l = sd.Link(arr.element(i), arr.element(i + 1), sd.Curve, "cx", "y", "cx", "y").bending(-1).triggerRule().arrow();
+        const l = sd.Link(arr.element(i), arr.element(i + 1), sd.Curve, "cx", "y", "cx", "y").bending(-1)..arrow();
         links.push(l);
     }
     for (let i = 1; i <= m; i++) {

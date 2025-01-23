@@ -31,8 +31,6 @@ export class BaseLink extends BaseCurve {
 /**
  * 连接两个元素，并返回一条线
  *
- * 如果发现修改线属性后，发生位置偏移，请调用 triggerRule() 重新计算位置
- *
  * @param sourceElement 第一个元素
  * @param targetElement 第二个元素
  * @param linkClass 连接类
@@ -41,12 +39,4 @@ export class BaseLink extends BaseCurve {
  * @param targetXLocation 第二个元素上的 x 定位符
  * @param targetYLocation 第二个元素上的 y 定位符
  */
-export function Link(
-    sourceElement: SDNode,
-    targetElement: SDNode,
-    linkClass: Line | Curve | Bezier | BraceCurve | CircleCurve | FixedPointCurve | VHBezier,
-    sourceXLocation: XLocation,
-    sourceYLocation: YLocation,
-    targetXLocation: XLocation,
-    targetYLocation: YLocation
-): BaseLink;
+export function Link(sourceElement: SDNode, targetElement: SDNode, linkClass: Line | Curve | Bezier | BraceCurve | CircleCurve | FixedPointCurve | VHBezier, sourceXLocation: XLocation, sourceYLocation: YLocation, targetXLocation: XLocation, targetYLocation: YLocation): BaseLink;

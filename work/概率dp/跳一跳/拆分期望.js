@@ -15,7 +15,7 @@ sd.main(async () => {
     
     for (let i = 2; i <= n; i++) {
         await sd.pause();
-        sd.Link(boxes.element(i - 1), boxes.element(i), sd.Curve, "cx", "y", "cx", "y").bending(-0.5).triggerRule().startAnimate().pointStoT().endAnimate().arrow();
+        sd.Link(boxes.element(i - 1), boxes.element(i), sd.Curve, "cx", "y", "cx", "y").bending(-0.5)..startAnimate().pointStoT().endAnimate().arrow();
         if (data[i - 2] === 1) {
             Appear(sd.Aside(boxes.element(i), new sd.Mathjax(svg, "+1"), "bc", 10));
         }

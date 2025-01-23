@@ -11,7 +11,7 @@ sd.init(() => {
     for (let i = 0; i < n; i++) {
         arr.element(i).value(new sd.Mathjax(arr, `a_{${i}}`), R.centerOnly());
     }
-})
+});
 
 sd.main(async () => {
     await sd.pause();
@@ -37,15 +37,29 @@ sd.main(async () => {
 
     await sd.pause();
     for (let i = 0; i < n / 2; i++) {
-        f0.value(i).startAnimate().transformMath(`y^{\\small(1\\small)}_{${i * 2}}`).triggerRule().endAnimate();
-        f1.value(i).startAnimate().transformMath(`y^{\\small(2\\small)}_{${i * 2 + 1}}`).triggerRule().endAnimate();
+        f0.value(i)
+            .startAnimate()
+            .transformMath(`y^{\\small(1\\small)}_{${i * 2}}`)
+            .endAnimate();
+        f1.value(i)
+            .startAnimate()
+            .transformMath(`y^{\\small(2\\small)}_{${i * 2 + 1}}`)
+            .endAnimate();
     }
 
     const n2 = n / 2;
     for (let i = 0; i < n; i++) {
         await sd.pause();
-        sd.Link(f0.element(i % n2), arr.element(i), sd.Line, "cx", "y", "cx", "my").startAnimate().pointStoT().endAnimate().arrow();
-        sd.Link(f1.element(i % n2), arr.element(i), sd.Line, "cx", "y", "cx", "my").startAnimate().pointStoT().endAnimate().arrow();
-        arr.value(i).after(300).startAnimate().transformMath(`y_{${i}}`)
+        sd.Link(f0.element(i % n2), arr.element(i), sd.Line, "cx", "y", "cx", "my")
+            .startAnimate()
+            .pointStoT()
+            .endAnimate()
+            .arrow();
+        sd.Link(f1.element(i % n2), arr.element(i), sd.Line, "cx", "y", "cx", "my")
+            .startAnimate()
+            .pointStoT()
+            .endAnimate()
+            .arrow();
+        arr.value(i).after(300).startAnimate().transformMath(`y_{${i}}`);
     }
-})
+});

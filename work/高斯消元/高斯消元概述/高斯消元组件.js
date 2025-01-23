@@ -56,7 +56,7 @@ export async function Gauss(grid, A, n, m) {
         // 消元
         for (let j = r + 1; j <= m; j++) {
             await sd.pause();
-            const link = sd.Link(grid.element(r, 1), grid.element(j, 1), sd.Curve, "x", "cy", "x", "cy").bending(0.5).triggerRule().startAnimate().pointStoT().endAnimate().arrow();
+            const link = sd.Link(grid.element(r, 1), grid.element(j, 1), sd.Curve, "x", "cy", "x", "cy").bending(0.5)..startAnimate().pointStoT().endAnimate().arrow();
             await sd.pause();
             if (!FracIsZero(A[j][i])) {
                 const c = FracDivide(A[j][i], A[r][i]);

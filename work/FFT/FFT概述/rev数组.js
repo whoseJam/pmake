@@ -15,7 +15,7 @@ sd.init(() => {
         arr.element(i).value(new sd.Mathjax(arr, `a_{${i}}`), R.centerOnly());
         arr.value(i).rank = i;
     }
-})
+});
 
 sd.main(async () => {
     await Solve(arr, 50);
@@ -23,7 +23,7 @@ sd.main(async () => {
     afterAll.forEach(callback => {
         callback();
     });
-})
+});
 
 async function Solve(arr, gap) {
     if (arr.length() === 1) {
@@ -35,8 +35,18 @@ async function Solve(arr, gap) {
             if (t1 === "000") {
                 const t3 = new sd.Text(svg, "现在位置二进制表示").fontSize(20);
                 const t4 = new sd.Text(svg, "原来位置二进制表示").fontSize(20);
-                t3.mx(lb1.x() - 20).y(lb1.y()).opacity(0).startAnimate().opacity(1).endAnimate();
-                t4.mx(lb2.x() - 20).y(lb2.y()).opacity(0).startAnimate().opacity(1).endAnimate();
+                t3.mx(lb1.x() - 20)
+                    .y(lb1.y())
+                    .opacity(0)
+                    .startAnimate()
+                    .opacity(1)
+                    .endAnimate();
+                t4.mx(lb2.x() - 20)
+                    .y(lb2.y())
+                    .opacity(0)
+                    .startAnimate()
+                    .opacity(1)
+                    .endAnimate();
             }
         });
         return;
@@ -45,28 +55,26 @@ async function Solve(arr, gap) {
     const n = arr.length();
     const f0 = new sd.Array(svg);
     const f1 = new sd.Array(svg);
-    
+
     f0.x(arr.x() - gap).y(arr.my() + 40);
     f1.x(arr.cx() + gap).y(arr.my() + 40);
 
     await sd.pause();
-    f0.startAnimate().freeze();
-    f1.startAnimate().freeze();
+    f0.startAnimate().resize(n / 2);
+    f1.startAnimate().resize(n / 2);
     for (let i = 0; i < n; i++) {
         const math = new sd.Mathjax(svg, arr.value(i).math()).center(arr.value(i).center());
         math.rank = arr.value(i).rank;
         if (!(i & 1)) {
-            f0.push();
-            f0.lastElement().value(math.onEnter(EN.moveTo()), R.centerOnly());
+            f0.element(i / 2).value(math.onEnter(EN.moveTo()), R.centerOnly());
         } else {
-            f1.push();
-            f1.lastElement().value(math.onEnter(EN.moveTo()), R.centerOnly());
+            f1.element((i - 1) / 2).value(math.onEnter(EN.moveTo()), R.centerOnly());
         }
     }
-    f0.unfreeze().endAnimate();
-    f1.unfreeze().endAnimate();
-    sd.Link(arr, f0, sd.Line, "cx", "my", "cx", "y").startAnimate().pointStoT().endAnimate().arrow();
-    sd.Link(arr, f1, sd.Line, "cx", "my", "cx", "y").startAnimate().pointStoT().endAnimate().arrow();
+    f0.endAnimate();
+    f1.endAnimate();
+    sd.Link(arr, f0, sd.Line, "cx", "cy", "cx", "cy").startAnimate().pointStoT().endAnimate().arrow();
+    sd.Link(arr, f1, sd.Line, "cx", "cy", "cx", "cy").startAnimate().pointStoT().endAnimate().arrow();
 
     await Solve(f0, gap / 2);
     await Solve(f1, gap / 2);

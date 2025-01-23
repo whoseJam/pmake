@@ -10,10 +10,9 @@ const links = [
     [2, 4],
 ];
 const path = [
-    [[1, 2], [2, 3], sd.Curve, (line) => line.bending(0.5)],
-    [[1, 2], [2, 4], sd.Curve, (line) => line.bending(-0.5).triggerRule()],
+    [[1, 2], [2, 3], sd.Curve, line => line.bending(0.5)],
+    [[1, 2], [2, 4], sd.Curve, line => line.bending(-0.5)],
 ];
-
 
 sd.init(() => {
     tree.root(1);
@@ -25,8 +24,6 @@ sd.init(() => {
         const l = sd.Link(tree.value(p[0][0], p[0][1]), tree.value(p[1][0], p[1][1]), p[2]).stroke(C.darkGrey).strokeDashArray([5, 5]);
         if (p[3]) p[3](l);
     });
-})
+});
 
-sd.main(async () => {
-    
-})
+sd.main(async () => {});

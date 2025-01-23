@@ -4,9 +4,15 @@ const svg = sd.svg();
 const C = sd.color();
 const R = sd.rule();
 const L = 10;
-const coord = new sd.Coord(svg).viewX(-L/2).viewY(-L/2).viewWidth(L).viewHeight(L);
-const arr = new sd.Array(svg); sd.Index(arr, "t");
-const dot = new sd.Array(svg); sd.Index(dot, "t");
+const coord = new sd.Coord(svg)
+    .viewX(-L / 2)
+    .viewY(-L / 2)
+    .viewWidth(L)
+    .viewHeight(L);
+const arr = new sd.Array(svg);
+sd.Index(arr, "t");
+const dot = new sd.Array(svg);
+sd.Index(dot, "t");
 const colorList = [C.orange, C.red, C.green, C.blue];
 const sampleX = [-2, -1, 0, 1];
 
@@ -14,12 +20,12 @@ sd.init(() => {
     coord.width(300).height(250);
     arr.x(coord.mx() + 20).y(coord.cy() - 20);
     dot.x(coord.mx() + 20).y(coord.cy() + 60);
-})
+});
 
 sd.main(async () => {
     await sd.pause();
     coord.startAnimate();
-    const A = coord.draw(1, (x) => x**3+x**2-2*x-3);
+    const A = coord.draw(1, x => x ** 3 + x ** 2 - 2 * x - 3);
     coord.endAnimate();
     A.childAs("label", new sd.Mathjax(A, "A(x)=x^3+x^2-2x-3"), R.pointAtPathByRate(1, "x", "cy", 10, 0));
 
@@ -43,4 +49,4 @@ sd.main(async () => {
         dot.element(dot.end()).valueFromExist(circ, R.centerOnly());
         dot.endAnimate();
     }
-})
+});

@@ -13,16 +13,19 @@ sd.init(() => {
         arr.element(i).value(new sd.Mathjax(arr, `a_{${i}}`), R.centerOnly());
         arr.value(i).rank = i;
     }
-})
+});
 
 sd.main(async () => {
     await Solve(arr, 50);
-})
+});
 
 async function Solve(arr, gap) {
     const myId = ++id;
     if (arr.length() === 1) {
-        arr.value(0).startAnimate().transformMath(`y^{\\small(${myId}\\small)}_{${arr.value(0).rank}}`).triggerRule().endAnimate();
+        arr.value(0)
+            .startAnimate()
+            .transformMath(`y^{\\small(${myId}\\small)}_{${arr.value(0).rank}}`)
+            .endAnimate();
         return;
     }
 
@@ -55,8 +58,20 @@ async function Solve(arr, gap) {
     await sd.pause();
     const n2 = n / 2;
     for (let i = 0; i < n; i++) {
-        sd.Link(f0.element(i % n2), arr.element(i), sd.Line, "cx", "y", "cx", "my").startAnimate().pointStoT().endAnimate().arrow();
-        sd.Link(f1.element(i % n2), arr.element(i), sd.Line, "cx", "y", "cx", "my").startAnimate().pointStoT().endAnimate().arrow();
-        arr.value(i).after(300).startAnimate().transformMath(`y^{\\small(${myId}\\small)}_{${arr.value(i).rank}}`).triggerRule().endAnimate();
+        sd.Link(f0.element(i % n2), arr.element(i), sd.Line, "cx", "y", "cx", "my")
+            .startAnimate()
+            .pointStoT()
+            .endAnimate()
+            .arrow();
+        sd.Link(f1.element(i % n2), arr.element(i), sd.Line, "cx", "y", "cx", "my")
+            .startAnimate()
+            .pointStoT()
+            .endAnimate()
+            .arrow();
+        arr.value(i)
+            .after(300)
+            .startAnimate()
+            .transformMath(`y^{\\small(${myId}\\small)}_{${arr.value(i).rank}}`)
+            .endAnimate();
     }
 }

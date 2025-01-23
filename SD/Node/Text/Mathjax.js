@@ -297,7 +297,6 @@ function parseMathjax(svg, replace) {
             const path = createPath(current, matrix, defs);
             path.setAttribute("fill", fill);
             path.setAttribute("stroke", stroke);
-            console.log(stroke, fill);
             if (replace) removeList.push(current);
             if (currentAtomID) atoms[currentAtomID].push(path);
             elements.push(path);

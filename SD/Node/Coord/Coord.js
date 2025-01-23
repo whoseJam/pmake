@@ -112,6 +112,7 @@ Coord.prototype = {
 };
 
 function draw(name, func) {
+    const parent = this;
     const path = new Path(this).opacity(0);
     path.vars.merge({
         function: func,
@@ -143,8 +144,9 @@ function draw(name, func) {
         return Math.min(Math.max(this.globalX(y), parent.x()), parent.mx());
     };
     path.startAnimate(this);
+    console.log("path.d=", path.duration());
     this.childAs(name, path, pathRule);
-    return this;
+    return path;
 }
 
 Coord.prototype.drawLine = function (name, k, x, y) {
@@ -194,7 +196,7 @@ function pathRule(parent, child) {
         }
         pen.LinkTo(target);
     }
-    if (!child.opacity()) {
+    if (!child.opacity() && parent.duration() > 0) {
         const context = new Context(child);
         child.startAnimate(context.tillc(0, 0));
         child.opacity(1).d(pen.toString());
