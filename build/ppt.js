@@ -44,18 +44,18 @@ defineEventListener("js", {
     onUnlink: function () {},
 });
 
-function ppt(sourceFileFolder, targetFileFolder) {
+function task(sourceFileFolder, targetFileFolder) {
     const pptFilePath = `${sourceFileFolder}/ppt.html`;
 
     if (!fs.existsSync(pptFilePath)) {
-        console.log(colors("red", `[error] 请检查路径 ${pptFilePath} 是否存在`));
+        console.log(colors("red", `[Error] Please check if the path ${pptFilePath} exists.`));
         process.exit();
     }
 
-    gulp.task("ppt-task", done => {
+    gulp.task("ppt-task", () => {
         return gulp
             .src(pptFilePath)
-            .pipe(webpack(PPTConfiguration(pptFilePath)))
+            .pipe(webpack(configuration(pptFilePath)))
             .pipe(gulp.dest(targetFileFolder));
     });
 
@@ -69,7 +69,7 @@ function ppt(sourceFileFolder, targetFileFolder) {
     walk(sourceFileFolder, path => {
         const suffix = path.split(".").slice(-1)[0];
         if (!eventListener[suffix] || !eventListener[suffix].onAdd) {
-            console.log(`文件 ${path} 的后缀名未定义 onAdd 处理函数`);
+            console.log(colors("red", `[Error] No 'onAdd' handler defined for file with extension ${suffix} at ${path}.`));
             return;
         }
         eventListener[suffix].onAdd(pathToOriginFile(path), pathToTargetFolder(path));
@@ -85,7 +85,7 @@ function ppt(sourceFileFolder, targetFileFolder) {
             path = path.replaceAll("\\", "/");
             const suffix = path.split(".").slice(-1)[0];
             if (!eventListener[suffix] || !eventListener[suffix].onChange) {
-                console.log(`文件 ${path} 的后缀名未定义 onChange 处理函数`);
+                console.log(colors("red", `[Error] No 'onChange' handler defined for file with extension ${suffix} at ${path}.`));
                 return;
             }
             eventListener[suffix].onChange(pathToOriginFile(path), pathToTargetFolder(path));
@@ -94,7 +94,7 @@ function ppt(sourceFileFolder, targetFileFolder) {
             path = path.replaceAll("\\", "/");
             const suffix = path.split(".").slice(-1)[0];
             if (!eventListener[suffix] || !eventListener[suffix].onAdd) {
-                console.log(`文件 ${path} 的后缀名未定义 onAdd 处理函数`);
+                console.log(colors("red", `[Error] No 'onAdd' handler defined for file with extension ${suffix} at ${path}.`));
                 return;
             }
             eventListener[suffix].onAdd(pathToOriginFile(path), pathToTargetFolder(path));
@@ -103,7 +103,7 @@ function ppt(sourceFileFolder, targetFileFolder) {
             path = path.replaceAll("\\", "/");
             const suffix = path.split(".").slice(-1)[0];
             if (!eventListener[suffix] || !eventListener[suffix].onUnlink) {
-                console.log(`文件 ${path} 的后缀名未定义 onUnlink 处理函数`);
+                console.log(colors("red", `[Error] No 'onUnlink' handler defined for file with extension ${suffix} at ${path}.`));
                 return;
             }
             eventListener[suffix].onUnlink(pathToTargetFile(path));
@@ -111,7 +111,7 @@ function ppt(sourceFileFolder, targetFileFolder) {
     }
 
     project();
-};
+}
 
 function relativePath(filePath) {
     const A = filePath.split("/");
@@ -143,11 +143,6 @@ function pathToTargetFile(path) {
 
 function pathToTargetFolder(path) {
     return `${targetFileFolder}/${relativePathWithoutFile(path)}`;
-}
-
-function pathToFile(path) {
-    path = path.replaceAll("\\", "/");
-    return path.split("/").slice(-1)[0];
 }
 
 function copyFile(srcPath, destFolderPath) {
@@ -221,7 +216,7 @@ function defineEventListener(suffix, listener) {
     });
 }
 
-function PPTConfiguration() {
+function configuration() {
     // pptFilePath: ./work/xxx/ppt.html
     const suffix = global["l"] ? "Local" : "Remote";
     return {
@@ -249,23 +244,16 @@ function PPTConfiguration() {
 }
 
 if (require.main === module) {
-    let defaultConfig;
-    try {
-        defaultConfig = require("../myconfig.json");
-    } catch (e) {
-        console.log(colors("red", "[error]未找到 myconfig.json 文件，请确保项目根目录下存在 myconfig.json 文件"));
-        process.exit(1);
-    }
     global["projectRoot"] = path.resolve(__dirname, "..");
     parser.parseInput();
     const sourceFileFolder = global["i"];
-    const targetFileFolder = defaultConfig["defaultPPTTargetFilePath"];
+    const targetFileFolder = global["o"] || parser.parseConfig("pptOutputPath");
     if (!sourceFileFolder) {
-        console.log(colors("red", "[error]请提供源文件夹路径"));
-        console.log(colors("cyan", "用法: node ppt.js -s <源文件夹路径> [-t <目标文件夹路径>]"));
+        console.log(colors("red", "[Error] Please provide the source folder path."));
+        console.log(colors("cyan", "Usage: ppt -i <source folder path> [-o <target folder path>]"));
         process.exit(1);
     }
-    ppt(sourceFileFolder, targetFileFolder);
+    task(sourceFileFolder, targetFileFolder);
 }
 
-module.exports = ppt;
+module.exports = task;

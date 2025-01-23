@@ -4,25 +4,18 @@ const fs = require("fs");
 const path = require("path");
 const colors = require("colors-console");
 
-const configKeys = [
-    "animationOutputPath",
-    "pptOutputPath",
-    "releaseOutputPath",
-];
+const configKeys = ["animationOutputPath", "pptOutputPath", "releaseOutputPath"];
 
 const configHints = {
-    "animationOutputPath": "Default output path for animation (For example: C:/Users/xxx/Desktop/output)",
-    "pptOutputPath": "Default output path for PPT (For example: C:/Users/xxx/Desktop/output/animation)",
-    "releaseOutputPath": "Default output path for release package (For example: C:/Users/xxx/Desktop/release)",
+    animationOutputPath: "Default output path for animation (For example: C:/Users/xxx/Desktop/output)",
+    pptOutputPath: "Default output path for PPT (For example: C:/Users/xxx/Desktop/output)",
+    releaseOutputPath: "Default output path for release package (For example: C:/Users/xxx/Desktop/release)",
 };
 
 function printSupportedKeys() {
     console.log(colors("cyan", "Supported configuration keys:"));
     configKeys.forEach(supportedKey => {
-        console.log(
-            colors("green", `- ${supportedKey}: `) + 
-            colors("yellow", configHints[supportedKey])
-        );
+        console.log(colors("green", `- ${supportedKey}: `) + colors("yellow", configHints[supportedKey]));
     });
 }
 
@@ -49,13 +42,7 @@ function updateConfig(configPath, key, value) {
         config[key] = value;
         try {
             fs.writeFileSync(configPath, JSON.stringify(config, null, 4), "utf8");
-            console.log(
-                colors("green", `Successfully updated `) + 
-                colors("cyan", key) + 
-                colors("green", ` to `) + 
-                colors("cyan", value) + 
-                colors("green", ` in ${configPath}`)
-            );
+            console.log(colors("green", `Successfully updated `) + colors("cyan", key) + colors("green", ` to `) + colors("cyan", value) + colors("green", ` in ${configPath}`));
         } catch (writeError) {
             console.error(colors("red", `Error writing to config file: ${writeError.message}`));
             process.exit(1);

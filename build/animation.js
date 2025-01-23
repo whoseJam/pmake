@@ -13,7 +13,7 @@ function validateJSFile(sourceFilePath) {
         console.log(colors("red", `[Error] File ${sourceFilePath} not found. Please check if the input path is correct.`));
         process.exit(1);
     }
-    if (!sourceFilePath.toLowerCase().endsWith('.js')) {
+    if (!sourceFilePath.toLowerCase().endsWith(".js")) {
         console.log(colors("red", `[Error] Invalid file type. The file must be a JavaScript (.js) file.`));
         process.exit(1);
     }
@@ -23,7 +23,7 @@ function validateJSFile(sourceFilePath) {
         console.log(colors("red", `[Error] Cannot read the file. Check file permissions.`));
         process.exit(1);
     }
-    const fileContent = fs.readFileSync(sourceFilePath, 'utf8').trim();
+    const fileContent = fs.readFileSync(sourceFilePath, "utf8").trim();
     if (fileContent.length === 0) {
         console.log(colors("red", `[Error] The JavaScript file is empty.`));
         process.exit(1);
@@ -86,7 +86,7 @@ if (require.main === module) {
     const targetFilePath = global["o"] || parser.parseConfig("animationOutputPath");
     if (!sourceFilePath) {
         console.log(colors("red", "[Error] Please provide the source file path."));
-        console.log(colors("cyan", "Usage: animation -i <source file path> [-o target path]"));
+        console.log(colors("cyan", "Usage: animation -i <source file path> [-o <target path>]"));
         process.exit(1);
     }
     task(sourceFilePath, targetFilePath);
