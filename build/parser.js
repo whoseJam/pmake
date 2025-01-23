@@ -1,27 +1,38 @@
 const colors = require("colors-console");
+const fs = require("fs");
 
 let parsed = false;
 let config = undefined;
 
-const hints = {
-    "animationOutputPath": colors("cyan", "animationOutputPath") + "：动画默认输出路径（例如 C:/Users/xxx/Desktop/output）",
-    "pptOutputPath": colors("cyan", "pptOutputPath") + "：ppt默认输出路径（例如 C:/Users/xxx/Desktop/output/animation）",
-}
+const configKeys = [
+    "animationOutputPath",
+    "pptOutputPath",
+    "releaseOutputPath",
+];
+
+const configHints = {
+    "animationOutputPath": "Default output path for animation (For example: C:/Users/xxx/Desktop/output)",
+    "pptOutputPath": "Default output path for PPT (For example: C:/Users/xxx/Desktop/output/animation)",
+    "releaseOutputPath": "Default output path for release package (For example: C:/Users/xxx/Desktop/release)",
+};
 
 module.exports = {
     parseInput() {
-        if (parsed) return;
-        parsed = true;
-        const length = process.argv.length;
-        for (let i = 0; i < length; i++) {
-            const arg = process.argv[i];
-            if (arg.startsWith("-")) {
-                const key = arg.slice(1);
-                if (i + 1 < length && !process.argv[i + 1].startsWith("-")) {
-                    const value = process.argv[i + 1];
+        const args = process.argv.slice(2);
+        for (let i = 0; i < args.length; i++) {
+            const arg = args[i];
+            const key = arg.replace(/^-/, '');
+            const value = args[i + 1];
+
+            if (arg.startsWith('-')) {
+                if (!value || value.startsWith('-')) {
+                    global[key] = true;
+                } else {
                     global[key] = value;
                     i++;
-                } else global[key] = true;
+                }
+            } else {
+                global[key] = true;
             }
         }
     },
@@ -34,8 +45,8 @@ module.exports = {
             }
         }
         if (!config[key]) {
-            console.log(colors("red", `[error]未找到 ${key} 请检查配置`));
-            console.log(hints[key]);
+            console.log(colors("red", `[Error] Configuration key '${key}' not found. Please check the configuration.`));
+            console.log(colors("cyan", configHints[key]));
             process.exit(1);
         }
         return config[key];

@@ -9,68 +9,51 @@ const release = require("./build/release");
 const themeTask = require("./build/theme");
 const parser = require("./build/parser");
 
-const colors = require("colors-console");
-
-let defaultConfig = undefined;
-try {
-    defaultConfig = require("./myconfig.json");
-} catch (e) {
-    console.log(colors("red", "[error]未找到 myconfig.json 文件，请确保 ./pmake 目录下存在 myconfig.json 文件"));
-    console.log(colors("cyan", "myconfig.json") + " 需要配置如下：");
-    console.log(colors("cyan", "defaultAnimationTargetFilePath") + "：动画默认输出路径（例如 C:/Users/xxx/Desktop/output）");
-    console.log(colors("cyan", "defaultPPTTargetFilePath") + "：ppt默认输出路径（例如 C:/Users/xxx/Desktop/output/animation）");
-    process.exit(1);
-}
-
-const defaultAnimationTargetFilePath = defaultConfig["defaultAnimationTargetFilePath"];
-const defaultPPTTargetFilePath = defaultConfig["defaultPPTTargetFilePath"];
-const defaultReleaseFilePath = defaultConfig["defaultReleaseFilePath"];
-
 global["projectRoot"] = __dirname.replaceAll("\\", "/");
 
 parser.parseInput();
 
 gulp.task("sd", () => {
-    return sd(defaultPPTTargetFilePath);
+    const pptOutputPath = global["o"] || parser.parseConfig("pptOutputPath");
+    return sd(pptOutputPath);
 });
 
 gulp.task("reveal", () => {
-    return reveal(defaultPPTTargetFilePath);
+    const pptOutputPath = global["o"] || parser.parseConfig("pptOutputPath");
+    return reveal(pptOutputPath);
 });
 
 gulp.task("theme", async () => {
-    return await themeTask(defaultPPTTargetFilePath);
+    const pptOutputPath = global["o"] || parser.parseConfig("pptOutputPath");
+    return await themeTask(pptOutputPath);
 });
 
 gulp.task("animation", () => {
-    return animation(global["i"], defaultAnimationTargetFilePath);
+    const animationOutputPath = global["o"] || parser.parseConfig("animationOutputPath");
+    return animation(global["i"], animationOutputPath);
 });
 
 gulp.task("iframe", () => {
-    return iframe(defaultPPTTargetFilePath);
+    const pptOutputPath = global["o"] || parser.parseConfig("pptOutputPath");
+    return iframe(pptOutputPath);
 });
 
 gulp.task("release", done => {
-    if (!defaultReleaseFilePath) {
-        console.log(colors("red", "[error]未找到 defaultReleaseFilePath 配置，请在 myconfig.json 中添加该配置项"));
-        console.log(colors("cyan", "defaultReleaseFilePath") + "：发布包输出路径（例如 C:/Users/xxx/Desktop/release）");
-        process.exit(1);
-    }
-    return release(defaultReleaseFilePath, done);
+    const releaseOutputPath = global["o"] || parser.parseConfig("releaseOutputPath");
+    return release(releaseOutputPath, done);
 });
 
 gulp.task("ppt", () => {
-    return ppt(global["s"] || defaultPPTTargetFilePath, defaultPPTTargetFilePath);
+    const pptOutputPath = global["o"] || parser.parseConfig("pptOutputPath");
+    return ppt(global["i"], pptOutputPath);
 });
 
 gulp.task("serve", done => {
     const exec = require("child_process").exec;
-    exec(`cd ${defaultPPTTargetFilePath} && live-server`, function (error, stdout, stderr) {
-        if (error) {
-            console.log(error);
-        } else {
-            console.log("success");
-        }
+    const pptOutputPath = parser.parseConfig("pptOutputPath");
+    exec(`cd ${pptOutputPath} && live-server`, function (error, stdout, stderr) {
+        if (error) console.log(error);
+        else console.log("success");
         done();
     });
 });

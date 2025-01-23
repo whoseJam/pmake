@@ -8,28 +8,43 @@ const colors = require("colors-console");
 const webpack = require("webpack-stream");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
-function animationTask(sourceFilePath, targetFilePath) {
-    const animationName = String(sourceFilePath).split("/").slice(-1)[0].split(".")[0];
-    const webpackConfiguration = animationConfiguration(animationName);
-
+function validateJSFile(sourceFilePath) {
     if (!fs.existsSync(sourceFilePath)) {
-        console.log(colors("red", `[error] 文件 ${sourceFilePath} 未找到，请检查输入路径是否正确`));
-        if (!sourceFilePath.endsWith(".js")) {
-            console.log(colors("red", "你可能遗忘了.js后缀？"));
-        }
+        console.log(colors("red", `[Error] File ${sourceFilePath} not found. Please check if the input path is correct.`));
         process.exit(1);
     }
-
-    return gulp.src(sourceFilePath).pipe(webpack(webpackConfiguration)).pipe(gulp.dest(targetFilePath));
+    if (!sourceFilePath.toLowerCase().endsWith('.js')) {
+        console.log(colors("red", `[Error] Invalid file type. The file must be a JavaScript (.js) file.`));
+        process.exit(1);
+    }
+    try {
+        fs.accessSync(sourceFilePath, fs.constants.R_OK);
+    } catch (err) {
+        console.log(colors("red", `[Error] Cannot read the file. Check file permissions.`));
+        process.exit(1);
+    }
+    const fileContent = fs.readFileSync(sourceFilePath, 'utf8').trim();
+    if (fileContent.length === 0) {
+        console.log(colors("red", `[Error] The JavaScript file is empty.`));
+        process.exit(1);
+    }
 }
 
-function animationConfiguration(animationName) {
+function task(sourceFilePath, targetFilePath) {
+    sourceFilePath = sourceFilePath.replace("\\", "/");
+    validateJSFile(sourceFilePath);
+    const file = String(sourceFilePath).split("/").slice(-1)[0].split(".")[0];
+    const config = configuration(file);
+    return gulp.src(sourceFilePath).pipe(webpack(config)).pipe(gulp.dest(targetFilePath));
+}
+
+function configuration(file) {
     const mode = global["d"] ? "development" : "production";
     const suffix = global["l"] ? "Local" : "Remote";
     return {
         mode: mode,
         output: {
-            filename: `${animationName}.js`,
+            filename: `${file}.js`,
         },
         plugins: [
             new HtmlWebpackPlugin({
@@ -37,7 +52,7 @@ function animationConfiguration(animationName) {
                 inject: "body",
                 inlineSource: ".(js)$",
                 minify: false,
-                filename: `${animationName}.html`,
+                filename: `${file}.html`,
                 scriptLoading: "blocking",
             }),
         ],
@@ -57,11 +72,6 @@ function animationConfiguration(animationName) {
             hints: false,
         },
         cache: true,
-        resolve: {
-            alias: {
-                "@": path.resolve(global["projectRoot"], "SD"),
-            },
-        },
         externals: {
             "@/sd": "sd",
             "slidew": "sd",
@@ -70,23 +80,16 @@ function animationConfiguration(animationName) {
 }
 
 if (require.main === module) {
-    let defaultConfig;
-    try {
-        defaultConfig = require("../myconfig.json");
-    } catch (e) {
-        console.log(colors("red", "[error]未找到 myconfig.json 文件，请确保项目根目录下存在 myconfig.json 文件"));
-        process.exit(1);
-    }
     global["projectRoot"] = path.resolve(__dirname, "..");
     parser.parseInput();
-    sourceFilePath = global["i"];
-    targetFilePath = defaultConfig["animationOutputPath"];
+    const sourceFilePath = global["i"];
+    const targetFilePath = global["o"] || parser.parseConfig("animationOutputPath");
     if (!sourceFilePath) {
-        console.log(colors("red", "[error]请提供源文件路径"));
-        console.log(colors("cyan", "用法: node aniTask.js <源文件路径> [目标路径]"));
+        console.log(colors("red", "[Error] Please provide the source file path."));
+        console.log(colors("cyan", "Usage: animation -i <source file path> [-o target path]"));
         process.exit(1);
     }
-    animationTask(sourceFilePath, targetFilePath);
+    task(sourceFilePath, targetFilePath);
 }
 
-module.exports = animationTask;
+module.exports = task;

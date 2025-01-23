@@ -6,7 +6,8 @@
     "scripts": {},
     "bin": {
         "animation": "./build/animation.js",
-        "ppt": "./build/ppt.js"
+        "ppt": "./build/ppt.js",
+        "config": "./build/config.js"
     },
     "repository": {
         "type": "",
