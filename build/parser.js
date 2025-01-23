@@ -1,5 +1,6 @@
-const colors = require("colors-console");
 const fs = require("fs");
+const path = require("path");
+const colors = require("colors-console");
 
 let parsed = false;
 let config = undefined;
@@ -36,10 +37,11 @@ module.exports = {
             try {
                 config = require("../myconfig.json");
             } catch (e) {
-                fs.writeFileSync("myconfig.json", JSON.stringify({}, null, 4));
+                const configPath = path.join(__dirname, "..", "myconfig.json");
+                fs.writeFileSync(configPath, JSON.stringify({}, null, 4));
             }
         }
-        if (!config[key]) {
+        if (!config || !config[key]) {
             console.log(colors("red", `[Error] Configuration key '${key}' not found. Please check the configuration.`));
             console.log(colors("cyan", configHints[key]));
             process.exit(1);
