@@ -12,16 +12,44 @@ class CompBrace {
      * @param gap 花括号到最近的元素的间距
      */
     brace(element1: number | SDNode, element2: number | SDNode, location: Location | undefined, gap: number | undefined): this;
-    l(): number;
-    l(l: number): this;
-    r(): number;
-    r(r: number): this;
+
+    /**
+     * 获取花括号的位置
+     */
     location(): Location;
+
+    /**
+     * 设置花括号的位置
+     * @param location
+     */
     location(location: Location): this;
+
+    /**
+     * 获取花括号到最近元素的距离
+     */
     braceGap(): number;
+
+    /**
+     * 设置花括号到最近元素的距离
+     * @param gap
+     */
     braceGap(gap: number): this;
+
+    /**
+     * 获取花括号上价值物到花括号的距离
+     */
     valueGap(): number;
+
+    /**
+     * 设置花括号上价值物到花括号的距离
+     * @param gap
+     */
     valueGap(gap: number): this;
+
+    /**
+     * 设置花括号的价值物
+     * @param value
+     */
     value(value: SDNode): this;
 }
 
