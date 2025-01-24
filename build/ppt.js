@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+const w = require("webpack");
 const fs = require("fs");
 const gulp = require("gulp");
 const path = require("path");
@@ -228,6 +229,10 @@ function configuration() {
                 template: `${global["projectRoot"]}/build/pptIndex${suffix}.html`,
                 inject: "body",
                 scriptLoading: "blocking",
+            }),
+            new w.DefinePlugin({
+                __VERSION__: JSON.stringify("1.0.0"),
+                DEFINE_LOCAL: global["l"],
             }),
         ],
         module: {

@@ -43,9 +43,10 @@ gulp.task("release", done => {
     return release(releaseOutputPath, done);
 });
 
-gulp.task("ppt", () => {
+gulp.task("ppt", done => {
     const pptOutputPath = global["o"] || parser.parseConfig("pptOutputPath");
-    return ppt(global["i"], pptOutputPath);
+    ppt(global["i"], pptOutputPath);
+    done();
 });
 
 gulp.task("serve", done => {
