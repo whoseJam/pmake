@@ -1,40 +1,23 @@
-
 export class Check {
     static isTypeOfSDNode(object: any): boolean;
-    
     static isTypeOfArray(object: any): boolean;
-    
     static isTypeOfElement(object: any): boolean;
-    
     static isTypeOfCurve(object: any): boolean;
-    
     static isTypeOfGraph(object: any): boolean;
-    
     static isTypeOfGrid(object: any): boolean;
-    
     static isTypeOfHTML(object: any): boolean;
-    
     static isTypeOfNake(object: any): boolean;
-    
     static isTypeOfTree(object: any): boolean;
-
     static isTypeOfLine(object: any): boolean;
-
     static isFalseType(object: any): boolean;
-
     /**
      * 判断是否是数字或者字符串
-     * @param object 
+     * @param object
      */
     static isNumberOrString(object: any): boolean;
-
     static isTypeOfString(object: any): boolean;
-
     static isTypeOfOpacity(object: any): boolean;
-
     static isTypeOfColor(object: any): boolean;
-
     static isValidNumber(object: any): boolean;
-
     static isTypeOfVector(object: any): boolean;
 }
