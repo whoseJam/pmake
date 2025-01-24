@@ -6,14 +6,11 @@ export function Aside(parent, aside, location = "lc", gap = 5) {
         location,
         gap,
     });
-
     aside.location = Factory.handler("location");
-    aside.gap = Factory.handlerLowPrecise("asideGap");
-
+    aside.gap = Factory.handlerLowPrecise("gap");
     parent.childAs(aside, function (parent, child) {
         const rule = A(child.vars.location, child.vars.gap);
         rule(parent, child);
     });
-
     return aside;
 }

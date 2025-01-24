@@ -10,9 +10,10 @@ class CompAside {
 }
 
 /**
- * @param parent
- * @param aside
- * @param location 位置，默认为 lc
- * @param gap 间隔，默认为 5
+ * 创建一个侧边元素
+ * @param parent 父元素
+ * @param aside 子元素
+ * @param location 子元素相对于父元素的位置，默认为lc
+ * @param gap 子元素到父元素的间隔，默认为5
  */
 export function Aside<T>(parent: SDNode, aside: T, location: Location, gap: number): CompAside & T;
