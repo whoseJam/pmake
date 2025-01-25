@@ -112,9 +112,9 @@ BaseGrid.prototype = {
             if (0 <= colId && colId < this.vars.elements[rowId].length) {
                 return this.vars.elements[rowId][colId];
             }
-            ErrorLauncher.outOfRangeError(colId);
+            ErrorLauncher.outOfRangeError(rowId + this.startN(), colId + this.startM());
         }
-        ErrorLauncher.outOfRangeError(rowId);
+        ErrorLauncher.outOfRangeError(rowId + this.startN(), colId + this.startM());
     },
     value: function () {
         const args = arguments;

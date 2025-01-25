@@ -17,7 +17,7 @@ export class BaseGrid extends SDNode {
     n(n: number): this;
     m(m: number): this;
 
-    pushCol(): this
+    pushCol(): this;
     pushCol(rows: number): this;
     pushRow(columns: number): this;
 

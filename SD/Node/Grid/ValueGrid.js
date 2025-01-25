@@ -1,5 +1,4 @@
 import { Enter as EN } from "@/Node/Core/Enter";
-import { effect, uneffect } from "@/Node/Core/Reactive";
 import { Grid } from "@/Node/Grid/Grid";
 
 export function ValueGrid(parent) {
@@ -7,8 +6,8 @@ export function ValueGrid(parent) {
 
     this.type("ValueGrid");
 
-    uneffect(this._.updater);
-    this._.updater = effect(() => {
+    this.uneffect("grid");
+    this.effect("valueGrid", () => {
         const x = this.x();
         const y = this.y();
         const elementWidth = this.elementWidth();

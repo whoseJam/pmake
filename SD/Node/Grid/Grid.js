@@ -1,9 +1,20 @@
 import { Enter as EN } from "@/Node/Core/Enter";
 import { Exit as EX } from "@/Node/Core/Exit";
-import { effect } from "@/Node/Core/Reactive";
 import { Box } from "@/Node/Element/Box";
 import { BaseGrid } from "@/Node/Grid/BaseGrid";
 import { Factory } from "@/Utility/Factory";
+
+function offsetN() {
+    return 0;
+}
+
+function offsetC(m, length) {
+    return (m - length) / 2;
+}
+
+function offsetM(m, length) {
+    return m - length;
+}
 
 export function Grid(parent) {
     BaseGrid.call(this, parent);
@@ -22,7 +33,7 @@ export function Grid(parent) {
         align: "x",
     });
 
-    this._.updater = effect(() => {
+    this.effect("grid", () => {
         const dict = {
             x: this.x(),
             y: this.y(),
@@ -36,8 +47,8 @@ export function Grid(parent) {
         const align = this.align();
         const mainAxis = main === "row" ? "y" : "x";
         const auxiAxis = main === "row" ? "x" : "y";
-        const auxiFlag = align === "x" || align === "y" ? 1 : -1;
-        const auxiLabel = align === "x" || align === "y" ? auxiAxis : `m${auxiAxis}`;
+        const m = this.m();
+        const offset = align === "x" || align === "y" ? offsetN : align === "cx" || align === "cy" ? offsetC : offsetM;
         for (let i = 0; i < elements.length; i++) {
             if (!elements[i]) continue;
             for (let j = 0; j < elements[i].length; j++) {
@@ -45,7 +56,7 @@ export function Grid(parent) {
                 element.width(dict["lx"]);
                 element.height(dict["ly"]);
                 element[mainAxis](dict[mainAxis] + i * dict[`l${mainAxis}`]);
-                element[auxiLabel](dict[auxiLabel] + auxiFlag * j * dict[`l${auxiAxis}`]);
+                element[auxiAxis](dict[auxiAxis] + (offset(m, elements[i].length) + j) * dict[`l${auxiAxis}`]);
             }
         }
     });

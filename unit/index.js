@@ -2,7 +2,32 @@ import * as sd from "@/sd";
 
 const svg = sd.svg();
 
-sd.main(TestBasicIndexFunctionality);
+sd.main(TestGridIndex);
+
+async function TestGridIndex() {
+    const locations = ["b", "l", "r", "t"];
+    const n = 5;
+    const grid = new sd.Grid(svg).x(100).y(100).startN(1).startM(1);
+    for (let i = 1; i <= n; i++) {
+        for (let j = 1; j <= i + 1; j++) {
+            grid.insert(i, j, `${i},${j}`);
+        }
+    }
+    await sd.pause();
+    const index = sd.Index(grid, "t");
+    index.opacity(0).startAnimate().opacity(1).endAnimate();
+    for (let i = 0; i < locations.length; i++) {
+        await sd.pause();
+        index.startAnimate().location(locations[i]).endAnimate();
+    }
+    await sd.pause();
+    grid.startAnimate().align("my").endAnimate();
+    await sd.pause();
+    for (let i = 0; i < locations.length; i++) {
+        await sd.pause();
+        index.startAnimate().location(locations[i]).endAnimate();
+    }
+}
 
 async function TestBasicIndexFunctionality() {
     const grid = new sd.Grid(svg).x(100).y(100).m(3).n(3);
