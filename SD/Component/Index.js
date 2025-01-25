@@ -8,19 +8,31 @@ import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 
 function asideRule(element, index, location, gap) {
-    A(location + "c", gap + (location === "l" || location === "r") * 3)(element, index);
+    A(location + "c", gap)(element, index);
 }
 
 function getStart(parent, location) {
     if (Check.isTypeOfGrid(parent)) {
-        return location === "t" || location === "b" ? parent.startM() : parent.startN();
+        if (parent.axis() === "row") {
+            return location === "t" || location === "b" ? parent.startM() : parent.startN();
+        } else {
+            return location === "t" || location === "b" ? parent.startN() : parent.startM();
+        }
     } else return parent.start();
 }
 
 function getLength(parent, location) {
     if (Check.isTypeOfGrid(parent)) {
-        return location === "t" || location === "b" ? parent.m() : parent.n();
+        if (parent.axis() === "row") {
+            return location === "t" || location === "b" ? parent.m() : parent.n();
+        } else {
+            return location === "t" || location === "b" ? parent.n() : parent.m();
+        }
     } else return parent.length();
+}
+
+function getGap(gap, parent, location) {
+    return gap + (location === "l" || location === "r") * 3;
 }
 
 function getElement(parent, location, i) {
@@ -30,11 +42,23 @@ function getElement(parent, location, i) {
                 for (let rowId = parent.startN(); rowId <= parent.endN(); rowId++) if (parent.endM(rowId) >= i) return parent.element(rowId, i);
                 ErrorLauncher.invalidComponentStatus();
             }
-            if (location === "b") return parent.element(parent.endN(), i);
+            if (location === "b") {
+                for (let rowId = parent.endN(); rowId >= parent.startN(); rowId--) if (parent.endM(rowId) >= i) return parent.element(rowId, i);
+                ErrorLauncher.invalidComponentStatus();
+            }
             if (location === "l") return parent.element(i, parent.startM());
             if (location === "r") return parent.element(i, parent.endM(i));
         } else {
             if (location === "t") return parent.element(i, parent.startM());
+            if (location === "b") return parent.element(i, parent.endM(i));
+            if (location === "l") {
+                for (let rowId = parent.startN(); rowId <= parent.endN(); rowId++) if (parent.endM(rowId) >= i) return parent.element(rowId, i);
+                ErrorLauncher.invalidComponentStatus();
+            }
+            if (location === "r") {
+                for (let rowId = parent.endN(); rowId >= parent.startN(); rowId--) if (parent.endM(rowId) >= i) return parent.element(rowId, i);
+                ErrorLauncher.invalidComponentStatus();
+            }
         }
     } else return parent.element(i);
 }
@@ -58,8 +82,8 @@ export function Index(parent, location = "t", fontSize = 15, gap = 3) {
     });
     index.effect("index", () => {
         const map = {};
-        const gap = index.gap();
         const location = index.location();
+        const gap = getGap(index.gap(), parent, location);
         const start = getStart(parent, location);
         const length = getLength(parent, location);
         index.vars.elements.forEach(element => (map[element.intValue()] = element));

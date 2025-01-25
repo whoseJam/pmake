@@ -21,8 +21,31 @@ async function TestGridIndex() {
         index.startAnimate().location(locations[i]).endAnimate();
     }
     await sd.pause();
-    grid.startAnimate().align("my").endAnimate();
+    grid.startAnimate().align("cx").endAnimate();
+    for (let i = 0; i < locations.length; i++) {
+        await sd.pause();
+        index.startAnimate().location(locations[i]).endAnimate();
+    }
     await sd.pause();
+    grid.startAnimate().align("mx").endAnimate();
+    for (let i = 0; i < locations.length; i++) {
+        await sd.pause();
+        index.startAnimate().location(locations[i]).endAnimate();
+    }
+    await sd.pause();
+    grid.startAnimate().axis("col").align("y").endAnimate();
+    for (let i = 0; i < locations.length; i++) {
+        await sd.pause();
+        index.startAnimate().location(locations[i]).endAnimate();
+    }
+    await sd.pause();
+    grid.startAnimate().align("cy").endAnimate();
+    for (let i = 0; i < locations.length; i++) {
+        await sd.pause();
+        index.startAnimate().location(locations[i]).endAnimate();
+    }
+    await sd.pause();
+    grid.startAnimate().align("my").endAnimate();
     for (let i = 0; i < locations.length; i++) {
         await sd.pause();
         index.startAnimate().location(locations[i]).endAnimate();

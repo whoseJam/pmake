@@ -33,7 +33,7 @@ export { Cube } from "./Node/Three/Cube";
 export { Coord } from "./Node/Coord/Coord";
 
 export { Grid } from "./Node/Grid/Grid";
-export { ValueGrid } from "./Node/Grid/ValueGrid";
+// export { ValueGrid } from "./Node/Grid/ValueGrid";
 
 export { BaseTree } from "./Node/Tree/BaseTree";
 export { BinaryTree } from "./Node/Tree/BinaryTree";
