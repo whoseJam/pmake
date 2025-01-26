@@ -10,7 +10,7 @@ import { Factory } from "@/Utility/Factory";
 function labelRule(parent, child) {
     const gap = parent.valueGap();
     const location = parent.location();
-    if (location === "t") PointAtPathByRate(0.5, "cxx", "my", 0, -gap)(parent, child);
+    if (location === "t") PointAtPathByRate(0.5, "cx", "my", 0, -gap)(parent, child);
     if (location === "b") PointAtPathByRate(0.5, "cx", "y", 0, gap)(parent, child);
     if (location === "l") PointAtPathByRate(0.5, "mx", "cy", -gap, 0)(parent, child);
     if (location === "r") PointAtPathByRate(0.5, "x", "cy", gap, 0)(parent, child);

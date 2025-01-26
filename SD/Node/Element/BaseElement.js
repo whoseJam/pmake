@@ -18,7 +18,6 @@ export function BaseElement(parent) {
         width: 40,
         height: 40,
         rate: 1.2,
-        background: undefined,
         value: undefined,
     });
 
@@ -39,7 +38,7 @@ BaseElement.prototype = {
     strokeOpacity: backgroundHandler("strokeOpacity"),
     strokeWidth: backgroundHandler("strokeWidth"),
     background: function () {
-        return this.vars.background;
+        return this.child("background");
     },
     text: function () {
         const value = this.child("value");

@@ -11,15 +11,16 @@ const data = [];
 
 sd.init(() => {
     for (let i = 1; i <= n; i++) {
-        arr.push(new sd.Mathjax(arr, `Star_{${i}}`));
-        stk.element(i-1).childAs("impact", new sd.Array(stk).elementWidth(10).elementHeight(10), R.aside("rc", 10));
-        arr.element(i-1).rate(1.5);
+        arr.push();
+        arr.lastElement().value(new sd.Mathjax(arr, `Star_{${i}}`), R.centerOnly());
+        stk.element(i - 1).childAs("impact", new sd.Array(stk).elementWidth(10).elementHeight(10), R.aside("rc", 10));
+        arr.element(i - 1).rate(1.5);
     }
-    stk.add = function(x) {
+    stk.add = function (x) {
         const impact = this.element(x).child("impact");
         impact.push().color(impact.end(), C.RED);
         return this;
-    }
+    };
     arr.cx(600).cy(150);
     stk.mx(arr.x() - 60).y(arr.my());
     graph.x(arr.x()).y(arr.my());
@@ -27,21 +28,29 @@ sd.init(() => {
     graph.n(n).m(n);
     for (let i = 0; i < n; i++) {
         const x = i;
-        const y = sd.rand(0, n-1);
-        graph.at(y+0.5, x+0.5).newNode(i + 1, " ");
-        graph.element(i + 1).color(C.ORANGE).r(15);
+        const y = sd.rand(0, n - 1);
+        graph.at(y + 0.5, x + 0.5).newNode(i + 1, " ");
+        graph
+            .element(i + 1)
+            .color(C.ORANGE)
+            .r(15);
         data.push({
             x: x,
             y: y,
-            circ: graph.element(i + 1)
+            circ: graph.element(i + 1),
         });
     }
-    graph.update();
-    const arrowA = new sd.Line(graph).source(graph.x() - 140, graph.my() + 30).target(graph.mx() + 50, graph.my() + 30).arrow();
+    const arrowA = new sd.Line(graph)
+        .source(graph.x() - 140, graph.my() + 30)
+        .target(graph.mx() + 50, graph.my() + 30)
+        .arrow();
     sd.Label(arrowA, "x轴", "br");
-    const arrowB = new sd.Line(graph).source(graph.x() - 140, graph.my() + 30).target(graph.x() - 140, graph.y() - 50).arrow();
+    const arrowB = new sd.Line(graph)
+        .source(graph.x() - 140, graph.my() + 30)
+        .target(graph.x() - 140, graph.y() - 50)
+        .arrow();
     sd.Label(arrowB, "y轴", "lt");
-})
+});
 
 sd.main(async () => {
     const focus = sd.Focus(stk);
@@ -53,7 +62,10 @@ sd.main(async () => {
         data[i].circ.startAnimate().color(C.GREEN).endAnimate();
 
         await sd.pause();
-        focus.startAnimate().focus(data[i].y, n-1).endAnimate();
+        focus
+            .startAnimate()
+            .focus(data[i].y, n - 1)
+            .endAnimate();
 
         await sd.pause();
         focus.startAnimate().focus(null).endAnimate();
@@ -67,4 +79,4 @@ sd.main(async () => {
         arr.endAnimate();
         data[i].circ.startAnimate().color(C.ORANGE).endAnimate();
     }
-})
+});

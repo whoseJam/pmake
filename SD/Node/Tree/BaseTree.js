@@ -225,6 +225,7 @@ BaseTree.prototype = {
         if (element.onEnter()) {
             this._.updates.push(() => {
                 element.triggerEnter(this, update);
+                this.childAs(element);
             });
         } else update();
     },
@@ -232,7 +233,6 @@ BaseTree.prototype = {
         id = String(id);
         this._.sdnodesMap[element.id] = { node: element, id };
         this._.nodesMap[id] = element;
-        this.childAs(element);
         this.vars.nodes.push(element);
         this._.updates.forEach(update => update());
         this._.updates = [];
@@ -242,7 +242,6 @@ BaseTree.prototype = {
         [sourceId, targetId] = [String(sourceId), String(targetId)];
         this._.sdnodesMap[element.id] = { link: element, sourceId, targetId };
         this._.linksMap.set([sourceId, targetId], element);
-        this.childAs(element);
         this.vars.links.push(element);
         this._.updates.forEach(update => update());
         this._.updates = [];

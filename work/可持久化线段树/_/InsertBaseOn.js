@@ -1,7 +1,7 @@
 import * as sd from "@/sd";
 
 /**
- * @param {sd.BaseTree} lastTree 
+ * @param {sd.BaseTree} lastTree
  * @param {{
  *  OnNewNode: () => number
  *  OnCreateValueAtLeaf: (x: number, value: any) => void
@@ -23,7 +23,7 @@ export async function InsertBaseOn(lastTree, n, position, value, args, skipAll =
     const VirtualLeftChild = args.VirtualLeftChild;
     const VirtualRightChild = args.VirtualRightChild;
     const currentTree = new sd.BinaryTree(svg);
-    
+
     let virtualId = 100;
 
     if (OnTreeCreated) {
@@ -39,7 +39,7 @@ export async function InsertBaseOn(lastTree, n, position, value, args, skipAll =
         const currentNode = currentTree.element(currentNodeId);
         currentNode.my_id = currentNodeId;
         currentNode.left_child = lastNode?.left_child;
-        currentNode.right_child = lastNode?.right_child; 
+        currentNode.right_child = lastNode?.right_child;
 
         if (l === r) {
             if (OnCreateValueAtLeaf) {

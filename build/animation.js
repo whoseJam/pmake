@@ -23,11 +23,6 @@ function validateJSFile(sourceFilePath) {
         console.log(colors("red", `[Error] Cannot read the file. Check file permissions.`));
         process.exit(1);
     }
-    const fileContent = fs.readFileSync(sourceFilePath, "utf8").trim();
-    if (fileContent.length === 0) {
-        console.log(colors("red", `[Error] The JavaScript file is empty.`));
-        process.exit(1);
-    }
 }
 
 function task(sourceFilePath, targetFilePath) {

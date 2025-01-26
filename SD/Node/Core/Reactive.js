@@ -353,10 +353,10 @@ function triggerDAGUpdate(object, key, freeze) {
     globalAllowDAGUpdate = true;
 }
 
-// export function checkEffect(effect) {
-//     console.log("effect=", effect.tag);
-//     const effectManager = effectsMap.get(effect);
-//     console.log(effectManager.in);
-//     console.log(effectManager.out);
-//     console.log("");
-// }
+export function checkEffect(effect) {
+    console.log("effect=", effect.tag);
+    const effectManager = effectsMap.get(effect);
+    console.log(effectManager.in);
+    console.log(effectManager.out);
+    console.log("");
+}

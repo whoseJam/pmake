@@ -49,6 +49,7 @@ BarArray.prototype = {
         return this;
     },
     insert: function (id, value) {
+        console.log("id=", id, "value=", value);
         value = +value;
         if (typeof value !== "number") ErrorLauncher.invalidArguments();
         const element = new Rect(this.layer("elements")).opacity(0);

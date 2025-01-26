@@ -3,8 +3,21 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const C = sd.color();
 const n = 13;
-const links = [[1, 2], [2, 3], [3, 4], [3, 5], [4, 6], [5, 7], [7, 8], [8, 9], [8, 10], [9, 11], [10, 12], [12, 13]];
-const colors = [C.orange, C.green, C.green, C.orange, C.blue, C.green, C.green, C.blue, C.blue, C.blue, C.orange, C.orange, C.green]
+const links = [
+    [1, 2],
+    [2, 3],
+    [3, 4],
+    [3, 5],
+    [4, 6],
+    [5, 7],
+    [7, 8],
+    [8, 9],
+    [8, 10],
+    [9, 11],
+    [10, 12],
+    [12, 13],
+];
+const colors = [C.orange, C.green, C.green, C.orange, C.blue, C.green, C.green, C.blue, C.blue, C.blue, C.orange, C.orange, C.green];
 const tree = new sd.Tree(svg).layerHeight(60).width(600).x(50).y(50);
 const arr = new sd.Array(svg).x(550).cy(300).start(1);
 const brace = sd.Brace(arr);
@@ -21,7 +34,7 @@ sd.init(() => {
     tree.root(1);
     links.forEach(link => tree.link(link[0], link[1]));
     colors.forEach((color, idx) => tree.color(idx + 1, color));
-})
+});
 
 sd.main(async () => {
     await sd.pause();
@@ -35,16 +48,17 @@ sd.main(async () => {
     arr.endAnimate();
 
     await climbOnTree(6, 11, "Query");
-})
+});
 
 function dfs1(current, parent) {
-    sz[current] = 1; fa[current] = parent; dep[current] = dep[parent] + 1;
+    sz[current] = 1;
+    fa[current] = parent;
+    dep[current] = dep[parent] + 1;
     const children = tree.children(current);
     for (let child of children) {
         const v = +tree.nodeId(child);
         dfs1(v, current);
-        if (sz[sn[current]] < sz[v])
-            sn[current] = v;
+        if (sz[sn[current]] < sz[v]) sn[current] = v;
         sz[current] += sz[v];
     }
     if (sn[current]) {
@@ -56,7 +70,9 @@ function dfs1(current, parent) {
 function dfs2(current, t) {
     arr.push(`${current}`);
     arr.color(arr.end(), tree.color(current));
-    top[current] = t; pos[current] = arr.length(); rpos[arr.length()] = current;
+    top[current] = t;
+    pos[current] = arr.length();
+    rpos[arr.length()] = current;
     if (sn[current]) dfs2(sn[current], t);
     const children = tree.children(current);
     for (let child of children) {
@@ -69,7 +85,8 @@ function dfs2(current, t) {
 
 async function climbOnTree(x, y, operator) {
     await sd.pause();
-    let fx = top[x], fy = top[y];
+    let fx = top[x],
+        fy = top[y];
     const px = sd.Pointer(tree, "x", "r").startAnimate().moveTo(x).endAnimate();
     const py = sd.Pointer(tree, "y", "l").startAnimate().moveTo(y).endAnimate();
     const pfx = sd.Pointer(tree, "fx", "r").startAnimate().moveTo(fx).endAnimate();
@@ -77,8 +94,12 @@ async function climbOnTree(x, y, operator) {
     while (fx !== fy) {
         if (dep[fx] < dep[fy]) {
             await sd.pause();
-            let tmp = fx; fx = fy; fy = tmp;
-            tmp = x; x = y; y = tmp;
+            let tmp = fx;
+            fx = fy;
+            fy = tmp;
+            tmp = x;
+            x = y;
+            y = tmp;
             tree.startAnimate();
             px.moveTo(x);
             py.moveTo(y);
@@ -88,16 +109,22 @@ async function climbOnTree(x, y, operator) {
         }
         await focusSequence(fx, x, pos[fx], pos[x], "pos[fx]", "pos[x]", operator);
         await sd.pause();
-        px.startAnimate().moveTo(x = fa[fx]).endAnimate();
+        px.startAnimate()
+            .moveTo((x = fa[fx]))
+            .endAnimate();
         await sd.pause();
-        pfx.startAnimate().moveTo(fx = top[x]).endAnimate();
+        pfx.startAnimate()
+            .moveTo((fx = top[x]))
+            .endAnimate();
     }
     await sd.pause();
     pfx.startAnimate().opacity(0).endAnimate();
     pfy.startAnimate().opacity(0).endAnimate();
     if (pos[x] > pos[y]) {
         await sd.pause();
-        let tmp = x; x = y; y = tmp;
+        let tmp = x;
+        x = y;
+        y = tmp;
         px.startAnimate().moveTo(x).endAnimate();
         py.startAnimate().moveTo(y).endAnimate();
     }
@@ -119,7 +146,7 @@ async function focusSequence(x, y, l, r, b1, b2, operator) {
     await sd.pause();
     const l1 = linkTo(x, l, b1);
     const l2 = linkTo(y, r, b2);
-    brace.startAnimate().brace(l, r, "t", 10).value(operator).update().endAnimate();
+    brace.startAnimate().brace(l, r, "t", 10).value(operator).endAnimate();
     await sd.pause();
     l1.startAnimate().opacity(0).endAnimate().remove();
     l2.startAnimate().opacity(0).endAnimate().remove();

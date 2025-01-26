@@ -1,4 +1,3 @@
-import { effect, uneffect } from "@/Node/Core/Reactive";
 import { D3Layout, Tree } from "@/Node/Tree/Tree";
 import { Factory } from "@/Utility/Factory";
 
@@ -13,15 +12,9 @@ export function HorizontalTree(parent) {
         layerWidth: 60,
     });
 
-    uneffect(this._.updater);
-    this._.updater = effect(() => {
-        const r = this.vars.r;
-        D3Layout.call(
-            this,
-            "horizontal",
-            node => [node.y + this.x(), node.x + this.y()],
-            (node, limit) => node.r(Math.min(r, limit / 2.1))
-        );
+    this.uneffect("tree");
+    this.effect("horizontalTree", () => {
+        D3Layout.call(this, "horizontal", node => [node.y + this.x(), node.x + this.y()]);
     });
 }
 

@@ -1,6 +1,4 @@
-import { effect, uneffect } from "@/Node/Core/Reactive";
 import { HorizontalTree } from "@/Node/Tree/HorizontalTree";
-import { D3Layout } from "@/Node/Tree/Tree";
 import { ValueTree } from "@/Node/Tree/ValueTree";
 
 export function HorizontalValueTree(parent) {
@@ -10,16 +8,6 @@ export function HorizontalValueTree(parent) {
 
     this.vars.merge({
         layerWidth: 60,
-    });
-
-    uneffect(this._.updater);
-    this._.updater = effect(() => {
-        D3Layout.call(
-            this,
-            "horizontal",
-            node => [node.y + this.x(), node.x + this.y()],
-            () => {}
-        );
     });
 }
 

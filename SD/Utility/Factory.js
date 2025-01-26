@@ -2,7 +2,7 @@ import { Action } from "@/Animate/Action";
 import { setPrecise } from "@/Node/Core/Reactive";
 
 function lowPrecise(oldValue, newValue) {
-    return Math.abs(oldValue - newValue) >= 5;
+    return Math.abs(oldValue - newValue) >= 1;
 }
 
 function mediumPrecise(oldValue, newValue) {

@@ -1,6 +1,4 @@
-import { Vector as V } from "@/Math/Vector";
 import { Enter as EN } from "@/Node/Core/Enter";
-import { effect } from "@/Node/Core/Reactive";
 import { Vertex } from "@/Node/Element/Vertex";
 import { Line } from "@/Node/Nake/Line";
 import { BaseTree } from "@/Node/Tree/BaseTree";
@@ -26,76 +24,65 @@ export function Tree(parent) {
         layerHeight: 60,
     });
 
-    this._.updater = effect(() => {
-        const r = this.vars.r;
-        D3Layout.call(
-            this,
-            "vertical",
-            node => [node.x + this.x(), node.y + this.y()],
-            (node, limit) => node.r(Math.min(r, limit / 2.1))
-        );
+    this.effect("tree", () => {
+        const position = node => {
+            return [node.x + this.x(), node.y + this.y()];
+        };
+        D3Layout.call(this, "vertical", position);
     });
 }
 
 Tree.prototype = {
     ...BaseTree.prototype,
-};
-
-Tree.prototype.width = Factory.handlerLowPrecise("width");
-Tree.prototype.r = Factory.handlerLowPrecise("r");
-Tree.prototype.layerHeight = Factory.handlerLowPrecise("layerHeight");
-Tree.prototype.height = function (height) {
-    if (height === undefined) return this.vars.height;
-    const depth = this.depth();
-    if (!depth) return this;
-    this.layerHeight(height / depth);
-    return this;
-};
-
-Tree.prototype.newNode = function (id, value) {
-    const element = new this._.nodeType(this.layer("nodes"));
-    element.value(Cast.castToSDNode(element, value, id));
-    element.onEnter(EN.appear("nodes"));
-    this.newNodeByBaseTree(id, element);
-    return this;
-};
-
-Tree.prototype.newNodeFromExistValue = function (id, value) {
-    const element = new this._.nodeType(this.layer("nodes"));
-    element.onEnter(EN.appear("nodes"));
-    this.newNodeByBaseTree(id, element);
-    element.value(value.onEnter(EN.moveTo()));
-    return this;
-};
-
-Tree.prototype.newNodeFromExistElement = function (id, value) {
-    const element = value;
-    element.onEnter(EN.moveTo("nodes"));
-    this.newNodeByBaseTree(id, element);
-    return this;
-};
-
-Tree.prototype.newLink = function (x, y, value = null) {
-    const element = new this._.linkType(this.layer("links"));
-    if (value !== null) element.value(value);
-    element.onEnter(EN.appear("links"));
-    this.newLinkByBaseTree(x, y, element);
-    return this;
-};
-
-Tree.prototype.newLinkFromExistValue = function (sourceId, targetId, value) {
-    const element = new this._.linkType(this.layer("links"));
-    element.onEnter(EN.appear("links"));
-    this.newLinkByBaseTree(sourceId, targetId, element);
-    element.value(value.onEnter(EN.moveTo()));
-    return this;
-};
-
-Tree.prototype.newLinkFromExistElement = function (sourceId, targetId, value) {
-    const element = value;
-    element.onEnter(EN.moveTo("links"));
-    this.newLinkByBaseTree(sourceId, targetId, element);
-    return this;
+    width: Factory.handlerLowPrecise("width"),
+    layerHeight: Factory.handlerLowPrecise("layerHeight"),
+    height: function (height) {
+        if (height === undefined) return this.vars.height;
+        const depth = this.depth();
+        if (!depth) return this;
+        this.layerHeight(height / depth);
+        return this;
+    },
+    newNode: function (id, value) {
+        const element = new this._.nodeType(this.layer("nodes"));
+        element.value(Cast.castToSDNode(element, value, id));
+        element.onEnter(EN.appear("nodes"));
+        this.newNodeByBaseTree(id, element);
+        return this;
+    },
+    newNodeFromExistValue: function (id, value) {
+        const element = new this._.nodeType(this.layer("nodes"));
+        element.onEnter(EN.appear("nodes"));
+        this.newNodeByBaseTree(id, element);
+        element.value(value.onEnter(EN.moveTo()));
+        return this;
+    },
+    newNodeFromExistElement: function (id, value) {
+        const element = value;
+        element.onEnter(EN.moveTo("nodes"));
+        this.newNodeByBaseTree(id, element);
+        return this;
+    },
+    newLink: function (sourceId, targetId, value) {
+        const element = new this._.linkType(this.layer("links"));
+        element.value(value);
+        element.onEnter(EN.appear("links"));
+        this.newLinkByBaseTree(sourceId, targetId, element);
+        return this;
+    },
+    newLinkFromExistValue: function (sourceId, targetId, value) {
+        const element = new this._.linkType(this.layer("links"));
+        element.onEnter(EN.appear("links"));
+        this.newLinkByBaseTree(sourceId, targetId, element);
+        element.value(value.onEnter(EN.moveTo()));
+        return this;
+    },
+    newLinkFromExistElement: function (sourceId, targetId, value) {
+        const element = value;
+        element.onEnter(EN.moveTo("links"));
+        this.newLinkByBaseTree(sourceId, targetId, element);
+        return this;
+    },
 };
 
 export function D3Layout(mode, convert, size) {
@@ -112,7 +99,6 @@ export function D3Layout(mode, convert, size) {
         return;
     }
     root = hierarchy(data);
-
     if (mode === "vertical") {
         this.vars.height = root.height * this.layerHeight();
         layout = tree().size([this.width(), this.height()]);
@@ -121,22 +107,15 @@ export function D3Layout(mode, convert, size) {
         layout = tree().size([this.height(), this.width()]);
     }
     result = layout(root);
-
-    let limit = Infinity;
     const nodes = result.descendants();
     const nodesMap = new Map();
-    nodes.forEach((node, i) => {
-        const vec = convert(node);
+    nodes.forEach(node => {
         nodesMap.set(node.data.data, node);
-        for (let j = i + 1; j < nodes.length; j++) {
-            limit = Math.min(limit, V.length(V.sub(vec, convert(nodes[j]))));
-        }
     });
-
-    this.forEachNode((node, id) => {
+    this.forEachNode(node => {
         const layout = nodesMap.get(node);
         this.tryUpdate(node, () => {
-            size(node, limit);
+            if (size) size(node);
             node.center(convert(layout));
         });
     });

@@ -52,7 +52,7 @@ class IFrameManager {
                     this.iframe.contentWindow.SetViewBox(viewBox.x, viewBox.y, viewBox.width, viewBox.height, this.rate);
                     this.iframe.contentWindow.Message("IFRAME_ID", this.id);
                     this.iframe.contentWindow.Message("IFRAME_URL", this.url);
-                    if (this.args) iframe.contentWindow.Message("IFRAME_ARGS", this.args());
+                    if (this.args) this.iframe.contentWindow.Message("IFRAME_ARGS", this.args());
                     this.iframe.contentWindow.Message("IFRAME_INITED", true);
                     window.removeEventListener("message", callback);
                 };

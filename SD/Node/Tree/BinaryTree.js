@@ -1,5 +1,4 @@
 import { Enter } from "@/Node/Core/Enter";
-import { effect, uneffect } from "@/Node/Core/Reactive";
 import { Tree } from "@/Node/Tree/Tree";
 import { Cast } from "@/Utility/Cast";
 import { trim } from "@/Utility/Trim";
@@ -11,8 +10,8 @@ export function BinaryTree(parent) {
 
     this._.biChildren = {};
 
-    uneffect(this._.updater);
-    this._.updater = effect(() => {
+    this.uneffect("tree");
+    this.effect("binaryTree", () => {
         BinaryTreeLayout.apply(this, ["vertical"]);
     });
 }

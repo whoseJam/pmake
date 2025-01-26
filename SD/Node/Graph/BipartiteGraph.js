@@ -10,7 +10,7 @@ export function BipartiteGraph(parent) {
 
     this.type("BipartiteGraph");
 
-    this.merge({
+    this.vars.merge({
         r: 20,
         rank: 0,
         width: 600,
@@ -37,10 +37,8 @@ export function BipartiteGraph(parent) {
         for (let node of orderedNodes) {
             const x = convertX(node);
             const yLocator = ["y", "my"][node.setNo];
-            this.tryMove(node, () => {
-                node.cx(x);
-                node[yLocator](this[yLocator]());
-            });
+            node.cx(x);
+            node[yLocator](this[yLocator]());
             currentIndex[node.setNo]++;
         }
         for (let link of links) {
@@ -48,11 +46,9 @@ export function BipartiteGraph(parent) {
             const targetId = this.targetId(link);
             const source = this.findNodeById(sourceId);
             const target = this.findNodeById(targetId);
-            this.tryMove(link, () => {
-                link.source(source.center());
-                link.target(target.center());
-                trim(link, source, target);
-            });
+            link.source(source.center());
+            link.target(target.center());
+            trim(link, source, target);
         }
     });
 }
