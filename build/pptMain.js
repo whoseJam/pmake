@@ -1,7 +1,7 @@
+import includeHTML from "../Reveal/Inject";
+import "../Reveal/plugin/Chalkboard.css";
 import "../Reveal/plugin/reset.css";
 import "../Reveal/plugin/reveal.css";
-import "../Reveal/plugin/Chalkboard.css";
-import includeHTML from "../Reveal/Inject";
 
 class ThemeManager {
     static AVAILABLE_THEMES = ["beige", "dracula", "serif", "simple", "sky", "solarized", "white"];
@@ -49,8 +49,7 @@ class ThemeManager {
             option.textContent = theme.charAt(0).toUpperCase() + theme.slice(1);
             select.appendChild(option);
         });
-        select.addEventListener("change", (e) => this.loadTheme(e.target.value));
-        this.addDropdownInteractions(select);
+        select.addEventListener("change", e => this.loadTheme(e.target.value));
         return select;
     }
     getDropdownStyles() {
@@ -72,18 +71,8 @@ class ThemeManager {
             background-position: right 15px center;
         `;
     }
-    addDropdownInteractions(select) {
-        select.addEventListener("mouseenter", () => {
-            select.style.borderColor = 'rgba(255, 255, 255, 0.5)';
-            select.style.transform = 'scale(1.02)';
-        });
-        select.addEventListener("mouseleave", () => {
-            select.style.borderColor = 'rgba(255, 255, 255, 0.2)';
-            select.style.transform = 'scale(1)';
-        });
-    }
     setupEventListeners() {
-        document.addEventListener("keydown", (e) => {
+        document.addEventListener("keydown", e => {
             if (e.key === "t" || e.key === "T") {
                 this.toggleThemeSelector();
             }
@@ -94,7 +83,7 @@ class ThemeManager {
         const isHidden = this.themeSelector.style.display === "none";
         this.themeSelector.style.display = isHidden ? "block" : "none";
         if (isHidden) {
-            const currentTheme = document.querySelector('link[data-theme]')?.dataset.theme || "beige";
+            const currentTheme = document.querySelector("link[data-theme]")?.dataset.theme || "beige";
             const select = this.themeSelector.querySelector("select");
             if (select) select.value = currentTheme;
         }
@@ -108,7 +97,7 @@ class ThemeManager {
         this.applyNewTheme(themeName);
     }
     removeExistingTheme() {
-        const existingTheme = document.querySelector('link[data-theme]');
+        const existingTheme = document.querySelector("link[data-theme]");
         if (existingTheme) {
             existingTheme.remove();
         }

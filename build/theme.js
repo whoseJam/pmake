@@ -10,8 +10,12 @@ async function themeTask(outputPath) {
 
     return gulp.src(sourcePath)
         .pipe(sass().on("error", sass.logError))
-        .pipe(autoprefixer())
-        .pipe(cleanCSS({ compatibility: "ie8" }))
+        .pipe(autoprefixer({
+            overrideBrowserslist: ['last 5 versions', 'ie >= 10', 'Firefox >= 45', 'Chrome >= 45', 'Safari >= 10'],
+            cascade: true,
+            remove: false
+        }))
+        .pipe(cleanCSS({ compatibility: "ie8", keepSpecialComments: 1 }))
         .pipe(gulp.dest(outputPath));
 }
 
