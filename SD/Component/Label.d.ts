@@ -11,25 +11,21 @@ class CompLabel {
 }
 
 /**
- * 构建一个标签
- * @param parent
+ * 创建一个标签
+ * @param parent 父元素
  * @param text 标签的文本
- * @param position 标签相对于父节点的位置
- * @param fontSize 标签字体大小
- * @param gap 标签到父组件的间距
+ * @param position 标签相对于父元素的位置，默认为 lc
+ * @param fontSize 标签字体大小，默认为 20
+ * @param gap 标签到父元素的间距，默认为 10
  */
-export function Label(
-    parent: SDNode,
-    text: string,
-    location: Location,
-    fontSize: number,
-    gap: number,
-): CompLabel & Text;
+export function Label(parent: SDNode, text: string, location: Location, fontSize: number, gap: number): CompLabel & Text;
 
-export function MathjaxLabel(
-    parent: SDNode,
-    text: string,
-    location: Location,
-    fontSize: number,
-    gap: number,
-): CompLabel & Mathjax;
+/**
+ * 创建一个 Mathjax 标签
+ * @param parent 父元素
+ * @param text 标签的文本
+ * @param location 标签相对于父元素的位置，默认为 lc
+ * @param fontSize 标签的字体大小，默认为 20
+ * @param gap 标签到父元素的间距，默认为 10
+ */
+export function MathjaxLabel(parent: SDNode, text: string, location: Location, fontSize: number, gap: number): CompLabel & Mathjax;

@@ -60,11 +60,15 @@ export class BaseTree extends SDNode {
     text(sourceId: InputID, targetId: InputID): string;
     intValue(tid: InputID): number;
     intValue(sourceId: InputID, targetId: InputID): number;
+    nodesInSubtree(node: InputNode): Array<SDNode>;
+    linksInSubtree(node: InputNode): Array<SDNode>;
+    forEachNodeInSubtree(node: InputNode, callback: (node: SDNode, id: string) => void): this;
+    forEachLinkInSubtree(node: InputNode, callback: (link: SDNode, sourceId: string, targetId: string) => void): this;
     nodesOnPath(source: InputNode, target: InputNode): Array<SDNode>;
     linksOnPath(source: InputNode, target: InputNode): Array<SDNode>;
     forEachNodeOnPath(sourceId: InputID, targetId: InputID, callback: (node: SDNode, id: string) => void): this;
     forEachLinkOnPath(sourceId: InputID, targetId: InputID, callback: (link: SDNode, sourceId: string, targetId: string) => void): this;
-    forEachNode(callback: (node: SDNode, tid: string) => void): this;
+    forEachNode(callback: (node: SDNode, id: string) => void): this;
     forEachLink(callback: (link: SDNode, sourceId: string, targetId: string) => void): this;
     rootId(): string;
     nodeId(node: InputNode): string | undefined;

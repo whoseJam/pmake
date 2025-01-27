@@ -282,6 +282,42 @@ BaseTree.prototype = {
         if (!value.text) ErrorLauncher.invalidInvoke("intValue");
         return +value.text();
     },
+    nodesInSubtree: function (node) {
+        node = this.element(node);
+        const nodeList = [];
+        const dfs = node => {
+            nodeList.push(node);
+            const children = this.children(node);
+            children.forEach(child => {
+                dfs(child);
+            });
+        };
+        dfs(node);
+        return nodeList;
+    },
+    linksInSubtree: function (node) {
+        node = this.element(node);
+        const linkList = [];
+        const dfs = node => {
+            const children = this.children(node);
+            children.forEach(child => {
+                linkList.push(this.element(node, child));
+                dfs(child);
+            });
+        };
+        dfs(node);
+        return linkList;
+    },
+    forEachNodeInSubtree: function (node, callback) {
+        this.nodesInSubtree(node).forEach(node => {
+            callback(node, this.nodeId(node));
+        });
+    },
+    forEachLinkInSubtree: function (node, callback) {
+        this.linksInSubtree(node).forEach(link => {
+            callback(link, this.sourceId(link), this.targetId(link));
+        });
+    },
     nodesOnPath: function (source, target) {
         source = this.element(source);
         const sourceList = [];

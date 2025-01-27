@@ -54,6 +54,28 @@ export class CompFocus {
      * @param element
      */
     focus(element: null | undefined | false): this;
+
+    /**
+     * 获取间隔
+     */
+    gap(): number;
+
+    /**
+     * 设置间隔
+     * @param gap
+     */
+    gap(gap: number): this;
+
+    /**
+     * 获取比率
+     */
+    rate(): number;
+
+    /**
+     * 设置比率
+     * @param rate
+     */
+    rate(rate: number): this;
 }
 
 /**
