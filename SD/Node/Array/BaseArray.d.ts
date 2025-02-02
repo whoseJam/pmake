@@ -54,5 +54,6 @@ export class BaseArray extends SDNode {
     color(id: number, color: Color): this;
     color(l: number, r: number, color: Color): this;
 
-    sort(comparator: (a: SDNode, b: SDNode) => boolean): this;
+    sort(comparator: (a: SDNode, b: SDNode) => number): this;
+    sort(l: number, r: number, comparator: (a: SDNode, b: SDNode) => number): this;
 }

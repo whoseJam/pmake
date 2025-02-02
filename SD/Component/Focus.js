@@ -47,6 +47,7 @@ export function Focus(parent) {
             this.startAnimate(context.tillc(0, 1));
             this.opacity(1);
         } else {
+            if (this.opacity() === 0) this.opacity(1);
             this.unfreeze();
         }
         return this;

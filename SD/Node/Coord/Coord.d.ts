@@ -28,6 +28,7 @@ export class Coord extends SDNode {
     viewWidth(width: number): this;
     viewHeight(): number;
     viewHeight(height: number): this;
+    viewBox(x: number, y: number, width: number, height: number): this;
 
     coordX(x: number): number;
     coordY(y: number): number;

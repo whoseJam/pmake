@@ -183,9 +183,15 @@ BaseArray.prototype = {
                 ErrorLauncher.invalidArguments();
         }
     },
-    sort: function (comparator = (a, b) => a.intValue() - b.intValue()) {
+    sort: function (l, r, comparator = (a, b) => a.intValue() - b.intValue()) {
+        if (arguments.length === 0) return this.sort(this.start(), this.end(), comparator);
+        if (arguments.length === 1) return this.sort(this.start(), this.end(), arguments[0]);
+        l -= this.start();
+        r -= this.start();
         const elements = this.vars.elements;
-        elements.sort(comparator);
+        const subarray = elements.slice(l, r + 1);
+        subarray.sort(comparator);
+        elements.splice(l, subarray.length, ...subarray);
         this.vars.elements = elements;
         return this;
     },

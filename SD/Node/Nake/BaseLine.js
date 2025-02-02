@@ -95,7 +95,7 @@ BaseLine.prototype = {
             const point = arguments[0];
             return this.source(point[0], point[1]);
         }
-        this.freeze().x1(x).y1(y).unfreeze();
+        this.x1(x).y1(y);
         return this;
     },
     target: function (x, y) {
@@ -105,7 +105,7 @@ BaseLine.prototype = {
             const point = arguments[0];
             return this.target(point[0], point[1]);
         }
-        this.freeze().x2(x).y2(y).unfreeze();
+        this.x2(x).y2(y);
         return this;
     },
     x: function (x) {

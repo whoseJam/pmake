@@ -1,5 +1,4 @@
 import { FIRST_INTER_FRAME, LAST_INTER_FRAME, LAST_MAIN_FRAME, pause } from "@/Animate/Window";
-import { freeze, unfreeze } from "@/Node/Core/Reactive";
 
 let initFinished = true;
 
@@ -11,10 +10,8 @@ export async function init(callback) {
     initFinished = false;
     const fn = async () => {
         if (window.self === window.top || (window.self !== window.top && window.IFRAME_INITED)) {
-            freeze();
             await callback(window.IFRAME_ARGS ? window.IFRAME_ARGS : {});
             initFinished = true;
-            unfreeze();
         } else {
             setTimeout(fn, 20);
         }
