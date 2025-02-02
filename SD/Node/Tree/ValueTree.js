@@ -1,5 +1,4 @@
 import { Enter as EN } from "@/Node/Core/Enter";
-import { effect, uneffect } from "@/Node/Core/Reactive";
 import { D3Layout, Tree } from "@/Node/Tree/Tree";
 
 export function ValueTree(parent) {
@@ -7,9 +6,14 @@ export function ValueTree(parent) {
 
     this.type("ValueTree");
 
-    uneffect(this._.updater);
-    this._.updater = effect(() => {
-        D3Layout.apply(this, ["vertical", node => [node.x + this.x(), node.y + this.y()], () => {}]);
+    this.uneffect("tree");
+    this.effect("valueTree", () => {
+        const x = this.x();
+        const y = this.y();
+        const position = node => {
+            return [node.x + x, node.y + y];
+        };
+        D3Layout.call(this, "vertical", position);
     });
 }
 
