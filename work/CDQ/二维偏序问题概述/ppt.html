@@ -27,8 +27,7 @@
         <h2>二维偏序问题</h2>
         <p>先按第一维度排序，再用某种支持区间操作的线性数据结构去约束第二个维度就行了</p>
         <iframe data-animation="./二维偏序问题1.js"
-            style="width: 1000px; height: 200px;"></iframe>
-        <p class="fragment">假设我们正在枚举第 $i$ 个坐标 $(x_i,y_i)$，通过这种方法，我们保证所有 $x$ 比 $x_i$ 小的坐标，都以 $y_i$ 为关键字插入到了数据结构中，我们只需要查询数据结构指定范围内的坐标个数，就能准确找到所有 $x$ 比 $x_i$ 小，$y$ 比 $y_i$ 小的元素个数了</p>
+            style="width: 1000px; height: 500px;"></iframe>
     </section>
     <section>
         <h2>二维偏序问题</h2>
@@ -40,5 +39,9 @@
             <li class="fragment">通过<b style="color: purple;">双指针</b>，对 $i\in R$，统计左边有多少个 $l$ 满足 $y(j)\lt y(i)$</li>
             <li class="fragment">为了使得双指针的正确性成立，需要在分治过程中归并 $y$ 这一属性，让它从小到大排列</li>
         </ul>
+    </section>
+    <section>
+        <h2>二维偏序问题</h2>
+        <p>这两种写法都是需要掌握的——因为它们组合到一起就构成了三维偏序的解法</p>
     </section>
 </section>

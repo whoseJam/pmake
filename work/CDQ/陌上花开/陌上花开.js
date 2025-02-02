@@ -1,8 +1,12 @@
 import * as sd from "@/sd";
+import { CDQ3D } from "../_/CDQ3D";
 
 const svg = sd.svg();
 const R = sd.rule();
 const C = sd.color();
+const GA = C.gradient(C.white, C.red, 0, 10);
+const GB = C.gradient(C.white, C.textBlue, 0, 10);
+const GC = C.gradient(C.white, C.orange, 0, 10);
 const data = [
     { a: 3, b: 5, c: 1 },
     { a: 6, b: 4, c: 4 },
@@ -14,129 +18,148 @@ const data = [
     { a: 9, b: 8, c: 3 },
     { a: 8, b: 9, c: 5 },
 ];
-const n = data.length;
-const tables = [];
-const tableObj = {
-    startAnimate: function() {
-        tables.forEach(table => table.startAnimate());
-        return this;
-    },
-    endAnimate: function() {
-        tables.forEach(table => table.endAnimate());
-        return this;
-    },
-    update: update
-};
-const arr = new sd.Array(svg).start(1);
-const pCur = sd.Pointer(svg, "cur");
-const pI = sd.Pointer(svg, "i");
-const focus = sd.Focus(arr);
+const gap = 10;
+const arr = new sd.ValueArray(svg).x(100).y(100).elementWidth(100);
+const braces = sd.make1d(data.length, undefined);
+const pI = sd.Pointer(arr, "i", "t");
+const pJ = sd.Pointer(arr, "j", "t");
+const sum = new sd.Array(svg).resize(data.length).start(1);
+const focus = sd.Focus(sum);
 
 sd.init(() => {
-    data.forEach((item, idx) => {
-        tables.push(new sd.Stack(svg)
-            .elementWidth(80)
-            .push(`a=${item.a}`)
-            .push(`b=${item.b}`)
-            .push(`c=${item.c}`));
-        item.id = idx;
+    data.forEach((value, i) => {
+        const stk = new sd.Stack(svg).elementWidth(arr.elementWidth() - gap * 2);
+        stk.valueA = value.a;
+        stk.valueB = value.b;
+        stk.valueC = value.c;
+        stk.resize(3);
+        stk.color(0, GA(value.a)).value(0, `a=${value.a}`);
+        stk.color(1, GB(value.b)).value(1, `b=${value.b}`);
+        stk.color(2, GC(value.c)).value(2, `c=${value.c}`);
+        arr.push(stk);
     });
-    for (let i = 1; i <= 10; i++) {
-        arr.push(i);
-        const e = arr.lastElement();
-        e.childAs("stk", new sd.Stack(e).elementWidth(20).elementHeight(20), R.aside("bc"));
-    }
-    tableObj.update();
-    arr.cx(100 + 4.5 * 100).y(520);
-})
+    sum.cx(arr.cx()).y(arr.my() + 240);
+});
 
 sd.main(async () => {
-    await sd.pause();
-    sortSubarray(data, 0, n - 1, (a, b) => a.a - b.a);
-    tableObj.startAnimate().update().endAnimate();
-    
-    await CDQ(0, n - 1);
-})
+    await CDQ3D(arr, {
+        onCheckALessThanB,
+        onMoveI,
+        onMoveJ,
+        onStartMerge,
+        onEndMerge,
+        onSortDim1,
+        onSortDim2,
+        onInsert,
+        onQuery,
+    });
+});
 
-function sortSubarray(arr, l, r, cmp) {
-    const subArr = arr.slice(l, r + 1);
-    subArr.sort(cmp);
-    for (let i = l; i <= r; i++)
-        arr[i] = subArr[i - l];
+async function onInsert(j) {
+    await sd.pause();
+    const value = arr.element(j).valueC;
+    arr.element(j).link = sd.Link(arr.element(j), sum.element(value), sd.Line, "cx", "my", "cx", "y").startAnimate().pointStoT().endAnimate().arrow();
 }
 
-async function CDQ(l, r) {
-    if (l === r) return;
-    let mid = (l + r) >> 1;
-    await CDQ(l, mid);
-    await CDQ(mid + 1, r);
-
+async function onQuery(i) {
     await sd.pause();
-    const boxL = tables[data[l].id].x();
-    const boxR = tables[data[r].id].mx();
-    const brace = new sd.BraceCurve(svg)
-        .target(boxL, arr.y() - 20)
-        .source(boxR, arr.y() - 20)
-        .opacity(0)
-        .startAnimate().opacity(1).endAnimate();
-    let cur = l - 1;
-    for (let i = mid + 1; i <= r; i++) {
-        await sd.pause();
-        pI.startAnimate().moveTo(tables[data[i].id]).endAnimate();
-        while (cur + 1 <= mid && data[cur + 1].b <= data[i].b) {
-            await sd.pause();
-            cur++;
-            pCur.startAnimate().moveTo(tables[data[cur].id]).endAnimate();
-            await sd.pause();
-            tables[data[cur].id].startAnimate().color(C.blue).endAnimate();
-            insert(data[cur].c);
+    const value = arr.element(i).valueC;
+    focus.startAnimate().focus(1, value).endAnimate();
+    await sd.pause();
+    focus.startAnimate().focus(null).endAnimate();
+}
+
+async function onSortDim1() {
+    await sd.pause();
+    arr.startAnimate()
+        .sort((a, b) => a.valueA - b.valueA)
+        .endAnimate();
+    await sd.pause();
+    arr.forEachElement((element, i) => {
+        braces[i] = new sd.BraceCurve(svg);
+        moveBrace(braces[i], i, i);
+        braces[i].opacity(0).startAnimate().opacity(1).endAnimate();
+    });
+}
+
+async function onSortDim2(l, r) {
+    await sd.pause();
+    arr.startAnimate()
+        .sort(l, r, (a, b) => a.valueB - b.valueB)
+        .endAnimate();
+}
+
+function onCheckALessThanB(a, b) {
+    return a.valueA <= b.valueA && a.valueB <= b.valueB;
+}
+
+async function onMoveI(i) {
+    await sd.pause();
+    pI.startAnimate().moveTo(i).endAnimate();
+}
+
+async function onMoveJ(j) {
+    await sd.pause();
+    pJ.startAnimate().moveTo(j).endAnimate();
+}
+
+async function onStartMerge(l, r) {
+    const m = (l + r) >> 1;
+    await sd.pause();
+    arr.startAnimate();
+    for (let i = l; i <= r; i++) arr.element(i).dy(80);
+    arr.endAnimate();
+    braces[l].startAnimate().dy(80).endAnimate();
+    braces[m + 1].startAnimate().dy(80).endAnimate();
+    await sd.pause();
+    braces[l].startAnimate().value("L", R.pointAtPathByRate(0.5, "cx", "my", 0, -3)).endAnimate();
+    braces[m + 1].startAnimate().value("R", R.pointAtPathByRate(0.5, "cx", "my", 0, -3)).endAnimate();
+    global.lineL = makeLine(l, "l").startAnimate().pointStoT().endAnimate();
+    global.lineM = makeLine(m, "r").startAnimate().pointStoT().endAnimate();
+    global.lineR = makeLine(r, "r").startAnimate().pointStoT().endAnimate();
+}
+
+async function onEndMerge(l, r) {
+    const m = (l + r) >> 1;
+    await sd.pause();
+    pI.startAnimate().moveTo(null).endAnimate();
+    pJ.startAnimate().moveTo(null).endAnimate();
+    await sd.pause();
+    lineL.startAnimate().fadeStoT().endAnimate().remove();
+    lineM.startAnimate().fadeStoT().endAnimate().remove();
+    lineR.startAnimate().fadeStoT().endAnimate().remove();
+    braces[l].startAnimate().value(null).endAnimate();
+    braces[m + 1].startAnimate().value(null).endAnimate();
+    for (let i = l; i <= m; i++)
+        if (arr.element(i).link) {
+            arr.element(i).link.startAnimate().fadeStoT().endAnimate().remove();
+            arr.element(i).link = undefined;
         }
-        await sd.pause();
-        const elemC = tables[data[i].id].element(2);
-        elemC.startAnimate().strokeWidth(3).stroke(C.red).endAnimate();
-        focus.startAnimate().focus(1, data[i].c).endAnimate();
-        await sd.pause();
-        elemC.startAnimate().strokeWidth(1).stroke(C.black).endAnimate();
-        focus.startAnimate().focus(null).endAnimate();
-    }
     await sd.pause();
-    pI.startAnimate().opacity(0).endAnimate();
-    pCur.startAnimate().opacity(0).endAnimate();
-    brace.startAnimate().opacity(0).remove();
-    clear();
-    for (let i = l; i <= cur; i++)
-        tables[data[i].id].startAnimate().color(C.white).endAnimate();
-
+    braces[l].startAnimate();
+    moveBrace(braces[l], l, r);
+    braces[l].endAnimate();
+    braces[m + 1].startAnimate().fadeStoT().endAnimate().remove();
     await sd.pause();
-    sortSubarray(data, l, r, (a, b) => a.b - b.b);
-    tableObj.startAnimate().update().endAnimate();
+    arr.startAnimate();
+    for (let i = l; i <= r; i++) arr.element(i).dy(-80);
+    arr.endAnimate();
+    braces[l].startAnimate().dy(-80).endAnimate();
 }
 
-function insert(pos) {
-    const e = arr.element(pos);
-    const stk = e.child("stk");
-    stk.startAnimate().push().color(C.blue).endAnimate();
-}
-
-function clear() {
-    for (let i = arr.start(); i <= arr.end(); i++) {
-        const e = arr.element(i);
-        const stk = e.child("stk");
-        stk.startAnimate().resize(0).endAnimate();
+function makeLine(at, location) {
+    const line = new sd.Line(svg);
+    if (location === "l") {
+        line.source(arr.element(at).pos("x", "y", -gap, -10));
+        line.target(arr.element(at).pos("x", "my", -gap, +10));
+    } else {
+        line.source(arr.element(at).pos("mx", "y", gap, -10));
+        line.target(arr.element(at).pos("mx", "my", gap, +10));
     }
+    return line;
 }
 
-function update() {
-    const realX = (i) => {
-        return 100 + i * 100 
-    };
-    const realY = (j) => {
-        return 380 - j * 30;
-    };
-    for (let i = 0; i < data.length; i++) {
-        const item = data[i];
-        const table = tables[item.id];
-        table.x(realX(i)).y(realY(item.b));
-    }
-    return this;
+function moveBrace(brace, l, r) {
+    brace.source(arr.element(l).pos("x", "y", 0, -3));
+    brace.target(arr.element(r).pos("mx", "y", 0, -3));
 }

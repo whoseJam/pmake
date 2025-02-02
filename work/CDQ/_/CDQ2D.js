@@ -8,8 +8,8 @@ import * as sd from "@/sd";
  *  onMoveJ: (j: number) => void;
  *  onStartMerge: (l: number, r: number) => void;
  *  onEndMerge: (l: number, r: number) => void;
- *  onSortDim1: (a: sd.SDNode, b: sd.SDNode) => number;
- *  onSortDim2: (a: sd.SDNode, b: sd.SDNode) => number;
+ *  onSortDim1: () => void;
+ *  onSortDim2: (l: number, r: number) => void;
  * }} args
  */
 export async function CDQ2D(arr, args) {
