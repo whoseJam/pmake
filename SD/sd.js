@@ -96,4 +96,4 @@ export { PathPen } from "./Utility/PathPen.js";
 
 export { CONTINUE_FRAME } from "./Animate/Window";
 
-export { effect, freeze, uneffect, unfreeze } from "./Node/Core/Reactive";
+export { checkEffect, effect, freeze, uneffect, unfreeze } from "./Node/Core/Reactive";

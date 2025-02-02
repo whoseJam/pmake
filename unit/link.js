@@ -2,11 +2,17 @@ import * as sd from "@/sd";
 
 const svg = sd.svg();
 
-sd.init(() => {
+sd.init(() => {});
 
-})
+sd.main(TestTreeBug);
 
-sd.main(TestPropertyChangeAfterLink);
+async function TestTreeBug() {
+    const t1 = new sd.Tree(svg).x(100).y(100).root(1);
+    const t2 = new sd.Tree(svg).x(200).y(100).root(1);
+    sd.Link(t1.element(1), t2.element(1)).doubleArrow();
+    await sd.pause();
+    t2.startAnimate().link(1, 2).endAnimate();
+}
 
 async function TestPropertyChangeAfterLink() {
     const v1 = new sd.Vertex(svg).center(100, 100);

@@ -25,8 +25,10 @@ export function Tree(parent) {
     });
 
     this.effect("tree", () => {
+        const x = this.x();
+        const y = this.y();
         const position = node => {
-            return [node.x + this.x(), node.y + this.y()];
+            return [node.x + x, node.y + y];
         };
         D3Layout.call(this, "vertical", position);
     });

@@ -222,6 +222,7 @@ SDNode.prototype = {
 };
 
 SDNode.prototype.effect = function (name, callback) {
+    if (arguments.length === 1) return this._.updaters[name];
     this._.updaters[name] = effect(callback);
 };
 

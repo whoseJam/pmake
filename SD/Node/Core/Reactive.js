@@ -93,7 +93,7 @@ class EffectManager {
         }
         this.out.push({ object, key, value });
     }
-    handleNewOutput(oldOut) {
+    outputUpdate(oldOut) {
         this.out.forEach(link => {
             let isNewOutput = true;
             let oldValue = undefined;
@@ -105,11 +105,10 @@ class EffectManager {
             }
             const objectManager = objectsMap.get(link.object);
             if (isNewOutput || hasChanged(oldValue, link.value, objectManager.precise.get(link.key))) {
-                const objectManager = objectsMap.get(link.object);
                 const outEffectsSet = objectManager.outputEffects(link.key);
                 outEffectsSet.forEach(effect => {
                     if (effect[currentEffectQueue.label]) return;
-                    currentEffectQueue.pushFront(effect);
+                    currentEffectQueue.pushBack(effect);
                 });
             }
         });
@@ -280,7 +279,7 @@ export function effect(innerEffect, tag) {
         const out = effectManager.out;
         effectManager.clear();
         innerEffect();
-        effectManager.handleNewOutput(out);
+        effectManager.outputUpdate(out);
         globalActiveEffect = undefined;
         if (tmpGlobalActiveEffect) {
             globalActiveEffect = tmpGlobalActiveEffect;
