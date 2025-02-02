@@ -68,11 +68,6 @@ export function Text(parent, text = "") {
 
     this.vars.associate("x", Factory.action(this, this._.nake, "x", Interp.numberInterp));
     this.vars.associate("y", Factory.action(this, this._.nake, "y", Interp.numberInterp));
-    this.effect("box", () => {
-        const box = fontSizeToBox(this.vars.text, this.vars.fontSize);
-        this.vars.width = box.width;
-        this.vars.height = box.height;
-    });
     this.vars.associate("text", Factory.action(this, this._.nake, "text", Interp.stringInterp));
     this.vars.associate("fontSize", Factory.action(this, this._.nake, "font-size", Interp.numberInterp));
 
@@ -93,14 +88,34 @@ Text.prototype = {
     fontSize: Factory.handlerLowPrecise("fontSize"),
     width: function (width) {
         if (width === undefined) return this.vars.width;
-        const fontSize = widthToFontSize(this.vars.text, width);
-        this.fontSize(fontSize);
+        if (this.width() > 1e-1) {
+            const k = width / this.vars.width;
+            this.fontSize(this.fontSize() * k);
+            this.vars.width *= k;
+            this.vars.height *= k;
+        } else {
+            const fontSize = widthToFontSize(this.vars.text, width);
+            this.fontSize(fontSize);
+            const box = fontSizeToBox(this.vars.text, fontSize);
+            this.vars.width = box.width;
+            this.vars.height = box.height;
+        }
         return this;
     },
     height: function (height) {
         if (height === undefined) return this.vars.height;
-        const fontSize = heightToFontSize(this.vars.text, height);
-        this.fontSize(fontSize);
+        if (this.height() > 1e-1) {
+            const k = height / this.vars.height;
+            this.fontSize(this.fontSize() * k);
+            this.vars.width *= k;
+            this.vars.height *= k;
+        } else {
+            const fontSize = heightToFontSize(this.vars.text, height);
+            this.fontSize(fontSize);
+            const box = fontSizeToBox(this.vars.text, fontSize);
+            this.vars.width = box.width;
+            this.vars.height = box.height;
+        }
         return this;
     },
     text: function (text) {
