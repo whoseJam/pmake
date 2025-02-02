@@ -7,7 +7,9 @@ const arr = new sd.Array(svg).resize(n).start(1);
 const pI = sd.Pointer(arr, "i", "t", 5, 30, 5);
 const pJ = sd.Pointer(arr, "j", "t", 5, 30, 5);
 
-sd.init(() => {});
+sd.init(() => {
+    arr.x(100).y(100);
+});
 
 sd.main(async () => {
     for (let i = 2; i <= n; i++) {
