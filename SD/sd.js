@@ -6,6 +6,8 @@ init();
 
 export { Action } from "./Animate/Action.js";
 
+export { SDNode } from "./Node/SDNode";
+
 export { Circle } from "./Node/Nake/Circle.js";
 export { Ellipse } from "./Node/Nake/Ellipse.js";
 export { Image } from "./Node/Nake/Image.js";
