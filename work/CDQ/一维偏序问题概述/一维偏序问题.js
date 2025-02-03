@@ -16,6 +16,5 @@ sd.init(() => {
 });
 
 sd.main(async () => {
-    console.log("enter main");
     await CDQ1D(arr);
 });

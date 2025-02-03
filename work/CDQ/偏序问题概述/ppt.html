@@ -5,62 +5,65 @@
     </section>
     <section>
         <h2>偏序关系</h2>
-        <p>假设给你 $n$ 个数据点，每个数据点有若干属性，我们可以根据数据点的各个属性大小来定义数据点的大小关系</p>
+        <p>假设给你 $n$ 个数据点，每个数据点有若干属性，我们可以根据数据点的各个属性大小来定义数据点的大小关系（这里默认这些属性都是<b>数值属性</b>）</p>
         <div class="fragment quote">
             例如每个数据点有三个属性 $\{a,b,c\}$，现在给出两个数据点 $d_1$ 和 $d_2$，如果有：
             <p class="fragment">
                 $$
                 \left\{
                 \begin{aligned}
-                d_1.a \lt d_2.a \\
-                d_1.b \gt d_2.b \\
-                d_1.c \lt d_2.c \\
+                a(d_1) \lt a(d_2) \\
+                b(d_1) \gt b(d_2) \\
+                c(d_1) \lt c(d_2) \\
                 \end{aligned}
                 \right.
                 $$
             </p>
             <span class="fragment">那么我们认为 $d_1$ 这个数据点比 $d_2$ 这个数据点更大</span>
         </div>
-        <p class="fragment">注意，我们一定是在相同的属性之间进行比较，并定义大小关系</p>
-        <p class="fragment">这种数据点之间的大小关系，我们就可以把它认为是一种<b>偏序关系</b></p>
+        <p class="fragment">注意，<b style="color: red;">比较</b>只能发生在<b style="color: red;">同类属性</b>之间</p>
+        <p class="fragment">这种数据点之间的<b>大小关系</b>，我们就可以把它认为是一种<b>偏序关系</b></p>
     </section>
     <section>
-        <h2>偏序关系</h2>
-        <p>容易发现，偏序关系中，有些数据点之间是没有相对大小关系的，这一点得和我们常见的全序关系做一个区分</p>
-        <div class="fragment quote">
-            例如每个数据点有两个属性 $\{x,y\}$，对于任意两个数据点 $d_1$ 和 $d_2$，如果满足：
-            $$
-            \left\{
-            \begin{aligned}
-            d_1.x\lt d_2.x \\
-            d_1.y\lt d_2.y
-            \end{aligned}
-            \right.
-            $$
-            则我们认为 $d_1$ 比 $d_2$ 小
-            <div class="fragment">那么可以发现，我们是无法判断 $\left\{\begin{aligned}x&=1\\y&=100 \end{aligned}\right.$ 和 $\left\{\begin{aligned}x&=100\\y&=1 \end{aligned}\right.$ 的大小关系的</div>
-        </div>
+        <h2>一维偏序关系</h2>
+        <p>一维偏序关系可以认为是定义在数轴空间上的——因为所有数据点都只有一个属性</p>
+        <iframe data-animation="./一维偏序.js"
+            style="width: 1000px; height: 200px;"></iframe>
+        <ul>
+            <li class="fragment">题目既可以定义<b style="color: purple;">属性值越大的数据点越小</b></li>
+            <li class="fragment">又可以定义<b style="color: brown;">属性值越小的数据点越小</b></li>
+        </ul>
+        <p class="fragment quote">我喜欢把低维偏序关系画在图上，因为这样看起来很直观</p>
     </section>
     <section>
-        <h2>偏序问题</h2>
-        <p>如果给你 $n$ 个数据点，假设两个数据点存在大小关系，则小的那个数据点会对大的那个数据点有贡献，你应该如何统计出所有贡献呢？</p>
-        <p class="fragment">容易写出一个 $O(n^2)$ 的暴力：</p>
-        <pre class="fragment"><code data-trim data-line-numbers class="cpp"><script type="text/template">
-            for (int i = 1; i <= n; i++) {
-                for (int j = 1; j <= n; j++) {
-                    if (d[i] less than d[j]) {
-                        计算 d[i] 对 d[j] 的贡献为 w(i, j)
-                        ans[j] += w(i, j);
+        <h2>二维偏序关系</h2>
+        <p>二维偏序关系可以认为是定义在平面空间上的——因为所有数据点都有两个属性，分别对应 $x$ 轴和 $y$ 轴</p>
+        <iframe data-animation="./二维偏序.js"
+            style="width: 1000px; height: 300px;"></iframe>
+        <ul>
+            <li class="fragment">越靠左下的数据点越大<span class="fragment">——$d_1\gt d_2$ 当 $x(d_1)\lt x(d_2)\land y(d_1)\lt y(d_2)$</span></li>
+            <li class="fragment">越靠右下的数据点越大<span class="fragment">——$d_1\gt d_2$ 当 $x(d_1)\gt x(d_2)\land y(d_1)\lt y(d_2)$</span></li>
+            <li class="fragment">越靠左上的数据点越大<span class="fragment">——$d_1\gt d_2$ 当 $x(d_1)\lt x(d_2)\land y(d_1)\gt y(d_2)$</span></li>
+            <li class="fragment">越靠右上的数据点越大<span class="fragment">——$d_1\gt d_2$ 当 $x(d_1)\gt x(d_2)\land y(d_1)\gt y(d_2)$</span></li>
+        </ul>
+        <p class="fragment quote">容易发现可能存在某两个数据点无法比较大小——此所谓偏序关系</p>
+    </section>
+    <section>
+        <h2>$k$ 维偏序问题</h2>
+        <p>如果给你 $n$ 个数据点，每个数据点有 $k$ 个属性，假设两个数据点存在大小关系，则小的那个数据点会对大的那个数据点有贡献，你应该如何统计出所有贡献呢？</p>
+        <p class="fragment">容易写出一个 $O(n^2k)$ 的暴力</p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                for (int i = 1; i <= n; i++) { // O(n)
+                    for (int j = 1; j <= n; j++) { // O(n)
+                        if (d[i] 比 d[j] 小) { // O(k)
+                            计算 d[i] 对 d[j] 的贡献为 w(i, j)
+                            ans[j] += w(i, j);
+                        }
                     }
                 }
-            }
-        </script></code></pre>
-    </section>
-    <section>
-        <h2>偏序问题</h2>
-        <p>如果数据点有 $d$ 个属性，我们就说数据点有 $d$ 个维度，把定义在这一套 $d$ 维数据点上的问题叫做 $d$ 维偏序问题</p>
-        <p class="fragment">CDQ则提出了一个可以在 $O(nlog^kn)$ 的时间复杂度内解决这个问题的做法，一种分治做法，我们叫做CDQ分治</p>
-        <p class="fragment quote">$k$ 是和数据点的维度有关的一个数字，一个数据点维度越多，$k$ 越大，一般来说 $k$ 取到 $1$ 或者 $2$</p>
-        
+            </script>
+        </codeblock>
+        <p class="fragment">而CDQ分治能帮我们优化此复杂度</p>
     </section>
 </section>

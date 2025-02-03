@@ -121,6 +121,9 @@ Text.prototype = {
     text: function (text) {
         if (text === undefined) return this.vars.text;
         this.vars.text = parseText(String(text));
+        const box = fontSizeToBox(this.vars.text, this.vars.fontSize);
+        this.vars.width = box.width;
+        this.vars.height = box.height;
         return this;
     },
     intValue: function () {
