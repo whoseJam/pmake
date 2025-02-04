@@ -10,94 +10,115 @@ export function TinyGraph(parent) {
 
     this.type("TinyGraph");
 
+    this.effect("tinyGraph", () => {});
     this._.updater = effect(() => {
-        const nodes = this.vars.nodes;
-        switch (nodes.length) {
-            case 1:
-                update1.call(this, nodes);
-                break;
-            case 2:
-                update2.call(this, nodes);
-                break;
-            case 3:
-                update3.call(this, nodes);
-                break;
-            case 4:
-                update4.call(this, nodes);
-                break;
-            case 5:
-                update5.call(this, nodes);
-                break;
-            case 6:
-                update6.call(this, nodes);
-                break;
-        }
+        const update = updateMap[this.vars.nodes.length];
+        update?.call(this, this.vars.nodes);
         this.forEachLink((link, sourceId, targetId) => {
             const source = this.findNodeById(sourceId);
             const target = this.findNodeById(targetId);
-            link.source(source.center());
-            link.target(target.center());
-            trim(link, source, target);
+            this.tryUpdate(link, () => {
+                link.source(source.center());
+                link.target(target.center());
+                trim(link, source, target);
+            });
         });
     });
 }
 
 TinyGraph.prototype = {
     ...BaseGraph.prototype,
+    newNode(id, value) {
+        const element = new this._.nodeType(this.layer("nodes"));
+        element.value(Cast.castToSDNode(element, value, id));
+        element.onEnter(EN.appear("nodes"));
+        this.newNodeByBaseGraph(id, element);
+        return this;
+    },
+    newLink: GridGraph.prototype.newLink,
 };
 
-TinyGraph.prototype.newLink = GridGraph.prototype.newLink;
-
-TinyGraph.prototype.newNode = function (id, value) {
-    const element = new this._.nodeType(this.layer("nodes"));
-    element.value(Cast.castToSDNode(element, value, id));
-    element.onEnter(EN.appear("nodes"));
-    this.newNodeByBaseGraph(id, element);
-    return this;
+const updateMap = {
+    1: function (nodes) {
+        this.tryUpdate(nodes[0], () => {
+            nodes[0].cx(this.cx()).cy(this.cy());
+        });
+    },
+    2: function (nodes) {
+        const w = this.width() / 4;
+        this.tryUpdate(nodes[0], () => {
+            nodes[0].cx(this.x() + w).cy(this.cy());
+        });
+        this.tryUpdate(nodes[1], () => {
+            nodes[1].cx(this.mx() - w).cy(this.cy());
+        });
+    },
+    3: function (nodes) {
+        const w = this.width() / 4;
+        const h = this.height() / 4;
+        this.tryUpdate(nodes[0], () => {
+            nodes[0].cx(this.cx()).cy(this.y() + h);
+        });
+        this.tryUpdate(nodes[1], () => {
+            nodes[1].cx(this.x() + w).cy(this.my() - h);
+        });
+        this.tryUpdate(nodes[2], () => {
+            nodes[2].cx(this.mx() - w).cy(this.my() - h);
+        });
+    },
+    4: function (nodes) {
+        const w = this.width() / 4;
+        const h = this.height() / 4;
+        this.tryUpdate(nodes[0], () => {
+            nodes[0].cx(this.x() + w).cy(this.y() + h);
+        });
+        this.tryUpdate(nodes[1], () => {
+            nodes[1].cx(this.x() + w).cy(this.my() - h);
+        });
+        this.tryUpdate(nodes[2], () => {
+            nodes[2].cx(this.mx() - w).cy(this.my() - h);
+        });
+        this.tryUpdate(nodes[3], () => {
+            nodes[3].cx(this.mx() - w).cy(this.y() + h);
+        });
+    },
+    5: function (nodes) {
+        this.tryUpdate(nodes[0], () => {
+            nodes[0].cx(this.x()).cy(this.y());
+        });
+        this.tryUpdate(nodes[1], () => {
+            nodes[1].cx(this.x()).cy(this.my());
+        });
+        this.tryUpdate(nodes[2], () => {
+            nodes[2].cx(this.mx()).cy(this.my());
+        });
+        this.tryUpdate(nodes[3], () => {
+            nodes[3].cx(this.mx()).cy(this.y());
+        });
+        this.tryUpdate(nodes[4], () => {
+            nodes[4].cx(this.cx()).cy(this.cy());
+        });
+    },
+    6: function (nodes) {
+        const w = this.width() / 4;
+        const h = this.height() / 4;
+        this.tryUpdate(nodes[0], () => {
+            nodes[0].cx(this.cx()).cy(this.y() + h / 2);
+        });
+        this.tryUpdate(nodes[1], () => {
+            nodes[1].cx(this.x() + w / 2).cy(this.y() + h);
+        });
+        this.tryUpdate(nodes[2], () => {
+            nodes[2].cx(this.x() + w / 2).cy(this.my() - h);
+        });
+        this.tryUpdate(nodes[3], () => {
+            nodes[3].cx(this.cx()).cy(this.my() - h / 2);
+        });
+        this.tryUpdate(nodes[4], () => {
+            nodes[4].cx(this.mx() - w / 2).cy(this.my() - h);
+        });
+        this.tryUpdate(nodes[5], () => {
+            nodes[5].cx(this.mx() - w / 2).cy(this.y() + h);
+        });
+    },
 };
-
-function update1(nodes) {
-    nodes[0].cx(this.cx()).cy(this.cy());
-}
-
-function update2(nodes) {
-    const w = this.width() / 4;
-    nodes[0].cx(this.x() + w).cy(this.cy());
-    nodes[1].cx(this.mx() - w).cy(this.cy());
-}
-
-function update3(nodes) {
-    const w = this.width() / 4;
-    const h = this.height() / 4;
-    nodes[0].cx(this.cx()).cy(this.y() + h);
-    nodes[1].cx(this.x() + w).cy(this.my() - h);
-    nodes[2].cx(this.mx() - w).cy(this.my() - h);
-}
-
-function update4(nodes) {
-    const w = this.width() / 4;
-    const h = this.height() / 4;
-    nodes[0].cx(this.x() + w).cy(this.y() + h);
-    nodes[1].cx(this.x() + w).cy(this.my() - h);
-    nodes[2].cx(this.mx() - w).cy(this.my() - h);
-    nodes[3].cx(this.mx() - w).cy(this.y() + h);
-}
-
-function update5(nodes) {
-    nodes[0].cx(this.x()).cy(this.y());
-    nodes[1].cx(this.x()).cy(this.my());
-    nodes[2].cx(this.mx()).cy(this.my());
-    nodes[3].cx(this.mx()).cy(this.y());
-    nodes[4].cx(this.cx()).cy(this.cy());
-}
-
-function update6(nodes) {
-    const w = this.width() / 4;
-    const h = this.height() / 4;
-    nodes[0].cx(this.cx()).cy(this.y() + h / 2);
-    nodes[1].cx(this.x() + w / 2).cy(this.y() + h);
-    nodes[2].cx(this.x() + w / 2).cy(this.my() - h);
-    nodes[3].cx(this.cx()).cy(this.my() - h / 2);
-    nodes[4].cx(this.mx() - w / 2).cy(this.my() - h);
-    nodes[5].cx(this.mx() - w / 2).cy(this.y() + h);
-}
