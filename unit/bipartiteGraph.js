@@ -1,18 +1,17 @@
 import * as sd from "@/sd";
 
-let svg = sd.svg();
-let g = new sd.BipartiteGraph(svg);
+const svg = sd.svg();
+const g = new sd.BipartiteGraph(svg);
 
-main();
+sd.init(() => {
+    for (let i = 1; i <= 7; i++) g.newNode(i, `${i <= 4 ? "x" : "y"}${i <= 4 ? i : i - 4}`, i <= 4 ? 0 : 1);
+});
 
-async function main() {
-    for (let i = 1; i <= 7; i++)
-        g.newNode(i, `${i <= 4 ? "x" : "y"}${i <= 4 ? i : i - 4}`, (i <= 4 ? 0 : 1));
+sd.main(async () => {
     g.newLink(1, 5);
     g.newLink(1, 6);
     g.newLink(2, 5);
     g.newLink(3, 6);
     g.newLink(3, 7);
     g.newLink(4, 7);
-    await sd.pause();
-}
+});

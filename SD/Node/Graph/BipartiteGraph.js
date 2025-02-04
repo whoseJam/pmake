@@ -1,5 +1,4 @@
 import { Enter as EN } from "@/Node/Core/Enter";
-import { effect } from "@/Node/Core/Reactive";
 import { BaseGraph } from "@/Node/Graph/BaseGraph";
 import { GridGraph } from "@/Node/Graph/GridGraph";
 import { Cast } from "@/Utility/Cast";
@@ -12,69 +11,67 @@ export function BipartiteGraph(parent) {
 
     this.vars.merge({
         r: 20,
-        rank: 0,
         width: 600,
         height: 250,
     });
 
-    this._.updater = effect(() => {
-        const nodes = this.vars.nodes;
-        const links = this.vars.links;
+    this._.no = {};
+
+    this.effect("bipartiteGraph", () => {
+        const no = this._.no;
         const orderedNodes = [];
         const count = [0, 0];
         const currentIndex = [1, 1];
-        for (let node of nodes) {
+        this.forEachNode(node => {
             orderedNodes.push(node);
-            count[node.setNo]++;
-        }
-        orderedNodes.sort((nodeA, nodeB) => {
-            return nodeA.rank - nodeB.rank;
+            count[no[node.id]]++;
         });
-        const minX = this.x();
-        const maxX = this.mx();
-        const gap = [(maxX - minX) / (count[0] + 1), (maxX - minX) / (count[1] + 1)];
-        const convertX = node => minX + gap[node.setNo] * currentIndex[node.setNo];
-        for (let node of orderedNodes) {
-            const x = convertX(node);
-            const yLocator = ["y", "my"][node.setNo];
-            node.cx(x);
-            node[yLocator](this[yLocator]());
-            currentIndex[node.setNo]++;
+        const x = this.x();
+        const mx = this.mx();
+        const gap = [(mx - x) / (count[0] + 1), (mx - x) / (count[1] + 1)];
+        const position = node => {
+            return x + gap[no[node.id]] * currentIndex[no[node.id]];
+        };
+        for (const node of orderedNodes) {
+            const x = position(node);
+            const yLocator = ["y", "my"][no[node.id]];
+            this.tryUpdate(node, () => {
+                node.cx(x);
+                node[yLocator](this[yLocator]());
+                currentIndex[no[node.id]]++;
+            });
         }
-        for (let link of links) {
-            const sourceId = this.sourceId(link);
-            const targetId = this.targetId(link);
+        this.forEachLink((link, sourceId, targetId) => {
             const source = this.findNodeById(sourceId);
             const target = this.findNodeById(targetId);
-            link.source(source.center());
-            link.target(target.center());
-            trim(link, source, target);
-        }
+            this.tryUpdate(link, () => {
+                link.source(source.center());
+                link.target(target.center());
+                trim(link, source, target);
+            });
+        });
     });
 }
 
 BipartiteGraph.prototype = {
     ...BaseGraph.prototype,
+    newNode(id, value, no) {
+        if (arguments.length === 2) return this.newNode(id, undefined, value);
+        const element = new this._.nodeType(this.layer("nodes"));
+        this._.no[element.id] = no;
+        element.value(Cast.castToSDNode(element, value, id));
+        element.onEnter(EN.appear("nodes"));
+        this.newNodeByBaseGraph(id, element);
+        return this;
+    },
+    newNodeFromExistElement(id, value, no) {
+        const element = value;
+        this._.no[element.id] = no;
+        element.onEnter(EN.moveTo("nodes"));
+        this.newNodeByBaseGraph(id, element);
+        return this;
+    },
+    newLink: GridGraph.prototype.newLink,
+    newLinkFromExistValue: GridGraph.prototype.newLinkFromExistValue,
+    newLinkFromExistElement: GridGraph.prototype.newLinkFromExistElement,
 };
-
-BipartiteGraph.prototype.newNode = function (id, value, setNo) {
-    if (arguments.length === 2) return this.newNode(id, undefined, value);
-    const element = new this._.nodeType(this.layer("nodes"));
-    element.value(Cast.castToSDNode(element, value, id));
-    element.onEnter(EN.appear("nodes"));
-    element.setNo = setNo;
-    this.newNodeByBaseGraph(id, element);
-    return this;
-};
-
-BipartiteGraph.prototype.newNodeFromExistElement = function (id, value, setNo) {
-    const element = value;
-    element.onEnter(EN.moveTo("nodes"));
-    element.setNo = setNo;
-    this.newNodeByBaseGraph(id, element);
-    return this;
-};
-
-BipartiteGraph.prototype.newLink = GridGraph.prototype.newLink;
-BipartiteGraph.prototype.newLinkFromExistValue = GridGraph.prototype.newLinkFromExistValue;
-BipartiteGraph.prototype.newLinkFromExistElement = GridGraph.prototype.newLinkFromExistElement;
