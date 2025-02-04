@@ -56,7 +56,7 @@ export class BaseTree extends SDNode {
     link(sourceId: InputID, targetId: InputID): this;
     link(sourceId: InputID, targetId: InputID, value: any): this;
     cut(sourceId: InputID, targetId: InputID): this;
-    text(tid: InputID): string;
+    text(id: InputID): string;
     text(sourceId: InputID, targetId: InputID): string;
     intValue(tid: InputID): number;
     intValue(sourceId: InputID, targetId: InputID): number;
@@ -72,6 +72,7 @@ export class BaseTree extends SDNode {
     forEachLink(callback: (link: SDNode, sourceId: string, targetId: string) => void): this;
     rootId(): string;
     nodeId(node: InputNode): string | undefined;
+    nodesId(): Array<string>;
     sourceId(link: SDNode): string | undefined;
     targetId(link: SDNode): string | undefined;
     source(link: SDNode): SDNode | undefined;

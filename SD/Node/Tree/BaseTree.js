@@ -20,7 +20,6 @@ export function BaseTree(parent) {
     this._.sdnodesMap = {}; // SDNode id -> { node: SDNode, id: TreeID } | { link: SDNode, sourceId: TreeID, targetId: TreeID }
     this._.nodesMap = {}; // TreeID -> SDNode
     this._.linksMap = new Map(); // TreeID -> SDNode
-    this._.updates = [];
 
     this._.BASE_TREE = true;
 }
@@ -256,7 +255,7 @@ BaseTree.prototype = {
         this.newLink(sourceId, targetId, value);
         return this;
     },
-    cur(x, y) {
+    cut(x, y) {
         this.eraseLinkByBaseTree(x, y);
         return this;
     },
@@ -374,6 +373,9 @@ BaseTree.prototype = {
             return this._.sdnodesMap[node.id].id;
         }
         return String(node);
+    },
+    nodesId() {
+        return this.nodes().map(node => this.nodeId(node));
     },
     sourceId(link) {
         return this.nodeId(this.source(link));

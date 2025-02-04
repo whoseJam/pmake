@@ -19,9 +19,9 @@ export function BaseGraph(parent) {
         nodes: [],
     });
 
-    this._.sidToLinks = {}; // id of SDNode -> { link: link, source: id on Graph, target: id on Graph }
-    this._.sidToNodes = {}; // id of SDNode -> { node: node, key: id on Graph }
-    this._.gidToNodes = {}; // id on Graph -> { node: node, key: id of SDNode }
+    this._.sdnodesMap = {}; // SDNode id -> { node: SDNode, id: GraphID } | { link: SDNode, sourceId: GraphId, targetId: GraphID }
+    this._.nodesMap = {}; // GraphID -> SDNode
+    this._.linksMap = {}; // GraphID-GraphID -> SDNode
     this._.nodeType = Vertex;
     this._.linkType = Line;
 
@@ -38,171 +38,88 @@ BaseGraph.prototype = {
     value: BaseTree.prototype.value,
     element: BaseTree.prototype.element,
     opacity: BaseTree.prototype.opacity,
-    text() {
-        return this.value.apply(this, arguments).text();
+    findNode: BaseTree.prototype.findNode,
+    findNodes: BaseTree.prototype.findNodes,
+    findLink: BaseTree.prototype.findLink,
+    findLinks: BaseTree.prototype.findLinks,
+    findNodeById: BaseTree.prototype.findNodeById,
+    findLinkById: BaseTree.prototype.findLinkById,
+    inLinks(node, mode) {
+        node = this.nodeId(node);
+        return this.findLinks((link, sourceId, targetId) => targetId === node || (mode === "undirect" && sourceId === node));
     },
-    findNodeById(id) {
-        const graphId = String(id);
-        const gidToNodes = this._.gidToNodes;
-        const node = gidToNodes[graphId];
-        return node?.node;
+    outLinks(node, mode) {
+        node = this.nodeId(node);
+        return this.findLinks((link, sourceId, targetId) => sourceId === node || (mode === "undirect" && targetId === node));
     },
-};
-
-BaseGraph.prototype.findLinkById = function (sourceId, targetId) {
-    const sourceGraphId = String(sourceId);
-    const targetGraphId = String(targetId);
-    const links = this.vars.links;
-    const sidToLinks = this._.sidToLinks;
-    for (let i = 0; i < links.length; i++) {
-        if (sidToLinks[links[i].id].source === sourceGraphId && sidToLinks[links[i].id].target === targetGraphId) {
-            return sidToLinks[links[i].id].link;
-        }
-    }
-    return undefined;
-};
-
-BaseGraph.prototype.inLinks = function (id, mode = "direct") {
-    const graphId = String(id);
-    const links = this.vars.links;
-    const sidToLinks = this._.sidToLinks;
-    const filter = mode === "direct" ? link => sidToLinks[link.id].target === graphId : link => sidToLinks[link.id].target === graphId || sidToLinks[link.id].source === graphId;
-    return links.filter(filter);
-};
-
-BaseGraph.prototype.outLinks = function (id, mode = "direct") {
-    const graphId = String(id);
-    const links = this.vars.links;
-    const sidToLinks = this._.sidToLinks;
-    const filter = mode === "direct" ? link => sidToLinks[link.id].source === graphId : link => sidToLinks[link.id].target === graphId || sidToLinks[link.id].source === graphId;
-    return links.filter(filter);
-};
-
-BaseGraph.prototype.inNodes = function (id, mode = "direct") {
-    const graphId = String(id);
-    return [...new Set(this.inLinks(graphId, mode).map(link => this.toNode(link, graphId)))];
-};
-
-BaseGraph.prototype.outNodes = function (id, mode = "direct") {
-    const graphId = String(id);
-    return [...new Set(this.outLinks(graphId, mode).map(link => this.toNode(link, graphId)))];
-};
-
-BaseGraph.prototype.inNodesId = function (id, mode = "direct") {
-    return this.inNodes(id, mode).map(node => this.nodeId(node));
-};
-
-BaseGraph.prototype.outNodesId = function (id, mode = "direct") {
-    return this.outNodes(id, mode).map(node => this.nodeId(node));
-};
-
-BaseGraph.prototype.newNodeByBaseGraph = function (id, element) {
-    const graphId = String(id);
-    const sidToNodes = this._.sidToNodes;
-    const gidToNodes = this._.gidToNodes;
-    sidToNodes[element.id] = { node: element, key: graphId };
-    gidToNodes[graphId] = { node: element, key: element.id };
-    this.childAs(element);
-    this.vars.nodes.push(element);
-    return this;
-};
-
-BaseGraph.prototype.newLinkByBaseGraph = function (sourceId, targetId, element) {
-    const sourceGraphId = String(sourceId);
-    const targetGraphId = String(targetId);
-    const sidToLinks = this._.sidToLinks;
-    sidToLinks[element.id] = { link: element, source: sourceGraphId, target: targetGraphId };
-    this.childAs(element);
-    this.vars.links.push(element);
-    return this;
-};
-
-BaseGraph.prototype.link = function (x, y, value = null) {
-    if (!this.findNodeById(y)) this.newNode(y);
-    if (!this.findNodeById(x)) this.newNode(x);
-    this.newLink(x, y, value);
-    return this;
-};
-
-BaseGraph.prototype.cut = function (x, y) {
-    const links = this.vars.links;
-    let link = this.findLinkById(x, y);
-    let idx = links.indexOf(link);
-    links.splice(idx, 1);
-    this.eraseChild(link);
-    return this;
-};
-
-BaseGraph.prototype.nodes = function () {
-    return [...this.vars.nodes];
-};
-
-BaseGraph.prototype.nodeId = function (node) {
-    const sidToNodes = this._.sidToNodes;
-    return sidToNodes[node.id].key;
-};
-
-BaseGraph.prototype.links = function () {
-    return [...this.vars.links];
-};
-
-BaseGraph.prototype.sourceId = function (link) {
-    const sidToLinks = this._.sidToLinks;
-    return sidToLinks[link.id].source;
-};
-
-BaseGraph.prototype.targetId = function (link) {
-    const sidToLinks = this._.sidToLinks;
-    return sidToLinks[link.id].target;
-};
-
-BaseGraph.prototype.nodesId = function () {
-    const nodesId = this.vars.nodes.map(node => node.nodeId);
-    return [...new Set(nodesId)];
-};
-
-BaseGraph.prototype.toNode = function (link, sourceId) {
-    const sourceGraphId = String(sourceId);
-    const sidToLinks = this._.sidToLinks;
-    const gidToNodes = this._.gidToNodes;
-    link = sidToLinks[link.id];
-    return gidToNodes[link.source === sourceGraphId ? link.target : link.source].node;
-};
-
-BaseGraph.prototype.toNodeId = function (link, sourceId) {
-    return this.nodeId(this.toNode(link, sourceId));
-};
-
-BaseGraph.prototype.forEachNode = function (callback) {
-    this.nodes().forEach(node => callback(node, this.nodeId(node)));
-    return this;
-};
-
-BaseGraph.prototype.forEachLink = function (callback) {
-    this.links().forEach(link => callback(link, this.sourceId(link), this.targetId(link)));
-    return this;
-};
-
-BaseGraph.prototype.forEachInNode = function (node, mode, callback) {
-    this.inNodes(node, mode).forEach(node => {
-        callback(node, this.nodeId(node));
-    });
-};
-
-BaseGraph.prototype.forEachInLink = function (node, mode, callback) {
-    this.inLinks(node, mode).forEach(link => {
-        callback(link, this.sourceId(link), this.targetId(link));
-    });
-};
-
-BaseGraph.prototype.forEachOutNode = function (node, mode, callback) {
-    this.outNodes(node, mode).forEach(node => {
-        callback(node, this.nodeId(node));
-    });
-};
-
-BaseGraph.prototype.forEachOutLink = function (node, mode, callback) {
-    this.outLinks(node, mode).forEach(link => {
-        callback(link, this.sourceId(link), this.targetId(link));
-    });
+    inNodes(node, mode) {
+        return this.inLinks(node, mode).map(link => this.toNode(link, node));
+    },
+    inNodesId(node, mode) {
+        return this.inNodes(node, mode).map(node => this.nodeId(node));
+    },
+    outNodes(node, mode) {
+        return this.outLinks(node, mode).map(link => this.toNode(link, node));
+    },
+    outNodesId(node, mode) {
+        return this.outNodes(node, mode).map(node => this.nodeId(node));
+    },
+    newNodeByBaseGraph(id, element) {
+        id = String(id);
+        this._.sdnodesMap[element.id] = { node: element, id };
+        this._.nodesMap[id] = element;
+        this.childAs(element);
+        this.vars.nodes.push(element);
+        return this;
+    },
+    newLinkByBaseGraph(sourceId, targetId, element) {
+        [sourceId, targetId] = [String(sourceId), String(targetId)];
+        this._.sdnodesMap[element.id] = { link: element, sourceId, targetId };
+        this._.linksMap[`${sourceId}-${targetId}`] = element;
+        this.childAs(element);
+        this.vars.links.push(element);
+        return this;
+    },
+    link: BaseTree.prototype.link,
+    cut: BaseTree.prototype.cut,
+    text: BaseTree.prototype.text,
+    intValue: BaseTree.prototype.intValue,
+    forEachInNode(node, mode, callback) {
+        this.inNodes(node, mode).forEach(node => {
+            callback(node, this.nodeId(node));
+        });
+    },
+    forEachInLink(node, mode, callback) {
+        this.inLinks(node, mode).forEach(link => {
+            callback(link, this.sourceId(link), this.targetId(link));
+        });
+    },
+    forEachOutNode(node, mode, callback) {
+        this.outNodes(node, mode).forEach(node => {
+            callback(node, this.nodeId(node));
+        });
+    },
+    forEachOutLink(node, mode, callback) {
+        this.outLinks(node, mode).forEach(link => {
+            callback(link, this.sourceId(link), this.targetId(link));
+        });
+    },
+    forEachNode: BaseTree.prototype.forEachNode,
+    forEachLink: BaseTree.prototype.forEachLink,
+    nodeId: BaseTree.prototype.nodeId,
+    nodesId: BaseTree.prototype.nodesId,
+    sourceId: BaseTree.prototype.sourceId,
+    targetId: BaseTree.prototype.targetId,
+    source: BaseTree.prototype.source,
+    target: BaseTree.prototype.target,
+    nodes: BaseTree.prototype.nodes,
+    links: BaseTree.prototype.links,
+    toNode(link, source) {
+        const sourceId = this.nodeId(source);
+        if (this.sourceId(sourceId) === sourceId) return this.target(link);
+        return this.source(link);
+    },
+    toNodeId(link, source) {
+        return this.nodeId(this.toNode(link, source));
+    },
 };

@@ -17,27 +17,25 @@ export function GridGraph(parent) {
 
     this._.curN = 0;
     this._.curM = 0;
-    this._.sidToPos = {}; // id of SDNode -> { x: number, y: number }
+    this._.pos = {};
 
     this.effect("gridGraph", () => {
-        const sidToPos = this._.sidToPos;
-        const x = this.x(),
-            mx = this.mx(),
-            W = (mx - x) / this.m();
-        const y = this.y(),
-            my = this.my(),
-            H = (my - y) / this.n();
-        const convertX = node => sidToPos[node.id].y * W + x;
-        const convertY = node => sidToPos[node.id].x * H + y;
-        const nodes = this.vars.nodes;
-        for (let node of nodes) {
+        const pos = this._.pos;
+        const x = this.x();
+        const mx = this.mx();
+        const w = (mx - x) / this.m();
+        const y = this.y();
+        const my = this.my();
+        const h = (my - y) / this.n();
+        const position = node => {
+            return [pos[node.id].y * w + x, pos[node.id].x * h + y];
+        };
+        for (const node of this.vars.nodes) {
             this.tryUpdate(node, () => {
-                node.cx(convertX(node));
-                node.cy(convertY(node));
+                node.center(position(node));
             });
         }
-        const links = this.vars.links;
-        for (let link of links) {
+        for (const link of this.vars.links) {
             const sourceId = this.sourceId(link);
             const targetId = this.targetId(link);
             const source = this.findNodeById(sourceId);
@@ -53,65 +51,54 @@ export function GridGraph(parent) {
 
 GridGraph.prototype = {
     ...BaseGraph.prototype,
-};
-
-GridGraph.prototype.n = Factory.handler("n");
-GridGraph.prototype.m = Factory.handler("m");
-
-GridGraph.prototype.at = function (i, j) {
-    this._.curN = i;
-    this._.curM = j;
-    return this;
-};
-
-GridGraph.prototype.newNode = function (id, value) {
-    const sidToPos = this._.sidToPos;
-    const element = new this._.nodeType(this.layer("nodes"));
-    element.value(Cast.castToSDNode(element, value, id));
-    sidToPos[element.id] = { x: this._.curN, y: this._.curM };
-    element.onEnter(EN.appear("nodes"));
-    this.newNodeByBaseGraph(id, element);
-    return this;
-};
-
-GridGraph.prototype.newNodeFromExistValue = function (id, value) {
-    const sidToPos = this._.sidToPos;
-    const element = new this._.nodeType(this.layer("nodes"));
-    sidToPos[element.id] = { x: this._.curN, y: this._.curM };
-    element.onEnter(EN.appear("nodes"));
-    this.newNodeByBaseGraph(id, element);
-    element.value(value.onEnter(EN.moveTo()));
-    return this;
-};
-
-GridGraph.prototype.newNodeFromExistElement = function (id, value) {
-    const sidToPos = this._.sidToPos;
-    const element = value;
-    sidToPos[element.id] = { x: this._.curN, y: this._.curM };
-    element.onEnter(EN.moveTo("nodes"));
-    this.newNodeByBaseGraph(id, element);
-    return this;
-};
-
-GridGraph.prototype.newLink = function (sourceId, targetId, value) {
-    const element = new this._.linkType(this.layer("links"));
-    element.value(value);
-    element.onEnter(EN.appear("links"));
-    this.newLinkByBaseGraph(sourceId, targetId, element);
-    return this;
-};
-
-GridGraph.prototype.newLinkFromExistValue = function (sourceId, targetId, value) {
-    const element = new this._.linkType(this.layer("links"));
-    element.onEnter(EN.appear("links"));
-    this.newLinkByBaseGraph(sourceId, targetId, element);
-    element.value(value.onEnter(EN.moveTo()));
-    return this;
-};
-
-GridGraph.prototype.newLinkFromExistElement = function (sourceId, targetId, value) {
-    const element = value;
-    element.onEnter(EN.moveTo("links"));
-    this.newLinkByBaseGraph(sourceId, targetId, element);
-    return this;
+    n: Factory.handler("n"),
+    m: Factory.handler("m"),
+    at(i, j) {
+        this._.curN = i;
+        this._.curM = j;
+        return this;
+    },
+    newNode(id, value) {
+        const element = new this._.nodeType(this.layer("nodes"));
+        element.value(Cast.castToSDNode(element, value, id));
+        this._.pos[element.id] = { x: this._.curN, y: this._.curM };
+        element.onEnter(EN.appear("nodes"));
+        this.newNodeByBaseGraph(id, element);
+        return this;
+    },
+    newNodeFromExistValue(id, value) {
+        const element = new this._.nodeType(this.layer("nodes"));
+        this._.pos[element.id] = { x: this._.curN, y: this._.curM };
+        element.onEnter(EN.appear("nodes"));
+        this.newNodeByBaseGraph(id, element);
+        element.value(value.onEnter(EN.moveTo()));
+        return this;
+    },
+    newNodeFromExistElement(id, value) {
+        const element = value;
+        this._.pos[element.id] = { x: this._.curN, y: this._.curM };
+        element.onEnter(EN.moveTo("nodes"));
+        this.newNodeByBaseGraph(id, element);
+        return this;
+    },
+    newLink(sourceId, targetId, value) {
+        const element = new this._.linkType(this.layer("links"));
+        element.value(value);
+        element.onEnter(EN.appear("links"));
+        this.newLinkByBaseGraph(sourceId, targetId, element);
+        return this;
+    },
+    newLinkFromExistValue(sourceId, targetId, value) {
+        const element = new this._.linkType(this.layer("links"));
+        element.onEnter(EN.appear("links"));
+        this.newLinkByBaseGraph(sourceId, targetId, element);
+        element.value(value.onEnter(EN.moveTo()));
+        return this;
+    },
+    newLinkFromExistElement(sourceId, targetId, value) {
+        const element = value;
+        element.onEnter(EN.moveTo("links"));
+        this.newLinkByBaseGraph(sourceId, targetId, element);
+        return this;
+    },
 };

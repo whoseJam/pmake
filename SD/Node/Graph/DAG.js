@@ -1,6 +1,5 @@
 import { mapTo } from "@/Math/Math";
 import { Enter as EN } from "@/Node/Core/Enter";
-import { effect } from "@/Node/Core/Reactive";
 import { BaseGraph } from "@/Node/Graph/BaseGraph";
 import { Cast } from "@/Utility/Cast";
 import { Factory } from "@/Utility/Factory";
@@ -17,65 +16,65 @@ export function DAG(parent) {
         align: undefined,
     });
 
-    const graph = new DAGLib.Graph();
-    graph.setGraph({ rankdir: "TB" });
-    graph.setDefaultEdgeLabel(function () {
+    this._.graph = new DAGLib.Graph();
+    this._.graph.setGraph({ rankdir: "TB" });
+    this._.graph.setDefaultEdgeLabel(function () {
         return {};
     });
-    this._.graph = graph;
 
-    this._.updater = effect(() => {
-        graph.setGraph({
+    this.effect("DAG", () => {
+        this._.graph.setGraph({
             align: this.align(),
             rankdir: this.rankDir(),
         });
-        DAGLayout(graph);
-        const box = GetBoxOfDAG(graph);
+        DAGLayout(this._.graph);
+        const box = getBox(this._.graph);
         const mapperX = mapTo(box.x, box.width, this.x(), this.width());
         const mapperY = mapTo(box.y, box.height, this.y(), this.height());
-        const convertX = node => mapperX(node.x);
-        const convertY = node => mapperY(node.y);
-        const convert = node => [convertX(node), convertY(node)];
-        this.forEachNode((node, nodeId) => {
-            const layout = graph.node(nodeId);
-            node.center(convert(layout));
+        const position = node => {
+            return [mapperX(node.x), mapperY(node.y)];
+        };
+        this.forEachNode((node, id) => {
+            const layout = this._.graph.node(id);
+            this.tryUpdate(node, () => {
+                node.center(position(layout));
+            });
         });
         this.forEachLink((link, sourceId, targetId) => {
             const source = this.findNodeById(sourceId);
             const target = this.findNodeById(targetId);
-            link.source(source.center());
-            link.target(target.center());
-            trim(link, source, target);
+            this.tryUpdate(link, () => {
+                link.source(source.center());
+                link.target(target.center());
+                trim(link, source, target);
+            });
         });
     });
 }
 
 DAG.prototype = {
     ...BaseGraph.prototype,
+    align: Factory.handler("align"),
+    rankDir: Factory.handler("rankDir"),
+    newNode(id, value) {
+        const element = new this._.nodeType(this.layer("nodes"));
+        element.value(Cast.castToSDNode(element, value, id));
+        element.onEnterDefault(EN.appear("nodes"));
+        this._.graph.setNode(id, {});
+        this.newNodeByBaseGraph(id, element);
+        return this;
+    },
+    newLink(sourceId, targetId, value) {
+        const element = new this._.linkType(this.layer("links"));
+        element.value(value);
+        element.onEnterDefault(EN.appear("links"));
+        this._.graph.setEdge(sourceId, targetId);
+        this.newLinkByBaseGraph(sourceId, targetId, element);
+        return this;
+    },
 };
 
-DAG.prototype.align = Factory.handler("align");
-DAG.prototype.rankDir = Factory.handler("rankDir");
-
-DAG.prototype.newNode = function (id, value) {
-    const element = new this._.nodeType(this.layer("nodes"));
-    element.value(Cast.castToSDNode(element, value, id));
-    element.onEnterDefault(EN.appear("nodes"));
-    this._.graph.setNode(id, {});
-    this.newNodeByBaseGraph(id, element);
-    return this;
-};
-
-DAG.prototype.newLink = function (sourceId, targetId, value) {
-    const element = new this._.linkType(this.layer("links"));
-    element.value(value);
-    element.onEnterDefault(EN.appear("links"));
-    this._.graph.setEdge(sourceId, targetId);
-    this.newLinkByBaseGraph(sourceId, targetId, element);
-    return this;
-};
-
-export function GetBoxOfDAG(graph) {
+function getBox(graph) {
     let x, mx, y, my;
     graph.nodes().forEach(function (info) {
         const layout = graph.node(info);
