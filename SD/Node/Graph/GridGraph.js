@@ -10,7 +10,6 @@ export function GridGraph(parent) {
     this.type("GridGraph");
 
     this.vars.merge({
-        r: 20,
         n: 1,
         m: 1,
     });
@@ -60,8 +59,8 @@ GridGraph.prototype = {
     },
     newNode(id, value) {
         const element = new this._.nodeType(this.layer("nodes"));
-        element.value(Cast.castToSDNode(element, value, id));
         this._.pos[element.id] = { x: this._.curN, y: this._.curM };
+        element.value(Cast.castToSDNode(element, value, id));
         element.onEnter(EN.appear("nodes"));
         this.newNodeByBaseGraph(id, element);
         return this;
