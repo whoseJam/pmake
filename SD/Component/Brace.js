@@ -43,11 +43,9 @@ export function Brace(parent) {
         if (!parent.childAs) replaceBrace(this, l, r);
         this.freeze();
         [this.vars.element1, this.vars.element2] = [l, r];
-        console.log("element1=", this.vars.element1, "element2=", this.vars.element2);
         if (this.opacity() === 0 && this.duration() > 0) {
             const context = new Context(this);
             this.startAnimate(context.tillc(0, 0));
-            console.log("this.unfreeze!!");
             this.unfreeze();
             this.startAnimate(context.tillc(0, 1));
             this.opacity(1);
@@ -60,7 +58,6 @@ export function Brace(parent) {
     brace.effect("brace", () => {
         const element1 = brace.vars.element1;
         const element2 = brace.vars.element2;
-        console.log("brace update element1=", element1, "element2=", element2);
         if (!element1 || !element2) return;
         const gap = brace.braceGap();
         const location = brace.location();

@@ -210,20 +210,12 @@ export function reactive(object, father = undefined) {
             object[key] = otherObject[key];
         }
     };
-    object.freeze = function () {
-        ErrorLauncher.warnNotImplementedYet("freeze");
-    };
-    object.freezing = function () {
-        ErrorLauncher.warnNotImplementedYet("freezing");
-    };
-    object.unfreeze = function () {
-        ErrorLauncher.warnNotImplementedYet("unfreeze");
-    };
     return proxy;
 }
 
 export function effect(innerEffect, tag) {
     const effect = () => {
+        window.EFFECT_COUNT++;
         let tmpEffect = undefined;
         let tmpQueue = undefined;
         if (globalActiveEffect) {
@@ -241,6 +233,15 @@ export function effect(innerEffect, tag) {
             [globalActiveEffect, effectQueue.queue] = [tmpEffect, tmpQueue];
             [tmpEffect, tmpQueue] = [undefined, undefined];
         }
+    };
+    effect.freeze = function () {
+        ErrorLauncher.warnNotImplementedYet("freeze");
+    };
+    effect.freezing = function () {
+        ErrorLauncher.warnNotImplementedYet("freezing");
+    };
+    effect.unfreeze = function () {
+        ErrorLauncher.warnNotImplementedYet("unfreeze");
     };
     effectsMap.set(effect, new EffectManager(effect));
     globalAllowUpdate = false;
@@ -281,7 +282,7 @@ function traceOutput(object, key, value) {
 function collectEffectOnDAG(queue, object, key) {
     const visitedObject = new Map();
     const visitedEffect = new Map();
-    function dfs(object, key, depth) {
+    function dfs(object, key, lastEffect = undefined) {
         if (!visitedObject.has(object)) visitedObject.set(object, new Set());
         if (visitedObject.get(object).has(key)) return;
         visitedObject.get(object).add(key);
@@ -289,19 +290,19 @@ function collectEffectOnDAG(queue, object, key) {
         const outEffectsSet = objectManager.outputEffects(key);
         outEffectsSet.forEach(effect => {
             const effectManager = effectsMap.get(effect);
-            if (!effectManager.inputHasChanged(object, key) && depth === 0) return;
+            if (!effectManager.inputHasChanged(object, key) && !lastEffect) return;
             if (!visitedEffect.has(effect)) {
                 visitedEffect.set(effect, {
                     degree: 0,
                 });
             }
-            if (depth > 0) visitedEffect.get(effect).degree++;
+            if (lastEffect && lastEffect !== effect) visitedEffect.get(effect).degree++;
             effectManager.out.forEach(link => {
-                dfs(link.object, link.key, depth + 1);
+                dfs(link.object, link.key, effect);
             });
         });
     }
-    dfs(object, key, 0);
+    dfs(object, key);
     const tmpQueue = [];
     visitedEffect.forEach((node, effect) => {
         if (node.degree === 0) tmpQueue.push(effect);
@@ -337,7 +338,6 @@ function collectEffect(queue, object, key) {
 function triggerUpdate(object, key) {
     if (!globalAllowUpdate) return;
     globalAllowUpdate = false;
-    // collectEffect(effectQueue, object, key);
     collectEffectOnDAG(effectQueue, object, key);
     effectQueue.execute();
     globalAllowUpdate = true;

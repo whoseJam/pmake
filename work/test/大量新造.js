@@ -2,9 +2,12 @@ import * as sd from "@/sd";
 
 const svg = sd.svg();
 const grid = new sd.Grid(svg);
+const n = 20;
 
 sd.init(() => {
-    grid.n(5).m(5);
+    sd.freeze();
+    grid.n(n).m(n);
+    sd.unfreeze();
 });
 
 sd.main(async () => {});

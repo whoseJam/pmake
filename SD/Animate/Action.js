@@ -40,7 +40,7 @@ export class Action {
         }
     }
     tick(t) {
-        if (t < this.l) return;
+        if (t < this.l) return false;
         global.ACTION_TICK++;
         if (this.l < this.r - 1) {
             const k0 = easeInOut((t - this.l) / (this.r - this.l));
@@ -56,6 +56,7 @@ export class Action {
             if (k1 === 0) this.tick(t);
         }
         global.ACTION_TICK--;
+        return true;
     }
     forceToFinish() {
         this.tick(this.r + 5);

@@ -87,48 +87,43 @@ function forwardWithReturn(comp, func) {
     };
 }
 
-SDNode.prototype.type = function (type) {
-    if (type === undefined) return this._.layer.getAttribute("type");
-    this._.layer.setAttribute("type", type);
-    return this;
-};
-
-SDNode.prototype.layer = function (name) {
-    return name === undefined ? this._.layer : this._.layers[name];
-};
-
-SDNode.prototype.newLayer = function (name) {
-    const layer = new SVGNode(this, this._.layer, "g");
-    this._.layers[name] = layer;
-    layer.setAttribute("layer", name);
-    return this;
-};
-
-SDNode.prototype.attachTo = function (parent) {
-    if (Check.isTypeOfSDNode(parent)) {
-        // parent is SDNode
-        this._.layer.moveTo(parent.layer());
-    } else {
-        // parent is RenderNode
-        this._.layer.moveTo(parent);
-    }
-    return this;
-};
-
-SDNode.prototype.childAs = function () {
-    const args = [...arguments];
-    const child = args.filter(arg => Check.isTypeOfSDNode(arg))[0];
-    const fn = () => {
-        if (child._.parent !== this && !child.onEnter()) child.attachTo(this);
-        this._.children.push(args[0], args[1], args[2]);
-    };
-    if (child.onEnter() && !child.entering()) child.triggerEnter(this, fn);
-    else fn();
-    return this;
-};
-
 SDNode.prototype = {
     ...SDNode.prototype,
+    type(type) {
+        if (type === undefined) return this._.layer.getAttribute("type");
+        this._.layer.setAttribute("type", type);
+        return this;
+    },
+    layer(name) {
+        return name === undefined ? this._.layer : this._.layers[name];
+    },
+    newLayer(name) {
+        const layer = new SVGNode(this, this._.layer, "g");
+        this._.layers[name] = layer;
+        layer.setAttribute("layer", name);
+        return this;
+    },
+    attachTo(parent) {
+        if (Check.isTypeOfSDNode(parent)) {
+            // parent is SDNode
+            this._.layer.moveTo(parent.layer());
+        } else {
+            // parent is RenderNode
+            this._.layer.moveTo(parent);
+        }
+        return this;
+    },
+    childAs() {
+        const args = [...arguments];
+        const child = args.filter(arg => Check.isTypeOfSDNode(arg))[0];
+        const fn = () => {
+            if (child._.parent !== this && !child.onEnter()) child.attachTo(this);
+            this._.children.push(args[0], args[1], args[2]);
+        };
+        if (child.onEnter() && !child.entering()) child.triggerEnter(this, fn);
+        else fn();
+        return this;
+    },
     child: forwardWithReturn("children", "child"),
     hasChild: forwardWithReturn("children", "has"),
     eraseChild: forwardWithReturn("children", "erase"),
@@ -139,10 +134,10 @@ SDNode.prototype = {
     after: forward("animate", "after"),
     duration: forwardWithReturn("animate", "duration"),
     opacity: Factory.handlerMediumPrecise("opacity"),
-    inRange: function (vec) {
+    inRange(vec) {
         return this.x() <= vec[0] && vec[0] <= this.mx() && this.y() <= vec[1] && vec[1] <= this.my();
     },
-    remove: function () {
+    remove() {
         this._.layer.remove();
     },
     scale: Location.scale,
@@ -164,23 +159,23 @@ SDNode.prototype = {
     },
     onClick: forward("interact", "onClick"),
     onDblClick: forward("interact", "onDblClick"),
-    rule: function (rule) {
+    rule(rule) {
         if (rule === undefined) return this._.rule;
         this._.rule = effect(() => {
             rule(this._.parent, this);
         }, this.type() + "-rule");
         return this;
     },
-    onEnter: function (enter) {
+    onEnter(enter) {
         if (enter === undefined) return this._.enter;
         this._.enter = enter;
         return this;
     },
-    onEnterDefault: function (enter) {
+    onEnterDefault(enter) {
         if (!this._.enter) this._.enter = enter;
         return this;
     },
-    triggerEnter: function (parent, move) {
+    triggerEnter(parent, move) {
         if (!this._.enter) return this;
         this._.entering = true;
         this._.enter.call(parent, this, move);
@@ -190,7 +185,7 @@ SDNode.prototype = {
     entering() {
         return this._.entering !== undefined;
     },
-    onExit: function (exit) {
+    onExit(exit) {
         if (exit === undefined) return this._.exit;
         this._.exit = exit;
         return this;
@@ -199,33 +194,31 @@ SDNode.prototype = {
         if (!this._.exit) this._.exit = exit;
         return this;
     },
-    triggerExit: function () {
+    triggerExit() {
         if (!this._.exit) return this;
         this._.exit.call(this._.parent, this);
         this._.exit = undefined;
         return this;
     },
-    title: function () {
+    title() {
         const titleElment = new SVGNode(this, this._.layer, "title");
         titleElment.setAttribute("innerHTML", title);
         return this;
     },
     freeze() {
-        this.vars.freeze();
+        for (const key in this._.updaters) this._.updaters[key].freeze();
         return this;
     },
     unfreeze() {
-        this.vars.unfreeze();
+        for (const key in this._.updaters) this._.updaters[key].unfreeze();
         if (this._.updates) this._.updates.forEach(update => update()); // Tree
         return this;
     },
-};
-
-SDNode.prototype.effect = function (name, callback) {
-    if (arguments.length === 1) return this._.updaters[name];
-    this._.updaters[name] = effect(callback);
-};
-
-SDNode.prototype.uneffect = function (name) {
-    uneffect(this._.updaters[name]);
+    effect(name, callback) {
+        if (arguments.length === 1) return this._.updaters[name];
+        this._.updaters[name] = effect(callback);
+    },
+    uneffect(name) {
+        uneffect(this._.updaters[name]);
+    },
 };

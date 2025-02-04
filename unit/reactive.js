@@ -3,13 +3,17 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 
 sd.main(async () => {
-    await TestDAGUpdate();
-    await TestCreateEffectInEffect();
-    await TestVarsNoChange();
-    await TestRepeatDependency();
-    await TestNestedRepeatDependency();
-    await TestCircleDependency();
-    await TestChainImpact();
+    // await TestDAGUpdate();
+    // await TestCreateEffectInEffect();
+    // await TestVarsNoChange();
+    // await TestRepeatDependency();
+    // await TestNestedRepeatDependency();
+    // await TestCircleDependency();
+    // await TestChainImpact();
+    // await TestGlobalFreeze();
+    // await TestEffectFreeze();
+    await TestObjectFreeze();
+    // await TestInitWithGlobalFreeze();
 });
 
 async function TestCreateEffectInEffect() {
@@ -211,8 +215,18 @@ async function TestCircleDependency() {
 
 async function TestInitWithGlobalFreeze() {
     sd.freeze();
-    new sd.Box(svg, "a").x(100).y(100);
+    let count = 0;
+    const box = new sd.Box(svg);
+    box.childAs(new sd.Text(svg, "a"), function (parent, child) {
+        count++;
+        console.log("rule triggered!");
+        child.width(parent.width() / 2);
+        child.cx(parent.cx()).cy(parent.cy());
+    });
+    box.x(100);
+    box.y(100);
     sd.unfreeze();
+    console.assert(count === 2, "Fail to optimize!");
 }
 
 async function TestChainImpact() {
@@ -256,6 +270,7 @@ async function TestEffectFreeze() {
     await sd.pause();
     a.effect("hello").unfreeze();
     console.assert(b.x() === 110 && b.y() === 110, "Effect unfreeze failed!");
+    console.log("Test Effect Freeze Passed!");
 }
 
 async function TestObjectFreeze() {
@@ -285,4 +300,5 @@ async function TestGlobalFreeze() {
     await sd.pause();
     sd.unfreeze();
     console.assert(b.x() === 110 && b.y() === 110, "Global unfreeze failed!");
+    console.log("Test Global Freeze Passed!");
 }

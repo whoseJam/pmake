@@ -27,13 +27,22 @@ class Queue {
     has(callback) {
         return callback[this.label];
     }
-    execute() {
+    execute(init = false) {
         while (this.queue.length > 0) {
             const callback = this.queue[0];
             this.queue.shift();
-            callback();
+            const effectManager = effectsMap.get(callback);
+            if (init || effectManager.anyInputHasChanged()) callback();
             callback[this.label] = false;
         }
+    }
+    transfer(condition, queue) {
+        const result = [];
+        for (let i = 0; i < this.queue.length; i++) {
+            if (condition(this.queue[i])) queue.pushBack(this.queue[i]);
+            else result.push(this.queue[i]);
+        }
+        this.queue = result;
     }
 }
 
@@ -41,8 +50,10 @@ const proxiesMap = new WeakMap(); // proxy -> object
 const effectsMap = new WeakMap(); // effect -> EffectManager
 const objectsMap = new WeakMap(); // object -> ObjectManager
 const effectQueue = new Queue("Effect");
+const freezeQueue = new Queue("Freeze");
 let globalAllowUpdate = true;
 let globalActiveEffect = undefined;
+let globalFreeze = 0;
 
 class EffectManager {
     constructor(effect) {
@@ -79,6 +90,20 @@ class EffectManager {
         }
         this.out.push({ object, key, value });
     }
+    inputHasChanged(object, key) {
+        const objectManager = objectsMap.get(object);
+        const old = this.in.find(link => link.key === key && link.object === object);
+        if (!old) ErrorLauncher.whatHappened();
+        return hasChanged(old.value, object[key], objectManager.precise.get(key));
+    }
+    anyInputHasChanged() {
+        for (let i = 0; i < this.in.length; i++) {
+            const old = this.in[i];
+            const objectManager = objectsMap.get(old.object);
+            if (hasChanged(old.value, old.object[old.key], objectManager.precise.get(old.key))) return true;
+        }
+        return false;
+    }
     outputUpdate(out) {
         this.out.forEach(current => {
             const objectManager = objectsMap.get(current.object);
@@ -86,6 +111,8 @@ class EffectManager {
             if (!old || hasChanged(old.value, current.value, objectManager.precise.get(current.key))) {
                 const outEffectsSet = objectManager.outputEffects(current.key);
                 outEffectsSet.forEach(effect => {
+                    const effectManager = effectsMap.get(effect);
+                    if (!effectManager.inputHasChanged(current.object, current.key));
                     if (effectQueue.has(effect)) return;
                     effectQueue.pushBack(effect);
                 });
@@ -128,12 +155,23 @@ class ObjectManager {
     }
 }
 
+function transferMeltingEffect() {
+    freezeQueue.transfer(effect => {
+        return effect.freezing() === 0 && !effectQueue.has(effect);
+    }, effectQueue);
+    if (!globalAllowUpdate) return;
+    globalAllowUpdate = false;
+    effectQueue.execute();
+    globalAllowUpdate = true;
+}
+
 export function freeze() {
-    ErrorLauncher.warnNotImplementedYet("freeze");
+    globalFreeze++;
 }
 
 export function unfreeze() {
-    ErrorLauncher.warnNotImplementedYet("unfreeze");
+    globalFreeze--;
+    if (globalFreeze === 0) transferMeltingEffect();
 }
 
 export function setPrecise(proxy, key, type) {
@@ -147,8 +185,8 @@ export function reactive(object, father = undefined) {
     let associated = {};
     const proxy = new Proxy(object, {
         get: function (object, key, receiver) {
-            traceInput(object, key);
             const value = Reflect.get(object, key, receiver);
+            traceInput(object, key, value);
             if (Check.isTypeOfSDNode(value)) return value;
             if (typeof value === "object") {
                 return reactive(value, object);
@@ -217,20 +255,22 @@ export function effect(innerEffect, tag) {
             [tmpEffect, tmpQueue] = [undefined, undefined];
         }
     };
+    let freeze = 0;
     effect.freeze = function () {
-        ErrorLauncher.warnNotImplementedYet("freeze");
+        freeze++;
     };
     effect.freezing = function () {
-        ErrorLauncher.warnNotImplementedYet("freezing");
+        return freeze;
     };
     effect.unfreeze = function () {
-        ErrorLauncher.warnNotImplementedYet("unfreeze");
+        freeze--;
+        if (freeze === 0) transferMeltingEffect();
     };
     effectsMap.set(effect, new EffectManager(effect));
     globalAllowUpdate = false;
     effectQueue.pushBack(effect);
     effect.tag = tag || innerEffect;
-    effectQueue.execute();
+    effectQueue.execute(true);
     globalAllowUpdate = true;
     return effect;
 }
@@ -246,10 +286,10 @@ export function uneffect(effect) {
     effectManager.clear();
 }
 
-function traceInput(object, key) {
+function traceInput(object, key, value) {
     if (!globalActiveEffect) return;
     const effectManager = effectsMap.get(globalActiveEffect);
-    effectManager.pushInput(object, key);
+    effectManager.pushInput(object, key, value);
     const objectManager = objectsMap.get(object);
     objectManager.pushOutput(key, globalActiveEffect);
 }
@@ -262,18 +302,70 @@ function traceOutput(object, key, value) {
     objectManager.pushInput(key, globalActiveEffect);
 }
 
+function collectEffectOnDAG(queue, object, key) {
+    const visitedObject = new Map();
+    const visitedEffect = new Map();
+    function dfs(object, key, lastEffect = undefined) {
+        if (!visitedObject.has(object)) visitedObject.set(object, new Set());
+        if (visitedObject.get(object).has(key)) return;
+        visitedObject.get(object).add(key);
+        const objectManager = objectsMap.get(object);
+        const outEffectsSet = objectManager.outputEffects(key);
+        outEffectsSet.forEach(effect => {
+            const effectManager = effectsMap.get(effect);
+            if (!effectManager.inputHasChanged(object, key) && !lastEffect) return;
+            if (!visitedEffect.has(effect)) {
+                visitedEffect.set(effect, {
+                    degree: 0,
+                });
+            }
+            if (lastEffect && lastEffect !== effect) visitedEffect.get(effect).degree++;
+            effectManager.out.forEach(link => {
+                dfs(link.object, link.key, effect);
+            });
+        });
+    }
+    dfs(object, key);
+    const tmpQueue = [];
+    visitedEffect.forEach((node, effect) => {
+        if (node.degree === 0) tmpQueue.push(effect);
+    });
+    if (tmpQueue.length === 0) collectEffect(queue, object, key);
+    while (tmpQueue.length > 0) {
+        const effect = tmpQueue.shift();
+        if (effect.freezing() + globalFreeze > 0) {
+            freezeQueue.pushBack(effect);
+            continue;
+        } else queue.pushBack(effect);
+        const effectManager = effectsMap.get(effect);
+        effectManager.out.forEach(link => {
+            const objectManager = objectsMap.get(link.object);
+            const outEffectsSet = objectManager.outputEffects(link.key);
+            outEffectsSet.forEach(nextEffect => {
+                if (!--visitedEffect.get(nextEffect).degree) {
+                    tmpQueue.push(nextEffect);
+                }
+            });
+        });
+    }
+}
+
 function collectEffect(queue, object, key) {
     const objectManager = objectsMap.get(object);
     const outEffectsSet = objectManager.outputEffects(key);
     outEffectsSet.forEach(effect => {
-        if (!queue.has(effect)) queue.pushBack(effect);
+        const effectManager = effectsMap.get(effect);
+        if (!effectManager.inputHasChanged(object, key)) return;
+        if (queue.has(effect)) return;
+        if (effect.freezing() + globalFreeze > 0) freezeQueue.pushBack(effect);
+        else queue.pushBack(effect);
     });
 }
 
 function triggerUpdate(object, key) {
     if (!globalAllowUpdate) return;
     globalAllowUpdate = false;
-    collectEffect(effectQueue, object, key);
+    collectEffectOnDAG(effectQueue, object, key);
     effectQueue.execute();
     globalAllowUpdate = true;
 }

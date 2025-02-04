@@ -3,6 +3,9 @@ import { Device as D } from "@/Interact/Device";
 import { Message } from "@/Interact/Message";
 import { Status as S } from "@/Interact/Status";
 
+window.DEBUG = true;
+window.ACTION_COUNT = 0;
+window.EFFECT_COUNT = 0;
 window.CURRENT_FRAME = 0;
 window.MAXIMUM_FRAME = 0;
 window.WHOSEJAM = 0;
@@ -97,6 +100,10 @@ function promiseOfContinueFrame() {
 }
 
 function promiseOfLastMainFrame() {
+    if (window.DEBUG) {
+        console.log("effect count =", window.EFFECT_COUNT);
+        console.log("action count =", window.ACTION_COUNT);
+    }
     return new Promise(function (resolve) {
         const fn = function () {
             if (window.SHOULD_FLUSH) {

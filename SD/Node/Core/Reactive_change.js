@@ -201,20 +201,12 @@ export function reactive(object, father = undefined) {
             object[key] = otherObject[key];
         }
     };
-    object.freeze = function () {
-        ErrorLauncher.warnNotImplementedYet("freeze");
-    };
-    object.freezing = function () {
-        ErrorLauncher.warnNotImplementedYet("freezing");
-    };
-    object.unfreeze = function () {
-        ErrorLauncher.warnNotImplementedYet("unfreeze");
-    };
     return proxy;
 }
 
 export function effect(innerEffect, tag) {
     const effect = () => {
+        window.EFFECT_COUNT++;
         let tmpEffect = undefined;
         let tmpQueue = undefined;
         if (globalActiveEffect) {
@@ -232,6 +224,15 @@ export function effect(innerEffect, tag) {
             [globalActiveEffect, effectQueue.queue] = [tmpEffect, tmpQueue];
             [tmpEffect, tmpQueue] = [undefined, undefined];
         }
+    };
+    effect.freeze = function () {
+        ErrorLauncher.warnNotImplementedYet("freeze");
+    };
+    effect.freezing = function () {
+        ErrorLauncher.warnNotImplementedYet("freezing");
+    };
+    effect.unfreeze = function () {
+        ErrorLauncher.warnNotImplementedYet("unfreeze");
     };
     effectsMap.set(effect, new EffectManager(effect));
     globalAllowUpdate = false;
