@@ -92,12 +92,8 @@ export function Index(parent, location = "t", fontSize = 15, gap = 3) {
                 const element = new Text(index, i).opacity(0);
                 element.onEnter(EN.appear());
                 element.onExit(EX.fade());
-                element.triggerEnter(index, () => {
-                    index.childAs(element);
-                    asideRule(getElement(parent, location, i), element, location, gap);
-                    index.vars.elements.push(element);
-                });
-                element._.updated = true;
+                index.childAs(element);
+                index.vars.elements.push(element);
             } else delete map[i];
         }
         for (let id in map) {
@@ -107,11 +103,9 @@ export function Index(parent, location = "t", fontSize = 15, gap = 3) {
         }
         index.vars.elements.forEach(element => {
             const i = element.intValue();
-            if (element._.updated) {
-                element._.updated = undefined;
-                return;
-            }
-            asideRule(getElement(parent, location, i), element, location, gap);
+            index.tryUpdate(element, () => {
+                asideRule(getElement(parent, location, i), element, location, gap);
+            });
         });
     });
     parent.childAs(index);

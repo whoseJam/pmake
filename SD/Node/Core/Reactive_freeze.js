@@ -51,6 +51,7 @@ const effectsMap = new WeakMap(); // effect -> EffectManager
 const objectsMap = new WeakMap(); // object -> ObjectManager
 const effectQueue = new Queue("Effect");
 const freezeQueue = new Queue("Freeze");
+const afterEffects = [];
 let globalAllowUpdate = true;
 let globalActiveEffect = undefined;
 let globalFreeze = 0;
@@ -160,9 +161,17 @@ function transferMeltingEffect() {
         return effect.freezing() === 0 && !effectQueue.has(effect);
     }, effectQueue);
     if (!globalAllowUpdate) return;
+    afterEffects.push([]);
     globalAllowUpdate = false;
     effectQueue.execute();
     globalAllowUpdate = true;
+    const callbacks = afterEffects.shift();
+    callbacks.forEach(callback => callback());
+}
+
+export function afterEffect(callback) {
+    if (afterEffects.length > 0) afterEffects[afterEffects.length - 1].push(callback);
+    else callback();
 }
 
 export function freeze() {
@@ -267,11 +276,14 @@ export function effect(innerEffect, tag) {
         if (freeze === 0) transferMeltingEffect();
     };
     effectsMap.set(effect, new EffectManager(effect));
+    afterEffects.push([]);
     globalAllowUpdate = false;
     effectQueue.pushBack(effect);
     effect.tag = tag || innerEffect;
     effectQueue.execute(true);
     globalAllowUpdate = true;
+    const callbacks = afterEffects.shift();
+    callbacks.forEach(callback => callback());
     return effect;
 }
 
@@ -364,10 +376,13 @@ function collectEffect(queue, object, key) {
 
 function triggerUpdate(object, key) {
     if (!globalAllowUpdate) return;
+    afterEffects.push([]);
     globalAllowUpdate = false;
     collectEffectOnDAG(effectQueue, object, key);
     effectQueue.execute();
     globalAllowUpdate = true;
+    const callbacks = afterEffects.shift();
+    callbacks.forEach(callback => callback());
 }
 
 export function checkEffect(effect) {

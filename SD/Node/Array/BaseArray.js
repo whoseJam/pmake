@@ -23,7 +23,7 @@ BaseArray.prototype = {
     x: Factory.handlerLowPrecise("x"),
     y: Factory.handlerLowPrecise("y"),
     start: Factory.handler("start"),
-    length: function (size) {
+    length(size) {
         if (size === undefined) {
             const elements = this.vars.elements;
             return elements.length;
@@ -40,44 +40,42 @@ BaseArray.prototype = {
         }
         return this;
     },
-    resize: function (size) {
+    resize(size) {
         this.length(size);
         return this;
     },
-    end: function () {
+    end() {
         return this.start() + this.length() - 1;
     },
-    idx: function (i) {
+    idx(i) {
         return i - this.start();
     },
-    indexOf: function (element) {
+    indexOf(element) {
         for (let i = this.start(); i <= this.end(); i++) if (this.element(i) === element) return i;
         ErrorLauncher.whatHappened();
     },
-    element: function (i) {
+    element(i) {
         const elements = this.vars.elements;
         const id = this.idx(i);
         if (0 <= id && id < elements.length) return elements[id];
         ErrorLauncher.outOfRangeError(i);
     },
-    elements: function () {
+    elements() {
         return [...this.vars.elements];
     },
-    firstElement: function () {
+    firstElement() {
         return this.element(this.start());
     },
-    lastElement: function () {
+    lastElement() {
         return this.element(this.end());
     },
-    forEachElement: function (callback) {
+    forEachElement(callback) {
         this.vars.elements.forEach((element, i) => callback(element, i + this.start()));
         return this;
     },
-    insertByBaseArray: function (id, element) {
-        element.triggerEnter(this, () => {
-            this.childAs(element);
-            this.vars.elements.splice(this.idx(id), 0, element);
-        });
+    insertByBaseArray(id, element) {
+        this.childAs(element);
+        this.vars.elements.splice(this.idx(id), 0, element);
         return this;
     },
     push: function (value) {

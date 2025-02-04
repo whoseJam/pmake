@@ -17,10 +17,12 @@ export function Array(parent) {
 
     this.effect("array", () => {
         this.vars.elements.forEach((element, id) => {
-            element.x(this.x() + id * this.elementWidth());
-            element.y(this.y());
-            element.width(this.elementWidth());
-            element.height(this.elementHeight());
+            this.tryUpdate(element, () => {
+                element.x(this.x() + id * this.elementWidth());
+                element.y(this.y());
+                element.width(this.elementWidth());
+                element.height(this.elementHeight());
+            });
         });
     });
 }

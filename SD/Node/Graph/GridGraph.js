@@ -1,5 +1,4 @@
 import { Enter as EN } from "@/Node/Core/Enter";
-import { effect } from "@/Node/Core/Reactive";
 import { BaseGraph } from "@/Node/Graph/BaseGraph";
 import { Cast } from "@/Utility/Cast";
 import { Factory } from "@/Utility/Factory";
@@ -20,7 +19,7 @@ export function GridGraph(parent) {
     this._.curM = 0;
     this._.sidToPos = {}; // id of SDNode -> { x: number, y: number }
 
-    this._.updater = effect(() => {
+    this.effect("gridGraph", () => {
         const sidToPos = this._.sidToPos;
         const x = this.x(),
             mx = this.mx(),
@@ -32,8 +31,10 @@ export function GridGraph(parent) {
         const convertY = node => sidToPos[node.id].x * H + y;
         const nodes = this.vars.nodes;
         for (let node of nodes) {
-            node.cx(convertX(node));
-            node.cy(convertY(node));
+            this.tryUpdate(node, () => {
+                node.cx(convertX(node));
+                node.cy(convertY(node));
+            });
         }
         const links = this.vars.links;
         for (let link of links) {
@@ -41,9 +42,11 @@ export function GridGraph(parent) {
             const targetId = this.targetId(link);
             const source = this.findNodeById(sourceId);
             const target = this.findNodeById(targetId);
-            link.source(source.center());
-            link.target(target.center());
-            trim(link, source, target);
+            this.tryUpdate(link, () => {
+                link.source(source.center());
+                link.target(target.center());
+                trim(link, source, target);
+            });
         }
     });
 }

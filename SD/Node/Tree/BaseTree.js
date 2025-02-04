@@ -29,7 +29,7 @@ BaseTree.prototype = {
     ...SDNode.prototype,
     x: Factory.handlerLowPrecise("x"),
     y: Factory.handlerLowPrecise("y"),
-    element: function () {
+    element() {
         const args = arguments;
         switch (args.length) {
             case 1:
@@ -45,7 +45,7 @@ BaseTree.prototype = {
                 ErrorLauncher.invalidArguments();
         }
     },
-    value: function () {
+    value() {
         const args = arguments;
         switch (args.length) {
             case 1: {
@@ -69,7 +69,7 @@ BaseTree.prototype = {
                 ErrorLauncher.invalidArguments();
         }
     },
-    opacity: function () {
+    opacity() {
         const args = arguments;
         switch (args.length) {
             case 0:
@@ -86,7 +86,7 @@ BaseTree.prototype = {
                 ErrorLauncher.invalidArguments();
         }
     },
-    color: function () {
+    color() {
         const args = arguments;
         switch (args.length) {
             case 1: {
@@ -110,44 +110,44 @@ BaseTree.prototype = {
                 ErrorLauncher.invalidArguments();
         }
     },
-    findNode: function (condition) {
+    findNode(condition) {
         for (let node of this.vars.nodes) {
             if (condition(node, this.nodeId(node))) return node;
         }
         return undefined;
     },
-    findNodes: function (condition) {
+    findNodes(condition) {
         const nodes = [];
         for (let node of this.vars.nodes) if (condition(node, this.nodeId(node))) nodes.push(node);
         return nodes;
     },
-    findLink: function (condition) {
+    findLink(condition) {
         for (let link of this.vars.links) if (condition(link, this.sourceId(link), this.targetId(link))) return link;
         return undefined;
     },
-    findLinks: function (condition) {
+    findLinks(condition) {
         const links = [];
         for (let link of this.vars.links) if (condition(link, this.sourceId(link), this.target(link))) links.push(link);
         return links;
     },
-    findNodeById: function (id) {
+    findNodeById(id) {
         const _id = String(id);
         return this.findNode((node, id) => id === _id);
     },
-    findLinkById: function (sourceId, targetId) {
+    findLinkById(sourceId, targetId) {
         const _sourceId = String(sourceId);
         const _targetId = String(targetId);
         return this.findLink((link, sourceId, targetId) => sourceId === _sourceId && targetId === _targetId);
     },
-    inLink: function (node) {
+    inLink(node) {
         node = this.nodeId(node);
         return this.findLink((link, sourceId, targetId) => targetId === node);
     },
-    outLinks: function (node) {
+    outLinks(node) {
         node = this.nodeId(node);
         return this.findLinks((link, sourceId, targetId) => sourceId === node);
     },
-    stratify: function () {
+    stratify() {
         const result = {};
         const root = this.root();
         if (!root) return undefined;
@@ -171,23 +171,23 @@ BaseTree.prototype = {
         dfs(root, 1);
         return result[this.nodeId(root)];
     },
-    father: function (node) {
+    father(node) {
         return this.source(this.inLink(node));
     },
-    fatherId: function (node) {
+    fatherId(node) {
         return this.sourceId(this.inLink(node));
     },
-    ancestor: function (node, kth) {
+    ancestor(node, kth) {
         node = this.element(node);
         for (let i = 1; i <= kth; i++) {
             node = this.father(node);
         }
         return node;
     },
-    ancestorId: function (node, kth) {
+    ancestorId(node, kth) {
         return this.nodeId(this.ancestor(node, kth));
     },
-    depth: function (u) {
+    depth(u) {
         if (u === undefined) {
             const root = this.stratify();
             return root ? root.height : 0;
@@ -199,7 +199,7 @@ BaseTree.prototype = {
         }
         return depth;
     },
-    lca: function (x, y) {
+    lca(x, y) {
         x = this.nodeId(x);
         y = this.nodeId(y);
         let dx = this.depth(x);
@@ -215,39 +215,29 @@ BaseTree.prototype = {
         }
         return this.findNodeById(x);
     },
-    lcaId: function (x, y) {
+    lcaId(x, y) {
         return this.nodeId(this.lca(x, y));
     },
-    children: function (node) {
+    children(node) {
         return this.outLinks(node).map(link => this.target(link));
     },
-    tryUpdate: function (element, update) {
-        if (element.onEnter()) {
-            this._.updates.push(() => {
-                element.triggerEnter(this, update);
-                this.childAs(element);
-            });
-        } else update();
-    },
-    newNodeByBaseTree: function (id, element) {
+    newNodeByBaseTree(id, element) {
         id = String(id);
         this._.sdnodesMap[element.id] = { node: element, id };
         this._.nodesMap[id] = element;
+        this.childAs(element);
         this.vars.nodes.push(element);
-        this._.updates.forEach(update => update());
-        this._.updates = [];
         return this;
     },
-    newLinkByBaseTree: function (sourceId, targetId, element) {
+    newLinkByBaseTree(sourceId, targetId, element) {
         [sourceId, targetId] = [String(sourceId), String(targetId)];
         this._.sdnodesMap[element.id] = { link: element, sourceId, targetId };
         this._.linksMap.set([sourceId, targetId], element);
+        this.childAs(element);
         this.vars.links.push(element);
-        this._.updates.forEach(update => update());
-        this._.updates = [];
         return this;
     },
-    eraseLinkByBaseTree: function (sourceId, targetId) {
+    eraseLinkByBaseTree(sourceId, targetId) {
         [sourceId, targetId] = [String(sourceId), String(targetId)];
         this._.linksMap.delete([sourceId, targetId]);
         const link = this.findLinkById(sourceId, targetId);
@@ -255,34 +245,34 @@ BaseTree.prototype = {
         this.vars.links.splice(this.vars.link.indexOf(link), 1);
         return this;
     },
-    root: function (id, value) {
+    root(id, value) {
         if (id === undefined) return this.findNode(node => this.father(node) === undefined);
         this.newNode(id, value);
         return this;
     },
-    link: function (sourceId, targetId, value) {
+    link(sourceId, targetId, value) {
         if (!this.findNodeById(targetId)) this.newNode(targetId);
         if (!this.findNodeById(sourceId)) this.newNode(sourceId);
         this.newLink(sourceId, targetId, value);
         return this;
     },
-    cur: function (x, y) {
+    cur(x, y) {
         this.eraseLinkByBaseTree(x, y);
         return this;
     },
-    text: function () {
+    text() {
         const value = this.element.apply(this, arguments).value();
         if (value === undefined) return "";
         if (!value.text) ErrorLauncher.invalidInvoke("text");
         return value.text();
     },
-    intValue: function () {
+    intValue() {
         const value = this.element.apply(this, arguments).value();
         if (!value) return 0;
         if (!value.text) ErrorLauncher.invalidInvoke("intValue");
         return +value.text();
     },
-    nodesInSubtree: function (node) {
+    nodesInSubtree(node) {
         node = this.element(node);
         const nodeList = [];
         const dfs = node => {
@@ -295,7 +285,7 @@ BaseTree.prototype = {
         dfs(node);
         return nodeList;
     },
-    linksInSubtree: function (node) {
+    linksInSubtree(node) {
         node = this.element(node);
         const linkList = [];
         const dfs = node => {
@@ -308,17 +298,17 @@ BaseTree.prototype = {
         dfs(node);
         return linkList;
     },
-    forEachNodeInSubtree: function (node, callback) {
+    forEachNodeInSubtree(node, callback) {
         this.nodesInSubtree(node).forEach(node => {
             callback(node, this.nodeId(node));
         });
     },
-    forEachLinkInSubtree: function (node, callback) {
+    forEachLinkInSubtree(node, callback) {
         this.linksInSubtree(node).forEach(link => {
             callback(link, this.sourceId(link), this.targetId(link));
         });
     },
-    nodesOnPath: function (source, target) {
+    nodesOnPath(source, target) {
         source = this.element(source);
         const sourceList = [];
         target = this.element(target);
@@ -338,7 +328,7 @@ BaseTree.prototype = {
         }
         return [...sourceList, source, ...targetList.reverse()];
     },
-    linksOnPath: function (source, target) {
+    linksOnPath(source, target) {
         source = this.element(source);
         const sourceList = [];
         target = this.element(target);
@@ -358,26 +348,26 @@ BaseTree.prototype = {
         }
         return [...sourceList, ...targetList.reverse()];
     },
-    forEachNodeOnPath: function (source, target, callback) {
+    forEachNodeOnPath(source, target, callback) {
         this.nodesOnPath(source, target).forEach(node => callback(node, this.nodeId(node)));
         return this;
     },
-    forEachLinkOnPath: function (source, target, callback) {
+    forEachLinkOnPath(source, target, callback) {
         this.linksOnPath(source, target).forEach(link => callback(link, this.sourceId(link), this.targetId(link)));
         return this;
     },
-    forEachNode: function (callback) {
+    forEachNode(callback) {
         this.vars.nodes.forEach(node => callback(node, this.nodeId(node)));
         return this;
     },
-    forEachLink: function (callback) {
+    forEachLink(callback) {
         this.vars.links.forEach(link => callback(link, this.sourceId(link), this.targetId(link)));
         return this;
     },
-    rootId: function () {
+    rootId() {
         return this.nodeId(this.root());
     },
-    nodeId: function (node) {
+    nodeId(node) {
         if (node === undefined) return undefined;
         if (Check.isTypeOfSDNode(node)) {
             if (!this._.sdnodesMap[node.id]) return undefined;
@@ -385,26 +375,26 @@ BaseTree.prototype = {
         }
         return String(node);
     },
-    sourceId: function (link) {
+    sourceId(link) {
         return this.nodeId(this.source(link));
     },
-    targetId: function (link) {
+    targetId(link) {
         return this.nodeId(this.target(link));
     },
-    source: function (link) {
+    source(link) {
         if (link === undefined) return undefined;
         if (!this._.sdnodesMap[link.id]) return undefined;
         return this.element(this._.sdnodesMap[link.id].sourceId);
     },
-    target: function (link) {
+    target(link) {
         if (link === undefined) return undefined;
         if (!this._.sdnodesMap[link.id]) return undefined;
         return this.element(this._.sdnodesMap[link.id].targetId);
     },
-    nodes: function () {
+    nodes() {
         return [...this.vars.nodes];
     },
-    links: function () {
+    links() {
         return [...this.vars.links];
     },
 };

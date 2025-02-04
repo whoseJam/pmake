@@ -66,7 +66,7 @@ BaseElement.prototype = {
         value = Cast.castToSDNode(this, value);
         value.onEnterDefault(EN.appear());
         value.onExitDefault(EX.fade());
-        value.triggerEnter(this, () => this.childAs("value", value, rule));
+        this.childAs("value", value, rule);
         return this;
     },
     valueFromExist: function (value, rule) {
@@ -74,7 +74,7 @@ BaseElement.prototype = {
         rule = getValueRule(this.vars, rule);
         value.onEnter(EN.moveTo());
         value.onExitDefault(EX.fade());
-        value.triggerEnter(this, () => this.childAs("value", value, rule));
+        this.childAs("value", value, rule);
         return this;
     },
 };

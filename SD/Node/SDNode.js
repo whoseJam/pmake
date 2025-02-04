@@ -116,12 +116,14 @@ SDNode.prototype = {
     childAs() {
         const args = [...arguments];
         const child = args.filter(arg => Check.isTypeOfSDNode(arg))[0];
-        const fn = () => {
+        const rule = args.filter(arg => typeof arg === "function")[0];
+        const update = () => {
             if (child._.parent !== this && !child.onEnter()) child.attachTo(this);
             this._.children.push(args[0], args[1], args[2]);
         };
-        if (child.onEnter() && !child.entering()) child.triggerEnter(this, fn);
-        else fn();
+        if (child.onEnter() && rule) {
+            this.tryUpdate(child, update);
+        } else update();
         return this;
     },
     child: forwardWithReturn("children", "child"),
@@ -211,7 +213,6 @@ SDNode.prototype = {
     },
     unfreeze() {
         for (const key in this._.updaters) this._.updaters[key].unfreeze();
-        if (this._.updates) this._.updates.forEach(update => update()); // Tree
         return this;
     },
     effect(name, callback) {
@@ -220,5 +221,10 @@ SDNode.prototype = {
     },
     uneffect(name) {
         uneffect(this._.updaters[name]);
+    },
+    tryUpdate(element, update) {
+        if (element.onEnter()) {
+            element.triggerEnter(this, update);
+        } else update();
     },
 };

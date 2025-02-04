@@ -14,19 +14,23 @@ export function HorizontalTree(parent) {
 
     this.uneffect("tree");
     this.effect("horizontalTree", () => {
-        D3Layout.call(this, "horizontal", node => [node.y + this.x(), node.x + this.y()]);
+        const x = this.x();
+        const y = this.y();
+        const position = node => {
+            return [node.y + x, node.x + y];
+        };
+        D3Layout.call(this, "horizontal", position);
     });
 }
 
 HorizontalTree.prototype = {
     ...Tree.prototype,
-};
-
-HorizontalTree.prototype.height = Factory.handlerLowPrecise("height");
-HorizontalTree.prototype.layerWidth = Factory.handlerLowPrecise("layerWidth");
-HorizontalTree.prototype.width = function (width) {
-    if (width === undefined) return this.vars.width;
-    const depth = this.depth();
-    this.layerWidth(width / depth);
-    return this;
+    height: Factory.handlerLowPrecise("height"),
+    layerWidth: Factory.handlerLowPrecise("layerWidth"),
+    width(width) {
+        if (width === undefined) return this.vars.width;
+        const depth = this.depth();
+        this.layerWidth(width / depth);
+        return this;
+    },
 };

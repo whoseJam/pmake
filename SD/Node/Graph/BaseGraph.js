@@ -30,27 +30,23 @@ export function BaseGraph(parent) {
 
 BaseGraph.prototype = {
     ...SDNode.prototype,
-};
-
-BaseGraph.prototype.x = Factory.handlerLowPrecise("x");
-BaseGraph.prototype.y = Factory.handlerLowPrecise("y");
-BaseGraph.prototype.width = Factory.handlerLowPrecise("width");
-BaseGraph.prototype.height = Factory.handlerLowPrecise("height");
-
-BaseGraph.prototype.color = BaseTree.prototype.color;
-BaseGraph.prototype.value = BaseTree.prototype.value;
-BaseGraph.prototype.element = BaseTree.prototype.element;
-BaseGraph.prototype.opacity = BaseTree.prototype.opacity;
-
-BaseGraph.prototype.text = function () {
-    return this.value.apply(this, arguments).text();
-};
-
-BaseGraph.prototype.findNodeById = function (id) {
-    const graphId = String(id);
-    const gidToNodes = this._.gidToNodes;
-    const node = gidToNodes[graphId];
-    return node?.node;
+    x: Factory.handlerLowPrecise("x"),
+    y: Factory.handlerLowPrecise("y"),
+    width: Factory.handlerLowPrecise("width"),
+    height: Factory.handlerLowPrecise("height"),
+    color: BaseTree.prototype.color,
+    value: BaseTree.prototype.value,
+    element: BaseTree.prototype.element,
+    opacity: BaseTree.prototype.opacity,
+    text() {
+        return this.value.apply(this, arguments).text();
+    },
+    findNodeById(id) {
+        const graphId = String(id);
+        const gidToNodes = this._.gidToNodes;
+        const node = gidToNodes[graphId];
+        return node?.node;
+    },
 };
 
 BaseGraph.prototype.findLinkById = function (sourceId, targetId) {
@@ -106,10 +102,8 @@ BaseGraph.prototype.newNodeByBaseGraph = function (id, element) {
     const gidToNodes = this._.gidToNodes;
     sidToNodes[element.id] = { node: element, key: graphId };
     gidToNodes[graphId] = { node: element, key: element.id };
-    element.triggerEnter(this, () => {
-        this.childAs(element);
-        this.vars.nodes.push(element);
-    });
+    this.childAs(element);
+    this.vars.nodes.push(element);
     return this;
 };
 
@@ -118,10 +112,8 @@ BaseGraph.prototype.newLinkByBaseGraph = function (sourceId, targetId, element) 
     const targetGraphId = String(targetId);
     const sidToLinks = this._.sidToLinks;
     sidToLinks[element.id] = { link: element, source: sourceGraphId, target: targetGraphId };
-    element.triggerEnter(this, () => {
-        this.childAs(element);
-        this.vars.links.push(element);
-    });
+    this.childAs(element);
+    this.vars.links.push(element);
     return this;
 };
 

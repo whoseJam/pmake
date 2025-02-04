@@ -6,7 +6,17 @@ const EN = sd.enter();
 
 sd.init(() => {});
 
-sd.main(main);
+sd.main(TestArrayInitWithFreeze);
+
+async function TestArrayInitWithFreeze() {
+    const arr = new sd.Array(svg).x(100).y(100);
+    await sd.pause();
+    arr.startAnimate();
+    sd.freeze();
+    arr.resize(3);
+    sd.unfreeze();
+    arr.endAnimate();
+}
 
 async function TestTwoArrayMoveValue() {
     const n = 10;

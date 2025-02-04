@@ -1,4 +1,5 @@
 import { svg } from "@/Interact/Root";
+import { afterEffect } from "@/Node/Core/Reactive";
 
 export class Enter {
     static appear(layer) {
@@ -7,8 +8,10 @@ export class Enter {
             element.opacity(0);
             element.attachTo(this.layer(layer));
             move();
-            element.startAnimate(this);
-            element.opacity(1);
+            afterEffect(() => {
+                element.startAnimate(this);
+                element.opacity(1);
+            });
         };
     }
     static moveTo(layer) {

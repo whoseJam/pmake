@@ -38,48 +38,48 @@ Tree.prototype = {
     ...BaseTree.prototype,
     width: Factory.handlerLowPrecise("width"),
     layerHeight: Factory.handlerLowPrecise("layerHeight"),
-    height: function (height) {
+    height(height) {
         if (height === undefined) return this.vars.height;
         const depth = this.depth();
         if (!depth) return this;
         this.layerHeight(height / depth);
         return this;
     },
-    newNode: function (id, value) {
+    newNode(id, value) {
         const element = new this._.nodeType(this.layer("nodes"));
         element.value(Cast.castToSDNode(element, value, id));
         element.onEnter(EN.appear("nodes"));
         this.newNodeByBaseTree(id, element);
         return this;
     },
-    newNodeFromExistValue: function (id, value) {
+    newNodeFromExistValue(id, value) {
         const element = new this._.nodeType(this.layer("nodes"));
         element.onEnter(EN.appear("nodes"));
         this.newNodeByBaseTree(id, element);
         element.value(value.onEnter(EN.moveTo()));
         return this;
     },
-    newNodeFromExistElement: function (id, value) {
+    newNodeFromExistElement(id, value) {
         const element = value;
         element.onEnter(EN.moveTo("nodes"));
         this.newNodeByBaseTree(id, element);
         return this;
     },
-    newLink: function (sourceId, targetId, value) {
+    newLink(sourceId, targetId, value) {
         const element = new this._.linkType(this.layer("links"));
         element.value(value);
         element.onEnter(EN.appear("links"));
         this.newLinkByBaseTree(sourceId, targetId, element);
         return this;
     },
-    newLinkFromExistValue: function (sourceId, targetId, value) {
+    newLinkFromExistValue(sourceId, targetId, value) {
         const element = new this._.linkType(this.layer("links"));
         element.onEnter(EN.appear("links"));
         this.newLinkByBaseTree(sourceId, targetId, element);
         element.value(value.onEnter(EN.moveTo()));
         return this;
     },
-    newLinkFromExistElement: function (sourceId, targetId, value) {
+    newLinkFromExistElement(sourceId, targetId, value) {
         const element = value;
         element.onEnter(EN.moveTo("links"));
         this.newLinkByBaseTree(sourceId, targetId, element);
@@ -88,6 +88,7 @@ Tree.prototype = {
 };
 
 export function D3Layout(mode, convert, size) {
+    console.log("tree update!");
     let data, root, layout, result;
     try {
         const template = stratify();
@@ -97,37 +98,44 @@ export function D3Layout(mode, convert, size) {
             return father ? this.nodeId(father) : undefined;
         });
         data = template(this.vars.nodes);
-    } catch (e) {
+        root = hierarchy(data);
+        if (mode === "vertical") {
+            this.vars.height = root.height * this.layerHeight();
+            layout = tree().size([this.width(), this.height()]);
+        } else {
+            this.vars.width = root.height * this.layerWidth();
+            layout = tree().size([this.height(), this.width()]);
+        }
+        result = layout(root);
+        const nodes = result.descendants();
+        const nodesMap = new Map();
+        nodes.forEach(node => {
+            nodesMap.set(node.data.data, node);
+        });
+        this.forEachNode(node => {
+            const layout = nodesMap.get(node);
+            this.tryUpdate(node, () => {
+                if (size) size(node);
+                node.center(convert(layout));
+            });
+        });
+        this.forEachLink((link, sourceId, targetId) => {
+            const source = this.findNodeById(sourceId);
+            const target = this.findNodeById(targetId);
+            this.tryUpdate(link, () => {
+                link.source(source.center());
+                link.target(target.center());
+                trim(link, source, target);
+            });
+        });
+    } catch (err) {
+        // this.forEachNode(node => {
+        //     if (node._.first) {
+        //         if (size) size(node);
+        //         node.center(this.center());
+        //         node._.first = undefined;
+        //     }
+        // });
         return;
     }
-    root = hierarchy(data);
-    if (mode === "vertical") {
-        this.vars.height = root.height * this.layerHeight();
-        layout = tree().size([this.width(), this.height()]);
-    } else {
-        this.vars.width = root.height * this.layerWidth();
-        layout = tree().size([this.height(), this.width()]);
-    }
-    result = layout(root);
-    const nodes = result.descendants();
-    const nodesMap = new Map();
-    nodes.forEach(node => {
-        nodesMap.set(node.data.data, node);
-    });
-    this.forEachNode(node => {
-        const layout = nodesMap.get(node);
-        this.tryUpdate(node, () => {
-            if (size) size(node);
-            node.center(convert(layout));
-        });
-    });
-    this.forEachLink((link, sourceId, targetId) => {
-        const source = this.findNodeById(sourceId);
-        const target = this.findNodeById(targetId);
-        this.tryUpdate(link, () => {
-            link.source(source.center());
-            link.target(target.center());
-            trim(link, source, target);
-        });
-    });
 }

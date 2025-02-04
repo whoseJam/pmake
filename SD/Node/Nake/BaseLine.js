@@ -95,7 +95,7 @@ BaseLine.prototype = {
             const point = arguments[0];
             return this.source(point[0], point[1]);
         }
-        this.x1(x).y1(y);
+        this.freeze().x1(x).y1(y).unfreeze();
         return this;
     },
     target: function (x, y) {
@@ -105,7 +105,7 @@ BaseLine.prototype = {
             const point = arguments[0];
             return this.target(point[0], point[1]);
         }
-        this.x2(x).y2(y);
+        this.freeze().x2(x).y2(y).unfreeze();
         return this;
     },
     x: function (x) {
@@ -174,7 +174,7 @@ BaseLine.prototype = {
         value = Cast.castToSDNode(this, value);
         value.onEnterDefault(EN.appear());
         value.onExitDefault(EX.fade());
-        value.triggerEnter(this, () => this.childAs("value", value, rule));
+        this.childAs("value", value, rule);
         return this;
     },
 };
