@@ -37,15 +37,15 @@ View.prototype = {
     y: Factory.handlerLowPrecise("y"),
     width: Factory.handlerLowPrecise("width"),
     height: Factory.handlerLowPrecise("height"),
-    push: function (element) {
+    push(element) {
         element.attachTo(this._.nake);
         this.childAs(element);
     },
-    viewBox: function (x, y, width, height) {
+    viewBox(x, y, width, height) {
         if (arguments.length === 0) return this.vars.viewBox;
         if (arguments.length === 1) {
             const viewBox = arguments[0];
-            return this.viewBox(viewBox.x.viewBox.y, viewBox.width, viewBox.height);
+            return this.viewBox(viewBox.x, viewBox.y, viewBox.width, viewBox.height);
         }
         this.vars.viewBox = {
             x,

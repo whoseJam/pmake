@@ -1,16 +1,20 @@
 import * as sd from "@/sd";
 
-import { BuildFailTree } from "../_/BuildFailTree";
-import { BuildTrieTreeSync } from "../_/BuildTrieTreeSync";
+import { buildFailTree } from "../_/BuildFailTree";
+import { buildTrieTreeSync } from "../_/BuildTrieTreeSync";
 
 const svg = sd.svg();
 const ac = new sd.Tree(svg).layerHeight(70);
 const focus = sd.Focus(ac);
 const data = ["aba", "bab"];
+const links = [
+    // format
+    { type: sd.Line },
+    { u: 2, v: 1, type: sd.Curve, props: { bending: -0.3 } },
+    { u: 5, v: 1, type: sd.Curve, props: { bending: 0.3 } },
+];
 
-const links = [{ type: sd.Line }, { u: 2, v: 1, type: sd.Curve, props: { bending: -0.3 } }, { u: 5, v: 1, type: sd.Curve, props: { bending: 0.3 } }];
-
-function CreateLink(u, v) {
+function makeLink(u, v) {
     for (let i = 1; i < links.length; i++) {
         if (links[i].u == u && links[i].v == v) {
             const line = new links[i].type(svg);
@@ -24,7 +28,7 @@ function CreateLink(u, v) {
 }
 
 sd.init(() => {
-    BuildTrieTreeSync(ac, data);
+    buildTrieTreeSync(ac, data);
 });
 
 sd.main(async () => {
@@ -38,27 +42,29 @@ sd.main(async () => {
             .endAnimate();
     });
 
-    await BuildFailTree(ac, {
-        OnLink: OnLink,
-        OnFocusChild: OnFocusChild,
+    await buildFailTree(ac, {
+        onLink,
+        onStartBuildChild,
     });
 
     focus.startAnimate().focus(null).endAnimate();
 });
 
-async function OnLink(nodeU, nodeV, u, v) {
+async function onLink(u, v) {
     await sd.pause();
-    const line = CreateLink(u, v);
-    line.source(nodeU.center());
-    line.target(nodeV.center());
+    const line = makeLink(u, v);
+    const du = ac.element(u);
+    const dv = ac.element(v);
+    line.source(du.center());
+    line.target(dv.center());
     line.arrow();
     line.strokeDashArray([5, 5]);
     line.opacity(0);
-    sd.trim(line, nodeU, nodeV);
+    sd.trim(line, du, dv);
     line.startAnimate().opacity(1).endAnimate();
 }
 
-async function OnFocusChild(child) {
+async function onStartBuildChild(v) {
     await sd.pause();
-    focus.startAnimate().focus(child).endAnimate();
+    focus.startAnimate().focus(v).endAnimate();
 }

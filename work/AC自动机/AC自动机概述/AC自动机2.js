@@ -1,7 +1,7 @@
 import * as sd from "@/sd";
 
-import { BuildFailTree } from "../_/BuildFailTree";
-import { BuildTrieTreeSync } from "../_/BuildTrieTreeSync";
+import { buildFailTree } from "../_/BuildFailTree";
+import { buildTrieTreeSync } from "../_/BuildTrieTreeSync";
 
 const svg = sd.svg();
 const C = sd.color();
@@ -16,7 +16,7 @@ let failChainV;
 
 const links = [{ type: sd.Line }, { u: 2, v: 1, type: sd.Curve, props: { bending: -0.3 } }, { u: 6, v: 1, type: sd.Curve, props: { bending: 0.3 } }, { u: 9, v: 6, type: sd.Curve, props: { bending: 0.3 } }];
 
-function CreateLink(u, v) {
+function makeLink(u, v) {
     for (let i = 1; i < links.length; i++) {
         if (links[i].u == u && links[i].v == v) {
             const line = new links[i].type(svg);
@@ -30,7 +30,7 @@ function CreateLink(u, v) {
 }
 
 sd.init(() => {
-    BuildTrieTreeSync(ac, data);
+    buildTrieTreeSync(ac, data);
 });
 
 sd.main(async () => {
@@ -44,22 +44,22 @@ sd.main(async () => {
             .endAnimate();
     });
 
-    await BuildFailTree(ac, {
-        OnLink: OnLink,
-        OnFocusParent: async parent => {
+    await buildFailTree(ac, {
+        onLink,
+        onStartBuild: async u => {
             await sd.pause();
-            parentFocus.startAnimate().focus(parent).endAnimate();
-            failFocus.focus(null).after(parentFocus).focus(parent);
+            parentFocus.startAnimate().focus(u).endAnimate();
+            failFocus.focus(null).after(parentFocus).focus(u);
         },
-        OnFocusChild: async child => {
+        onStartBuildChild: async v => {
             await sd.pause();
-            ac.startAnimate().color(child, C.blue).endAnimate();
+            ac.startAnimate().color(v, C.blue).endAnimate();
         },
-        OnRemoveFocusChild: async child => {
+        onEndBuildChild: async v => {
             await sd.pause();
-            ac.startAnimate().color(child, C.white).endAnimate();
+            ac.startAnimate().color(v, C.white).endAnimate();
         },
-        OnFailJumpTo: OnFailJumpTo,
+        onFailJumpTo,
     });
 
     await sd.pause();
@@ -67,36 +67,38 @@ sd.main(async () => {
     failFocus.startAnimate().focus(null).endAnimate();
 });
 
-async function OnFailJumpTo(fail, parent, first) {
+async function onFailJumpTo(fail, parent, first) {
     await sd.pause();
     const length = ac.depth(fail);
     failFocus.startAnimate().focus(fail).endAnimate();
     if (first) {
-        failChainU = CreatePath(parent, length, C.textBlue).startAnimate().pointStoT().endAnimate().arrow();
-        failChainV = CreatePath(fail, length, C.darkOrange).startAnimate().pointStoT().endAnimate().arrow();
+        failChainU = makePath(parent, length, C.textBlue).startAnimate().pointStoT().endAnimate().arrow();
+        failChainV = makePath(fail, length, C.darkOrange).startAnimate().pointStoT().endAnimate().arrow();
     } else {
-        failChainU.startAnimate().d(CreatePathD(parent, length)).endAnimate();
-        failChainV.startAnimate().d(CreatePathD(fail, length)).endAnimate();
+        failChainU.startAnimate().d(makePathD(parent, length)).endAnimate();
+        failChainV.startAnimate().d(makePathD(fail, length)).endAnimate();
     }
 }
 
-async function OnLink(nodeU, nodeV, u, v) {
+async function onLink(u, v) {
     if (v != 1) {
         await sd.pause();
         const length = ac.depth(v);
-        failChainU.startAnimate().d(CreatePathD(u, length)).endAnimate();
-        failChainV.startAnimate().d(CreatePathD(v, length)).endAnimate();
+        failChainU.startAnimate().d(makePathD(u, length)).endAnimate();
+        failChainV.startAnimate().d(makePathD(v, length)).endAnimate();
         ac.startAnimate().color(v, C.orange).endAnimate();
     }
 
     await sd.pause();
-    const line = CreateLink(u, v);
-    line.source(nodeU.center());
-    line.target(nodeV.center());
+    const line = makeLink(u, v);
+    const du = ac.element(u);
+    const dv = ac.element(v);
+    line.source(du.center());
+    line.target(dv.center());
     line.arrow();
     line.strokeDashArray([5, 5]);
     line.opacity(0);
-    sd.trim(line, nodeU, nodeV);
+    sd.trim(line, du, dv);
     line.startAnimate().opacity(1).endAnimate();
 
     if (v != 1) {
@@ -108,12 +110,12 @@ async function OnLink(nodeU, nodeV, u, v) {
     }
 }
 
-function CreatePath(u, length, color = C.black) {
-    return new sd.Path(svg).d(CreatePathD(u, length).toString()).stroke(color).strokeWidth(2);
+function makePath(u, length, color = C.black) {
+    return new sd.Path(svg).d(makePathD(u, length).toString()).stroke(color).strokeWidth(2);
 }
 
-function CreatePathD(u, length) {
-    function GetPath(u, length) {
+function makePathD(u, length) {
+    function getPath(u, length) {
         const path = [];
         for (let i = 1; i <= length; i++) {
             path.push(ac.element(u));
@@ -121,7 +123,7 @@ function CreatePathD(u, length) {
         }
         return path.reverse();
     }
-    const path = GetPath(u, length);
+    const path = getPath(u, length);
     const pen = new sd.PathPen();
     pen.MoveTo(path[0].center());
     for (let i = 1; i < path.length; i++) {

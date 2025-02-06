@@ -2,17 +2,17 @@ import * as sd from "@/sd";
 
 /**
  * 构建Trie树
- * @param {sd.BaseTree} ac 
- * @param {Array<string>} strs 
+ * @param {sd.BaseTree} ac
+ * @param {Array<string>} strs
  * @param {{
- *  OnLink: (nodeU: sd.SDNode, nodeV: sd.SDNode, u: number, v: number) => void
- *  OnReachEndOfString: (nodeU: sd.SDNode, u: number) => void
+ *  onLink: (u: number, v: number) => void;
+ *  onReachEndOfString: (u: number) => void;
  * }} args
  */
-export async function BuildTrieTree(ac, strs, args = {}) {
+export async function buildTrieTree(ac, strs, args = {}) {
     const R = sd.rule();
-    const OnLink = args.OnLink;
-    const OnReachEndOfString = args.OnReachEndOfString;
+    const onLink = args.onLink;
+    const onReachEndOfString = args.onReachEndOfString;
 
     let tot = 1;
     ac.root(1);
@@ -29,16 +29,12 @@ export async function BuildTrieTree(ac, strs, args = {}) {
                 ac.element(tot).str = s.substr(0, i + 1);
                 ac.element(tot).acch = {};
 
-                if (OnLink) {
-                    await OnLink(ac.element(u), ac.element(tot), +u, +tot);
-                }
+                if (onLink) await onLink(+u, +tot);
             }
             u = cur.acch[s[i]];
         }
         ac.element(u).is_end = true;
-        if (OnReachEndOfString) {
-            await OnReachEndOfString(ac.element(u), u);
-        }
+        if (onReachEndOfString) await onReachEndOfString(u);
     }
     for (let i = 0; i < strs.length; i++) {
         await insert(strs[i]);

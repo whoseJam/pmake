@@ -78,30 +78,30 @@ BaseArray.prototype = {
         this.vars.elements.splice(this.idx(id), 0, element);
         return this;
     },
-    push: function (value) {
+    push(value) {
         this.insert(this.end() + 1, value);
         return this;
     },
-    pushArray: function (array) {
+    pushArray(array) {
         for (let i = 0; i < array.length; i++) this.push(array[i]);
         return this;
     },
-    pushFromExistValue: function (value) {
+    pushFromExistValue(value) {
         this.insertFromExistValue(this.end() + 1, value);
         return this;
     },
-    pushFromExistElement: function (value) {
+    pushFromExistElement(value) {
         this.insertFromExistElement(this.end() + 1, value);
         return this;
     },
-    eraseByBaseArray: function (id) {
+    eraseByBaseArray(id) {
         const element = this.element(id);
         const elements = this.vars.elements;
         elements.splice(this.idx(id), 1);
         this.eraseChild(element);
         return this;
     },
-    pop: function () {
+    pop() {
         this.erase(this.end());
         return this;
     },
@@ -111,33 +111,33 @@ BaseArray.prototype = {
         this.eraseByBaseArray(id);
         return this;
     },
-    dropElement: function (id) {
+    dropElement(id) {
         const element = this.element(id);
         this.eraseByBaseArray(id);
         return element;
     },
-    dropFirstElement: function () {
+    dropFirstElement() {
         return this.dropElement(this.start());
     },
-    dropLastElement: function () {
+    dropLastElement() {
         return this.dropElement(this.end());
     },
-    dropValue: function (id) {
+    dropValue(id) {
         const element = this.element(id);
         const value = element.after(this.delay()).drop();
         return value;
     },
-    text: function (id, text) {
+    text(id, text) {
         if (text === undefined) return this.value(id).text();
         this.value(id).text(text);
         return this;
     },
-    intValue: function (id) {
+    intValue(id) {
         const value = this.value(id);
         if (value === undefined) return 0;
         return +this.value(id).text();
     },
-    opacity: function () {
+    opacity() {
         const args = arguments;
         switch (args.length) {
             case 0:
@@ -152,7 +152,7 @@ BaseArray.prototype = {
                 ErrorLauncher.invalidArguments();
         }
     },
-    value: function () {
+    value() {
         const args = arguments;
         switch (args.length) {
             case 1:
@@ -164,7 +164,7 @@ BaseArray.prototype = {
                 ErrorLauncher.invalidArguments();
         }
     },
-    color: function () {
+    color() {
         const args = arguments;
         switch (args.length) {
             case 1:
@@ -181,7 +181,7 @@ BaseArray.prototype = {
                 ErrorLauncher.invalidArguments();
         }
     },
-    sort: function (l, r, comparator = (a, b) => a.intValue() - b.intValue()) {
+    sort(l, r, comparator = (a, b) => a.intValue() - b.intValue()) {
         if (arguments.length === 0) return this.sort(this.start(), this.end(), comparator);
         if (arguments.length === 1) return this.sort(this.start(), this.end(), arguments[0]);
         l -= this.start();

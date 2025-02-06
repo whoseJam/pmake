@@ -65,24 +65,24 @@ export function Polygon(parent, points = []) {
 Polygon.prototype = {
     ...BaseNake.prototype,
     points: Factory.handler("points"),
-    x: function (x) {
+    x(x) {
         if (x === undefined) return this.vars.x;
-        this.points(updatePoints(vars, x - vars.x, 0));
+        this.points(updatePoints(this.vars, x - this.vars.x, 0));
         return this;
     },
-    y: function (y) {
+    y(y) {
         if (y === undefined) return this.vars.y;
-        this.points(updatePoints(vars, 0, y - vars.y));
+        this.points(updatePoints(this.vars, 0, y - this.vars.y));
         return this;
     },
-    width: function (width) {
+    width(width) {
         if (width === undefined) return this.vars.width;
-        this.points(updatePointsWidth(vars, width));
+        this.points(updatePointsWidth(this.vars, width));
         return this;
     },
-    height: function (height) {
+    height(height) {
         if (height === undefined) return this.vars.height;
-        this.points(updatePointsHeight(vars, height));
+        this.points(updatePointsHeight(this.vars, height));
         return this;
     },
 };

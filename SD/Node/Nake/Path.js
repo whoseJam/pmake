@@ -85,26 +85,26 @@ export function Path(parent) {
 
 Path.prototype = {
     ...BaseLine.prototype,
-    at: function (k) {
+    at(k) {
         return getPointByRate(this.d(), k);
     },
-    getPointAtLength: function (length) {
+    getPointAtLength(length) {
         return getPointAtLength(this.d(), length);
     },
-    totalLength: function () {
+    totalLength() {
         return getTotalLength(this.d());
     },
-    x: function (x) {
+    x(x) {
         if (x === undefined) return this.vars.x;
         this.d(move(this.vars.d, x - this.vars.x, 0));
         return this;
     },
-    y: function (y) {
+    y(y) {
         if (y === undefined) return this.vars.y;
         this.d(move(this.vars.d, 0, y - this.vars.y));
         return this;
     },
-    d: function (d) {
+    d(d) {
         if (d === undefined) return this.vars.d;
         this.vars.d = d;
         const box = pathToBox(d);
@@ -114,10 +114,10 @@ Path.prototype = {
         this.vars.height = box.height;
         return this;
     },
-    width: function () {
+    width() {
         return this.vars.width;
     },
-    height: function () {
+    height() {
         return this.vars.height;
     },
 };

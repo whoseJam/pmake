@@ -36,19 +36,19 @@ BaseLine.prototype = {
     markerStart: handlerMarker("markerStart"),
     markerMid: handlerMarker("markerMid"),
     markerEnd: handlerMarker("markerEnd"),
-    arrow: function (flag = true) {
+    arrow(flag = true) {
         this.markerEnd(flag ? "arrow" : "");
         return this;
     },
-    revArrow: function (flag = true) {
+    revArrow(flag = true) {
         this.markerStart(flag ? "arrowReverse" : "");
         return this;
     },
-    doubleArrow: function (flag = true) {
+    doubleArrow(flag = true) {
         this.arrow(flag).revArrow(flag);
         return this;
     },
-    pointStoT: function () {
+    pointStoT() {
         const len = this.totalLength();
         const context = new Context(this);
         this.startAnimate(context.tillc(0, 0));
@@ -57,7 +57,7 @@ BaseLine.prototype = {
         this.strokeDashArray([len, 0]);
         return this;
     },
-    pointTtoS: function () {
+    pointTtoS() {
         const len = this.totalLength();
         const context = new Context(this);
         this.startAnimate(context.tillc(0, 0));
@@ -68,7 +68,7 @@ BaseLine.prototype = {
         this.strokeDashOffset(0);
         return this;
     },
-    fadeStoT: function () {
+    fadeStoT() {
         const len = this.totalLength();
         const context = new Context(this);
         this.startAnimate(context.tillc(0, 0));
@@ -79,7 +79,7 @@ BaseLine.prototype = {
         this.strokeDashOffset(-len);
         return this;
     },
-    fadeTtoS: function () {
+    fadeTtoS() {
         const len = this.totalLength();
         const context = new Context(this);
         this.startAnimate(context.tillc(0, 0));
@@ -88,7 +88,7 @@ BaseLine.prototype = {
         this.strokeDashArray([0, len]);
         return this;
     },
-    source: function (x, y) {
+    source(x, y) {
         if (arguments.length === 0) {
             return [this.x1(), this.y1()];
         } else if (arguments.length === 1) {
@@ -98,7 +98,7 @@ BaseLine.prototype = {
         this.freeze().x1(x).y1(y).unfreeze();
         return this;
     },
-    target: function (x, y) {
+    target(x, y) {
         if (arguments.length === 0) {
             return [this.x2(), this.y2()];
         } else if (arguments.length === 1) {
@@ -108,7 +108,7 @@ BaseLine.prototype = {
         this.freeze().x2(x).y2(y).unfreeze();
         return this;
     },
-    x: function (x) {
+    x(x) {
         const x1 = this.x1();
         const x2 = this.x2();
         const ox = Math.min(x1, x2);
@@ -120,7 +120,7 @@ BaseLine.prototype = {
         this.unfreeze();
         return this;
     },
-    y: function (y) {
+    y(y) {
         const y1 = this.y1();
         const y2 = this.y2();
         const oy = Math.min(y1, y2);
@@ -132,7 +132,7 @@ BaseLine.prototype = {
         this.unfreeze();
         return this;
     },
-    width: function (width) {
+    width(width) {
         const x1 = this.x1();
         const x2 = this.x2();
         if (width === undefined) return Math.abs(x1 - x2);
@@ -140,7 +140,7 @@ BaseLine.prototype = {
         else this.x1(x2 + width);
         return this;
     },
-    height: function (height) {
+    height(height) {
         const y1 = this.y1();
         const y2 = this.y2();
         if (height === undefined) return Math.abs(y1 - y2);
@@ -148,25 +148,25 @@ BaseLine.prototype = {
         else this.y1(y2 + height);
         return this;
     },
-    text: function () {
+    text() {
         const value = this.child("value");
         if (!value) return "";
         if (!value.text) ErrorLauncher.invalidInvoke("text");
         return value.text();
     },
-    drop: function () {
+    drop() {
         const value = this.child("value");
         value.onExit(EX.drop());
         this.eraseChild(value);
         return value;
     },
-    intValue: function () {
+    intValue() {
         const value = this.value();
         if (!value) return 0;
         if (!value.text) ErrorLauncher.invalidInvoke("intValue");
         return +value.text();
     },
-    value: function (value, rule) {
+    value(value, rule) {
         if (arguments.length === 0) return this.child("value");
         if (this.hasChild("value")) this.eraseChild("value");
         if (Check.isFalseType(value)) return this;

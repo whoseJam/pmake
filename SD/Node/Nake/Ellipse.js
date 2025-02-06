@@ -34,19 +34,19 @@ Ellipse.prototype = {
     cy: Factory.handlerLowPrecise("cy"),
     rx: Factory.handlerLowPrecise("rx"),
     ry: Factory.handlerLowPrecise("ry"),
-    x: function (x) {
+    x(x) {
         if (x === undefined) return this.cx() - this.rx();
         return this.cx(x - this.x() + this.cx());
     },
-    y: function (y) {
+    y(y) {
         if (y === undefined) return this.cy() - this.ry();
         return this.cy(y - this.y() + this.cy());
     },
-    width: function (width) {
+    width(width) {
         if (width === undefined) return this.rx() * 2;
         return this.rx(width / 2);
     },
-    height: function (height) {
+    height(height) {
         if (height === undefined) return this.ry() * 2;
         return this.ry(height / 2);
     },

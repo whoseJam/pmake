@@ -2,17 +2,17 @@ import * as sd from "@/sd";
 
 /**
  * 构建Trie树
- * @param {sd.BaseTree} ac 
- * @param {Array<string>} strs 
+ * @param {sd.BaseTree} ac
+ * @param {Array<string>} strs
  * @param {{
- *  OnLink: (nodeU: sd.SDNode, nodeV: sd.SDNode, u: number, v: number) => void
- *  OnReachEndOfString: (nodeU: sd.SDNode, u: number) => void
+ *  onLink: (u: number, v: number) => void;
+ *  onReachEndOfString: (u: number) => void;
  * }} args
  */
-export function BuildTrieTreeSync(ac, strs, args = {}) {
+export function buildTrieTreeSync(ac, strs, args = {}) {
     const R = sd.rule();
-    const OnLink = args.OnLink;
-    const OnReachEndOfString = args.OnReachEndOfString;
+    const onLink = args.onLink;
+    const onReachEndOfString = args.onReachEndOfString;
 
     let tot = 1;
     ac.root(1);
@@ -29,16 +29,12 @@ export function BuildTrieTreeSync(ac, strs, args = {}) {
                 ac.element(tot).str = s.substr(0, i + 1);
                 ac.element(tot).acch = {};
 
-                if (OnLink) {
-                    OnLink(ac.element(u), ac.element(tot), +u, +tot);
-                }
+                if (onLink) onLink(+u, +tot);
             }
             u = cur.acch[s[i]];
         }
         ac.element(u).is_end = true;
-        if (OnReachEndOfString) {
-            OnReachEndOfString(ac.element(u), u);
-        }
+        if (onReachEndOfString) onReachEndOfString(u);
     }
     for (let i = 0; i < strs.length; i++) {
         insert(strs[i]);

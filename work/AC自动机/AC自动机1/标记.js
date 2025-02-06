@@ -8,12 +8,12 @@ const svg = sd.svg();
 const C = sd.color();
 const R = sd.rule();
 const ac = new sd.Tree(svg).layerHeight(90).width(600);
-const target = "abaabba";
+const target = "abaa";
 const arr = new sd.Array(svg).pushArray(target);
 const pointer = sd.Pointer(arr, "i", "t");
 const focus = sd.Focus(ac);
 const brace = sd.Brace(arr);
-const data = ["aba", "ba", "aa", "bb"];
+const data = ["aba", "ba", "aa", "bb", "b"];
 
 const links = [{ type: sd.Line }, { u: 2, v: 1, type: sd.Curve, props: { bending: -0.3 } }, { u: 5, v: 1, type: sd.Curve, props: { bending: 0.3 } }, { u: 7, v: 2, type: sd.Curve, props: { bending: -0.3 } }, { u: 8, v: 5, type: sd.Curve, props: { bending: 0.3 } }];
 
@@ -33,6 +33,7 @@ function makeLink(u, v) {
 sd.init(async () => {
     buildTrieTreeSync(ac, data, { onReachEndOfString: u => ac.element(u).strokeWidth(3) });
     buildFailTreeSync(ac, { onLink });
+
     ac.forEachNode((node, id) => {
         if (id === "1") return;
         if (node.cx() < ac.father(node).cx() || (node.cx() === ac.father(node).cx() && node.cx() < ac.cx())) {
@@ -56,6 +57,7 @@ sd.main(async () => {
 
 async function onStartMatch() {
     await sd.pause();
+    ac.startAnimate().color(1, C.green).endAnimate();
     focus.startAnimate().focus(1).endAnimate().clickable(false);
 }
 
@@ -93,7 +95,13 @@ async function onMatchExtended(u, i) {
     arr.startAnimate().color(i, C.green).endAnimate();
 
     await sd.pause();
-    ac.startAnimate().color(u, C.white).endAnimate();
+    ac.startAnimate();
+    u = ac.element(u).fail;
+    while (u) {
+        if (ac.color(u).fill !== C.green) ac.color(u, C.green);
+        u = ac.element(u).fail;
+    }
+    ac.endAnimate();
 }
 
 async function onMatchFailed(u, i) {

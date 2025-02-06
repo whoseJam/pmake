@@ -86,11 +86,11 @@ Text.prototype = {
     x: Factory.handlerLowPrecise("x"),
     y: Factory.handlerLowPrecise("y"),
     fontSize: Factory.handlerLowPrecise("fontSize"),
-    width: function (width) {
+    width(width) {
         if (width === undefined) return this.vars.width;
         if (this.width() > 1e-1) {
-            const k = width / this.vars.width;
-            this.fontSize(this.fontSize() * k);
+        const k = width / this.vars.width;
+        this.fontSize(this.fontSize() * k);
             this.vars.width *= k;
             this.vars.height *= k;
         } else {
@@ -102,7 +102,7 @@ Text.prototype = {
         }
         return this;
     },
-    height: function (height) {
+    height(height) {
         if (height === undefined) return this.vars.height;
         if (this.height() > 1e-1) {
             const k = height / this.vars.height;
@@ -118,7 +118,7 @@ Text.prototype = {
         }
         return this;
     },
-    text: function (text) {
+    text(text) {
         if (text === undefined) return this.vars.text;
         this.vars.text = parseText(String(text));
         const box = fontSizeToBox(this.vars.text, this.vars.fontSize);
@@ -126,7 +126,7 @@ Text.prototype = {
         this.vars.height = box.height;
         return this;
     },
-    intValue: function () {
+    intValue() {
         return +this.text();
     },
 };

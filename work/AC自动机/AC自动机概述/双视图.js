@@ -1,7 +1,7 @@
 import * as sd from "@/sd";
 
-import { BuildFailTreeSync } from "../_/BuildFailTreeSync";
-import { BuildTrieTreeSync } from "../_/BuildTrieTreeSync";
+import { buildFailTreeSync } from "../_/BuildFailTreeSync";
+import { buildTrieTreeSync } from "../_/BuildTrieTreeSync";
 
 const svg = sd.svg();
 const C = sd.color();
@@ -11,7 +11,7 @@ const data = ["ababa", "babb"];
 
 const links = [{ type: sd.Line }, { u: 2, v: 1, type: sd.Curve, props: { bending: -0.3 } }, { u: 7, v: 1, type: sd.Curve, props: { bending: 0.3 } }, { u: 6, v: 4, type: sd.Curve, props: { bending: -0.3 } }, { u: 10, v: 7, type: sd.Curve, props: { bending: 0.3 } }];
 
-function CreateLink(u, v) {
+function makeLink(u, v) {
     for (let i = 1; i < links.length; i++) {
         if (links[i].u == u && links[i].v == v) {
             const line = new links[i].type(svg);
@@ -25,9 +25,9 @@ function CreateLink(u, v) {
 }
 
 sd.init(async () => {
-    BuildTrieTreeSync(ac, data);
-    BuildFailTreeSync(ac, {
-        OnLink: OnLink,
+    buildTrieTreeSync(ac, data);
+    buildFailTreeSync(ac, {
+        onLink,
     });
 });
 
@@ -45,6 +45,19 @@ sd.main(async () => {
         node.onClick(() => {
             sd.inter(async () => {
                 let f = id;
+                const path = [f];
+                while (ac.fatherId(f)) {
+                    f = ac.fatherId(f);
+                    path.push(f);
+                }
+                for (let i = path.length - 1; i >= 0; i--) ac.startAnimate().color(path[i], C.green).endAnimate();
+                await sd.pause();
+                for (let i = path.length - 1; i >= 0; i--) ac.startAnimate().color(path[i], C.white).endAnimate();
+            });
+        });
+        node.onDblClick(() => {
+            sd.inter(async () => {
+                let f = id;
                 ac.startAnimate().color(f, C.green).endAnimate();
                 while (ac.element(f).fail) {
                     f = ac.element(f).fail;
@@ -59,27 +72,16 @@ sd.main(async () => {
                 }
             });
         });
-        node.onDblClick(() => {
-            sd.inter(async () => {
-                let f = id;
-                const path = [f];
-                while (ac.fatherId(f)) {
-                    f = ac.fatherId(f);
-                    path.push(f);
-                }
-                for (let i = path.length - 1; i >= 0; i--) ac.startAnimate().color(path[i], C.green).endAnimate();
-                await sd.pause();
-                for (let i = path.length - 1; i >= 0; i--) ac.startAnimate().color(path[i], C.white).endAnimate();
-            });
-        });
     });
 });
 
-function OnLink(nodeU, nodeV, u, v) {
-    const line = CreateLink(u, v);
-    line.source(nodeU.center());
-    line.target(nodeV.center());
+function onLink(u, v) {
+    const line = makeLink(u, v);
+    const du = ac.element(u);
+    const dv = ac.element(v);
+    line.source(du.center());
+    line.target(dv.center());
     line.arrow();
     line.strokeDashArray([5, 5]);
-    sd.trim(line, nodeU, nodeV);
+    sd.trim(line, du, dv);
 }
