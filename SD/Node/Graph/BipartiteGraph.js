@@ -2,6 +2,7 @@ import { Enter as EN } from "@/Node/Core/Enter";
 import { BaseGraph } from "@/Node/Graph/BaseGraph";
 import { GridGraph } from "@/Node/Graph/GridGraph";
 import { Cast } from "@/Utility/Cast";
+import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { trim } from "@/Utility/Trim";
 
 export function BipartiteGraph(parent) {
@@ -57,6 +58,7 @@ BipartiteGraph.prototype = {
     ...BaseGraph.prototype,
     newNode(id, value, no) {
         if (arguments.length === 2) return this.newNode(id, undefined, value);
+        if (no === undefined) ErrorLauncher.invalidArguments();
         const element = new this._.nodeType(this.layer("nodes"));
         this._.no[element.id] = no;
         element.value(Cast.castToSDNode(element, value, id));
