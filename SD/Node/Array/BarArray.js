@@ -22,11 +22,13 @@ export function BarArray(parent) {
         const y = this.my();
         let maxHeight = 0;
         this.vars.elements.forEach((element, i) => {
-            element.width(this.elementWidth());
-            element.height(this.elementHeight() * element.value());
-            element.x(this.x() + i * this.elementWidth());
-            element.my(y);
-            maxHeight = Math.max(maxHeight, this.elementHeight() * element.value());
+            this.tryUpdate(element, () => {
+                element.width(this.elementWidth());
+                element.height(this.elementHeight() * element.value());
+                element.x(this.x() + i * this.elementWidth());
+                element.my(y);
+                maxHeight = Math.max(maxHeight, this.elementHeight() * element.value());
+            });
         });
         this.vars.height = maxHeight;
         this.vars.y = y - maxHeight;
@@ -52,20 +54,22 @@ BarArray.prototype = {
         value = +value;
         if (typeof value !== "number") ErrorLauncher.invalidArguments();
         const element = new Rect(this.layer("elements")).opacity(0);
-        element.vars.value = value;
-        element.value = function (value) {
-            if (value === undefined) return this.vars.value;
-            this.vars.value = value;
-            const baseline = this.my();
-            this.height(value * this.parent.elementHeight());
-            this.my(baseline);
-            return this;
+        element.value = function () {
+            return value;
         };
         element.intValue = function () {
-            return this.value();
+            return value;
         };
         element.onEnter(EN.appear("elements"));
         this.insertByBaseArray(id, element);
         return this;
     },
+    insertFromExistValue(id, value) {
+        const element = value;
+        element.onEnter(EN.moveTo("elements"));
+        this.insertByBaseArray(id, element);
+        return this;
+    },
 };
+
+BarArray.prototype.insertFromExistElement = BarArray.prototype.insertFromExistValue;
