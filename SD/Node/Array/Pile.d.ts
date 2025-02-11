@@ -1,11 +1,6 @@
-import { BaseArray } from "@/Node/Array/BaseArray";
+import { Array } from "@/Node/Array";
 import { SDNode } from "@/Node/SDNode";
 
-export class Pile extends BaseArray {
+export class Pile extends Array {
     constructor(parent: SDNode);
-
-    elementWidth(): number;
-    elementWidth(width: number): this;
-    elementHeight(): number;
-    elementHeight(height: number): this;
 }
