@@ -16,10 +16,12 @@ export function Stack(parent) {
 
     this.effect("stack", () => {
         this.vars.elements.forEach((element, id) => {
-            element.width(this.elementWidth());
-            element.height(this.elementHeight());
-            element.x(this.x());
-            element.y(this.y() + id * this.elementHeight());
+            this.tryUpdate(element, () => {
+                element.width(this.elementWidth());
+                element.height(this.elementHeight());
+                element.x(this.x());
+                element.y(this.y() + id * this.elementHeight());
+            });
         });
     });
 }

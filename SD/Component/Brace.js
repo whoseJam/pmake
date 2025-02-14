@@ -35,7 +35,7 @@ export function Brace(parent) {
     brace.location = Factory.handler("location");
     brace.braceGap = Factory.handlerLowPrecise("braceGap");
     brace.valueGap = Factory.handlerLowPrecise("valueGap");
-    brace.brace = function (l, r, location = "t", gap = 5) {
+    brace.brace = function (l, r, location, gap) {
         if (!Check.isTypeOfSDNode(l)) l = parent.element(l);
         if (!Check.isTypeOfSDNode(r)) r = parent.element(r);
         if (!Check.isFalseType(location)) this.location(location);

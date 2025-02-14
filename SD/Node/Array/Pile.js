@@ -16,10 +16,12 @@ export function Pile(parent) {
 
     this.effect("pile", () => {
         this.vars.elements.forEach((element, i) => {
-            element.width(this.elementWidth());
-            element.height(this.elementHeight());
-            element.x(this.x());
-            element.y(this.my() - (i + 1) * this.elementHeight());
+            this.tryUpdate(element, () => {
+                element.width(this.elementWidth());
+                element.height(this.elementHeight());
+                element.x(this.x());
+                element.y(this.my() - (i + 1) * this.elementHeight());
+            });
         });
     });
 }

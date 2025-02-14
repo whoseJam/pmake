@@ -16,8 +16,10 @@ export function ValueArray(parent) {
     this.effect("valueArray", () => {
         const align = this.align();
         this.vars.elements.forEach((element, id) => {
-            element.cx(this.x() + this.elementWidth() * (id + 0.5));
-            element[align](this[align]());
+            this.tryUpdate(element, () => {
+                element.cx(this.x() + this.elementWidth() * (id + 0.5));
+                element[align](this[align]());
+            });
         });
     });
 }

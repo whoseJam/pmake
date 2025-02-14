@@ -15,8 +15,10 @@ export function ValueStack(parent) {
     this.effect("valueStack", () => {
         const align = this.align();
         this.vars.elements.forEach((element, i) => {
-            element.cy(this.y() + this.elementHeight() * (i + 0.5));
-            element[align](this[align]());
+            this.tryUpdate(element, () => {
+                element.cy(this.y() + this.elementHeight() * (i + 0.5));
+                element[align](this[align]());
+            });
         });
     });
 }
