@@ -128,6 +128,10 @@ class ObjectManager {
     }
 }
 
+export function afterEffect(callback) {
+    callback();
+}
+
 export function freeze() {
     ErrorLauncher.warnNotImplementedYet("freeze");
 }

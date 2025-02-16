@@ -1,5 +1,5 @@
 import * as sd from "@/sd";
-import { BucketOptimize } from "../_/BucketOptimize";
+import { bucketOptimize } from "../_/BucketOptimize";
 
 const svg = sd.svg();
 const C = sd.color();
@@ -11,7 +11,7 @@ const arr = new sd.Array(svg);
 
 sd.init(() => {
     for (let i = 0; i < data.length; i++)
-        arr.push(CastToBinStr(data[i]));
+        arr.push(binaryStr(data[i]));
 })
 
 sd.main(async () => {
@@ -29,15 +29,15 @@ sd.main(async () => {
     pj.startAnimate().moveTo(null).endAnimate();
     pi.startAnimate().moveTo(null).endAnimate();
     await sd.pause();
-    await BucketOptimize(arr, data.length - 1, {
-        OnCreateFirstBucket: OnCreateFirstBucket,
-        OnCreateBucket: OnCreateBucket,
-        OnUpdateBucket: OnUpdateBucket,
-        OnUpdateCurrent: OnUpdateCurrent
+    await bucketOptimize(arr, data.length - 1, {
+        onCreateFirstBucket,
+        onCreateBucket,
+        onUpdateBucket,
+        onUpdateCurrent
     });
 })
 
-async function OnUpdateBucket(arr, j) {
+async function onUpdateBucket(arr, j) {
     const firstBucket = global.firstBucket;
     const currentBucket = arr.element(j).child("stk");
     const links = [];
@@ -54,7 +54,7 @@ async function OnUpdateBucket(arr, j) {
     });
 }
 
-async function OnUpdateCurrent(arr, i) {
+async function onUpdateCurrent(arr, i) {
     const firstBucket = global.firstBucket;
     const currentBucket = arr.element(i).child("stk");
     const links = [];
@@ -71,20 +71,20 @@ async function OnUpdateCurrent(arr, i) {
     });
 }
 
-async function OnCreateFirstBucket(arr, cx) {
+async function onCreateFirstBucket(arr, cx) {
     const stk = new sd.Stack(svg).elementWidth(15).elementHeight(15).resize(logV);
     stk.cx(cx).my(arr.y() - 5).opacity(0).startAnimate().opacity(1).endAnimate();
     global.firstBucket = stk;
 }
 
-async function OnCreateBucket(arr, i) {
+async function onCreateBucket(arr, i) {
     const element = arr.element(i);
     const stk = new sd.Stack(svg).elementWidth(15).elementHeight(15).resize(logV);
     for (let i = 0; i < logV; i++) stk.value(i, element.text()[i]);
     element.startAnimate().childAs("stk", stk.onEnter(EN.appear()), R.aside("tc", 5)).endAnimate();
 }
 
-function CastToBinStr(x) {
+function binaryStr(x) {
     let ans = "";
     for (let i = 0; i < logV; i++) {
         ans = String(x % 2) + ans;

@@ -1,5 +1,5 @@
 import * as sd from "@/sd";
-import { BucketOptimize } from "../_/BucketOptimize";
+import { bucketOptimize } from "../_/BucketOptimize";
 
 const svg = sd.svg();
 const C = sd.color();
@@ -18,31 +18,33 @@ sd.init(() => {
 
 sd.main(async () => {
     await sd.pause();
-    await BucketOptimize(arr, str.length, {
-        OnCreateFirstBucket: OnCreateFirstBucket,
-        OnCreateBucket: OnCreateBucket,
-        OnUpdateBucket: OnUpdateBucket,
-        OnUpdateCurrent: OnUpdateCurrent
+    await bucketOptimize(arr, str.length, {
+        onCreateFirstBucket,
+        onCreateBucket,
+        onUpdateBucket,
+        onUpdateCurrent
     })
 })
 
-async function OnCreateFirstBucket(arr, cx) {
+async function onCreateFirstBucket(arr, cx) {
     const stk = new sd.Stack(svg).elementWidth(15).elementHeight(15).resize(charset.length);
     stk.cx(cx).my(arr.y() - 5);
     for (let i = 0; i < charset.length; i++) {
-        sd.Label(stk.element(i), charset[i], "lc", 10, 3);
+        console.log(`e${i}.cy=${stk.element(i).cy()}`);
+        const lb = sd.Label(stk.element(i), charset[i], "lc", 10, 3);
+        console.log(`label.cy=${lb.cy()} lalbel.height=${lb.height()} label.fontSize=${lb.fontSize()}`)
     }
     stk.opacity(0).startAnimate().opacity(1).endAnimate();
     global.firstBucket = stk;
 }
 
-async function OnCreateBucket(arr, i) {
+async function onCreateBucket(arr, i) {
     const element = arr.element(i);
     const dist = (arr.text(i).charCodeAt(0) - "a".charCodeAt(0)) * 15 + 6.3;
     element.label = sd.Label(element, arr.text(i), "tc", 10, dist).opacity(0).startAnimate().opacity(1).endAnimate();
 }
 
-async function OnUpdateBucket(arr, j) {
+async function onUpdateBucket(arr, j) {
     await sd.pause();
     const firstBucket = global.firstBucket;
     const current = arr.element(j).label;
@@ -52,7 +54,7 @@ async function OnUpdateBucket(arr, j) {
     link.startAnimate().fadeStoT().endAnimate().remove();
 }
 
-async function OnUpdateCurrent(arr, i) {
+async function onUpdateCurrent(arr, i) {
     await sd.pause();
     const firstBucket = global.firstBucket;
     const current = arr.element(i).label;

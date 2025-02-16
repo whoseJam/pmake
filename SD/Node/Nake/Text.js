@@ -85,36 +85,39 @@ Text.prototype = {
     ...BaseNake.prototype,
     x: Factory.handlerLowPrecise("x"),
     y: Factory.handlerLowPrecise("y"),
-    fontSize: Factory.handlerLowPrecise("fontSize"),
-    width(width) {
-        if (width === undefined) return this.vars.width;
-        if (this.width() > 1e-1) {
-        const k = width / this.vars.width;
-        this.fontSize(this.fontSize() * k);
+    fontSize(fontSize) {
+        if (fontSize == undefined) return this.vars.fontSize;
+        if (this.vars.fontSize > 1e-1) {
+            const k = fontSize / this.vars.fontSize;
             this.vars.width *= k;
             this.vars.height *= k;
         } else {
-            const fontSize = widthToFontSize(this.vars.text, width);
-            this.fontSize(fontSize);
             const box = fontSizeToBox(this.vars.text, fontSize);
             this.vars.width = box.width;
             this.vars.height = box.height;
+        }
+        this.vars.fontSize = fontSize;
+        return this;
+    },
+    width(width) {
+        if (width === undefined) return this.vars.width;
+        if (this.vars.width > 1e-1) {
+            const k = width / this.vars.width;
+            this.fontSize(this.fontSize() * k);
+        } else {
+            const fontSize = widthToFontSize(this.vars.text, width);
+            this.fontSize(fontSize);
         }
         return this;
     },
     height(height) {
         if (height === undefined) return this.vars.height;
-        if (this.height() > 1e-1) {
+        if (this.vars.height > 1e-1) {
             const k = height / this.vars.height;
-            this.fontSize(this.fontSize() * k);
-            this.vars.width *= k;
-            this.vars.height *= k;
+            this.fontSize(this.fontSize() * k);        
         } else {
             const fontSize = heightToFontSize(this.vars.text, height);
             this.fontSize(fontSize);
-            const box = fontSizeToBox(this.vars.text, fontSize);
-            this.vars.width = box.width;
-            this.vars.height = box.height;
         }
         return this;
     },
