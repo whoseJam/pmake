@@ -33,7 +33,7 @@ Stack.prototype = {
     insert: Array.prototype.insert,
     insertFromExistValue: Array.prototype.insertFromExistValue,
     insertFromExistElement: Array.prototype.insertFromExistElement,
-    height: function (height) {
+    height(height) {
         if (height === undefined) return this.elementHeight() * this.length();
         const length = Math.max(this.length(), 1);
         this.elementHeight(height / length);

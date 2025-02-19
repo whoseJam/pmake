@@ -27,13 +27,13 @@ export function ValueArray(parent) {
 ValueArray.prototype = {
     ...Array.prototype,
     align: Factory.handler("align"),
-    insert: function (id, value) {
+    insert(id, value) {
         const element = Cast.castToSDNode(this.layer("elements"), value);
         element.onEnter(EN.appear("elements"));
         this.insertByBaseArray(id, element);
         return this;
     },
-    insertFromExistValue: function (id, value) {
+    insertFromExistValue(id, value) {
         const element = value;
         element.onEnter(EN.moveTo("elements"));
         this.insertByBaseArray(id, element);

@@ -28,7 +28,7 @@ export function Pile(parent) {
 
 Pile.prototype = {
     ...BaseArray.prototype,
-    y: function (y) {
+    y(y) {
         if (y === undefined) return this.my() - this.height();
         this.my(y + this.height());
         return this;
@@ -39,7 +39,7 @@ Pile.prototype = {
     insert: Array.prototype.insert,
     insertFromExistValue: Array.prototype.insertFromExistValue,
     insertFromExistElement: Array.prototype.insertFromExistElement,
-    height: function (height) {
+    height(height) {
         if (height === undefined) return this.elementHeight() * this.length();
         const length = Math.max(this.length(), 1);
         this.elementHeight(height / length);
