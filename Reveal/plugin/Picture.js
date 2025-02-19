@@ -1,7 +1,7 @@
-import { CopyStyles }     from "./Util";
+import { CopyStyles } from "./Util";
 import { ReplaceElement } from "./Util";
 
-export function Picture() {
+export default function Picture() {
     return {
         id: "Picture",
         init: function init(reveal) {

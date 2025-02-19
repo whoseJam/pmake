@@ -29,7 +29,7 @@ function LoadScript(url, callback) {
 	head.appendChild(script);
 }
 
-export function MathJax2() {
+export default function MathJax2() {
 	return {
 		id: "MathJax2",
 		init: async function(reveal) {
