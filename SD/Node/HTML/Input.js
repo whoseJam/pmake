@@ -46,17 +46,17 @@ Input.prototype = {
     y: Factory.handlerLowPrecise("y"),
     width: Factory.handlerLowPrecise("width"),
     height: Factory.handlerLowPrecise("height"),
-    onChange: function (callback) {
+    onChange(callback) {
         if (callback === undefined) return this._.onChange;
         this._.onChange = callback;
         return this;
     },
-    label: function (value) {
+    label(value) {
         if (value === undefined) return this._.label.getAttribute("text");
         this._.label.setAttribute("text", value);
         return this;
     },
-    value: function (value) {
+    value(value) {
         if (value === undefined) return this._.nake.getAttribute("value");
         this._.nake.setAttribute("value", value);
         return this;
