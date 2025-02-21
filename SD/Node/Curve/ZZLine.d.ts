@@ -3,6 +3,9 @@ import { SDNode } from "@/Node/SDNode";
 
 type Location = "t" | "b" | "l" | "r";
 
+/**
+ * 双折线组件
+ */
 export class ZZLine extends BaseCurve {
     constructor(parent: SDNode);
 
