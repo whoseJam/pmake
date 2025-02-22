@@ -28,7 +28,7 @@
         <p class="fragment quote">假设第 $i+1$ 行的炮兵放置状态为 $P$...</p>
         <p class="fragment">
             $$
-            f_{i,S,T}\stackrel{max}{\rightarrow} f_{i+1,P,S}+count(P),T与S与P能连成合法的三行
+            f_{i,S,T}+count(P)\stackrel{max}{\rightarrow} f_{i+1,P,S},T与S与P能连成合法的三行
             $$
         </p>
         <codeblock class="fragment">
@@ -40,5 +40,21 @@
                                 f[i + 1][P][S] = max(f[i + 1][P][S], f[i][S][T] + count(P));
             </script>
         </codeblock>
+    </section>
+    <section>
+        <h2>三进制</h2>
+        <p>又或者，我们可以换一个思路，把棋盘上的网格分成三类</p>
+        <ul>
+            <li>炮兵所在的地方<span class="fragment">，设为状态 $2$</span></li>
+            <li>位于炮兵正下方<b>恰好</b>一个单位的地方<span class="fragment">，设为状态 $1$</span></li>
+            <li>位于炮兵正下方<b>超过</b>一个单位的地方<span class="fragment">，设为状态 $0$</span></li>
+        </ul>
+        <iframe data-animation="./三进制状态转移.js"
+            style="width: 1000px; height: 200px;"></iframe>
+        <p class="fragment">
+            $$
+            f_{i,S}+[T中2的数量]\stackrel{max}{\rightarrow} f_{i+1,T},T与S能连成合法的两行
+            $$
+        </p>
     </section>
 </section>
