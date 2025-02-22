@@ -62,7 +62,7 @@ BaseGraph.prototype = {
         return this.outLinks(node, mode).map(link => this.toNode(link, node));
     },
     outNodesId(node, mode) {
-        return this.outNodes(node, mode).map(node => this.nodeId(node));
+        return this.outNodes(node, mode).map(node => this.toNodeId(node));
     },
     newNodeByBaseGraph(id, element) {
         id = String(id);
@@ -116,7 +116,7 @@ BaseGraph.prototype = {
     links: BaseTree.prototype.links,
     toNode(link, source) {
         const sourceId = this.nodeId(source);
-        if (this.sourceId(sourceId) === sourceId) return this.target(link);
+        if (this.sourceId(link) === sourceId) return this.target(link);
         return this.source(link);
     },
     toNodeId(link, source) {

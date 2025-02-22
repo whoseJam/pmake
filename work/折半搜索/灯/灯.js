@@ -63,7 +63,7 @@ sd.main(async () => {
 function changeStatus(u, status) {
     const adj = [...graph.outNodes(u, "undirect"), graph.element(u)];
     adj.forEach(node => {
-        status[+node.nodeId] ^= 1;
+        status[+graph.nodeId(node)] ^= 1;
     });
 }
 

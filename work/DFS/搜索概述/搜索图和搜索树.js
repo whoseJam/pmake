@@ -51,7 +51,7 @@ function initNode(x) {
         let childCount = 0;
         graph.forEachOutNode(originId, "direct", outNode => {
             const newNodeId = ++cnt;
-            tree.newNode(newNodeId, outNode.nodeId);
+            tree.newNode(newNodeId, graph.nodeId(outNode));
             tree.link(x, newNodeId);
             tree.element(x, newNodeId).arrow();
             initNode(newNodeId);

@@ -25,5 +25,5 @@ function init(reveal) {
 
     ReplaceElement(parent, element, pre);
 
-    Init(reveal);
+    init(reveal);
 }

@@ -202,7 +202,7 @@ SDNode.prototype = {
         this._.exit = undefined;
         return this;
     },
-    title() {
+    title(title) {
         const titleElment = new SVGNode(this, this._.layer, "title");
         titleElment.setAttribute("innerHTML", title);
         return this;

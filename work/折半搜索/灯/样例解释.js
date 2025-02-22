@@ -27,18 +27,18 @@ sd.init(() => {
     for (let i = 1; i <= n; i++) {
         let tmp = 0;
         arr.element(i).onClick(() => {
-            tmp ^= 1;
-            arr.color(i, tmp ? C.green : C.white);
-            const adj = [...graph.outNodes(i, "undirect"), graph.element(i)];
-            
-            adj.forEach(node => {
-                node.open ^= 1;
-                node.color(node.open ? C.green : C.white);
+            sd.inter(async () => {
+                tmp ^= 1;
+                arr.startAnimate().color(i, tmp ? C.green : C.white).endAnimate();
+                const adj = [...graph.outNodes(i, "undirect"), graph.element(i)];
+                
+                adj.forEach(node => {
+                    node.open ^= 1;
+                    node.startAnimate().color(node.open ? C.green : C.white).endAnimate();
+                })
             })
         })
     }
-})
+});
 
-sd.main(async () => {
-
-})
+sd.main(async () => {});
