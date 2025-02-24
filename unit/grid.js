@@ -3,7 +3,35 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const C = sd.color();
 
-sd.main(TestDiffLayout);
+sd.main(TestResetSize);
+
+async function TestResetSize() {
+    const n = 5;
+    const grid = new sd.Grid(svg).x(100).y(100).m(n).n(n);
+    await sd.pause();
+    grid.startAnimate().n(3).endAnimate();
+}
+
+async function TestPushColAndRow() {
+    const n = 5;
+    const grid = new sd.Grid(svg).x(100).y(100).startN(1).startM(1);
+    for (let i = 1; i <= n; i++) {
+        for (let j = 1; j <= i + 1; j++) {
+            grid.insert(i, j, `${i},${j}`);
+        }
+    }
+    await sd.pause();
+    grid.startAnimate().pushCol().endAnimate();
+    await sd.pause();
+    grid.startAnimate().pushRow().endAnimate();
+    await sd.pause();
+    grid.startAnimate().pushCol().endAnimate();
+    await sd.pause();
+    grid.startAnimate().pushRow(12).endAnimate();
+    await sd.pause();
+    grid.startAnimate().popCol().endAnimate();
+    console.log(grid.m(), grid.n());
+}
 
 async function TestDiffLayout() {
     const n = 5;

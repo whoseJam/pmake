@@ -1,11 +1,12 @@
 import { BaseGrid } from "@/Node/Grid/BaseGrid";
 import { SDNode } from "@/Node/SDNode";
+import { RenderNode } from "@/Renderer/RenderNode";
 
 type Axis = "row" | "col";
 type Align = "x" | "y" | "cx" | "cy" | "mx" | "my";
 
 export class Grid extends BaseGrid {
-    constructor(parent: SDNode);
+    constructor(parent: SDNode | RenderNode);
 
     /**
      * 获取网格主轴

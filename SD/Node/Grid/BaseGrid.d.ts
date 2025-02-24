@@ -70,12 +70,28 @@ export class BaseGrid extends SDNode {
     m(m: number): this;
 
     /**
-     * 向网格中添加一列
+     * 网格的第二维度容量自增
      */
     pushCol(): this;
 
-    pushCol(rows: number): this;
-    pushRow(columns: number): this;
+    /**
+     * 网格的第二维度容量自增，且在新增的第二维度上放置 count 个元素
+     *
+     * 需保证 count 不能超过网格第一维度的容量
+     * @param count 新增列内元素个数
+     */
+    pushCol(count: number): this;
+
+    /**
+     * 网格的第一维度容量自增
+     */
+    pushRow(): this;
+
+    /**
+     * 网格的第一维度容量自增，且在新增的第一维度上放置 count 个元素
+     * @param count 新增行内元素个数
+     */
+    pushRow(count: number): this;
 
     /**
      * 获取网格指定下标对应的元素
