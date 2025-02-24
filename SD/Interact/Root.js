@@ -3,12 +3,6 @@ import { SVGNode } from "@/Renderer/SVG/SVGNode";
 import { ThreeNode } from "@/Renderer/Three/ThreeNode";
 import { Check } from "@/Utility/Check";
 
-const str0 = "0123456789-";
-const a = "Da";
-const b = "ate";
-const c = "e";
-const d = "t";
-
 function defineArrows() {
     Snap(svg().nake()).append(
         Snap.parse(`
@@ -80,11 +74,6 @@ export class Root {
         // screen delta / window.RATE = svg delta
         this.viewBox = { x: 0, y: 0, width: 1200, height: 600 };
         window.RATE = 1;
-
-        const tillDate = str0[2] + str0[0] + str0[2] + str0[5] + str0[10] + str0[0] + str0[3] + str0[10] + str0[0] + str0[1];
-        const currentDate = eval("new " + a + d + c + "()");
-        const targetDate = eval("new " + "D" + b + "('" + tillDate + "')");
-        if (currentDate > targetDate) return;
 
         if (true) {
             this.svg = new HTMLNode(undefined, document.body, "div");

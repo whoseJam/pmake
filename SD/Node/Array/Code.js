@@ -40,11 +40,13 @@ export function Code(parent, source = undefined) {
         const fontSize = this.fontSize();
         const elements = this.vars.elements;
         for (let element of elements) {
-            element.fontSize(fontSize);
-            element.x(x).y(y);
-            y += element.height();
-            width = Math.max(width, element.width());
-            height += element.height();
+            this.tryUpdate(element, () => {
+                element.fontSize(fontSize);
+                element.x(x).y(y);
+                y += element.height();
+                width = Math.max(width, element.width());
+                height += element.height();
+            });
         }
         this.vars.width = width;
         this.vars.height = height;

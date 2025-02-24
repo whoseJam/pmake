@@ -1,12 +1,12 @@
 
 // ./xxxx/yyyy.html
-function GetLocation(path) {
+function getLocation(path) {
     path = path.replace("\\", "/");
     const folders = path.split("/").slice(0, -1);
     return folders.join("/");
 }
 
-export function GetLocationFromAncestor(element) {
+export function getLocationFromAncestor(element) {
     while (element.parentNode && element.parentNode.getAttribute) {
         const parent = element.parentNode;
         if (parent.id === "slide-host") return undefined;
@@ -17,7 +17,7 @@ export function GetLocationFromAncestor(element) {
     return undefined;
 }
 
-function LoadFromURL(element, url, allowSecondTry = true) {
+function loadFromURL(element, url, allowSecondTry = true) {
     let xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
         if (this.readyState !== 4) return;
@@ -32,35 +32,35 @@ function LoadFromURL(element, url, allowSecondTry = true) {
             }
             while (body.children.length > 0) {
                 const child = body.children[body.children.length - 1];
-                child.setAttribute("location", GetLocation(url));
+                child.setAttribute("location", getLocation(url));
                 parent.insertBefore(child, element.nextSibling);
             }
             parent.removeChild(element);
-            FindIncludeHTMLRequest();
+            findIncludeHTMLRequest();
             return;
         } else if (allowSecondTry) {
-            const location = GetLocationFromAncestor(element);
+            const location = getLocationFromAncestor(element);
             if (location) {
-                LoadFromURL(element, `${location}/${url}`, false);
+                loadFromURL(element, `${location}/${url}`, false);
                 return; 
             }
         }
         console.warn(`File ${url} Not Found`);
         const parent = element.parentNode;
         parent.removeChild(element);
-        FindIncludeHTMLRequest();
+        findIncludeHTMLRequest();
     }
     xhttp.open("GET", url, true);
     xhttp.send();
 }
 
-function FindIncludeHTMLRequest() {
+function findIncludeHTMLRequest() {
     const elements = document.getElementsByTagName("*");
     for (let i = 0; i < elements.length; i++) {
         const element = elements[i];
         const file = element.getAttribute("include-html") ? element.getAttribute("include-html") : element.getAttribute("w3-include-html");
         if (!file) continue;
-        LoadFromURL(element, file);
+        loadFromURL(element, file);
         return;
     }
     if (global.callback) {
@@ -71,5 +71,5 @@ function FindIncludeHTMLRequest() {
 
 export default function includeHTML(callback) {
     global.callback = callback;
-    FindIncludeHTMLRequest();
+    findIncludeHTMLRequest();
 }

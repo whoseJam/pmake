@@ -117,16 +117,16 @@ BaseTree.prototype = {
     },
     findNodes(condition) {
         const nodes = [];
-        for (let node of this.vars.nodes) if (condition(node, this.nodeId(node))) nodes.push(node);
+        for (const node of this.vars.nodes) if (condition(node, this.nodeId(node))) nodes.push(node);
         return nodes;
     },
     findLink(condition) {
-        for (let link of this.vars.links) if (condition(link, this.sourceId(link), this.targetId(link))) return link;
+        for (const link of this.vars.links) if (condition(link, this.sourceId(link), this.targetId(link))) return link;
         return undefined;
     },
     findLinks(condition) {
         const links = [];
-        for (let link of this.vars.links) if (condition(link, this.sourceId(link), this.target(link))) links.push(link);
+        for (const link of this.vars.links) if (condition(link, this.sourceId(link), this.targetId(link))) links.push(link);
         return links;
     },
     findNodeById(id) {

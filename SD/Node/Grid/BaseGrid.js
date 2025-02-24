@@ -75,7 +75,7 @@ BaseGrid.prototype = {
         });
         return this;
     },
-    eraseByBaseGrid: function (rowId, colId) {
+    eraseByBaseGrid(rowId, colId) {
         const element = this.element(rowId, colId);
         const ri = this.idxN(rowId);
         const rj = this.idxM(colId);

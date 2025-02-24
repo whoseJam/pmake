@@ -43,6 +43,8 @@ sd.init(() => {
     init(1);
 });
 
+sd.main(async () => {});
+
 function init(x) {
     const node = tree.element(x);
     node.onClick(() => {

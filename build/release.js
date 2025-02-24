@@ -48,6 +48,11 @@ function releaseTask(targetPath, done) {
             .pipe(gulp.dest(targetPath));
     };
 
+    const processDist = () => {
+        return gulp.src(["./dist/**/*"], { base: "." })
+            .pipe(gulp.dest(targetPath));
+    }
+
     const processReveal = () => {
         return gulp.src([
             "Reveal/plugin/reset.css",
@@ -59,7 +64,7 @@ function releaseTask(targetPath, done) {
     };
 
     done();
-    return gulp.series(processSD, processBuild, processPackage, processReveal)();
+    return gulp.series(processSD, processBuild, processPackage, processDist, processReveal)();
 }
 
 module.exports = releaseTask;

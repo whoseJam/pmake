@@ -5,24 +5,7 @@ import { Path } from "@/Node/Nake/Path";
 import { SDNode } from "@/Node/SDNode";
 import { Factory } from "@/Utility/Factory";
 import { PathPen } from "@/Utility/PathPen";
-
-function XAxisRule(parent, child) {
-    const Y = parent.vars.viewBox.y;
-    const H = parent.vars.viewBox.height;
-    const currentY = Math.min(Y + H, Math.max(Y, 0));
-    child.cy(parent.globalY(currentY));
-    child.x(parent.globalX(parent.vars.viewBox.x));
-    child.width(parent.width());
-}
-
-function YAxisRule(parent, child) {
-    const X = parent.vars.viewBox.x;
-    const W = parent.vars.viewBox.width;
-    const currentX = Math.min(X + W, Math.max(X, 0));
-    child.cx(parent.globalX(currentX));
-    child.y(parent.globalY(parent.vars.viewBox.y + parent.vars.viewBox.height));
-    child.height(parent.height());
-}
+import { Enter as EN } from "@/Node/Core/Enter";
 
 export function Coord(parent) {
     SDNode.call(this, parent);
@@ -30,8 +13,8 @@ export function Coord(parent) {
     this.vars.merge({
         x: 0,
         y: 0,
-        width: 100,
-        height: 100,
+        width: 200,
+        height: 200,
         viewBox: {
             x: 0,
             y: 0,
@@ -40,8 +23,22 @@ export function Coord(parent) {
         },
     });
 
-    this.childAs("x-axis", new Line(this).arrow().source(0, 0).target(40, 0), XAxisRule);
-    this.childAs("y-axis", new Line(this).arrow().source(0, 40).target(0, 0), YAxisRule);
+    this.childAs("x-axis", new Line(this).arrow().source(0, 0).target(40, 0), function(parent, child) {
+        const Y = parent.vars.viewBox.y;
+        const H = parent.vars.viewBox.height;
+        const currentY = Math.min(Y + H, Math.max(Y, 0));
+        child.cy(parent.globalY(currentY));
+        child.x(parent.globalX(parent.vars.viewBox.x));
+        child.width(parent.width());
+    });
+    this.childAs("y-axis", new Line(this).arrow().source(0, 40).target(0, 0), function(parent, child) {
+        const X = parent.vars.viewBox.x;
+        const W = parent.vars.viewBox.width;
+        const currentX = Math.min(X + W, Math.max(X, 0));
+        child.cx(parent.globalX(currentX));
+        child.y(parent.globalY(parent.vars.viewBox.y + parent.vars.viewBox.height));
+        child.height(parent.height());
+    });
 
     this._.BASE_COORD = true;
 }
@@ -62,7 +59,7 @@ Coord.prototype = {
     y: Factory.handlerLowPrecise("y"),
     width: Factory.handlerLowPrecise("width"),
     height: Factory.handlerLowPrecise("height"),
-    viewBox: function (x, y, width, height) {
+    viewBox(x, y, width, height) {
         if (x === undefined) return { x: this.vars.x, y: this.vars.y, width: this.vars.height, height: this.vars.height };
         if (arguments.length === 1) return this.viewBox(x.x, x.y, x.width, x.height);
         this.vars.viewBox = { x, y, width, height };
@@ -72,52 +69,54 @@ Coord.prototype = {
     viewY: viewBoxHandler("y"),
     viewWidth: viewBoxHandler("width"),
     viewHeight: viewBoxHandler("height"),
-    coordX: function (x) {
+    coordX(x) {
         return ((x - this.x()) / this.width()) * this.viewWidth() + this.viewX();
     },
-    coordY: function (y) {
+    coordY(y) {
         return ((this.my() - y) / this.height()) * this.viewHeight() + this.viewY();
     },
-    coordAt: function (x, y) {
+    coordAt(x, y) {
         if (arguments.length === 1) return this.coordAt(x[0], x[1]);
         return [this.coordX(x), this.coordY(y)];
     },
-    globalX: function (x) {
+    globalX(x) {
         return ((x - this.viewX()) / this.viewWidth()) * this.width() + this.x();
     },
-    globalY: function (y) {
+    globalY(y) {
         return this.my() - ((y - this.viewY()) / this.viewHeight()) * this.height();
     },
-    globalAt: function (x, y) {
+    globalAt(x, y) {
         if (arguments.length === 1) return this.globalAt(x[0], x[1]);
         return [this.globalX(x), this.globalY(y)];
     },
-    sampleX: function (x, count) {
+    sampleX(x, count) {
         return (this.viewWidth() / count) * x + this.viewX();
     },
-    sampleY: function (y, count) {
+    sampleY(y, count) {
         return (this.viewHeight() / count) * y + this.viewY();
     },
-    trim: function (source, target) {
+    trim(source, target) {
         if (typeof target === "number") return V.intersect(source, target);
         return V.cohenSutherland(source, target, this.x(), this.y(), this.width(), this.height());
     },
-    xAxis: function () {
+    xAxis() {
         return this.child("x-axis");
     },
-    yAxis: function () {
+    yAxis() {
         return this.child("y-axis");
     },
     draw,
 };
 
-function draw(name, func) {
+function draw() {
+    const args = [...arguments];
+    const name = args.filter(arg => typeof arg === "string")[0];
+    const callback = args.filter(arg => typeof arg === "function")[0];
     const parent = this;
-    const path = new Path(this).opacity(0);
+    const path = new Path(this);
     path.vars.merge({
-        function: func,
+        function: callback,
     });
-
     path.function = Factory.handler("function");
     path.coordX = function (y) {
         return this.function()(y);
@@ -143,9 +142,9 @@ function draw(name, func) {
     path.trimGlobalX = function (y) {
         return Math.min(Math.max(this.globalX(y), parent.x()), parent.mx());
     };
-    path.startAnimate(this);
-    console.log("path.d=", path.duration());
-    this.childAs(name, path, pathRule);
+    path.onEnter(EN.pointStoT());
+    if (name) this.childAs(name, path, pathRule);
+    else this.childAs(path, pathRule);
     return path;
 }
 
@@ -167,22 +166,16 @@ Coord.prototype.drawLine = function (name, k, x, y) {
     return line;
 };
 
-function lineRule(parent, child) {
-    // if (valueChanged) {
-    //     const point = child.member.get("point");
-    //     const k = child.member.get("k");
-    // }
-}
 
-function pathRule(parent, child) {
-    const func = child.function();
+function pathRule(parent, path) {
+    const callback = path.function();
     const pen = new PathPen();
     let firstMoveTo = false;
     for (let i = 0; i <= Coord.SAMPLE_COUNT; i++) {
         const x = parent.sampleX(i, Coord.SAMPLE_COUNT);
-        const y = func(x);
+        const y = callback(x);
         const lastX = parent.sampleX(i - 1, Coord.SAMPLE_COUNT);
-        const lastY = func(lastX);
+        const lastY = callback(lastX);
         const point = parent.globalAt(x, y);
         const lastPoint = parent.globalAt(lastX, lastY);
         const [source, target, accpeted] = parent.trim(lastPoint, point);
@@ -196,15 +189,12 @@ function pathRule(parent, child) {
         }
         pen.LinkTo(target);
     }
-    if (!child.opacity() && parent.duration() > 0) {
-        const context = new Context(child);
-        child.startAnimate(context.tillc(0, 0));
-        child.opacity(1).d(pen.toString());
-        child.startAnimate(context.tillc(0, 1));
-        child.unfreeze();
-        child.pointStoT();
-        child.freeze();
-    } else {
-        child.d(pen.toString());
-    }
+    path.d(pen.toString());
+}
+
+function lineRule(parent, child) {
+    // if (valueChanged) {
+    //     const point = child.member.get("point");
+    //     const k = child.member.get("k");
+    // }
 }

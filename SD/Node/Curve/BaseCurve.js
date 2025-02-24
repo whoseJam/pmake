@@ -22,14 +22,14 @@ BaseCurve.prototype = {
     y1: Factory.handler("y1"),
     x2: Factory.handler("x2"),
     y2: Factory.handler("y2"),
-    dx: function (dx) {
+    dx(dx) {
         this.freeze();
         this.source(V.add(this.source(), [dx, 0]));
         this.target(V.add(this.target(), [dx, 0]));
         this.unfreeze();
         return this;
     },
-    dy: function (dy) {
+    dy(dy) {
         this.freeze();
         this.source(V.add(this.source(), [0, dy]));
         this.target(V.add(this.target(), [0, dy]));

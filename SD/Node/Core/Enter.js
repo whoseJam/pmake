@@ -14,6 +14,22 @@ export class Enter {
             });
         };
     }
+
+    static pointStoT(layer) {
+        return function (element, move) {
+            element.after(this.delay());
+            element.opacity(0);
+            element.attachTo(this.layer(layer));
+            move();
+            afterEffect(() => {
+                element.after(this);
+                element.opacity(1);
+                element.startAnimate(this);
+                element.pointStoT();
+            });
+        };
+    }
+
     static moveTo(layer) {
         return function (element, move) {
             element.after(this.delay());

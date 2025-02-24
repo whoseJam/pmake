@@ -16,17 +16,19 @@ export function Pile(parent) {
 
     this.effect("pile", () => {
         this.vars.elements.forEach((element, i) => {
-            element.width(this.elementWidth());
-            element.height(this.elementHeight());
-            element.x(this.x());
-            element.y(this.my() - (i + 1) * this.elementHeight());
+            this.tryUpdate(element, () => {
+                element.width(this.elementWidth());
+                element.height(this.elementHeight());
+                element.x(this.x());
+                element.y(this.my() - (i + 1) * this.elementHeight());
+            });
         });
     });
 }
 
 Pile.prototype = {
     ...BaseArray.prototype,
-    y: function (y) {
+    y(y) {
         if (y === undefined) return this.my() - this.height();
         this.my(y + this.height());
         return this;
@@ -37,7 +39,7 @@ Pile.prototype = {
     insert: Array.prototype.insert,
     insertFromExistValue: Array.prototype.insertFromExistValue,
     insertFromExistElement: Array.prototype.insertFromExistElement,
-    height: function (height) {
+    height(height) {
         if (height === undefined) return this.elementHeight() * this.length();
         const length = Math.max(this.length(), 1);
         this.elementHeight(height / length);
