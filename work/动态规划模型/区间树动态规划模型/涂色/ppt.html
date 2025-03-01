@@ -31,7 +31,7 @@
         <p class="fragment math-fragment">
             $$
             f_{l,r}=min\begin{cases}
-            f_{l+1,r-1} & C_l 与 C_r 相同 \\
+            min(f_{l+1,r}, f_{l,r-1}) & C_l 与 C_r 相同 \\
             f_{l,k}+f_{k+1,r} & 无论 C_l 与 C_r 是否相同
             \end{cases}
             $$
