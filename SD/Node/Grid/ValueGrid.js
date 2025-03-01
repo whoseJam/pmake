@@ -1,4 +1,5 @@
 import { Enter as EN } from "@/Node/Core/Enter";
+import { Exit as EX } from "@/Node/Core/Exit";
 import { Grid } from "@/Node/Grid/Grid";
 
 export function ValueGrid(parent) {
@@ -28,10 +29,11 @@ export function ValueGrid(parent) {
 
 ValueGrid.prototype = {
     ...Grid.prototype,
-    insert: function (rowId, colId, value) {
+    insert(i, j, value) {
         const element = value;
         element.onEnterDefault(EN.appear("elements"));
-        this.insertByBaseGrid(rowId, colId, element);
+        element.onExitDefault(EX.fade());
+        this.insertByBaseGrid(i, j, element);
         return this;
     },
 };

@@ -1,4 +1,3 @@
-import { SDNode } from "@/Node/SDNode";
 import { BaseHTML } from "@/Node/HTML/BaseHTML";
 import { RenderNode } from "@/Renderer/RenderNode";
 
@@ -12,13 +11,13 @@ export class Button extends BaseHTML {
 
     /**
      * 设置按钮上的文字
-     * @param text 
+     * @param text
      */
     text(text: string): this;
 
     /**
      * 设置按钮的点击回调
-     * @param callback 
+     * @param callback
      */
     onClick(callback: () => void): this;
 }

@@ -53,10 +53,12 @@ export function Grid(parent) {
             if (!elements[i]) continue;
             for (let j = 0; j < elements[i].length; j++) {
                 const element = elements[i][j];
-                element.width(dict["lx"]);
-                element.height(dict["ly"]);
-                element[mainAxis](dict[mainAxis] + i * dict[`l${mainAxis}`]);
-                element[auxiAxis](dict[auxiAxis] + (offset(m, elements[i].length) + j) * dict[`l${auxiAxis}`]);
+                this.tryUpdate(element, () => {
+                    element.width(dict["lx"]);
+                    element.height(dict["ly"]);
+                    element[mainAxis](dict[mainAxis] + i * dict[`l${mainAxis}`]);
+                    element[auxiAxis](dict[auxiAxis] + (offset(m, elements[i].length) + j) * dict[`l${auxiAxis}`]);
+                });
             }
         }
     });
@@ -70,30 +72,31 @@ Grid.prototype = {
     elementHeight: Factory.handlerLowPrecise("elementHeight"),
     axis: Factory.handlerLowPrecise("main"),
     align: Factory.handlerLowPrecise("align"),
-    width: function (width) {
+    width(width) {
         const label = this.vars.main === "row" ? "m" : "n";
         if (width === undefined) return this[label]() * this.elementWidth();
         const length = this[label]() ? this[label]() : 1;
         this.elementWidth(width / length);
         return this;
     },
-    height: function (height) {
+    height(height) {
         const label = this.vars.main === "row" ? "n" : "m";
         if (height === undefined) return this[label]() * this.elementHeight();
         const length = this[label]() ? this[label]() : 1;
         this.elementHeight(height / length);
         return this;
     },
-    insert: function (rowId, colId, value) {
+    insert(i, j, value) {
         const element = new Box(this.layer("elements"), value).opacity(0);
         element.onEnter(EN.appear("elements"));
-        this.insertByBaseGrid(rowId, colId, element);
+        element.onExitDefault(EX.fade());
+        this.insertByBaseGrid(i, j, element);
         return this;
     },
-    erase: function (rowId, colId) {
-        const element = this.element(rowId, colId);
+    erase(i, j) {
+        const element = this.element(i, j);
         element.onExit(EX.fade());
-        this.eraseByBaseGrid(rowId, colId);
+        this.eraseByBaseGrid(i, j);
         return this;
     },
 };

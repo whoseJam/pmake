@@ -22,63 +22,47 @@ BaseGrid.prototype = {
     ...SDNode.prototype,
     startN: Factory.handler("startN"),
     startM: Factory.handler("startM"),
-    endN: function () {
+    endN() {
         return this.startN() + this.n() - 1;
     },
-    endM: function (idx) {
+    endM(idx) {
         if (idx === undefined) return this.startM() + this.m() - 1;
         const elements = this.vars.elements;
         return this.startM() + elements[this.idxN(idx)].length - 1;
     },
-    idxN: function (idx) {
+    idxN(idx) {
         return idx - this.startN();
     },
-    idxM: function (idx) {
+    idxM(idx) {
         return idx - this.startM();
     },
-    n: function (n) {
-        let on = this.vars.n;
-        if (n === undefined) return on;
-        while (on < n) {
-            this.pushRow();
-            on++;
-        }
-        while (on > n) {
-            this.popRow();
-            on--;
-        }
+    n(n) {
+        if (n === undefined) return this.vars.n;
+        while (this.n() < n) this.pushRow();
+        while (this.n() > n) this.popRow();
         return this;
     },
-    m: function (m) {
-        let om = this.vars.m;
-        if (m === undefined) return om;
-        while (om < m) {
-            this.pushCol();
-            om++;
-        }
-        while (om > m) {
-            this.popCol();
-            om--;
-        }
+    m(m) {
+        if (m === undefined) return this.vars.m;
+        while (this.m() < m) this.pushCol();
+        while (this.m() > m) this.popCol();
         return this;
     },
-    insertByBaseGrid: function (rowId, colId, element) {
-        const ri = this.idxN(rowId);
-        const rj = this.idxM(colId);
+    insertByBaseGrid(i, j, element) {
+        const ri = this.idxN(i);
+        const rj = this.idxM(j);
         const elements = this.vars.elements;
-        element.triggerEnter(this, () => {
-            while (elements.length <= ri) elements.push([]);
-            elements[ri].splice(rj, 0, element);
-            this.childAs(element);
-            this.vars.n = elements.length;
-            this.vars.m = Math.max(elements[ri].length, this.vars.m);
-        });
+        while (elements.length <= ri) elements.push([]);
+        elements[ri].splice(rj, 0, element);
+        this.childAs(element);
+        this.vars.n = elements.length;
+        this.vars.m = Math.max(elements[ri].length, this.vars.m);
         return this;
     },
-    eraseByBaseGrid: function (rowId, colId) {
-        const element = this.element(rowId, colId);
-        const ri = this.idxN(rowId);
-        const rj = this.idxM(colId);
+    eraseByBaseGrid(i, j) {
+        const element = this.element(i, j);
+        const ri = this.idxN(i);
+        const rj = this.idxM(j);
         const elements = this.vars.elements;
         elements[ri].splice(rj, 1);
         this.eraseChild(element);
@@ -86,6 +70,26 @@ BaseGrid.prototype = {
         for (let i = 0; i < elements.length; i++) m = Math.max(m, elements[i].length);
         this.vars.n = elements.length;
         this.vars.m = m;
+        return this;
+    },
+    popCol() {
+        let erased = false;
+        const elements = this.vars.elements;
+        for (let i = 0; i < elements.length; i++) {
+            const element = elements[i].pop();
+            if (element) {
+                this.eraseChild(element);
+                erased = true;
+            }
+        }
+        if (erased) this.vars.m--;
+        return this;
+    },
+    popRow() {
+        const row = this.vars.elements.pop();
+        if (!row) return this;
+        row.forEach(element => this.eraseChild(element));
+        this.vars.n--;
         return this;
     },
     pushCol(rows) {
@@ -106,17 +110,25 @@ BaseGrid.prototype = {
         }
         return this;
     },
-    element: function (rowId, colId) {
-        [rowId, colId] = [this.idxN(rowId), this.idxM(colId)];
-        if (0 <= rowId && rowId < this.vars.elements.length) {
-            if (0 <= colId && colId < this.vars.elements[rowId].length) {
-                return this.vars.elements[rowId][colId];
+    element(i, j) {
+        [i, j] = [this.idxN(i), this.idxM(j)];
+        if (0 <= i && i < this.vars.elements.length) {
+            if (0 <= j && j < this.vars.elements[i].length) {
+                return this.vars.elements[i][j];
             }
-            ErrorLauncher.outOfRangeError(rowId + this.startN(), colId + this.startM());
+            ErrorLauncher.outOfRangeError(i + this.startN(), j + this.startM());
         }
-        ErrorLauncher.outOfRangeError(rowId + this.startN(), colId + this.startM());
+        ErrorLauncher.outOfRangeError(i + this.startN(), j + this.startM());
     },
-    value: function () {
+    forEachElement(callback) {
+        this.vars.elements.forEach((row, i) => {
+            row.forEach((element, j) => {
+                callback(element, i + this.startN(), j + this.startM());
+            });
+        });
+        return this;
+    },
+    value() {
         const args = arguments;
         switch (args.length) {
             case 2: {
@@ -132,13 +144,13 @@ BaseGrid.prototype = {
                 ErrorLauncher.invalidArguments();
         }
     },
-    intValue: function (rowId, colId) {
-        const value = this.value(rowId, colId);
+    intValue(i, j) {
+        const value = this.value(i, j);
         if (!value) return 0;
         if (!value.text) ErrorLauncher.invalidInvoke("intValue");
         return +value.text();
     },
-    opacity: function () {
+    opacity() {
         const args = arguments;
         switch (args.length) {
             case 0:
@@ -158,7 +170,7 @@ BaseGrid.prototype = {
                 ErrorLauncher.invalidArguments();
         }
     },
-    color: function () {
+    color() {
         const args = arguments;
         switch (args.length) {
             case 1:
@@ -176,13 +188,5 @@ BaseGrid.prototype = {
             default:
                 ErrorLauncher.invalidArguments();
         }
-    },
-    forEachElement: function (callback) {
-        this.vars.elements.forEach((row, rowId) => {
-            row.forEach((element, colId) => {
-                callback(element, rowId + this.startN(), colId + this.startM());
-            });
-        });
-        return this;
     },
 };

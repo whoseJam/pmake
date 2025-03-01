@@ -1,10 +1,9 @@
-import { SDNode } from "@/Node/SDNode";
 import { BaseHTML } from "@/Node/HTML/BaseHTML";
 import { RenderNode } from "@/Renderer/RenderNode";
 
 export class Slider extends BaseHTML {
     constructor(parent: SDNode | RenderNode);
-    
+
     /**
      * 获取滑块的范围最大值
      */
@@ -12,7 +11,7 @@ export class Slider extends BaseHTML {
 
     /**
      * 设置滑块的范围最大值
-     * @param max 
+     * @param max
      */
     max(max: number): this;
 
@@ -23,7 +22,7 @@ export class Slider extends BaseHTML {
 
     /**
      * 设置滑块的范围最小值
-     * @param min 
+     * @param min
      */
     min(min: number): this;
 
@@ -34,13 +33,13 @@ export class Slider extends BaseHTML {
 
     /**
      * 设置滑块的值
-     * @param value 
+     * @param value
      */
     value(value: number): this;
 
     /**
      * 设置滑块的修改回调
-     * @param callback 
+     * @param callback
      */
     onChange(callback: (value: number) => void): this;
 }

@@ -47,7 +47,7 @@ export class BaseArray extends SDNode {
 
     /**
      * 把一个下标转换为物理下标
-     * 
+     *
      * 假设数组的 start 为 3，则数组的第一个元素的逻辑下标为 3，物理下标为 0
      * @param id 数组的逻辑下标
      */
@@ -60,7 +60,7 @@ export class BaseArray extends SDNode {
     indexOf(element: SDNode): number;
 
     /**
-     * 获取指定下标对应的元素
+     * 获取数组指定下标对应的元素
      * @param id 指定元素的下标
      */
     element(id: number): SDNode;
@@ -150,14 +150,14 @@ export class BaseArray extends SDNode {
 
     /**
      * 丢弃数组的第一个元素
-     * 
+     *
      * 该元素不会从场景中消失，仅仅是从数组中删除
      */
     dropFirstElement(): SDNode;
 
     /**
      * 丢弃数组的最后一个元素
-     * 
+     *
      * 该元素不会从场景中消失，仅仅是从数组中删除
      */
     dropLastElement(): SDNode;
@@ -167,6 +167,19 @@ export class BaseArray extends SDNode {
      * @param id 指定元素的下标
      */
     dropValue(id: number): SDNode;
+
+    /**
+     * 获取数组指定元素的价值物
+     * @param id 指定元素的下标
+     */
+    value(id: number): SDNode;
+
+    /**
+     * 设置数组指定元素的价值物
+     * @param id 指定元素的下标
+     * @param value 价值物
+     */
+    value(id: number, value: SDNode): this;
 
     /**
      * 获取数组指定元素的文本
@@ -201,19 +214,6 @@ export class BaseArray extends SDNode {
      * @param opacity 透明度
      */
     opacity(id: number, opacity: number): this;
-
-    /**
-     * 获取数组指定元素的价值物
-     * @param id 指定元素的下标
-     */
-    value(id: number): SDNode;
-
-    /**
-     * 设置数组指定元素的价值物
-     * @param id 指定元素的下标
-     * @param value 价值物
-     */
-    value(id: number, value: SDNode): this;
 
     /**
      * 设置数组所有元素的颜色
