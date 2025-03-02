@@ -1,18 +1,32 @@
-import { BaseGraph } from "@/Node/Graph/BaseGraph";
 import { SDNode } from "@/Node/SDNode";
+import { RenderNode } from "@/Renderer/RenderNode";
+import { DAG } from "@/Node/Graph/DAG";
 
-type RankDir = "TB" | "BT" | "LR" | "RL";
-type Align = "UL" | "UR" | "DL" | "DR" | "C";
+/**
+ * 箱子有向无环图组件
+ */
+export class BoxDAG extends DAG {
+    constructor(parent: SDNode | RenderNode);
 
-export class BoxDAG extends BaseGraph {
-    constructor(parent: SDNode);
-
+    /**
+     * 获取箱子的宽度
+     */
     elementWidth(): number;
+
+    /**
+     * 设置箱子的宽度
+     * @param width
+     */
     elementWidth(width: number): this;
+
+    /**
+     * 获取箱子的高度
+     */
     elementHeight(): number;
+
+    /**
+     * 设置箱子的高度
+     * @param height 
+     */
     elementHeight(height: number): this;
-    rankDir(): RankDir;
-    rankDir(rankDir: RankDir): this;
-    align(): Align;
-    align(align: Align): this;
 }
