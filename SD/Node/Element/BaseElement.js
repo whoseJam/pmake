@@ -37,28 +37,30 @@ BaseElement.prototype = {
     stroke: backgroundHandler("stroke"),
     strokeOpacity: backgroundHandler("strokeOpacity"),
     strokeWidth: backgroundHandler("strokeWidth"),
-    background: function () {
+    background() {
         return this.child("background");
     },
-    text: function () {
+    text(text) {
         const value = this.child("value");
         if (!value) return "";
         if (!value.text) ErrorLauncher.invalidInvoke("text");
-        return value.text();
+        if (!text) value.text();
+        value.text(text);
+        return this;
     },
-    drop: function () {
+    drop() {
         const value = this.child("value");
         value.onExit(EX.drop());
         this.eraseChild(value);
         return value;
     },
-    intValue: function () {
+    intValue() {
         const value = this.value();
         if (!value) return 0;
         if (!value.text) ErrorLauncher.invalidInvoke("intValue");
         return +value.text();
     },
-    value: function (value, rule) {
+    value(value, rule) {
         if (arguments.length === 0) return this.child("value");
         if (this.hasChild("value")) this.eraseChild("value");
         if (Check.isFalseType(value)) return this;
