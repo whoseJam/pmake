@@ -1,4 +1,4 @@
-import { SDNode }     from "@/Node/SDNode";
+import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 
 export class HTMLNode extends RenderNode {
