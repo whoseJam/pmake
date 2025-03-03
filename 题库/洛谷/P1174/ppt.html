@@ -7,5 +7,44 @@
         <h2>打砖块</h2>
         <iframe data-animation="./样例解释.js"
             style="width: 1000px; height: 300px;"></iframe>
+        <p>有 $n$ 行 $m$ 列砖块，有 $k$ 发子弹，每一枚子弹可以打碎某一列当前处于这一列最下面的那块砖，并得到相应的得分</p>
+        <p class="fragment">某一些砖块被打碎后会<b style="color: purple;">返还</b>一发子弹</p>
+        <p class="fragment">最大化得分</p>
+    </section>
+    <section>
+        <h2>打砖块</h2>
+        <iframe data-animation="./样例解释.js"
+            style="width: 1000px; height: 300px;"></iframe>
+        <p>将 $k$ 发子弹分配到这 $m$ 列...</p>
+        <p class="fragment quote">普通资源分配动态规划模型+序列构造动态规划模型</p>
+        <p class="fragment">设 $f_{i,j}$ 表示对前 $i$ 列，分配 $j$ 发子弹，所能获取的最大得分</p>
+        <p class="fragment">
+            $$
+            f_{i,j}=\mathop{max}\limits_{k}\{f_{i-1,j-k}+[在第i列打k发子弹能获取的收益]\}
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>打砖块</h2>
+        <iframe data-animation="./问题.js"
+            style="width: 1000px; height: 300px;"></iframe>
+        <ul>
+            <li class="fragment">设 $f^N_{i,j}$ 表示前 $i$ 列，分配 $j$ 发子弹，最后一发打在普通砖块上，所能获取的最大得分</li>
+            <li class="fragment">设 $f^Y_{i,j}$ 表示前 $i$ 列，分配 $j$ 发子弹，最后一发打在特殊砖块上，所能获取的最大得分</li>
+        </ul>
+        <p class="fragment">
+            $$
+            f^Y_{i,j}=max(f^Y_{i-1,j-k}+[在第i列打k发子弹，最后一发在特殊砖块上，能获取的收益])
+            $$
+        </p>
+        <p class="fragment math-fragment">
+            $$
+            f^N_{i,j}=\mathop{max}
+            \begin{cases}
+            f^Y_{i-1,j-k}+[在第i列打k发子弹，最后一发在普通砖块上，能获取的收益]\\
+            f^N_{i-1,j-k}+[在第i列打k发子弹，最后一发在特殊砖块上，能获取的收益]
+            \end{cases}
+            $$
+        </p>
     </section>
 </section>
