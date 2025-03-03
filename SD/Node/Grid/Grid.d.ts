@@ -29,4 +29,12 @@ export class Grid extends BaseGrid {
      * @param align
      */
     align(align: Align): this;
+
+    elementWidth(): number;
+
+    elementWidth(width: number): this;
+
+    elementHeight(): number;
+
+    elementHeight(height: number): this;
 }
