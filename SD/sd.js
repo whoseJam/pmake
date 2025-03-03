@@ -19,6 +19,7 @@ export { Text } from "./Node/Nake/Text.js";
 export { View } from "./Node/Nake/View.js";
 
 export { Cube } from "./Node/Three/Cube.js";
+export { Light } from "./Node/Three/Light.js";
 
 export { InvertedTriangle } from "./Node/Polygon/InvertedTriangle.js";
 export { Triangle } from "./Node/Polygon/Triangle.js";
@@ -80,7 +81,7 @@ export { Pointer } from "./Component/Pointer.js";
 export { Stress } from "./Component/Stress.js";
 
 export { device } from "./Interact/Device.js";
-export { div, svg, three } from "./Interact/Root.js";
+export { div, svg } from "./Interact/Root.js";
 export { vec } from "./Math/Vector.js";
 export { rule } from "./Rule/Rule.js";
 export { color } from "./Utility/Color.js";

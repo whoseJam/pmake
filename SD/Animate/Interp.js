@@ -1,4 +1,5 @@
 import { Check } from "@/Utility/Check";
+import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 function castHexToRGB(hex) {
     hex = hex.replace("#", "");
@@ -13,47 +14,66 @@ function castToArray(value) {
     return value;
 }
 
+function setter(attrs, key) {
+    if (attrs.setAttribute) {
+        return function (value) {
+            attrs.setAttribute(key, value);
+        };
+    } else if (attrs[key]) {
+        return function (value) {
+            attrs[key] = value;
+        };
+    }
+    ErrorLauncher.unknownKeyError(key);
+}
+
 export class Interp {
     static exLengthInterp(attrs, key) {
+        const set = setter(attrs, key);
         return function (t) {
             const A = +this.source.slice(0, -2);
             const B = +this.target.slice(0, -2);
             const current = A * (1 - t) + B * t;
-            attrs.setAttribute(key, current + "ex");
+            set(current + "ex");
         };
     }
     static numberInterp(attrs, key) {
+        const set = setter(attrs, key);
         return function (t) {
             const A = this.source;
             const B = this.target;
             const current = A * (1 - t) + B * t;
-            attrs.setAttribute(key, current);
+            set(current);
         };
     }
     static pixelInterp(attrs, key) {
+        const set = setter(attrs, key);
         return function (t) {
             const A = this.source;
             const B = this.target;
             const current = A * (1 - t) + B * t;
-            attrs.setAttribute(key, `${current}px`);
+            set(`${current}px`);
         };
     }
     static colorInterp(attrs, key) {
+        const set = setter(attrs, key);
         return function (t) {
             const fRGB = Check.isTypeOfString(this.source) ? castHexToRGB(this.source) : this.source;
             const tRGB = Check.isTypeOfString(this.target) ? castHexToRGB(this.target) : this.target;
             const r = fRGB.r * (1 - t) + tRGB.r * t;
             const g = fRGB.g * (1 - t) + tRGB.g * t;
             const b = fRGB.b * (1 - t) + tRGB.b * t;
-            attrs.setAttribute(key, { r, g, b });
+            set({ r, g, b });
         };
     }
     static stringInterp(attrs, key) {
+        const set = setter(attrs, key);
         return function (t) {
-            if (t === 1) attrs.setAttribute(key, this.target);
+            if (t === 1) set(this.target);
         };
     }
     static arrayInterp(attrs, key) {
+        const set = setter(attrs, key);
         return function (t) {
             const A = castToArray(this.source);
             const B = castToArray(this.target);
@@ -65,10 +85,11 @@ export class Interp {
                 const v = va * (1 - t) + vb * t;
                 ans.push(v);
             }
-            attrs.setAttribute(key, ans);
+            set(ans);
         };
     }
     static matrixInterp(attrs, key) {
+        const set = setter(attrs, key);
         return function (t) {
             const A = this.source;
             const B = this.target;
@@ -80,10 +101,11 @@ export class Interp {
                 e: A.e * (1 - t) + B.e * t,
                 f: A.f * (1 - t) + B.f * t,
             };
-            attrs.setAttribute(key, `matrix(${current.a}, ${current.b}, ${current.c}, ${current.d}, ${current.e}, ${current.f})`);
+            set(`matrix(${current.a}, ${current.b}, ${current.c}, ${current.d}, ${current.e}, ${current.f})`);
         };
     }
     static boxInterp(attrs, key) {
+        const set = setter(attrs, key);
         return function (t) {
             const A = this.source;
             const B = this.target;
@@ -91,14 +113,15 @@ export class Interp {
             const y = A.y * (1 - t) + B.y * t;
             const width = A.width * (1 - t) + B.width * t;
             const height = A.height * (1 - t) + B.height * t;
-            attrs.setAttribute(key, `${x} ${y} ${width} ${height}`);
+            set(`${x} ${y} ${width} ${height}`);
         };
     }
     static translateInterp(attrs, key) {
+        const set = setter(attrs, key);
         return function (t) {
             const tx = this.source[0] + (this.target[0] - this.source[0]) * t;
             const ty = this.source[1] + (this.target[1] - this.source[1]) * t;
-            attrs.setAttribute(key, `translate(${tx},${ty})`);
+            set(`translate(${tx},${ty})`);
         };
     }
 }

@@ -1,11 +1,13 @@
 import { Interp } from "@/Animate/Interp";
-import { three } from "@/Interact/Root";
 import { SDNode } from "@/Node/SDNode";
-import { createRenderNode } from "@/Renderer/RenderNode";
+import { Scene } from "@/Node/Three/Scene";
 import { Color as C } from "@/Utility/Color";
+import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
+import { BoxGeometry, Mesh, MeshToonMaterial } from "three";
 
 export function Cube(parent) {
+    if (parent instanceof Scene) ErrorLauncher.invalidArguments();
     SDNode.call(this, parent);
 
     this.vars.merge({
@@ -17,16 +19,19 @@ export function Cube(parent) {
         rz: 0,
         color: C.pureGreen,
     });
+    this._.scene = parent._.scene;
+    this._.geometry = new BoxGeometry(1, 1, 1);
+    this._.material = new MeshToonMaterial({ color: C.pureGreen });
+    this._.mesh = new Mesh(this._.geometry, this._.material);
+    this._.scene.add(this._.mesh);
 
-    this._.nake = createRenderNode(this, three(), "cube");
-
-    this.vars.associate("x", Factory.action(this, this._.nake, "x", Interp.numberInterp));
-    this.vars.associate("y", Factory.action(this, this._.nake, "y", Interp.numberInterp));
-    this.vars.associate("z", Factory.action(this, this._.nake, "z", Interp.numberInterp));
-    this.vars.associate("rx", Factory.action(this, this._.nake, "rx", Interp.numberInterp));
-    this.vars.associate("ry", Factory.action(this, this._.nake, "ry", Interp.numberInterp));
-    this.vars.associate("rz", Factory.action(this, this._.nake, "rz", Interp.numberInterp));
-    this.vars.associate("color", Factory.action(this, this._.nake, "color", Interp.colorInterp));
+    this.vars.associate("x", Factory.action(this, this._.mesh.position, "x", Interp.numberInterp));
+    this.vars.associate("y", Factory.action(this, this._.mesh.position, "y", Interp.numberInterp));
+    this.vars.associate("z", Factory.action(this, this._.mesh.position, "z", Interp.numberInterp));
+    this.vars.associate("rx", Factory.action(this, this._.mesh.rotation, "x", Interp.numberInterp));
+    this.vars.associate("ry", Factory.action(this, this._.mesh.rotation, "y", Interp.numberInterp));
+    this.vars.associate("rz", Factory.action(this, this._.mesh.rotation, "z", Interp.numberInterp));
+    this.vars.associate("color", Factory.action(this, this._.material, "color", Interp.colorInterp));
 }
 
 Cube.prototype = {

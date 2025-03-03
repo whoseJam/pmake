@@ -29,6 +29,7 @@ export { ValueArray } from "./Node/Array/ValueArray";
 export { ValueStack } from "./Node/Array/ValueStack";
 
 export { Cube } from "./Node/Three/Cube";
+export { Light } from "./Node/Three/Light";
 
 export { Coord } from "./Node/Coord/Coord";
 
@@ -79,7 +80,7 @@ export { Stress } from "./Component/Stress";
 
 // Singleton
 export { device } from "./Interact/Device";
-export { div, svg, three } from "./Interact/Root";
+export { div, svg } from "./Interact/Root";
 export { vec } from "./Math/Vector";
 export { rule } from "./Rule/Rule";
 export { color } from "./Utility/Color";

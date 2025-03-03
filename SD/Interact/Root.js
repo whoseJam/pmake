@@ -1,6 +1,6 @@
 import { HTMLNode } from "@/Renderer/HTML/HTMLNode";
 import { SVGNode } from "@/Renderer/SVG/SVGNode";
-import { ThreeNode } from "@/Renderer/Three/ThreeNode";
+// import { ThreeNode } from "@/Renderer/Three/ThreeNode";
 import { Check } from "@/Utility/Check";
 
 function defineArrows() {
@@ -101,23 +101,13 @@ export class Root {
                 updateDivViewBox(this.viewBox);
             });
         }
-
-        if (true) {
-            this.three = new ThreeNode(undefined, document.body, "three");
-            window.addEventListener("resize", () => {
-                updateThreeViewBox(this.viewBox);
-            });
-        }
-
         if (window.self === window.top) {
             updateSVGViewBox(this.viewBox);
             updateDivViewBox(this.viewBox);
-            updateThreeViewBox(this.viewBox);
             updateWindowRate(this.viewBox);
         } else {
             this.svg.setAttribute("opacity", 0);
             this.div.setAttribute("opacity", 0);
-            this.three.setAttribute("opacity", 0);
         }
     }
 
@@ -153,11 +143,9 @@ export class Root {
         this.viewBox = { x: X, y: Y, width: W, height: H + 1 };
         updateSVGViewBox(this.viewBox);
         updateDivViewBox(this.viewBox);
-        updateThreeViewBox(this.viewBox);
         updateWindowRate(this.viewBox);
         this.svg.setAttribute("opacity", 1);
         this.div.setAttribute("opacity", 1);
-        this.three.setAttribute("opacity", 1);
     }
 }
 
@@ -167,8 +155,4 @@ export function svg() {
 
 export function div() {
     return Root.div;
-}
-
-export function three() {
-    return Root.three;
 }

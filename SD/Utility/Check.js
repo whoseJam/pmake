@@ -41,4 +41,7 @@ export class Check {
     static isTypeOfVector(object) {
         return object && typeof object[0] === "number" && typeof object[1] === "number";
     }
+    static isTypeOfThreeNode(object) {
+        return object && object.IS_THREE_NODE;
+    }
 }

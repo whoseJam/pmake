@@ -54,12 +54,17 @@ export function SDNode(parent, layer = undefined, group = undefined) {
         }
     } else {
         // parent is RenderNode
-        this._.parent = parent.parent;
-        if (!layer) {
-            this._.layer = createRenderNode(this, parent, group);
+        if (Check.isTypeOfThreeNode(parent)) {
+            this._.parent = parent.parent;
+            this._.layer = parent;
         } else {
-            // appear later, layer is undefined
-            this._.layer = createRenderNode(this, undefined, layer);
+            this._.parent = parent.parent;
+            if (!layer) {
+                this._.layer = createRenderNode(this, parent, group);
+            } else {
+                // appear later, layer is undefined
+                this._.layer = createRenderNode(this, undefined, layer);
+            }
         }
     }
 

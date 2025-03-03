@@ -20,4 +20,5 @@ export class Check {
     static isTypeOfColor(object: any): boolean;
     static isValidNumber(object: any): boolean;
     static isTypeOfVector(object: any): boolean;
+    static isTypeOfThreeNode(object: any): boolean;
 }
