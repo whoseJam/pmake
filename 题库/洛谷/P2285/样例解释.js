@@ -5,7 +5,7 @@
 你需要把鼹鼠出现的时刻以及位置可视化展示在网格中
 你可以用sd.Grid来绘制网格
 可以用sd.Circle来表示一只鼹鼠
-可以在sd.Circle顶上添加鼹鼠出现的时刻信息
+可以在sd.Circle上添加鼹鼠出现的时刻信息
 */
 import * as sd from "@/sd";
 

@@ -23,18 +23,19 @@ class Song {
 }
 
 const songs = [
-    new Song ("Song1", 2010, 18),
-    new Song ("Song2", 2012, 24),
-    new Song ("Song3", 2015, 12),
-    new Song ("Song4", 2018, 30),
-    new Song ("Song5", 2020, 21),
-    new Song ("Song6", 2021, 15),
-    new Song ("Song7", 2022, 27),
-    new Song ("Song8", 2023, 33),
-    new Song ("Song9", 2024, 20),
-    new Song ("Song10", 2025, 28),
-    new Song ("Song11", 2026, 16),
-    new Song ("Song12", 2027, 35)
+    // song list
+    new Song("Song1", 2010, 18),
+    new Song("Song2", 2012, 24),
+    new Song("Song3", 2015, 12),
+    new Song("Song4", 2018, 30),
+    new Song("Song5", 2020, 21),
+    new Song("Song6", 2021, 15),
+    new Song("Song7", 2022, 27),
+    new Song("Song8", 2023, 33),
+    new Song("Song9", 2024, 20),
+    new Song("Song10", 2025, 28),
+    new Song("Song11", 2026, 16),
+    new Song("Song12", 2027, 35),
 ];
 
 const CDCapacity = 48; // CD容量
@@ -52,9 +53,12 @@ function initSongDisplay() {
         songElement.onClick(() => {
             sd.inter(async () => {
                 song.isSelected = !song.isSelected;
-                songElement.startAnimate().color(song.isSelected? C.blue : C.grey).endAnimate();
+                songElement
+                    .startAnimate()
+                    .color(song.isSelected ? C.blue : C.grey)
+                    .endAnimate();
                 updateCDDivision();
-            })
+            });
         });
         songArray.pushFromExistElement(songElement);
     });
@@ -63,7 +67,10 @@ function initSongDisplay() {
 }
 
 function updateCDDivision() {
-    let currentCDDuration = 0, left = 0, right = 0, flag = false;
+    let currentCDDuration = 0;
+    let left = 0;
+    let right = 0;
+    let flag = false;
     const ranges = [];
     usedBraces.forEach(brace => freeBrace(brace));
     usedBraces = [];
@@ -86,15 +93,14 @@ function updateCDDivision() {
         const brace = allocBrace();
         brace.startAnimate().brace(range[0], range[1]).endAnimate();
         usedBraces.push(brace);
-    })
+    });
 }
 
 sd.init(() => {
     initSongDisplay();
 });
 
-sd.main(() => {
-});
+sd.main(() => {});
 
 function allocBrace() {
     return sd.Brace(songArray);
