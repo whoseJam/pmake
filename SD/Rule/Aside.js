@@ -1,7 +1,6 @@
-
 export function Aside(align = "tc", gap = 5) {
-    return function(parent, child) {
-        if (align === "tl")      child.x(parent.x()).my(parent.y() - gap);
+    return function (parent, child) {
+        if (align === "tl") child.x(parent.x()).my(parent.y() - gap);
         else if (align === "tc") child.cx(parent.cx()).my(parent.y() - gap);
         else if (align === "tr") child.mx(parent.mx()).my(parent.y() - gap);
         else if (align === "lt") child.mx(parent.x() - gap).y(parent.y());
@@ -14,5 +13,5 @@ export function Aside(align = "tc", gap = 5) {
         else if (align === "rc") child.x(parent.mx() + gap).cy(parent.cy());
         else if (align === "rb") child.x(parent.mx() + gap).my(parent.my());
         else throw new Error(`Invalid Align ${align}`);
-    }
+    };
 }

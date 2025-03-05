@@ -3,11 +3,11 @@ import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 
 /**
- * 代码块组件
- * 
- * 可以把多行代码线性组织起来，把每一行代码视作数组中的一个元素
- * 
- * 该组件的默认行号是从 1 开始的
+ * Code 组件
+ *
+ * 此组件可以把多行代码线性组织起来，把每一行代码视作数组中的一个元素
+ *
+ * 此组件的默认行号是从 1 开始的
  */
 export class Code extends BaseArray {
     constructor(parent: SDNode | RenderNode);

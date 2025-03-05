@@ -2,6 +2,9 @@ import { BaseNake } from "@/Node/Nake/BaseNake";
 import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 
+/**
+ * 圆形组件
+ */
 export class Circle extends BaseNake {
     constructor(parent: SDNode | RenderNode);
 

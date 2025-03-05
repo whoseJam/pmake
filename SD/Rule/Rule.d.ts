@@ -1,11 +1,7 @@
 import { SDNode } from "@/Node/SDNode";
-
 import { Aside } from "@/Rule/Aside";
-
 import { Background, CircleBackground } from "@/Rule/Background";
-
 import { CenterFixAspect, CenterOnly, TriangleCenterFixAspect } from "@/Rule/Center";
-
 import { PointAtPathByLength, PointAtPathByRate } from "@/Rule/Path";
 
 export type SDRule = (parent: SDNode, child: SDNode) => void;

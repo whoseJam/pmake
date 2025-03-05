@@ -6,7 +6,7 @@ sd.main(async () => {
     const arr = new sd.Stack(svg).x(800).y(100);
     arr.push(1).push(2).push(3).push(4);
     await sd.pause();
-    arr.startAnimate()
+    arr.startAnimate();
     arr.insert(1, "+2");
     arr.insert(4, "+1");
     arr.endAnimate();
@@ -39,4 +39,4 @@ sd.main(async () => {
     a6.startAnimate().pushFromExistValue(e5).endAnimate();
     await sd.pause();
     a6.startAnimate().sort().endAnimate();
-})
+});

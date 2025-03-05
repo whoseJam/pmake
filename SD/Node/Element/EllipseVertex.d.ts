@@ -3,9 +3,9 @@ import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 
 /**
- * 椭圆元素组件
- * 
- * 其背景是一个椭圆
+ * EllipseVertex 组件
+ *
+ * 其 background 是一个 Ellipse
  */
 export class EllipseVertex extends BaseElement {
     constructor(parent: SDNode | RenderNode);

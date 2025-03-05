@@ -39,18 +39,18 @@ BarArray.prototype = {
     ...BaseArray.prototype,
     elementWidth: Factory.handlerLowPrecise("elementWidth"),
     elementHeight: Factory.handlerLowPrecise("elementHeight"),
-    intValue: function (idx) {
+    intValue(idx) {
         return this.value(idx);
     },
     width: Array.prototype.width,
-    height: function (height) {
+    height(height) {
         if (height === undefined) return this.vars.height;
         const elements = this.vars.elements;
         let maxValue = elements.reduce((maxValue, element) => Math.max(maxValue, element.value()));
         this.elementHeight(height / Math.max(1, maxValue));
         return this;
     },
-    insert: function (id, value) {
+    insert(id, value) {
         value = +value;
         if (typeof value !== "number") ErrorLauncher.invalidArguments();
         const element = new Rect(this.layer("elements")).opacity(0);
