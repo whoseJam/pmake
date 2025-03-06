@@ -19,7 +19,7 @@ function setter(attrs, key) {
         return function (value) {
             attrs.setAttribute(key, value);
         };
-    } else if (attrs[key]) {
+    } else if (attrs[key] !== undefined) {
         return function (value) {
             attrs[key] = value;
         };

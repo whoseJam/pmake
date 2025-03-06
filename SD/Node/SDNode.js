@@ -8,6 +8,7 @@ import { createRenderNode } from "@/Renderer/RenderNode";
 import { SVGNode } from "@/Renderer/SVG/SVGNode";
 import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
+import { Enter as EN } from "@/Node/Core/Enter";
 
 let id = 0;
 
@@ -126,9 +127,9 @@ SDNode.prototype = {
             if (child._.parent !== this && !child.onEnter()) child.attachTo(this);
             this._.children.push(args[0], args[1], args[2]);
         };
-        if (child.onEnter() && rule) {
-            this.tryUpdate(child, update);
-        } else update();
+        if (!child.onEnter()) child.onEnter(EN.appear());
+        if (rule) this.tryUpdate(child, update);
+        else update();
         return this;
     },
     child: forwardWithReturn("children", "child"),

@@ -5,10 +5,11 @@ import { Color as C } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 import { BoxGeometry, Mesh, MeshToonMaterial } from "three";
+import { BaseThree } from "@/Node/Three/BaseThree";
 
 export function Cube(parent) {
     if (parent instanceof Scene) ErrorLauncher.invalidArguments();
-    SDNode.call(this, parent);
+    BaseThree.call(this, parent);
 
     this.vars.merge({
         x: 0,
@@ -35,12 +36,6 @@ export function Cube(parent) {
 }
 
 Cube.prototype = {
-    ...SDNode.prototype,
-    x: Factory.handlerLowPrecise("x"),
-    y: Factory.handlerLowPrecise("y"),
-    z: Factory.handlerLowPrecise("z"),
-    rx: Factory.handlerLowPrecise("rx"),
-    ry: Factory.handlerLowPrecise("ry"),
-    rz: Factory.handlerLowPrecise("rz"),
+    ...BaseThree.prototype,
     color: Factory.handler("color"),
 };
