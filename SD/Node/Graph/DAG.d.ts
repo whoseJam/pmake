@@ -5,9 +5,6 @@ import { RenderNode } from "@/Renderer/RenderNode";
 type RankDir = "TB" | "BT" | "LR" | "RL";
 type Align = "UL" | "UR" | "DL" | "DR" | "C";
 
-/**
- * 有向无环图组件
- */
 export class DAG extends BaseGraph {
     constructor(parent: SDNode | RenderNode);
     rankDir(): RankDir;
