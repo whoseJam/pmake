@@ -1,4 +1,4 @@
-export function Aside(align = "tc", gap = 5) {
+export function aside(align = "tc", gap = 5) {
     return function (parent, child) {
         if (align === "tl") child.x(parent.x()).my(parent.y() - gap);
         else if (align === "tc") child.cx(parent.cx()).my(parent.y() - gap);

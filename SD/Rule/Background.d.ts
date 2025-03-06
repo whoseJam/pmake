@@ -1,13 +1,18 @@
-import { RuleType } from "@/Rule/Rule";
+import { SDRule } from "@/Rule/Rule";
 
 /**
- * 普通背景规则
+ * background 布局规则，该规则用于实现子节点与父节点在布局上的特定位置关系。
+ *
+ * 在实际的布局场景中，当你期望子节点在位置上与父节点完全重合，呈现出子节点如同父节点背景一般的视觉效果时，可调用此函数。
+ * 例如，在创建具有背景装饰效果的组件时，将装饰元素作为子节点，通过此布局规则让装饰元素完美贴合父节点的位置和大小。
  */
-export function Background(): RuleType;
+export function background(): SDRule;
 
 /**
- * 圆形背景规则
- * 
- * 需要保证父节点和子节点同时具有r方法
+ * circleBackground 布局规则，该规则用于实现子节点和父节点在布局上的特定位置关系。
+ *
+ * 在实际的布局场景中，当你期望子节点在位置上与父节点完全重合，呈现出子节点如同父节点背景一般的视觉效果时，可调用此函数。
+ * 例如，在创建具有背景装饰效果的组件时，将装饰元素作为子节点，通过此布局规则让装饰元素完美贴合父节点的位置和大小。
+ * 需要保证父节点和子节点同时具有 r 方法。
  */
-export function CircleBackground(): RuleType;
+export function circleBackground(): SDRule;

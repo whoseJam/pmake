@@ -1,26 +1,40 @@
 import { SDRule } from "@/Rule/Rule";
 
 /**
- * 单纯把子节点和父节点的中心对齐
- */
-export function CenterOnly(): SDRule;
-
-/**
- * 将子节点和父节点的中心对齐，并且认为子节点的宽高比是不可变的
- * @param rate 空闲比，默认 1.2
- */
-export function CenterFixAspect(rate: number): SDRule;
-
-/**
- * 将子节点和父节点的中心对齐，并且认为子节点的宽高比是可变的
- * @param rate 空闲比，默认 1.2
- */
-export function Center(rate: number): SDRule;
-
-/**
- * 将子节点和父节点的中心对齐，并且认为子节点的宽高比是不可变的
+ * centerOnly 布局规则，其核心功能是将子节点与父节点进行中心重合。
  *
- * 当父节点是三角形时使用该方法
- * @param rate 空闲比，默认1.2
+ * 在实际的布局设计场景中，当你仅需要让子节点的中心与父节点的中心重合，而不考虑其他额外的布局约束时，就可以使用这个函数。
+ * 例如，在创建一个弹窗组件，弹窗内有一个图标，你希望图标始终处于弹窗的正中心位置，就可以调用此函数来实现该布局效果。
  */
-export function TriangleCenterFixAspect(rate: number): SDRule;
+export function centerOnly(): SDRule;
+
+/**
+ * centerFixAspect 布局规则，该规则主要实现子节点与父节点的中心对齐，同时确保子节点的宽高比保持不变。
+ *
+ * 此函数会依据传入的空闲率和父组件的大小，动态调整子组件的大小。空闲率影响着子组件在父组件内部占据空间的比例，
+ * 从而能够灵活适应不同的布局需求。
+ *
+ * @param rate 空闲比，它表示子节点相对于父节点在空间利用上的宽松程度。该值默认设置为 1.2。
+ */
+export function centerFixAspect(rate: number): SDRule;
+
+/**
+ * center 布局规则，该规则主要实现子节点与父节点的中心对齐，并认为子节点的宽高比是可变的。
+ *
+ * 此函数会依据传入的空闲率和父组件的大小，动态调整子组件的大小。空闲率影响着子组件在父组件内部占据空间的比例，
+ * 从而能够灵活适应不同的布局需求。
+ *
+ * @param rate 空闲比，它表示子节点相对于父节点在空间利用上的宽松程度。该值默认设置为 1.2。
+ */
+export function center(rate: number): SDRule;
+
+/**
+ * triangleCenterFixAspect 布局规则，该规则主要实现子节点与父节点的中心对齐，同时确保子节点的宽高比保持不变。
+ * 在父节点是三角形的时候使用此方法。
+ *
+ * 此函数会依据传入的空闲率和父组件的大小，动态调整子组件的大小。空闲率影响着子组件在父组件内部占据空间的比例，
+ * 从而能够灵活适应不同的布局需求。
+ *
+ * @param rate 空闲比，它表示子节点相对于父节点在空间利用上的宽松程度。该值默认设置为 1.2。
+ */
+export function triangleCenterFixAspect(rate: number): SDRule;

@@ -1,5 +1,4 @@
-
-export function Background() {
+export function background() {
     return function (parent, child) {
         const x = parent.x();
         const y = parent.y();
@@ -11,7 +10,7 @@ export function Background() {
     }
 }
 
-export function CircleBackground() {
+export function circleBackground() {
     return function (parent, child) {
         const x = parent.x();
         const y = parent.y();

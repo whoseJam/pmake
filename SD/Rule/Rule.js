@@ -1,18 +1,18 @@
-import { Aside } from "@/Rule/Aside";
-import { Background, CircleBackground } from "@/Rule/Background";
-import { Center, CenterFixAspect, CenterOnly, TriangleCenterFixAspect } from "@/Rule/Center";
-import { PointAtPathByLength, PointAtPathByRate } from "@/Rule/Path";
+import { aside } from "@/Rule/Aside";
+import { background, circleBackground } from "@/Rule/Background";
+import { center, centerFixAspect, centerOnly, triangleCenterFixAspect } from "@/Rule/Center";
+import { pointAtPathByLength, pointAtPathByRate } from "@/Rule/Path";
 
 export class Rule {
-    static aside = Aside;
-    static background = Background;
-    static circleBackground = CircleBackground;
-    static center = Center;
-    static centerOnly = CenterOnly;
-    static centerFixAspect = CenterFixAspect;
-    static triangleCenterFixAspect = TriangleCenterFixAspect;
-    static pointAtPathByRate = PointAtPathByRate;
-    static pointAtPathByLength = PointAtPathByLength;
+    static aside = aside;
+    static background = background;
+    static circleBackground = circleBackground;
+    static center = center;
+    static centerOnly = centerOnly;
+    static centerFixAspect = centerFixAspect;
+    static triangleCenterFixAspect = triangleCenterFixAspect;
+    static pointAtPathByRate = pointAtPathByRate;
+    static pointAtPathByLength = pointAtPathByLength;
 }
 
 export function rule() {

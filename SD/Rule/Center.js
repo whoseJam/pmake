@@ -1,4 +1,4 @@
-export function CenterOnly() {
+export function centerOnly() {
     return function (parent, child) {
         const cx = parent.cx();
         const cy = parent.cy();
@@ -6,7 +6,7 @@ export function CenterOnly() {
     };
 }
 
-export function CenterFixAspect(rate = 1.2) {
+export function centerFixAspect(rate = 1.2) {
     return function (parent, child) {
         const cx = parent.cx();
         const cy = parent.cy();
@@ -23,7 +23,7 @@ export function CenterFixAspect(rate = 1.2) {
     };
 }
 
-export function Center(rate = 1.2) {
+export function center(rate = 1.2) {
     return function (parent, child) {
         const cx = parent.cx();
         const cy = parent.cy();
@@ -36,7 +36,7 @@ export function Center(rate = 1.2) {
     };
 }
 
-export function TriangleCenterFixAspect(rate = 1.2) {
+export function triangleCenterFixAspect(rate = 1.2) {
     return function (parent, child) {
         let width = parent.width();
         let height = parent.height();
