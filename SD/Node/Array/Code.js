@@ -62,25 +62,25 @@ export function Code(parent, source = undefined) {
 Code.prototype = {
     ...BaseArray.prototype,
     fontSize: Factory.handler("fontSize"),
-    width: function (width) {
+    width(width) {
         if (width === undefined) return this.vars.width;
         const k = width / this.vars.width;
         this.fontSize(this.fontSize() * k);
         return this;
     },
-    height: function (height) {
+    height(height) {
         if (height === undefined) return this.vars.height;
         const k = height / this.vars.height;
         this.fontSize(this.fontSize() * k);
         return this;
     },
-    insert: function (id, value = "") {
+    insert(id, value = "") {
         const element = Cast.castToSDNode(this.layer("elements"), value);
         element.onEnter(EN.appear("elements"));
         this.insertByBaseArray(id, element);
         return this;
     },
-    code: function (source) {
+    code(source) {
         for (let i = this.end(); i >= this.start(); i--) this.erase(i);
         let ans = "";
         for (let i = 0; i < source.length; i++) {
@@ -92,7 +92,7 @@ Code.prototype = {
         if (ans.length > 0) this.push(ans);
         return this;
     },
-    focus: function (l, r) {
+    focus(l, r) {
         const focus = this.child("focus");
         if (Check.isFalseType(l)) {
             this.freeze();
@@ -119,13 +119,13 @@ Code.prototype = {
         }
         return this;
     },
-    l: function () {
+    l() {
         return this.vars.l;
     },
-    r: function () {
+    r() {
         return this.vars.r;
     },
-    value: function () {
+    value() {
         return this.element.apply(this, arguments);
     },
 };

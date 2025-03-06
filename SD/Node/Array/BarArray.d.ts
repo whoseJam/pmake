@@ -2,34 +2,78 @@ import { BaseArray } from "@/Node/Array/BaseArray";
 import { RenderNode } from "@/Renderer/RenderNode";
 
 /**
- * BarArray 组件
- *
- * 此组件的每个 element 是一个 Rect，元素值越大，则 Rect 越高
+ * BarArray 组件，用于创建动态高度的柱状图布局。
+ * 
+ * 此组件继承自 BaseArray，专门用于可视化数值序列。每个元素都被表示为一个矩形条（Rect），
+ * 其宽度保持一致，而高度则根据元素值动态变化。元素值越大，对应的矩形条就越高。
+ * 
+ * 组件使用单位高度来控制数值到实际显示高度的映射：
+ * - 如果元素值为 n，其显示高度将是单位高度的 n 倍。
+ * - 例如：当单位高度为 10 时，值为 5 的元素将显示为 50 的高度。
+ * - 通过调整单位高度，可以控制整个图表的显示比例。
+ * 
+ * 特性：
+ * - 动态高度：根据数值自动调整柱形高度。
+ * - 统一宽度：所有柱形保持相同的宽度。
+ * - 自动缩放：根据数值范围自动调整显示比例。
+ * - 灵活布局：支持动态调整柱形间距和大小。
+ * 
+ * 常见应用场景：
+ * - 数据分布的可视化展示。
+ * - 算法过程中的数组状态展示。
+ * - 排序算法的动画演示。
+ * - 频率或数量统计的图形化表示。
  */
 export class BarArray extends BaseArray {
     constructor(parent: SDNod | RenderNode);
 
     /**
-     * 获取 BarArray 每个 element 的宽度
+     * 获取每个柱形元素的宽度。
+     * 
+     * 使用场景：
+     * - 在调整布局前获取当前宽度。
+     * - 计算柱形之间的间距。
+     * - 在保存图表状态时记录设置。
+     * 
+     * @returns 当前每个柱形的宽度值。
      */
     elementWidth(): number;
 
     /**
-     * 设置 BarArray 每个 element 的宽度
-     * @param width 每个 Rect 组件的宽度
+     * 设置每个柱形元素的宽度。
+     * 
+     * 使用场景：
+     * - 设置窄柱形实现紧凑显示。
+     * - 使用宽柱形突出显示少量数据。
+     * - 调整宽度优化变化过程的可视效果。
+     * 
+     * @param width 要设置的宽度值。
+     * @returns this 用于支持链式调用。
      */
     elementWidth(width: number): this;
 
     /**
-     * 获取 BarArray 单位 1 的高度
+     * 获取柱形元素的单位高度。
+     * 
+     * 使用场景：
+     * - 获取当前的高度缩放比例。
+     * - 计算实际显示高度。
+     * - 在保存图表状态时记录设置。
+     * 
+     * @returns 当前的单位高度值。
      */
     elementHeight(): number;
 
     /**
-     * 设置 BarArray 单位 1 的高度
-     *
-     * 假设数组的某个 element 的值为 3，则该元素的高度为 3 倍的单位 1 高度
-     * @param height 每个 Rect 组件的单位 1 高度
+     * 设置柱形元素的单位高度。
+     * 
+     * 使用场景：
+     * - 设置较小单位高度适应屏幕。
+     * - 增大单位高度突出细微差异。
+     * - 根据数据范围优化显示效果。
+     * 
+     * @param height 要设置的单位高度值。
+     * @returns this 用于支持链式调用。
      */
     elementHeight(height: number): this;
 }
