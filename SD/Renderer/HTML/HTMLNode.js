@@ -3,7 +3,7 @@ import { RenderNode } from "@/Renderer/RenderNode";
 
 const innerHTMLKey = new Set(["innerHTML", "text"]);
 const callbackKey = new Set(["onclick", "onchange"]);
-const styleKey = new Set(["position", "left", "top", "pointer-events", "width", "height", "border", "overflow", "transform", "opacity", "display", "min-width", "min-height", "white-space"]);
+const styleKey = new Set(["position", "left", "top", "pointer-events", "width", "height", "border", "overflow", "transform", "opacity", "display", "min-width", "min-height", "white-space", "background-color", "color", "border-color"]);
 
 export function HTMLNode(parent, render, label) {
     RenderNode.call(this, parent, render, label);
@@ -62,6 +62,7 @@ HTMLNode.prototype = {
         } else if (key === "value") {
             this.element.value = value;
         } else if (styleKey.has(key)) {
+            if (value.r && value.g && value.b) value = `rgb(${value.r}, ${value.g}, ${value.b})`;
             this.element.style[key] = value;
         } else if (callbackKey.has(key)) {
             this.element[key] = value;

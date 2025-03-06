@@ -35,9 +35,9 @@ export class Children {
         }
         child = this.children[name];
         if (child === undefined) return undefined;
-        child._.parent = undefined;
         if (!child.onExit()) child.onExit(EX.fade());
         child.triggerExit();
+        child._.parent = undefined;
         delete this.children[name];
         return child;
     }
