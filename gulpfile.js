@@ -9,6 +9,7 @@ const iframe = require("./build/iframe");
 const release = require("./build/release");
 const themeTask = require("./build/theme");
 const parser = require("./build/parser");
+const rag = require("./build/rag");
 
 global["projectRoot"] = __dirname.replaceAll("\\", "/");
 
@@ -66,4 +67,10 @@ gulp.task("serve", done => {
         else console.log("success");
         done();
     });
+});
+
+gulp.task("rag", done => {
+    const ragOutputPath = global["o"] || parser.parseConfig("ragOutputPath");
+    rag(ragOutputPath);
+    done();
 });

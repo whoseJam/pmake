@@ -30,11 +30,13 @@ export class Color {
     static paleGreen = "#98FB98";
     static peachPuff = "#FFDAB9";
     static pureGreen = "#00ff00";
+    static buttonGrey = "#F0F0F0";
     static darkOrange = "#b4610e";
     static darkPurple = "#9932CC";
     static ghostWhite = "#F8F8FF";
     static deepSkyBlue = "#00bfff";
     static lemonChiffon = "#FFFACD";
+    static darkButtonGrey = "#767676";
 
     static RED = { main: this.red, border: this.darkRed };
     static BLUE = { main: this.blue, border: this.darkBlue };
@@ -43,8 +45,9 @@ export class Color {
     static ORANGE = { main: this.orange, border: this.darkOrange };
     static PURPLE = { main: this.purple, border: this.darkPurple };
     static DEFAULT = { main: this.white, border: this.black };
+    static BUTTON_GREY = { main: this.buttonGrey, border: this.darkButtonGrey };
 
-    static rand = randHexColor;
+    static random = randHexColor;
 
     static gradient(source, target, l, r) {
         source = HexToRGB(source);

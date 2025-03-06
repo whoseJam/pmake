@@ -1,3 +1,5 @@
+import { Exit as EX } from "@/Node/Core/Exit";
+
 let id = 0;
 
 export class Children {
@@ -33,7 +35,9 @@ export class Children {
         }
         child = this.children[name];
         if (child === undefined) return undefined;
+        if (!child.onExit()) child.onExit(EX.fade());
         child.triggerExit();
+        child._.parent = undefined;
         delete this.children[name];
         return child;
     }

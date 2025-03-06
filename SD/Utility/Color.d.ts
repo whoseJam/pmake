@@ -64,7 +64,7 @@ export class Color {
      */
     static peachPuff: HexColor;
     static pureGreen: HexColor;
-
+    static buttonGrey: HexColor;
     static darkOrange: HexColor;
     static darkPurple: HexColor;
 
@@ -82,6 +82,7 @@ export class Color {
      * 柠檬绸色
      */
     static lemonChiffon: HexColor;
+    static darkButtonGrey: HexColor;
 
     static RED: PacketColor;
     static BLUE: PacketColor;
@@ -90,12 +91,13 @@ export class Color {
     static ORANGE: PacketColor;
     static PURPLE: PacketColor;
     static DEFAULT: PacketColor;
+    static BUTTON_GREY: PacketColor;
 
     /**
      * 获取一种随机的颜色
      * @returns
      */
-    static rand: () => HexColor;
+    static random: () => HexColor;
 
     /**
      * 获取梯度颜色生成器

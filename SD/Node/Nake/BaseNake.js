@@ -40,7 +40,7 @@ BaseNake.prototype = {
     strokeWidth: Factory.handlerMediumPrecise("strokeWidth"),
     strokeDashOffset: Factory.handlerMediumPrecise("strokeDashOffset"),
     strokeDashArray: Factory.handler("strokeDashArray"),
-    color: function (color) {
+    color(color) {
         if (color === undefined) return { main: this.fill(), border: this.stroke() };
         if (typeof color === "string") {
             this.fill(color);

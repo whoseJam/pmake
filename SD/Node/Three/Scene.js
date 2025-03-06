@@ -13,7 +13,6 @@ export function Scene(canvas) {
 Scene.prototype = {
     ...Scene.prototype,
     add(element) {
-        console.log("add ", element, "into the scene");
         this._.scene.add(element);
     },
 };

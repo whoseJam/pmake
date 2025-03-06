@@ -1,5 +1,6 @@
 /**
  * 此文件演示如何使用 sd 动画框架
+ * 这个文件必须学习
  */
 
 import * as sd from "@/sd"; // 导入 sd 动画框架
@@ -8,11 +9,11 @@ const svg = sd.svg(); // 这是 svg 画布
 const div = sd.div(); // 这是 html 画布
 
 // 模块引入，注意在一个动画中并不是每个模块都需要被引入，按需引入即可
-const C = sd.color(); // 这是颜色模块
-const D = sd.device(); // 这是输入设备模块
-const EN = sd.enter(); // 这是进入动画模块
-const EX = sd.exit(); // 这是退出动画模块
-const R = sd.rule(); // 这是布局规则模块
+const C = sd.color(); // 这是颜色模块，当使用颜色模块时，请通过 C 对象来使用，使代码更加简洁
+const D = sd.device(); // 这是输入设备模块，当使用设备模块时，请通过 D 对象来使用，使代码更加简洁
+const EN = sd.enter(); // 这是进入动画模块，当使用进入动画模块时，请通过 EN 对象来使用，使代码更加简洁
+const EX = sd.exit(); // 这是退出动画模块，当使用退出动画模块时，请通过 EX 对象来使用，使代码更加简洁
+const R = sd.rule(); // 这是布局规则模块，当使用布局规则模块时，请通过 R 对象 来使用，使代码更加简洁
 
 // 一些全局变量的定义
 const n = 3;
