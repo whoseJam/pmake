@@ -1,23 +1,35 @@
 /**
  * 此文件演示如何使用 Array 组件进行一些操作
+ *
+ * Array 组件是一个可视化的数组组件，它内部每一个元素都是一个 Box
+ * 这些 Box 从左往右顺次排列，拥有相同的宽度和高度
+ *
  */
 import * as sd from "@/sd";
 
 const svg = sd.svg();
+const C = sd.color();
 const EN = sd.enter();
-const arr = new sd.Array(svg).x(100).y(100).start(1);
+const arr = new sd.Array(svg).x(100).y(100);
 
 sd.init(() => {
-    for (let i = 1; i <= 10; i++) arr.push(11 - i);
+    // 让 Array 从下标 1 开始
+    arr.start(1);
+    // 向 Array 中添加数值
+    for (let i = 1; i <= 5; i++) arr.push(6 - i);
+    // 向 Array 中添加字符串
+    arr.push("str");
+    // 向 Array 中添加空
+    arr.push(null);
+    // 向 Array 中添加其他组件
+    arr.push(new sd.Circle(svg));
 });
 
 sd.main(async () => {
     await sd.pause();
     // 对某段区间进行排序
+    // 排序使用的默认排序器，会让元素按照 intValue 从小到大排序
     arr.startAnimate().sort(1, 5).endAnimate();
-    await sd.pause();
-    // 对整个 Array 进行排序
-    arr.startAnimate().sort().endAnimate();
 
     await sd.pause();
     // 交换某两个元素，容纳元素的框和元素的值都会被交换
@@ -35,9 +47,35 @@ sd.main(async () => {
     await sd.pause();
     // 仅交换两个元素的值
     arr.startAnimate();
-    const v3 = arr.dropValue(3); // 这种写法可以
-    const v4 = arr.element(4).drop(); // 这种写法也可以
-    arr.element(3).valueFromExist(v4); // 这种写法可以
-    arr.element(4).value(v3.onEnter(EN.moveTo())); // 这种写法也可以
+    // 这种写法将 Array 的第三个元素的内部值取出来
+    const v3 = arr.dropValue(3);
+    // 这种写法先选中 Array 的第四个元素，在让它把自己的内部值取出来
+    const v4 = arr.element(4).drop();
+    // console.log(v4.delay(), v4.duration());
+    // 这种写先选中 Array 的第三个元素，再让它把 v4 作为自己的内部值，同时 v4 是场景中已经存在的，会动画平移到第三个元素内部
+    arr.element(3).valueFromExist(v4);
+    // 这种写法先选中 Array 第四个元素，再让它把 v3 作为自己的内部值，同时指定 v3 在作为第四个元素的子节点时，是平移过去
+    arr.element(4).value(v3.onEnter(EN.moveTo()));
     arr.endAnimate();
+
+    await sd.pause();
+    // 遍历 Array 中的每一个元素
+    arr.forEachElement((element, id) => {
+        // 可以对 element 进行一些操作
+        element.onClick(() => {
+            // 如果在交互回调中有动画编排操作，一定要使用 sd.inter 包裹起来
+            sd.inter(async () => {
+                element.startAnimate().color(C.random()).endAnimate();
+            });
+        });
+    });
+
+    await sd.pause();
+    // 删除 Array 中的元素
+    // 当要删除多个元素时，建议从后往前删除
+    arr.startAnimate().erase(4).erase(2).endAnimate();
+
+    await sd.pause();
+    // 调整 Array 每一个 Box 的宽度和高度
+    arr.startAnimate().elementWidth(50).elementHeight(60).endAnimate();
 });

@@ -2,13 +2,13 @@ import { Enter as EN } from "@/Node/Core/Enter";
 import { Exit as EX } from "@/Node/Core/Exit";
 import { Text } from "@/Node/Nake/Text";
 import { SDNode } from "@/Node/SDNode";
-import { Aside as A } from "@/Rule/Aside";
+import { Rule as R } from "@/Rule/Rule";
 import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 
 function asideRule(element, index, location, gap) {
-    A(location + "c", gap)(element, index);
+    R.aside(location + "c", gap)(element, index);
 }
 
 function getStart(parent, location) {

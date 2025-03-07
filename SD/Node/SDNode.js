@@ -174,6 +174,12 @@ SDNode.prototype = {
         }, this.type() + "-rule");
         return this;
     },
+    eraseRule() {
+        if (!this.rule()) return this;
+        uneffect(this._.rule);
+        this._.rule = undefined;
+        return this;
+    },
     onEnter(enter) {
         if (enter === undefined) return this._.enter;
         this._.enter = enter;

@@ -2,7 +2,7 @@ import { Context } from "@/Animate/Context";
 import { Enter as EN } from "@/Node/Core/Enter";
 import { Exit as EX } from "@/Node/Core/Exit";
 import { BraceCurve } from "@/Node/Curve/BraceCurve";
-import { PointAtPathByRate } from "@/Rule/Path";
+import { Rule as R } from "@/Rule/Rule";
 import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
@@ -10,10 +10,10 @@ import { Factory } from "@/Utility/Factory";
 function labelRule(parent, child) {
     const gap = parent.valueGap();
     const location = parent.location();
-    if (location === "t") PointAtPathByRate(0.5, "cx", "my", 0, -gap)(parent, child);
-    if (location === "b") PointAtPathByRate(0.5, "cx", "y", 0, gap)(parent, child);
-    if (location === "l") PointAtPathByRate(0.5, "mx", "cy", -gap, 0)(parent, child);
-    if (location === "r") PointAtPathByRate(0.5, "x", "cy", gap, 0)(parent, child);
+    if (location === "t") R.pointAtPathByRate(0.5, "cx", "my", 0, -gap)(parent, child);
+    if (location === "b") R.pointAtPathByRate(0.5, "cx", "y", 0, gap)(parent, child);
+    if (location === "l") R.pointAtPathByRate(0.5, "mx", "cy", -gap, 0)(parent, child);
+    if (location === "r") R.pointAtPathByRate(0.5, "x", "cy", gap, 0)(parent, child);
 }
 
 function replaceBrace(brace, l, r) {

@@ -1,6 +1,7 @@
 import { Enter as EN } from "@/Node/Core/Enter";
 import { Exit as EX } from "@/Node/Core/Exit";
 import { SDNode } from "@/Node/SDNode";
+import { Rule as R } from "@/Rule/Rule";
 import { CenterFixAspect } from "@/Rule/Center";
 import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
@@ -44,7 +45,7 @@ BaseElement.prototype = {
         const value = this.child("value");
         if (!value) return "";
         if (!value.text) ErrorLauncher.invalidInvoke("text");
-        if (!text) value.text();
+        if (arguments.length === 0) return value.text();
         value.text(text);
         return this;
     },
@@ -91,5 +92,5 @@ function backgroundHandler(key) {
 }
 
 function getValueRule(vars, rule) {
-    return rule ? rule : CenterFixAspect(vars.rate);
+    return rule ? rule : R.centerFixAspect(vars.rate);
 }

@@ -123,9 +123,7 @@ BaseArray.prototype = {
         return this.dropElement(this.end());
     },
     dropValue(id) {
-        const element = this.element(id);
-        const value = element.after(this.delay()).drop();
-        return value;
+        return this.element(id).drop();
     },
     text(id, text) {
         if (text === undefined) return this.value(id).text();

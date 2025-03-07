@@ -114,7 +114,7 @@ Text.prototype = {
         if (height === undefined) return this.vars.height;
         if (this.vars.height > 1e-1) {
             const k = height / this.vars.height;
-            this.fontSize(this.fontSize() * k);        
+            this.fontSize(this.fontSize() * k);
         } else {
             const fontSize = heightToFontSize(this.vars.text, height);
             this.fontSize(fontSize);
@@ -125,8 +125,11 @@ Text.prototype = {
         if (text === undefined) return this.vars.text;
         this.vars.text = parseText(String(text));
         const box = fontSizeToBox(this.vars.text, this.vars.fontSize);
+        // TODO: 支持 vars 级别的 freeze/unfreeze
+        if (this.rule()) this.rule().freeze();
         this.vars.width = box.width;
         this.vars.height = box.height;
+        if (this.rule()) this.rule().unfreeze();
         return this;
     },
     intValue() {
