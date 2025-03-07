@@ -3,7 +3,7 @@ import { SDNode } from "@/Node/SDNode";
 
 type Location = "t" | "b" | "l" | "r";
 
-interface IndexComponent extends BaseArray {
+class CompIndex {
     location(): Location;
     location(location: Location): this;
     fontSize(): number;
@@ -12,16 +12,4 @@ interface IndexComponent extends BaseArray {
     gap(gap: number): this;
 }
 
-/**
- * 创建一个索引
- * @param parent
- * @param location
- * @param fontSize 指定索引字体大小，默认为 15
- * @param gap 指定索引到父节点的距离，默认为 3
- */
-export function Index(
-    parent: SDNode,
-    location: Location,
-    fontSize: number,
-    gap: number,
-): SDNode;
+export function Index(parent: SDNode, location: Location, fontSize: number, gap: number): CompIndex & BaseArray;

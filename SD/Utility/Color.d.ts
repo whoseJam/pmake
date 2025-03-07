@@ -2,15 +2,6 @@ export type HexColor = string;
 export type PacketColor = { main: HexColor; border: HexColor };
 export type SDColor = HexColor | PacketColor;
 
-/**
- * 颜色模块
- *
- * 提供颜色到 16 进制字符串的映射
- *
- * 在动画框架中有两种颜色：
- * - 单一颜色：就是通常意义上的颜色
- * - 打包颜色：由于很多元素有边框色和填充色之分，打包颜色就把边框色和填充色打包成一个对象，方便参数传递
- */
 export class Color {
     static red: HexColor;
     static blue: HexColor;

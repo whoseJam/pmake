@@ -10,10 +10,6 @@ export class Check {
     static isTypeOfTree(object: any): boolean;
     static isTypeOfLine(object: any): boolean;
     static isFalseType(object: any): boolean;
-    /**
-     * 判断是否是数字或者字符串
-     * @param object
-     */
     static isNumberOrString(object: any): boolean;
     static isTypeOfString(object: any): boolean;
     static isTypeOfOpacity(object: any): boolean;
