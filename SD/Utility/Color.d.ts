@@ -93,20 +93,8 @@ export class Color {
     static DEFAULT: PacketColor;
     static BUTTON_GREY: PacketColor;
 
-    /**
-     * 获取一种随机的颜色
-     * @returns
-     */
     static random: () => HexColor;
-
-    /**
-     * 获取梯度颜色生成器
-     * @param start 起始颜色
-     * @param end 终止颜色
-     * @param l 左端点
-     * @param r 右端点
-     * @returns 梯度颜色生成器
-     */
+    static equal(a: SDColor, b: SDColor): boolean;
     static gradient: (start: HexColor, end: HexColor, l: number, r: number) => (grad: number) => HexColor;
 }
 

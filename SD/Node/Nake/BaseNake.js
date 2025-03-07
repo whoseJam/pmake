@@ -41,12 +41,12 @@ BaseNake.prototype = {
     strokeDashOffset: Factory.handlerMediumPrecise("strokeDashOffset"),
     strokeDashArray: Factory.handler("strokeDashArray"),
     color(color) {
-        if (color === undefined) return { main: this.fill(), border: this.stroke() };
+        if (color === undefined) return { fill: this.fill(), stroke: this.stroke() };
         if (typeof color === "string") {
             this.fill(color);
             if (this.text) this.stroke(color);
             else if (Check.isTypeOfLine(this)) this.stroke(color);
-        } else this.fill(color.main).stroke(color.border);
+        } else this.fill(color.fill).stroke(color.stroke);
         return this;
     },
 };

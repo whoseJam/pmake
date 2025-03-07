@@ -38,16 +38,22 @@ export class Color {
     static lemonChiffon = "#FFFACD";
     static darkButtonGrey = "#767676";
 
-    static RED = { main: this.red, border: this.darkRed };
-    static BLUE = { main: this.blue, border: this.darkBlue };
-    static GREY = { main: this.grey, border: this.darkGrey };
-    static GREEN = { main: this.green, border: this.darkGreen };
-    static ORANGE = { main: this.orange, border: this.darkOrange };
-    static PURPLE = { main: this.purple, border: this.darkPurple };
-    static DEFAULT = { main: this.white, border: this.black };
-    static BUTTON_GREY = { main: this.buttonGrey, border: this.darkButtonGrey };
+    static RED = { fill: this.red, stroke: this.darkRed };
+    static BLUE = { fill: this.blue, stroke: this.darkBlue };
+    static GREY = { fill: this.grey, stroke: this.darkGrey };
+    static GREEN = { fill: this.green, stroke: this.darkGreen };
+    static ORANGE = { fill: this.orange, stroke: this.darkOrange };
+    static PURPLE = { fill: this.purple, stroke: this.darkPurple };
+    static DEFAULT = { fill: this.white, stroke: this.black };
+    static BUTTON_GREY = { fill: this.buttonGrey, stroke: this.darkButtonGrey };
 
     static random = randHexColor;
+
+    static equal(a, b) {
+        if (a.fill && b.fill) return a.fill === b.fill && a.stroke === b.stroke;
+        if (!a.fill && !b.fill) return a === b;
+        return false;
+    }
 
     static gradient(source, target, l, r) {
         source = HexToRGB(source);

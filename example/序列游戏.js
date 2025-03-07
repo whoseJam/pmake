@@ -19,7 +19,6 @@
     - 页面上有两个并排排列的按钮。
     - 点击左侧按钮，全局状态切换为 `L`。
     - 点击右侧按钮，全局状态切换为 `R`。
-
 */
 
 import * as sd from "@/sd";
@@ -56,9 +55,7 @@ sd.init(() => {
                 if (direction === "R") {
                     const right = arr.element(id + 1);
                     const rightAfter = arr.element(id + 2);
-                    if (right && rightAfter && 
-                        right.intValue() === 1 && 
-                        !rightAfter.intValue()) {
+                    if (right && rightAfter && right.intValue() === 1 && !rightAfter.intValue()) {
                         arr.startAnimate();
                         const removed = arr.dropValue(id);
                         arr.element(id + 2).valueFromExist(removed);
@@ -67,9 +64,7 @@ sd.init(() => {
                 } else {
                     const left = arr.element(id - 1);
                     const leftBefore = arr.element(id - 2);
-                    if (left && leftBefore && 
-                        left.intValue() === 1 && 
-                        !leftBefore.intValue()) {
+                    if (left && leftBefore && left.intValue() === 1 && !leftBefore.intValue()) {
                         arr.startAnimate();
                         const removed = arr.dropValue(id);
                         arr.element(id - 2).valueFromExist(removed);
@@ -86,7 +81,7 @@ sd.init(() => {
 sd.main(async () => {});
 
 function updateButtonColors() {
-    leftBtn.color((direction === "L") ? C.BLUE : C.BUTTON_GREY);
-    rightBtn.color((direction === "R") ? C.BLUE : C.BUTTON_GREY);
+    leftBtn.color(direction === "L" ? C.BLUE : C.BUTTON_GREY);
+    rightBtn.color(direction === "R" ? C.BLUE : C.BUTTON_GREY);
     console.log(leftBtn.fill());
 }
