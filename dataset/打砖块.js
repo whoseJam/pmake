@@ -1,5 +1,7 @@
 /*
 
+luogu P1174
+
 ### 需求描述
 实现打砖块游戏，游戏界面中，砖块按列从上至下依次排列，各列砖块数量随机生成，数量范围可自定义，以此形成每列砖块数量均不相同的布局。
 
@@ -18,69 +20,59 @@
 */
 import * as sd from "@/sd";
 
+// 游戏参数设置
+const brickCount = 3;
+const totalClicks = 5;
+const specialBrickRatio = 0.3;
+const columnCount = 5;
+let clickCount = totalClicks;
+let score = 0;
 const svg = sd.svg();
 const C = sd.color();
-const EN = sd.enter();
-const EX = sd.exit();
-const R = sd.rule();
+const grid = new sd.Grid(svg).axis("col").elementWidth(70);
+const clickCountText = new sd.Text(svg, `剩余点击次数: ${clickCount}`);
+const scoreText = new sd.Text(svg, `当前得分: ${score}`);
 
-// 全局变量
-const K = 5; // 总共能点击按钮的次数
-let clicksLeft = K; // 剩余点击次数
-const columns = 5; // 列数
-const minBricksPerColumn = 1;
-const maxBricksPerColumn = 8; // 每列最多的砖块数
-
-// 存储每列的砖块数组
-const columnsBricks = [];
-// 存储每列的按钮
-const columnsButtons = [];
-
-sd.init(() => {
-    // 初始化每列的砖块数组
-    for (let i = 0; i < columns; i++) {
-        columnsBricks.push([]);
-    }
-
-    // 生成砖块和按钮
-    for (let col = 0; col < columns; col++) {
-        const bricksInColumn = Math.floor(Math.random() * (maxBricksPerColumn - minBricksPerColumn + 1)) + minBricksPerColumn;
-        for (let row = 0; row < bricksInColumn; row++) {
-            const brick = new sd.Rect(svg);
-            brick.x(col * 50 + 25).y(row * 20 + 20);
-            brick.width(40).height(15);
-            brick.score = Math.floor(Math.random() * 100); // 每个方块有不同得分
-            brick.isSpecial = Math.random() < 0.2; // 20% 的特殊方块
-            if (brick.isSpecial) {
-                brick.fill(C.YELLOW);
-            } else {
-                brick.fill(C.GREEN);
-            }
-            const scoreText = new sd.Text(brick, brick.score.toString()).x(brick.mx() - 10).y(brick.my() + 5);
-            columnsBricks[col].push(brick);
+// 处理按钮点击事件
+function handleButtonClick(col) {
+    if (clickCount > 0 && grid.endM(col) >= grid.startM()) {
+        clickCount--;
+        const brick = grid.element(col, grid.endM(col));
+        const isSpecial = brick.color().fill === C.yellow;
+        score += brick.intValue();
+        grid.startAnimate().erase(col, grid.endM(col)).endAnimate();
+        if (isSpecial) {
+            clickCount++;
         }
+        clickCountText.text(`剩余点击次数: ${clickCount}`);
+        scoreText.text(`当前得分: ${score}`);
+    }
+}
 
-        // 在每列下方添加按钮
+// 初始化游戏
+sd.init(() => {
+    grid.x(100).y(100);
+    clickCountText.x(100).y(50);
+    scoreText.x(100).y(70);
+    // 创建砖块和按钮
+    for (let col = 0; col < columnCount; col++) {
+        for (let row = 0; row < brickCount; row++) {
+            const isSpecial = Math.random() < specialBrickRatio;
+            grid.insert(col, row, sd.rand(1, 100));
+            if (isSpecial) {
+                grid.color(col, row, C.yellow);
+            } else {
+                grid.color(col, row, C.green);
+            }
+        }
         const button = new sd.Button(svg);
-        button.x(col * 50 + 25).y(bricksInColumn * 20 + 30);
-        button.width(40).height(15);
-        button.text("点击");
-        columnsButtons.push(button);
+        button.text("消除");
         button.onClick(() => {
             sd.inter(async () => {
-                if (clicksLeft > 0) {
-                    const bricks = columnsBricks[col];
-                    if (bricks.length > 0) {
-                        const lastBrick = bricks.pop();
-                        lastBrick.startAnimate().opacity(0).endAnimate().remove();
-                        clicksLeft--;
-                        if (lastBrick.isSpecial) {
-                            clicksLeft++;
-                        }
-                    }
-                }
+                handleButtonClick(col);
             });
         });
+        button.cx(grid.element(col, brickCount - 1).cx()).y(grid.my() + 20);
     }
 });
 

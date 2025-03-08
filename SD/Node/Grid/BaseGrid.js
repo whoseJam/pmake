@@ -51,10 +51,10 @@ BaseGrid.prototype = {
     insertByBaseGrid(i, j, element) {
         const ri = this.idxN(i);
         const rj = this.idxM(j);
+        this.childAs(element);
         const elements = this.vars.elements;
         while (elements.length <= ri) elements.push([]);
         elements[ri].splice(rj, 0, element);
-        this.childAs(element);
         this.vars.n = elements.length;
         this.vars.m = Math.max(elements[ri].length, this.vars.m);
         return this;
