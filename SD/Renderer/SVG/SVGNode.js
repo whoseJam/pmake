@@ -1,7 +1,9 @@
 import { Action } from "@/Animate/Action";
 import { Dom } from "@/Dom/Dom";
 import { RenderNode } from "@/Renderer/RenderNode";
+import { svg } from "@/Interact/Root";
 
+const SVGLabel = new Set(["circle", "ellipse", "image", "line", "path", "polygon", "rect", "text", "svg", "g", "marker", "defs"]);
 const shapeKey = new Set(["circle", "ellipse", "foreignObject", "fragment", "image", "line", "path", "rect", "svg", "text", "polygon", "polyline"]);
 
 function appendAndRemove(svgNode, owner) {
@@ -49,7 +51,7 @@ export function SVGNode(parent, render, label) {
 
 SVGNode.prototype = {
     ...SVGNode.prototype,
-    nake: function () {
+    nake() {
         return this.element;
     },
     append(label) {
@@ -63,9 +65,13 @@ SVGNode.prototype = {
         }
     },
     moveTo(render) {
-        const t = this.parent.delay() + this.parent.duration();
-        new Action(t, t, this.render, render, moveTo(this), this, "moveTo");
-        this.render = render;
+        if (SVGLabel.has(render.label)) {
+            const t = this.parent.delay() + this.parent.duration();
+            new Action(t, t, this.render, render, moveTo(this), this, "moveTo");
+            this.render = render;
+        } else {
+            this.moveTo(svg());
+        }
     },
     appear() {
         if (this.parent === undefined) {

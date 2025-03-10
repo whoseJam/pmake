@@ -1,9 +1,11 @@
 import { Dom } from "@/Dom/Dom";
+import { div } from "@/Interact/Root";
 import { RenderNode } from "@/Renderer/RenderNode";
 
 const innerHTMLKey = new Set(["innerHTML", "text"]);
 const callbackKey = new Set(["onclick", "onchange"]);
 const styleKey = new Set(["position", "left", "top", "pointer-events", "width", "height", "border", "overflow", "transform", "opacity", "display", "min-width", "min-height", "white-space", "background-color", "color", "border-color"]);
+const HTMLLabel = new Set(["div", "input", "button", "label", "textarea", "canvas"]);
 
 export function HTMLNode(parent, render, label) {
     RenderNode.call(this, parent, render, label);
@@ -34,8 +36,12 @@ HTMLNode.prototype = {
         }
     },
     moveTo(render) {
-        render.append(this.nake());
-        this.render = render;
+        if (HTMLLabel.has(render.label)) {
+            render.append(this.nake());
+            this.render = render;
+        } else {
+            this.moveTo(div());
+        }
     },
     appear() {
         throw new Error("Not Implemented Yet");

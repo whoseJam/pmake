@@ -39,11 +39,11 @@ export function Label(parent, text, location = "lc", fontSize = 20, gap = 10) {
     label.location = Factory.handler("location");
     label.gap = Factory.handlerLowPrecise("labelGap");
 
-    parent.childAs(`label_${label.text()}`, label, LabelRule);
+    parent.childAs(label, LabelRule);
 
     return label;
 }
 
-export function MathjaxLabel(parent, text, location = "lc", fontSize = 20, gap = 10,) {
+export function MathjaxLabel(parent, text, location = "lc", fontSize = 20, gap = 10) {
     return Label(parent, new Mathjax(parent, text), location, fontSize, gap);
 }

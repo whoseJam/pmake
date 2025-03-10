@@ -7,6 +7,65 @@
 按钮被点击一次就是放置乘号，再次被点击就是取消放置，以此循环往复
 */
 
+// import * as sd from "@/sd";
+
+// // 定义数码数量n和乘号数量k
+// const n = 5;
+// const k = 2;
+// // 创建SVG容器
+// const svg = sd.svg();
+// // 存储数码的数组
+// const digits = [];
+// // 存储按钮的数组
+// const buttons = [];
+// // 存储当前乘号放置情况的数组，初始时都为false
+// const multipliers = new Array(n - 1).fill(false);
+// const resultText = new sd.Text(svg).x(100).y(200);
+
+// // 初始化数码和按钮
+// sd.init(() => {
+//     for (let i = 0; i < n; i++) {
+//         // 创建数码，这里简单用数字表示，可根据需求替换为更复杂的元素
+//         const digit = new sd.Text(svg, (i + 1).toString()).x(100 + i * 50).y(100);
+//         digits.push(digit);
+//         if (i < n - 1) {
+//             // 创建按钮
+//             const button = new sd.Button(svg).x(125 + i * 50).y(150);
+//             button.onClick(() => {
+//                 // 切换乘号放置状态
+//                 multipliers[i] = !multipliers[i];
+//                 // 更新表达式结果
+//                 updateExpressionResult();
+//             });
+//             buttons.push(button);
+//         }
+//     }
+// });
+
+// // 更新表达式结果的函数
+// function updateExpressionResult() {
+//     let expression = "";
+//     for (let i = 0; i < n; i++) {
+//         expression += digits[i].text();
+//         if (i < n - 1 && multipliers[i]) {
+//             expression += "*";
+//         }
+//     }
+//     let result;
+//     try {
+//         // 计算表达式结果
+//         result = eval(expression);
+//     } catch (error) {
+//         result = "Error";
+//     }
+//     resultText.text(result.toString());
+// }
+
+// sd.main(async () => {
+//     // 初始时更新一次表达式结果
+//     updateExpressionResult();
+// });
+
 import * as sd from "@/sd";
 
 const digits = [2, 3, 4, 5, 4, 1, 5];
