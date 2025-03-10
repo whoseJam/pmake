@@ -6,9 +6,7 @@ const data = "awkdklsafiewla";
 const arr = new sd.Array(svg);
 
 sd.init(() => {
-    for (let i = 0; i < data.length; i++) {
-        arr.push(data[i]);
-    }
+    arr.pushArray(data);
 });
 
 sd.main(async () => {

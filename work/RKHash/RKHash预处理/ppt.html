@@ -12,15 +12,15 @@
     </section>
     <section>
         <h2>RKHash预处理</h2>
-        <div>
-            <div class="left">
+        <div style="display: flex; justify-content: space-around;">
+            <div>
                 <p class="fragment">前缀和数组
                     $$
                     S(n)=\sum_{i=1}^n B^{n-i}s[i]
                     $$
                 </p>
             </div>
-            <div class="right">
+            <div>
                 <p class="fragment">幂次数组
                     $$
                     P(n)=B^n
@@ -28,7 +28,17 @@
                 </p>
             </div>
         </div>
-        <p class="math-fragment fragment">
+        <iframe data-animation="./RKHash.js" class="fragment"
+            style="width: 1000px; height: 350px;"></iframe>
+        <p class="fragment">
+            $$
+            Hash(s,l,r)=S(r)-P(r-l+1)S(l-1)
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>数学证明</h2>
+        <p class="math-fragment">
             $$
             \begin{aligned}
             Hash(s,l,r)
@@ -39,15 +49,7 @@
             \end{aligned}
             $$
         </p>
-    </section>
-    <section>
-        <h2>RKHash预处理</h2>
-        <p>
-            $$
-            Hash(s,l,r)=S(r)-P(r-l+1)S(l-1)
-            $$
-        </p>
-        <codeblock>
+        <codeblock class="fragment">
             <script type="text/template">
                 ull Hash(int l, int r) {
                     return S[r] - P[r - l + 1] * S[l - 1];
