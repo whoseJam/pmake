@@ -3,7 +3,13 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const C = sd.color();
 
-sd.main(TestResetSize);
+sd.main(TestOutRangeInsert);
+
+async function TestOutRangeInsert() {
+    const grid = new sd.Grid(svg).x(100).y(100).startN(1).startM(1);
+    grid.insert(2, 1, 1);
+    grid.insert(1, 1, 2);
+}
 
 async function TestResetSize() {
     const n = 5;

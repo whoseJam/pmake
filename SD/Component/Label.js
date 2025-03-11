@@ -7,7 +7,7 @@ function isMathjax(str) {
     return label.startsWith("$") && label.endsWith("$") && label.length >= 2;
 }
 
-function LabelRule(parent, child) {
+function labelRule(parent, child) {
     const location = child.vars.location;
     const gap = child.vars.labelGap;
     if (location === "lt") child.mx(parent.x() - gap).y(parent.y());
@@ -39,7 +39,7 @@ export function Label(parent, text, location = "lc", fontSize = 20, gap = 10) {
     label.location = Factory.handler("location");
     label.gap = Factory.handlerLowPrecise("labelGap");
 
-    parent.childAs(label, LabelRule);
+    parent.childAs(label, labelRule);
 
     return label;
 }
