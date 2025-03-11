@@ -6,7 +6,22 @@ const EN = sd.enter();
 
 sd.init(() => {});
 
-sd.main(TestArrayInitWithFreeze);
+sd.main(TestArrayElementSwitch);
+
+async function TestArrayElementSwitch() {
+    const arr1 = new sd.Array(svg).x(100).y(100).pushArray("01234");
+    const arr2 = new sd.Array(svg).x(100).y(200); //.pushArray("56789");
+    await sd.pause();
+    arr1.startAnimate();
+    arr2.startAnimate();
+    const indices = [0, 1, 3];
+    for (let i = indices.length - 1; i >= 0; i--) {
+        const element = arr1.dropElement(indices[i]);
+        arr2.insertFromExistElement(0, element);
+    }
+    arr1.endAnimate();
+    arr2.endAnimate();
+}
 
 async function TestArrayInitWithFreeze() {
     const arr = new sd.Array(svg).x(100).y(100);

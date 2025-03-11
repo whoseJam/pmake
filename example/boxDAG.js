@@ -1,8 +1,8 @@
 /**
- * 此文件演示如何使用 sd.DAG 组件进行一些操作
+ * 此文件演示如何使用 sd.BoxDAG 组件进行一些操作
  *
- * sd.DAG 组件是一个采用有向无环图布局的图组件，这里的图并不一定真的是无环的，但在在组件内部对所有图都会按照 degre 提供的布局去做布局
- * sd.DAG 的每个节点默认是 sd.Vertex，每一条边默认是 sd.Line
+ * sd.BoxDAG 组件是一个采用有向无环图布局的图组件，这里的图并不一定真的是无环的，但在在组件内部对所有图都会按照 degre 提供的布局去做布局
+ * sd.BoxDAG 的每个节点默认是 sd.Box，每一条边默认是 sd.Line
  *
  * 你可以设置 degre 布局的 rankDir 和 align
  * rankDir 决定了节点的排列方向
@@ -14,7 +14,7 @@ import * as sd from "@/sd";
 
 const svg = sd.svg();
 const C = sd.color();
-const graph = new sd.DAG(svg).cx(800).cy(300);
+const graph = new sd.BoxDAG(svg).cx(800).cy(300);
 const n = 9;
 const m = 10;
 
@@ -47,4 +47,8 @@ sd.main(async () => {
     await sd.pause();
     // 设置 sd.DAG 的 align 属性为 DL，让节点在当前行的对齐方式为从下到上
     graph.startAnimate().align("DL").endAnimate();
+
+    await sd.pause();
+    // 设置 sd.DAG 内的每个节点的宽度和高度
+    graph.startAnimate().elementWidth(60).elementHeight(30).endAnimate();
 });

@@ -75,7 +75,9 @@ BaseArray.prototype = {
     },
     insertByBaseArray(id, element) {
         this.childAs(element);
-        this.vars.elements.splice(this.idx(id), 0, element);
+        const idx = this.idx(id);
+        if (idx < 0 || idx > this.length()) ErrorLauncher.outOfRangeError(id);
+        this.vars.elements.splice(idx, 0, element);
         return this;
     },
     push(value) {

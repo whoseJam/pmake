@@ -7,7 +7,7 @@ luogu P4901
 
 ### 二、动画场景设计
 1. **初始场景**
-    - 一个班级有 N 个学生需要排队。
+    - 一个班级有 n 个学生需要排队。
 2. **排队形过程展示**
     - 起始阶段，在下方展示区域创建一个水平队列。此队列使用 sd.Array 进行存储，队列中的每个元素对应一个代表学生的小矩形块。这些矩形块紧密排列，每个矩形块的中心位置清晰显示学生的学号，学号按照顺序从左至右依次排列。例如，对于一个有 10 名学生的班级，展示为 “1 2 3 4 5 6 7 8 9 10” 的矩形块队列。
     - 按照斐波那契数列规则选取学生。利用 SD 动画框架，将当前要选取的学生对应的矩形块颜色转变为红色（或其他醒目的颜色）以突出显示，同时使该矩形块进行几次闪烁动画，之后将其从原队列中通过平移操作移动到新的一行。新行位于上一行的正下方，且起始位置保持对齐。例如，对于 10 人的队列，逐个突出显示并平移 “1 2 3 5 8” 到新行，在移动过程中，sd.Array 中的相应元素也同步调整。
@@ -29,7 +29,7 @@ luogu P4901
 
 import * as sd from "@/sd";
 
-const N = 20; // 假设有10个学生
+const n = 20; // 假设有10个学生
 const svg = sd.svg();
 const C = sd.color();
 const EN = sd.enter();
@@ -74,30 +74,32 @@ async function selectAndReorderStudents(originalArray, newArray) {
     await sd.pause();
     originalArray.startAnimate();
     newArray.startAnimate();
-    const elements = [];
     for (let i = originalArray.length(); i >= 1; i--) {
         if (originalArray.color(i).fill === C.white) {
-            elements.push(originalArray.dropElement(i));
+            newArray.insertFromExistElement(1, originalArray.dropElement(i));
         }
     }
-    for (let i = elements.length - 1; i >= 0; i--) newArray.pushFromExistElement(elements[i]);
     originalArray.endAnimate();
     newArray.endAnimate();
 
     await sd.pause();
-    const rowNumbers = [];
-    originalArray.forEachElement(element => rowNumbers.push(element.intValue()));
-    const beauty = calculateBeauty(rowNumbers);
-    sd.Label(originalArray, `美观度：${beauty}`, "lc").opacity(0).startAnimate().opacity(1).endAnimate();
+    labelBeauty(originalArray);
 
     await sd.pause();
     originalArray.startAnimate().color(C.white).endAnimate();
 }
 
+function labelBeauty(array) {
+    const rowNumbers = [];
+    array.forEachElement(element => rowNumbers.push(element.intValue()));
+    const beauty = calculateBeauty(rowNumbers);
+    sd.Label(array, `美观度：${beauty}`, "lc").opacity(0).startAnimate().opacity(1).endAnimate();
+}
+
 sd.init(() => {
     const originalArray = new sd.Array(rows).start(1);
     rows.push(originalArray);
-    for (let i = 1; i <= N; i++) {
+    for (let i = 1; i <= n; i++) {
         originalArray.push(i);
     }
 });
@@ -111,10 +113,6 @@ sd.main(async () => {
     }
     if (rows.lastElement().length() >= 1) {
         await sd.pause();
-        const rowNumbers = [];
-        const lastArray = rows.lastElement();
-        lastArray.forEachElement(element => rowNumbers.push(element.intValue()));
-        const beauty = calculateBeauty(rowNumbers);
-        sd.Label(lastArray, `美观度：${beauty}`, "lc").opacity(0).startAnimate().opacity(1).endAnimate();
+        labelBeauty(rows.lastElement());
     }
 });
