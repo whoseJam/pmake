@@ -11,8 +11,8 @@ function labelRule(parent, child) {
     const direction = parent.direction();
     if (direction === "t") child.cx(parent.cx()).y(parent.my() + gap);
     if (direction === "b") child.cx(parent.cx()).my(parent.y() - gap);
-    if (direction === "l") child.cy(parent.cy()).x(parent.mx() + gap);
-    if (direction === "r") child.cy(parent.cy()).mx(parent.x() - gap);
+    if (direction === "l") child.cy(parent.cy()).mx(parent.x() - gap);
+    if (direction === "r") child.cy(parent.cy()).x(parent.mx() + gap);
 }
 
 function addPointerMap(pointer, element) {
