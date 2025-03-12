@@ -13,13 +13,13 @@ const links = [
     [4, 6],
     [4, 7],
     [5, 8],
-    [5, 9]
+    [5, 9],
 ];
 const externLinks = [
     [9, 3, sd.Curve, {}],
     [6, 7, sd.Line, {}],
     [8, 9, sd.Line, {}],
-    [3, 2, sd.Line, {}]
+    [3, 2, sd.Line, {}],
 ];
 
 sd.init(() => {
@@ -30,22 +30,18 @@ sd.init(() => {
         tree.element(link[0], link[1]).arrow();
     });
     externLinks.forEach(link => {
-        link[3].link = sd.Link(
-            tree.element(link[0]),
-            tree.element(link[1]),
-            link[2]
-        ).arrow();
+        link[3].link = sd.Link(tree.element(link[0]), tree.element(link[1]), link[2]).arrow();
         link[3].link.clazz = link[2];
     });
     stack.y(tree.root().y());
-})
+});
 
 sd.main(async () => {
     await sd.pause();
     await Tarjan(n, stack, Element, ToNodes, {
-        OnTraceBack: OnTraceBack
+        OnTraceBack: OnTraceBack,
     });
-})
+});
 
 function Element(u) {
     return tree.element(u);
@@ -56,16 +52,18 @@ function ToNodes(u) {
         return {
             id: tree.nodeId(node),
             link: tree.element(u, tree.nodeId(node)),
-            node: node
+            node: node,
         };
     });
-    const extern = externLinks.filter(link => String(link[0]) === u).map(link => {
-        return {
-            id: String(link[1]),
-            link: link[3].link,
-            node: tree.element(link[1])
-        }
-    });
+    const extern = externLinks
+        .filter(link => String(link[0]) === u)
+        .map(link => {
+            return {
+                id: String(link[1]),
+                link: link[3].link,
+                node: tree.element(link[1]),
+            };
+        });
     return [...children, ...extern];
 }
 

@@ -19,14 +19,18 @@ sd.init(() => {
     path.arrow();
 
     const top = v.pos("cx", "y");
-    fromRoot = new sd.Line(svg).source(V.add(top, [60, -40])).target(top).arrow().value("...", R.pointAtPathByRate(0, "x", "cy"));
-})
+    fromRoot = new sd.Line(svg)
+        .source(V.add(top, [60, -40]))
+        .target(top)
+        .arrow()
+        .value("...", R.pointAtPathByRate(0, "x", "cy"));
+});
 
 sd.main(async () => {
     await sd.pause();
-    const c1 = new sd.Curve(svg)
+    const c1 = new sd.Curve(svg);
     c1.source(V.add(v.pos("cx", "my"), [20, 80]));
     c1.target(v.center());
     sd.trim(c1, null, v);
     c1.startAnimate().pointStoT().endAnimate().arrow();
-})
+});

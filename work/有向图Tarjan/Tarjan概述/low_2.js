@@ -25,8 +25,6 @@ sd.init(() => {
     draw(0);
     draw(-Math.PI / 8);
     draw(-Math.PI / 4);
-})
+});
 
-sd.main(async () => {
-
-})
+sd.main(async () => {});

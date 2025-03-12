@@ -123,7 +123,8 @@ Text.prototype = {
     },
     text(text) {
         if (text === undefined) return this.vars.text;
-        this.vars.text = parseText(String(text));
+        const parsedText = parseText(String(text));
+        this.vars.text = parsedText === "" ? parseText(" ") : parsedText;
         const box = fontSizeToBox(this.vars.text, this.vars.fontSize);
         // TODO: 支持 vars 级别的 freeze/unfreeze
         if (this.rule()) this.rule().freeze();

@@ -19,32 +19,52 @@ const graphs = {
         n: 4,
         x: 0,
         y: 0,
-        links: [[1, 2], [2, 3], [3, 4], [4, 1], [1, 3]]
+        links: [
+            [1, 2],
+            [2, 3],
+            [3, 4],
+            [4, 1],
+            [1, 3],
+        ],
     },
     2: {
         n: 3,
         x: 1,
         y: 0,
-        links: [[1, 2], [2, 3], [3, 1]],
+        links: [
+            [1, 2],
+            [2, 3],
+            [3, 1],
+        ],
     },
     3: {
         n: 1,
         x: 0.5,
         y: 0.5,
-        links: []
+        links: [],
     },
     4: {
         n: 3,
         x: 0,
         y: 1,
-        links: [[1, 2], [2, 3], [3, 1]]
+        links: [
+            [1, 2],
+            [2, 3],
+            [3, 1],
+        ],
     },
     5: {
         n: 4,
         x: 1,
         y: 1,
-        links: [[1, 2], [2, 3], [3, 4], [4, 1], [2, 4]]
-    }
+        links: [
+            [1, 2],
+            [2, 3],
+            [3, 4],
+            [4, 1],
+            [2, 4],
+        ],
+    },
 };
 const externLinks = [
     [[1, 3], [3, 1], sd.Line, {}],
@@ -52,8 +72,8 @@ const externLinks = [
     [[3, 1], [4, 2], sd.Line, {}],
     [[3, 1], [5, 2], sd.Curve, {}],
     [[1, 4], [4, 1], sd.Line, {}],
-    [[4, 3], [5, 4], sd.Line, {}]
-]
+    [[4, 3], [5, 4], sd.Line, {}],
+];
 
 sd.init(() => {
     for (let id in graphs) {
@@ -61,20 +81,16 @@ sd.init(() => {
         grid.at(graphs[id].x, graphs[id].y).newNode(id, graphs[id].graph);
     }
     externLinks.forEach(link => {
-        link[3].link = sd.Link(
-            grid.element(link[0][0]).element(link[0][1]),
-            grid.element(link[1][0]).element(link[1][1]),
-            link[2]
-        ).arrow();
+        link[3].link = sd.Link(grid.element(link[0][0]).element(link[0][1]), grid.element(link[1][0]).element(link[1][1]), link[2]).arrow();
         link[3].link.clazz = link[2];
     });
     stack.y(Element(Id(1, 1)).y());
-})
+});
 
 sd.main(async () => {
     await sd.pause();
     await Dfs(Id(1, 1));
-    
+
     await sd.pause();
     grid.startAnimate();
     for (let graphId in graphs) {
@@ -105,7 +121,10 @@ sd.main(async () => {
                 stack.startAnimate();
                 stack.color(stack.end(), colorList[GraphId(last) - 1]);
                 stack.startAnimate();
-                Element(last).startAnimate().color(colorList[GraphId(last) - 1]).endAnimate();
+                Element(last)
+                    .startAnimate()
+                    .color(colorList[GraphId(last) - 1])
+                    .endAnimate();
                 await sd.pause();
                 stack.startAnimate();
                 stack.pop();
@@ -117,14 +136,18 @@ sd.main(async () => {
             await sd.pause();
         } else {
             if (low[u] === dfn[u]) await sd.pause();
-            Element(u).startAnimate().value(i+1).endAnimate();
+            Element(u)
+                .startAnimate()
+                .value(i + 1)
+                .endAnimate();
             const textOld = Element(u).value();
-            const textNew = new sd.Text(svg, i+1).fontSize(textOld.fontSize()).center(textOld.center());
+            const textNew = new sd.Text(svg, i + 1).fontSize(textOld.fontSize()).center(textOld.center());
+            textNew.opacity(0).after(Element(u)).opacity(1);
             stack.startAnimate().pushFromExistValue(textNew).endAnimate();
             stack.lastElement().nodeId = u;
         }
     }
-})
+});
 
 function MakeTinyGraph(n, links) {
     const graph = new sd.TinyGraph(svg).width(180).height(180);
@@ -141,7 +164,7 @@ function MakeTinyGraph(n, links) {
 async function Dfs(u) {
     low[u] = dfn[u] = ++tot;
     seq.push(u);
-    ins[stk[++top] = u] = true;
+    ins[(stk[++top] = u)] = true;
 
     const toNodes = ToNodes(u);
     for (let to of toNodes) {
@@ -169,7 +192,7 @@ async function Dfs(u) {
 
 function IsAncesstor(a, u) {
     while (prt[u] && u != a) u = prt[u];
-    return (u == a);
+    return u == a;
 }
 
 function LinkTo(link, color) {
@@ -187,16 +210,18 @@ function ToNodes(u) {
         return {
             id: Id(GraphId(u), graph.nodeId(node)),
             link: graph.element(NodeId(u), graph.nodeId(node)),
-            node: node
+            node: node,
         };
     });
-    const extern = externLinks.filter(link => link[0][0] === GraphId(u) && link[0][1] === NodeId(u)).map(link => {
-        return {
-            id: Id(link[1][0], link[1][1]),
-            link: link[3].link,
-            node: graphs[link[1][0]].graph.element(link[1][1])
-        }
-    });
+    const extern = externLinks
+        .filter(link => link[0][0] === GraphId(u) && link[0][1] === NodeId(u))
+        .map(link => {
+            return {
+                id: Id(link[1][0], link[1][1]),
+                link: link[3].link,
+                node: graphs[link[1][0]].graph.element(link[1][1]),
+            };
+        });
     return [...children, ...extern];
 }
 

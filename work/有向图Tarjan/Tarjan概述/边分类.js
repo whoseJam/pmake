@@ -12,9 +12,9 @@ const prt = sd.make1d(n + 5);
 let tot = 0;
 let top = 0;
 const postProc = {
-    "orange": [],
-    "purple": [],
-    "red": []
+    orange: [],
+    purple: [],
+    red: [],
 };
 const links = [
     [1, 2],
@@ -24,12 +24,12 @@ const links = [
     [5, 6],
     [2, 7],
     [1, 8],
-    [8, 9]
+    [8, 9],
 ];
 const externLinks = [
     [3, 6, sd.Curve, {}],
     [7, 1, sd.Line, {}],
-    [9, 7, sd.Line, {}]
+    [9, 7, sd.Line, {}],
 ];
 
 sd.init(() => {
@@ -40,14 +40,10 @@ sd.init(() => {
         tree.element(link[0], link[1]).arrow();
     });
     externLinks.forEach(link => {
-        link[3].link = sd.Link(
-            tree.element(link[0]),
-            tree.element(link[1]),
-            link[2]
-        ).arrow();
+        link[3].link = sd.Link(tree.element(link[0]), tree.element(link[1]), link[2]).arrow();
         link[3].link.clazz = link[2];
     });
-})
+});
 
 sd.main(async () => {
     await sd.pause();
@@ -58,16 +54,16 @@ sd.main(async () => {
     postProc["red"].forEach(proc => proc());
     await sd.pause();
     postProc["purple"].forEach(proc => proc());
-})
+});
 
 function IsAncesstor(a, u) {
     while (prt[u] && u != a) u = prt[u];
-    return (u == a);
+    return u == a;
 }
 
 async function Dfs(u) {
     low[u] = dfn[u] = ++tot;
-    ins[stk[++top] = u] = true;
+    ins[(stk[++top] = u)] = true;
 
     const toNodes = ToNodes(u);
     for (let to of toNodes) {
@@ -77,7 +73,7 @@ async function Dfs(u) {
             prt[v] = u;
             await Dfs(to.id);
             low[u] = Math.min(low[u], low[v]);
-        } else  {
+        } else {
             const color = IsAncesstor(v, u) ? "red" : IsAncesstor(u, v) ? "orange" : "purple";
             postProc[color].push(() => {
                 LinkTo(to.link, C[color]);
@@ -109,15 +105,17 @@ function ToNodes(u) {
         return {
             id: tree.nodeId(node),
             link: tree.element(u, tree.nodeId(node)),
-            node: node
+            node: node,
         };
     });
-    const extern = externLinks.filter(link => String(link[0]) === u).map(link => {
-        return {
-            id: String(link[1]),
-            link: link[3].link,
-            node: tree.element(link[1])
-        }
-    });
+    const extern = externLinks
+        .filter(link => String(link[0]) === u)
+        .map(link => {
+            return {
+                id: String(link[1]),
+                link: link[3].link,
+                node: tree.element(link[1]),
+            };
+        });
     return [...children, ...extern];
 }

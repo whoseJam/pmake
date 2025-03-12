@@ -12,7 +12,7 @@ const links = [
     [4, 1],
     [5, 4],
     [5, 6],
-    [6, 3]
+    [6, 3],
 ];
 
 sd.init(() => {
@@ -27,14 +27,14 @@ sd.init(() => {
         graph.element(link[0], link[1]).arrow();
     });
     stack.y(graph.element(1).y());
-})
+});
 
 sd.main(async () => {
     await sd.pause();
     await Tarjan(n, stack, Element, ToNodes, {
-        OnTraceBack: OnTraceBack
+        OnTraceBack: OnTraceBack,
     });
-})
+});
 
 function Element(u) {
     return graph.element(u);
@@ -45,15 +45,14 @@ function ToNodes(u) {
         return {
             id: graph.nodeId(node),
             link: graph.element(u, graph.nodeId(node)),
-            node: node
+            node: node,
         };
     });
     return [...children];
 }
 
 function OnTraceBack(source, target, u, v) {
-    if ((u == 4 && v == 1) ||
-        (u == 2 && v == 1)) {
+    if ((u == 4 && v == 1) || (u == 2 && v == 1)) {
         return sd.Link(source, target, sd.Curve);
     }
     return sd.Link(source, target);

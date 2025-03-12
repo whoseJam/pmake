@@ -9,8 +9,13 @@ const dfn = sd.make1d(n + 5);
 const ins = sd.make1d(n + 5);
 const stk = sd.make1d(n + 5);
 const prt = sd.make1d(n + 5);
-const seq = new sd.Array(svg).start(1); sd.Index(seq);
-const table = new sd.Grid(svg).n(n + 1).m(3).elementHeight(25).elementWidth(70);
+const seq = new sd.Array(svg).start(1);
+sd.Index(seq);
+const table = new sd.Grid(svg)
+    .n(n + 1)
+    .m(3)
+    .elementHeight(25)
+    .elementWidth(70);
 let tot = 0;
 let top = 0;
 const links = [
@@ -21,13 +26,13 @@ const links = [
     [3, 6],
     [3, 7],
     [5, 8],
-    [5, 9]
+    [5, 9],
 ];
 const externLinks = [
     [8, 2, sd.Line, {}],
     [5, 1, sd.Line, {}],
     [7, 6, sd.Line, {}],
-    [6, 3, sd.Curve, {}]
+    [6, 3, sd.Curve, {}],
 ];
 
 sd.init(() => {
@@ -38,11 +43,7 @@ sd.init(() => {
         tree.element(link[0], link[1]).arrow();
     });
     externLinks.forEach(link => {
-        link[3].link = sd.Link(
-            tree.element(link[0]),
-            tree.element(link[1]),
-            link[2]
-        ).arrow();
+        link[3].link = sd.Link(tree.element(link[0]), tree.element(link[1]), link[2]).arrow();
         link[3].link.clazz = link[2];
     });
     seq.y(tree.my() + 50).x((tree.width() - n * 40) / 2);
@@ -52,7 +53,7 @@ sd.init(() => {
     for (let i = 1; i <= n; i++) {
         table.value(i, 0, `节点${i}`);
     }
-})
+});
 
 sd.main(async () => {
     await sd.pause();
@@ -63,28 +64,22 @@ sd.main(async () => {
         focus.startAnimate().focus(i, 0, i, 2).endAnimate();
         table.startAnimate().value(i, 2, low[i]).endAnimate();
         if (low[i] !== dfn[i]) {
-            const zzline = sd.Link(
-                seq.element(dfn[i]),
-                seq.element(low[i]),
-                sd.ZZLine,
-                "cx", "my", "cx", "my"
-            ).bending(30).location("b").startAnimate().pointStoT().endAnimate().arrow();
+            const zzline = sd.Link(seq.element(dfn[i]), seq.element(low[i]), sd.ZZLine, "cx", "my", "cx", "my").bending(30).location("b").startAnimate().pointStoT().endAnimate().arrow();
             await sd.pause();
             zzline.startAnimate().opacity(0).endAnimate().remove();
         } else {
-            
         }
     }
-})
+});
 
 function IsAncesstor(a, u) {
     while (prt[u] && u != a) u = prt[u];
-    return (u == a);
+    return u == a;
 }
 
 async function Dfs(u) {
     low[u] = dfn[u] = ++tot;
-    ins[stk[++top] = u] = true;
+    ins[(stk[++top] = u)] = true;
     seq.startAnimate().push(u).endAnimate();
     table.startAnimate().value(+u, 1, dfn[u]).endAnimate();
 
@@ -127,15 +122,17 @@ function ToNodes(u) {
         return {
             id: tree.nodeId(node),
             link: tree.element(u, tree.nodeId(node)),
-            node: node
+            node: node,
         };
     });
-    const extern = externLinks.filter(link => String(link[0]) === u).map(link => {
-        return {
-            id: String(link[1]),
-            link: link[3].link,
-            node: tree.element(link[1])
-        }
-    });
+    const extern = externLinks
+        .filter(link => String(link[0]) === u)
+        .map(link => {
+            return {
+                id: String(link[1]),
+                link: link[3].link,
+                node: tree.element(link[1]),
+            };
+        });
     return [...children, ...extern];
 }

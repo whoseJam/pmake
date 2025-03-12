@@ -18,7 +18,7 @@ export async function Tarjan(n, stack, Element, ToNodes, args) {
 
     function IsAncesstor(a, u) {
         while (prt[u] && u != a) u = prt[u];
-        return (u == a);
+        return u == a;
     }
 
     function LinkTo(link, color) {
@@ -37,8 +37,8 @@ export async function Tarjan(n, stack, Element, ToNodes, args) {
         const textOld = Element(u).value();
         const textNew = new sd.Text(svg, u).fontSize(textOld.fontSize()).center(textOld.center());
         stack.startAnimate().pushFromExistValue(textNew).endAnimate();
-        
-        ins[stk[++top] = u] = true;
+
+        ins[(stk[++top] = u)] = true;
 
         const toNodes = ToNodes(u);
         for (let to of toNodes) {
@@ -76,12 +76,12 @@ export async function Tarjan(n, stack, Element, ToNodes, args) {
         } else {
             await sd.pause();
             const v = dfn.indexOf(low[u]);
-            
+
             let link = undefined;
             if (OnTraceBack) {
-                link = OnTraceBack(Element(u), Element(v), u, v);    
+                link = OnTraceBack(Element(u), Element(v), u, v);
             } else {
-                link = sd.Link(Element(u), Element(v)); 
+                link = sd.Link(Element(u), Element(v));
             }
             link.stroke(C.grey).startAnimate().pointStoT().endAnimate().arrow();
         }
