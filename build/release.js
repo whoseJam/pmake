@@ -1,11 +1,36 @@
 const gulp = require("gulp");
-const through = require("through2");
 const path = require("path");
+const through = require("through2");
+
+const URLS_TO_BE_PROCESSED = [
+    // urls to be processed
+    "./build/**/*",
+    "./dist/**/*",
+    "./Reveal/**/*",
+    "./example/**/*",
+    ".prettierrc",
+    "gulpfile.js",
+    "jsconfig.json",
+    "package.json",
+    "README.md",
+];
+
+const BLACK_LIST_FOR_SD = new Set([
+    // black list for SD
+    "Animate\\Action.js",
+    "Animate\\ActionList.js",
+    "Animate\\Animate.js",
+    "Animate\\Context.js",
+    "Animate\\Interp.js",
+    "Animate\\Window.js",
+    "Interact\\Init.js",
+    "sd.js",
+]);
 
 function convertImportPaths(content, filePath, targetPath) {
     const importRegex = /from\s+['"](@[^'"]+)['"]/g;
     const requireRegex = /require\s*\(\s*['"](@[^'"]+)['"]\s*\)/g;
-    const getRelativePath = (importPath) => {
+    const getRelativePath = importPath => {
         const purePath = importPath.substring(1);
         const currentDir = path.dirname(filePath);
         const targetPath = path.join("SD", purePath);
@@ -13,58 +38,35 @@ function convertImportPaths(content, filePath, targetPath) {
         return relativePath.startsWith(".") ? relativePath : "./" + relativePath;
     };
     content = content.replace(importRegex, (match, importPath) => {
-        return "from \"" + getRelativePath(importPath) + "\"";
+        return 'from "' + getRelativePath(importPath) + '"';
     });
     content = content.replace(requireRegex, (match, importPath) => {
-        return "require(\"" + getRelativePath(importPath) + "\")";
+        return 'require("' + getRelativePath(importPath) + '")';
     });
     return content;
 }
 
 function releaseTask(targetPath, done) {
-    const processSD = () => {
-        return gulp.src(["SD/**/*.ts"], { base: "SD" })
-            .pipe(through.obj(function(file, enc, done) {
-                if (file.isNull()) {
-                    return done(null, file);
-                }
-                if (file.isBuffer() && path.extname(file.path) === ".ts") {
+    gulp.src(["SD/**/*.ts", "SD/**/*.js"], { base: "." })
+        .pipe(
+            through.obj(function (file, enc, done) {
+                if (file.isNull()) return done(null, file);
+                const relativePath = path.relative("SD", file.path);
+                if (BLACK_LIST_FOR_SD.has(relativePath)) return done(null, null);
+                if (file.isBuffer()) {
                     const content = file.contents.toString();
                     const newContent = convertImportPaths(content, file.path, targetPath);
                     file.contents = Buffer.from(newContent);
                 }
                 done(null, file);
-            }))
-            .pipe(gulp.dest(targetPath));
-    };
+            })
+        )
+        .pipe(gulp.dest(targetPath));
 
-    const processBuild = () => {
-        return gulp.src(["./build/**/*"], { base: "." })
-            .pipe(gulp.dest(targetPath));
-    };
-
-    const processPackage = () => {
-        return gulp.src(["package.json"], { base: "." })
-            .pipe(gulp.dest(targetPath));
-    };
-
-    const processDist = () => {
-        return gulp.src(["./dist/**/*"], { base: "." })
-            .pipe(gulp.dest(targetPath));
+    for (const url of URLS_TO_BE_PROCESSED) {
+        gulp.src([url], { base: "." }).pipe(gulp.dest(targetPath));
     }
-
-    const processReveal = () => {
-        return gulp.src([
-            "Reveal/plugin/reset.css",
-            "Reveal/plugin/reveal.css", 
-            "Reveal/plugin/Chalkboard.css",
-            "Reveal/Inject.js"
-        ], { base: "." })
-            .pipe(gulp.dest(targetPath));
-    };
-
     done();
-    return gulp.series(processSD, processBuild, processPackage, processDist, processReveal)();
 }
 
 module.exports = releaseTask;

@@ -2,7 +2,7 @@
     "name": "slidew",
     "version": "1.0.8",
     "description": "",
-    "main": "sd.d.ts",
+    "main": "./SD/sd.d.ts",
     "scripts": {},
     "bin": {
         "animation": "./build/animation.js",
@@ -62,7 +62,7 @@
         "through2": "^4.0.2",
         "css-loader": "^7.1.1",
         "gulp": "^5.0.0",
-        "gulp-autoprefixer": "^9.0.0",
+        "gulp-autoprefixer": "^3.1.1",
         "gulp-better-rollup": "^4.0.1",
         "gulp-clean-css": "^4.3.0",
         "gulp-concat": "^2.6.1",

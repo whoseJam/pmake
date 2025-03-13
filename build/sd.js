@@ -2,30 +2,37 @@ const gulp = require("gulp");
 const path = require("path");
 const webpack = require("webpack-stream");
 const JavaScriptObfuscator = require("webpack-obfuscator");
-const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
-module.exports = function SDTask(targetFilePath) {
-    const webpackConfiguration = SDConfiguration();
-    return gulp.src("./SD/sd.js").pipe(webpack(webpackConfiguration)).pipe(gulp.dest(targetFilePath));
+const obfuscator = new JavaScriptObfuscator({
+    identifierNamesGenerator: "mangled",
+    splitStrings: true,
+});
+
+/**
+ * Compile sd.js to the target folder.
+ * @param {string} targetFolder The folder to hold the output.
+ * @returns {NodeJS.ReadWriteStream}
+ */
+module.exports = function (targetFolder) {
+    const config = getConfiguration();
+    return (
+        gulp
+            // webpack stream
+            .src("./SD/sd.js")
+            .pipe(webpack(config))
+            .pipe(gulp.dest(targetFolder))
+    );
 };
 
-function SDConfiguration() {
+function getConfiguration() {
     const plugins = [];
-    if (!global["d"]) {
-        plugins.push(
-            new JavaScriptObfuscator({
-                stringArray: true,
-                controlFlowFlattening: false,
-                selfDefending: true,
-                identifierNamesGenerator: "mangled",
-                unicodeEscapeSequence: true,
-                compact: true,
-            })
-        );
-    }
+    if (!global["d"]) plugins.push(obfuscator);
+    const mode = global["d"] ? "development" : "production";
+    const watch = global["w"] ? true : false;
     return {
-        mode: global["d"] ? "development" : "production",
-        watch: global["w"] ? true : false,
+        mode,
+        watch,
+        plugins,
         output: {
             filename: "sd.js",
             library: "sd",
@@ -33,7 +40,6 @@ function SDConfiguration() {
             umdNamedDefine: true,
             globalObject: "this",
         },
-        plugins: plugins,
         module: {
             rules: [
                 {
@@ -60,10 +66,6 @@ function SDConfiguration() {
         },
         externals: {
             dagre: "dagre",
-            // "d3": "d3",
-            // "react": "React",
-            // "react-dom": "ReactDOM",
-            // "react-redux": "ReactRedux",
         },
     };
 }

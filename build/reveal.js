@@ -1,43 +1,49 @@
 const gulp = require("gulp");
 const webpack = require("webpack-stream");
 
-module.exports = function(targetFilePath) {
-    const webpackConfiguration = RevealConfiguration();
-    return gulp.src("./Reveal/MyReveal.js")
-               .pipe(webpack(webpackConfiguration))
-               .pipe(gulp.dest(targetFilePath));
-}
+/**
+ * Compile sd.js to the target folder.
+ * @param {string} targetFolder The folder to hold the output.
+ * @returns {NodeJS.ReadWriteStream}
+ */
+module.exports = function (targetFolder) {
+    const config = getConfiguration();
+    return (
+        gulp
+            // webpack stream
+            .src("./Reveal/MyReveal.js")
+            .pipe(webpack(config))
+            .pipe(gulp.dest(targetFolder))
+    );
+};
 
-function RevealConfiguration() {
+function getConfiguration() {
+    const mode = global["d"] ? "development" : "production";
+    const watch = global["w"] ? true : false;
     return {
-        mode:  global["d"] ? "development" : "production",
-        watch: global["w"] ? true : false,
+        mode,
+        watch,
         output: {
             filename: "myreveal.js",
             library: "MyReveal",
             libraryTarget: "umd",
             umdNamedDefine: true,
-            globalObject: "this"
+            globalObject: "this",
         },
-        plugins: [],
         module: {
             rules: [
-                {   test: /.js$/,
+                {
+                    test: /.js$/,
                     use: {
                         loader: "babel-loader",
-                    }
+                    },
                 },
-                {   test: /\.css$/,
-                    use: [
-                        "style-loader",
-                        "css-loader"
-                    ]
-                }
-            ]
+                { test: /\.css$/, use: ["style-loader", "css-loader"] },
+            ],
         },
         performance: {
-            hints: false
+            hints: false,
         },
-        cache: true
-    }
+        cache: true,
+    };
 }

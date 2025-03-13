@@ -1,5 +1,40 @@
 import { ActionList } from "@/Animate/ActionList";
 import { Status as S } from "@/Interact/Status";
+import { Dom } from "@/Dom/Dom";
+import { render } from "react-dom";
+
+let checkWaterMarkTick = 0;
+const WATER_MARK_CHECK_INTERVAL = 100;
+const WATER_MARK_STRING = "power by whoseJam";
+
+export function createWaterMark() {
+    const watermark = (
+        <div
+            id="watermark"
+            style={{
+                position: "fixed",
+                bottom: "10px",
+                right: "10px",
+                fontSize: "15px",
+                color: "rgba(0, 0, 0, 0.3)",
+                pointerEvents: "none",
+            }}
+        >
+            {WATER_MARK_STRING}
+        </div>
+    );
+    const container = Dom.createElementAndAppendToBody("div");
+    render(watermark, container);
+}
+
+function checkWaterMark() {
+    checkWaterMarkTick++;
+    if (checkWaterMarkTick >= WATER_MARK_CHECK_INTERVAL) {
+        checkWaterMarkTick = 0;
+        if (Dom.getByID("watermark")) return;
+        createWaterMark();
+    }
+}
 
 export class Animate {
     static lastTickFlag = false;
@@ -22,6 +57,7 @@ export class Animate {
         }
     }
     static tick(t) {
+        checkWaterMark();
         const dt = t - this.currentTimestamp;
         this.currentTimestamp = t;
         const currentActionList = this.currentActionList;

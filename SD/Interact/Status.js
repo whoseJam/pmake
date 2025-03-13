@@ -28,21 +28,6 @@ export class Status {
         D.onKeyDown("t", () => {
             wrapper.style["opacity"] ^= 1;
         });
-
-        const watermark = (
-            <div style={{
-                position: "fixed", 
-                bottom: "10px", 
-                right: "10px", 
-                fontSize: "15px", 
-                color: "rgba(0, 0, 0, 0.3)", 
-                pointerEvents: "none"
-            }}>
-                power by whoseJam
-            </div>
-        );
-        const watermarkDiv = Dom.createElementAndAppendToBody("div");
-        render(watermark, watermarkDiv);
     }
 
     static updateFrameStatus() {

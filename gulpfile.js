@@ -30,7 +30,7 @@ gulp.task("reveal", () => {
 gulp.task("revealPlugin", () => {
     const pluginOutputPath = global["o"];
     return revealPlugin(pluginOutputPath);
-})
+});
 
 gulp.task("theme", async () => {
     global["theme"] = true;
@@ -50,7 +50,7 @@ gulp.task("iframe", () => {
 
 gulp.task("release", done => {
     const releaseOutputPath = global["o"] || parser.parseConfig("releaseOutputPath");
-    return release(releaseOutputPath, done);
+    release(releaseOutputPath, done);
 });
 
 gulp.task("ppt", done => {

@@ -17,7 +17,7 @@ async function TestArrayElementSwitch() {
     const indices = [0, 1, 3];
     for (let i = indices.length - 1; i >= 0; i--) {
         const element = arr1.dropElement(indices[i]);
-        arr2.insertFromExistElement(0, element);
+        arr2.insertFromExistElement(-1, element);
     }
     arr1.endAnimate();
     arr2.endAnimate();
