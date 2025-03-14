@@ -6,6 +6,7 @@ const URLS_TO_BE_PROCESSED = [
     // urls to be processed
     "./build/**/*",
     "./dist/**/*",
+    "./example/**/*",
     "./IFrame/**/*",
     "./Reveal/**/*",
     "./SD/**/*",
