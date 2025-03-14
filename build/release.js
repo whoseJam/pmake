@@ -6,25 +6,27 @@ const URLS_TO_BE_PROCESSED = [
     // urls to be processed
     "./build/**/*",
     "./dist/**/*",
+    "./IFrame/**/*",
     "./Reveal/**/*",
-    "./example/**/*",
+    "./SD/**/*",
+    ".prettierignore",
     ".prettierrc",
-    "gulpfile.js",
-    "jsconfig.json",
     "package.json",
-    "README.md",
 ];
 
-const BLACK_LIST_FOR_SD = new Set([
-    // black list for SD
-    "Animate\\Action.js",
-    "Animate\\ActionList.js",
-    "Animate\\Animate.js",
-    "Animate\\Context.js",
-    "Animate\\Interp.js",
-    "Animate\\Window.js",
-    "Interact\\Init.js",
-    "sd.js",
+const BLACK_LIST = new Set([
+    // black list
+    "SD\\Animate\\Action.js",
+    "SD\\Animate\\ActionList.js",
+    "SD\\Animate\\Animate.js",
+    "SD\\Animate\\Context.js",
+    "SD\\Animate\\Interp.js",
+    "SD\\Animate\\Window.js",
+    "SD\\Interact\\Init.js",
+    "SD\\sd.js",
+    "build\\github.js",
+    "build\\rag.js",
+    "build\\release.js",
 ]);
 
 function convertImportPaths(content, filePath, targetPath) {
@@ -46,27 +48,21 @@ function convertImportPaths(content, filePath, targetPath) {
     return content;
 }
 
-function releaseTask(targetPath, done) {
-    gulp.src(["SD/**/*.ts", "SD/**/*.js"], { base: "." })
+module.exports = function (targetPath) {
+    return gulp
+        .src(URLS_TO_BE_PROCESSED, { base: "." })
         .pipe(
             through.obj(function (file, enc, done) {
                 if (file.isNull()) return done(null, file);
-                const relativePath = path.relative("SD", file.path);
-                if (BLACK_LIST_FOR_SD.has(relativePath)) return done(null, null);
-                if (file.isBuffer()) {
+                const relativePath = path.relative(global["projectRoot"], file.path);
+                if (BLACK_LIST.has(relativePath)) return done(null, null);
+                if (file.isBuffer() && relativePath.startsWith("SD")) {
+                    console.log(`Converting import of ${relativePath}`);
                     const content = file.contents.toString();
-                    const newContent = convertImportPaths(content, file.path, targetPath);
-                    file.contents = Buffer.from(newContent);
+                    file.contents = Buffer.from(convertImportPaths(content, file.path, targetPath));
                 }
-                done(null, file);
+                return done(null, file);
             })
         )
         .pipe(gulp.dest(targetPath));
-
-    for (const url of URLS_TO_BE_PROCESSED) {
-        gulp.src([url], { base: "." }).pipe(gulp.dest(targetPath));
-    }
-    done();
-}
-
-module.exports = releaseTask;
+};

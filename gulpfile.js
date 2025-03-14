@@ -2,14 +2,15 @@ const gulp = require("gulp");
 
 const sd = require("./build/sd");
 const animation = require("./build/animation");
+const github = require("./build/github");
+const iframe = require("./build/iframe");
 const ppt = require("./build/ppt");
+const rag = require("./build/rag");
+const release = require("./build/release");
 const reveal = require("./build/reveal");
 const revealPlugin = require("./build/revealPlugin");
-const iframe = require("./build/iframe");
-const release = require("./build/release");
-const themeTask = require("./build/theme");
+const theme = require("./build/theme");
 const parser = require("./build/parser");
-const rag = require("./build/rag");
 
 global["projectRoot"] = __dirname.replaceAll("\\", "/");
 
@@ -35,7 +36,7 @@ gulp.task("revealPlugin", () => {
 gulp.task("theme", async () => {
     global["theme"] = true;
     const pptOutputPath = global["o"] || parser.parseConfig("pptOutputPath");
-    return themeTask(pptOutputPath);
+    return theme(pptOutputPath);
 });
 
 gulp.task("animation", () => {
@@ -48,9 +49,14 @@ gulp.task("iframe", () => {
     return iframe(pptOutputPath);
 });
 
-gulp.task("release", done => {
+gulp.task("release", () => {
     const releaseOutputPath = global["o"] || parser.parseConfig("releaseOutputPath");
-    release(releaseOutputPath, done);
+    return release(releaseOutputPath);
+});
+
+gulp.task("github", () => {
+    const githubOutputPath = global["o"] || parser.parseConfig("githubOutputPath");
+    return github(githubOutputPath);
 });
 
 gulp.task("ppt", done => {
