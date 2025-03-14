@@ -1,15 +1,28 @@
 const gulp = require("gulp");
 const webpack = require("webpack-stream");
 
-module.exports = function task(targetFilePath) {
-    const config = configuration();
-    return gulp.src("./IFrame/IFrame.js").pipe(webpack(config)).pipe(gulp.dest(targetFilePath));
+/**
+ * Compile iframe.js to the target folder.
+ * @param {string} targetFolder The folder to hold the output.
+ * @returns {NodeJS.ReadWriteStream}
+ */
+module.exports = function (targetFolder) {
+    const config = getConfiguration();
+    return (
+        gulp
+            // webpack stream
+            .src("./IFrame/IFrame.js")
+            .pipe(webpack(config))
+            .pipe(gulp.dest(targetFolder))
+    );
 };
 
-function configuration() {
+function getConfiguration() {
+    const mode = global["d"] ? "development" : "production";
+    const watch = global["w"] ? true : false;
     return {
-        mode: global["d"] ? "development" : "production",
-        watch: global["w"] ? true : false,
+        mode,
+        watch,
         output: {
             filename: "iframe.js",
             library: "iframe",

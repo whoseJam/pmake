@@ -35,7 +35,7 @@ gulp.task("revealPlugin", () => {
 gulp.task("theme", async () => {
     global["theme"] = true;
     const pptOutputPath = global["o"] || parser.parseConfig("pptOutputPath");
-    return await themeTask(pptOutputPath);
+    return themeTask(pptOutputPath);
 });
 
 gulp.task("animation", () => {
