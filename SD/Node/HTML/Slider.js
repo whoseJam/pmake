@@ -15,8 +15,8 @@ export function Slider(parent) {
     this.vars.merge({
         x: 0,
         y: 0,
-        width: 60,
-        height: 25,
+        width: 80,
+        height: 20,
     });
 
     this._.layer.setAttribute("width", "80px");
