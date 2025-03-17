@@ -3,7 +3,7 @@ import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 
 export class Ellipse extends BaseNake {
-    constructor(parent: SDNode | RenderNode);
+    constructor(target: SDNode | RenderNode);
 
     /**
      * 获取 x 方向的半径

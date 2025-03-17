@@ -6,7 +6,7 @@ import { RenderNode } from "@/Renderer/RenderNode";
  * 圆形组件
  */
 export class Circle extends BaseNake {
-    constructor(parent: SDNode | RenderNode);
+    constructor(target: SDNode | RenderNode);
 
     /**
      * 获取半径

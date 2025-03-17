@@ -3,8 +3,8 @@ import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 
 export class Text extends BaseNake {
-    constructor(parent: SDNode | RenderNode);
-    constructor(parent: SDNode | RenderNode, text: number | string);
+    constructor(target: SDNode | RenderNode);
+    constructor(target: SDNode | RenderNode, text: number | string);
 
     /**
      * 获取字体大小

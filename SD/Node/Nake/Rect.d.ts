@@ -3,5 +3,5 @@ import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 
 export class Rect extends BaseNake {
-    constructor(parent: SDNode | RenderNode);
+    constructor(target: SDNode | RenderNode);
 }

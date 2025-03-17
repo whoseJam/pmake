@@ -4,7 +4,7 @@ const svg = sd.svg();
 const C = sd.color();
 const T = 500;
 
-sd.main(Test9);
+sd.main(Test0);
 
 async function Test12() {
     const math = new sd.Mathjax(svg, "a+b=c").center(100, 100);
@@ -160,7 +160,7 @@ async function Test0() {
     await sd.pause();
     math.startAnimate().transformMath("5678").fontSize(20).endAnimate();
     await sd.pause();
-    math.startAnimate().transformMath("1234").color(C.blue).endAnimate();
+    math.startAnimate().transformMath("1234").color(C.textBlue).endAnimate();
     await sd.pause();
     math.startAnimate().color(C.purple).endAnimate();
 }

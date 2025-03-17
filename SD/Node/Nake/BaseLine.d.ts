@@ -4,7 +4,7 @@ import { RenderNode } from "@/Renderer/RenderNode";
 import { SDRule } from "@/Rule/Rule";
 
 export class BaseLine extends BaseNake {
-    constructor(parent: SDNode | RenderNode, tag: string);
+    constructor(target: SDNode | RenderNode, tag: string);
 
     /**
      * 获取线头标记

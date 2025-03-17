@@ -3,7 +3,7 @@ import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 
 export class Polygon extends BaseNake {
-    constructor(parent: SDNode | RenderNode);
+    constructor(target: SDNode | RenderNode);
 
     /**
      * 获取多边形上的点

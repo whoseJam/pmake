@@ -1,14 +1,13 @@
-import { Context } from "@/Animate/Context";
 import { Vector as V } from "@/Math/Vector";
 import { Line } from "@/Node/Nake/Line";
 import { Path } from "@/Node/Nake/Path";
-import { SDNode } from "@/Node/SDNode";
+import { SD2DNode } from "@/Node/SD2DNode";
 import { Factory } from "@/Utility/Factory";
 import { PathPen } from "@/Utility/PathPen";
 import { Enter as EN } from "@/Node/Core/Enter";
 
 export function Coord(parent) {
-    SDNode.call(this, parent);
+    SD2DNode.call(this, parent);
 
     this.vars.merge({
         x: 0,
@@ -23,7 +22,7 @@ export function Coord(parent) {
         },
     });
 
-    this.childAs("x-axis", new Line(this).arrow().source(0, 0).target(40, 0), function(parent, child) {
+    this.childAs("x-axis", new Line(this).arrow().source(0, 0).target(40, 0), function (parent, child) {
         const Y = parent.vars.viewBox.y;
         const H = parent.vars.viewBox.height;
         const currentY = Math.min(Y + H, Math.max(Y, 0));
@@ -31,7 +30,7 @@ export function Coord(parent) {
         child.x(parent.globalX(parent.vars.viewBox.x));
         child.width(parent.width());
     });
-    this.childAs("y-axis", new Line(this).arrow().source(0, 40).target(0, 0), function(parent, child) {
+    this.childAs("y-axis", new Line(this).arrow().source(0, 40).target(0, 0), function (parent, child) {
         const X = parent.vars.viewBox.x;
         const W = parent.vars.viewBox.width;
         const currentX = Math.min(X + W, Math.max(X, 0));
@@ -54,7 +53,7 @@ function viewBoxHandler(key) {
 }
 
 Coord.prototype = {
-    ...SDNode.prototype,
+    ...SD2DNode.prototype,
     x: Factory.handlerLowPrecise("x"),
     y: Factory.handlerLowPrecise("y"),
     width: Factory.handlerLowPrecise("width"),
@@ -165,7 +164,6 @@ Coord.prototype.drawLine = function (name, k, x, y) {
 
     return line;
 };
-
 
 function pathRule(parent, path) {
     const callback = path.function();

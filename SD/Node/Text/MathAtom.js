@@ -1,10 +1,10 @@
 import { Interp } from "@/Animate/Interp";
-import { SDNode } from "@/Node/SDNode";
+import { SD2DNode } from "@/Node/SD2DNode";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
 
 export function MathAtom(parent, nake) {
-    SDNode.call(this, parent, nake);
+    SD2DNode.call(this, parent, nake);
 
     this.vars.merge({
         stroke: C.black,
@@ -20,10 +20,10 @@ export function MathAtom(parent, nake) {
 }
 
 MathAtom.prototype = {
-    ...SDNode.prototype,
+    ...SD2DNode.prototype,
     fill: Factory.handler("fill"),
     stroke: Factory.handler("stroke"),
-    color: function (color) {
+    color(color) {
         if (color === undefined) return { main: this.fill(), border: this.stroke() };
         if (typeof color === "string") this.fill(color);
         else this.fill(color.main).stroke(color.border);

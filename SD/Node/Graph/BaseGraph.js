@@ -1,11 +1,11 @@
 import { Vertex } from "@/Node/Element/Vertex";
 import { Line } from "@/Node/Nake/Line";
-import { SDNode } from "@/Node/SDNode";
 import { BaseTree } from "@/Node/Tree/BaseTree";
 import { Factory } from "@/Utility/Factory";
+import { SD2DNode } from "@/Node/SD2DNode";
 
 export function BaseGraph(parent) {
-    SDNode.call(this, parent);
+    SD2DNode.call(this, parent);
 
     this.newLayer("nodes");
     this.newLayer("links");
@@ -29,7 +29,7 @@ export function BaseGraph(parent) {
 }
 
 BaseGraph.prototype = {
-    ...SDNode.prototype,
+    ...SD2DNode.prototype,
     x: Factory.handlerLowPrecise("x"),
     y: Factory.handlerLowPrecise("y"),
     width: Factory.handlerLowPrecise("width"),

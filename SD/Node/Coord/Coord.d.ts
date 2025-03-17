@@ -16,7 +16,7 @@ class SDFunction {
 }
 
 export class Coord extends SDNode {
-    constructor(parent: SDNode | RenderNode);
+    constructor(target: SDNode | RenderNode);
     xAxis(): SDNode;
     yAxis(): SDNode;
     viewX(): number;

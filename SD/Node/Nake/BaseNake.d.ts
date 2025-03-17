@@ -3,7 +3,7 @@ import { RenderNode } from "@/Renderer/RenderNode";
 import { HexColor, PacketColor, SDColor } from "@/Utility/Color";
 
 export class BaseNake extends SDNode {
-    constructor(parent: SDNode | RenderNode, tag: string);
+    constructor(target: SDNode | RenderNode, tag: string);
 
     /**
      * 获取填充色

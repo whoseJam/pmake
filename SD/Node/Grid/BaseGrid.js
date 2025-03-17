@@ -1,9 +1,9 @@
-import { SDNode } from "@/Node/SDNode";
+import { SD2DNode } from "@/Node/SD2DNode";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 
 export function BaseGrid(parent) {
-    SDNode.call(this, parent);
+    SD2DNode.call(this, parent);
 
     this.vars.merge({
         n: 0,
@@ -19,7 +19,7 @@ export function BaseGrid(parent) {
 }
 
 BaseGrid.prototype = {
-    ...SDNode.prototype,
+    ...SD2DNode.prototype,
     startN: Factory.handler("startN"),
     startM: Factory.handler("startM"),
     endN() {
@@ -156,9 +156,9 @@ BaseGrid.prototype = {
         const args = arguments;
         switch (args.length) {
             case 0:
-                return SDNode.prototype.opacity.call(this);
+                return SD2DNode.prototype.opacity.call(this);
             case 1:
-                return SDNode.prototype.opacity.call(this, args[1]);
+                return SD2DNode.prototype.opacity.call(this, args[1]);
             case 2: {
                 const element = this.element(args[0], args[1]);
                 return element.opacity();

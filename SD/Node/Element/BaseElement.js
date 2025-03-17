@@ -1,15 +1,14 @@
 import { Enter as EN } from "@/Node/Core/Enter";
 import { Exit as EX } from "@/Node/Core/Exit";
-import { SDNode } from "@/Node/SDNode";
+import { SD2DNode } from "@/Node/SD2DNode";
 import { Rule as R } from "@/Rule/Rule";
-import { CenterFixAspect } from "@/Rule/Center";
 import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 
 export function BaseElement(parent) {
-    SDNode.call(this, parent);
+    SD2DNode.call(this, parent);
 
     this.newLayer("background");
 
@@ -26,7 +25,7 @@ export function BaseElement(parent) {
 }
 
 BaseElement.prototype = {
-    ...SDNode.prototype,
+    ...SD2DNode.prototype,
     x: Factory.handlerLowPrecise("x"),
     y: Factory.handlerLowPrecise("y"),
     width: Factory.handlerLowPrecise("width"),

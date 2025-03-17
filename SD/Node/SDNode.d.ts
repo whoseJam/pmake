@@ -1,16 +1,18 @@
 import { RenderNode } from "@/Renderer/RenderNode";
 
 export class SDNode {
-    constructor(node: SDNode);
-    constructor(target: RenderNode);
-    constructor(node: SDNode, target: RenderNode);
+    constructor(target: SDNode | RenderNode);
+
     type(type: string): this;
+    fixAspect(): boolean;
+
     layer(): RenderNode;
     layer(name: string): RenderNode;
     newLayer(name: string): this;
     layer(name: string): RenderNode;
     attachTo(layer: SDNode): this;
     attachTo(layer: RenderNode): this;
+
     childAs(name: string, child: SDNode, rule: Rule): this;
     childAs(name: string, child: SDNode): this;
     childAs(child: SDNode, rule: Rule): this;
@@ -19,6 +21,8 @@ export class SDNode {
     hasChild(child: string | SDNode): SDNode;
     eraseChild(name: string): SDNode;
     eraseChild(child: SDNode): SDNode;
+    remove(): void;
+
     startAnimate(duration: number): this;
     startAnimate(other: SDNode): this;
     startAnimate(start: number, end: number): this;
@@ -29,38 +33,13 @@ export class SDNode {
     after(delay: number): this;
     after(other: SDNode): this;
     duration(): number;
-    opacity(): number;
-    opacity(opacity: number): this;
-    inRange(point: [number, number]): boolean;
-    remove(): void;
-    x(): number;
-    x(x: number): this;
-    y(): number;
-    y(y: number): this;
-    width(): number;
-    width(width: number): this;
-    height(): number;
-    height(height: number): this;
-    scale(scale: number): this;
-    pos(xLocator: string, yLocator: string, dx: number, dy: number): [number, number];
-    center(): [number, number];
-    center(center: [number, number]): this;
-    center(cx: number, cy: number): this;
-    kx(k: number): number;
-    ky(k: number): number;
-    cx(): number;
-    cx(cx: number): this;
-    cy(): number;
-    cy(cy: number): this;
-    dx(dx: number): this;
-    dy(dy: number): this;
-    mx(): number;
-    mx(mx: number): this;
-    my(): number;
-    my(my: number): this;
+
     freeze(): this;
     unfreeze(): this;
     freezing(): boolean;
+    rule(): (parent: SDNode, child: SDNode) => void;
+    rule(rule: (parent: SDNode, child: SDNode) => void): this;
+
     drag(type: true): this;
     drag(type: false | null | undefined);
     drag(onDrag: (dx: number, dy: number) => [number, number]): this;
@@ -68,8 +47,7 @@ export class SDNode {
     clickable(type: false | null | undefined);
     onClick(onClick: (node: this) => void): this;
     onDblClick(onClick: (node: this) => void): this;
-    rule(): (parent: SDNode, child: SDNode) => void;
-    rule(rule: (parent: SDNode, child: SDNode) => void): this;
+
     onEnter(enter: (element: SDNode, move: () => void) => void): this;
     onEnter(): (element: SDNode) => void | undefined;
     onEnterDefault(enter: (element: SDNode, move: () => void) => void): this;
@@ -79,5 +57,4 @@ export class SDNode {
     onExit(exit: (element: SDNode) => void): this;
     onExitDefault(exit: (element: SDNode) => void): this;
     triggerExit(): this;
-    title(title: string): this;
 }

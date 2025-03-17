@@ -1,12 +1,12 @@
 import { Interp } from "@/Animate/Interp";
-import { SDNode } from "@/Node/SDNode";
+import { SD2DNode } from "@/Node/SD2DNode";
 import { createRenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
 
 export function BaseNake(parent, label) {
-    SDNode.call(this, parent, undefined, "g");
+    SD2DNode.call(this, parent, undefined, "g");
 
     this.vars.merge({
         fill: C.black,
@@ -32,7 +32,7 @@ export function BaseNake(parent, label) {
 }
 
 BaseNake.prototype = {
-    ...SDNode.prototype,
+    ...SD2DNode.prototype,
     fill: Factory.handler("fill"),
     stroke: Factory.handler("stroke"),
     fillOpacity: Factory.handlerMediumPrecise("fillOpacity"),

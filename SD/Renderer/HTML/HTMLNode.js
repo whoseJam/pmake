@@ -65,7 +65,4 @@ HTMLNode.prototype = {
             this.element.setAttribute(key, value);
         }
     },
-    hasShape() {
-        return true;
-    },
 };

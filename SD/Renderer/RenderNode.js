@@ -1,5 +1,6 @@
 import { Action } from "@/Animate/Action";
 import { div, svg } from "@/Interact/Root";
+import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 export const SVGLabel = new Set(["circle", "ellipse", "image", "line", "path", "polygon", "rect", "text", "svg", "g", "marker", "defs"]);
 export const HTMLLabel = new Set(["div", "input", "button", "label", "textarea", "canvas"]);
@@ -60,6 +61,18 @@ RenderNode.prototype = {
     nake() {
         return this.element;
     },
+    append(label) {
+        let child = label;
+        if (typeof label === "string") child = new this.class(this.parent, this, label);
+        this.nake().append(child.nake());
+        return child;
+    },
+    appendNake(nake) {
+        this.nake().append(nake);
+    },
+    moveTo() {
+        ErrorLauncher.notImplementedYet("moveTo");
+    },
     appear() {
         if (this.parent === undefined) {
             if (this.render.nake) this.render.nake().appendChild(this.nake());
@@ -81,10 +94,13 @@ RenderNode.prototype = {
         const t = this.parent.delay() + this.parent.duration();
         new Action(t, t, this.render, undefined, treeStructureChange(this, this.parent), this, "remove");
     },
-    append(label) {
-        let child = label;
-        if (typeof label === "string") child = new this.class(this.parent, this, label);
-        this.nake().append(child.nake());
-        return child;
+    setAttribute() {
+        ErrorLauncher.notImplementedYet("setAttribute");
+    },
+    getAttribute() {
+        ErrorLauncher.notImplementedYet("getAttribute");
+    },
+    hasShape() {
+        return true;
     },
 };

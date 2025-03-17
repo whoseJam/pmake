@@ -1,4 +1,3 @@
-import { Action } from "@/Animate/Action";
 import { Animate } from "@/Node/Core/Animate";
 import { Children } from "@/Node/Core/Children";
 import { Interact } from "@/Node/Core/Interact";
@@ -11,24 +10,6 @@ import { Factory } from "@/Utility/Factory";
 import { Enter as EN } from "@/Node/Core/Enter";
 
 let id = 0;
-
-function interp(node, attrs) {
-    return function (t) {
-        const k = this.source + (this.target - this.source) * t;
-        attrs.setAttribute("opacity", k);
-        if (t === 1 && !node._.clickableCalled) {
-            attrs.setAttribute("pointer-events", k === 0 ? "none" : "auto");
-        }
-    };
-}
-
-function opacityInterp(node, attrs) {
-    return function (newValue, oldValue) {
-        const l = node.delay();
-        const r = node.delay() + node.duration();
-        new Action(l, r, oldValue, newValue, interp(node, attrs), node, "opacity");
-    };
-}
 
 export function SDNode(parent, layer = undefined, group = undefined) {
     this.id = ++id;
@@ -66,11 +47,7 @@ export function SDNode(parent, layer = undefined, group = undefined) {
         }
     }
 
-    this.vars = reactive({
-        opacity: 1,
-    });
-
-    this.vars.associate("opacity", opacityInterp(this, this._.layer));
+    this.vars = reactive({});
 
     this._.BASE_SDNODE = true;
 }
@@ -92,11 +69,16 @@ function forwardWithReturn(comp, func) {
 
 SDNode.prototype = {
     ...SDNode.prototype,
+
     type(type) {
         if (type === undefined) return this._.layer.getAttribute("type");
         this._.layer.setAttribute("type", type);
         return this;
     },
+    fixAspect() {
+        return false;
+    },
+
     layer(name) {
         return name === undefined ? this._.layer : this._.layers[name];
     },
@@ -116,6 +98,7 @@ SDNode.prototype = {
         }
         return this;
     },
+
     childAs() {
         const args = [...arguments];
         const child = args.filter(arg => Check.isTypeOfSDNode(arg))[0];
@@ -132,19 +115,17 @@ SDNode.prototype = {
     child: forwardWithReturn("children", "child"),
     hasChild: forwardWithReturn("children", "has"),
     eraseChild: forwardWithReturn("children", "erase"),
+    remove() {
+        this._.layer.remove();
+    },
+
     startAnimate: forward("animate", "startAnimate"),
     endAnimate: forward("animate", "endAnimate"),
     isAnimating: forwardWithReturn("animate", "isAnimating"),
     delay: forwardWithReturn("animate", "delay"),
     after: forward("animate", "after"),
     duration: forwardWithReturn("animate", "duration"),
-    opacity: Factory.handlerMediumPrecise("opacity"),
-    inRange(vec) {
-        return this.x() <= vec[0] && vec[0] <= this.mx() && this.y() <= vec[1] && vec[1] <= this.my();
-    },
-    remove() {
-        this._.layer.remove();
-    },
+
     scale: Location.scale,
     pos: Location.position,
     center: Location.center,
