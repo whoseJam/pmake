@@ -3,7 +3,14 @@ import * as sd from "@/sd";
 const div = sd.div();
 const C = sd.color();
 
-sd.main(TestInputChaining);
+sd.main(TestLayout);
+
+async function TestLayout() {
+    const input = new sd.Input(div).x(100).y(100);
+    sd.Focus(input).focus();
+    await sd.pause();
+    input.label("aaa");
+}
 
 async function TestBasicInputFunctionality() {
     const input = new sd.Input(div);
@@ -26,7 +33,7 @@ async function TestInputAnimation() {
 async function TestInputCallback() {
     const input = new sd.Input(div);
     let callbackTriggered = false;
-    input.onChange((value) => {
+    input.onChange(value => {
         callbackTriggered = true;
         console.assert(value === "新值", "Callback value test failed");
         console.log("onChange callback triggered with value:", value);
@@ -41,12 +48,12 @@ async function TestInputCallback() {
 async function TestInputChaining() {
     const input = new sd.Input(div);
     await sd.pause();
-    input.x(150).y(150).width(150).value("链式调用").onChange((value) => console.log("Changed value:", value));
-    console.assert(
-        input.x() === 150 && 
-        input.y() === 150 && 
-        input.value() === "链式调用",
-        "Method chaining test failed"
-    );
+    input
+        .x(150)
+        .y(150)
+        .width(150)
+        .value("链式调用")
+        .onChange(value => console.log("Changed value:", value));
+    console.assert(input.x() === 150 && input.y() === 150 && input.value() === "链式调用", "Method chaining test failed");
     console.log("Input chaining test passed");
 }

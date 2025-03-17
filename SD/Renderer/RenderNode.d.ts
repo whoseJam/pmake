@@ -11,6 +11,7 @@ export class RenderNode {
 
     nake(): Element;
     append(tag: string): RenderNode;
+    append(node: RenderNode): RenderNode;
     moveTo(layer: RenderNode);
     appear();
     remove();
