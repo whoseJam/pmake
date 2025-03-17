@@ -5,7 +5,7 @@ const sizeKey = new Set(["x", "y", "cx", "cy", "width", "height", "d", "x1", "y1
 function isVisible(element) {
     if (element && "opacity" in element) {
         if (element.opacity() === 0) return false;
-        if (element._ && element._.parent) return isVisible(element._.parent);
+        if (element._ && element._.layer) return isVisible(element._.layer);
         return isVisible(element.parent);
     }
     return true;

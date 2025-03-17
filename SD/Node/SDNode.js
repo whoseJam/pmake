@@ -46,7 +46,6 @@ export function SDNode(parent, layer = undefined, group = undefined) {
 
     if (Check.isTypeOfSDNode(parent)) {
         // parent is SDNode
-        this._.parent = parent;
         if (!layer) {
             this._.layer = createRenderNode(this, parent.layer(), group);
         } else {
@@ -56,10 +55,8 @@ export function SDNode(parent, layer = undefined, group = undefined) {
     } else {
         // parent is RenderNode
         if (Check.isTypeOfThreeNode(parent)) {
-            this._.parent = parent.parent;
             this._.layer = parent;
         } else {
-            this._.parent = parent.parent;
             if (!layer) {
                 this._.layer = createRenderNode(this, parent, group);
             } else {
