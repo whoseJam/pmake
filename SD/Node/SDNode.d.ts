@@ -9,9 +9,8 @@ export class SDNode {
     layer(): RenderNode;
     layer(name: string): RenderNode;
     newLayer(name: string): this;
-    layer(name: string): RenderNode;
-    attachTo(layer: SDNode): this;
-    attachTo(layer: RenderNode): this;
+    attachTo(target: SDNode): this;
+    attachTo(target: RenderNode): this;
 
     childAs(name: string, child: SDNode, rule: Rule): this;
     childAs(name: string, child: SDNode): this;
@@ -39,6 +38,9 @@ export class SDNode {
     freezing(): boolean;
     rule(): (parent: SDNode, child: SDNode) => void;
     rule(rule: (parent: SDNode, child: SDNode) => void): this;
+    eraseRule(): this;
+    effect(name: string, callback: () => void): this;
+    uneffect(name: string): this;
 
     drag(type: true): this;
     drag(type: false | null | undefined);
