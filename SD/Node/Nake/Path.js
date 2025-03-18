@@ -1,23 +1,21 @@
 import { Action } from "@/Animate/Action";
+import { Interp } from "@/Animate/Interp";
 import { svg } from "@/Interact/Root";
 import { BaseLine } from "@/Node/Nake/BaseLine";
+import { RenderNode } from "@/Renderer/RenderNode";
 
 let globalPath = undefined;
 
-function interp(l, r, snap) {
-    return function (t) {
-        if (t !== 0) return;
-        if (l === r) snap.attr({ d: this.target });
-        else snap.animate({ d: this.target }, r - l, mina.easeinout);
-    };
-}
-
-function pathInterp(node, attrs) {
+/**
+ * @param {Path} node
+ * @param {RenderNode} path
+ * @returns
+ */
+function pathInterp(node, path) {
     return function (newValue, oldValue) {
         const l = node.delay();
         const r = node.delay() + node.duration();
-        const snap = Snap(attrs.nake());
-        new Action(l, r, oldValue, newValue, interp(l, r, snap), node, "d");
+        new Action(l, r, oldValue, newValue, Interp.pathInterp(path.nake()), node, "d");
     };
 }
 

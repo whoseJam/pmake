@@ -4,7 +4,7 @@ const svg = sd.svg();
 const C = sd.color();
 const T = 500;
 
-sd.main(Test0);
+sd.main(Test12);
 
 async function Test12() {
     const math = new sd.Mathjax(svg, "a+b=c").center(100, 100);
@@ -41,6 +41,7 @@ async function Test9() {
     await sd.pause();
     const m1 = math.createMath(1);
     const m3 = math.createMath(2);
+    await sd.pause();
     const sum = new sd.Mathjax(svg, "").cx(100).cy(200);
     sum.startAnimate(T).transformMathFrom("\\sum_{i={1}}^{3}i", [m1, m3], { 1: 2, 2: 3 }).endAnimate();
     await sd.pause();
@@ -56,20 +57,20 @@ async function Test9() {
     await sd.pause();
     two.startAnimate(T).transformMath("c^3+a^1+b^2").endAnimate();
     await sd.pause();
-    two.startAnimate(T).transformMath("\\mu").fontSize(25).endAnimate();
+    two.startAnimate(T).transformMath("\\mu").fontSize(40).endAnimate();
     await sd.pause();
-    sum.startAnimate(T).transformMath("\\varphi").fontSize(25).endAnimate();
+    sum.startAnimate(T).transformMath("\\varphi").fontSize(40).endAnimate();
     await sd.pause();
-    math.startAnimate().transformMath("\\sigma").fontSize(25).endAnimate();
+    math.startAnimate().transformMath("\\sigma").fontSize(40).endAnimate();
     await sd.pause();
     const final = new sd.Mathjax(svg).cx(125).cy(125).startAnimate(T).transformMathFrom("{\\infty}", [two, sum, math]).endAnimate();
 }
 
 async function Test8() {
     await sd.pause();
-    const math = new sd.Mathjax(svg, "\\frac{15}{20}").cx(300).cy(400);
+    const math = new sd.Mathjax(svg, "\\frac{{15}}{{20}}").cx(300).cy(400);
     await sd.pause();
-    math.startAnimate().transformMath("\\frac{3}{4}").cx(300).cy(400).endAnimate();
+    math.startAnimate().transformMath("\\frac{{3}}{{4}}", { 1: 1, 2: 2 }).cx(300).cy(400).endAnimate();
 }
 
 async function Test7() {
@@ -87,7 +88,7 @@ async function Test7() {
     const m3 = new sd.Mathjax(svg, "c").x(900).y(100);
     const m = new sd.Mathjax(svg, "ttt").x(800).y(200);
     await sd.pause();
-    m.startAnimate(10000).transformMathFrom("\\sum_{i=1}^{n}{a+b}", [m1, m2, m3], { 1: 1, 2: 2, 3: 3 }).endAnimate();
+    m.startAnimate().transformMathFrom("\\sum_{i=1}^{n}{a+b}", [m1, m2, m3], { 1: 1, 2: 2, 3: 3 }).endAnimate();
 }
 
 async function Test6() {
@@ -145,12 +146,7 @@ async function Test1() {
     await sd.pause();
     const math = new sd.Mathjax(svg, "{aaaa}{b}{c}{dddd}").fontSize(40).x(100).y(100);
     await sd.pause();
-    math.startAnimate(T).transformMath("{a}{c}{b}{d}", { 1: 1, 2: 3, 3: 2, 4: 4 }).endAnimate();
-}
-
-function getGCD(a, b) {
-    if (!b) return a;
-    return getGCD(b, a % b);
+    math.startAnimate().transformMath("{a}{c}{b}{d}", { 1: 1, 2: 3, 3: 2, 4: 4 }).fontSize(20).endAnimate();
 }
 
 async function Test0() {
@@ -160,7 +156,12 @@ async function Test0() {
     await sd.pause();
     math.startAnimate().transformMath("5678").fontSize(20).endAnimate();
     await sd.pause();
-    math.startAnimate().transformMath("1234").color(C.textBlue).endAnimate();
+    math.startAnimate().transformMath("1234").color(C.textBlue).fontSize(40).endAnimate();
     await sd.pause();
     math.startAnimate().color(C.purple).endAnimate();
+}
+
+function getGCD(a, b) {
+    if (!b) return a;
+    return getGCD(b, a % b);
 }

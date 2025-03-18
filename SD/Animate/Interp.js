@@ -124,4 +124,19 @@ export class Interp {
             set(`translate(${tx},${ty})`);
         };
     }
+    static pathInterp(attrs, key) {
+        const object = Snap(attrs);
+        let animateHandler = undefined;
+        return function (t) {
+            if (t === 0) {
+                if (this.l === this.r) object.attr({ d: this.target });
+                else animateHandler = object.animate({ d: this.target }, this.r - this.l, mina.easeinout);
+            } else if (t === 1 && this.r > this.l) {
+                setTimeout(() => {
+                    animateHandler.stop();
+                    object.attr({ d: this.target });
+                }, 50);
+            }
+        };
+    }
 }
