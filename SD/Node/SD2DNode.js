@@ -30,8 +30,6 @@ export function SD2DNode(target) {
         opacity: 1,
     });
 
-    console.log("this=", this, "isHtml=", Check.isTypeOfHTML(this), this.BASE_HTML);
-
     if (Check.isTypeOfHTML(this)) {
         this._.layer = createRenderNode(this, this._.layers.__targetLayer, "div");
     } else {

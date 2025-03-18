@@ -23,8 +23,6 @@ export function Slider(parent) {
 
     this._.layer.setAttribute("width", "80px");
     this._.layer.setAttribute("height", "20px");
-    this._.layer.nake().id = "fuck";
-    console.log(this._.layer.nake());
     this._.nake = createRenderNode(this, this._.layer, "input");
     this._.nake.setAttribute("width", "100%");
     this._.nake.setAttribute("height", "100%");

@@ -26,8 +26,6 @@ export function SDNode(target) {
     this._.layers.__targetLayer = target;
 
     this.vars = reactive({});
-
-    this._.BASE_SDNODE = true;
 }
 
 function forward(comp, func) {
@@ -47,6 +45,7 @@ function forwardWithReturn(comp, func) {
 
 SDNode.prototype = {
     ...SDNode.prototype,
+    BASE_SDNODE: true,
 
     type(type) {
         if (type === undefined) return this._.layer.getAttribute("type");
