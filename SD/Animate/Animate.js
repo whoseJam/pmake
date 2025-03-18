@@ -5,7 +5,7 @@ import { render } from "react-dom";
 
 let checkWaterMarkTick = 0;
 const WATER_MARK_CHECK_INTERVAL = 100;
-const WATER_MARK_STRING = "power by whoseJam";
+const WATER_MARK_STRING = "pow" + "er b" + "y wh" + "oseJ" + "am";
 
 export function createWaterMark() {
     const watermark = (
