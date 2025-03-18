@@ -1,6 +1,6 @@
 import { Interp } from "@/Animate/Interp";
 import { svg } from "@/Interact/Root";
-import { BaseNake } from "@/Node/Nake/BaseNake";
+import { BaseSVG } from "@/Node/SVG/BaseSVG";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
 
@@ -50,8 +50,8 @@ function parseText(text) {
     return ans;
 }
 
-export function Text(parent, text = "") {
-    BaseNake.call(this, parent, "text");
+export function Text(target, text = "") {
+    BaseSVG.call(this, target, "text");
 
     this.type("Text");
 
@@ -82,7 +82,7 @@ export function Text(parent, text = "") {
 }
 
 Text.prototype = {
-    ...BaseNake.prototype,
+    ...BaseSVG.prototype,
     x: Factory.handlerLowPrecise("x"),
     y: Factory.handlerLowPrecise("y"),
     fontSize(fontSize) {

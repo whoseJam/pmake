@@ -1,10 +1,10 @@
 import { Vector as V } from "@/Math/Vector";
-import { Line } from "@/Node/Nake/Line";
-import { Path } from "@/Node/Nake/Path";
+import { Enter as EN } from "@/Node/Core/Enter";
 import { SD2DNode } from "@/Node/SD2DNode";
+import { Line } from "@/Node/SVG/Line";
+import { Path } from "@/Node/SVG/Path";
 import { Factory } from "@/Utility/Factory";
 import { PathPen } from "@/Utility/PathPen";
-import { Enter as EN } from "@/Node/Core/Enter";
 
 export function Coord(parent) {
     SD2DNode.call(this, parent);
@@ -38,8 +38,6 @@ export function Coord(parent) {
         child.y(parent.globalY(parent.vars.viewBox.y + parent.vars.viewBox.height));
         child.height(parent.height());
     });
-
-    this._.BASE_COORD = true;
 }
 
 Coord.SAMPLE_COUNT = 50;
@@ -54,6 +52,7 @@ function viewBoxHandler(key) {
 
 Coord.prototype = {
     ...SD2DNode.prototype,
+    BASE_COORD: true,
     x: Factory.handlerLowPrecise("x"),
     y: Factory.handlerLowPrecise("y"),
     width: Factory.handlerLowPrecise("width"),

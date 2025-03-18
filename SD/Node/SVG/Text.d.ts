@@ -1,8 +1,8 @@
-import { BaseNake } from "@/Node/Nake/BaseNake";
 import { SDNode } from "@/Node/SDNode";
+import { BaseSVG } from "@/Node/SVG/BaseSVG";
 import { RenderNode } from "@/Renderer/RenderNode";
 
-export class Text extends BaseNake {
+export class Text extends BaseSVG {
     constructor(target: SDNode | RenderNode);
     constructor(target: SDNode | RenderNode, text: number | string);
 

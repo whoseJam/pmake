@@ -1,6 +1,6 @@
 import { Interp } from "@/Animate/Interp";
 import { Vector as V } from "@/Math/Vector";
-import { BaseLine } from "@/Node/Nake/BaseLine";
+import { BaseLine } from "@/Node/SVG/BaseLine";
 import { Factory } from "@/Utility/Factory";
 
 export function Line(parent) {

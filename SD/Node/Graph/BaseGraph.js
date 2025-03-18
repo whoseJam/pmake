@@ -1,8 +1,8 @@
 import { Vertex } from "@/Node/Element/Vertex";
-import { Line } from "@/Node/Nake/Line";
+import { SD2DNode } from "@/Node/SD2DNode";
+import { Line } from "@/Node/SVG/Line";
 import { BaseTree } from "@/Node/Tree/BaseTree";
 import { Factory } from "@/Utility/Factory";
-import { SD2DNode } from "@/Node/SD2DNode";
 
 export function BaseGraph(parent) {
     SD2DNode.call(this, parent);
@@ -24,12 +24,11 @@ export function BaseGraph(parent) {
     this._.linksMap = {}; // GraphID-GraphID -> SDNode
     this._.nodeType = Vertex;
     this._.linkType = Line;
-
-    this._.BASE_GRAPH = true;
 }
 
 BaseGraph.prototype = {
     ...SD2DNode.prototype,
+    BASE_GRAPH: true,
     x: Factory.handlerLowPrecise("x"),
     y: Factory.handlerLowPrecise("y"),
     width: Factory.handlerLowPrecise("width"),

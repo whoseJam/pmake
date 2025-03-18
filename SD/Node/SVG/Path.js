@@ -1,7 +1,7 @@
 import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
 import { svg } from "@/Interact/Root";
-import { BaseLine } from "@/Node/Nake/BaseLine";
+import { BaseLine } from "@/Node/SVG/BaseLine";
 import { RenderNode } from "@/Renderer/RenderNode";
 
 let globalPath = undefined;

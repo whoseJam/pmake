@@ -1,9 +1,9 @@
-import { BaseNake } from "@/Node/Nake/BaseNake";
 import { SDNode } from "@/Node/SDNode";
+import { BaseSVG } from "@/Node/SVG/BaseSVG";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { SDRule } from "@/Rule/Rule";
 
-export class BaseLine extends BaseNake {
+export class BaseLine extends BaseSVG {
     constructor(target: SDNode | RenderNode, tag: string);
 
     /**

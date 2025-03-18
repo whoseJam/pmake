@@ -1,7 +1,7 @@
-import { BaseLine } from "@/Node/Nake/BaseLine";
 import { SDNode } from "@/Node/SDNode";
+import { BaseSVG } from "@/Node/SVG/BaseSVG";
 import { RenderNode } from "@/Renderer/RenderNode";
 
-export class Line extends BaseLine {
+export class Rect extends BaseSVG {
     constructor(target: SDNode | RenderNode);
 }

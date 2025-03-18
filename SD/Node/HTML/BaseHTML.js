@@ -15,4 +15,5 @@ export function BaseHTML(parent) {
 
 BaseHTML.prototype = {
     ...SD2DNode.prototype,
+    BASE_HTML: true,
 };

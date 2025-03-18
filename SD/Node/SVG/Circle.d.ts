@@ -1,11 +1,11 @@
-import { BaseNake } from "@/Node/Nake/BaseNake";
 import { SDNode } from "@/Node/SDNode";
+import { BaseSVG } from "@/Node/SVG/BaseSVG";
 import { RenderNode } from "@/Renderer/RenderNode";
 
 /**
  * 圆形组件
  */
-export class Circle extends BaseNake {
+export class Circle extends BaseSVG {
     constructor(target: SDNode | RenderNode);
 
     /**

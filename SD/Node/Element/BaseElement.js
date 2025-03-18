@@ -20,12 +20,11 @@ export function BaseElement(parent) {
         rate: 1.2,
         value: undefined,
     });
-
-    this._.BASE_ELEMENT = true;
 }
 
 BaseElement.prototype = {
     ...SD2DNode.prototype,
+    BASE_ELEMENT: true,
     x: Factory.handlerLowPrecise("x"),
     y: Factory.handlerLowPrecise("y"),
     width: Factory.handlerLowPrecise("width"),
@@ -71,7 +70,7 @@ BaseElement.prototype = {
         this.childAs("value", value, rule);
         return this;
     },
-    valueFromExist: function (value, rule) {
+    valueFromExist(value, rule) {
         if (this.hasChild("value")) this.eraseChild("value");
         rule = getValueRule(this.vars, rule);
         value.onEnter(EN.moveTo());

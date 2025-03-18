@@ -2,7 +2,7 @@ import { Context } from "@/Animate/Context";
 import { Interp } from "@/Animate/Interp";
 import { Enter as EN } from "@/Node/Core/Enter";
 import { Exit as EX } from "@/Node/Core/Exit";
-import { BaseNake } from "@/Node/Nake/BaseNake";
+import { BaseSVG } from "@/Node/SVG/BaseSVG";
 import { Rule as R } from "@/Rule/Rule";
 import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
@@ -11,7 +11,7 @@ import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 
 export function BaseLine(parent, tag) {
-    BaseNake.call(this, parent, tag);
+    BaseSVG.call(this, parent, tag);
 
     this.vars.fillOpacity = 0;
     this.vars.strokeOpacity = 1;
@@ -32,7 +32,7 @@ export function BaseLine(parent, tag) {
 }
 
 BaseLine.prototype = {
-    ...BaseNake.prototype,
+    ...BaseSVG.prototype,
     markerStart: handlerMarker("markerStart"),
     markerMid: handlerMarker("markerMid"),
     markerEnd: handlerMarker("markerEnd"),

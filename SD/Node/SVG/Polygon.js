@@ -1,5 +1,5 @@
 import { Action } from "@/Animate/Action";
-import { BaseNake } from "@/Node/Nake/BaseNake";
+import { BaseSVG } from "@/Node/SVG/BaseSVG";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
 
@@ -36,7 +36,7 @@ function pointsToBox(points) {
 }
 
 export function Polygon(parent, points = []) {
-    BaseNake.call(this, parent, "polygon");
+    BaseSVG.call(this, parent, "polygon");
 
     this.type("Polygen");
 
@@ -63,7 +63,7 @@ export function Polygon(parent, points = []) {
 }
 
 Polygon.prototype = {
-    ...BaseNake.prototype,
+    ...BaseSVG.prototype,
     points: Factory.handler("points"),
     x(x) {
         if (x === undefined) return this.vars.x;

@@ -1,8 +1,8 @@
-import { BaseNake } from "@/Node/Nake/BaseNake";
 import { SDNode } from "@/Node/SDNode";
+import { BaseSVG } from "@/Node/SVG/BaseSVG";
 import { RenderNode } from "@/Renderer/RenderNode";
 
-export class Ellipse extends BaseNake {
+export class Ellipse extends BaseSVG {
     constructor(target: SDNode | RenderNode);
 
     /**

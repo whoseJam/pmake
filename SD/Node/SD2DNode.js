@@ -1,7 +1,9 @@
+import { Action } from "@/Animate/Action";
 import { SDNode } from "@/Node/SDNode";
+import { createRenderNode } from "@/Renderer/RenderNode";
+import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
-import { Action } from "@/Animate/Action";
 
 function interp(node, attrs) {
     return function (t) {
@@ -27,6 +29,14 @@ export function SD2DNode(target) {
     this.vars.merge({
         opacity: 1,
     });
+
+    console.log("this=", this, "isHtml=", Check.isTypeOfHTML(this), this.BASE_HTML);
+
+    if (Check.isTypeOfHTML(this)) {
+        this._.layer = createRenderNode(this, this._.layers.__targetLayer, "div");
+    } else {
+        this._.layer = createRenderNode(this, this._.layers.__targetLayer, "g");
+    }
 
     this.vars.associate("opacity", opacityInterp(this, this._.layer));
 }

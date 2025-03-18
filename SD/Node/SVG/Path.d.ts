@@ -1,5 +1,5 @@
-import { BaseLine } from "@/Node/Nake/BaseLine";
 import { SDNode } from "@/Node/SDNode";
+import { BaseLine } from "@/Node/SVG/BaseLine";
 import { RenderNode } from "@/Renderer/RenderNode";
 
 export class Path extends BaseLine {

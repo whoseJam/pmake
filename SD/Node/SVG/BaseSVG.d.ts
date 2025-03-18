@@ -2,7 +2,7 @@ import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { HexColor, PacketColor, SDColor } from "@/Utility/Color";
 
-export class BaseNake extends SDNode {
+export class BaseSVG extends SDNode {
     constructor(target: SDNode | RenderNode, tag: string);
 
     /**

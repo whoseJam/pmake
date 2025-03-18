@@ -1,17 +1,15 @@
 import { Animate } from "@/Node/Core/Animate";
 import { Children } from "@/Node/Core/Children";
+import { Enter as EN } from "@/Node/Core/Enter";
 import { Interact } from "@/Node/Core/Interact";
 import { Location } from "@/Node/Core/Location";
 import { effect, reactive, uneffect } from "@/Node/Core/Reactive";
-import { createRenderNode } from "@/Renderer/RenderNode";
 import { SVGNode } from "@/Renderer/SVG/SVGNode";
 import { Check } from "@/Utility/Check";
-import { Factory } from "@/Utility/Factory";
-import { Enter as EN } from "@/Node/Core/Enter";
 
 let id = 0;
 
-export function SDNode(parent, layer = undefined, group = undefined) {
+export function SDNode(target) {
     this.id = ++id;
     this._ = {
         ready: false, // only when ready = true, the action can impact the node
@@ -23,29 +21,9 @@ export function SDNode(parent, layer = undefined, group = undefined) {
         interact: new Interact(this),
         updaters: {},
     };
-    group = group === undefined ? "g" : group;
 
-    if (Check.isTypeOfSDNode(parent)) {
-        // parent is SDNode
-        if (!layer) {
-            this._.layer = createRenderNode(this, parent.layer(), group);
-        } else {
-            // appear later, layer is undefined
-            this._.layer = createRenderNode(this, undefined, layer);
-        }
-    } else {
-        // parent is RenderNode
-        if (Check.isTypeOfThreeNode(parent)) {
-            this._.layer = parent;
-        } else {
-            if (!layer) {
-                this._.layer = createRenderNode(this, parent, group);
-            } else {
-                // appear later, layer is undefined
-                this._.layer = createRenderNode(this, undefined, layer);
-            }
-        }
-    }
+    if (Check.isTypeOfSDNode(target)) target = target.layer();
+    this._.layers.__targetLayer = target;
 
     this.vars = reactive({});
 

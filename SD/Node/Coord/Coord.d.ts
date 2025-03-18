@@ -1,6 +1,6 @@
-import { Line } from "@/Node/Nake/Line";
-import { Path } from "@/Node/Nake/Path";
 import { SDNode } from "@/Node/SDNode";
+import { Line } from "@/Node/SVG/Line";
+import { Path } from "@/Node/SVG/Path";
 import { RenderNode } from "@/Renderer/RenderNode";
 
 class SDFunction {

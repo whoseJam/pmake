@@ -1,11 +1,11 @@
 import { Interp } from "@/Animate/Interp";
 import { Vector as V } from "@/Math/Vector";
-import { BaseNake } from "@/Node/Nake/BaseNake";
+import { BaseSVG } from "@/Node/SVG/BaseSVG";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
 
 export function Circle(parent) {
-    BaseNake.call(this, parent, "circle");
+    BaseSVG.call(this, parent, "circle");
 
     this.type("Circle");
 
@@ -27,7 +27,7 @@ export function Circle(parent) {
 }
 
 Circle.prototype = {
-    ...BaseNake.prototype,
+    ...BaseSVG.prototype,
     r: Factory.handlerLowPrecise("r"),
     cx: Factory.handlerLowPrecise("cx"),
     cy: Factory.handlerLowPrecise("cy"),

@@ -1,5 +1,5 @@
-import { Factory } from "@/Utility/Factory";
 import { SD3DNode } from "@/Node/SD3DNode";
+import { Factory } from "@/Utility/Factory";
 
 export function BaseThree(parent) {
     SD3DNode.call(this, parent);
@@ -7,6 +7,7 @@ export function BaseThree(parent) {
 
 BaseThree.prototype = {
     ...SD3DNode.prototype,
+    BASE_THREE: true,
     x: Factory.handlerLowPrecise("x"),
     y: Factory.handlerLowPrecise("y"),
     z: Factory.handlerLowPrecise("z"),

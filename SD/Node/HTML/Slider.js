@@ -10,6 +10,8 @@ function sliderCallback() {
 export function Slider(parent) {
     BaseHTML.call(this, parent);
 
+    this.type("Slider");
+
     this._.onChange = undefined;
 
     this.vars.merge({
@@ -21,6 +23,8 @@ export function Slider(parent) {
 
     this._.layer.setAttribute("width", "80px");
     this._.layer.setAttribute("height", "20px");
+    this._.layer.nake().id = "fuck";
+    console.log(this._.layer.nake());
     this._.nake = createRenderNode(this, this._.layer, "input");
     this._.nake.setAttribute("width", "100%");
     this._.nake.setAttribute("height", "100%");

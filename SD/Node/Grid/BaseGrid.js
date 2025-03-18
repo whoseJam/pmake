@@ -14,12 +14,11 @@ export function BaseGrid(parent) {
         startM: 0,
         elements: [],
     });
-
-    this._.BASE_GRID = true;
 }
 
 BaseGrid.prototype = {
     ...SD2DNode.prototype,
+    BASE_GRID: true,
     startN: Factory.handler("startN"),
     startM: Factory.handler("startM"),
     endN() {

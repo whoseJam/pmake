@@ -1,9 +1,9 @@
 import { Interp } from "@/Animate/Interp";
-import { BaseNake } from "@/Node/Nake/BaseNake";
+import { BaseSVG } from "@/Node/SVG/BaseSVG";
 import { Factory } from "@/Utility/Factory";
 
 export function Image(parent) {
-    BaseNake.call(this, parent, "image");
+    BaseSVG.call(this, parent, "image");
 
     this.type("Image");
 
@@ -30,7 +30,7 @@ export function Image(parent) {
 }
 
 Image.prototype = {
-    ...BaseNake.prototype,
+    ...BaseSVG.prototype,
     x: Factory.handlerLowPrecise("x"),
     y: Factory.handlerLowPrecise("y"),
     href: Factory.handler("href"),

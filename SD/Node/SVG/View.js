@@ -1,9 +1,9 @@
 import { Interp } from "@/Animate/Interp";
-import { BaseNake } from "@/Node/Nake/BaseNake";
+import { BaseSVG } from "@/Node/SVG/BaseSVG";
 import { Factory } from "@/Utility/Factory";
 
 export function View(parent) {
-    BaseNake.call(this, parent, "view");
+    BaseSVG.call(this, parent, "view");
 
     this.vars.merge({
         x: 0,
@@ -32,7 +32,7 @@ export function View(parent) {
 }
 
 View.prototype = {
-    ...BaseNake.prototype,
+    ...BaseSVG.prototype,
     x: Factory.handlerLowPrecise("x"),
     y: Factory.handlerLowPrecise("y"),
     width: Factory.handlerLowPrecise("width"),

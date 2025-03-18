@@ -1,10 +1,10 @@
 import { Interp } from "@/Animate/Interp";
-import { BaseNake } from "@/Node/Nake/BaseNake";
+import { BaseSVG } from "@/Node/SVG/BaseSVG";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
 
 export function Ellipse(parent) {
-    BaseNake.call(this, parent, "ellipse");
+    BaseSVG.call(this, parent, "ellipse");
 
     this.type("Ellipse");
 
@@ -29,7 +29,7 @@ export function Ellipse(parent) {
 }
 
 Ellipse.prototype = {
-    ...BaseNake.prototype,
+    ...BaseSVG.prototype,
     cx: Factory.handlerLowPrecise("cx"),
     cy: Factory.handlerLowPrecise("cy"),
     rx: Factory.handlerLowPrecise("rx"),

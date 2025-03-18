@@ -1,9 +1,9 @@
 import { Exit as EX } from "@/Node/Core/Exit";
+import { SD2DNode } from "@/Node/SD2DNode";
 import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
-import { SD2DNode } from "@/Node/SD2DNode";
 
 export function BaseArray(parent) {
     SD2DNode.call(this, parent);
@@ -14,12 +14,11 @@ export function BaseArray(parent) {
         start: 0,
         elements: [],
     });
-
-    this._.BASE_ARRAY = true;
 }
 
 BaseArray.prototype = {
     ...SD2DNode.prototype,
+    BASE_ARRAY: true,
     x: Factory.handlerLowPrecise("x"),
     y: Factory.handlerLowPrecise("y"),
     start: Factory.handler("start"),

@@ -5,7 +5,7 @@ import { Check } from "@/Utility/Check";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
 
-export function BaseNake(parent, label) {
+export function BaseSVG(parent, label) {
     SD2DNode.call(this, parent, undefined, "g");
 
     this.vars.merge({
@@ -31,8 +31,9 @@ export function BaseNake(parent, label) {
     this._.BASE_NAKE = true;
 }
 
-BaseNake.prototype = {
+BaseSVG.prototype = {
     ...SD2DNode.prototype,
+    BASE_SVG: true,
     fill: Factory.handler("fill"),
     stroke: Factory.handler("stroke"),
     fillOpacity: Factory.handlerMediumPrecise("fillOpacity"),

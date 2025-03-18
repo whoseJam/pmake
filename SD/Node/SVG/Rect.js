@@ -1,10 +1,10 @@
 import { Interp } from "@/Animate/Interp";
-import { BaseNake } from "@/Node/Nake/BaseNake";
+import { BaseSVG } from "@/Node/SVG/BaseSVG";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
 
-export function Rect(parent) {
-    BaseNake.call(this, parent, "rect");
+export function Rect(target) {
+    BaseSVG.call(this, target, "rect");
 
     this.type("Rect");
 
@@ -29,7 +29,7 @@ export function Rect(parent) {
 }
 
 Rect.prototype = {
-    ...BaseNake.prototype,
+    ...BaseSVG.prototype,
     x: Factory.handlerLowPrecise("x"),
     y: Factory.handlerLowPrecise("y"),
     width: Factory.handlerLowPrecise("width"),
