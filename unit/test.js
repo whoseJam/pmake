@@ -1,69 +1,28 @@
-import * as sd from "@/sd";
+import * as sd from "slidew";
 
 const svg = sd.svg();
-const div = sd.div();
 const C = sd.color();
-const arr = new sd.Array(svg);
-const leftBtn = new sd.Button(div).text("向左");
-const rightBtn = new sd.Button(div).text("向右");
-const data = [0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0];
-let direction = "L";
+const rect = new sd.Rect(svg);
 
-sd.init(() => {
-    for (let i = 0; i < data.length; i++) {
-        arr.push(data[i] ? data[i] : undefined);
-    }
-    leftBtn.y(arr.my() + 5).cx(arr.kx(0.4));
-    rightBtn.y(arr.my() + 5).cx(arr.kx(0.6));
-
-    leftBtn.onClick(() => {
-        direction = "L";
-        updateButtonColors();
-    });
-    rightBtn.onClick(() => {
-        direction = "R";
-        updateButtonColors();
-    });
-
-    arr.forEachElement((element, id) => {
-        element.onClick(() => {
-            if (element.intValue() !== 1) return;
-            sd.inter(async () => {
-                if (direction === "R") {
-                    const right = arr.element(id + 1);
-                    const rightAfter = arr.element(id + 2);
-                    if (right && rightAfter && 
-                        right.intValue() === 1 && 
-                        !rightAfter.intValue()) {
-                        arr.startAnimate();
-                        const removed = arr.dropValue(id);
-                        arr.element(id + 2).valueFromExist(removed);
-                        arr.endAnimate();
-                    }
-                } else {
-                    const left = arr.element(id - 1);
-                    const leftBefore = arr.element(id - 2);
-                    if (left && leftBefore && 
-                        left.intValue() === 1 && 
-                        !leftBefore.intValue()) {
-                        arr.startAnimate();
-                        const removed = arr.dropValue(id);
-                        arr.element(id - 2).valueFromExist(removed);
-                        arr.endAnimate();
-                    }
-                }
-            });
-        });
-    });
-
-    updateButtonColors();
-});
+sd.init(() => {});
 
 sd.main(async () => {
+    await sd.pause();
+    rect.startAnimate().x(100).endAnimate(); // 将 rect 的 x 坐标设置为 100
+    await sd.pause();
+    rect.startAnimate().dx(100).endAnimate(); // 将 rect 的 x 坐标增大 100
+    await sd.pause();
+    rect.startAnimate().scale(2).endAnimate(); // 将 rect 扩大至原来的两倍
+    await sd.pause();
+    appear(new sd.Circle(svg).r(3).color(C.red).center(rect.x(), rect.y())); // 在 rect 的 (x, y) 处新建一个红点
+    await sd.pause();
+    appear(new sd.Circle(svg).r(3).color(C.blue).center(rect.center())); // 在 rect 的中心处新建一个蓝点
+    await sd.pause();
+    appear(new sd.Circle(svg).r(3).color(C.green).center(rect.pos("mx", "cy"))); // 在 rect 的 (mx, y) 处新建一个绿点
+    await sd.pause();
+    appear(new sd.Circle(svg).r(3).color(C.orange).center(rect.pos("x", "y", 10, 10))); // 在 rect 的 (x + 10, y + 10) 处新建一个橙点
 });
 
-function updateButtonColors() {
-    leftBtn.color((direction === "L") ? C.BLUE : C.BUTTON_GREY);
-    rightBtn.color((direction === "R") ? C.BLUE : C.BUTTON_GREY);
-    console.log(leftBtn.fill());
+function appear(object) {
+    object.opacity(0).startAnimate().opacity(1).endAnimate();
 }

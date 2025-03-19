@@ -18,8 +18,7 @@ export class SDNode {
     childAs(child: SDNode): this;
     child(name: string): SDNode;
     hasChild(child: string | SDNode): SDNode;
-    eraseChild(name: string): SDNode;
-    eraseChild(child: SDNode): SDNode;
+    eraseChild(child: string | SDNode): SDNode;
     remove(): void;
 
     startAnimate(duration: number): this;
@@ -50,8 +49,8 @@ export class SDNode {
     onClick(onClick: (node: this) => void): this;
     onDblClick(onClick: (node: this) => void): this;
 
-    onEnter(enter: (element: SDNode, move: () => void) => void): this;
     onEnter(): (element: SDNode) => void | undefined;
+    onEnter(enter: (element: SDNode, move: () => void) => void): this;
     onEnterDefault(enter: (element: SDNode, move: () => void) => void): this;
     triggerEnter(): this;
     entering(): boolean;
