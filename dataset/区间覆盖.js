@@ -75,15 +75,28 @@ const EN = sd.enter();
 const EX = sd.exit();
 
 // Hardcoded intervals for demonstration
-const intervals = [[1, 3], [2, 5], [4, 7], [6, 9]];
+const intervals = [
+    [1, 3],
+    [2, 5],
+    [4, 7],
+    [6, 9],
+];
 const intervalRects = [];
 const selectedIntervals = [];
 let totalLength = 0;
 
 // Number line from 0 to 10
-const numberLine = new sd.Line(svg).x1(0).y1(50).x2(10 * 50).y2(50).stroke("black");
+const numberLine = new sd.Line(svg)
+    .x1(0)
+    .y1(50)
+    .x2(10 * 50)
+    .y2(50)
+    .stroke(C.black);
 for (let i = 0; i <= 10; i++) {
-    new sd.Text(svg).text(i).x(i * 50).y(70);
+    new sd.Text(svg)
+        .text(i)
+        .x(i * 50)
+        .y(70);
 }
 
 // Text to display total length of selected intervals
@@ -102,7 +115,7 @@ sd.main(async () => {
             .clickable(true)
             .onClick(() => {
                 sd.inter(async () => {
-                    handleClick(rect, i, start, end)
+                    handleClick(rect, i, start, end);
                 });
             });
         intervalRects.push(rect);
@@ -117,7 +130,7 @@ function handleClick(rect, index, start, end) {
         // Deselect the interval
         selectedIntervals.splice(selectedIntervals.indexOf(index), 1);
         rect.fill(C.green);
-        totalLength -= (end - start + 1);
+        totalLength -= end - start + 1;
     } else {
         // Check for overlaps with already selected intervals
         let hasOverlap = false;
@@ -132,7 +145,7 @@ function handleClick(rect, index, start, end) {
         if (!hasOverlap) {
             selectedIntervals.push(index);
             rect.fill(C.yellow);
-            totalLength += (end - start + 1);
+            totalLength += end - start + 1;
         } else {
             alert("This interval overlaps with a previously selected interval.");
         }
