@@ -75,4 +75,4 @@ export { PathPen } from "./Utility/PathPen.js";
 export { rand } from "./Utility/Random.js";
 export { input } from "./Utility/Reader.js";
 export { trim } from "./Utility/Trim.js";
-export { init, int, inter, main, make1d, make2d } from "./Utility/Util.js";
+export { init, int, inter, irreversible, main, make1d, make2d, reversible } from "./Utility/Util.js";
