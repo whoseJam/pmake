@@ -44,7 +44,7 @@ export async function BuildFailTreeFromLen(str, len, locations, args) {
         }
     }
     sd.unfreeze();
-    sd.uneffect(tree._.updater);
+    tree.uneffect("horizontalTree");
     tree.forEachLink((link, sourceId, targetId) => {
         const source = tree.element(sourceId);
         const target = tree.element(targetId);
