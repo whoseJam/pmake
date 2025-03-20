@@ -2,117 +2,122 @@
 
 luogu P4901
 
-### 一、动画主题
-通过可视化、可交互的动画展示，呈现依据题目要求对班级学生进行排队形的完整过程，并最终展示每个班级排队形后指定行队伍的美观度计算结果。
+## 需求文档
 
-### 二、动画场景设计
-1. **初始场景**
-    - 一个班级有 n 个学生需要排队。
-2. **排队形过程展示**
-    - 起始阶段，在下方展示区域创建一个水平队列。此队列使用 sd.Array 进行存储，队列中的每个元素对应一个代表学生的小矩形块。这些矩形块紧密排列，每个矩形块的中心位置清晰显示学生的学号，学号按照顺序从左至右依次排列。例如，对于一个有 10 名学生的班级，展示为 “1 2 3 4 5 6 7 8 9 10” 的矩形块队列。
-    - 按照斐波那契数列规则选取学生。利用 SD 动画框架，将当前要选取的学生对应的矩形块颜色转变为红色（或其他醒目的颜色）以突出显示，同时使该矩形块进行几次闪烁动画，之后将其从原队列中通过平移操作移动到新的一行。新行位于上一行的正下方，且起始位置保持对齐。例如，对于 10 人的队列，逐个突出显示并平移 “1 2 3 5 8” 到新行，在移动过程中，sd.Array 中的相应元素也同步调整。
-    - 剩余未选取的学生矩形块自动靠拢，形成新的队列，同时更新 sd.Array 以反映新的队列状态。持续进行下一轮选取，如此循环往复，直至队列中没有学生可被选取。在整个过程中，原队列的长度逐渐缩短，新行的数量和每行的人数逐步确定，且 sd.Array 始终准确记录队列状态。
-3. **美观度结果展示**
-    - 当每个班级的排队形操作结束后，在屏幕下方展示区域的底部创建结果面板。
-    - 对于存在第 $K_i$ 行的班级，借助 SD.Text 组件在结果面板中展示第 $K_i$ 行的队伍（以学号数字形式呈现该行学生）以及该行对应的美观度数值。这里的队伍展示可以基于 sd.Array 中存储的对应行的数据进行呈现。
-    - 对于不存在第 $K_i$ 行的班级，同样在结果面板中使用 SD.Text 展示 “-1”。
+### 初始化阶段：
+1. 初始化一个场景，用于展示一个班级的学生队列及其排列情况。
+   - 使用 `sd.Text` 组件表示每个学生，文本内容为学生的学号（例如 `sd.Text(svg, "1")`、`sd.Text(svg, "2")` 等）。
+   - 初始化一个一维数组表示初始的学生队列，将学生按学号顺序从一个初始位置排列。
+   - 使用 `sd.Array` 组件来存储每一行的学生。每行代表一个 `sd.Array` 对象，学生通过斐波那契数列规则被分配到不同的行。
 
-### 三、代码需求
-1. **数据结构**
-    - 使用 sd.Array 精确存储每行学生的学号信息，便于在动画过程中对学生的位置和状态进行准确跟踪和调整。
-2. **函数**
-    - 编写生成斐波那契数列的函数，该函数能够准确确定每次选取人员在队列中的位置，为后续的选取操作提供依据。
-    - 实现从队列（sd.Array）中选取人员并生成新队列和新行的函数。此函数需正确处理 sd.Array 中元素的移除、添加和位置调整，保证数据与动画展示的一致性。
-    - 编写计算一行美观度（分解质因子个数）的函数，确保计算逻辑准确无误，能够根据 sd.Array 中的学号数据计算出正确的美观度。
+### 主要动画阶段：
+1. **按照斐波那契数列顺序（1, 2, 3, 5, 8, 13, ...）取出学生并组成新的行：**
+   - 使用斐波那契数列确定要提取的学生的位置索引。
+   - 将被选中的学生（`sd.Text` 组件）从原队列中“移动”到新的一行 `sd.Array` 中，直到原队列中没有学生为止。
+   - 对于每一次“取走”操作，可以通过动画展示学生被选中并移动到新行的过程。
+2. **计算每一行的美观度：**
+   - 提取每一行中学号乘积，并计算乘积的质因子个数。
+   - 使用 `sd.Text` 组件在每一行下方显示相应的美观度计算结果。
 
+### 交互式设计：
+1. 由于题目没有特别要求交互元素，此处可以省略交互式设计。如果有必要增加交互，可以设置按钮继续展示接下来的排列过程，但是通常需求描述中没有体现交互。
+
+### 布局设计：
+1. 初始队列可以水平排列在画布上半部分，各 `sd.Text` 组件按学号顺序并排。
+2. 新生成的行排列在初始队列下方，每行的 `sd.Array` 组件依次垂直排开。
+3. 在每一行下使用 `sd.Text` 组件显示该行的美观度。
+
+*/
+
+/*
+评价：
+计算逻辑没问题，动画逻辑就没动画。
 */
 
 import * as sd from "@/sd";
 
-const n = 20; // 假设有10个学生
 const svg = sd.svg();
-const C = sd.color();
-const EN = sd.enter();
-const EX = sd.exit();
-const rows = new sd.ValueStack(svg).elementHeight(60).align("x").x(100).y(100);
+const n = 10; // 假设班级人数为10
+const k = 2; // 假设要求的是第2行的美观度
 
-// 生成斐波那契数列的函数
-function fibonacciSequence(n) {
-    let fib = [1, 2];
-    while (fib[fib.length - 1] <= n) {
-        fib.push(fib[fib.length - 1] + fib[fib.length - 2]);
-    }
-    return fib.filter(num => num <= n);
+// 构建斐波那契数列，直到超过总数n
+let fib = [1, 2];
+while (fib[fib.length - 1] + fib[fib.length - 2] <= n) {
+    fib.push(fib[fib.length - 1] + fib[fib.length - 2]);
 }
 
-// 计算一行美观度（分解质因子个数）的函数
-function calculateBeauty(arr) {
-    function countPrimeFactors(num) {
-        let count = 0;
-        for (let i = 2; i * i <= num; i++) {
-            while (num % i === 0) {
-                count++;
-                num /= i;
-            }
-        }
-        if (num > 1) count++;
-        return count;
-    }
-    let totalBeauty = 0;
-    arr.forEach(num => (totalBeauty += countPrimeFactors(num)));
-    return totalBeauty;
+// 初始化一个数组表示学生学号
+let students = [];
+for (let i = 1; i <= n; i++) {
+    students.push(i);
 }
 
-// 从队列（sd.Array）中选取人员并生成新队列和新行的函数
-async function selectAndReorderStudents(originalArray, newArray) {
-    await sd.pause();
-    const fibIndices = fibonacciSequence(originalArray.length());
-    originalArray.startAnimate();
-    for (const index of fibIndices) originalArray.color(index, C.red);
-    originalArray.endAnimate();
-
-    await sd.pause();
-    originalArray.startAnimate();
-    newArray.startAnimate();
-    for (let i = originalArray.length(); i >= 1; i--) {
-        if (originalArray.color(i).fill === C.white) {
-            newArray.insertFromExistElement(1, originalArray.dropElement(i));
+// 创建一个二维数组用于存储最终的每行学生编号
+let lines = [];
+while (students.length > 0) {
+    const newLine = [];
+    let nextStudents = [];
+    for (let i = 0, j = 0; i < students.length; i++) {
+        if (i + 1 === fib[j]) {
+            newLine.push(students[i]); // 被选中的学生
+            j++;
+        } else {
+            nextStudents.push(students[i]); // 未被选中的学生留在原数组
         }
     }
-    originalArray.endAnimate();
-    newArray.endAnimate();
-
-    await sd.pause();
-    labelBeauty(originalArray);
-
-    await sd.pause();
-    originalArray.startAnimate().color(C.white).endAnimate();
+    lines.push(newLine);
+    students = nextStudents;
 }
 
-function labelBeauty(array) {
-    const rowNumbers = [];
-    array.forEachElement(element => rowNumbers.push(element.intValue()));
-    const beauty = calculateBeauty(rowNumbers);
-    sd.Label(array, `美观度：${beauty}`, "lc").opacity(0).startAnimate().opacity(1).endAnimate();
+// 打印每行的学生队列和所求行数是否存在检查
+if (k > lines.length) {
+    console.log(-1);
+} else {
+    // 计算第k-1行（数组从0开始，所以是k-1行）的美观度
+    let product = lines[k - 1].reduce((acc, student) => acc * student, 1);
+    let primeFactors = 0;
+    for (let i = 2; i <= product; i++) {
+        while (product % i === 0) {
+            primeFactors++;
+            product /= i;
+        }
+    }
+    console.log("美观度:", primeFactors);
 }
 
-sd.init(() => {
-    const originalArray = new sd.Array(rows).start(1);
-    rows.push(originalArray);
-    for (let i = 1; i <= n; i++) {
-        originalArray.push(i);
+// 渲染每一行的学生
+const R = sd.rule;
+const fontSize = 20; // 字体大小
+const lineHeight = 30; // 行高
+const cellWidth = 25; // 单元格宽度
+const lineSpacing = 40; // 行间距
+
+let y = 50;
+lines.forEach((line, lineIndex) => {
+    // 创建一个 sd.Array 对象来表示一行学生
+    const lineArray = new sd.Array(svg).resize(line.length).dx(50).dy(y);
+
+    line.forEach((student, index) => {
+        const studentText = new sd.Text(svg, student.toString()).fontSize(fontSize);
+        lineArray.value(index, studentText);
+    });
+
+    // 在行下方显示美观度计算
+    const product = line.reduce((acc, student) => acc * student, 1);
+    let primeFactors = 0;
+    let productCopy = product;
+    for (let i = 2; i <= productCopy; i++) {
+        while (productCopy % i === 0) {
+            primeFactors++;
+            productCopy /= i;
+        }
     }
+
+    if (lineIndex === k - 1) {
+        const beautyText = new sd.Text(svg, `第${k}行的美观度：${primeFactors}`).center(200, y + lineHeight + 10).fontSize(fontSize);
+    }
+
+    y += lineHeight + lineSpacing;
 });
 
-sd.main(async () => {
-    let count = 0;
-    while (rows.lastElement().length() > 1) {
-        rows.push(new sd.Array(rows).start(1));
-        await selectAndReorderStudents(rows.element(count), rows.element(count + 1));
-        count++;
-    }
-    if (rows.lastElement().length() >= 1) {
-        await sd.pause();
-        labelBeauty(rows.lastElement());
-    }
-});
+sd.main(async () => {});

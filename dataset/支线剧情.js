@@ -1,5 +1,7 @@
 /*
 
+luogu P4043
+
 ### 一、动画场景整体构思
 1. **场景布局**：
     - 屏幕主要区域展示一棵用 `sd.DAG` 表示的剧情选择图，图的节点代表剧情点，有向边代表剧情走向。
@@ -39,64 +41,120 @@
 
 ### 四、注意事项
 1. 在构建 `sd.DAG` 时，需要确保节点和树枝的布局合理，避免重叠，以保证动画的可视化效果。
-2. 处理点击事件时，要注意事件的准确性和响应速度，确保用户交互体验良好。
-3. 确保所有使用的 `SD` 动画框架组件和函数方法都符合官方文档的要求，并且代码风格与 `example` 文件夹下的文件保持一致。 
+2. 处理点击事件时，要注意事件的准确性和响应速度，确保用户交互体验良好。 
 
+*/
+
+/*
+评价：计算逻辑正确，动画逻辑错误。
 */
 
 import * as sd from "@/sd";
 
 const svg = sd.svg();
+const div = sd.div();
 const C = sd.color();
-const D = sd.device();
 
-const links = [
-    [1, 2, 1],
-    [1, 3, 2],
-    [2, 4, 3],
-    [2, 5, 4],
-    [3, 5, 5],
-    [3, 6, 6],
-];
+// 示例输入数据，这里使用一个示例数据，其中 N 个剧情点及其对应的信息：
+// 这个例子中有6个节点，常常从1号节点开始，格式为 [剧情点数量, [ [下一剧情点编号, 时间], [下一剧情点编号, 时间], ... ], [ [下一剧情点编号, time], [下一剧情点num, 时间], ... ], ... ]
+const inputData = {
+    N: 6,
+    edges: [
+        [], // 0号剧情点不使用
+        [
+            [2, 1],
+            [3, 2],
+        ], // 剧情点1可以前往剧情点2（花费时间为1）和剧情点3（花费时间为2）
+        [
+            [4, 3],
+            [5, 4],
+        ], // 剧情点2可以前往剧情点4（花费时间为3）和剧情点5（花费时间为4）
+        [
+            [5, 5],
+            [6, 6],
+        ], // 剧情点3可以前往剧情点5（花费时间为5）和剧情点6（花费时间6）
+        [], // 剧情点4是一个结局，没有支线剧情
+        [], // 剧情点5是一个结局，没有支线剧情
+        [], // 剧情点6是一个结局，没有支线剧情
+    ],
+};
 
-const totalPathLength = new sd.Text(svg, `总长度：${0}`);
-const button = new sd.Button(svg).text("重置");
-const dag = new sd.DAG(svg).x(100).y(100).width(150).height(150);
-const focus = sd.Focus(dag);
-let currentNode;
+// 初始化 DAG 图
+let dag = new sd.DAG(svg).rankDir("LR");
+let nodes = [];
+let edges = [];
 
-sd.init(() => {
-    links.forEach(link => {
-        dag.link(link[0], link[1], link[2]);
-        dag.element(link[0], link[1]).arrow();
-    });
-    dag.forEachNode(node => {
-        node.onClick(() => {
-            const checkLink = dag.findLinkById(dag.nodeId(currentNode), dag.nodeId(node));
-            if (!checkLink) return;
-            sd.inter(async () => {
-                focus.startAnimate().focus(node).endAnimate();
-                node.startAnimate().color(C.grey).endAnimate();
-                totalPathLength.length += checkLink.intValue();
-                totalPathLength.text(`总长度：${totalPathLength.length}`);
-                currentNode = node;
-            });
+const nodeRadius = 30;
+
+// 创建节点数据，并添加到 DAG 图中
+for (let i = 1; i <= inputData.N; i++) {
+    dag.newNode(i);
+    nodes.push(dag.element(i));
+}
+
+// 添加边到 DAG 图中
+for (let i = 1; i <= inputData.N; i++) {
+    let currentEdges = inputData.edges[i]; // 获得第 i 个剧情点的支线剧情信息
+    for (let edge of currentEdges) {
+        let [target, time] = edge;
+        let edgeObj = dag.link(i, target, `${time}`); // 添加边, 并将时间作为边标签
+        edges.push({ from: i, to: target, edge: edgeObj });
+        dag.element(i, target).arrow();
+    }
+}
+
+let visitedNodes = new Set(); // 记录访问过的节点
+let visitedEdges = new Set(); // 记录访问过的边索引
+let currentNode = 1; // 初始化当前节点为1号剧情点
+
+// 1号节点初始状态为黄色，表示当前所在位置
+nodes[0].color(C.yellow);
+visitedNodes.add(1);
+
+// 点击节点事件处理函数
+dag.forEachNode(node => {
+    node.onClick(() => {
+        sd.inter(async () => {
+            const nodeIndex = nodes.indexOf(node) + 1;
+            if (nodeIndex !== currentNode) {
+                const edgeObj = edges.find(e => e.from === currentNode && e.to === nodeIndex);
+                if (edgeObj && !visitedEdges.has(edgeObj)) {
+                    visitedEdges.add(edgeObj);
+
+                    if (!visitedNodes.has(nodeIndex)) {
+                        //nodes[currentNode - 1].color(C.grey);  // 将当前节点颜色设置为灰色
+                        node.startAnimate().color(C.yellow).endAnimate();
+                        currentNode = nodeIndex;
+                        visitedNodes.add(nodeIndex);
+                    }
+                } else {
+                    alert("不能访问该节点！");
+                    return;
+                }
+            } else if (nodeIndex === 1) {
+                alert("已经在1号剧情点！");
+            }
         });
     });
-    button.onClick(() => {
-        currentNode = dag.element(1);
-        focus.startAnimate().focus(1).endAnimate();
+});
+
+// 重新开始游戏按钮
+const resetButton = new sd.Button(div).text("重新开始").x(200).y(50);
+resetButton.onClick(async () => {
+    sd.inter(async () => {
+        for (let node of nodes) {
+            node.color(C.black);
+        }
+        for (let edge of edges) {
+            edge.edge.color(C.black);
+        }
+        nodes[0].color(C.yellow); // 1号节点初始为黄色，表示回到1号剧情点
+        currentNode = 1;
+        visitedNodes.clear();
+        visitedNodes.add(1);
+        visitedEdges.clear();
     });
-    totalPathLength.x(dag.x() - 20).my(dag.y() - 20);
-    totalPathLength.length = 0;
-    button.mx(dag.mx() + 20).my(dag.y() - 20);
 });
 
-sd.init(() => {});
-
-sd.main(async () => {
-    await sd.pause(sd.CONTINUE_FRAME);
-    currentNode = dag.element(1);
-    focus.startAnimate().focus(1).endAnimate();
-    dag.startAnimate().color(1, C.grey).endAnimate();
-});
+// 动画主函数
+sd.main(async () => {});

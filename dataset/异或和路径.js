@@ -2,107 +2,134 @@
 
 luogu P3211
 
-### 需求描述
-1. **图绘制需求**
-    - 使用 SD 动画框架绘制一个无向连通图，节点编号从 1 到 N（N 可自定义），节点用圆形表示，边用线条连接。
-    - 在每条边上显示该边的非负整数权值。
-    - 你可以用 sd.GridGraph 生成可控的图。
-2. **随机路径生成需求**
-    - 从 1 号节点开始，以相等的概率随机选择与当前节点相关联的某条边，让一个动点沿此边移动到下一个节点，直到动点到达 n 号节点。
-    - 你可以用 sd.Focus 来表示动点。
-3. **XOR 和计算与显示需求**
-    - 在动点移动过程中，实时计算当前路径上经过边的权值的“XOR 和”。
-    - 可以在动画界面的某个位置实时显示当前路径的“XOR 和”数值。
-4. **期望值计算与显示需求**
-    - 支持多次运行随机路径生成过程，每次生成路径计算其“XOR 和”。
-    - 计算所有这些路径“XOR 和”的期望值，并在动画界面上显示最终的期望值。
-    - 每次运行完成后，应该清除这次动画生成的轨迹和“XOR 和”显示。
-5. **整体交互需求**
-    - 提供一个开始动画的交互操作（例如点击某个按钮或者通过代码执行初始化操作后等待用户按某个键开始）。
-    - 在动画进行过程中，生成的路径线条（动点移动轨迹）要有别于图的原始边线条，例如用红色线条表示路径。 
+**需求文档**
 
+#### 初始化阶段：
+1. **画布准备：**
+   - 使用 `sd.svg` 创建SVG画布。
+   - 使用 `sd.TinyGraph` 创建图结构，并在每个节点的中心位置使用 `sd.Text` 显示节点编号。
+   - 连接节点的边将使用 `sd.Line` 绘制，并在每条边的中心位置使用 `sd.Text` 显示边权值。
+   - 使用一个 `sd.Focus` 组件，初始位置在节点1，表示当前访问的节点。
+
+2. **文本组件初始化：**
+   - 在画布顶部位置，使用以下 `sd.Text` 组件：
+       - 一个 `sd.Text` 组件来显示“当前概率：1.000”。
+       - 一个 `sd.Text` 组件来显示“当前路径异或和：0”。
+   - 添加一个 `sd.Button`，按钮内容描述为“采样”。
+
+#### 主要动画阶段：
+1. **随机采样路径：**
+   - 当用户点击“采样”按钮时，将 `sd.Focus` 组件重置至节点1，并将“当前概率”重置为1.000，将“当前路径异或和”重置为0，将“当前路径节点序列”重置为“1”。
+   - 从当前节点（从节点1开始）随机均匀地选择一条相邻边，将 `sd.Focus` 组件动画过渡到所选择的相邻节点，并重复此过程，直到 `sd.Focus` 到达节点N：
+       - 更新“当前概率”值，将其乘以1除以当前节点出度数。
+       - 更新“当前路径异或和”值，将其与所选边的权值异或。
+   - 当 `sd.Focus` 到达节点N时，动画暂停，突出显示得到的路径结果，显示当前路径的总概率和总异或和。
+
+#### 交互式设计：
+1. **按钮交互：**
+   - 用户每次点击“采样”按钮，触发新的一轮随机路径采样过程，重新初始化 `sd.Focus` 的位置和文本组件信息。
+
+#### 布局设计：
+1. **节点分布：**
+   - 利用 `sd.TinyGraph` 的力导向布局来均匀分布节点，减少边交叉。
+2. **结果展示位置：**
+   - 将展示“当前概率”、“当前路径异或和”和“当前路径节点序列”的 `sd.Text` 组件放在画布的左上角，确保清晰可见。按钮“采样”可 以放在画布右下角或合适位置。
+   - `sd.Focus` 随着当前访问节点的变化而移动。
+
+*/
+
+/*
+对 sd.Graph 理解过于不到位，没有可用性。
 */
 
 import * as sd from "@/sd";
 
-// 自定义节点数量
-const n = 4;
-
-// 创建 svg 画布
 const svg = sd.svg();
 const C = sd.color();
 
-// 生成图
-const graph = new sd.GridGraph(svg).x(100).y(200).height(100).width(180);
-// 表示动点
-const focus = sd.Focus(graph);
-// 存储所有路径的 XOR 和
-const xorSums = [];
+const N = 2;
+const M = 2;
+const edges = [
+    { u: 1, v: 1, w: 2 },
+    { u: 1, v: 2, w: 3 },
+];
 
-// 实时显示 XOR 和
-const xorSumText = new sd.Mathjax(svg, "XOR 和: 0");
-
-// 显示概率
-const posssibilityText = new sd.Mathjax(svg, "概率: \\frac{1}{1}");
-const button = new sd.Button(svg).text("开始");
-
-sd.init(() => {
-    graph.at(0.5, 0).newNode(1);
-    graph.at(0, 0.5).newNode(2);
-    graph.at(1, 0.5).newNode(3);
-    graph.at(0.5, 1).newNode(4);
-    graph.link(1, 2, 1).link(1, 3, 3).link(2, 3, 2).link(2, 4, 4).link(3, 4, 1);
-
-    button.onClick(() => {
-        sd.inter(async () => {
-            await randomWalk();
-        });
-    });
-    button.x(graph.x() - 20).my(graph.y() - 10);
-    xorSumText.x(graph.x() - 20).my(button.y() - 10);
-    posssibilityText.x(graph.x() - 20).my(xorSumText.y() - 10);
+const adjs = Array.from({ length: N + 1 }, () => []);
+edges.forEach(edge => {
+    adjs[edge.u].push(edge.v);
+    if (edge.u !== edge.v) adjs[edge.v].push(edge.u);
 });
 
-sd.main(async () => {});
+const graph = new sd.TinyGraph(svg);
+for (let i = 1; i <= N; i++) graph.newNode(i);
+edges.forEach(edge => {
+    graph.link(edge[0], edge[1]);
+});
 
-async function randomWalk() {
-    let currentNode = graph.element(1);
-    let xorSum = 0;
-    focus.startAnimate().focus(1).endAnimate();
-    while (graph.nodeId(currentNode) !== String(n)) {
-        const nextLinks = graph.outLinks(currentNode, "undirect");
-        const nextLink = nextLinks[Math.floor(Math.random() * nextLinks.length)];
-        const nextNode = graph.toNode(nextLink, currentNode);
+let randomWalkEdges = [];
 
-        await sd.pause();
-        // 绘制动点移动轨迹（红色线条）
-        const line = new sd.Line(svg).strokeWidth(2);
-        if (graph.sourceId(nextLink) === graph.nodeId(currentNode)) {
-            line.source(nextLink.source());
-            line.target(nextLink.target());
-        } else {
-            line.source(nextLink.target());
-            line.target(nextLink.source());
-        }
-        line.color(C.red);
-        line.startAnimate().pointStoT().endAnimate().arrow();
-        await sd.pause();
-        focus.startAnimate().focus(nextNode).endAnimate();
-        await sd.pause();
-        line.startAnimate().fadeStoT().endAnimate().remove();
+const focus = sd.Focus(graph);
+const currentProbabilityText = new sd.Text(svg).text("当前概率：1.000").x(50).y(30);
+const currentXorSumText = new sd.Text(svg).text("当前路径异或和：0").x(50).y(60);
+const currentPathNodesText = new sd.Text(svg).text("当前路径节点序列：1").x(50).y(90);
 
-        xorSum ^= nextLink.intValue();
-        xorSumText.startAnimate().transformMath(`XOR 和: ${xorSum}`).endAnimate();
-        posssibilityText
-            .startAnimate()
-            .transformMath(posssibilityText.math() + `\\frac{1}{${nextLinks.length}}`)
-            .endAnimate();
-        currentNode = nextNode;
-    }
+const buttonDiv = sd.div();
+const sampleButton = new sd.Button(buttonDiv);
 
+sampleButton
+    .text("开始一次采样")
+    .cx(100)
+    .cy(50)
+    .onClick(() => {
+        sd.inter(async () => {
+            sampleButton.text("下一次采样");
+            focus.focus(1);
+
+            let currentNode = 1;
+            let currentProbability = 1.0;
+            let currentXorSum = 0;
+            let currentPathNodes = [1];
+            randomWalkEdges.length = 0;
+
+            currentProbabilityText.content = "当前概率：1.000";
+            currentXorSumText.content = "当前路径异或和：0";
+            currentPathNodesText.content = "当前路径节点序列：1";
+
+            while (currentNode !== N) {
+                const edges = graph.outLinks(currentNode);
+                const nextNodeIndex = Math.floor(Math.random() * edges.length);
+                const { to, key, line, _object } = edges[nextNodeIndex];
+
+                const edgeLine = graph.getLine(key).line;
+                randomWalkEdges.push(edgeLine);
+                edgeLine.startAnimate().color(C.red).endAnimate();
+
+                const nextNode = to;
+
+                await sd.pause();
+                focus.startAnimate().focus(nextNode).endAnimate();
+
+                currentNode = nextNode;
+                currentProbability /= edges.length;
+                const edge = edges.find(e => (e.u === currentNode && e.v === _object[0]) || (e.v === currentNode && e.u === _object[0]));
+                currentXorSum ^= edge.w;
+                currentPathNodes.push(currentNode);
+
+                currentProbabilityText.content = `当前概率：${Math.round(currentProbability * 1000) / 1000}`;
+                currentXorSumText.content = `当前路径异或和：${currentXorSum}`;
+                currentPathNodesText.content = `当前路径节点序列：${currentPathNodes.join(" -> ")}`;
+                await sd.pause();
+            }
+
+            for (let edgeLine of randomWalkEdges) {
+                edgeLine.startAnimate().color(C.black).endAnimate();
+            }
+            randomWalkEdges.length = 0;
+        });
+    });
+
+graph.scale(1.5);
+
+sd.main(async () => {
     await sd.pause();
-    // 清除这次动画生成的轨迹
-    focus.startAnimate().focus(null).endAnimate();
-    xorSumText.startAnimate().transformMath("XOR 和: 0").endAnimate();
-    posssibilityText.startAnimate().transformMath("概率: \\frac{1}{1}").endAnimate();
-}
+});

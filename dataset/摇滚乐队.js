@@ -1,4 +1,7 @@
 /*
+
+luogu P2736
+
 摇滚乐队CD装盘动画
 
 需求描述：
@@ -34,118 +37,148 @@
 - 使用onClick和sd.inter处理交互
 */
 
+/*
+评价：
+不可用。逻辑哪哪都有问题。
+*/
+
 import * as sd from "@/sd";
 
-// 输入数据
-const songCount = 5; // 歌曲数量N
-const cdCapacity = 50; // CD容量T
-const cdCount = 3; // CD数量M
-const songLengths = [20, 30, 15, 25, 10]; // 歌曲长度数组
-
-// 创建svg容器
 const svg = sd.svg();
 const C = sd.color();
-const R = sd.rule();
 
-// 创建CD数组
-const cds = [];
+const N = 4; // 歌曲数量
+const T = 5; // CD 的容量
+const M = 2; // CD 数量
+const songs = [4, 3, 4, 2];
 
-// 创建歌曲序列数组
-const songArray = new sd.Array(svg).x(100).y(300);
-const cdArray = new sd.ValueArray(svg).elementWidth(150);
-// 初始化歌曲数据
-for (let i = 0; i < songCount; i++) {
-    songArray.push(songLengths[i]);
-}
-sd.Label(songArray, "歌曲数组", "lc");
-
-// 为每个歌曲添加点击事件
-songArray.forEachElement((rect, i) => {
-    rect.onClick(() => {
-        sd.inter(async () => {
-            if (rect.fill() === C.grey) rect.startAnimate().fill(C.white).endAnimate();
-            else rect.startAnimate().fill(C.grey).endAnimate();
-            updateCD();
-        });
-    });
-});
-
-function updateCD() {
-    songArray.forEachElement(song => {
-        song.placed = false;
-    });
-    for (let j = 0; j < cdCount; j++) {
-        const cd = cdArray.element(j);
-        // 重新计算CD容量
-        cd.usedCapacity = 0;
-        cd.remainingCapacity = cdCapacity;
-        // 更新歌曲占用部分
-        const sections = [];
-        let cumulated = 0;
-        // 重新开始塞歌
-        for (let k = 0; k < songCount; k++) {
-            if (songArray.element(k).placed) continue;
-            if (songArray.element(k).fill() !== C.grey) continue;
-            const song = songLengths[k];
-            if (cd.remainingCapacity >= song) {
-                cd.usedCapacity += song;
-                cd.remainingCapacity -= song;
-                songArray.element(k).placed = true;
-                if (cd.sections.length > 0) {
-                    const section = cd.sections.shift();
-                    sections.push(section);
-                    section
-                        .startAnimate()
-                        .x(cd.x() + 2 + cumulated)
-                        .y(cd.y() + 2)
-                        .width((song * 96) / cdCapacity)
-                        .height(46)
-                        .endAnimate();
-                } else {
-                    const section = new sd.Rect(svg)
-                        .x(cd.x() + 2 + cumulated)
-                        .y(cd.y() + 2)
-                        .width((song * 96) / cdCapacity)
-                        .height(46)
-                        .opacity(0)
-                        .startAnimate()
-                        .opacity(1)
-                        .endAnimate();
-                    sections.push(section);
+const allSongs = new sd.Array(svg)
+    .resize(N)
+    .forEachElement((elem, i) => {
+        elem.value(songs[i].toString()).fill(C.green).opacity(0.5);
+        elem.onClick(() => {
+            sd.inter(async () => {
+                if (!elem.frozen()) {
+                    handleSongClick(elem, i, songs[i]);
+                    elem.freeze();
                 }
-                cumulated += (song / cdCapacity) * 100;
-            } else break;
-        }
-        for (const section of cd.sections) section.startAnimate().opacity(0).endAnimate().remove();
-        cd.sections = sections;
-        // 更新CD信息文本
-        cd.child("label").text(`${cd.usedCapacity}/${cd.remainingCapacity + cd.usedCapacity}`);
-    }
-    let allocatedCount = 0;
-    songArray.forEachElement(song => {
-        if (song.fill() === C.grey) allocatedCount++;
-    });
-    statusText.text(`已选歌曲数: ${allocatedCount}   总歌曲数: ${songCount}`);
-}
+            });
+        });
+    })
+    .x(50)
+    .y(50);
 
-// 创建CD对象及相关显示元素
-for (let i = 0; i < cdCount; i++) {
-    const cd = new sd.Rect(cdArray).width(102).height(50);
-    cd.usedCapacity = 0;
-    cd.remainingCapacity = cdCapacity;
-    cd.sections = [];
-    cd.childAs("label", new sd.Text(svg, `0/${cdCapacity}`), R.aside("tc"));
-    cdArray.push(cd);
-}
+const currentStatusText = new sd.Text(svg, `Current State: 0 songs placed`).fontSize(20).center(250, 20);
 
-// 显示当前状态文本
-const statusText = new sd.Text(svg, `已选歌曲数: ${0}   总歌曲数: ${songCount}`).cx(100).y(50);
-
-// 初始化函数
-sd.init(() => {
-    cdArray.cx(songArray.cx()).my(songArray.y() - 40);
-    statusText.cx(cdArray.cx()).my(cdArray.y() - 60);
+const CDs = new sd.Array(svg).resize(M).forEachElement((cd, i) => {
+    const bg = new sd.Rect(cd).fill(C.grey).stroke(C.black).strokeWidth(3);
+    const content = new sd.Rect(cd)
+        .fill(C.azure)
+        .stroke(C.black)
+        .width(cd.width() - 10)
+        .height(cd.height() - 10);
+    new sd.Text(cd, `CD ${i + 1}`).center(content.center()[0], content.center()[1] - 30).fontSize(16);
+    bg.width(100).height(60);
+    cd.color(C.azure);
+    cd.dx(i * 120)
+        .y(150)
+        .width(100)
+        .height(60);
 });
 
-// 主函数
-sd.main(async () => {});
+let currentCDIndex = 0;
+let usedTime = new Array(M).fill(0);
+let currentSongIndex = 0;
+let songsPlaced = 0;
+
+function handleSongClick(songElem, songIndex, songLength) {
+    if (currentCDIndex < M && songIndex >= currentSongIndex && usedTime[currentCDIndex] + songLength <= T) {
+        usedTime[currentCDIndex] += songLength;
+        songsPlaced++;
+        currentStatusText.text(`Current State: ${songsPlaced} songs placed`);
+        currentSongIndex = songIndex + 1;
+
+        const startPos = songElem.center();
+        const targetPos = CDs.element(currentCDIndex).center();
+        const line = new sd.Line(svg).source(startPos).target(startPos).color(C.pureRed).strokeWidth(2);
+        line.startAnimate().target(targetPos[0], targetPos[1]).endAnimate();
+
+        songElem
+            .startAnimate()
+            .center(targetPos[0], targetPos[1] + 10)
+            .opacity(0.5)
+            .color(C.red)
+            .endAnimate();
+        line.startAnimate().opacity(0).endAnimate();
+
+        const cd = CDs.element(currentCDIndex);
+        const usedWidth = (usedTime[currentCDIndex] / T) * (cd.width() - 10);
+        const valueRect = cd.value();
+        valueRect.width(usedWidth);
+
+        if (usedTime[currentCDIndex] === T) {
+            currentCDIndex++;
+        }
+    } else {
+        songElem
+            .startAnimate()
+            .color(C.pureRed)
+            .duration(300)
+            .endAnimate()
+            .then(() => {
+                songElem.startAnimate().color(C.green).duration(300).endAnimate();
+            });
+    }
+}
+
+sd.main(async () => {
+    await sd.pause();
+
+    for (let i = 0; i < N; i++) {
+        if (currentCDIndex >= M) {
+            break;
+        }
+
+        const currentSong = allSongs.element(i);
+        currentSong.startAnimate().color(C.blue).endAnimate();
+
+        if (usedTime[currentCDIndex] + songs[i] <= T) {
+            usedTime[currentCDIndex] += songs[i];
+            songsPlaced++;
+
+            const startPos = currentSong.center();
+            const targetPos = CDs.element(currentCDIndex).center();
+            const line = new sd.Line(svg).source(startPos).target(startPos).color(C.pureRed).strokeWidth(2);
+            line.startAnimate().target(targetPos[0], targetPos[1]).endAnimate();
+
+            await sd.pause();
+            currentSong
+                .startAnimate()
+                .center(targetPos[0], targetPos[1] + 10)
+                .opacity(0.5)
+                .color(C.blue)
+                .endAnimate();
+            line.startAnimate().opacity(0).endAnimate();
+
+            const cd = CDs.element(currentCDIndex);
+            const usedWidth = (usedTime[currentCDIndex] / T) * (cd.width() - 10);
+            const valueRect = cd.value();
+            valueRect.width(usedWidth);
+
+            if (usedTime[currentCDIndex] === T) {
+                currentCDIndex++;
+            }
+        } else {
+            currentCDIndex++;
+            if (currentCDIndex < M) {
+                i--;
+            } else {
+                break;
+            }
+        }
+
+        currentStatusText.text(`Current State: ${songsPlaced} songs placed`);
+        await sd.pause();
+    }
+    await sd.pause();
+});

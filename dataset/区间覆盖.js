@@ -53,17 +53,13 @@ luogu P1868
 
 /*
 
-评价：稍微修改一下能用。
-
+评价：
+稍微修改一下能用。
 编造方法：Text.textArchor。
-
 错误使用：
 sd.inter：没有用 sd.inter 把交互部分框起来。
 sd.color：没有用 C.yellow/C.green，而是直接用 "yello"/"green"。
-
-视觉效果：
-布局不太行。
-
+视觉效果，布局不太行。
 */
 
 import * as sd from "@/sd";
