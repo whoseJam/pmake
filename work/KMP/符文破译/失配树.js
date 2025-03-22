@@ -7,10 +7,10 @@ import { KMP } from "../_/KMP";
 const svg = sd.svg();
 const C = sd.color();
 const R = sd.rule();
-const str = " abbabaabbabb";
+const str = " ababa";
 const n = str.length - 1;
 const arr = new sd.Array(svg);
-const s = new sd.Array(svg).pushArray("abbabbaabbabaabbabb").opacity(0).start(1);
+const s = new sd.Array(svg).pushArray("abaababababaa").opacity(0).start(1);
 const gap = 5;
 const locations = [
     // locations
@@ -20,13 +20,6 @@ const locations = [
     { location: "tc", gap: gap },
     { location: "tc", gap: gap },
     { location: "tc", gap: gap },
-    { location: "rc", gap: gap },
-    { location: "rc", gap: gap },
-    { location: "rc", gap: gap },
-    { location: "tc", gap: gap },
-    { location: "tc", gap: gap },
-    { location: "tc", gap: gap },
-    { location: "rc", gap: gap },
 ];
 const len = buildLenSync(str);
 const ps = sd.Pointer(s, "", "b", 3, 20, 3);
@@ -42,7 +35,7 @@ sd.main(async () => {
     await buildFailTreeFromLen(arr, len, locations, {
         onCreateTree,
     });
-    s.cx(global.tree.cx()).y(global.tree.my()).startAnimate().opacity(1).endAnimate();
+    s.cx(tree.cx()).y(tree.my()).startAnimate().opacity(1).endAnimate();
     await KMP(s, arr, {
         onPointerIMove,
         onPointerJMove,
@@ -58,9 +51,7 @@ async function onPointerIMove(i) {
 }
 
 async function onPointerJMove(j) {
-    if (j + 1 <= n) {
-        focus.startAnimate().focus(arr.element(j)).endAnimate();
-    }
+    if (j <= n) focus.startAnimate().focus(arr.element(j)).endAnimate();
 }
 
 async function onMatch(i, j) {
@@ -73,7 +64,7 @@ async function onFail(i, j) {
     await sd.pause();
     if (1 <= j && j <= arr.length()) {
         s.startAnimate().color(i, C.red).endAnimate();
-        arr.startAnimate().color(j, C.red).endAnimate();
+        if (j <= arr.end()) arr.startAnimate().color(j, C.red).endAnimate();
     } else if (j === 0) {
     }
 }
@@ -81,10 +72,12 @@ async function onFail(i, j) {
 async function onJumpFail(i, j, len) {
     await sd.pause();
     focus.startAnimate().focus(len).endAnimate();
-    arr.startAnimate()
-        .color(len + 2, j + 1, C.white)
-        .color(len + 1, C.red)
-        .endAnimate();
+    arr.startAnimate();
+    const lim = Math.min(arr.end(), j + 1);
+    console.log(len + 2, lim);
+    if (len + 2 <= lim) arr.color(len + 2, lim, C.white);
+    arr.color(len + 1, C.red);
+    arr.endAnimate();
     s.startAnimate()
         .color(i - j, i - len - 1, C.white)
         .endAnimate();
@@ -93,5 +86,5 @@ async function onJumpFail(i, j, len) {
 function onCreateTree(tree) {
     global.tree = tree;
     focus = sd.Focus(tree);
-    tree.layerWidth(150).height(600).x(arr.x()).cy(arr.cy());
+    tree.layerWidth(150).height(300).x(arr.x()).cy(arr.cy());
 }

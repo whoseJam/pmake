@@ -1,6 +1,6 @@
 import * as sd from "@/sd";
 
-import { KMP } from "../_/KMP";
+import { KMP0 } from "../_/KMP";
 
 const svg = sd.svg();
 const C = sd.color();
@@ -24,7 +24,7 @@ sd.init(() => {
 });
 
 sd.main(async () => {
-    await KMP(s, t, {
+    await KMP0(s, t, {
         onPointerIMove,
         onPointerJMove,
         onMatch,

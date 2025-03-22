@@ -36,7 +36,6 @@ sd.main(async () => {
 });
 
 async function onPointerIMove(i) {
-    await sd.pause();
     ps.startAnimate().moveTo(i).endAnimate();
     if (global.moveT) {
         s.startAnimate()
@@ -46,6 +45,7 @@ async function onPointerIMove(i) {
 }
 
 async function onPointerJMove(j) {
+    await sd.pause();
     if (j + 1 <= t.length())
         pt.startAnimate()
             .moveTo(j + 1)

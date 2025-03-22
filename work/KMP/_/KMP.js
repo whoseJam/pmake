@@ -43,11 +43,11 @@ export async function KMP(s, t, args) {
     let j = 0;
     for (let i = start; i <= s.length(); i++) {
         if (onPointerIMove) await onPointerIMove(i);
-        if (onPointerJMove) await onPointerJMove(j);
 
         if (getChar(s, i) === getChar(t, j + 1)) {
             j++;
             if (onMatch) await onMatch(i, j);
+            if (onPointerJMove) await onPointerJMove(j);
         } else {
             if (onFail) await onFail(i, j + 1);
             while (j && getChar(s, i) !== getChar(t, j + 1)) {
@@ -57,6 +57,43 @@ export async function KMP(s, t, args) {
             if (getChar(s, i) === getChar(t, j + 1)) {
                 j++;
                 if (onMatch) await onMatch(i, j);
+                if (onPointerJMove) await onPointerJMove(j);
+            } else {
+                if (onFail) await onFail(i, j);
+            }
+        }
+    }
+}
+
+export async function KMP0(s, t, args) {
+    const onPointerIMove = args.onPointerIMove;
+    const onPointerJMove = args.onPointerJMove;
+    const onMatch = args.onMatch;
+    const onFail = args.onFail;
+    const onJumpFail = args.onJumpFail;
+    const start = args.start ? args.start : 1;
+
+    const len = buildLenSync(" " + getString(t));
+    let j = 0;
+    // if (onPointerJMove) await onPointerJMove(j);
+    for (let i = start; i <= s.length(); i++) {
+        if (onPointerIMove) await onPointerIMove(i);
+        if (onPointerJMove) await onPointerJMove(j);
+
+        if (getChar(s, i) === getChar(t, j + 1)) {
+            j++;
+            if (onMatch) await onMatch(i, j);
+            // if (onPointerJMove) await onPointerJMove(j);
+        } else {
+            if (onFail) await onFail(i, j + 1);
+            while (j && getChar(s, i) !== getChar(t, j + 1)) {
+                if (onJumpFail) await onJumpFail(i, j, len[j]);
+                j = len[j];
+            }
+            if (getChar(s, i) === getChar(t, j + 1)) {
+                j++;
+                if (onMatch) await onMatch(i, j);
+                // if (onPointerJMove) await onPointerJMove(j);
             } else {
                 if (onFail) await onFail(i, j);
             }
