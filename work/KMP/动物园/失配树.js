@@ -1,7 +1,7 @@
 import * as sd from "@/sd";
 
-import { BuildFailTreeFromLen } from "../_/BuildFailTreeFromLen";
-import { BuildLenSync } from "../_/BuildLen";
+import { buildFailTreeFromLen } from "../_/BuildFailTreeFromLen";
+import { buildLenSync } from "../_/BuildLen";
 
 const svg = sd.svg();
 const R = sd.rule();
@@ -10,7 +10,7 @@ const n = str.length - 1;
 const arr = new sd.Array(svg);
 const gap = 5;
 const locations = [{}, { location: "tc", gap: gap }, { location: "tc", gap: gap }, { location: "tc", gap: gap }, { location: "rc", gap: gap }, { location: "rc", gap: gap }, { location: "rc", gap: gap }, { location: "rc", gap: gap }, { location: "rc", gap: gap }];
-const len = BuildLenSync(str);
+const len = buildLenSync(str);
 
 sd.init(() => {
     for (let i = 0; i <= n; i++) arr.push(str[i]);
@@ -19,7 +19,7 @@ sd.init(() => {
 });
 
 sd.main(async () => {
-    await BuildFailTreeFromLen(arr, len, locations, {
+    await buildFailTreeFromLen(arr, len, locations, {
         onCreateTree,
     });
 });

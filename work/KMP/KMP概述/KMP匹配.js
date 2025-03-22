@@ -1,6 +1,6 @@
 import * as sd from "@/sd";
 
-import { BuildLenSync } from "../_/BuildLen";
+import { buildLenSync } from "../_/BuildLen";
 import { KMP } from "../_/KMP";
 
 const svg = sd.svg();
@@ -18,7 +18,7 @@ sd.init(() => {
     t.y(80);
     sd.Label(s, "s");
     sd.Label(t, "t");
-    const l = BuildLenSync(" " + tString);
+    const l = buildLenSync(" " + tString);
     for (let i = 1; i <= t.length(); i++) len.push(l[i]);
     t.childAs(len, function (parent, child) {
         child.x(parent.x()).y(parent.my());

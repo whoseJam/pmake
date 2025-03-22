@@ -8,7 +8,7 @@ import * as sd from "@/sd";
  *  onCreateTree: (tree: sd.HorizontalValueTree) => void
  * }} args
  */
-export async function BuildFailTreeFromLen(str, len, locations, args) {
+export async function buildFailTreeFromLen(str, len, locations, args) {
     const svg = sd.svg();
     const R = sd.rule();
     const EN = sd.enter();

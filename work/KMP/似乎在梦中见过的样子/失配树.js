@@ -5,11 +5,24 @@ import { buildLenSync } from "../_/BuildLen";
 
 const svg = sd.svg();
 const R = sd.rule();
-const str = " aaaabbabbaa";
+const str = " abcabcabc";
 const n = str.length - 1;
 const arr = new sd.Array(svg);
+const kText = new sd.Text(svg, "k=2").x(100).y(90);
 const gap = 5;
-const locations = [{}, { location: "tc", gap: gap }, { location: "tc", gap: gap }, { location: "tc", gap: gap }, { location: "tc", gap: gap }, { location: "tc", gap: gap }, { location: "rc", gap: gap }, { location: "rc", gap: gap }, { location: "rc", gap: gap }, { location: "rc", gap: gap }, { location: "rc", gap: gap }, { location: "rc", gap: gap }, { location: "rc", gap: gap }];
+const locations = [
+    // locations
+    {},
+    { location: "tc", gap: gap },
+    { location: "tc", gap: gap },
+    { location: "tc", gap: gap },
+    { location: "tc", gap: gap },
+    { location: "tc", gap: gap },
+    { location: "tc", gap: gap },
+    { location: "tc", gap: gap },
+    { location: "tc", gap: gap },
+    { location: "tc", gap: gap },
+];
 const len = buildLenSync(str);
 
 sd.init(() => {
@@ -24,6 +37,6 @@ sd.main(async () => {
     });
 });
 
-async function onCreateTree(tree) {
-    tree.layerWidth(150).height(600).x(arr.x()).cy(arr.cy());
+function onCreateTree(tree) {
+    tree.layerWidth(150).height(500).x(arr.x()).cy(arr.cy());
 }

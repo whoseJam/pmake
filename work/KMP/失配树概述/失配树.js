@@ -1,7 +1,7 @@
 import * as sd from "@/sd";
 
-import { BuildFailTreeFromLen } from "../_/BuildFailTreeFromLen";
-import { BuildLenSync } from "../_/BuildLen";
+import { buildFailTreeFromLen } from "../_/buildFailTreeFromLen";
+import { buildLenSync } from "../_/BuildLen";
 import { KMP } from "../_/KMP";
 
 const svg = sd.svg();
@@ -13,7 +13,7 @@ const arr = new sd.Array(svg);
 const s = new sd.Array(svg).pushArray("abbabbaabbabaabbabb").opacity(0).start(1);
 const gap = 5;
 const locations = [{}, { location: "tc", gap: gap }, { location: "tc", gap: gap }, { location: "tc", gap: gap }, { location: "tc", gap: gap }, { location: "tc", gap: gap }, { location: "rc", gap: gap }, { location: "rc", gap: gap }, { location: "rc", gap: gap }, { location: "tc", gap: gap }, { location: "tc", gap: gap }, { location: "tc", gap: gap }, { location: "rc", gap: gap }];
-const len = BuildLenSync(str);
+const len = buildLenSync(str);
 const ps = sd.Pointer(s, "", "b", 3, 20, 3);
 let focus;
 
@@ -24,7 +24,7 @@ sd.init(() => {
 });
 
 sd.main(async () => {
-    await BuildFailTreeFromLen(arr, len, locations, {
+    await buildFailTreeFromLen(arr, len, locations, {
         onCreateTree,
     });
     s.cx(global.tree.cx()).y(global.tree.my()).startAnimate().opacity(1).endAnimate();

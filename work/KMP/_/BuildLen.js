@@ -4,7 +4,7 @@ import * as sd from "@/sd";
  * @param {string} str 一个带有前缀空格的字符串
  * @returns {Array<number>}
  */
-export function BuildLenSync(str) {
+export function buildLenSync(str) {
     const n = str.length - 1;
     const len = sd.make1d(n + 5);
     let j = 0;

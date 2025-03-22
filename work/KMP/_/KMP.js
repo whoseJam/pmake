@@ -1,5 +1,5 @@
 import * as sd from "@/sd";
-import { BuildLenSync } from "./BuildLen";
+import { buildLenSync } from "./BuildLen";
 
 function validChar(x) {
     return ("a" <= x && x <= "z") || ("A" <= x && x <= "Z");
@@ -39,7 +39,7 @@ export async function KMP(s, t, args) {
     const onJumpFail = args.onJumpFail;
     const start = args.start ? args.start : 1;
 
-    const len = BuildLenSync(" " + getString(t));
+    const len = buildLenSync(" " + getString(t));
     let j = 0;
     for (let i = start; i <= s.length(); i++) {
         if (onPointerIMove) await onPointerIMove(i);
