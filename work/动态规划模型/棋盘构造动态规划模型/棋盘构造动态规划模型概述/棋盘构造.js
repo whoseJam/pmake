@@ -14,8 +14,12 @@ sd.main(async () => {
     await sd.pause();
     sd.Brace(grid).startAnimate().brace(grid.element(1, 1), grid.element(1, m), "t").value("宽度不太大").endAnimate();
     await sd.pause();
-    sd.Label(new sd.Rect(svg).color(C.blue).dx(-80).opacity(0).startAnimate().opacity(1).endAnimate(), "0", "lc");
-    sd.Label(new sd.Rect(svg).color(C.green).dx(-80).dy(80).opacity(0).startAnimate().opacity(1).endAnimate(), "1", "lc");
+    const ocean = new sd.Rect(svg).color(C.blue).x(-80);
+    const grass = new sd.Rect(svg).color(C.green).x(-80).y(80);
+    sd.Label(ocean, "0", "lc");
+    sd.Label(grass, "1", "lc");
+    ocean.opacity(0).startAnimate().opacity(1).endAnimate();
+    grass.opacity(0).startAnimate().opacity(1).endAnimate();
     for (let i = 1; i <= n; i++) {
         await sd.pause();
         let ans = "";
