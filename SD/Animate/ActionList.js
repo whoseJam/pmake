@@ -139,6 +139,7 @@ export class ActionList {
         for (let i = this.actions.length - 1; i >= 0; i--) {
             const action = this.actions[i];
             const newAction = action.clone();
+            newAction.reverse = true;
             newAction.l = maxTimestamp - action.r;
             newAction.r = maxTimestamp - action.l;
             newAction.source = action.target;

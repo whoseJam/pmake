@@ -1,16 +1,16 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-const img = new sd.Image(svg);
+const domain = "http://localhost:1313";
+const img1 = new sd.Image(svg).href(domain + "/img/gift.png");
+const img2 = new sd.Image(svg).href(domain + "/img/gift.png").x(50);
 
-img.href("https://images.pexels.com/photos/9551192/pexels-photo-9551192.jpeg");
+sd.init(() => {});
 
-main();
-
-async function main() {
+sd.main(async () => {
     await sd.pause();
-    img.startAnimate().cx(600).cy(300).endAnimate();
-    await sd.pause();
-    img.startAnimate().scale(2).endAnimate();
-    await sd.pause();
-}
+    img1.href(domain + "/img/snowflake.png");
+    img2.startAnimate()
+        .href(domain + "/img/snowflake.png")
+        .endAnimate();
+});
