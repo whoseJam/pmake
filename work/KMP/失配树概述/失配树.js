@@ -1,7 +1,7 @@
 import * as sd from "@/sd";
 
 import { buildFailTreeFromLen } from "../_/buildFailTreeFromLen";
-import { buildLenSync } from "../_/BuildLen";
+import { buildLenSync } from "../_/BuildLenSync";
 import { KMP } from "../_/KMP";
 
 const svg = sd.svg();

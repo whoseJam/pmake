@@ -1,5 +1,5 @@
 import * as sd from "@/sd";
-import { buildLenSync } from "./BuildLen";
+import { buildLenSync } from "./BuildLenSync";
 
 function validChar(x) {
     return ("a" <= x && x <= "z") || ("A" <= x && x <= "Z");
@@ -19,7 +19,9 @@ function getChar(s, i) {
 }
 
 /**
+ * Match s[start...] with t[t.start...t.end].
  *
+ * The `start` param will play a role in preparing the length array.
  * @param {sd.Array} s
  * @param {sd.Array} t
  * @param {{
@@ -41,9 +43,9 @@ export async function KMP(s, t, args) {
 
     const len = buildLenSync(" " + getString(t));
     let j = 0;
-    for (let i = start; i <= s.length(); i++) {
+    if (onPointerJMove) await onPointerJMove(j);
+    for (let i = start; i <= s.end(); i++) {
         if (onPointerIMove) await onPointerIMove(i);
-
         if (getChar(s, i) === getChar(t, j + 1)) {
             j++;
             if (onMatch) await onMatch(i, j);

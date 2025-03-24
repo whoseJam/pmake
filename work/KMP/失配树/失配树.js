@@ -1,7 +1,7 @@
 import * as sd from "@/sd";
 
 import { buildFailTreeFromLen } from "../_/BuildFailTreeFromLen";
-import { buildLenSync } from "../_/BuildLen";
+import { buildLenSync } from "../_/BuildLenSync";
 
 const svg = sd.svg();
 const R = sd.rule();

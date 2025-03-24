@@ -1,6 +1,5 @@
 import * as sd from "@/sd";
-
-import { KMP0 } from "../_/KMP";
+import { KMP } from "../_/KMP";
 
 const svg = sd.svg();
 const C = sd.color();
@@ -13,6 +12,9 @@ const pt = sd.Pointer(t, "", "b", 3, 20, 3);
 const ls = new sd.Line(svg).opacity(0);
 const lt = new sd.Line(svg).opacity(0);
 
+let moveArrayT = false;
+let currentIndexI = s.start();
+
 sd.init(() => {
     t.y(80).dx(40);
     sd.Label(s, "t");
@@ -24,7 +26,7 @@ sd.init(() => {
 });
 
 sd.main(async () => {
-    await KMP0(s, t, {
+    await KMP(s, t, {
         onPointerIMove,
         onPointerJMove,
         onMatch,
@@ -35,25 +37,25 @@ sd.main(async () => {
 });
 
 async function onPointerIMove(i) {
-    await sd.pause();
+    currentIndexI = i;
     ps.startAnimate().moveTo(i).endAnimate();
-    if (global.moveT) {
+    if (moveArrayT) {
         s.startAnimate()
             .color(i - 1, C.white)
             .endAnimate();
+        t.startAnimate().dx(40).color(1, C.white).endAnimate();
+        moveArrayT = false;
     }
 }
 
 async function onPointerJMove(j) {
+    if (currentIndexI === s.end()) return;
+    await sd.pause();
     if (j + 1 <= t.length())
         pt.startAnimate()
             .moveTo(j + 1)
             .endAnimate();
     else pt.startAnimate().dx(40).endAnimate();
-    if (global.moveT) {
-        t.startAnimate().dx(40).color(1, C.white).endAnimate();
-        global.moveT = undefined;
-    }
 }
 
 async function onMatch(i, j) {
@@ -70,7 +72,9 @@ async function onFail(i, j) {
         t.startAnimate().color(j, C.red).endAnimate();
     } else if (j === 0) {
         len.startAnimate().value(i, 0).endAnimate();
-        global.moveT = true;
+        moveArrayT = true;
+    } else {
+        s.startAnimate().color(i, C.red).endAnimate();
     }
 }
 
