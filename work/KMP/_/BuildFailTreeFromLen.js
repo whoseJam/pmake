@@ -30,9 +30,7 @@ export async function buildFailTreeFromLen(str, len, locations, args) {
 
     await sd.pause();
     const tree = new sd.HorizontalValueTree(svg);
-    if (onCreateTree) {
-        await onCreateTree(tree);
-    }
+    if (onCreateTree) await onCreateTree(tree);
 
     sd.freeze();
     tree.startAnimate(2000);
@@ -44,7 +42,7 @@ export async function buildFailTreeFromLen(str, len, locations, args) {
         }
     }
     sd.unfreeze();
-    tree.uneffect("horizontalTree");
+    tree.uneffectAll();
     tree.forEachLink((link, sourceId, targetId) => {
         const source = tree.element(sourceId);
         const target = tree.element(targetId);
