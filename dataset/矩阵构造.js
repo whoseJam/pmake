@@ -26,87 +26,171 @@ luogu P3208
 
 */
 
+/*
+动画逻辑错误
+计算逻辑错误
+*/
+
 import * as sd from "@/sd";
 
 const svg = sd.svg();
+const div = sd.div();
 const C = sd.color();
-const EN = sd.enter();
-const EX = sd.exit();
-const D = sd.device();
 
-// 创建按钮
-const initButton = new sd.Button(svg).x(100).y(100).text("初始化");
-// 假设 n 和 m 为矩阵的大小，这里先设定为 3 和 3，实际应用中可以根据需求调整
-const n = 3;
-const m = 3;
-const data = [
+const N = 3,
+    M = 3,
+    P = 3;
+const SUM_MATRIX = [
     [0, 0, 0],
     [0, 4, 5],
     [0, 5, 3],
 ];
-// 创建矩阵
-const matrixGrid = new sd.Grid(svg).x(200).y(100).n(n).m(m);
-const sumGrid = new sd.Grid(svg)
-    .x(matrixGrid.mx() + 80)
-    .y(matrixGrid.y())
-    .n(n)
-    .m(m);
 
-// 初始化设置
-sd.init(() => {
-    // 设置按钮点击事件
-    for (let i = 0; i < n; i++) for (let j = 0; j < m; j++) sumGrid.value(i, j, data[i][j]);
-    initButton.onClick(() => {
-        sd.inter(async () => {
-            await randomFillGrid();
-        });
-    });
+function gridLabelGrid(label, grid, top) {
+    return new sd.Text(svg, label)
+        .cx(grid.center()[0])
+        .y(top ? grid.y() - 30 : grid.y() + grid.height() + 30)
+        .fontSize(24)
+        .color(C.black);
+}
+
+const sumMatrixGrid = new sd.Grid(svg)
+    .n(N + 1)
+    .m(M + 1)
+    .dy(50);
+const sumMatrixLabel = gridLabelGrid("Sum Matrix:", sumMatrixGrid, true);
+
+const originalMatrixGrid = new sd.Grid(svg).n(N).m(M).dy(250);
+const originalMatrixLabel = gridLabelGrid("Original Matrix:", originalMatrixGrid, false);
+
+const initButton = new sd.Button(div).text("Initialize").cx(100).y(30);
+initButton.onClick(async () => {
+    await solveMatrix();
 });
+
+// 初始化 sumMatrixGrid 矩阵
+function updateSumMatrixGrid() {
+    for (let i = 0; i < N + 1; i++) {
+        for (let j = 0; j < M + 1; j++) {
+            if (i === 0 || j === 0) {
+                sumMatrixGrid.insert(i, j, "0").color(i, j, C.purple);
+            } else {
+                sumMatrixGrid.insert(i, j, SUM_MATRIX[i - 1][j - 1].toString());
+            }
+        }
+    }
+}
+
+// 填充矩阵的计算过程动画函数
+async function fillMatrix(firstRow, firstCol) {
+    let matrix = sd.make2d(N, M, 0);
+
+    // 清空原有矩阵内容并在填充前展示空矩阵
+    for (let i = 0; i < N; i++) {
+        for (let j = 0; j < M; j++) {
+            if (i !== 0 || j !== 0) {
+                originalMatrixGrid.value(i, j, null);
+            }
+        }
+    }
+
+    if (firstRow) {
+        await sd.pause();
+        // 填充首行首列
+        for (let i = 0; i < N; i++) {
+            matrix[i][0] = firstCol[i];
+            if (i === 0) {
+                matrix[i][0] = 0;
+            }
+            originalMatrixGrid.value(i, 0, String(matrix[i][0])).color(i, 0, C.blue);
+        }
+        for (let j = 0; j < M; j++) {
+            matrix[0][j] = firstRow[j];
+            if (j === 0) {
+                matrix[0][j] = 0;
+            }
+            await sd.pause();
+            originalMatrixGrid.value(0, j, String(matrix[0][j])).color(0, j, C.blue);
+        }
+
+        // 填充其余部分
+        for (let i = 1; i < N; i++) {
+            for (let j = 1; j < M; j++) {
+                const sum = SUM_MATRIX[i - 1][j - 1];
+                const value = (sum - matrix[i - 1][j - 1] - matrix[i - 1][j] - matrix[i][j - 1]) % P;
+                if (value < 0) {
+                    matrix[i][j] = value + P;
+                } else {
+                    matrix[i][j] = value;
+                }
+                await sd.pause();
+                originalMatrixGrid.insert(i, j, String(matrix[i][j])).color(i, j, C.green);
+            }
+        }
+    }
+    return matrix;
+}
+
+// 比较两个矩阵的字典序
+function compareLexic(mat1, mat2) {
+    for (let i = 0; i < N; i++) {
+        for (let j = 0; j < M; j++) {
+            if (mat1[i][j] !== mat2[i][j]) {
+                return mat1[i][j] - mat2[i][j];
+            }
+        }
+    }
+    return 0;
+}
+
+async function solveMatrix() {
+    let bestMatrix = null;
+
+    function generate(num, len) {
+        const result = sd.make1d(len);
+        for (let i = 0; i < len; i++) {
+            result[i] = num % P;
+            num = Math.floor(num / P);
+        }
+        return result;
+    }
+
+    const totalCases = Math.pow(P, N + M - 2);
+    for (let mask = 0; mask < totalCases; mask++) {
+        const firstRow = [0].concat(generate(mask % Math.pow(P, M - 1), M - 1));
+        const firstCol = [0].concat(generate(Math.floor(mask / Math.pow(P, M - 1)), N - 1));
+
+        const matrix = await fillMatrix(firstRow, firstCol);
+
+        let valid = true;
+        for (let i = 0; i < N; i++) {
+            for (let j = 0; j < M; j++) {
+                if (matrix[i][j] < 0 || matrix[i][j] >= P) {
+                    valid = false;
+                    break;
+                }
+            }
+        }
+
+        if (valid) {
+            if (bestMatrix === null || compareLexic(matrix, bestMatrix) < 0) {
+                bestMatrix = matrix.map(row => row.slice());
+            }
+        }
+    }
+
+    if (bestMatrix) {
+        for (let i = 0; i < N; i++) {
+            for (let j = 0; j < M; j++) {
+                const cellValue = bestMatrix[i][j].toString();
+                await sd.pause();
+                originalMatrixGrid.insert(i, j, cellValue).color(i, j, C.red);
+            }
+        }
+    }
+    return bestMatrix;
+}
 
 sd.main(async () => {
-    const focus1 = sd.Focus(matrixGrid);
-    const focus2 = sd.Focus(sumGrid);
-    for (let i = 1; i < n; i++) {
-        for (let j = 1; j < m; j++) {
-            await sd.pause(sd.CONTINUE_FRAME);
-            focus1
-                .startAnimate()
-                .focus(i - 1, j - 1, i, j)
-                .endAnimate();
-            focus2.startAnimate().focus(i, j).endAnimate();
-            const l1 = new sd.Line(svg).source(focus1.pos("x", "y")).target(focus2.pos("x", "y"));
-            const l2 = new sd.Line(svg).source(focus1.pos("mx", "y")).target(focus2.pos("mx", "y"));
-            const l3 = new sd.Line(svg).source(focus1.pos("x", "my")).target(focus2.pos("x", "my"));
-            const l4 = new sd.Line(svg).source(focus1.pos("mx", "my")).target(focus2.pos("mx", "my"));
-            const lines = [l1, l2, l3, l4];
-            lines.forEach(line => line.stroke(C.red).startAnimate().pointStoT().endAnimate());
-            await sd.pause(sd.CONTINUE_FRAME);
-            lines.forEach(line => line.startAnimate().fadeStoT().endAnimate());
-        }
-    }
-    await sd.pause(sd.CONTINUE_FRAME);
-    focus1.startAnimate().focus(null).endAnimate();
-    focus2.startAnimate().focus(null).endAnimate();
+    updateSumMatrixGrid();
 });
-
-async function randomFillGrid() {
-    // 生成第一行与第一列的数据
-    matrixGrid.startAnimate();
-    matrixGrid.value(0, 0, sd.rand(0, data[1][1]));
-    for (let i = 1; i < n; i++) {
-        const sum = matrixGrid.intValue(i - 1, 0);
-        matrixGrid.value(i, 0, sd.rand(0, data[i][1] - sum));
-    }
-    for (let j = 1; j < n; j++) {
-        const sum = matrixGrid.intValue(0, j - 1) + matrixGrid.intValue(1, j - 1);
-        matrixGrid.value(0, j, sd.rand(0, data[1][j] - sum));
-    }
-    matrixGrid.endAnimate();
-    // 填充整个矩阵
-    await sd.pause();
-    matrixGrid.forEachElement((element, rowId, colId) => {
-        if (rowId * colId === 0) {
-            element.startAnimate().value(null).endAnimate();
-        }
-    });
-}

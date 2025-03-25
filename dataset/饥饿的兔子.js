@@ -27,93 +27,111 @@ luogu P3895
 
 */
 
+/*
+动画逻辑正确，计算逻辑正确。
+*/
+
 import * as sd from "@/sd";
+
 const svg = sd.svg();
+const div = sd.div();
 const C = sd.color();
-const EN = sd.enter();
-const R = sd.rule();
+const n = 5,
+    m = 4,
+    k = 3,
+    l = 1;
+const wolfData = ["1001", "1101", "1111", "1110", "0111"];
 
-// 获取输入的 n 和 m
-const n = 5; // 这里假设输入为 5，可以根据实际情况修改
-const m = 3; // 这里假设输入为 3，可以根据实际情况修改
+// 初始化一个二维数组来存储狼的捕食情况
+const wolfMatrix = wolfData.map(row => row.split("").map(char => char === "1"));
 
-// 输入的 01 串数据
-const wolfData = ["01010", "10101", "00110"];
+// 初始化一个二维数组来存储兔子每天是否出去觅食
+let rabbitMatrix = Array.from({ length: m }, () => Array(n).fill(false));
 
-// 创建网格和显示区域
-const grid = new sd.Grid(svg).x(100).y(100);
+// 初始化一个二维数组来存储网格中的矩形对象
+const grid = new sd.Grid(svg)
+    .n(m)
+    .m(n)
+    .forEachElement((element, i, j) => {
+        // i 是行索引代表几天， j 是列索引代表第几只兔子
+        if (!wolfMatrix[j][i]) {
+            // 狼在第 i 天会捕食编号为 j+1 的兔子。
+            element.fill(C.red);
+        } else {
+            element.fill(C.green);
+        }
+        element.onClick(() => {
+            if (wolfMatrix[j][i]) {
+                if (rabbitMatrix[i][j]) {
+                    rabbitMatrix[i][j] = false;
+                    element.fill(C.green);
+                } else {
+                    rabbitMatrix[i][j] = true;
+                    element.fill(C.yellow);
+                }
+                updateResult();
+            }
+        });
+    });
 
-// 存储每行的生疏度显示文本
-const unfamiliarityTexts = [];
-// 存储每行的选中状态
-const selectedStates = Array(m)
-    .fill()
-    .map(() => Array(n).fill(false));
-
-// 计算生疏度
-function calculateUnfamiliarity(row) {
-    if (row === 0) return 0;
-
+// 生疏度计算函数
+function calculateP(i) {
+    if (i === 0) return 0;
     let count = 0;
     for (let j = 0; j < n; j++) {
-        if (selectedStates[row][j] && !selectedStates[row - 1][j]) {
+        if (rabbitMatrix[i][j] && !rabbitMatrix[i - 1][j]) {
             count++;
         }
     }
     return count;
 }
 
-// 更新生疏度显示
-function updateUnfamiliarity(row) {
-    const unfamiliarity = calculateUnfamiliarity(row);
-    unfamiliarityTexts[row - 1].text(`生疏度: ${unfamiliarity}`);
+// 验证方案是否合法
+function validate() {
+    for (let i = 0; i < m; i++) {
+        let dayCount = 0;
+        for (let j = 0; j < n; j++) {
+            if (rabbitMatrix[i][j]) {
+                dayCount++;
+                if (!wolfMatrix[j][i]) {
+                    return `第 ${i + 1} 天，兔子 ${j + 1} 会被捕食，方案不合法。`;
+                }
+            }
+        }
+        if (dayCount !== k) {
+            return `第 ${i + 1} 天，只有 ${dayCount} 只兔子出去觅食，需要 ${k} 只兔子，方案不合法。`;
+        }
+        let p_value = calculateP(i);
+        if (p_value > l) {
+            return `第 ${i + 1} 天的生疏度 ${p_value} 超过了限制 ${l}，方案不合法。`;
+        }
+    }
+    return "方案合法。";
+}
 
-    // 如果有下一行，也更新下一行的生疏度
-    if (row + 1 < m) {
-        const nextUnfamiliarity = calculateUnfamiliarity(row + 1);
-        unfamiliarityTexts[row].text(`生疏度: ${nextUnfamiliarity}`);
+// 更新结果显示区
+const resultText = new sd.Text(div).text("请进行选择并提交").x(0).y(200);
+const submitButton = new sd.Button(div).text("提交").x(0).y(250);
+submitButton.onClick(() => {
+    const result = validate();
+    resultText.text(result);
+});
+
+// 生疏度显示
+const pTexts = Array.from({ length: m }, (_, i) =>
+    new sd.Text(svg)
+        .text(`第 ${i + 1} 天生疏度: 0`)
+        .x(n * 50 + 20)
+        .y(i * 50 + 25)
+);
+
+function updateResult() {
+    for (let i = 0; i < m; i++) {
+        pTexts[i].text(`第 ${i + 1} 天生疏度: ${calculateP(i)}`);
     }
 }
 
-sd.init(() => {
-    grid.startN(1).startM(1);
-    grid.n(m).m(n);
-
-    // 初始化单元格颜色和生疏度显示
-    for (let i = 1; i <= m; i++) {
-        for (let j = 1; j <= n; j++) {
-            const value = wolfData[i - 1][j - 1];
-            grid.value(i, j, value);
-        }
-
-        // 为每行创建生疏度显示文本
-        if (i > 1) {
-            const unfamiliarityText = new sd.Text(svg, "生疏度: 0").x(grid.mx() + 20).cy(grid.y() + (i - 0.5) * grid.elementHeight());
-            unfamiliarityTexts.push(unfamiliarityText);
-        }
-    }
-
-    // 单元格点击事件
-    grid.forEachElement((element, i, j) => {
-        if (wolfData[i - 1][j - 1] === "0") return;
-
-        element.onClick(() => {
-            sd.inter(async () => {
-                selectedStates[i - 1][j - 1] = !selectedStates[i - 1][j - 1];
-
-                if (selectedStates[i - 1][j - 1]) {
-                    element.startAnimate().color(C.blue).endAnimate();
-                } else {
-                    element.startAnimate().color(C.white).endAnimate();
-                }
-
-                // 更新当前行和下一行的生疏度
-                if (i - 1 > 0) updateUnfamiliarity(i - 1);
-            });
-        });
-    });
-    sd.Label(grid, "兔子", "tc");
-    sd.Label(grid, "天数", "lc");
+sd.main(async () => {
+    // 主逻辑，这里可以添加一些初始动画效果
+    await sd.pause();
 });
-
-sd.main(async () => {});

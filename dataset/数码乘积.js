@@ -9,96 +9,123 @@ luogu P1018
 4. **实时计算功能**：每当按钮点击操作导致乘号的放置情况发生变化时，需要实时更新并计算插入乘号后的表达式的结果。    
 
  */
+
+/*
+评价：
+没有计算逻辑错误，有动画逻辑错误。
+*/
+
 import * as sd from "@/sd";
+
 const svg = sd.svg();
 const div = sd.div();
 
-// 题目数据
-let N = 4; // 字符串长度
-let K = 2; // 乘号数量
-let digits = [1, 2, 3, 1]; // 数字串，这里以数组的形式表示
+const N = 4; // 数字串长度
+const K = 2; // 乘号数量
+const digits = "1231"; // 数字串
+
+const multiply_signs_status = new Array(N - 1).fill(false);
+let placed_signs_count = 0;
 const C = sd.color();
-const EN = sd.enter();
-const EX = sd.exit();
 
-// 数组元素，用于显示数字
-const ARRAY_COLOR = C.BLUE;
-const digitArray = new sd.Array(svg)
-    .resize(N)
-    .range(0, N)
-    .labels(Array.from(digits).map(String))
-    .color("white")
-    .forEachElement((item, i) => {
-        item.color(ARRAY_COLOR).strokeColor(ARRAY_COLOR.fill).strokeWidth(3);
-    })
-    .y(0)
-    .x(20)
-    .scale(2)
-    .fontSize(30)
-    .shape("rounded-rect");
+// 创建数字数组，并使其初始状态透明
+const digitsArray = new sd.Array(svg).resize(N).forEachElement((digit, i) => {
+    digit.value(digits[i]);
+});
 
-// 间隔的按钮数组
-const buttons = [];
-const buttonWidth = 40; // 按钮的宽度
-const signArray = [];
-const buttonGap = 20;
-let totalMultiplicationSigns = 0; // 当前已放置的乘号数量
+// 创建乘号按钮数组，并使其初始状态透明
+const multiplyButtons = new sd.ValueArray(div);
+for (let i = 1; i < N; i++) {
+    multiplyButtons.push(
+        new sd.Button(multiplyButtons).text("Insert x").onClick(() => {
+            handleButtonClick(i - 1);
+        })
+    );
+}
 
-// 在数字之间创建按钮，用于处理乘号的插入和移除
-for (let i = 0; i < N - 1; i++) {
-    const btnDiv = sd.div(div); // 使用原生div作为按钮的容器，因为Button已不复用。
+// 创建结果输出的文本组件并使其初始透明状态
+const resultText = new sd.Text(div).text("Result: ").dy(50);
 
-    const btn = new sd.Circle(btnDiv) // 使用sd.Button来生成按钮
-        .x(i === 0 ? buttonWidth : i * (2 * buttonWidth + buttonGap))
-        .y(200) // 将按钮放在数字下方
-        .r(buttonWidth / 2) // 圆形按钮
-        .color(C.white)
-        .text("")
-        .strokeColor(C.blue)
-        .strokeWidth(2)
-        .textColor(C.black);
-    buttons.push(btn);
-
-    // 用signArray来记录是否在数字之间存在乘号（用1表示存在，0表示不存在）。
-    signArray.push(0);
-
-    btn.drag(false); // 禁止按钮拖动
-    btn.clickable(true).onClick(() => {
-        sd.inter(async () => {
-            if (signArray[i] === 1) {
-                // 如果当前间隔已经有乘号，点击后移除乘号，并将按钮颜色恢复为白色
-                signArray[i] = 0;
-                totalMultiplicationSigns--;
-                btn.startAnimate().color(C.white).endAnimate();
-            } else if (totalMultiplicationSigns < K) {
-                // 如果当前间隔没有乘号且还有可用的乘号，点击后插入乘号，并改变按钮颜色以表示此处有乘号
-                signArray[i] = 1;
-                totalMultiplicationSigns++;
-                btn.startAnimate().color(C.green).endAnimate();
-            }
-
-            // 实时计算并显示结果
-            let expression = digits[0] + "";
-            for (let j = 1; j < N; j++) {
-                if (signArray[j - 1] === 1) {
-                    expression += `*${digits[j]}`;
-                } else {
-                    expression += digits[j];
-                }
-            }
-            let result = eval(expression); // 实际应用中要更安全地计算表达式
-            console.log(expression + " = " + result);
-
-            // 在div下方显示表达式和结果
-            if (resultDisplay) {
-                resultDisplay.erase(); // 移除上一次的结果
-            }
-            resultDisplay = new sd.Text(div).text(`表达式: ${expression} = ${result}`).x(5).dy(30); // 结果显示在按钮下方
-        }).catch(err => {
-            console.error(err);
-        });
+// 处理按钮点击的函数定义
+function handleButtonClick(i) {
+    sd.inter(async () => {
+        if (multiply_signs_status[i]) {
+            multiply_signs_status[i] = false;
+            placed_signs_count--;
+            multiplyButtons.element(i).text("Insert x");
+        } else if (placed_signs_count < K) {
+            multiply_signs_status[i] = true;
+            placed_signs_count++;
+            multiplyButtons.element(i).text("Remove x");
+        }
+        await updateExpression();
+        placeMultiplySigns(); // 更新乘号位置
+        if (placed_signs_count != K) {
+            resultText.text(`Result: Waiting for all signs to be placed (${placed_signs_count} out of ${K})`);
+        }
     });
 }
-let resultDisplay = null;
 
-sd.main(async () => {});
+// 更新表达式并计算结果的函数定义
+async function updateExpression() {
+    if (placed_signs_count != K) return; // 仅当恰好放入K个乘号才计算
+
+    let segments = [digits[0]];
+    for (let i = 0; i < N - 1; i++) {
+        if (multiply_signs_status[i]) {
+            segments.push("*");
+            segments.push(digits[i + 1]);
+        } else {
+            segments[segments.length - 1] += digits[i + 1];
+        }
+    }
+
+    // 将分割表达式片段分解为数字数组：
+    let segmentsArray = [];
+    let segment = "";
+    for (let char of segments.join("")) {
+        if (char === "*") {
+            if (segment) {
+                segmentsArray.push(BigInt(segment));
+                segment = "";
+            }
+        } else {
+            segment += char;
+        }
+    }
+    if (segment) {
+        segmentsArray.push(BigInt(segment));
+    }
+
+    // 计算乘积结果
+    let product = segmentsArray.reduce((acc, curr) => acc * curr, BigInt(1)); // 计算结果应为 BigInt
+    resultText.text(`Result: ${product}`);
+}
+
+// 创建乘号图形放置在两个数字之间
+const multiplySigns = new sd.ValueArray(svg, N - 1);
+for (let i = 1; i < N; i++) {
+    multiplySigns.push(new sd.Mathjax(multiplySigns, "\\times"));
+    multiplySigns.lastElement().opacity(0);
+}
+
+function placeMultiplySigns() {
+    multiplySigns.forEachElement((sign, i) => {
+        if (multiply_signs_status[i]) {
+            sign.startAnimate().opacity(1).endAnimate();
+        } else {
+            sign.startAnimate().opacity(0).endAnimate();
+        }
+    });
+}
+
+sd.main(async () => {
+    digitsArray.center(600, 300);
+    multiplySigns.cx(digitsArray.cx()).my(digitsArray.y());
+    multiplyButtons.forEachElement((button, i) => {
+        const midPointX = (digitsArray.element(i).cx() + digitsArray.element(i + 1).cx()) / 2;
+        const midPointY = digitsArray.element(i).cy() + 50;
+        button.center(midPointX, midPointY);
+    });
+    resultText.cx(sd.cx);
+});

@@ -1,80 +1,223 @@
 /*
 
-### 需求描述
-1. **数据结构与存储**：
-    - 有 2n 头奶牛，前 n 头为斑点奶牛，后 n 头为非斑点奶牛，每头奶牛基因是长度为 m 的字符串。用 `sd.ValueStack` 存放奶牛基因，每个基因用 `sd.Array` 表示。例如，若有 4 头奶牛（n = 2），基因长度为 3（m = 3），斑点奶牛基因分别为 "abc"、"def"，非斑点奶牛基因分别为 "ghi"、"jkl"，则可构建 `sd.ValueStack` 来存储这些基因数据。
-2. **区间选择器实现**：
-    - 使用 `sd.Button` 加上两个 `sd.Input` 实现区间选择器。两个 `sd.Input` 分别用于输入起始位置和结束位置，输入范围需限制在 [1, m] 之间（因为基因长度为 m）。`sd.Button` 用于触发区间选择操作，点击按钮后，验证输入的区间是否合法（起始位置不能大于结束位置，且都要在有效范围内）。
-3. **基因涂色功能**：
-    - 用户选定区间后，对每头奶牛在该区间内的基因进行涂色。具体来说，遍历 `sd.ValueStack` 中的每个 `sd.Array`（即每头奶牛的基因），提取出选定区间内的字符。例如，若选定区间为 [2, 3]，对于基因 "abc"，则提取出 "bc"。然后，为这些提取出的字符设置颜色，可以使用 `sd.color` 方法来指定颜色，比如红色 `C.red`（假设 `C` 为已引入的颜色工具，类似示例代码中的设置）。
-4. **界面交互与动画效果**：
-    - 当用户输入区间并点击按钮后，通过动画展示基因的涂色过程。可以使用 `startAnimate` 和 `endAnimate` 方法来实现动画效果。例如，先将未选定区间的基因颜色设置为默认颜色（如黑色），然后在动画过程中，逐渐将选定区间的基因颜色变为指定颜色（如红色）。
-5. **错误处理与提示**：
-    - 如果用户输入的区间不合法（如起始位置大于结束位置、超出基因长度范围等），给出相应的错误提示。可以使用 `sd.Text` 组件在界面上显示错误信息，如 "输入区间不合法，请重新输入"。
-6. **代码结构与组织**：
-    - 代码整体结构需参考示例代码的风格，逻辑清晰。在 `sd.init` 函数中进行初始化操作，如创建 `sd.ValueStack`、`sd.Button`、`sd.Input` 等组件，并设置它们的初始位置和属性。在 `sd.main` 函数中处理用户交互和动画逻辑，确保各个功能模块之间协同工作。
+luogu P3667
+
+### 需求文档
+
+#### 初始化阶段：
+1. **获取SVG画布作为渲染区域：**
+   - 使用 `sd.svg()` 函数获取SVG画布。
+    
+2. **初始化两组牛的基因组字符串列表展示：**
+   - 声明两个数组 `spottedCows` 和 `plainCows` 分别存储斑点牛和普通牛的基因组字符串序列。这里每个字符串代表一头牛的基因序列。由于用户已经给出了一个具体的样例数据，我们使用该数据：
+   - 使用 `sd.Array` 来表示每个牛的基因组字符串。 `sd.Array` 的每个元素代表一个基因字符。
+
+3. **创建高亮当前检查的子串区间的矩形边框：**
+   - 初始化透明边框的 `sd.Rect` 组件，一个用于斑点牛的基因组数组中，一个用于普通牛的基因组数组中，边框颜色为 `sd.color().yellow`。
+
+4. **创建输入框和按钮组件用于交互：**
+   - 使用 `sd.Input` 组件来让用户输入区间的起始位置 `start` 和终止位置 `end`。
+   - 使用 `sd.Button` 组件让用户点击，高亮输入的区间，并验证是否能唯一区分斑点牛和普通牛的基因组序列。
+
+#### 主要动画阶段：
+无。
+
+#### 交互式设计：
+1. **用户输入区间：**
+   - 设置两个 `sd.Input` 组件，一个用于输入区间起始位置，另一个用于输入区间结束位置。
+   - 使用一个 `sd.Button` 组件，让用户点击“验证”按钮后，高亮所有奶牛的这段区间的基因。
+
+#### 布局设计：
+1. **基因组字符串列表：**
+   - 斑点牛的基因组数组 `spottedCows` 放在画布的上部分。
+   - 普通牛的基因组数组 `plainCows` 放在画布的下部分。
+   - 每个数组中的基因组字符串由 `sd.Array` 组件绘制，通过垂直排列展示各个基因组字符串。
+
+2. **高亮矩形框：**
+   - 设置透明边框的 `sd.Rect` 来高亮斑点牛和普通牛当前的检查区间，使其填充颜色为黄色。
+
+3. **用户交互组件布局：**
+   - 输入框和按钮组件可以放置在画布顶部或底部区域。
+   - 验证结果提示信息可以显示在画布底部区域。
 
 */
 
+/*
+评价：
+计算逻辑正确，动画逻辑正确。
+*/
+
 import * as sd from "@/sd";
+
+const svg = sd.svg(); // 获取 SVG 画布
 const C = sd.color();
-const svg = sd.svg();
-// 假设 n 和 m 已知，这里设置示例值
-const n = 3;
-const m = 8;
-// 示例基因数据
-const spottedCowsGenes = ["AATCCCAT", "ACTTGCAA", "GGTCGCAA"];
-const nonSpottedCowsGenes = ["ACTCCCAG", "ACTCGCAT", "ACTTCCAT"];
-const spotted = new sd.ValueStack(svg).x(100).y(100).align("x");
-const nonSpotted = new sd.ValueStack(svg).x(100).y(100).align("x");
-const startInput = new sd.Input(svg);
-const endInput = new sd.Input(svg);
-const button = new sd.Button(svg);
+const btnWidth = 100;
+const btnHeight = 30;
+const geneWidth = 20;
+const geneHeight = 30;
+const fontSize = 12;
+const inputWidth = 100;
+const inputHeight = 30;
 
-sd.init(() => {
-    // 填充斑点奶牛基因
-    spottedCowsGenes.forEach(gene => {
-        const arr = new sd.Array(svg).pushArray(gene);
-        spotted.push(arr);
-    });
-    // 填充非斑点奶牛基因
-    nonSpottedCowsGenes.forEach(gene => {
-        const arr = new sd.Array(svg).pushArray(gene);
-        nonSpotted.push(arr);
-    });
-    nonSpotted.y(spotted.my() + 20);
-    startInput.x(nonSpotted.x()).y(nonSpotted.my() + 20);
-    endInput.x(nonSpotted.x()).y(startInput.my() + 20);
-    button.x(nonSpotted.x()).y(endInput.my() + 20);
-    // sd.Label(startInput, "左端点", "rc");
-    // sd.Label(endInput, "右端点", "rc");
+// 输入的基因组数据
+const spottedCows = ["AATCCCAT", "ACTTGCAA", "GGTCGCAA"];
+const plainCows = ["ACTCCCAG", "ACTCGCAT", "ACTTCCAT"];
+const N = spottedCows.length; // 斑点牛的数量
+const M = spottedCows[0].length; // 第1个斑点牛基因组的长度，假设所有基因组长度相同
 
-    button.onClick(() => {
-        const start = parseInt(startInput.value());
-        const end = parseInt(endInput.value());
-        if (isNaN(start) || isNaN(end) || start > end || start < 1 || end > m) return;
-        sd.inter(async () => {
-            // 先对选定区间进行涂色
-            spotted.forEachElement(arr => {
-                for (let i = start - 1; i < end; i++) {
-                    arr.element(i).startAnimate().color(C.red).endAnimate();
-                }
-            });
-            nonSpotted.forEachElement(arr => {
-                for (let i = start - 1; i < end; i++) {
-                    arr.element(i).startAnimate().color(C.red).endAnimate();
-                }
-            });
-            await sd.pause();
-            // 再将所有基因设置为默认颜色
-            spotted.forEachElement(arr => {
-                arr.startAnimate().color(C.white).endAnimate();
-            });
-            nonSpotted.forEachElement(arr => {
-                arr.startAnimate().color(C.white).endAnimate();
-            });
-        });
+// 初始化两个数组用于存储基因组字符串，每个字符作为一个独立的元素放入数组中
+const spottedArrays = [];
+const plainArrays = [];
+for (let i = 0; i < N; i++) {
+    spottedArrays.push(
+        new sd.Array(svg)
+            .x(50)
+            .y(150 + i * geneHeight)
+            .start(1)
+    );
+    for (let j = 0; j < M; j++) {
+        spottedArrays[i].push(new sd.Text(svg, spottedCows[i][j]).fontSize(fontSize).fill(C.black));
+    }
+}
+
+for (let i = 0; i < N; i++) {
+    plainArrays.push(
+        new sd.Array(svg)
+            .x(50)
+            .y(350 + i * geneHeight)
+            .start(1)
+    );
+    for (let j = 0; j < M; j++) {
+        plainArrays[i].push(new sd.Text(svg, plainCows[i][j]).fontSize(fontSize).fill(C.black));
+    }
+}
+
+// 创建高亮当前检查子串区间的矩形边框
+let highlightedRectsSpotted = new Array(N).fill(null);
+let highlightedRectsPlain = new Array(N).fill(null);
+
+let verifyBtn = new sd.Button(sd.div()).onClick(() => {
+    sd.inter(async () => {
+        let start = Number(startInput.value()) - 1; // 区间起始下标（已转换为0-based）, 并确保不小于0
+        let end = Number(endInput.value()); // 区间结束下标（已转换为1-based），并确保不大于M
+
+        if (start < 0 || end > M || start >= end) {
+            let resultText = new sd.Text(svg, "无效的起始或结束位置，请重新输入。").x(50).y(600).fontSize(fontSize).fill(C.red);
+            appear(resultText);
+            await sd.pause(3000);
+            resultText.erase();
+            return;
+        }
+
+        let startPos = Math.max(0, start);
+        let endPos = Math.min(M, end);
+
+        for (let i = 0; i < N; i++) {
+            if (highlightedRectsSpotted[i]) {
+                highlightedRectsSpotted[i].erase();
+                highlightedRectsSpotted[i] = null;
+            }
+            if (highlightedRectsPlain[i]) {
+                highlightedRectsPlain[i].erase();
+                highlightedRectsPlain[i] = null;
+            }
+        }
+
+        for (let i = 0; i < N; i++) {
+            // 初始化起点和终点元素，并计算其中心位置
+            let startElement = spottedArrays[i].element(startPos);
+            let endElement = spottedArrays[i].element(endPos - 1);
+
+            if (!startElement || !endElement) continue;
+
+            let startCenter = startElement.center();
+            let endCenter = endElement.center();
+
+            let centerX = (startCenter[0] + endCenter[0]) / 2;
+            let centerY = startCenter[1];
+
+            highlightedRectsSpotted[i] = new sd.Rect(svg)
+                .strokeWidth(1)
+                .fillOpacity(0)
+                .stroke(C.orange)
+                .strokeWidth(1)
+                .center(centerX - 20, centerY)
+                .width((endPos - startPos) * startElement.width())
+                .height(startElement.height());
+
+            // 同样处理普通牛的基因组
+            startElement = plainArrays[i].element(startPos);
+            endElement = plainArrays[i].element(endPos - 1);
+
+            if (!startElement || !endElement) continue;
+
+            startCenter = startElement.center();
+            endCenter = endElement.center();
+
+            centerX = (startCenter[0] + endCenter[0]) / 2;
+            centerY = startCenter[1];
+
+            highlightedRectsPlain[i] = new sd.Rect(svg)
+                .strokeWidth(1)
+                .fillOpacity(0)
+                .stroke(C.orange)
+                .strokeWidth(1)
+                .center(centerX - 20, centerY)
+                .width((endPos - startPos) * startElement.width())
+                .height(startElement.height());
+        }
+
+        const spottedSubstrings = spottedCows.map(cow => cow.slice(startPos, endPos));
+        const plainSubstrings = plainCows.map(cow => cow.slice(startPos, endPos));
+        const spottedSet = new Set(spottedSubstrings);
+        let canDistinguish = true;
+        for (let sub of plainSubstrings) {
+            if (spottedSet.has(sub)) {
+                canDistinguish = false;
+                break;
+            }
+        }
+
+        let resultMsg = "";
+        if (canDistinguish) {
+            resultMsg = `位置区间 [${start + 1}, ${end}]的长度为 ${end - start}，可以区分斑点牛和普通牛。`;
+        } else {
+            resultMsg = `位置区间 [${start + 1}, ${end}]的长度为 ${end - start}，不能区分斑点牛和普通牛。`;
+        }
+
+        let resultText = new sd.Text(svg, resultMsg).x(500).y(100).fontSize(fontSize);
+        appear(resultText);
+        await sd.pause();
+        resultText.remove();
     });
 });
 
-sd.main(async () => {});
+verifyBtn.text("验证区间").x(350).y(50).width(btnWidth).height(btnHeight);
+
+let startInput = new sd.Input(sd.div())
+    .label("起始位置：")
+    .value(2) // 默认值可以设为2
+    .width(inputWidth)
+    .height(inputHeight)
+    .x(50)
+    .y(50);
+
+let endInput = new sd.Input(sd.div())
+    .label("结束位置：")
+    .value(5) // 默认值可以设为5
+    .width(inputWidth)
+    .height(inputHeight)
+    .x(200)
+    .y(50);
+
+sd.init(() => {
+    new sd.Text(svg, "斑点牛基因组序列：").x(50).y(100);
+    new sd.Text(svg, "普通牛基因组序列：").x(50).y(300);
+});
+
+function appear(element) {
+    element.opacity(0);
+    element.startAnimate().opacity(1).endAnimate();
+}
+
+sd.main(() => {});
