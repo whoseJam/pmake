@@ -35,6 +35,6 @@ export class ErrorLauncher {
         }
     }
     static warnNotImplementedYet(method) {
-        console.warn(`Function ${method} not implemented yet.`);
+        // console.warn(`Function ${method} not implemented yet.`);
     }
 }

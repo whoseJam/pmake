@@ -3,7 +3,7 @@ import { Device as D } from "@/Interact/Device";
 import { Message } from "@/Interact/Message";
 import { Status as S } from "@/Interact/Status";
 
-window.DEBUG = true;
+window.DEBUG = false;
 window.ACTION_COUNT = 0;
 window.EFFECT_COUNT = 0;
 window.CURRENT_FRAME = 0;
@@ -116,10 +116,6 @@ function promiseOfLastMainFrame() {
         fn();
     });
 }
-
-global.DEBUG = function () {
-    A.debug();
-};
 
 export function pause(frameType = 0) {
     if (window.SHOULD_FLUSH) {

@@ -24,7 +24,6 @@ export class ActionList {
         this.frame = window.CURRRENT_FRAME;
     }
     push(action) {
-        // console.log(action.channel);
         this.totalCount++;
         this.trim(action);
         this.actions.push(action);

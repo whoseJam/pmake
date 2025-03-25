@@ -3,7 +3,7 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 
 sd.main(async () => {
-    // await TestDAGUpdate();
+    await TestDAGUpdate();
     // await TestCreateEffectInEffect();
     // await TestVarsNoChange();
     // await TestRepeatDependency();
@@ -12,7 +12,7 @@ sd.main(async () => {
     // await TestChainImpact();
     // await TestGlobalFreeze();
     // await TestEffectFreeze();
-    await TestObjectFreeze();
+    // await TestObjectFreeze();
     // await TestInitWithGlobalFreeze();
 });
 
