@@ -37,19 +37,18 @@
                 </tr>
             </tbody>
         </table>
-        <p class="fragment" style="font-size: 20px;">
-            $$
-            \begin{aligned}
-            f(i,j)=&\frac i n\frac j s(f(i,j)+1)+\\
-            &(1-\frac i n)\frac j s(f(i+1,j)+1)+\\
-            &\frac i n(1-\frac j s)(f(i,j+1)+1)+\\
-            &(1-\frac i n)(1-\frac j s)(f(i+1,j+1)+1)
-            \end{aligned}
-            $$
-        </p>
-    </section>
-    <section>
-        <h2>收集bug</h2>
-        <p>显然 $f(n,s)=0$，把 $f(0,0)$ 递推出来即为答案</p>
+        <div style="display: flex; justify-content: space-around; align-items: center;">
+            <p class="fragment" style="font-size: 20px;">
+                $$
+                \begin{aligned}
+                f(i,j)=&\frac i n\frac j s(f(i,j)+1)+\\
+                &(1-\frac i n)\frac j s(f(i+1,j)+1)+\\
+                &\frac i n(1-\frac j s)(f(i,j+1)+1)+\\
+                &(1-\frac i n)(1-\frac j s)(f(i+1,j+1)+1)
+                \end{aligned}
+                $$
+            </p>
+            <p class="fragment" style="width: 30%;">显然 $f(n,s)=0$，把 $f(0,0)$ 递推出来即为答案</p>
+        </div>
     </section>
 </section>
