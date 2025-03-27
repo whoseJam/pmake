@@ -1,12 +1,14 @@
 <section>
     <section>
         <h1>百事世界杯之旅</h1>
-        <p>借助的期望的定义，做动态规划</p>
+        <p>两种计算期望的方法都试一试</p>
     </section>
     <problem data-problemset="luogu" data-problemid="P1291"></problem>
     <section>
         <h2>百事世界杯之旅</h2>
         <p>总共有 $n$ 个球星需要收集，每一瓶饮料开奖出来每位球星的概率是相同的，求期望需要开多少瓶饮料，才能开出所有球星</p>
+        <iframe data-animation="./状态图.js"
+            style="width: 1000px; height: 150px;"></iframe>
         <p class="fragment">设 $f(k)$ 表示已经开奖了 $k$ 位球星，期望还需要开多少瓶饮料，才能开出所有球星</p>
         <div style="display: flex; align-items: center;">
             <iframe data-animation="./状态转移.js" class="fragment"
@@ -36,16 +38,21 @@
             f(k)=\frac{n-k}{n}\big(f(k+1)+1\big)+\frac{k}{n}\big(f(k)+1\big)
             $$
         </p>
+    </section>
+    <section>
+        <h2>百事世界杯之旅</h2>
+        <p>
+            $$
+            f(k)=\frac{n-k}{n}\big(f(k+1)+1\big)+\frac{k}{n}\big(f(k)+1\big)
+            $$
+        </p>
         <p class="fragment">
             $$
             f(k)=f(k+1)+\frac{n}{n-k}
             $$
         </p>
         <p class="fragment">显然 $f(n)=0$</p>
-    </section>
-    <section>
-        <h2>百事世界杯之旅</h2>
-        <p>
+        <p class="fragment">
             $$
             \begin{aligned}
             f(0)&=f(1)+\frac{n}{n} \\
@@ -55,5 +62,35 @@
             \end{aligned}
             $$
         </p>
+    </section>
+    <section>
+        <h2>百事世界杯之旅</h2>
+        <p>另一种做法是，考虑期望的线性性</p>
+        <iframe data-animation="./状态图.js"
+            style="width: 1000px; height: 150px;"></iframe>
+        <p style="font-size: 20px;">
+            $$
+            \begin{aligned}
+            E(从0个球星到n个球星的开瓶总次数)&=E(从0个球星到1个球星的开瓶次数) \\
+            &+E(从1个球星到2个球星的开瓶次数) \\
+            &+E(...)\\
+            &+E(从n-1个球星到n个球星的开瓶次数)
+            \end{aligned}
+            $$
+        </p>
+        <p class="fragment">设 $E_k$ 表示从第 $k$ 个球星到第 $k+1$ 个球星的开瓶总次数</p>
+        <div style="display: flex; align-items: center;">
+            <iframe data-animation="./状态转移.js" class="fragment"
+                style="width: 400px; height: 200px;"></iframe>
+            <p class="fragment math-fragment" style="font-size: 20px;">
+                $$
+                \begin{aligned}
+                E_k&=\frac{k}{n}(E_k+1)+\frac{n-k}{n}1 \\
+                E_k&=1+\frac{n}{n-k} \\
+                answer&=E_0+E_1+...+E_{n-1}=\frac{n}{1}+\frac{n}{2}+...+\frac{n}{n}
+                \end{aligned}
+                $$
+            </p>
+        </div>
     </section>
 </section>
