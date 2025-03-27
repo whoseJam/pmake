@@ -8,9 +8,9 @@ const GA = C.gradient(C.white, C.red, 0, 10);
 const GB = C.gradient(C.white, C.textBlue, 0, 10);
 const GC = C.gradient(C.white, C.orange, 0, 10);
 const data = [
-    { a: 3, b: 5, c: 1 },
+    { a: 2, b: 5, c: 1 },
     { a: 6, b: 4, c: 4 },
-    { a: 2, b: 1, c: 8 },
+    { a: 1, b: 1, c: 8 },
     { a: 3, b: 7, c: 2 },
     { a: 5, b: 6, c: 7 },
     { a: 4, b: 3, c: 6 },
@@ -25,6 +25,10 @@ const pI = sd.Pointer(arr, "i", "t");
 const pJ = sd.Pointer(arr, "j", "t");
 const sum = new sd.Array(svg).resize(data.length).start(1);
 const focus = sd.Focus(sum);
+
+let lineL;
+let lineM;
+let lineR;
 
 sd.init(() => {
     data.forEach((value, i) => {
@@ -90,7 +94,7 @@ async function onSortDim2(l, r) {
 }
 
 function onCheckALessThanB(a, b) {
-    return a.valueA <= b.valueA && a.valueB <= b.valueB;
+    return a.valueB <= b.valueB;
 }
 
 async function onMoveI(i) {
@@ -114,9 +118,9 @@ async function onStartMerge(l, r) {
     await sd.pause();
     braces[l].startAnimate().value("L", R.pointAtPathByRate(0.5, "cx", "my", 0, -3)).endAnimate();
     braces[m + 1].startAnimate().value("R", R.pointAtPathByRate(0.5, "cx", "my", 0, -3)).endAnimate();
-    global.lineL = makeLine(l, "l").startAnimate().pointStoT().endAnimate();
-    global.lineM = makeLine(m, "r").startAnimate().pointStoT().endAnimate();
-    global.lineR = makeLine(r, "r").startAnimate().pointStoT().endAnimate();
+    lineL = makeLine(l, "l").startAnimate().pointStoT().endAnimate();
+    lineM = makeLine(m, "r").startAnimate().pointStoT().endAnimate();
+    lineR = makeLine(r, "r").startAnimate().pointStoT().endAnimate();
 }
 
 async function onEndMerge(l, r) {

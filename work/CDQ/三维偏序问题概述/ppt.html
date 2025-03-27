@@ -1,7 +1,11 @@
 <section>
     <section>
-        <h1>陌上花开</h1>
-        <p>三维偏序问题，可以用CDQ了</p>
+        <iframe data-animation="./陌上花开.js"
+            style="width: 1000px; height: 500px;"></iframe>
+    </section>
+    <section>
+        <h1>三维偏序问题</h1>
+        <p>可以用CDQ了</p>
     </section>
     <problem data-problemset="luogu" data-problemid="P3810"></problem>
     <section>
@@ -19,8 +23,7 @@
             $$
             我们就说第 $i$ 个数据点比第 $j$ 个数据点更小
         </p>
-        <p class="fragment">设比第 $i$ 个数据点小的数据点有 $f(i)$ 个，我们需要知道对于任意 $d\in [0,n-1]$，有多少个数据点 $i$ 满足 $f(i)=d$</p>
-        <p class="fragment quote">换言之，就是对每个数据点，统计一下有多少别的数据点，比自己更小</p>
+        <p class="fragment">设比第 $i$ 个数据点小的数据点有 $f(i)$ 个，求 $f(1),f(2),...,f(n)$</p>
     </section>
     <section>
         <h2>陌上花开</h2>

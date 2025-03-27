@@ -27,9 +27,7 @@ export async function CDQ3D(arr, args) {
     const onQuery = args.onQuery;
 
     async function CDQ(l, r) {
-        if (l === r) {
-            return;
-        }
+        if (l === r) return;
         const mid = (l + r) >> 1;
         await CDQ(l, mid);
         await CDQ(mid + 1, r);
