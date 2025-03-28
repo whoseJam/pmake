@@ -51,4 +51,21 @@
             <p class="fragment" style="width: 30%;">显然 $f(n,s)=0$，把 $f(0,0)$ 递推出来即为答案</p>
         </div>
     </section>
+    <section>
+        <h2>收集bug</h2>
+        <p>能用期望的线性性做吗？试一试</p>
+        <iframe data-animation="./状态图.js"
+            style="width: 1000px; height: 200px;"></iframe>
+        <p class="quote">上图展示了样例，$n=1$ 且 $s=2$</p>
+        <p class="fragment">如果设 $E_{i,j}$ 表示从 $(i,j)$ 上离开所需要的期望次数...</p>
+        <p class="fragment math-fragment">
+            $$
+            \begin{aligned}
+            E_{i,j}&=\frac{1}{n}\frac{1}{s}(1+E_{i,j})+(1-\frac{1}{n}\frac{1}{s}) \\
+            E_{i,j}&=\frac{ns}{ns-ij}
+            \end{aligned}
+            $$
+        </p>
+        <p class="fragment">不好用期望的线性性处理的原因在于，这里的代价，并不像第一题那样是一定会取到的，例如从 $(i,j)$ 上离开的代价为 $100$，但在随机试验中可能根本就不会来到 $(i,j)$ 这个点上</p>
+    </section>
 </section>

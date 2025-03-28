@@ -19,16 +19,24 @@ sd.init(() => {
     arrPl.dx(-100).dy(50).opacity(0);
     arrPr.dx(0).dy(90).opacity(0);
     arrRes.dx(100).dy(50).opacity(0);
-})
+});
 
 sd.main(async () => {
     await sd.pause();
     arrs.forEach(arr => arr.startAnimate().color(at, C.orange).endAnimate());
     await sd.pause();
-    const l = new sd.Line(svg).source(arrRoot.cx(), arrRoot.y() - 50).target(arrRoot.cx(), arrRoot.y()).arrow().opacity(0).value(new sd.Mathjax(svg, "E_l+E_r").fontSize(fontSize), R.pointAtPathByRate(0.5, "x", "cy")).startAnimate().opacity(1).endAnimate();
-    
+    const l = new sd.Line(svg)
+        .source(arrRoot.cx(), arrRoot.y() - 50)
+        .target(arrRoot.cx(), arrRoot.y())
+        .arrow()
+        .opacity(0)
+        .value(new sd.Mathjax(svg, "E_l+E_r").fontSize(fontSize), R.pointAtPathByRate(0.5, "x", "cy"))
+        .startAnimate()
+        .opacity(1)
+        .endAnimate();
+
     await sd.pause();
-    L12.value(new sd.Mathjax(L12, "P_l").fontSize(fontSize).color(C.textBlue), R.pointAtPathByRate(0.5, "mx", "cy", -10));
+    L12.startAnimate().value(new sd.Mathjax(L12, "P_l").fontSize(fontSize).color(C.textBlue), R.pointAtPathByRate(0.5, "mx", "cy", -10)).endAnimate();
     arrPl.startAnimate().opacity(1).endAnimate();
     await sd.pause();
     arrPl.startAnimate().color(0, at, C.grey).endAnimate();
@@ -39,10 +47,13 @@ sd.main(async () => {
     sd.Aside(arrPl, new sd.Mathjax(svg, "E_i-E_r").fontSize(fontSize), "bc").opacity(0).startAnimate().opacity(1).endAnimate();
 
     await sd.pause();
-    L13.value(new sd.Mathjax(L13, "P_r").fontSize(fontSize).color(C.textBlue), R.pointAtPathByRate(0.5, "mx", "cy", -5));
+    L13.startAnimate().value(new sd.Mathjax(L13, "P_r").fontSize(fontSize).color(C.textBlue), R.pointAtPathByRate(0.5, "mx", "cy", -5)).endAnimate();
     arrPr.startAnimate().opacity(1).endAnimate();
     await sd.pause();
-    arrPr.startAnimate().color(at, n - 1, C.grey).endAnimate();
+    arrPr
+        .startAnimate()
+        .color(at, n - 1, C.grey)
+        .endAnimate();
     await sd.pause();
     L13.childAs("add", new sd.Mathjax(L13, "+1").fontSize(fontSize), R.pointAtPathByRate(0.5, "x", "cy", 5));
     L13.child("add").opacity(0).startAnimate().opacity(1).endAnimate();
@@ -50,12 +61,12 @@ sd.main(async () => {
     sd.Aside(arrPr, new sd.Mathjax(svg, "E_i-E_l").fontSize(fontSize), "bc").opacity(0).startAnimate().opacity(1).endAnimate();
 
     await sd.pause();
-    L14.value(new sd.Mathjax(L14, "1-P_l-P_r").fontSize(fontSize).color(C.textBlue), R.pointAtPathByRate(0.5, "x", "cy", 15));
+    L14.startAnimate().value(new sd.Mathjax(L14, "1-P_l-P_r").fontSize(fontSize).color(C.textBlue), R.pointAtPathByRate(0.5, "x", "cy", 15)).endAnimate();
     arrRes.startAnimate().opacity(1).endAnimate();
     await sd.pause();
     L14.childAs("add", new sd.Mathjax(L14, "+1").fontSize(fontSize), R.pointAtPathByRate(0.5, "mx", "cy", -10));
     L14.child("add").opacity(0).startAnimate().opacity(1).endAnimate();
-})
+});
 
 function MakeArray() {
     return new sd.Array(svg).elementWidth(10).elementHeight(10).resize(n);
