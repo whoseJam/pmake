@@ -3,7 +3,7 @@ import { Device as D } from "@/Interact/Device";
 import { Message } from "@/Interact/Message";
 import { Status as S } from "@/Interact/Status";
 
-window.DEBUG = false;
+window.DEBUG = true;
 window.ACTION_COUNT = 0;
 window.EFFECT_COUNT = 0;
 window.CURRENT_FRAME = 0;

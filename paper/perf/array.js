@@ -2,7 +2,7 @@ import * as sd from "@/sd";
 
 const svg = sd.svg();
 const C = sd.color();
-const n = 100;
+const n = 50;
 const arr = new sd.Array(svg).x(100).y(400);
 
 sd.init(() => {
