@@ -5,31 +5,65 @@
     <problem data-problemset="luogu" data-problemid="P7385"></problem>
     <section>
         <h2>跳一跳</h2>
-        <iframe data-animation="./拆分期望.js"
+        <iframe data-animation="./样例解释.js"
             style="width: 1000px; height: 200px;"></iframe>
-        <p class="fragment">
-            $$
-            \begin{aligned}
-            answer&=E(X_1+X_2+X_3) \\
-            &=E(X_1)+E(X_2)+E(X_3)
-            \end{aligned}
-            $$
-        </p>
-        <p class="fragment">为了后续叙述方便，我们把普通跳跃的概率记作 $A$，把中心跳跃的概率记作 $B$</p>
+        <p>你在玩一个叫做跳一跳的游戏，有 $n$ 个格子可以跳跃，规则如下</p>
+            <ol>
+            <li>有一个计数器 $cnt$，初始值为 $2$</li>
+            <li>如果进行了一次普通跳跃，加 $1$ 分，并将 $cnt$ 重置为 $2$</li>
+            <li>如果进行了一次中心跳跃，加 $cnt$ 分，并将 $cnt$ 翻倍</li>
+            <li>如果在进行了中心跳跃的情况下，跳上了一个特殊格子 $x_i$，额外加 $y_i$ 分</li>
+            <li>如果进行了一次失败跳跃，游戏结束</li>
+            <li>跳到最后一个格子后，游戏结束</li>
+        </ol>
+        <table class="fragment">
+            <tr>
+                <td></td>
+                <td><b style="color: cadetblue;">普通跳跃</b></td>
+                <td><b style="color: red;">中心跳跃</b></td>
+                <td>失败跳跃</td>
+            </tr>
+            <tr>
+                <td>概率</td>
+                <td>$A$</td>
+                <td>$B$</td>
+                <td>$1-A-B$</td>
+            </tr>
+        </table>
+        <p class="fragment">求 $E(最终得分)$</p>
     </section>
     <section>
         <h2>跳一跳</h2>
-        <p>对于 $E(X_1)$ 来说，我们考虑每一个格子能对 $E(X_1)$ 产生多大的贡献</p>
-        <p class="fragment">容易知道，我们只需要保证我们能以<b>普通跳跃</b>的形式，跳到第 $i$ 个格子上，那么第 $i$ 个格子就会对 $E(X_1)$ 产生 $+1$ 的贡献</p>
-        <p class="fragment">
-            $$
-            Add(i)\rightarrow E(X_1)=(A+B)^{i-1}A
-            $$
-        </p>
-        <p class="fragment">所以这部分的贡献之和就应该是：
+        <p class="math-fragment">
             $$
             \begin{aligned}
-            E(X_1)&=\sum_{i=1}^n(A+B)^{i-1}A \\
+            E(最终得分)&=E(普通跳跃得分)+E(中心跳跃得分) \\
+            &=E(普通跳跃得分)+E(中心跳跃特殊格得分)+E(中心跳跃cnt得分)
+            \end{aligned}
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>普通跳跃得分</h2>
+        <p>
+            $$
+            \begin{aligned}
+            E(普通跳跃得分)&=E(第二格上普通跳跃得分) \\
+            &+E(第三格上普通跳跃得分) \\
+            &+E(...) \\
+            &+E(第n格上普通跳跃得分)
+            \end{aligned}
+            $$
+        </p>
+        <p class="fragment">
+            $$
+            E(第i格上普通跳跃得分)=(A+B)^{i-1}A
+            $$
+        </p>
+        <p class="fragment math-fragment">所以
+            $$
+            \begin{aligned}
+            E(普通跳跃得分)&=\sum_{i=1}^n(A+B)^{i-1}A \\
             &=\begin{cases}
             A\times n & A+B=1 \\ 
             A\times\frac{1-(A+B)^n}{1-(A+B)} & A+B\ne 1
@@ -39,56 +73,51 @@
         </p>
     </section>
     <section>
-        <h2>一些解释</h2>
-        <p>有若干种方式理解上一页PPT，设第 $i$ 个格子为 $G_i$</p>
-        <div class="fragment quote">
-            <b>随机变量视角</b>
-            <p style="font-size: 20px;">
-                $$
-                \begin{aligned}
-                E(X_1)&=E(G_1产生的得分+G_2产生的得分+...+G_n产生的得分) \\
-                &=E(G_1产生的得分)+E(G_2产生的得分)+...+E(G_n产生的得分)
-                \end{aligned}
-                $$
-            </p>
-            <span class="fragment">利用期望的线性性，把一个大期望拆成很多个更好考虑的小期望</span>
-        </div>
-        <div class="fragment quote">
-            <b>和式变换视角</b>
-            <p>设 $J$ 是一种跳跃方案，$f(J)$ 表示这种跳跃方案拿到的普通得分</p>
-            <p style="font-size: 15px;" class="math-fragment">
-                $$
-                \begin{aligned}
-                E(X_1)&=\sum_{某种跳跃方案J}P(J发生的概率)f(J) \\
-                &=\sum_{某种跳跃方案J}P(J发生的概率)\sum_{i=1}^n[G_i在这种方案下产生的得分(0或1)] \\
-                &=\sum_{i=1}^n\bigg( 1\sum_{某种跳跃方案J}P(J发生的概率)[在J方案下G_i能产生得分]+0\sum_{某种跳跃方案J}P(J发生的概率)[在J方案下G_i能不产生得分]\bigg) \\
-                &=\sum_{i=1}^n 1\times P(G_i产生得分)+0\times P(G_i不产生得分) = \sum_{i=1}^n E(G_i产生的得分)
-                \end{aligned}
-                $$
-            </p>
-        </div>
-    </section>
-    <section>
-        <h2>跳一跳</h2>
-        <p>对于 $E(X_3)$ 来说，如果一个特殊格 $x_i$ 想对 $E(X_3)$ 有贡献，我们只需要保证我们能以<b>中心跳跃</b>的形式，跳到第 $x_i$ 个格子上即可</p>
+        <h2>中心跳跃特殊格得分</h2>
+        <p>
+            $$
+            \begin{aligned}
+            E(中心跳跃特殊格得分)&=E(第 x_1 格上中心跳跃特殊格得分) \\
+            &+E(第 x_2 格上中心跳跃特殊格得分) \\
+            &+E(...) \\
+            &+E(第 x_m 格上中心跳跃特殊格得分)
+            \end{aligned}
+            $$
+        </p>
         <p class="fragment">
             $$
-            Add(x_i)\rightarrow E(X_3)=(A+B)^{x_i-1}By_i
+            E(第x_i格上中心跳跃特殊格得分)=(A+B)^{x_i-1}By_i
             $$
         </p>
-        <p class="fragment">所以这部分的贡献之和就应该是：
+        <p class="fragment">所以
             $$
-            E(X_3)=\sum_{i=1}^m(A+B)^{x_i-1}By_i
+            E(中心跳跃特殊格得分)=\sum_{i=1}^m(A+B)^{x_i-1}By_i
             $$
         </p>
     </section>
     <section>
-        <h2>跳一跳</h2>
-        <p>对于 $E(X_2)$ 来说，我们就不太好讨论一个独立地格子对答案的贡献了，因为全局的计数器的存在，导致一个格子对答案的贡献可能和<b>之前若干个格子的跳法有关</b></p>
-        <p class="fragment">设 $C_i$ 表示来到第 $i$ 个格子上时全局计数器的取值，显然 $C_i$ 也是随机变量</p>
-        <p class="fragment">第 $i$ 个格子对答案的贡献就是 $E(C_{i-1})\times B$，只要能求出 $E(C_i)$ 即可</p>
-        <p class="fragment">考虑计算 $E(C_i)$</p>
-        <table class="fragment">
+        <h2>中心跳跃 $cnt$ 得分</h2>
+        <p>
+            $$
+            \begin{aligned}
+            E(中心跳跃cnt得分)&=E(第二格上中心跳跃cnt得分) \\
+            &+E(第三格上中心跳跃cnt得分) \\
+            &+E(...) \\
+            &+E(第n格上中心跳跃cnt得分)
+            \end{aligned}
+            $$
+        </p>
+        <p class="fragment quote">如何计算 $E(第i格上中心跳跃cnt得分)？$</p>
+        <p class="fragment">容易发现第 $i$ 个上产生的得分可能是 $2,4,8,16,32...$，这取决于前面有多少个连续的格子都是<b style="color: red;">中心跳跃</b><span class="fragment">，既然 $cnt$ 也是一个随机变量，我们不妨把这个随机变量一路上的期望推导出来</span></b></p>
+        <p class="fragment">设 $E_i$ 表示来到第 $i$ 个格子上时 $cnt$ 的期望取值
+            $$
+            E(第i格上中心跳跃cnt得分)=E_{i-1}B
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>中心跳跃 $cnt$ 得分</h2>
+        <table>
             <thead>
                 <tr>
                     <th>第 $i$ 格上的事件</th>
@@ -99,53 +128,38 @@
             <tbody>
                 <tr>
                     <td>普通跳跃</td>
-                    <td>$A$</td>
+                    <td>$A(A+B)^{i-1}$</td>
                     <td>$2$</td>
                 </tr>
                 <tr>
                     <td>中心跳跃</td>
                     <td>$B$</td>
-                    <td>$E(C_{i-1})\times 2$</td>
+                    <td>$2E_{i-1}$</td>
                 </tr>
             </tbody>
         </table>
-        <p class="fragment quote">
+        <p class="fragment">
             $$
-            \begin{aligned}
-            E(C_i)=2A+E(C_{i-1})\times 2\times B
-            \end{aligned}
+            E_i=2A(A+B)^{i-1}+2E_{i-1}B
             $$
         </p>
         <p class="fragment">
             $$
-            \begin{aligned}
-            E(C_i)=2A(A+B)^{i-1}+E(C_{i-1})\times 2\times B
-            \end{aligned}
+            E(中心跳跃cnt得分)=\sum_{i=1}^nE_{i-1} B
             $$
         </p>
-    </section>
-    <section>
-        <h2>跳一跳</h2>
-        <p>
-            $$
-            E(C_i)=2A(A+B)^{i-1}+E(C_{i-1})\times 2\times B
-            $$
-        </p>
-        <p>
-            $$
-            S(i)=\sum_{j=1}^iE(C_{j-1})\times B=S(i-1)+E(C_i)\times B
-            $$
-        </p>
-        <p>
-            $$
-            E(X_3)=\sum_{i=1}^nE(C_{i-1})\times B=S(n)
-            $$
+        <p class="fragment">
+            \begin{cases}
+            S_i=S_{i-1}+E_{i-1}B\\
+            E_i=2A(A+B)^{i-1}+2E_{i-1}B \\
+            (A+B)^i=(A+B)^{i-1}(A+B)
+            \end{cases}
         </p>
         <p class="fragment">
             $$
             \begin{pmatrix}1&B&0\\0&2B&2A\\0&0&A+B\end{pmatrix}
-            \begin{pmatrix}S(i-1)\\E(C_{i-1})\\(A+B)^{i-1}\end{pmatrix}
-            =\begin{pmatrix}S(i)\\E(C_{i})\\(A+B)^{i}\end{pmatrix}
+            \begin{pmatrix}S_{i-1}\\E_{i-1}\\(A+B)^{i-1}\end{pmatrix}
+            =\begin{pmatrix}S_i\\E_{i}\\(A+B)^{i}\end{pmatrix}
             $$
         </p>
     </section>
