@@ -1,49 +1,52 @@
-// This is wrong, why? 
-
 #include<iostream>
 #include<cstring>
 #include<cstdio>
 #include<map>
 using namespace std;
 
-namespace FastIO{
-	const int L=(1<<20);
-	char buf[L],*S,*T;
-	#ifdef ONLINE_JUDGE
-	inline char getchar(){
-		if(S==T){T=(S=buf)+fread(buf,1,L,stdin);if(S==T)return EOF;}
-		return *S++;
-	}
-	#endif
-	inline int read(){
-		int s=0,f=1;char t=getchar();
-		while('0'>t||t>'9'){if(t=='-')f=-1;t=getchar();}
-		while('0'<=t&&t<='9'){s=(s<<1)+(s<<3)+t-'0';t=getchar();}
-		return s*f;
-	}
-}
-using FastIO::read;
-
+const int N=1005;
+double P[N][N];
 int n,s;
 
 double E(int i,int j){
-	double di=i;
-	double dj=j;
-	double dn=n;
-	double ds=s;
-	return (dn*ds)/(dn*ds-di*dj);
+	return 1.0*(n*s)/(n*s-i*j);
+}
+
+double ED(int i,int j){
+	return E(i,j)*1.0*((n-i)*j)/(n*s-i*j);
+}
+
+double ER(int i,int j){
+	return E(i,j)*1.0*(i*(s-j))/(n*s-i*j);
+}
+
+double ERD(int i,int j){
+	return E(i,j)*1.0*((n-i)*(s-j))/(n*s-i*j);
 }
 
 int main(){
-	n=read();s=read();
-	double ans=E(0,0);
-	for(int i=1;i<=n;i++){
-		for(int j=1;j<=s;j++){
-			if(i==n&&j==s)continue;
-			ans+=E(i,j);
+	scanf("%d%d",&n,&s);
+	P[0][0]=1;
+	for(int i=0;i<=n;i++){
+		for(int j=0;j<=s;j++){
+			if(i<n)P[i+1][j]+=P[i][j]*((n-i)*j)/(n*s-i*j);
+			if(j<s)P[i][j+1]+=P[i][j]*(i*(s-j))/(n*s-i*j);
+			if(i<n&&j<s)P[i+1][j+1]+=P[i][j]*((n-i)*(s-j))/(n*s-i*j);
 		}
 	}
-	printf("%.4lf\n",ans);
+	
+	double ans=0;
+	for(int i=0;i<=n;i++){
+		for(int j=0;j<=s;j++){
+			if(i==n&&j==s)continue;
+//			ans+=P[i][j]*ER(i,j);
+//			ans+=P[i][j]*ED(i,j);
+//			ans+=P[i][j]*ERD(i,j);
+//			or
+			ans+=P[i][j]*E(i,j);
+		}
+	}
+	printf("%.4f",ans);
 	return 0;
 }
 
