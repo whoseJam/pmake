@@ -1,4 +1,5 @@
 import { Action } from "@/Animate/Action";
+import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 const sizeKey = new Set(["x", "y", "cx", "cy", "width", "height", "d", "x1", "y1", "x2", "y2", "transform", "opacity", "font-size", "points", "left", "top"]);
 
@@ -20,16 +21,22 @@ export class ActionList {
         this.validCount = 0; // action (hide = false)
         this.totalCount = 0; // action (by push)
         this.actions = [];
+        this.actionsMap = new Map();
         this.enabled = false;
         this.frame = window.CURRRENT_FRAME;
     }
     push(action) {
         this.totalCount++;
         this.trim(action);
-        this.actions.push(action);
+        if (!this.actionsMap.has(action.owner)) this.actionsMap.set(action.owner, {});
+        const actionMap = this.actionsMap.get(action.owner);
+        if (!actionMap[action.channel]) actionMap[action.channel] = [];
+        actionMap[action.channel].push(action);
         if (!action.is(Action.hideFlag)) {
             this.validCount++;
             if (action.is(Action.stopFlag)) this.stopCount++;
+        } else {
+            ErrorLauncher.whatHappened();
         }
     }
     checkConflict(before, after) {
@@ -66,65 +73,112 @@ export class ActionList {
         }
     }
     trim(action) {
-        this.actions.forEach(otherAction => {
-            if (otherAction.owner === action.owner && otherAction.channel === action.channel) {
-                this.checkConflict(otherAction, action);
-                if (otherAction.is(Action.hideFlag)) {
-                    if (otherAction.is(Action.stopFlag)) this.stopCount--;
-                    this.validCount--;
-                }
+        const actionMap = this.actionsMap.get(action.owner);
+        if (!actionMap) return;
+        const otherActions = actionMap[action.channel] || [];
+        otherActions.forEach(otherAction => {
+            this.checkConflict(otherAction, action);
+            if (otherAction.is(Action.hideFlag)) {
+                if (otherAction.is(Action.stopFlag)) this.stopCount--;
+                this.validCount--;
             }
         });
-        this.filter(action => !action.is(Action.hideFlag));
+        actionMap[action.channel] = otherActions.filter(action => !action.is(Action.hideFlag));
+
+        // this.actions.forEach(otherAction => {
+        //     if (otherAction.owner === action.owner && otherAction.channel === action.channel) {
+        //         this.checkConflict(otherAction, action);
+        //         if (otherAction.is(Action.hideFlag)) {
+        //             if (otherAction.is(Action.stopFlag)) this.stopCount--;
+        //             this.validCount--;
+        //         }
+        //     }
+        // });
+        // this.filter(action => !action.is(Action.hideFlag));
     }
     filter(condition) {
         this.actions = this.actions.filter(condition);
     }
     firstTick() {
-        this.zeroAction = 0;
-        this.actions.sort((a, b) => {
-            if (a.l !== b.l) return a.l - b.l;
-            return a.r - b.r;
-        });
-        this.actions.forEach(action => {
-            if (action.l === 0 && action.r === 0) this.zeroAction++;
-        });
-        if (this.zeroAction >= 100) {
-            this.actions.forEach(action => {
-                if (action.l !== 0 || action.r !== 0) {
-                    action.l += this.zeroAction / 3;
-                    action.r += this.zeroAction / 3;
-                }
-            });
-        }
+        // this.zeroAction = 0;
+        // this.actions.sort((a, b) => {
+        //     if (a.l !== b.l) return a.l - b.l;
+        //     return a.r - b.r;
+        // });
+        // this.actions.forEach(action => {
+        //     if (action.l === 0 && action.r === 0) this.zeroAction++;
+        // });
+        // if (this.zeroAction >= 100) {
+        //     this.actions.forEach(action => {
+        //         if (action.l !== 0 || action.r !== 0) {
+        //             action.l += this.zeroAction / 3;
+        //             action.r += this.zeroAction / 3;
+        //         }
+        //     });
+        // }
     }
     tick(t, dt) {
         this.t = t;
         if (this.stopCount === this.validCount) return;
-        this.actions.forEach(action => {
-            if (action.is(Action.stopFlag)) return;
-            if (action.ownerIsCreated() && !action.ownerIsReady()) {
-                action.skipping += dt;
-                return;
+        this.actionsMap.forEach(actionMap => {
+            for (const channel in actionMap) {
+                const actions = actionMap[channel];
+                actions.forEach(action => {
+                    if (action.is(Action.stopFlag)) return;
+                    if (action.ownerIsCreated() && !action.ownerIsReady()) {
+                        action.skipping += dt;
+                        return;
+                    }
+                    if (!action.t) action.t = t;
+                    const duration = this.t - action.t + action.skipping;
+                    action.tick(duration);
+                    if (action.is(Action.stopFlag)) this.stopCount++;
+                });
             }
-            if (!action.t) action.t = t;
-            const duration = this.t - action.t + action.skipping;
-            action.tick(duration);
-            if (action.is(Action.stopFlag)) this.stopCount++;
         });
+        // this.actions.forEach(action => {
+        //     if (action.is(Action.stopFlag)) return;
+        //     if (action.ownerIsCreated() && !action.ownerIsReady()) {
+        //         action.skipping += dt;
+        //         return;
+        //     }
+        //     if (!action.t) action.t = t;
+        //     const duration = this.t - action.t + action.skipping;
+        //     action.tick(duration);
+        //     if (action.is(Action.stopFlag)) this.stopCount++;
+        // });
     }
     restart(t) {
-        this.actions.forEach(action => {
-            action.t = t;
-            action.unset(Action.stopFlag);
+        this.actionsMap.forEach(actionMap => {
+            for (const channel in actionMap) {
+                const actions = actionMap[channel];
+                actions.forEach(action => {
+                    action.t = t;
+                    action.unset(Action.stopFlag);
+                });
+            }
         });
+        // this.actions.forEach(action => {
+        //     action.t = t;
+        //     action.unset(Action.stopFlag);
+        // });
     }
     forceToFinish() {
-        this.actions.forEach(action => {
-            if (action.is(Action.stopFlag)) return;
-            action.forceToFinish();
-            this.stopCount++;
+        this.actionsMap.forEach(actionMap => {
+            for (const channel in actionMap) {
+                const actions = actionMap[channel];
+                actions.forEach(action => {
+                    if (action.is(Action.stopFlag)) return;
+                    action.forceToFinish();
+                    this.stopCount++;
+                });
+            }
         });
+        // this.actions.forEach(action => {
+        //     if (action.is(Action.stopFlag)) return;
+        //     action.forceToFinish();
+        //     this.stopCount++;
+        // });
     }
     finished() {
         return this.stopCount === this.validCount;
@@ -132,59 +186,107 @@ export class ActionList {
     rollback() {
         const other = new ActionList();
         let maxTimestamp = 0;
-        this.actions.forEach(action => {
-            maxTimestamp = Math.max(maxTimestamp, action.r);
+        this.actionsMap.forEach(actionMap => {
+            for (const channel in actionMap) {
+                const actions = actionMap[channel];
+                actions.forEach(action => {
+                    maxTimestamp = Math.max(maxTimestamp, action.r);
+                });
+            }
         });
-        for (let i = this.actions.length - 1; i >= 0; i--) {
-            const action = this.actions[i];
-            const newAction = action.clone();
-            newAction.reverse = true;
-            newAction.l = maxTimestamp - action.r;
-            newAction.r = maxTimestamp - action.l;
-            newAction.source = action.target;
-            newAction.target = action.source;
-            other.push(newAction);
-        }
+        this.actionsMap.forEach(actionMap => {
+            for (const channel in actionMap) {
+                const actions = actionMap[channel];
+                for (let i = actions.length - 1; i >= 0; i--) {
+                    const action = actions[i];
+                    const newAction = action.clone();
+                    newAction.reverse = true;
+                    newAction.l = maxTimestamp - action.r;
+                    newAction.r = maxTimestamp - action.l;
+                    newAction.source = action.target;
+                    newAction.target = action.source;
+                    other.push(newAction);
+                }
+            }
+        });
+        // this.actions.forEach(action => {
+        //     maxTimestamp = Math.max(maxTimestamp, action.r);
+        // });
+        // for (let i = this.actions.length - 1; i >= 0; i--) {
+        //     const action = this.actions[i];
+        //     const newAction = action.clone();
+        //     newAction.reverse = true;
+        //     newAction.l = maxTimestamp - action.r;
+        //     newAction.r = maxTimestamp - action.l;
+        //     newAction.source = action.target;
+        //     newAction.target = action.source;
+        //     other.push(newAction);
+        // }
         other.enabled = true;
         return other;
     }
     replay() {
         const other = new ActionList();
-        this.actions.forEach(action => {
-            if (action.is(Action.hideFlag)) return;
-            const newAction = action.clone();
-            other.push(newAction);
+        this.actionsMap.forEach(actionMap => {
+            for (const channel in actionMap) {
+                const actions = actionMap[channel];
+                actions.forEach(action => {
+                    if (action.is(Action.hideFlag)) return;
+                    const newAction = action.clone();
+                    other.push(newAction);
+                });
+            }
         });
+        // this.actions.forEach(action => {
+        //     if (action.is(Action.hideFlag)) return;
+        //     const newAction = action.clone();
+        //     other.push(newAction);
+        // });
         other.enabled = true;
         return other;
     }
     debug() {
         console.log("---------------Action List debug---------------");
         let used = 0;
-        this.actions.forEach(action => {
-            if (action.is(Action.hideFlag)) return;
-            console.log(action.toString(), action);
-            used++;
+        this.actionsMap.forEach(actionMap => {
+            for (const channel in actionMap) {
+                const actions = actionMap[channel];
+                actions.forEach(action => {
+                    if (action.is(Action.hideFlag)) return;
+                    console.log(action.toString(), action);
+                    used++;
+                });
+            }
         });
+        // this.actions.forEach(action => {
+        //     if (action.is(Action.hideFlag)) return;
+        //     console.log(action.toString(), action);
+        //     used++;
+        // });
         console.log("input action count =", this.totalCount, "used action count =", this.validCount, "rate =", this.validCount / this.totalCount);
         console.log("---------------Action List debug---------------");
         console.log("");
     }
     updateWindowSize() {
-        this.actions.forEach(action => {
-            if (action.is(Action.hideFlag)) return;
-            if (sizeKey.has(action.channel)) {
-                const owner = action.owner;
-                if ("opacity" in owner && (owner._.nake || owner._.BASE_MATHJAX) && isVisible(owner)) {
-                    const x = owner.x();
-                    const mx = owner.mx();
-                    const y = owner.y();
-                    const my = owner.my();
-                    window.SVG_MAXX = Math.max(window.SVG_MAXX, mx);
-                    window.SVG_MINX = Math.min(window.SVG_MINX, x);
-                    window.SVG_MAXY = Math.max(window.SVG_MAXY, my);
-                    window.SVG_MINY = Math.min(window.SVG_MINY, y);
-                }
+        this.actionsMap.forEach(actionMap => {
+            for (const channel in actionMap) {
+                const actions = actionMap[channel];
+                actions.forEach(action => {
+                    if (action.is(Action.hideFlag)) return;
+                    if (sizeKey.has(action.channel)) {
+                        const owner = action.owner;
+                        if ("opacity" in owner && (owner._.nake || owner._.BASE_MATHJAX) && isVisible(owner)) {
+                            const x = owner.x();
+                            const mx = owner.mx();
+                            const y = owner.y();
+                            const my = owner.my();
+                            window.SVG_MAXX = Math.max(window.SVG_MAXX, mx);
+                            window.SVG_MINX = Math.min(window.SVG_MINX, x);
+                            window.SVG_MAXY = Math.max(window.SVG_MAXY, my);
+                            window.SVG_MINY = Math.min(window.SVG_MINY, y);
+                        }
+                    }
+                });
             }
         });
     }

@@ -14,7 +14,14 @@ const focus = sd.Focus(ac);
 const brace = sd.Brace(arr);
 const data = ["aba", "ba", "aa", "bb"];
 
-const links = [{ type: sd.Line }, { u: 2, v: 1, type: sd.Curve, props: { bending: -0.3 } }, { u: 5, v: 1, type: sd.Curve, props: { bending: 0.3 } }, { u: 7, v: 2, type: sd.Curve, props: { bending: -0.3 } }, { u: 8, v: 5, type: sd.Curve, props: { bending: 0.3 } }];
+const links = [
+    // format
+    { type: sd.Line },
+    { u: 2, v: 1, type: sd.Curve, props: { bending: -0.3 } },
+    { u: 5, v: 1, type: sd.Curve, props: { bending: 0.3 } },
+    { u: 7, v: 2, type: sd.Curve, props: { bending: -0.3 } },
+    { u: 8, v: 5, type: sd.Curve, props: { bending: 0.3 } },
+];
 
 function makeLink(u, v) {
     for (let i = 1; i < links.length; i++) {
@@ -39,6 +46,7 @@ sd.init(async () => {
         } else {
             sd.Label(node, node.str, "rc");
         }
+        node.childAs("mark", new sd.ValueArray(node).elementWidth(10).elementHeight(10), R.aside("tc"));
     });
     arr.x(ac.mx()).cy(ac.cy());
 });
@@ -92,7 +100,10 @@ async function onMatchExtended(u, i) {
     arr.startAnimate().color(i, C.green).endAnimate();
 
     await sd.pause();
-    ac.startAnimate().color(u, C.white).endAnimate();
+    ac.element(u).child("mark").startAnimate().push(new sd.Circle(svg).r(3).color(C.RED)).endAnimate();
+
+    await sd.pause();
+    ac.startAnimate().color(C.white).endAnimate();
 }
 
 async function onMatchFailed(u, i) {

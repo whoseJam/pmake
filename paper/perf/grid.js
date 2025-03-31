@@ -1,7 +1,7 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-const n = 20;
+const n = 25;
 const grid = new sd.Grid(svg);
 
 sd.init(() => {

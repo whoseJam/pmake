@@ -1,8 +1,8 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-const n = 20;
-const m = 20;
+const n = 25;
+const m = n;
 const e = 100;
 const graph = new sd.GridGraph(svg).n(n).m(m);
 const seed = 13123;

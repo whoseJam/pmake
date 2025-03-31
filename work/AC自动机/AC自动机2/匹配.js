@@ -1,5 +1,4 @@
 import * as sd from "@/sd";
-
 import { buildFailTreeSync } from "../_/BuildFailTreeSync";
 import { buildTrieTreeSync } from "../_/BuildTrieTreeSync";
 import { matchOnACMachine } from "../_/MatchOnACMachine";
@@ -8,12 +7,13 @@ const svg = sd.svg();
 const C = sd.color();
 const R = sd.rule();
 const ac = new sd.Tree(svg).layerHeight(90).width(600);
-const target = "abaa";
+const target = "abaabba";
 const arr = new sd.Array(svg).pushArray(target);
 const pointer = sd.Pointer(arr, "i", "t");
 const focus = sd.Focus(ac);
 const brace = sd.Brace(arr);
-const data = ["aba", "ba", "aa", "bb", "b"];
+const failBrace = sd.Brace(arr);
+const data = ["aba", "ba", "aa", "bb"];
 
 const links = [{ type: sd.Line }, { u: 2, v: 1, type: sd.Curve, props: { bending: -0.3 } }, { u: 5, v: 1, type: sd.Curve, props: { bending: 0.3 } }, { u: 7, v: 2, type: sd.Curve, props: { bending: -0.3 } }, { u: 8, v: 5, type: sd.Curve, props: { bending: 0.3 } }];
 
@@ -33,7 +33,6 @@ function makeLink(u, v) {
 sd.init(async () => {
     buildTrieTreeSync(ac, data, { onReachEndOfString: u => ac.element(u).strokeWidth(3) });
     buildFailTreeSync(ac, { onLink });
-
     ac.forEachNode((node, id) => {
         if (id === "1") return;
         if (node.cx() < ac.father(node).cx() || (node.cx() === ac.father(node).cx() && node.cx() < ac.cx())) {
@@ -57,8 +56,7 @@ sd.main(async () => {
 
 async function onStartMatch() {
     await sd.pause();
-    ac.startAnimate().color(1, C.green).endAnimate();
-    focus.startAnimate().focus(1).endAnimate().clickable(false);
+    focus.startAnimate().focus(1).endAnimate();
 }
 
 async function onStartMatchAt(i) {
@@ -94,14 +92,23 @@ async function onMatchExtended(u, i) {
         .endAnimate();
     arr.startAnimate().color(i, C.green).endAnimate();
 
-    await sd.pause();
-    ac.startAnimate();
-    u = ac.element(u).fail;
-    while (u) {
-        if (ac.color(u).fill !== C.green) ac.color(u, C.green);
-        u = ac.element(u).fail;
+    let f = u;
+    while (f !== 1) {
+        await sd.pause();
+        if (u === f) pointer.startAnimate().gap(20).endAnimate();
+        ac.startAnimate().color(f, C.orange).endAnimate();
+        const length = ac.depth(f) - 1;
+        failBrace
+            .startAnimate()
+            .brace(i - length + 1, i, "b")
+            .endAnimate();
+        f = ac.element(f).fail;
     }
-    ac.endAnimate();
+
+    await sd.pause();
+    pointer.startAnimate().gap(3).endAnimate();
+    failBrace.startAnimate().opacity(0).endAnimate();
+    ac.startAnimate().color(C.white).endAnimate();
 }
 
 async function onMatchFailed(u, i) {

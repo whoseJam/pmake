@@ -19,20 +19,40 @@
     <section>
         <h2>AC自动机1</h2>
         <p>以 $\{aba,ba,aa,bb,b\}$ 为例</p>
-        <iframe data-animation="./标记.js"
-            style="width: 1000px; height: 300px;"></iframe>
+        <iframe data-animation="./标记1.js"
+            style="width: 1000px; height: 250px;"></iframe>
         <codeblock>
             <script type="text/template">
-                int query(string s) {
+                void query(const string& s) {
                     int ans = 0, u = 1;
-                    for (int i = 0; i < s.length(); i++) {
-                        // 移动 u，直到 u 存在字符为 s[i] 的出边，沿该出边移动
-                        for (int f = u; !vis[f]; f = fa[f]) vis[f] = 1;
+                    for (int i = 0, dir; i < s.length(); i++) {
+                        dir = s[i] - 'a';
+                        while (!ch[u][dir] && u) u = fa[u];
+                        if (ch[u][dir]) u = ch[u][dir];
+                        else u = 1;
+                        vis[u] = 1;
                     }
-                    // 统计 vis = 1（被标记过） 且 flg = 1（是终止节点）的节点数量
-                    for (int i = 2; i <= tot; i++)
-                        if (vis[i] && flg[i]) ans++;
-                    return ans;
+                }
+            </script>
+        </codeblock>
+        <p class="fragment quote">主串 $s[1...i]$ 在AC自动机匹配到的节点，是所有<b>可匹配节点</b>中，长度最长的那个</p>
+    </section>
+    <section>
+        <h2>AC自动机1</h2>
+        <p>以 $\{aba,ba,aa,bb,b\}$ 为例</p>
+        <iframe data-animation="./标记1.js"
+            style="width: 1000px; height: 250px;"></iframe>
+        <codeblock>
+            <script type="text/template">
+                void query(const string& s) {
+                    int ans = 0, u = 1;
+                    for (int i = 0, dir; i < s.length(); i++) {
+                        dir = s[i] - 'a';
+                        while (!ch[u][dir] && u) u = fa[u];
+                        if (ch[u][dir]) u = ch[u][dir];
+                        else u = 1;
+                        for (int f = u; f && !vis[f]; f = fa[f]) vis[f] = 1;
+                    }
                 }
             </script>
         </codeblock>

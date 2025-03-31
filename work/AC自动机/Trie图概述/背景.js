@@ -13,25 +13,40 @@ const pointer = sd.Pointer(arr, "i", "t");
 const focus = sd.Focus(ac);
 const brace = sd.Brace(arr);
 const data = ["aba", "ba", "aa", "bb"];
+const links = [
+    // format
+    { type: sd.Line },
+    { u: 3, v: 8, type: sd.Curve, props: { bending: 0.3 } },
+];
+let lastMatched = 0;
 
-const links = [{ type: sd.Line }, { u: 2, v: 1, type: sd.Curve, props: { bending: -0.3 } }, { u: 5, v: 1, type: sd.Curve, props: { bending: 0.3 } }, { u: 7, v: 2, type: sd.Curve, props: { bending: -0.3 } }, { u: 8, v: 5, type: sd.Curve, props: { bending: 0.3 } }];
-
-function makeLink(u, v) {
+function makeLink(links, u, v) {
+    const du = ac.element(u);
+    const dv = ac.element(v);
     for (let i = 1; i < links.length; i++) {
         if (links[i].u == u && links[i].v == v) {
             const line = new links[i].type(svg);
-            for (let key in links[i].props) {
-                line[key](links[i].props[key]);
-            }
+            for (let key in links[i].props) line[key](links[i].props[key]);
+            line.source(du.center());
+            line.target(dv.center());
+            sd.trim(line, du, dv);
             return line;
         }
     }
-    return new links[0].type(svg);
+    const line = new links[0].type(svg);
+    line.source(du.center());
+    line.target(dv.center());
+    sd.trim(line, du, dv);
+    return line;
 }
 
 sd.init(async () => {
-    buildTrieTreeSync(ac, data, { onReachEndOfString: u => ac.element(u).strokeWidth(3) });
-    buildFailTreeSync(ac, { onLink });
+    buildTrieTreeSync(ac, data, {
+        // format
+        onReachEndOfString: u => ac.element(u).strokeWidth(3),
+        onLink: (u, v) => ac.element(u, v).arrow(),
+    });
+    buildFailTreeSync(ac);
     ac.forEachNode((node, id) => {
         if (id === "1") return;
         if (node.cx() < ac.father(node).cx() || (node.cx() === ac.father(node).cx() && node.cx() < ac.cx())) {
@@ -91,21 +106,16 @@ async function onMatchExtended(u, i) {
         .endAnimate();
     arr.startAnimate().color(i, C.green).endAnimate();
 
+    if (lastMatched !== +ac.fatherId(u) && lastMatched) {
+        await sd.pause();
+        makeLink(links, lastMatched, u).strokeWidth(2).startAnimate().pointStoT().value(arr.text(i), R.pointAtPathByRate(0.5, "x", "y")).endAnimate().arrow();
+    }
+    lastMatched = u;
+
     await sd.pause();
     ac.startAnimate().color(u, C.white).endAnimate();
 }
 
 async function onMatchFailed(u, i) {
     brace.startAnimate().opacity(0).endAnimate();
-}
-
-function onLink(u, v) {
-    const line = makeLink(u, v);
-    const du = ac.element(u);
-    const dv = ac.element(v);
-    line.source(du.center());
-    line.target(dv.center());
-    line.arrow();
-    line.strokeDashArray([5, 5]);
-    sd.trim(line, du, dv);
 }

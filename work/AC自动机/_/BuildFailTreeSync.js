@@ -7,7 +7,7 @@ import * as sd from "@/sd";
  *  onLink: (u: sd.SDNode, v: sd.SDNode, sourceId: number, targetId: number) => void
  * }} args
  */
-export function buildFailTreeSync(ac, args) {
+export function buildFailTreeSync(ac, args = {}) {
     const onLink = args.onLink;
     const Q = [1];
 

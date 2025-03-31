@@ -1,7 +1,7 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-const n = 100;
+const n = 25;
 const seed = 11;
 const tree = new sd.Tree(svg);
 
@@ -16,7 +16,6 @@ sd.init(() => {
     sd.freeze();
     tree.root(1);
     for (let i = 2; i <= n; i++) {
-        console.log("i=", i);
         const fa = rand(1, i - 1);
         tree.link(fa, i);
     }

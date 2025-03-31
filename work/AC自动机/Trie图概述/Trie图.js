@@ -8,6 +8,9 @@ const C = sd.color();
 const R = sd.rule();
 const V = sd.vec();
 const ac = new sd.Tree(svg).layerHeight(70);
+const pu = sd.Pointer(ac, "u", "l");
+const pf = sd.Pointer(ac, "f", "r");
+const pv = sd.Pointer(ac, "v", "l");
 const focus = new sd.Focus(ac);
 const data = ["abab", "babb"];
 
@@ -31,19 +34,22 @@ const links2 = [
     { u: 9, v: 6, type: sd.Curve, props: { bending: 0.5 } },
 ];
 
-function makeLink(links, du, dv, u, v) {
+function makeLink(links, u, v) {
+    const du = ac.element(u);
+    const dv = ac.element(v);
     for (let i = 1; i < links.length; i++) {
         if (links[i].u == u && links[i].v == v) {
             const line = new links[i].type(svg);
             line.source(du.center());
             line.target(dv.center());
-            for (let key in links[i].props) {
-                line[key](links[i].props[key]);
-            }
+            for (let key in links[i].props) line[key](links[i].props[key]);
             return line;
         }
     }
-    return new links[0].type(svg).source(du.center()).target(dv.center());
+    const line = new links[0].type(svg);
+    line.source(du.center());
+    line.target(dv.center());
+    return line;
 }
 
 sd.init(() => {
@@ -52,73 +58,73 @@ sd.init(() => {
             ac.element(u, v).arrow();
         },
     });
+    ac.forEachNode(node => {
+        node.links = {};
+    });
 });
 
 sd.main(async () => {
     await buildTrieGraph(ac, "ab", {
         onLink,
-        onStartBuild: async parent => {
+        onStartBuild: async u => {
             await sd.pause();
-            focus.startAnimate().focus(parent).endAnimate();
+            pu.startAnimate().moveTo(u).endAnimate();
+            focus.startAnimate().focus(u).endAnimate();
         },
-        onStartBuildChild: async child => {
+        onStartBuildChild: async v => {
             await sd.pause();
-            ac.startAnimate().color(child, C.blue).endAnimate();
+            pv.startAnimate().moveTo(v).endAnimate();
+            ac.startAnimate().color(v, C.blue).endAnimate();
         },
-        onEndBuildChild: async child => {
+        onEndBuildChild: async v => {
             await sd.pause();
-            ac.startAnimate().color(child, C.white).endAnimate();
+            pv.startAnimate().opacity(0).endAnimate();
+            ac.startAnimate().color(v, C.white).endAnimate();
         },
     });
     await sd.pause();
     focus.startAnimate().focus(null).endAnimate();
 });
 
-async function onLink(u, v, character) {
+async function onLink(v, vf, character) {
+    function colorLink(u, character, color) {
+        const du = ac.element(u);
+        if (du.links[character]) du.links[character].startAnimate().stroke(color).endAnimate();
+        else ac.element(u, du.acch[character]).startAnimate().stroke(color).endAnimate();
+    }
+    const u = character ? v : +ac.fatherId(v);
     const du = ac.element(u);
     const dv = ac.element(v);
-    if (character) {
+    const dvf = ac.element(vf);
+    if (du.fail) {
         await sd.pause();
-        const length = ac.depth(du.fail);
-        const failChainU = makePath(u, length, C.textBlue).startAnimate().pointStoT().endAnimate().arrow();
-        const failChainV = makePath(du.fail, length, C.darkOrange).startAnimate().pointStoT().endAnimate().arrow();
-
-        await sd.pause();
-        const line = makeLink(links1, du, dv, u, v).arrow();
-        line.value(character, R.pointAtPathByRate(0.3, "x", "cy"));
-        sd.trim(line, du, dv);
-        line.opacity(0).startAnimate().opacity(1).endAnimate();
-
-        await sd.pause();
-        failChainU.startAnimate().opacity(0).endAnimate().remove();
-        failChainV.startAnimate().opacity(0).endAnimate().remove();
-    } else {
-        await sd.pause();
-        const line = makeLink(links2, du, dv, u, v).arrow();
-        line.strokeDashArray([5, 5]);
-        sd.trim(line, du, dv);
-        line.opacity(0).startAnimate().opacity(1).endAnimate();
-    }
-}
-
-function makePath(u, length, color = C.black) {
-    return new sd.Path(svg).d(makePathD(u, length).toString()).stroke(color).strokeWidth(2);
-}
-
-function makePathD(u, length) {
-    function GetPath(u, length) {
-        const path = [];
-        for (let i = 1; i <= length; i++) {
-            path.push(ac.element(u));
-            u = ac.fatherId(u);
+        pf.startAnimate().moveTo(du.fail).endAnimate();
+        if (character) {
+            await sd.pause();
+            colorLink(du.fail, character, C.textBlue);
+        } else {
+            await sd.pause();
+            colorLink(du.fail, ac.text(u, v), C.textBlue);
+            colorLink(u, ac.text(u, v), C.textBlue);
         }
-        return path.reverse();
     }
-    const path = GetPath(u, length);
-    const pen = new sd.PathPen();
-    pen.MoveTo(path[0].center());
-    for (let i = 1; i < path.length; i++) {
-        pen.LinkTo(path[i].center());
+
+    await sd.pause();
+    const line = makeLink(character ? links1 : links2, v, vf).arrow();
+    if (character) line.value(character, R.pointAtPathByRate(0.3, "x", "cy"));
+    else line.strokeDashArray([5, 5]);
+    sd.trim(line, dv, dvf);
+    line.opacity(0).startAnimate().opacity(1).endAnimate();
+    if (character) dv.links[character] = line;
+
+    if (du.fail) {
+        await sd.pause();
+        pf.startAnimate().opacity(0).endAnimate();
+        if (character) {
+            colorLink(du.fail, character, C.black);
+        } else {
+            colorLink(du.fail, ac.text(u, v), C.black);
+            colorLink(u, ac.text(u, v), C.black);
+        }
     }
-    return pen.toString();
 }
