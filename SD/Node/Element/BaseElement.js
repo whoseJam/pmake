@@ -29,7 +29,7 @@ BaseElement.prototype = {
     y: Factory.handlerLowPrecise("y"),
     width: Factory.handlerLowPrecise("width"),
     height: Factory.handlerLowPrecise("height"),
-    rate: Factory.handlerLowPrecise("rate"),
+    rate: Factory.handlerMediumPrecise("rate"),
     color: backgroundHandler("color"),
     fill: backgroundHandler("fill"),
     fillOpacity: backgroundHandler("fillOpacity"),
@@ -57,13 +57,15 @@ BaseElement.prototype = {
         const value = this.value();
         if (!value) return 0;
         if (!value.text) ErrorLauncher.invalidInvoke("intValue");
-        return +value.text();
+        const i = Math.floor(+value.text());
+        if (isNaN(i)) ErrorLauncher.invalidInvoke("intValue");
+        return i;
     },
     value(value, rule) {
         if (arguments.length === 0) return this.child("value");
         if (this.hasChild("value")) this.eraseChild("value");
         if (Check.isFalseType(value)) return this;
-        rule = getValueRule(this.vars, rule);
+        rule = getValueRule(rule);
         value = Cast.castToSDNode(this, value);
         value.onEnterDefault(EN.appear());
         value.onExitDefault(EX.fade());
@@ -72,7 +74,7 @@ BaseElement.prototype = {
     },
     valueFromExist(value, rule) {
         if (this.hasChild("value")) this.eraseChild("value");
-        rule = getValueRule(this.vars, rule);
+        rule = getValueRule(rule);
         value.onEnter(EN.moveTo());
         value.onExitDefault(EX.fade());
         this.childAs("value", value, rule);
@@ -89,6 +91,12 @@ function backgroundHandler(key) {
     };
 }
 
-function getValueRule(vars, rule) {
-    return rule ? rule : R.centerFixAspect(vars.rate);
+function getValueRule(rule) {
+    return (
+        rule ||
+        function (parent, child) {
+            const rate = parent.rate();
+            R.centerFixAspect(rate)(parent, child);
+        }
+    );
 }

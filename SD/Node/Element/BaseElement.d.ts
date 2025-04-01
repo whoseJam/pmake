@@ -24,9 +24,9 @@ export class BaseElement extends SD2DNode {
     background(): SDNode;
     text(): string;
     text(text: string): this;
-    drop(): this;
     intValue(): number;
     value(): SDNode | undefined;
     value(value: any, rule?: SDRule): this;
     valueFromExist(value: SDNode, rule?: SDRule): this;
+    drop(): SDNode;
 }

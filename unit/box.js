@@ -1,13 +1,42 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
+const div = sd.div();
 const C = sd.color();
 const R = sd.rule();
 const EN = sd.enter();
 
 sd.init(() => {});
 
-sd.main(async () => {
+sd.main(TestWithHTML);
+
+async function TestWithHTML() {
+    const box = new sd.Box(svg, new sd.Button(div));
+    await sd.pause();
+    box.value().startAnimate().opacity(0.5).endAnimate();
+    box.startAnimate().opacity(0.5).endAnimate();
+}
+
+async function TestIntValue() {
+    const box1 = new sd.Box(svg, "1");
+    const box2 = new sd.Box(svg, "1.8").x(100);
+    const box3 = new sd.Box(svg).x(200);
+    const box4 = new sd.Box(svg, "A").x(300);
+    console.log(box1.intValue()); // 1
+    console.log(box2.intValue()); // 1
+    console.log(box3.intValue()); // 0
+    // console.log(box4.intValue()); // this is invalid invoke
+}
+
+async function TestRate() {
+    const box = new sd.Box(svg, "V");
+    await sd.pause();
+    box.startAnimate().rate(2).endAnimate(); // 提高空闲率，"V" 会显得很小
+    await sd.pause();
+    box.startAnimate().rate(1).endAnimate(); // 降低空闲率，"V" 会显得很大
+}
+
+async function TestBasic() {
     const box = new sd.Box(svg).cx(600).cy(300).value(new sd.Circle(svg));
     await sd.pause();
     let txt = "helloworld",
@@ -50,7 +79,7 @@ sd.main(async () => {
     await sd.pause();
     const e7 = b7.drop();
     b8.after(b7).startAnimate().valueFromExist(e7).endAnimate();
-});
+}
 
 async function TestTextCenter() {
     const box = new sd.Box(svg).center(600, 300).value("a");

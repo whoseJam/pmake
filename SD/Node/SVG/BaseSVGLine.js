@@ -6,17 +6,12 @@ import { BaseSVG } from "@/Node/SVG/BaseSVG";
 import { Rule as R } from "@/Rule/Rule";
 import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
-import { Color as C } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 
-export function BaseLine(parent, tag) {
+export function BaseSVGLine(parent, tag) {
     BaseSVG.call(this, parent, tag);
 
-    this.vars.fillOpacity = 0;
-    this.vars.strokeOpacity = 1;
-    this.vars.strokeWidth = 1;
-    this.vars.stroke = C.black;
     this.vars.merge({
         markerStart: "",
         markerMid: "",
@@ -27,26 +22,22 @@ export function BaseLine(parent, tag) {
     this.vars.associate("markerStart", Factory.action(this, this._.nake, "marker-start", Interp.stringInterp));
     this.vars.associate("markerMid", Factory.action(this, this._.nake, "marker-mid", Interp.stringInterp));
     this.vars.associate("markerEnd", Factory.action(this, this._.nake, "marker-end", Interp.stringInterp));
-
-    this._.BASE_LINE = true;
 }
 
-BaseLine.prototype = {
+BaseSVGLine.prototype = {
     ...BaseSVG.prototype,
+    BASE_SVGLINE: true,
     markerStart: handlerMarker("markerStart"),
     markerMid: handlerMarker("markerMid"),
     markerEnd: handlerMarker("markerEnd"),
-    arrow(flag = true) {
-        this.markerEnd(flag ? "arrow" : "");
-        return this;
+    arrow(arrow = true) {
+        return this.markerEnd(arrow ? "arrow" : "");
     },
-    revArrow(flag = true) {
-        this.markerStart(flag ? "arrowReverse" : "");
-        return this;
+    revArrow(arrow = true) {
+        return this.markerStart(arrow ? "reverseArrow" : "");
     },
-    doubleArrow(flag = true) {
-        this.arrow(flag).revArrow(flag);
-        return this;
+    doubleArrow(arrow = true) {
+        return this.arrow(arrow).revArrow(arrow);
     },
     pointStoT() {
         const len = this.totalLength();
@@ -88,65 +79,14 @@ BaseLine.prototype = {
         this.strokeDashArray([0, len]);
         return this;
     },
-    source(x, y) {
-        if (arguments.length === 0) {
-            return [this.x1(), this.y1()];
-        } else if (arguments.length === 1) {
-            const point = arguments[0];
-            return this.source(point[0], point[1]);
-        }
-        this.freeze().x1(x).y1(y).unfreeze();
-        return this;
+    at(k) {
+        ErrorLauncher.notImplementedYet("at", this.type());
     },
-    target(x, y) {
-        if (arguments.length === 0) {
-            return [this.x2(), this.y2()];
-        } else if (arguments.length === 1) {
-            const point = arguments[0];
-            return this.target(point[0], point[1]);
-        }
-        this.freeze().x2(x).y2(y).unfreeze();
-        return this;
+    getPointAtLength(length) {
+        ErrorLauncher.notImplementedYet("getPointAtLength", this.type());
     },
-    x(x) {
-        const x1 = this.x1();
-        const x2 = this.x2();
-        const ox = Math.min(x1, x2);
-        if (x === undefined) return ox;
-        const dx = x - ox;
-        this.freeze();
-        this.x1(x1 + dx);
-        this.x2(x2 + dx);
-        this.unfreeze();
-        return this;
-    },
-    y(y) {
-        const y1 = this.y1();
-        const y2 = this.y2();
-        const oy = Math.min(y1, y2);
-        if (y === undefined) return oy;
-        const dy = y - oy;
-        this.freeze();
-        this.y1(y1 + dy);
-        this.y2(y2 + dy);
-        this.unfreeze();
-        return this;
-    },
-    width(width) {
-        const x1 = this.x1();
-        const x2 = this.x2();
-        if (width === undefined) return Math.abs(x1 - x2);
-        if (x1 < x2) this.x2(x1 + width);
-        else this.x1(x2 + width);
-        return this;
-    },
-    height(height) {
-        const y1 = this.y1();
-        const y2 = this.y2();
-        if (height === undefined) return Math.abs(y1 - y2);
-        if (y1 < y2) this.y2(y1 + height);
-        else this.y1(y2 + height);
-        return this;
+    totalLength() {
+        ErrorLauncher.notImplementedYet("totalLength", this.type());
     },
     text() {
         const value = this.child("value");

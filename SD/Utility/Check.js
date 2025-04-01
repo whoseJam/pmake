@@ -16,7 +16,7 @@ export class Check {
     static isTypeOfHTML = isTypeOf("HTML");
     static isTypeOfSVG = isTypeOf("SVG");
     static isTypeOfTree = isTypeOf("TREE");
-    static isTypeOfLine = isTypeOf("LINE");
+    static isTypeOfSVGLine = isTypeOf("SVGLINE");
     static isTypeOfThree = isTypeOf("THREE");
     static isFalseType(object) {
         return object === null || object === undefined || object === false;
