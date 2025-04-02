@@ -21,6 +21,9 @@ export class Check {
     static isFalseType(object) {
         return object === null || object === undefined || object === false;
     }
+    static isEmptyType(object) {
+        return object === null || object === undefined;
+    }
     static isNumberOrString(object) {
         return typeof object === "number" || typeof object === "string";
     }

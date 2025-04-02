@@ -2,6 +2,7 @@ import { Context } from "@/Animate/Context";
 import { Interp } from "@/Animate/Interp";
 import { Enter as EN } from "@/Node/Core/Enter";
 import { Exit as EX } from "@/Node/Core/Exit";
+import { BaseElement } from "@/Node/Element/BaseElement";
 import { BaseSVG } from "@/Node/SVG/BaseSVG";
 import { Rule as R } from "@/Rule/Rule";
 import { Cast } from "@/Utility/Cast";
@@ -34,7 +35,7 @@ BaseSVGLine.prototype = {
         return this.markerEnd(arrow ? "arrow" : "");
     },
     revArrow(arrow = true) {
-        return this.markerStart(arrow ? "reverseArrow" : "");
+        return this.markerStart(arrow ? "arrow" : "");
     },
     doubleArrow(arrow = true) {
         return this.arrow(arrow).revArrow(arrow);
@@ -88,35 +89,28 @@ BaseSVGLine.prototype = {
     totalLength() {
         ErrorLauncher.notImplementedYet("totalLength", this.type());
     },
-    text() {
-        const value = this.child("value");
-        if (!value) return "";
-        if (!value.text) ErrorLauncher.invalidInvoke("text");
-        return value.text();
-    },
-    drop() {
-        const value = this.child("value");
-        value.onExit(EX.drop());
-        this.eraseChild(value);
-        return value;
-    },
-    intValue() {
-        const value = this.value();
-        if (!value) return 0;
-        if (!value.text) ErrorLauncher.invalidInvoke("intValue");
-        return +value.text();
-    },
+    text: BaseElement.prototype.text,
+    intValue: BaseElement.prototype.intValue,
     value(value, rule) {
         if (arguments.length === 0) return this.child("value");
         if (this.hasChild("value")) this.eraseChild("value");
-        if (Check.isFalseType(value)) return this;
-        rule = getValueRule(this.vars, rule);
+        if (Check.isEmptyType(value)) return this;
+        rule = getValueRule(rule);
         value = Cast.castToSDNode(this, value);
         value.onEnterDefault(EN.appear());
         value.onExitDefault(EX.fade());
         this.childAs("value", value, rule);
         return this;
     },
+    valueFromExist(value, rule) {
+        if (this.hasChild("value")) this.eraseChild("value");
+        rule = getValueRule(rule);
+        value.onEnter(EN.moveTo());
+        value.onExitDefault(EX.fade());
+        this.childAs("value", value, rule);
+        return this;
+    },
+    drop: BaseElement.prototype.drop,
 };
 
 function handlerMarker(key) {
@@ -128,6 +122,6 @@ function handlerMarker(key) {
     };
 }
 
-function getValueRule(vars, rule) {
+function getValueRule(rule) {
     return rule ? rule : R.pointAtPathByRate(0.5, "cx", "cy");
 }

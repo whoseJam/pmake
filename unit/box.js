@@ -8,7 +8,26 @@ const EN = sd.enter();
 
 sd.init(() => {});
 
-sd.main(TestWithHTML);
+sd.main(TestLayout);
+
+async function TestLayout() {
+    function addFocus(node) {
+        sd.Focus(node).focus(node).strokeWidth(1).strokeDashArray([5, 5]);
+    }
+    const svg = sd.svg();
+    const values = [new sd.Circle(svg), new sd.Mathjax(svg, "A^2"), new sd.Rect(svg), new sd.Text(svg, "A")];
+    const boxes = [];
+    values.forEach((value, i) => {
+        addFocus(value);
+        const box = new sd.Box(svg, value)
+            .width(80)
+            .height(80)
+            .x(100 * i);
+        boxes.push(box);
+    });
+    await sd.pause();
+    boxes.forEach(box => box.startAnimate().height(60).endAnimate());
+}
 
 async function TestWithHTML() {
     const box = new sd.Box(svg, new sd.Button(div));

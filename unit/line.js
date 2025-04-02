@@ -2,7 +2,43 @@ import * as sd from "@/sd";
 
 const svg = sd.svg();
 
-sd.main(TestLine);
+sd.main(TestText);
+
+async function TestText() {
+    const line1 = new sd.Line(svg, "A");
+    const line2 = new sd.Line(svg, new sd.Rect(svg).width(12).height(12)).x(100);
+    console.log(line1.text()); // "A"
+    // console.log(line2.text()); // this is invalid invoke
+    await sd.pause();
+    line1.text("B");
+}
+
+async function TestArrow() {
+    const l1 = new sd.Line(svg).x(100).y(100);
+    const l2 = new sd.Line(svg).x(200).y(100);
+    const l3 = new sd.Line(svg).x(300).y(100);
+    l1.arrow();
+    l2.revArrow();
+    l3.doubleArrow();
+}
+
+async function TestMarker() {
+    const styles = ["arrow", "adaptiveArrow"];
+    const lines = [];
+    styles.forEach((style, i) => {
+        const line = new sd.Line(svg);
+        line.source(0, i * 40 + 100);
+        line.target(200, i * 40 + 100);
+        line.markerStart(style).markerEnd(style);
+        lines.push(line);
+    });
+    sd.main(async () => {
+        await sd.pause();
+        lines.forEach(line => {
+            line.startAnimate().strokeWidth(3).endAnimate();
+        });
+    });
+}
 
 async function TestLine() {
     const line = new sd.Line(svg).x(100).y(100);

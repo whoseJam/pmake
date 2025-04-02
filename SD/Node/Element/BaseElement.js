@@ -11,13 +11,14 @@ export function BaseElement(parent) {
     SD2DNode.call(this, parent);
 
     this.newLayer("background");
+    this.newLayer("value");
 
     this.vars.merge({
         x: 0,
         y: 0,
         width: 40,
         height: 40,
-        rate: 1.2,
+        rate: 1.3,
         value: undefined,
     });
 }
@@ -47,12 +48,6 @@ BaseElement.prototype = {
         value.text(text);
         return this;
     },
-    drop() {
-        const value = this.child("value");
-        value.onExit(EX.drop());
-        this.eraseChild(value);
-        return value;
-    },
     intValue() {
         const value = this.value();
         if (!value) return 0;
@@ -64,10 +59,10 @@ BaseElement.prototype = {
     value(value, rule) {
         if (arguments.length === 0) return this.child("value");
         if (this.hasChild("value")) this.eraseChild("value");
-        if (Check.isFalseType(value)) return this;
+        if (Check.isEmptyType(value)) return this;
         rule = getValueRule(rule);
         value = Cast.castToSDNode(this, value);
-        value.onEnterDefault(EN.appear());
+        value.onEnterDefault(EN.appear("value"));
         value.onExitDefault(EX.fade());
         this.childAs("value", value, rule);
         return this;
@@ -75,10 +70,16 @@ BaseElement.prototype = {
     valueFromExist(value, rule) {
         if (this.hasChild("value")) this.eraseChild("value");
         rule = getValueRule(rule);
-        value.onEnter(EN.moveTo());
+        value.onEnter(EN.moveTo("value"));
         value.onExitDefault(EX.fade());
         this.childAs("value", value, rule);
         return this;
+    },
+    drop() {
+        const value = this.child("value");
+        value.onExit(EX.drop());
+        this.eraseChild(value);
+        return value;
     },
 };
 

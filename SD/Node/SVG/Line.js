@@ -1,9 +1,10 @@
 import { Interp } from "@/Animate/Interp";
 import { Vector as V } from "@/Math/Vector";
 import { BaseSVGLine } from "@/Node/SVG/BaseSVGLine";
+import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
 
-export function Line(parent) {
+export function Line(parent, value) {
     BaseSVGLine.call(this, parent, "line");
 
     this.type("Line");
@@ -24,6 +25,8 @@ export function Line(parent) {
     this._.nake.setAttribute("y1", this.vars.y1);
     this._.nake.setAttribute("x2", this.vars.x2);
     this._.nake.setAttribute("y2", this.vars.y2);
+
+    if (!Check.isEmptyType(value)) this.value(value);
 }
 
 Line.prototype = {
@@ -68,6 +71,22 @@ Line.prototype = {
         else this.y1(y2 + height);
         return this;
     },
+    at(k) {
+        const v1 = this.source();
+        const v2 = this.target();
+        const d = V.sub(v2, v1);
+        return V.add(v1, V.numberMul(d, k));
+    },
+    getPointAtLength(length) {
+        const total = this.totalLength();
+        const k = length / total;
+        return this.at(k);
+    },
+    totalLength() {
+        const v1 = this.source();
+        const v2 = this.target();
+        return V.length(V.sub(v1, v2));
+    },
     x1: Factory.handlerLowPrecise("x1"),
     y1: Factory.handlerLowPrecise("y1"),
     x2: Factory.handlerLowPrecise("x2"),
@@ -91,21 +110,5 @@ Line.prototype = {
         }
         this.freeze().x2(x).y2(y).unfreeze();
         return this;
-    },
-    at(k) {
-        const v1 = this.source();
-        const v2 = this.target();
-        const d = V.sub(v2, v1);
-        return V.add(v1, V.numberMul(d, k));
-    },
-    getPointAtLength(length) {
-        const total = this.totalLength();
-        const k = length / total;
-        return this.at(k);
-    },
-    totalLength() {
-        const v1 = this.source();
-        const v2 = this.target();
-        return V.length(V.sub(v1, v2));
     },
 };
