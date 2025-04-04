@@ -8,7 +8,13 @@ const EN = sd.enter();
 
 sd.init(() => {});
 
-sd.main(TestText);
+sd.main(TestDropEmptyValue);
+
+async function TestDropEmptyValue() {
+    const box = new sd.Box(svg);
+    const value = box.drop();
+    console.log("value =", value);
+}
 
 async function TestText() {
     const box = new sd.Box(svg);

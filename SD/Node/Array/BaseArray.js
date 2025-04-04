@@ -173,7 +173,7 @@ BaseArray.prototype = {
     },
     dropElement(id) {
         const element = this.element(id);
-        if (!element) ErrorLauncher.arrayElementNotFound(id);
+        if (!element) return undefined;
         element.onExit(EX.drop());
         this.__erase(id);
         return element;
@@ -186,7 +186,14 @@ BaseArray.prototype = {
     },
     dropValue(id) {
         const element = this.__getElementWithMethod(id, "drop");
+        if (!element) return undefined;
         return element.drop();
+    },
+    dropFirstValue() {
+        return this.dropValue(this.start());
+    },
+    dropLastValue() {
+        return this.dropValue(this.end());
     },
     sort(l, r, comparator = (a, b) => a.intValue() - b.intValue()) {
         if (arguments.length === 0) return this.sort(this.start(), this.end(), comparator);
@@ -217,7 +224,7 @@ BaseArray.prototype = {
     __getElementWithMethod(id, method) {
         const element = this.element(id);
         if (!element) ErrorLauncher.arrayElementNotFound(id);
-        if (typeof element[method] !== "function") ErrorLauncher.methodNotFound();
+        if (typeof element[method] !== "function") ErrorLauncher.methodNotFound(element, method);
         return element;
     },
 };

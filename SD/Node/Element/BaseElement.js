@@ -81,7 +81,8 @@ BaseElement.prototype = {
         return this;
     },
     drop() {
-        const value = this.child("value");
+        const value = this.value();
+        if (!value) return undefined;
         value.onExit(EX.drop());
         this.eraseChild(value);
         return value;

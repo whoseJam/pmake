@@ -29,5 +29,5 @@ export class BaseElement extends SD2DNode {
     value(): SDNode | undefined;
     value(value: any, rule?: SDRule): this;
     valueFromExist(value: SDNode, rule?: SDRule): this;
-    drop(): SDNode;
+    drop(): SDNode | undefined;
 }

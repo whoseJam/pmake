@@ -40,10 +40,12 @@ export class BaseArray extends SD2DNode {
 
     erase(id: number): this;
     pop(): this;
-    dropElement(id: number): SDNode;
-    dropFirstElement(): SDNode;
-    dropLastElement(): SDNode;
-    dropValue(id: number): SDNode;
+    dropElement(id: number): SDNode | undefined;
+    dropFirstElement(): SDNode | undefined;
+    dropLastElement(): SDNode | undefined;
+    dropValue(id: number): SDNode | undefined;
+    dropFirstValue(): SDNode | undefined;
+    dropLastValue(): SDNode | undefined;
 
     sort(comparator?: (a: SDNode, b: SDNode) => number): this;
     sort(l: number, r: number, comparator?: (a: SDNode, b: SDNode) => number): this;
