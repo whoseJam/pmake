@@ -22,6 +22,7 @@ export class BaseElement extends SD2DNode {
     strokeWidth(): number;
     strokeWidth(width: number): this;
     background(): SDNode;
+
     text(): string;
     text(text: string): this;
     intValue(): number;

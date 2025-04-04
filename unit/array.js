@@ -6,7 +6,13 @@ const EN = sd.enter();
 
 sd.init(() => {});
 
-sd.main(TestArrayElementSwitch);
+sd.main(TestBasic);
+
+async function TestIndexOf() {
+    const arr = new sd.Array(svg).x(100).y(100).resize(10);
+    const circle = new sd.Circle(svg);
+    console.log(arr.indexOf(circle));
+}
 
 async function TestArrayElementSwitch() {
     const arr1 = new sd.Array(svg).x(100).y(100).pushArray("01234");
@@ -17,7 +23,7 @@ async function TestArrayElementSwitch() {
     const indices = [0, 1, 3];
     for (let i = indices.length - 1; i >= 0; i--) {
         const element = arr1.dropElement(indices[i]);
-        arr2.insertFromExistElement(-1, element);
+        arr2.insertFromExistElement(0, element);
     }
     arr1.endAnimate();
     arr2.endAnimate();
@@ -40,14 +46,14 @@ async function TestTwoArrayMoveValue() {
     for (let i = 0; i < n; i++) arr1.value(i, new sd.Mathjax(arr1, i));
     await sd.pause();
     for (let i = 0; i < n; i++) {
-        arr2.startAnimate(10000);
+        arr2.startAnimate();
         arr2.push();
         arr2.element(i).value(arr1.element(i).drop().onEnter(EN.moveTo()));
         arr2.endAnimate();
     }
 }
 
-async function main() {
+async function TestBasic() {
     const arr = new sd.Array(svg).x(800).y(100);
     arr.push(1).push(2).push(3);
     await sd.pause();

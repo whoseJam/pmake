@@ -8,7 +8,15 @@ const EN = sd.enter();
 
 sd.init(() => {});
 
-sd.main(TestLayout);
+sd.main(TestText);
+
+async function TestText() {
+    const box = new sd.Box(svg);
+    console.assert(box.text() === "");
+    await sd.pause();
+    box.text("a");
+    console.assert(box.text() === "a");
+}
 
 async function TestLayout() {
     function addFocus(node) {

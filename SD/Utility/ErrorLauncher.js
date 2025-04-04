@@ -34,6 +34,19 @@ export class ErrorLauncher {
             throw new Error(`Function ${method} not implemented yet.`);
         }
     }
+    static failToParseAsIntValue(text) {
+        throw new Error(`Fail to parse ${text} as int value.`);
+    }
+    static methodNotFound(node, method) {
+        if (typeof node.type === "function") node = node.type();
+        throw new Error(`Cannot invoke method ${method} on ${node}.`);
+    }
+    static arrayElementNotFound(id) {
+        throw new Error(`Array element[${id}] not found.`);
+    }
+    static gridElementNotFound(rowId, colId) {
+        throw new Error(`Grid element[${rowId}, ${colId}] not found.`);
+    }
     static warnNotImplementedYet(method) {
         console.warn(`Function ${method} not implemented yet.`);
     }

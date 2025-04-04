@@ -41,20 +41,20 @@ Array.prototype = {
         const element = new Box(this.layer("elements")).opacity(0);
         element.value(value);
         element.onEnter(EN.appear("elements"));
-        this.insertByBaseArray(id, element);
+        this.__insert(id, element);
         return this;
     },
     insertFromExistValue(id, value) {
         const element = new Box(this.layer("elements")).opacity(0);
         element.onEnter(EN.appear("elements"));
-        this.insertByBaseArray(id, element);
+        this.__insert(id, element);
         element.value(value.onEnter(EN.moveTo()));
         return this;
     },
     insertFromExistElement(id, value) {
         const element = value;
         element.onEnter(EN.moveTo("elements"));
-        this.insertByBaseArray(id, element);
+        this.__insert(id, element);
         return this;
     },
 };
