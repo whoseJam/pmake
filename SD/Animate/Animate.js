@@ -20,7 +20,7 @@ export function createWaterMark() {
                 pointerEvents: "none",
             }}
         >
-            {/* {WATER_MARK_STRING} */}
+            {WATER_MARK_STRING}
         </div>
     );
     const container = Dom.createElementAndAppendToBody("div");
