@@ -3,7 +3,7 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const C = sd.color();
 
-sd.main(TestBuildTree);
+sd.main(TestDepth);
 
 async function TestBuildTree() {
     const tree = new sd.Tree(svg);
@@ -24,6 +24,7 @@ async function TestDepth() {
     console.assert(tree.depth(1) === 1);
     console.assert(tree.depth(3) === 2);
     console.assert(tree.depth(5) === 3);
+    // tree.depth(rect);
     try {
         tree.depth(rect);
     } catch {

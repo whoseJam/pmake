@@ -7,6 +7,7 @@ import { Factory } from "@/Utility/Factory";
 import { trim } from "@/Utility/Trim";
 import { hierarchy, stratify, tree } from "d3";
 
+// javascript-obfuscator:disable
 export function Tree(parent) {
     BaseTree.call(this, parent);
 

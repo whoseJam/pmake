@@ -7,6 +7,7 @@ function castToId(tree, object) {
     return Check.isTypeOfSDNode(object) ? tree.nodeId(object) : object;
 }
 
+// javascript-obfuscator:disable
 export function BaseTree(parent) {
     SD2DNode.call(this, parent);
 
