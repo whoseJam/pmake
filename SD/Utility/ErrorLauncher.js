@@ -1,3 +1,5 @@
+import { Check } from "./Check";
+
 export class ErrorLauncher {
     static unknownKeyError(key) {
         throw new Error(`Unknown key ${key}.`);
@@ -23,6 +25,32 @@ export class ErrorLauncher {
     }
     static linkNotExist(source, target) {
         throw new Error(`Link (source = ${source}, target = ${target}) do not exists.`);
+    }
+    static treeNodeNotFound(node) {
+        if (Check.isTypeOfSDNode(node)) {
+            console.log(node);
+            throw new Error("Tree node above not found.");
+        } else {
+            throw new Error(`Tree node[${node}] not found.`);
+        }
+    }
+    static treeLinkNotFound(source, target) {
+        if (Check.isTypeOfSDNode(source) && !Check.isTypeOfSDNode(target)) {
+            console.log("source =", source);
+            throw new Error(`Tree link[source, ${target}] not found.`);
+        } else if (!Check.isTypeOfSDNode(source) && Check.isTypeOfSDNode(target)) {
+            console.log("target =", target);
+            throw new Error(`Tree link[${source}, target] not found.`);
+        } else if (Check.isTypeOfSDNode(source) && Check.isTypeOfSDNode(target)) {
+            console.log("source =", source);
+            console.log("target =", target);
+            throw new Error(`Tree link[source, target] not found`);
+        } else {
+            throw new Error(`Tree link[${source}, ${target}] not found.`);
+        }
+    }
+    static lcaNotFound() {
+        throw new Error("LCA NOT FOUND.");
     }
     static whatHappened() {
         throw new Error("What happened???");
