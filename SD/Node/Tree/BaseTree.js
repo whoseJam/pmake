@@ -418,7 +418,7 @@ BaseTree.prototype = {
     },
     linkValue(source, target, value) {
         const element = this.__getLinkWithMethod(source, target, "value");
-        if (arguments.length === 1) return element.value();
+        if (arguments.length === 2) return element.value();
         element.value(value);
         return this;
     },

@@ -22,23 +22,20 @@
     <section>
         <h2>AC自动机2</h2>
         <iframe data-animation="./标记.js"
-            style="width: 1000px; height: 250px;"></iframe>
-        <codeblock>
+            style="width: 1000px; height: 300px;"></iframe>
+        <ul>
+            <li class="fragment">在匹配过程中，标记所有途径点（一个节点可能被标记多次）</li>
+            <li class="fragment">在fail树上，每一个标记到树根的这条树链，都在主串中某位置出现了一次</li>
+            <li class="fragment">统计每个节点其子树内的标记数量，即该节点在主串中出现的<b style="color: purple;">总次数</b></li>
+        </ul>
+        <codeblock class="fragment">
             <script type="text/template">
-                void query(const string& s) {
-                    int ans = 0, u = 1;
-                    for (int i = 0, dir; i < s.length(); i++) {
-                        dir = s[i] - 'a';
-                        while (!ch[u][dir] && u) u = fa[u];
-                        if (ch[u][dir]) u = ch[u][dir];
-                        else u = 1;
-                        vis[u]++;
-                    }
-                }
-                void dfs(int u) {
+                // 假设 cnt 数组是标记数组
+                // 注意区分fail树和trie树的子节点，它们是两棵不同的树
+                void Dfs(int u) {
                     for (int v : son[u]) {
-                        dfs(c);
-                        vis[u] += vis[v];
+                        Dfs(v);
+                        cnt[u] += cnt[v];
                     }
                 }
             </script>
