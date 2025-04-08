@@ -1,5 +1,6 @@
 import { SD2DNode } from "@/Node/SD2DNode";
 import { SDNode } from "@/Node/SDNode";
+import { PacketColor, SDColor } from "@/Utility/Color";
 
 export class BaseTree extends SD2DNode {
     nodes(): Array<SDNode>;
@@ -75,7 +76,7 @@ export class BaseTree extends SD2DNode {
     nodeText(node: number | string | SDNode, text: string): this;
     text(source: number | string | SDNode, target: number | string | SDNode): string;
     text(source: number | string | SDNode, target: number | string | SDNode, text: string): this;
-    linkText(source: number | string | SDNode, target: number | stirng | SDNode): string;
+    linkText(source: number | string | SDNode, target: number | string | SDNode): string;
     linkText(source: number | string | SDNode, target: number | string | SDNode, text: string): this;
     intValue(node: number | string | SDNode): number;
     intValue(source: number | string | SDNode, target: number | string | SDNode): number;

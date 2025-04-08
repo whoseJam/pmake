@@ -20,33 +20,27 @@ export class ErrorLauncher {
     static invalidComponentStatus() {
         throw new Error("The component somehow get into an invalid status.");
     }
-    static nodeNotExists(id) {
-        throw new Error(`Node (id = ${id}) do not exists.`);
-    }
-    static linkNotExist(source, target) {
-        throw new Error(`Link (source = ${source}, target = ${target}) do not exists.`);
-    }
-    static treeNodeNotFound(node) {
+    static nodeNotFound(node) {
         if (Check.isTypeOfSDNode(node)) {
             console.log(node);
-            throw new Error("Tree node above not found.");
+            throw new Error("Tree/Graph node above not found.");
         } else {
-            throw new Error(`Tree node[${node}] not found.`);
+            throw new Error(`Tree/Graph node[${node}] not found.`);
         }
     }
-    static treeLinkNotFound(source, target) {
+    static linkNotFound(source, target) {
         if (Check.isTypeOfSDNode(source) && !Check.isTypeOfSDNode(target)) {
             console.log("source =", source);
-            throw new Error(`Tree link[source, ${target}] not found.`);
+            throw new Error(`Tree/Graph link[source, ${target}] not found.`);
         } else if (!Check.isTypeOfSDNode(source) && Check.isTypeOfSDNode(target)) {
             console.log("target =", target);
-            throw new Error(`Tree link[${source}, target] not found.`);
+            throw new Error(`Tree/Graph link[${source}, target] not found.`);
         } else if (Check.isTypeOfSDNode(source) && Check.isTypeOfSDNode(target)) {
             console.log("source =", source);
             console.log("target =", target);
-            throw new Error(`Tree link[source, target] not found`);
+            throw new Error(`Tree/Graph link[source, target] not found`);
         } else {
-            throw new Error(`Tree link[${source}, ${target}] not found.`);
+            throw new Error(`Tree/Graph link[${source}, ${target}] not found.`);
         }
     }
     static lcaNotFound() {

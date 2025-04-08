@@ -3,7 +3,50 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const C = sd.color();
 
-sd.main(TestOutRangeInsert);
+sd.main(TestDrop);
+
+async function TestDrop() {
+    const grid1 = new sd.Grid(svg).insert(0, 0, 1).insert(0, 1, 2).insert(0, 2, 3);
+    const grid2 = new sd.Grid(svg).y(100).insert(0, 0, "A").insert(0, 1, "B").insert(0, 2, "C");
+    function swapByValue(x) {
+        grid1.startAnimate();
+        grid2.startAnimate();
+        const v1 = grid1.dropValue(0, x);
+        const v2 = grid2.dropValue(0, x);
+        grid1.element(0, x).valueFromExist(v2);
+        grid2.element(0, x).valueFromExist(v1);
+        grid1.endAnimate();
+        grid2.endAnimate();
+    }
+    function swapByElement(x) {
+        grid1.startAnimate();
+        grid2.startAnimate();
+        const e1 = grid1.dropElement(0, x);
+        const e2 = grid2.dropElement(0, x);
+        grid1.insertFromExistElement(0, x, e2);
+        grid2.insertFromExistElement(0, x, e1);
+        grid1.endAnimate();
+        grid2.endAnimate();
+    }
+    await sd.pause();
+    swapByValue(2);
+    await sd.pause();
+    swapByElement(1);
+}
+
+async function TestInsert() {
+    const svg = sd.svg();
+    const grid = new sd.Grid(svg).n(1).m(3);
+    const value1 = new sd.Circle(svg).cx(grid.element(0, 0).cx()).cy(120);
+    const value2 = new sd.Text(svg, "A").cx(grid.element(0, 1).cx()).cy(120);
+    const value3 = new sd.Box(svg, "B").cx(grid.element(0, 2).cx()).cy(120);
+    await sd.pause();
+    grid.startAnimate().insert(1, 0, value1).endAnimate();
+    await sd.pause();
+    grid.startAnimate().insertFromExistValue(1, 1, value2).endAnimate();
+    await sd.pause();
+    grid.startAnimate().insertFromExistElement(1, 2, value3).endAnimate();
+}
 
 async function TestOutRangeInsert() {
     const grid = new sd.Grid(svg).x(100).y(100).startN(1).startM(1);

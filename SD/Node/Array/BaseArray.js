@@ -46,6 +46,7 @@ BaseArray.prototype = {
         for (let i = this.start(); i <= this.end(); i++) if (this.element(i) === element) return i;
         return -1;
     },
+
     element(i) {
         const id = this.idx(i);
         if (0 <= id && id < this.length()) return this.vars.elements[id];
@@ -64,6 +65,7 @@ BaseArray.prototype = {
         this.vars.elements.forEach((element, id) => callback(element, id + this.start()));
         return this;
     },
+
     opacity() {
         if (arguments.length === 0) {
             return SD2DNode.prototype.opacity.call(this);
@@ -135,6 +137,7 @@ BaseArray.prototype = {
             return this;
         }
     },
+
     insert() {
         ErrorLauncher.notImplementedYet("insert", this.type());
     },
@@ -160,6 +163,7 @@ BaseArray.prototype = {
         for (let i = 0; i < array.length; i++) this.push(array[i]);
         return this;
     },
+
     erase(id) {
         const element = this.element(id);
         if (!element) ErrorLauncher.arrayElementNotFound(id);
@@ -185,8 +189,9 @@ BaseArray.prototype = {
         return this.dropElement(this.end());
     },
     dropValue(id) {
-        const element = this.__getElementWithMethod(id, "drop");
+        const element = this.element(id);
         if (!element) return undefined;
+        if (!element.drop) ErrorLauncher.methodNotFound(element, "drop");
         return element.drop();
     },
     dropFirstValue() {
@@ -195,6 +200,7 @@ BaseArray.prototype = {
     dropLastValue() {
         return this.dropValue(this.end());
     },
+
     sort(l, r, comparator = (a, b) => a.intValue() - b.intValue()) {
         if (arguments.length === 0) return this.sort(this.start(), this.end(), comparator);
         if (arguments.length === 1) return this.sort(this.start(), this.end(), arguments[0]);
@@ -207,6 +213,7 @@ BaseArray.prototype = {
         this.vars.elements = elements;
         return this;
     },
+
     __insert(id, element) {
         this.childAs(element);
         const idx = this.idx(id);

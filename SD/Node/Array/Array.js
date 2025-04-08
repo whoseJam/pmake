@@ -29,8 +29,6 @@ export function Array(parent) {
 
 Array.prototype = {
     ...BaseArray.prototype,
-    elementWidth: Factory.handlerLowPrecise("elementWidth"),
-    elementHeight: Factory.handlerLowPrecise("elementHeight"),
     width(width) {
         if (width === undefined) return this.elementWidth() * this.length();
         const length = this.length() ? this.length() : 1;
@@ -38,8 +36,7 @@ Array.prototype = {
         return this;
     },
     insert(id, value) {
-        const element = new Box(this.layer("elements")).opacity(0);
-        element.value(value);
+        const element = new Box(this.layer("elements"), value).opacity(0);
         element.onEnter(EN.appear("elements"));
         this.__insert(id, element);
         return this;
@@ -48,15 +45,16 @@ Array.prototype = {
         const element = new Box(this.layer("elements")).opacity(0);
         element.onEnter(EN.appear("elements"));
         this.__insert(id, element);
-        element.value(value.onEnter(EN.moveTo()));
+        element.valueFromExist(value);
         return this;
     },
-    insertFromExistElement(id, value) {
-        const element = value;
+    insertFromExistElement(id, element) {
         element.onEnter(EN.moveTo("elements"));
         this.__insert(id, element);
         return this;
     },
+    elementWidth: Factory.handlerLowPrecise("elementWidth"),
+    elementHeight: Factory.handlerLowPrecise("elementHeight"),
 };
 
 Array.prototype.height = Array.prototype.elementHeight;

@@ -7,7 +7,6 @@ function castToId(tree, object) {
     return Check.isTypeOfSDNode(object) ? tree.nodeId(object) : object;
 }
 
-// javascript-obfuscator:disable
 export function BaseTree(parent) {
     SD2DNode.call(this, parent);
 
@@ -21,8 +20,6 @@ export function BaseTree(parent) {
     this._.sdnodesMap = {}; // SDNode id -> { node: SDNode, id: TreeID } | { link: SDNode, sourceId: TreeID, targetId: TreeID }
     this._.nodesMap = {}; // TreeID -> SDNode
     this._.linksMap = new Map(); // TreeID -> SDNode
-
-    this._.BASE_TREE = true;
 }
 
 BaseTree.prototype = {
@@ -96,12 +93,12 @@ BaseTree.prototype = {
     },
     inLink(node) {
         const id = this.nodeId(node);
-        if (id === undefined) ErrorLauncher.treeNodeNotFound(node);
+        if (id === undefined) ErrorLauncher.nodeNotFound(node);
         return this.findLink((_1, _2, targetId) => targetId === id);
     },
     outLinks(node) {
         const id = this.nodeId(node);
-        if (id === undefined) ErrorLauncher.treeNodeNotFound(node);
+        if (id === undefined) ErrorLauncher.nodeNotFound(node);
         return this.findLinks((_1, sourceId, _2) => sourceId === id);
     },
     father(node) {
@@ -130,8 +127,8 @@ BaseTree.prototype = {
     },
     lca(x, y) {
         let [_x, _y, dx, dy] = [this.nodeId(x), this.nodeId(y), this.depth(x), this.depth(y)];
-        if (_x === undefined) ErrorLauncher.treeNodeNotFound(x);
-        if (_y === undefined) ErrorLauncher.treeNodeNotFound(y);
+        if (_x === undefined) ErrorLauncher.nodeNotFound(x);
+        if (_y === undefined) ErrorLauncher.nodeNotFound(y);
         for (let i = 1; i <= 100 && _x !== _y; i++) {
             if (dx > dy) (_x = this.fatherId(_x)), dx--;
             else (y = this.fatherId(y)), dy--;
@@ -380,12 +377,12 @@ BaseTree.prototype = {
         if (arguments.length === 1) {
             const [node] = arguments;
             const _node = this.element(node);
-            if (!_node) ErrorLauncher.treeNodeNotFound(node);
+            if (!_node) ErrorLauncher.nodeNotFound(node);
             element = _node;
         } else {
             const [source, target] = arguments;
             const link = this.element(source, target);
-            if (!link) ErrorLauncher.treeLinkNotFound(source, target);
+            if (!link) ErrorLauncher.linkNotFound(source, target);
             element = link;
         }
         if (!element.intValue) {
@@ -479,13 +476,13 @@ BaseTree.prototype = {
     },
     __getNodeWithMethod(node, method) {
         const element = this.element(node);
-        if (!element) ErrorLauncher.treeNodeNotFound(node);
+        if (!element) ErrorLauncher.nodeNotFound(node);
         if (typeof element[method] !== "function") ErrorLauncher.methodNotFound(element, method);
         return element;
     },
     __getLinkWithMethod(source, target, method) {
         const element = this.element(source, target);
-        if (!element) ErrorLauncher.treeLinkNotFound(source, target);
+        if (!element) ErrorLauncher.linkNotFound(source, target);
         if (typeof element[method] !== "function") ErrorLauncher.methodNotFound(element, method);
         return element;
     },
