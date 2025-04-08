@@ -131,7 +131,7 @@ BaseTree.prototype = {
         if (_y === undefined) ErrorLauncher.nodeNotFound(y);
         for (let i = 1; i <= 100 && _x !== _y; i++) {
             if (dx > dy) (_x = this.fatherId(_x)), dx--;
-            else (y = this.fatherId(y)), dy--;
+            else (_y = this.fatherId(_y)), dy--;
         }
         if (_x !== _y) ErrorLauncher.lcaNotFound();
         return this.findNodeById(_x);

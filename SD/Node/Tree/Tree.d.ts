@@ -1,19 +1,8 @@
 import { SDNode } from "@/Node/SDNode";
 import { BaseTree } from "@/Node/Tree/BaseTree";
-import { RenderNode } from "@/Renderer/RenderNode";
 
 export class Tree extends BaseTree {
-    constructor(target: SDNode | RenderNode);
-
-    /**
-     * 获取树的层高
-     */
     layerHeight(): number;
-
-    /**
-     * 设置树的层高
-     * @param height
-     */
     layerHeight(height: number): this;
 }
 

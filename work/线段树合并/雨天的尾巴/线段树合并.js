@@ -1,4 +1,5 @@
 import * as sd from "@/sd";
+import { mergeArrayOnTree } from "../_/MergeArrayOnTree";
 
 const svg = sd.svg();
 const div = sd.div();
@@ -17,6 +18,7 @@ const links = [
 const inputX = new sd.Input(div).label("x");
 const inputY = new sd.Input(div).y(inputX.my() + 10).label("y");
 const inputCount = new sd.Input(div).y(inputY.my() + 10).label("count");
+const buttons = [];
 for (let i = 0, y = inputCount.my(); i < itemColors.length; i++) {
     const button = new sd.Button(div)
         .y(y + 10)
@@ -24,6 +26,37 @@ for (let i = 0, y = inputCount.my(); i < itemColors.length; i++) {
         .text(`加${i + 1}类救济粮`);
     button.onClick(() => add(i));
     y = button.my();
+    buttons.push(button);
+}
+const submit = new sd.Button(div)
+    .text("提交")
+    .width(120)
+    .y(buttons[buttons.length - 1].my() + 10)
+    .onClick(() => {
+        buttons.forEach(button => button.onClick(null));
+        sd.inter(async () => {
+            await mergeArrayOnTree(tree, {
+                onMergeArray,
+            });
+        });
+    });
+
+async function onMergeArray(u, v) {
+    const du = tree.element(u);
+    const dv = tree.element(v);
+    const au = du.child("arr");
+    const av = dv.child("arr");
+    await sd.pause();
+    const link = sd.Link(av, au).startAnimate().pointStoT().endAnimate().arrow();
+    await sd.pause();
+    au.forEachElement((element, id) => {
+        element
+            .startAnimate()
+            .value(element.intValue() + av.intValue(id))
+            .endAnimate();
+    });
+    await sd.pause();
+    link.startAnimate().fadeStoT().endAnimate().remove();
 }
 
 function add(type) {

@@ -3,20 +3,36 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const C = sd.color();
 const n = 8;
-const seq1 = [1, 2, 0, 0, 2, 0, 0, 0];
-const seq2 = [0, 0, 3, 1, 1, 1, 0, 0];
+const lvalues = [7, 4, 6, 8];
+const rvalues = [1, 2, 3, 5];
+const seq1 = sd.make1d(n, 0);
+const seq2 = sd.make1d(n, 0);
+lvalues.forEach(v => (seq1[v - 1] = 1));
+rvalues.forEach(v => (seq2[v - 1] = 1));
 const t1 = makeTree(n, seq1);
 const t2 = makeTree(n, seq2).x(t1.mx() + 80);
 
 sd.init(() => {
-    new sd.Array(t1)
-        .pushArray(seq1)
-        .cx(t1.cx())
-        .my(t1.y() - 40);
-    new sd.Array(t2)
-        .pushArray(seq2)
-        .cx(t2.cx())
-        .my(t2.y() - 40);
+    const item1 = new sd.Array(svg).elementWidth(15).elementHeight(15).pushArray(lvalues);
+    const item2 = new sd.Array(svg).elementWidth(15).elementHeight(15).pushArray(rvalues);
+    sd.Aside(
+        new sd.Array(t1)
+            .pushArray(seq1)
+            .cx(t1.cx())
+            .my(t1.y() - 40),
+        item1,
+        "tc"
+    );
+    sd.Aside(
+        new sd.Array(t2)
+            .pushArray(seq2)
+            .cx(t2.cx())
+            .my(t2.y() - 40),
+        item2,
+        "tc"
+    );
+    sd.Label(item1, "左子树拥有的权值", "tc");
+    sd.Label(item2, "右子树拥有的权值", "tc");
 });
 
 sd.main(async () => {
@@ -80,13 +96,6 @@ sd.main(async () => {
             return;
         } else if (t1.element(x).opacity() < 1) {
             await sd.pause();
-            if (x > 1)
-                sd.Link(t1.element(x >> 1), t2.element(x))
-                    .stroke(C.red)
-                    .opacity(0)
-                    .startAnimate()
-                    .opacity(1)
-                    .endAnimate();
             transferSubtree(t2, t3, x);
             return;
         } else if (t2.element(x).opacity() < 1) {
@@ -99,9 +108,6 @@ sd.main(async () => {
             if (x > 1) t3.element(x >> 1, x).opacity(1);
             t3.element(x).opacity(1);
             t3.endAnimate();
-            t1.startAnimate();
-            t1.element(x).value(t3.text(x));
-            t1.endAnimate();
             if (l === r) return;
             const mid = (l + r) >> 1;
             await dfs(x << 1, l, mid);
@@ -112,6 +118,13 @@ sd.main(async () => {
             await sd.pause();
             px.startAnimate().moveTo(x).endAnimate();
             py.startAnimate().moveTo(x).endAnimate();
+            await sd.pause();
+            sd.Label(t3.element(x), `+${t1.rightChild(x).intValue() * t2.leftChild(x).intValue()}`, "rc", 15, 1)
+                .color(C.textBlue)
+                .opacity(0)
+                .startAnimate()
+                .opacity(1)
+                .endAnimate();
             return;
         }
     }
