@@ -2,6 +2,12 @@ import { SDNode } from "@/Node/SDNode";
 import { BaseTree } from "@/Node/Tree/BaseTree";
 
 export class Tree extends BaseTree {
+    layout(): "vertical" | "horizontal";
+    layout(mode: "vertical" | "horizontal"): this;
+    layerGap(): number;
+    layerGap(gap: number): this;
+    layerWidth(): number;
+    layerWidth(width: number): this;
     layerHeight(): number;
     layerHeight(height: number): this;
 }

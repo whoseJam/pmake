@@ -3,9 +3,11 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 
 sd.init(() => {
-    sd.freeze();
+    // sd.freeze();
     makeComplexGraph();
-    sd.unfreeze();
+    // .forEachNode(node => node.r(50))
+    // .width(500);
+    // sd.unfreeze();
 });
 
 sd.main(async () => {
@@ -18,15 +20,16 @@ function makeComplexGraph() {
     console.log(tree.width(), tree.height());
     graph.newNode(1, tree);
     graph.element(1).r(80);
-    graph.newNode(2, makeVertex());
-    graph.newNode(3, makeGrid());
-    graph.newNode(4, makeArray());
-    graph.link(1, 2).link(1, 3).link(2, 3).link(3, 4);
+    console.log(graph.element(1).id);
+    // graph.newNode(2, makeVertex());
+    // graph.newNode(3, makeGrid());
+    // graph.newNode(4, makeArray());
+    // graph.link(1, 2).link(1, 3).link(2, 3).link(3, 4);
     return graph;
 }
 
 function makeComplexTree() {
-    const tree = new sd.Tree(svg).width(60).layerHeight(120).freeze();
+    const tree = new sd.Tree(svg).layerHeight(120).freeze();
     tree.root(1, makeGrid());
     tree.newNode(2, makeArray());
     tree.newNode(3, makeGrid());

@@ -3,7 +3,21 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const C = sd.color();
 
-sd.main(TestDepth);
+sd.main(TestLayout);
+
+async function TestLayout() {
+    const tree = new sd.Tree(svg).x(100).y(100);
+    tree.link(1, 2).link(2, 3).link(1, 4);
+    await sd.pause();
+    tree.startAnimate().layout("horizontal").endAnimate();
+}
+
+async function TestErrorStructure() {
+    const tree = new sd.Tree(svg).x(100).y(100);
+    tree.link(1, 2).link(3, 4);
+    await sd.pause();
+    tree.startAnimate().link(1, 3).endAnimate();
+}
 
 async function TestBuildTree() {
     const tree = new sd.Tree(svg);
