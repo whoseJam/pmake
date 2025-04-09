@@ -213,6 +213,9 @@ export function reactive(object, father = undefined) {
             object[key] = otherObject[key];
         }
     };
+    object.setTogether = function () {
+        ErrorLauncher.warnNotImplementedYet("setTogether");
+    };
     return proxy;
 }
 

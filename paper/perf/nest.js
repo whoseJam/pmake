@@ -4,6 +4,7 @@ const svg = sd.svg();
 
 sd.init(() => {
     // sd.freeze();
+    // makeComplexTree();
     makeComplexGraph();
     // .forEachNode(node => node.r(50))
     // .width(500);
