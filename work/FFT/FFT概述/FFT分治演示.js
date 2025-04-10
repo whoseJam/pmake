@@ -5,7 +5,7 @@ const C = sd.color();
 const R = sd.rule();
 const EN = sd.enter();
 const n = 8;
-const arr = new sd.Array(svg).resize(n);
+const arr = new sd.Array(svg).x(100).y(100).resize(n);
 let id = 0;
 
 sd.init(() => {
