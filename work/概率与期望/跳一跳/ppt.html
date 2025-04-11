@@ -48,8 +48,8 @@
         <p>
             $$
             \begin{aligned}
-            E(普通跳跃得分)&=E(第二格上普通跳跃得分) \\
-            &+E(第三格上普通跳跃得分) \\
+            E(普通跳跃得分)&=E(第一格上普通跳跃得分) \\
+            &+E(第二格上普通跳跃得分) \\
             &+E(...) \\
             &+E(第n格上普通跳跃得分)
             \end{aligned}
@@ -100,14 +100,14 @@
         <p>
             $$
             \begin{aligned}
-            E(中心跳跃cnt得分)&=E(第二格上中心跳跃cnt得分) \\
-            &+E(第三格上中心跳跃cnt得分) \\
+            E(中心跳跃cnt得分)&=E(第一格上中心跳跃cnt得分) \\
+            &+E(第二格上中心跳跃cnt得分) \\
             &+E(...) \\
             &+E(第n格上中心跳跃cnt得分)
             \end{aligned}
             $$
         </p>
-        <p class="fragment quote">如何计算 $E(第i格上中心跳跃cnt得分)？$</p>
+        <p class="fragment quote">如何计算 $E(第i格上中心跳跃cnt得分)$？</p>
         <p class="fragment">容易发现第 $i$ 个上产生的得分可能是 $2,4,8,16,32...$，这取决于前面有多少个连续的格子都是<b style="color: red;">中心跳跃</b><span class="fragment">，既然 $cnt$ 也是一个随机变量，我们不妨把这个随机变量一路上的期望推导出来</span></b></p>
         <p class="fragment">设 $E_i$ 表示来到第 $i$ 个格子上时 $cnt$ 的期望取值
             $$
