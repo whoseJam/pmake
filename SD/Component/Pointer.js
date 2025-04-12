@@ -28,7 +28,7 @@ function erasePointerMap(pointer) {
 }
 
 export function Pointer(parent, label, direction = "b", gap = 3, length = 20) {
-    const pointer = new Line(parent).opacity(0).arrow();
+    const pointer = new Line(parent);
     pointer.vars.merge({
         element: undefined,
         length,
@@ -81,5 +81,6 @@ export function Pointer(parent, label, direction = "b", gap = 3, length = 20) {
     });
     pointer.childAs(new Text(pointer, label), labelRule);
     if (Check.isTypeOfSDNode(parent)) parent.childAs(pointer);
+    pointer.opacity(0).arrow();
     return pointer;
 }

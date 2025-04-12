@@ -5,9 +5,14 @@ const sizeKey = new Set(["x", "y", "cx", "cy", "width", "height", "d", "x1", "y1
 
 function isVisible(element) {
     if (element && "opacity" in element) {
+        if (global.aaa) {
+            console.log("element=", element, "parent=", element.parent, "layer=", element._.layer);
+        }
+
         if (element.opacity() === 0) return false;
+        if (element.parent) return isVisible(element.parent);
         if (element._ && element._.layer) return isVisible(element._.layer);
-        return isVisible(element.parent);
+        return false;
     }
     return true;
 }
@@ -284,6 +289,12 @@ export class ActionList {
                             window.SVG_MINX = Math.min(window.SVG_MINX, x);
                             window.SVG_MAXY = Math.max(window.SVG_MAXY, my);
                             window.SVG_MINY = Math.min(window.SVG_MINY, y);
+                            if (x < 0) {
+                                global.aaa = true;
+                                isVisible(owner);
+                                console.log("-------------------------");
+                                global.aaa = false;
+                            }
                         }
                     }
                 });
