@@ -41,14 +41,7 @@ export function SD2DNode(target) {
 
 SD2DNode.prototype = {
     ...SDNode.prototype,
-    opacity(opacity) {
-        if (arguments.length === 0) return this.vars.opacity;
-        this.vars.opacity = opacity;
-        this._.children.forEach(child => {
-            child.opacity(opacity);
-        });
-        return this;
-    },
+    opacity: Factory.handlerMediumPrecise("opacity"),
     inRange(point) {
         return this.x() <= point[0] && point[0] <= this.mx() && this.y() <= point[1] && point[1] <= this.my();
     },
