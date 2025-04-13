@@ -29,13 +29,13 @@
             </div>
             <div style="width: 33%;">
                 <p class="fragment">如果 $a_i\gt a_{i-1}$</p>
-                <iframe data-animation="./高低.js" class="fragment"
+                <iframe data-animation="./低高.js" class="fragment"
                     style="width: 1000px; height: 300px;"></iframe>
                 <p class="fragment">正确率显然是 $\frac{a_{i-1} }{a_i}\frac{1}{a_{i-1} }$</p>        
             </div>
             <div style="width: 33%;">
                 <p class="fragment">如果 $a_i\lt a_{i-1}$</p>
-                <iframe data-animation="./低高.js" class="fragment"
+                <iframe data-animation="./高低.js" class="fragment"
                     style="width: 1000px; height: 300px;"></iframe>
                 <p class="fragment">正确率显然是 $\frac{a_{i} }{a_{i-1} }\frac{1}{a_{i} }$</p>
             </div>
@@ -43,8 +43,8 @@
         <p class="fragment math-fragment" style="font-size: 20px;">
             $$
             \begin{aligned}
-            E(第i题AC)&=\frac{1}{max(a_i,a_{i+1})} \\
-            E(AC)&=\sum_{i=1}^n \frac{1}{max(a_i,a_{i+1})}
+            E(第i题AC)&=\frac{1}{max(a_{i-1},a_{i})} \\
+            E(AC)&=\sum_{i=1}^n \frac{1}{max(a_{i-1},a_{i})}
             \end{aligned}
             $$
         </p>
