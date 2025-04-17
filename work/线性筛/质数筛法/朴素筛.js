@@ -6,10 +6,7 @@ const R = sd.rule();
 const n = 20;
 const arr = new sd.Array(svg).start(2).resize(n - 1);
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     arr.cx(600).cy(300);
     for (let i = 2; i <= n; i++) {
         arr.value(i, i);
@@ -18,9 +15,9 @@ function init() {
         stk.elementWidth(20).elementHeight(20);
         e.childAs("stk", stk, R.aside("bc"));
     }
-}
+});
 
-async function main() {
+sd.main(async () => {
     const cur = sd.Pointer(arr, "cur");
     const kcur = sd.Pointer(arr, "kcur");
     for (let i = 2; i <= n; i++) {
@@ -28,7 +25,9 @@ async function main() {
         cur.startAnimate().moveTo(i).endAnimate();
         for (let j = 2; i * j <= n; j++) {
             await sd.pause();
-            kcur.startAnimate().moveTo(i * j).endAnimate();
+            kcur.startAnimate()
+                .moveTo(i * j)
+                .endAnimate();
             const notPrime = arr.element(i * j);
             const stk = notPrime.child("stk");
             const size = stk.length();
@@ -37,4 +36,4 @@ async function main() {
         await sd.pause();
         kcur.startAnimate().moveTo(null).endAnimate();
     }
-}
+});
