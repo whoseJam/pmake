@@ -12,13 +12,10 @@
             <script type="text/template">
                 void Sieve(int n) {
                     for (int i = 2; i <= n; i++) {
-                        if (!vis[i]) {
-                            prim[++tot] = i;
-                            f[i] = i;
-                        }
+                        if (!vis[i]) f[prim[++tot] = i] = i; // 对于任意质数 p，f[p] = p
                         for (int j = 1; j <= tot && i * prim[j] <= n; j++) {
                             vis[i * prim[j]] = 1;
-                            f[i * prim[j]] = prim[j];
+                            f[i * prim[j]] = prim[j]; // 对于任意合数 x，其 f[x] = 筛掉它的合数
                             if (i % prim[j] == 0) break;
                         }
                     }
