@@ -13,33 +13,29 @@
     </section>
     <section>
         <h2>最大流</h2>
-        <iframe 
-            style="width: 1000px; height: 400px;"
-            data-src="./animation/最大流例子.html"></iframe>
+        <iframe data-animation="./最大流例子.js"
+            style="width: 1000px; height: 400px;"></iframe>
         <p class="fragment">上图的最大流条数就是 $5$ 条</p>
     </section>
     <section>
         <h2>最大流</h2>
         <p>那么我们如何去找一个图的最大流呢？</p>
         <p class="fragment">最朴素的思想，自然是不断DFS出源点到汇点的剩余容量不为 $0$ 的道路，找到这条道路的瓶颈，然后在这条道路上放尽可能多的流</p>
-        <iframe rate="1.05" class="fragment"
-            style="width: 1000px; height: 400px;"
-            data-src="./animation/成功的朴素最大流.html"></iframe>
+        <iframe data-animation="./成功的朴素最大流.js" class="fragment"
+            style="width: 1000px; height: 400px;"></iframe>
         <p class="fragment">我们把一条从源点到汇点、剩余容量不为 $0$ 的道路，叫做一条<b>增广路</b>，意指这条路可以让我们的最大流变大</p>
     </section>
     <section>
         <h2>最大流</h2>
         <p>但是这样做是有反例的</p>
-        <iframe rate="1.05"
-            style="width: 1000px; height: 400px;"
-            data-src="./animation/失败的朴素最大流.html"></iframe>
+        <iframe data-animation="./失败的朴素最大流.js"
+            style="width: 1000px; height: 400px;"></iframe>
     </section>
     <section>
         <h2>最大流</h2>
         <p>于是，我们引入了反悔流</p>
-        <iframe rate="1.05"
-            style="width: 1000px; height: 400px;"
-            data-src="./animation/反悔最大流.html"></iframe>
+        <iframe data-animation="./反悔最大流.js"
+            style="width: 1000px; height: 400px;"></iframe>
         <p class="fragment quote" style="margin-top: -20px;">更专业的说法叫做引入反向弧，允许网络退流</p>
     </section>
     <section>

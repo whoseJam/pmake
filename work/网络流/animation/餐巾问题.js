@@ -5,10 +5,7 @@ const C = sd.color();
 const R = sd.rule();
 const graph = new sd.GridGraph(svg);
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     graph.at(0, 0.5).newNode("S");
 
     graph.at(0.33, 0).newNode("1");
@@ -27,10 +24,7 @@ function init() {
 
     function link(u, v, value, xloc, yloc, col = C.black) {
         graph.newLink(u, v);
-        graph.element(u, v)
-            .arrow()
-            .stroke(col)
-            .value(value, R.pointAtPathByRate(0.5, xloc, yloc));
+        graph.element(u, v).arrow().stroke(col).value(value, R.pointAtPathByRate(0.5, xloc, yloc));
     }
     function simpleLink(u, v) {
         graph.newLink(u, v);
@@ -49,8 +43,6 @@ function init() {
 
     graph._.linkType = sd.Curve;
     link("S", "1'", "∞/p", "mx", "my");
-}
+});
 
-async function main() {
-    await sd.pause();
-}
+sd.main(async () => {});

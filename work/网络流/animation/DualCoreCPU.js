@@ -8,13 +8,10 @@ const links = [
     { from: "S", to: "j", cap: "a_j", xloc: "mx", yloc: "y" },
     { from: "i", to: "j", cap: "w_{i,j}", xloc: "x", yloc: "cy" },
     { from: "i", to: "T", cap: "b_i", xloc: "x", yloc: "my" },
-    { from: "j", to: "T", cap: "b_j", xloc: "x", yloc: "y" }
+    { from: "j", to: "T", cap: "b_j", xloc: "x", yloc: "y" },
 ];
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     graph.at(0.5, 0).newNode("S");
     graph.at(0, 0.5).newNode("i");
     graph.at(1, 0.5).newNode("j");
@@ -32,8 +29,6 @@ function init() {
         e.yloc = lk.yloc;
     });
     graph.element("i", "j").doubleArrow();
-}
+});
 
-async function main() {
-    await sd.pause();
-}
+sd.main(async () => {});

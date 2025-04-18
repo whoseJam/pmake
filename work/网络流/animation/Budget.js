@@ -5,10 +5,7 @@ const C = sd.color();
 const R = sd.rule();
 const graph = new sd.GridGraph(svg);
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     graph.at(0, 0.5).newNode("S");
     graph.at(0.33, 0).newNode("R1");
     graph.at(0.33, 0.33).newNode("R2");
@@ -28,23 +25,20 @@ function init() {
     for (let i = 1; i <= 3; i++) {
         link(`C${i}`, "T");
     }
-}
+});
 
-async function main() {
+sd.main(async () => {
     await sd.pause();
-    graph.element("S", "R2")
-        .startAnimate()
-        .value("V/V")
-        .endAnimate();
+    graph.element("S", "R2").startAnimate().value("V/V").endAnimate();
     await sd.pause();
     graph.startAnimate();
     const label = ["3/5", "0/inf", "3/20"];
     for (let i = 1; i <= 3; i++) {
-        graph.newLink("R2", `C${i}`)
+        graph
+            .newLink("R2", `C${i}`)
             .element("R2", `C${i}`)
-            .value(label[i-1])
+            .value(label[i - 1])
             .arrow();
     }
     graph.endAnimate();
-    await sd.pause();
-}
+});

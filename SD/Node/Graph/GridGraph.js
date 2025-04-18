@@ -19,6 +19,7 @@ export function GridGraph(parent) {
     this._.pos = {};
 
     this.effect("gridGraph", () => {
+        console.log("trigger grid update");
         const pos = this._.pos;
         const x = this.x();
         const mx = this.mx();

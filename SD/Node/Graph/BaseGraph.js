@@ -151,6 +151,7 @@ BaseGraph.prototype = {
         this._.sdnodesMap[element.id] = { link: element, sourceId, targetId };
         this._.linksMap[`${sourceId}-${targetId}`] = element;
         this.childAs(element);
+        console.log("insert new link source=", sourceId, "target=", targetId);
         this.vars.links.push(element);
         return this;
     },

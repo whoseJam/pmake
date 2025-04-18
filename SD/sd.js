@@ -34,6 +34,7 @@ export { ZZLine } from "./Node/Curve/ZZLine.js";
 export { Box } from "./Node/Element/Box.js";
 export { EllipseVertex } from "./Node/Element/EllipseVertex.js";
 export { Vertex } from "./Node/Element/Vertex.js";
+export { BaseGraph } from "./Node/Graph/BaseGraph.js";
 export { BipartiteGraph } from "./Node/Graph/BipartiteGraph.js";
 export { BoxDAG } from "./Node/Graph/BoxDAG.js";
 export { DAG } from "./Node/Graph/DAG.js";

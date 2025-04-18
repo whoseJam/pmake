@@ -5,10 +5,7 @@ const R = sd.rule();
 const graph1 = new sd.GridGraph(svg).height(200).cx(500).cy(300);
 const graph2 = new sd.GridGraph(svg).height(200).cx(700).cy(300);
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     function initGraph(graph) {
         graph.at(0, 0.5).newNode(1);
         graph.at(1, 0.5).newNode(2);
@@ -19,9 +16,9 @@ function init() {
     const e = graph1.element(1, 2).arrow();
     e.childAs("maxFlow", new sd.Text(e, 100), R.pointAtPathByRate(0.5, "mx", "cy", -10));
     e.childAs("minFlow", new sd.Text(e, 20), R.pointAtPathByRate(0.5, "x", "cy", 10));
-}
+});
 
-async function main() {
+sd.main(async () => {
     await sd.pause();
     graph2.startAnimate().newLink(1, 2);
     const e = graph2.element(1, 2);
@@ -41,4 +38,4 @@ async function main() {
     l1.arrow().opacity(0).startAnimate().opacity(1).value(20).endAnimate();
     l2.arrow().opacity(0).startAnimate().opacity(1).value(20).endAnimate();
     await sd.pause();
-}
+});

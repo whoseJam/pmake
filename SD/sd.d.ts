@@ -30,6 +30,7 @@ export { ZZLine } from "./Node/Curve/ZZLine";
 export { Box } from "./Node/Element/Box";
 export { EllipseVertex } from "./Node/Element/EllipseVertex";
 export { Vertex } from "./Node/Element/Vertex";
+export { BaseGraph } from "./Node/Graph/BaseGraph";
 export { BipartiteGraph } from "./Node/Graph/BipartiteGraph";
 export { BoxDAG } from "./Node/Graph/BoxDAG";
 export { DAG } from "./Node/Graph/DAG";

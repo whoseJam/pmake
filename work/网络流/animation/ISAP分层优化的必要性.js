@@ -9,13 +9,10 @@ const links = [
     { from: 1, to: 3, cap: 99, xloc: "mx", yloc: "y" },
     { from: 2, to: 3, cap: 1, xloc: "x", yloc: "cy" },
     { from: 2, to: 4, cap: 99, xloc: "x", yloc: "my" },
-    { from: 3, to: 4, cap: 99, xloc: "x", yloc: "y" }
+    { from: 3, to: 4, cap: 99, xloc: "x", yloc: "y" },
 ];
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     graph.at(0.5, 0).newNode(1);
     graph.at(0, 0.5).newNode(2);
     graph.at(1, 0.5).newNode(3);
@@ -31,20 +28,19 @@ function init() {
         e.yloc = lk.yloc;
     });
     graph._.linkType = sd.Curve;
-}
+});
 
-async function main() {
+sd.main(async () => {
     for (let i = 1; i <= 3; i++) {
         await flow(graph, [
             { from: 1, to: 2 },
             { from: 2, to: 3 },
-            { from: 3, to: 4 }
+            { from: 3, to: 4 },
         ]);
         await flow(graph, [
             { from: 1, to: 3 },
             { from: 3, to: 2 },
-            { from: 2, to: 4}
+            { from: 2, to: 4 },
         ]);
     }
-    await sd.pause();
-}
+});
