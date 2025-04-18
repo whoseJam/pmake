@@ -143,6 +143,10 @@ SDNode.prototype = {
         for (const name in this._.updaters) this.uneffect(name);
         return this;
     },
+    triggerEffect(name) {
+        this._.updaters[name].trigger();
+        return this;
+    },
 
     drag: forward("interact", "drag"),
     clickable: function (type) {

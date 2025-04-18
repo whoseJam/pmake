@@ -2,7 +2,6 @@ import { Enter as EN } from "@/Node/Core/Enter";
 import { BaseGraph } from "@/Node/Graph/BaseGraph";
 import { Cast } from "@/Utility/Cast";
 import { Factory } from "@/Utility/Factory";
-import { trim } from "@/Utility/Trim";
 
 export function GridGraph(parent) {
     BaseGraph.call(this, parent);
@@ -18,8 +17,7 @@ export function GridGraph(parent) {
     this._.curM = 0;
     this._.pos = {};
 
-    this.effect("gridGraph", () => {
-        console.log("trigger grid update");
+    this.effect("nodes", () => {
         const pos = this._.pos;
         const x = this.x();
         const mx = this.mx();
@@ -33,17 +31,6 @@ export function GridGraph(parent) {
         for (const node of this.vars.nodes) {
             this.tryUpdate(node, () => {
                 node.center(position(node));
-            });
-        }
-        for (const link of this.vars.links) {
-            const sourceId = this.sourceId(link);
-            const targetId = this.targetId(link);
-            const source = this.findNodeById(sourceId);
-            const target = this.findNodeById(targetId);
-            this.tryUpdate(link, () => {
-                link.source(source.center());
-                link.target(target.center());
-                trim(link, source, target);
             });
         }
     });
