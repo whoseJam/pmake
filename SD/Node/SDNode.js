@@ -158,7 +158,7 @@ SDNode.prototype = {
     onDblClick: forward("interact", "onDblClick"),
 
     onEnter(enter) {
-        if (enter === undefined) return this._.enter;
+        if (arguments.length === 0) return this._.enter;
         this._.enter = enter;
         return this;
     },
@@ -177,7 +177,7 @@ SDNode.prototype = {
         return this._.entering !== undefined;
     },
     onExit(exit) {
-        if (exit === undefined) return this._.exit;
+        if (arguments.length === 0) return this._.exit;
         this._.exit = exit;
         return this;
     },

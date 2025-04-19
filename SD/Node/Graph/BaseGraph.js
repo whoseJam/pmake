@@ -178,4 +178,6 @@ BaseGraph.prototype = {
         this.vars.links.push(element);
         return this;
     },
+    __getNodeWithMethod: BaseTree.prototype.__getNodeWithMethod,
+    __getLinkWithMethod: BaseTree.prototype.__getLinkWithMethod,
 };

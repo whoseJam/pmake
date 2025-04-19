@@ -69,14 +69,14 @@ GridGraph.prototype = {
         return this;
     },
     newLink(sourceId, targetId, value) {
-        const element = new this._.linkType(this.layer("links"));
+        const element = new this._.linkType(this.layer("links")).opacity(0);
         element.value(value);
         element.onEnter(EN.appear("links"));
         this.__insertLink(sourceId, targetId, element);
         return this;
     },
     newLinkFromExistValue(sourceId, targetId, value) {
-        const element = new this._.linkType(this.layer("links"));
+        const element = new this._.linkType(this.layer("links")).opacity(0);
         element.onEnter(EN.appear("links"));
         this.__insertLink(sourceId, targetId, element);
         element.value(value.onEnter(EN.moveTo()));
