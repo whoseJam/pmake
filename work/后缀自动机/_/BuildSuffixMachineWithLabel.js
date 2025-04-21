@@ -3,9 +3,9 @@ import { suffixMachine } from "./SuffixMachine";
 
 /**
  *
- * @param {*} graph
- * @param {*} tree
- * @param {*} str
+ * @param {sd.BaseGraph} graph
+ * @param {sd.BaseTree} tree
+ * @param {string} str
  * @param {number} characterSet
  * @param {{
  *  onCreateNewNodeOnGraph: (u: number) => void
