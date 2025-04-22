@@ -20,6 +20,8 @@ export { Pile } from "./Node/Array/Pile";
 export { Stack } from "./Node/Array/Stack";
 export { ValueArray } from "./Node/Array/ValueArray";
 export { ValueStack } from "./Node/Array/ValueStack";
+export { BaseAxis } from "./Node/Axis/BaseAxis";
+export { Axis } from "./Node/Axis/Axis";
 export { Coord } from "./Node/Coord/Coord";
 export { enter } from "./Node/Core/Enter";
 export { exit } from "./Node/Core/Exit";

@@ -1,0 +1,13 @@
+import { SD2DNode } from "@/Node/SD2DNode";
+import { SDNode } from "@/Node/SDNode";
+
+export class BaseAxis extends SD2DNode {
+    ticks(): number;
+    ticks(ticks: any): this;
+    percent(x: number): number;
+    global(x: number): [number, number];
+    globalX(x: number): number;
+    globalY(x: number): number;
+
+    forEachTick(callback: (tick: SDNode, i: number) => void): this;
+}

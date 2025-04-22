@@ -8,19 +8,16 @@ const arrF = new sd.ValueArray(svg).elementWidth(60).start(1);
 const arrC = new sd.ValueArray(svg).elementWidth(60).start(1).y(60);
 const arrR = new sd.ValueArray(svg).elementWidth(60).start(1).y(120);
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     for (let i = 1; i <= n; i++) {
         arrF.push(new sd.Mathjax(arrF, `f(${i})`));
         arrC.push(new sd.Mathjax(arrC, `\\lfloor\\frac{${n}}{${i}}\\rfloor`));
-        arrR.push(new sd.Mathjax(arrR, `${Math.floor(n/i)}`));
+        arrR.push(new sd.Mathjax(arrR, `${Math.floor(n / i)}`));
     }
     arrR.opacity(0);
-}
+});
 
-async function main() {
+sd.main(async () => {
     await sd.pause();
     arrR.startAnimate().opacity(1).endAnimate();
     for (let l = 1, r; l <= n; l = r + 1) {
@@ -28,20 +25,25 @@ async function main() {
         await sd.pause();
         focus(l, r);
     }
-    await sd.pause();
-}
+});
 
 function focus(l, r) {
-    const x = arrF.x() + arrF.elementWidth() * (l-1);
+    const x = arrF.x() + arrF.elementWidth() * (l - 1);
     const mx = arrF.x() + arrF.elementWidth() * r;
     const y = arrF.y();
     const my = arrR.my();
     if (rct.opacity() === 0) {
-        rct.x(x).y(y).width(mx - x).height(my - y);
+        rct.x(x)
+            .y(y)
+            .width(mx - x)
+            .height(my - y);
         rct.startAnimate().opacity(1).endAnimate();
     } else {
         rct.startAnimate();
-        rct.x(x).y(y).width(mx - x).height(my - y);
+        rct.x(x)
+            .y(y)
+            .width(mx - x)
+            .height(my - y);
         rct.endAnimate();
     }
 }
