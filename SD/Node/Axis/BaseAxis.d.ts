@@ -6,6 +6,8 @@ export class BaseAxis extends SD2DNode {
     ticks(ticks: any): this;
     tick(x: number): SDNode | undefined;
     percent(x: number): number;
+    local(x: number, y: number): number;
+    local(v: [number, number]): number;
     global(x: number): [number, number];
     globalX(x: number): number;
     globalY(x: number): number;

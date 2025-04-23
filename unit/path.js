@@ -1,16 +1,22 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-const pen = new sd.PathPen();
-const path = new sd.Path(svg);
 
-sd.init(() => {
+sd.init(() => {});
+
+sd.main(TestBasic);
+
+async function TestBasic() {
+    const pen = new sd.PathPen();
+    const path = new sd.Path(svg);
     const str = pen.MoveTo(100, 100).LinkTo(150, 150).LinkTo(100, 200).toString();
-    console.log("str=", str);
     path.d(str);
-})
-
-sd.main(async () => {
     await sd.pause();
-    path.startAnimate().pointStoT().endAnimate().arrow();
-})
+    path.startAnimate().x(200).endAnimate();
+    await sd.pause();
+    path.startAnimate().y(200).endAnimate();
+    await sd.pause();
+    path.startAnimate().width(300).endAnimate();
+    await sd.pause();
+    path.startAnimate().x(100).y(100).width(40).height(40).endAnimate();
+}

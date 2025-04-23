@@ -5,7 +5,27 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestTickAttrs);
+sd.main(TestLogTicks);
+
+async function TestLogTicks() {
+    const start = 1;
+    const end = 16;
+    const axis = new sd.Axis(svg).x(100).y(100).ticks(sd.BaseAxis.log2(start, end)).withTickLabel(true);
+    for (let i = start; i <= end; i++) {
+        new sd.Circle(svg).r(3).color(C.black).center(axis.global(i));
+    }
+}
+
+async function TestLocal() {
+    const axis = new sd.Axis(svg).x(100).y(100).direction([0.4, 0.2]);
+    await sd.pause();
+    new sd.Circle(svg).r(6).center(axis.source()).color(C.green);
+    new sd.Circle(svg).r(6).center(400, 300).color(C.blue);
+    new sd.Circle(svg)
+        .r(6)
+        .center(axis.global(axis.local(400, 300)))
+        .color(C.red);
+}
 
 async function TestWithTickAndWithTickLabel() {
     const axis = new sd.Axis(svg).x(100).y(100).width(600).tickLength(20).withTickLabel(true);

@@ -54,7 +54,7 @@ export function Axis(parent) {
         direction: [1, 0],
         sx: 0,
         sy: 0,
-        length: 100,
+        length: 300,
         ticks: 10,
         withTick: true,
         withTickLabel: false,
@@ -176,6 +176,7 @@ Axis.prototype = {
         this.freeze();
         this.sx(x).sy(y);
         this.unfreeze();
+        return this;
     },
     target(x, y) {
         if (arguments.length === 0) {
@@ -185,6 +186,7 @@ Axis.prototype = {
         this.freeze();
         this.tx(x).ty(y);
         this.unfreeze();
+        return this;
     },
     width(width) {
         const direction = this.direction();
@@ -201,6 +203,7 @@ Axis.prototype = {
     length: Factory.handlerLowPrecise("length"),
     direction(direction) {
         if (arguments.length === 0) return this.vars.direction;
+        if (arguments.length === 2) return this.direction(arguments);
         if (typeof direction === "string") {
             if (direction === "horizontal") return this.direction([0, 1]);
             return this.direction([0, -1]);
