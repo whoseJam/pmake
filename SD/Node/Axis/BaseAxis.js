@@ -1,4 +1,5 @@
 import { SD2DNode } from "@/Node/SD2DNode";
+import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 
 export function BaseAxis(parent) {
@@ -12,27 +13,31 @@ export function BaseAxis(parent) {
 BaseAxis.prototype = {
     ...SD2DNode.prototype,
     ticks: Factory.handler("ticks"),
-    global(x) {
+    tick() {
+        ErrorLauncher.notImplementedYet("tick", this.type());
+    },
+    percent(x) {
         const ticks = this.ticks();
         if (typeof ticks === "number") {
-            const k = x / (ticks - 1);
-            return this.child("line").at(k);
+            return x / (ticks - 1);
         } else if (Array.isArray(ticks) && ticks.length === 3) {
             const [start, end, step] = ticks;
-            const k = (x - start) / (end - start);
-            return this.child("line").at(k);
+            return (x - start) / (end - start);
         }
+    },
+    global(x) {
+        return this.child("line").at(this.percent(x));
     },
     forEachTick(callback) {
         const ticks = this.ticks();
         if (typeof ticks === "number") {
             for (let i = 0; i < ticks; i++) {
-                callback(undefined, i);
+                callback(this.tick(i), i);
             }
         } else if (Array.isArray(ticks) && ticks.length === 3) {
             const [start, end, step] = ticks;
             for (let i = start; i <= end; i += step) {
-                callback(undefined, i);
+                callback(this.tick(i), i);
             }
         }
     },

@@ -4,6 +4,7 @@ import { SDNode } from "@/Node/SDNode";
 export class BaseAxis extends SD2DNode {
     ticks(): number;
     ticks(ticks: any): this;
+    tick(x: number): SDNode | undefined;
     percent(x: number): number;
     global(x: number): [number, number];
     globalX(x: number): number;

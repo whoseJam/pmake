@@ -1,5 +1,5 @@
-import { Pool } from "@/Utility/Pool/Pool";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
+import { Pool } from "@/Utility/Pool/Pool";
 
 export class ObjectPool extends Pool {
     constructor(args) {
@@ -22,7 +22,6 @@ export class ObjectPool extends Pool {
             resource.__pool_status = "using";
             return this.getIdle(resource);
         }
-        console.log("allocate key=", key, "status=", resource.__pool_status);
         if (resource.__pool_status === "using") ErrorLauncher.whatHappened();
         if (resource.__pool_status === "used") {
             resource.__pool_status = "using";
@@ -40,5 +39,13 @@ export class ObjectPool extends Pool {
                 this.onIdle(resource);
             }
         }
+    }
+    isUsing(key) {
+        const resource = this.resources[key];
+        return resource && resource.__pool_status === "using";
+    }
+    get(key) {
+        const resource = this.resources[key];
+        return resource;
     }
 }

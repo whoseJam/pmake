@@ -8,4 +8,6 @@ interface ObjectPoolParams {
 export class ObjectPool {
     constructor(args: ObjectPoolParams);
     allocate(key: number | string): any;
+    isUsing(key: number | string): boolean;
+    get(key: number | string): any | undefined;
 }
