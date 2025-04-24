@@ -14,6 +14,14 @@ export function BaseCoord(parent) {
     });
 }
 
+function handler(key) {
+    return function (by, value) {
+        if (arguments.length === 1) return this.axis(by)[key];
+        this.axis(by)[key](value);
+        return this;
+    };
+}
+
 BaseCoord.prototype = {
     ...SD2DNode.prototype,
     BASE_COORD: true,
@@ -24,11 +32,9 @@ BaseCoord.prototype = {
     axis() {
         ErrorLauncher.notImplementedYet("axis", this.type());
     },
-    ticks(by, ticks) {
-        if (arguments.length === 1) return this.axis(by).ticks();
-        this.axis(by).ticks(ticks);
-        return this;
-    },
+    ticks: handler("ticks"),
+    withTick: handler("withTick"),
+    withTickLabel: handler("withTickLabel"),
     local() {
         ErrorLauncher.notImplementedYet("local", this.type());
     },

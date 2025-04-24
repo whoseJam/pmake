@@ -5,12 +5,12 @@ import { Coord } from "@/Node/Coord/Coord";
 export function FixGapCoord(parent) {
     BaseCoord.call(this, parent);
 
-    this.type("Coord");
+    this.type("FixGapCoord");
 
-    this.childAs("x", new FixGapAxis(this).direction(1, 0).withTickLabel(true), (parent, child) => {
+    this.childAs("y", new FixGapAxis(this).direction(0, -1).withTickLabel(true).tickLabelAlign("target"), (parent, child) => {
         child.source(parent.pos("x", "my"));
     });
-    this.childAs("y", new FixGapAxis(this).direction(0, -1).withTickLabel(true).tickLabelAlign("target"), (parent, child) => {
+    this.childAs("x", new FixGapAxis(this).direction(1, 0).withTickLabel(true), (parent, child) => {
         child.source(parent.pos("x", "my"));
     });
 }
@@ -23,12 +23,12 @@ FixGapCoord.prototype = {
         return this;
     },
     width(width) {
-        if (arguments.length === 0) return this.axis("x")?.length() || 300;
+        if (arguments.length === 0) return this.axis("x").length();
         this.axis("x").length(width);
         return this;
     },
     height(height) {
-        if (arguments.length === 0) return this.axis("y")?.length() || 300;
+        if (arguments.length === 0) return this.axis("y").length();
         this.axis("y").length(height);
         return this;
     },
