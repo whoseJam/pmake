@@ -92,4 +92,9 @@ BaseAxis.prototype = {
             if (ticks.scale === "log10") for (let i = start, k = 1; i <= end; i *= k, k *= 10) callback(this.tick(i), i);
         }
     },
+    tickCount() {
+        let count = 0;
+        this.forEachTick(() => count++);
+        return count;
+    },
 };

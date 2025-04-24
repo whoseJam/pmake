@@ -14,10 +14,6 @@ export function Coord(parent) {
 
     this.type("Coord");
 
-    this.vars.merge({
-        elements: [],
-    });
-
     this.childAs("x", new Axis(this).direction(1, 0).withTickLabel(true), (parent, child) => {
         child.source(parent.pos("x", "my")).length(parent.width());
     });

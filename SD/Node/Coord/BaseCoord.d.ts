@@ -3,6 +3,8 @@ import { SD2DNode } from "@/Node/SD2DNode";
 
 export class BaseCoord extends SD2DNode {
     axis(by: "x" | "y"): BaseAxis;
+    ticks(by: "x" | "y"): any;
+    ticks(by: "x" | "y", ticks: any): this;
     local(x: number, y: number): [number, number];
     local(v: [number, number]): [number, number];
     localX(x: number): number;

@@ -10,15 +10,8 @@ export function BaseCoord(parent) {
         y: 0,
         width: 300,
         height: 300,
+        elements: [],
     });
-}
-
-function viewBoxHandler(key) {
-    return function (value) {
-        if (value === undefined) return this.vars.viewBox[key];
-        this.vars.viewBox[key] = value;
-        return this;
-    };
 }
 
 BaseCoord.prototype = {
@@ -30,6 +23,11 @@ BaseCoord.prototype = {
     height: Factory.handlerLowPrecise("height"),
     axis() {
         ErrorLauncher.notImplementedYet("axis", this.type());
+    },
+    ticks(by, ticks) {
+        if (arguments.length === 1) return this.axis(by).ticks();
+        this.axis(by).ticks(ticks);
+        return this;
     },
     local() {
         ErrorLauncher.notImplementedYet("local", this.type());

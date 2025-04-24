@@ -45,7 +45,7 @@ function createTickLabelPool(axis) {
     });
 }
 
-export function Axis(parent) {
+export function Axis(parent, vars = {}) {
     BaseAxis.call(this, parent);
 
     this.type("Axis");
@@ -63,6 +63,7 @@ export function Axis(parent) {
         fontSize: 20,
         tickLabelAlign: "source",
         tickLabelFormat: i => i,
+        ...vars,
     });
 
     const tickPool = createTickPool(this);

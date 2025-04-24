@@ -13,4 +13,5 @@ export class BaseAxis extends SD2DNode {
     globalY(x: number): number;
 
     forEachTick(callback: (tick: SDNode, i: number) => void): this;
+    tickCount(): number;
 }
