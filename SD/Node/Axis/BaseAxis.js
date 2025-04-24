@@ -36,7 +36,7 @@ BaseAxis.prototype = {
     percent(x) {
         const ticks = this.ticks();
         if (typeof ticks === "number") {
-            return x / (ticks - 1);
+            return x / ticks;
         } else if (Array.isArray(ticks) && ticks.length === 3) {
             const [start, end, step] = ticks;
             return (x - start) / (end - start);
@@ -49,7 +49,7 @@ BaseAxis.prototype = {
     inversePercent(x) {
         const ticks = this.ticks();
         if (typeof ticks === "number") {
-            return x * (ticks - 1);
+            return x * ticks;
         } else if (Array.isArray(ticks) && ticks.length === 3) {
             const [start, end, step] = ticks;
             return x * (end - start) + start;
@@ -78,7 +78,7 @@ BaseAxis.prototype = {
     forEachTick(callback) {
         const ticks = this.ticks();
         if (typeof ticks === "number") {
-            for (let i = 0; i < ticks; i++) {
+            for (let i = 0; i <= ticks; i++) {
                 callback(this.tick(i), i);
             }
         } else if (Array.isArray(ticks) && ticks.length === 3) {

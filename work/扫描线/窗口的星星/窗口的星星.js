@@ -1,45 +1,53 @@
 import * as sd from "@/sd";
 
-let svg = sd.svg();
-let W = 300, H = 200;
-let C = sd.color(), stars = [];
-let data = [
-    [430, 210],
-    [250, 330],
-    [320, 390],
-    [510, 190],
-    [490, 120],
+const svg = sd.svg();
+const C = sd.color();
+const W = 3;
+const H = 2;
+const stars = [];
+const layer = svg.append("g");
+const coord = new sd.Coord(svg);
+const rect = coord.drawRect(0, 0, W, H).fillOpacity(0);
+const data = [
+    [5, 5],
+    [6, 7],
+    [3, 6],
+    [8, 5],
+    [7, 4],
+    [4, 3],
+    [3, 5],
 ];
-for (let i = 0; i < data.length; i++) {
-    data[i][0] += W;
-}
-for (let i = 0; i < data.length; i++) {
-    let star = new sd.Circle(svg).cx(data[i][0]).cy(data[i][1]).color(C.deepSkyBlue).r(4);
-    stars.push(star);
-}
-let p = new sd.Circle(svg).color(C.RED).r(4).cx(100).cy(400);
-let r = new sd.Rect(svg).width(W).height(H).fillOpacity(0);
-p.childAs("dot", r, function(parent, child) {
-    child.x(parent.cx());
-    child.my(parent.cy());
-})
-p.drag(true);
 
-main();
+sd.init(() => {
+    data.forEach(item => {
+        const star = coord.drawCircle(item[0], item[1], 4);
+        stars.push(star);
+    });
+    rect.drag(true);
+});
 
-async function main() {
+sd.main(async () => {
     await sd.pause();
-    for (let i = 0; i < 1; i++) {
-        let r = new sd.Rect(stars[i]).width(W).height(H);
-        r.x(stars[i].cx()-W).y(stars[i].cy());
-        r.fillOpacity(0.2).stroke(C.BLUE.border);
-        r.fill(C.orange);
-    }
+    rect.startAnimate()
+        .childAs(new sd.Circle(svg).color(C.black).r(4), (parent, child) => {
+            child.center(parent.pos("x", "my"));
+        })
+        .endAnimate();
+    for (let i = 0; i < 1; i++) drawRectAndAppear(data[i][0], data[i][1]);
     await sd.pause();
-    for (let i = 1; i < data.length; i++) {
-        let r = new sd.Rect(stars[i]).width(W).height(H);
-        r.x(stars[i].cx()-W).y(stars[i].cy());
-        r.fillOpacity(0.2).stroke(C.BLUE.border);
-        r.fill(C.orange);
-    }
+    for (let i = 1; i < data.length; i++) drawRectAndAppear(data[i][0], data[i][1]);
+});
+
+function drawRect(x, y) {
+    const [minX, maxY] = coord.global(x - W, y - H);
+    const [maxX, minY] = coord.global(x, y);
+    return new sd.Rect(layer)
+        .x(minX)
+        .width(maxX - minX)
+        .y(minY)
+        .height(maxY - minY);
+}
+
+function drawRectAndAppear(x, y) {
+    return drawRect(x, y).fillOpacity(0.2).stroke(C.textBlue).fill(C.orange).opacity(0).startAnimate().opacity(1).endAnimate();
 }

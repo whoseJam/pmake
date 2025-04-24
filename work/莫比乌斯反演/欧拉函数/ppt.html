@@ -20,7 +20,7 @@
     </section>
     <section>
         <h2>欧拉函数</h2>
-        <p>当 $n=p^k$ 且 $p$ 是一个质数时，考虑 $[1,n]$ 内与 $n$ 互质的数的个数：</p>
+        <p>当 $n=p^k$ 且 $p$ 是一个质数时，考虑 $[1,n]$ 内与 $n$ 互质的数的个数</p>
         <ul>
             <li class="fragment">$1,2,3...p-1$ 显然全部与 $n$ 互质，但 $p$ 与 $n$ 不互质</li>
             <li class="fragment">$p+1,p+2,p+3...2p-1$ 显然全部与 $n$ 互质，但 $2p$ 与 $n$ 不互质</li>
@@ -35,7 +35,7 @@
     </section>
     <section>
         <h2>欧拉函数</h2>
-        <p>（在此不证明）$\varphi(n)$ 是积性函数，假设 $n=p_1^{a_1}p_2^{a_2}...p_n^{a_n}$，则：
+        <p>（在此不证明）$\varphi(n)$ 是积性函数，假设 $n=p_1^{a_1}p_2^{a_2}...p_n^{a_n}$，则
             $$
             \begin{aligned}
             \varphi(n)&=\varphi(p_1^{a_1})\varphi(p_2^{a_2})...\varphi(p_n^{a_n}) \\
@@ -47,7 +47,7 @@
     </section>
     <section>
         <h2>欧拉函数</h2>
-        <p>假设我们用 $i$ 和 $p_1$ 筛掉了 $x$，且 $i$ 中不包含 $p_1$ 这个因子：</p>
+        <p>假设我们用 $i$ 和 $p_1$ 筛掉了 $x$，且 $i$ 中不包含 $p_1$ 这个因子</p>
         <p>
             $$i=p_2^{a_2}p_3^{a_3}...p_n^{a_n}$$
             $$x=p_1p_2^{a_2}p_3^{a_3}...p_n^{a_n}$$
@@ -65,14 +65,14 @@
         </p>
         <codeblock class="fragment">
             <script type="text/template">
-                当 i % prim[j] != 0 时：
+                当 i % prim[j] != 0 时
                 phi[i * prim[j]] = phi[i] * (prim[j] - 1);
             </script>
         </codeblock>
     </section>
     <section>
         <h2>欧拉函数</h2>
-        <p>假设我们用 $i$ 和 $p_1$ 筛掉了 $x$，且 $i$ 中包含 $p_1$ 这个因子：</p>
+        <p>假设我们用 $i$ 和 $p_1$ 筛掉了 $x$，且 $i$ 中包含 $p_1$ 这个因子</p>
         <p>
             $$i=p_1^{a_1}p_2^{a_2}...p_n^{a_n}$$
             $$x=p_1^{a_1+1}p_2^{a_2}...p_n^{a_n}$$
@@ -95,7 +95,7 @@
         </p>
         <codeblock class="fragment">
             <script type="text/template">
-                当 i % prim[j] == 0 时：
+                当 i % prim[j] == 0 时
                 phi[i * prim[j]] = phi[i] * prim[j];
             </script>
         </codeblock>

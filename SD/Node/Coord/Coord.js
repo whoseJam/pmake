@@ -40,7 +40,6 @@ function elementProp2(key) {
         const _element = this.__getElement(element);
         if (arguments.length === 1) return _element[key];
         if (arguments.length === 2) [v1, v2] = [v1[0], v1[1]];
-        console.log("set element=", _element, "key=", key, "v=", [v1, v2]);
         _element[key] = [v1, v2];
         return this;
     };
@@ -75,8 +74,9 @@ Coord.prototype = {
     rectY: elementProp1("y"),
     rectWidth: elementProp1("width"),
     rectHeight: elementProp1("height"),
-    drawCircle(x, y) {
+    drawCircle(x, y, r) {
         const circle = new Circle(this).opacity(0).onEnter(EN.appear());
+        if (r !== undefined) circle.r(r);
         this.vars.elements.push({
             element: circle,
             x,
