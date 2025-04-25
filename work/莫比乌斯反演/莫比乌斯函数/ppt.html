@@ -17,7 +17,7 @@
         <p>当 $p$ 是质数时，显然 $\mu(p)=-1$</p>
         <codeblock class="fragment">
             <script type="text/template">
-                如果 i 是质数：
+                如果 i 是质数
                 prim[++tot] = i;
                 mu[i] = -1;
             </script>
@@ -44,7 +44,7 @@
         <codeblock class="fragment">
             <script type="text/template">
                 当 i % prim[j] != 0 时
-                mu[i * prim[j]] = -mu[i];
+                mu[x] = -mu[i];
             </script>
         </codeblock>
     </section>
@@ -69,7 +69,7 @@
         <codeblock class="fragment">
             <script type="text/template">
                 当 i % prim[j] == 0 时
-                mu[i * prim[j]] = 0;
+                mu[x] = 0;
             </script>
         </codeblock>
     </section>

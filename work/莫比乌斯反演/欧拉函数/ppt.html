@@ -66,7 +66,7 @@
         <codeblock class="fragment">
             <script type="text/template">
                 当 i % prim[j] != 0 时
-                phi[i * prim[j]] = phi[i] * (prim[j] - 1);
+                phi[x] = phi[i] * (prim[j] - 1);
             </script>
         </codeblock>
     </section>
@@ -96,7 +96,7 @@
         <codeblock class="fragment">
             <script type="text/template">
                 当 i % prim[j] == 0 时
-                phi[i * prim[j]] = phi[i] * prim[j];
+                phi[x] = phi[i] * prim[j];
             </script>
         </codeblock>
     </section>

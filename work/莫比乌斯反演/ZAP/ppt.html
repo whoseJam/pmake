@@ -20,8 +20,8 @@
         <p class="math-fragment" style="margin-top: -40px;">
             $$
             \begin{aligned}
-            \sum_{x=1}^a\sum_{y=1}^b[gcd(a,b)=k]
-            &=\sum_{x=1}^a\sum_{y=1}^b[gcd(\frac a k,\frac b k)=1] \\
+            \sum_{x=1}^a\sum_{y=1}^b[gcd(x,y)=k]
+            &=\sum_{x=1}^a\sum_{y=1}^b[gcd(\frac x k,\frac y k)=1] \\
             &=\sum_{x=1}^a\sum_{y=1}^b\sum_{d|gcd(\frac x k,\frac y k)}\mu(d) \\
             &=\sum_{x=1}^{a/k}\sum_{y=1}^{b/k}\sum_{d|gcd(x,y)}\mu(d) \\
             &=\sum_{d=1}^{min(a/k,b/k)}\mu(d)\sum_{1\le x\le a/k\\ d|x}\sum_{1\le y\le b/k \\ d|y}1 \\

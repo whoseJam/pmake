@@ -22,7 +22,7 @@
             &=\sum_{k\in P}\sum_{x=1}^n\sum_{y=1}^m[gcd(\frac x k,\frac y k)=1] \\
             &=\sum_{k\in P}\sum_{x=1}^{n/k}\sum_{y=1}^{m/k}[gcd(x,y)=1] \\
             &=\sum_{k\in P}\sum_{x=1}^{n/k}\sum_{y=1}^{m/k}\sum_{d|x\\d|y}\mu(d) \\
-            &=\sum_{k\in P}\sum_{d=1}^{min(n/k,m/k)}\mu(d)\sum_{x=1\\x|d}^{n/k}\sum_{y=1\\y|d}^{m/k}1
+            &=\sum_{k\in P}\sum_{d=1}^{min(n/k,m/k)}\mu(d)\sum_{x=1\\d|x}^{n/k}\sum_{y=1\\d|y}^{m/k}1
             \end{aligned}
             $$
         </p>
@@ -33,7 +33,7 @@
             $$
             \begin{aligned}
             answer
-            &=\sum_{k\in P}\sum_{d=1}^{min(n/k,m/k)}\mu(d)\sum_{x=1\\x|d}^{n/k}\sum_{y=1\\y|d}^{m/k}1 \\
+            &=\sum_{k\in P}\sum_{d=1}^{min(n/k,m/k)}\mu(d)\sum_{x=1\\d|x}^{n/k}\sum_{y=1\\d|y}^{m/k}1 \\
             &=\sum_{k\in P}\sum_{d=1}^{min(n/k,m/k)}\mu(d) \lfloor\frac{n}{kd}\rfloor \lfloor\frac{m}{kd}\rfloor \\
             &=\sum_{T=1}^{min(n,m)} \lfloor\frac n T\rfloor \lfloor\frac m T\rfloor \sum_{d|T}\mu(d)[\frac T d\in P]
             \end{aligned}
@@ -56,7 +56,7 @@
             \end{aligned}
             $$
         </p>
-        <p class="fragment">枚举每个质数 $p$，把 $p\rightarrow F(kp)$ 的贡献 $\mu(p)$ 累加到 $F(kp)$ 里面去</p>
+        <p class="fragment">枚举每个质数 $p$，把 $p\rightarrow F(kp)$ 的贡献 $\mu(k)$ 累加到 $F(kp)$ 里面去</p>
         <codeblock class="fragment">
             <script type="text/template">
                 for (int i = 1; i <= tot; i++)

@@ -26,6 +26,7 @@ int prim[N],tot,mu[N];
 bool vis[N];
 
 void Sieve(int n){
+	mu[1]=1;
 	for(int i=2;i<=n;i++){
 		if(!vis[i]){
 			prim[++tot]=i;
