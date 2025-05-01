@@ -50,24 +50,21 @@ struct Node{
 }d[N];
 
 struct Operation{
-	int type;
-	int y;
-	int l,r;
-	int pos,d;
+	int x1,x2,y,flg;
 };
 vector<Operation> ops;
 
 Operation QueryOperation(int y,int l,int r){
-	return (Operation){1,y,l,r,0,0};
+	return (Operation){l,r,y,0};
 }
 
-Operation AddOperation(int y,int pos,int d){
-	return (Operation){2,y,0,0,pos,d};
+Operation AddOperation(int y,int x,int d){
+	return (Operation){x,x,y,d};
 }
 
 bool cmp(const Operation& a,const Operation& b){
 	if(a.y!=b.y)return a.y<b.y;
-	return a.type>b.type;
+	return (a.flg==0)<(b.flg==0);
 }
 
 bool cmpXY(const Node& a,const Node& b){
@@ -111,11 +108,8 @@ int Solve(){
 	sort(ops.begin(),ops.end(),cmp);
 	int ans=0;
 	for(int i=0;i<ops.size();i++){
-		if(ops[i].type==1){
-			ans+=T.sum(ops[i].l,ops[i].r);
-		}else{
-			T.add(ops[i].pos,ops[i].d);
-		}
+		if(ops[i].flg==0)ans+=T.sum(ops[i].x1,ops[i].x2);
+		else T.add(ops[i].x1,ops[i].flg);
 	}
 	return ans+n;
 }

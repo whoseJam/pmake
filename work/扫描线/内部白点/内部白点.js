@@ -31,7 +31,7 @@ const segment = sd.make1d(100, 0);
 
 sd.init(() => {
     data.forEach(item => {
-        item.dot = coord.drawCircle(item.x, item.y, 5);
+        item.dot = coord.drawCircle(item.x, item.y, 5).color(C.black);
     });
 });
 

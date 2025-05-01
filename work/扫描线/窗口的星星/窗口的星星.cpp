@@ -24,12 +24,12 @@ using FastIO::read;
 const ll N=10005;
 ll W,H,Ls[N*2],Lsn;
 
-struct star{
-	ll x,y,l;
+struct Star{
+	ll x,y,L;
 }s[N];
 
-struct bound{
-	ll flg,h,l,r,light;
+struct Bound{
+	ll x1,x2,y,flg,L;
 }b[N*2];
 
 #define lc (x<<1)
@@ -82,9 +82,9 @@ ll Query(){
 	return t[1].max;
 }
 
-bool cmp(const bound& a,const bound& b){
-	if(a.h==b.h)return a.flg<b.flg;
-	return a.h<b.h;
+bool cmp(const Bound& a,const Bound& b){
+	if(a.y==b.y)return a.flg<b.flg;
+	return a.y<b.y;
 }
 
 ll n,tot;
@@ -93,33 +93,33 @@ void Clear(){
 	tot=0;Lsn=0;
 }
 
+int Find(int x){
+	return lower_bound(Ls+1,Ls+1+Lsn,x)-Ls;
+}
+
 void Solve(){
 	Clear();
 	n=read();W=read();H=read();
 	for(ll i=1;i<=n;i++){
 		s[i].x=read();
 		s[i].y=read();
-		s[i].l=read();
-		Ls[++Lsn]=s[i].x-W+1;
+		s[i].L=read();
+		Ls[++Lsn]=s[i].x-W;
 		Ls[++Lsn]=s[i].x;
 	}
 	sort(Ls+1,Ls+1+Lsn);
 	Lsn=unique(Ls+1,Ls+1+Lsn)-Ls-1;
 	for(ll i=1;i<=n;i++){
-		ll l=lower_bound(Ls+1,Ls+1+Lsn,s[i].x-W+1)-Ls;
-		ll r=lower_bound(Ls+1,Ls+1+Lsn,s[i].x)-Ls;
-		b[++tot]=(bound){1,s[i].y-H+1,l,r,s[i].l};
-		b[++tot]=(bound){-1,s[i].y+1,l,r,s[i].l};
+		ll l=Find(s[i].x-W);
+		ll r=Find(s[i].x);
+		b[++tot]=(Bound){l,r,s[i].y-H,1,s[i].L};
+		b[++tot]=(Bound){l,r,s[i].y,-1,s[i].L};
 	}
 	Build(1,1,Lsn);
 	sort(b+1,b+1+tot,cmp);
 	ll Ans=0;
 	for(ll i=1;i<=tot;i++){
-		if(b[i].flg==1){
-			Add(1,b[i].l,b[i].r,b[i].light); 
-		}else{
-			Add(1,b[i].l,b[i].r,-b[i].light);
-		}
+		Add(1,b[i].x1+1,b[i].x2,b[i].L*b[i].flg); 
 		Ans=max(Ans,Query());
 	}
 	cout<<Ans<<'\n'; 
