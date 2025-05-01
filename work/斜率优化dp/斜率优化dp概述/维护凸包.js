@@ -1,79 +1,88 @@
 import * as sd from "@/sd";
+import { buildConvex } from "../_/BuildConvex";
 
 const svg = sd.svg();
 const C = sd.color();
 const R = sd.rule();
-const coord = new sd.Coord(svg).viewBox(-5, -5, 15, 15).width(600).height(300).cx(500).y(70);
-const linksArr = new sd.Array(svg).x(coord.x() + 20).y(coord.my() + 20);
+const coord = new sd.FixGapCoord(svg).cx(300).y(70).ticks("x", [-4, 6, 1]).ticks("y", [-1, 6, 1]).gap("x", 50);
+const linksArr = new sd.Array(svg).x(coord.x() + 20).y(coord.my() + 40);
 const nodesArr = new sd.Array(svg).x(coord.x()).y(linksArr.my() + 20);
-const convex = [];
 const data = [
-    { x: -3, y: 6 },
-    { x: -2, y: 1 },
-    { x: -1.5, y: -1 },
-    { x: 1, y: 2 },
-    { x: 1.5, y: 5 },
-    { x: 2, y: 8 },
-    { x: 3, y: 0.5 },
-    { x: 4, y: 2.5 },
-    { x: 5, y: 6.5 },
+    [-3, 4],
+    [-2, 1],
+    [-1, 0],
+    [0, 5],
+    [1, 6],
+    [2, 3],
+    [3, 1],
+    [4, 3],
+    [5, 4],
 ];
+let newSlope = undefined;
+let L1 = undefined;
+let L2 = undefined;
 
 sd.init(() => {});
 
 sd.main(async () => {
+    await buildConvex(
+        data.map(v => {
+            return { x: v[0], y: v[1] };
+        }),
+        {
+            onStartAdd,
+            onAddConvex,
+            onPopConvex,
+            onCheckSlope,
+        }
+    );
+});
+
+async function onPopConvex() {
     await sd.pause();
-    CreateNode(0);
-    convex.push(0);
-    nodesArr.startAnimate().push("D1").endAnimate();
+    L1.startAnimate().fadeStoT().endAnimate();
+    L2.startAnimate().fadeTtoS().endAnimate();
+    linksArr.startAnimate().pop().endAnimate();
+    nodesArr.startAnimate().pop().endAnimate();
+}
 
-    for (let i = 1; i < data.length; i++) {
-        await sd.pause();
-        CreateNode(i);
+async function onStartAdd(i) {
+    await sd.pause();
+    createNode(i);
+    newSlope = undefined;
+}
 
-        let finalLink = undefined;
-        while (convex.length >= 2) {
-            const K1 = Slope(i, convex[convex.length - 1]);
-            const L1 = CreateLink(convex[convex.length - 1], i);
-
-            const K2 = Slope(convex[convex.length - 1], convex[convex.length - 2]);
-            const L2 = data[convex[convex.length - 1]].line;
-            if (K2 <= K1) {
-                finalLink = L1;
-                break;
-            } else {
-                await sd.pause();
-                L1.startAnimate().fadeStoT().endAnimate();
-                L2.startAnimate().fadeTtoS().endAnimate();
-                linksArr.startAnimate().pop().endAnimate();
-                nodesArr.startAnimate().pop().endAnimate();
-                convex.pop();
-            }
-        }
-        if (!finalLink) {
+async function onAddConvex(i) {
+    if (i > 0) {
+        if (!newSlope) {
             await sd.pause();
-            finalLink = CreateLink(i - 1, i);
+            newSlope = createLink(i - 1, i);
         }
-
         await sd.pause();
-        data[i].line = finalLink;
-        const cloneLink = new sd.Line(svg).source(finalLink.source()).target(finalLink.target()).stroke(finalLink.stroke());
+        data[i].line = newSlope;
+        const cloneLink = new sd.Line(svg).source(newSlope.source()).target(newSlope.target()).stroke(newSlope.stroke());
         linksArr.startAnimate();
         linksArr.pushFromExistValue(cloneLink);
         linksArr.endAnimate();
         nodesArr.startAnimate();
         nodesArr.push(`D${i + 1}`);
         nodesArr.endAnimate();
-
-        convex.push(i);
+    } else {
+        await sd.pause();
+        nodesArr.startAnimate();
+        nodesArr.push(`D${i + 1}`);
+        nodesArr.endAnimate();
     }
-});
-
-function Slope(a, b) {
-    return (data[a].y - data[b].y) / (data[a].x - data[b].x);
 }
 
-function CreateLink(a, b) {
+async function onCheckSlope(i, cllst, clst, k1, k2) {
+    await sd.pause();
+    L1 = createLink(clst, i);
+    L2 = data[clst].line;
+    if (k2 <= k1) newSlope = L1;
+}
+
+function createLink(a, b) {
     const L = new sd.Line(svg).stroke(C.red);
     L.source(data[a].circle.center());
     L.target(data[b].circle.center());
@@ -81,14 +90,14 @@ function CreateLink(a, b) {
     return L;
 }
 
-function CreateNode(x) {
-    const item = data[x];
-    item.circle = new sd.Circle(coord)
+function createNode(i) {
+    const [x, y] = data[i];
+    data[i].circle = new sd.Circle(coord)
         .r(2)
         .color(C.black)
-        .center(coord.globalAt(item.x, item.y))
+        .center(coord.global(x, y))
         .strokeWidth(0)
-        .childAs(new sd.Mathjax(coord, `(x_{${x + 1}},y_{${x + 1}})`).fontSize(20), R.aside("tc", 2))
+        .childAs(new sd.Mathjax(coord, `(x_{${i + 1}},y_{${i + 1}})`).fontSize(17), R.aside("tc", 2))
         .opacity(0)
         .startAnimate()
         .opacity(1)

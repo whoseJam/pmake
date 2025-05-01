@@ -1,45 +1,52 @@
 import * as sd from "@/sd";
+import { buildConvex } from "../_/BuildConvex";
 
 const svg = sd.svg();
 const div = sd.div();
 const C = sd.color();
 const R = sd.rule();
+const V = sd.vec();
 const math = new sd.Mathjax(svg, "f_i=\\mathop{min}\\limits_{j\\lt i}\\{f_{j}+A_iB_{j}\\}");
-const line = new sd.Line(svg).opacity(0);
-const coord = new sd.Coord(svg).viewBox(-5, -5, 15, 15).width(400).height(200).cx(math.cx()).y(70).opacity(0);
-const convex = [3, 4, 6, 5, 7, 2];
+const coord = new sd.FixGapCoord(svg).cx(math.cx()).y(70).opacity(0).ticks("x", [-4, 6, 1]).ticks("y", [-1, 6, 1]);
 let sliderLabel;
-let K = 1;
+const line = new sd.Line(svg).opacity(0);
+const circles = [];
 const data = [
-    { x: 1, y: 2 },
-    { x: 5, y: 6.5 },
-    { x: -3, y: 6 },
-    { x: -2, y: 1 },
-    { x: 3, y: 0.5 },
-    { x: -1.5, y: -1 },
-    { x: 4, y: 2.5 },
-    { x: 1.5, y: 5 },
-    { x: 1, y: 8 },
+    [1, 2],
+    [5, 4],
+    [-3, 4],
+    [-2, 1],
+    [3, 1],
+    [-1, 0],
+    [4, 3],
+    [2, 3],
+    [1, 6],
 ];
-
-const slider = new sd.Slider(div)
-    .min(0)
-    .max(25)
-    .value(4)
-    .onChange(value => {
-        K = value * 0.05;
-        sd.inter(async () => {
-            const center = line.center();
-            const start = [center[0] - 200, center[1] + 200 * K];
-            const end = [center[0] + 200, center[1] - 200 * K];
-            line.startAnimate().source(start).target(end).endAnimate();
-        });
+const convex = await buildConvex(
+    data.map(item => {
+        return { x: item[0], y: item[1] };
     })
-    .opacity(0);
+);
+const minTick = 0;
+const maxTick = 25;
+const slider = new sd.Slider(div).min(minTick).max(maxTick).value(4).opacity(0);
+slider.onChange(value => {
+    const min = -Math.PI / 2;
+    const max = Math.PI / 2;
+    const k = (value - minTick + 1) / (maxTick + 2 - minTick);
+    const current = (max - min) * k + min;
+    const direction = V.makeComplex(1, current);
+    sd.inter(async () => {
+        updateLineByDirection(direction);
+    });
+});
 
 sd.init(() => {
     sliderLabel = sd.Label(slider, "$-A_i$").opacity(0);
-    slider.width(80).mx(coord.mx()).my(coord.my());
+    slider
+        .width(80)
+        .mx(coord.mx())
+        .y(coord.my() + 20);
 });
 
 sd.main(async () => {
@@ -67,30 +74,28 @@ sd.main(async () => {
     k.startAnimate().transformMath("k").my(50).endAnimate();
     x.startAnimate().transformMath("x").my(50).endAnimate();
     await sd.pause();
-    coord.startAnimate().opacity(1).endAnimate();
+    coord.startAnimate();
+    coord.opacity(1);
     data.forEach((item, idx) => {
-        item.circle = new sd.Circle(coord)
-            .r(2)
+        const circle = coord
+            .drawCircle(item[0], item[1], 3)
+            .after(0)
             .color(C.black)
-            .center(coord.globalAt(item.x, item.y))
             .strokeWidth(0)
             .childAs(new sd.Mathjax(coord, `(B_{${idx + 1}},f_{${idx + 1}})`).fontSize(8), R.aside("tc", 2));
+        circles.push(circle);
     });
+    coord.endAnimate();
     await sd.pause();
-    line.source([0, 0]).target(400, -80).cx(coord.cx()).my(coord.my()).startAnimate().opacity(1).endAnimate();
-    line.childAs(new sd.Mathjax(line, "k=-A_i").fontSize(8), R.pointAtPathByRate(1, "cx", "my"));
+    updateLine([-3, -1], [1, 0.2]);
+    line.startAnimate().opacity(1).childAs(new sd.Mathjax(line, "k=-A_i").fontSize(8), R.pointAtPathByRate(1, "x", "cy", 3)).endAnimate();
     for (let i = 0; i < data.length; i++) {
         await sd.pause();
-        const pos = coord.globalAt(data[i].x, data[i].y);
-        const k = (pos[0] - coord.x()) / coord.width();
-        const lineY = line.at(k)[1];
-        const nodeY = pos[1];
-        data[i].circle.startAnimate().color(C.red).endAnimate();
-        line.startAnimate()
-            .dy(nodeY - lineY)
-            .endAnimate();
+        updateLineByPosition(data[i]);
+        circles[i].startAnimate().color(C.red).endAnimate();
+        coord.endAnimate();
         await sd.pause();
-        data[i].circle.startAnimate().color(C.black).endAnimate();
+        circles[i].startAnimate().color(C.black).endAnimate();
     }
     await sd.pause();
     line.drag((dx, dy) => {
@@ -100,8 +105,7 @@ sd.main(async () => {
     sliderLabel.opacity(1);
     await sd.pause();
     for (let i = 0; i + 1 < convex.length; i++) {
-        const link = sd
-            .Link(data[convex[i] - 1].circle, data[convex[i + 1] - 1].circle, sd.Line, "cx", "cy", "cx", "cy")
+        sd.Link(circles[convex[i]], circles[convex[i + 1]])
             .opacity(0)
             .stroke(C.red)
             .after(i * 300)
@@ -111,3 +115,28 @@ sd.main(async () => {
             .endAnimate();
     }
 });
+
+function updateLineByDirection(direction) {
+    const w = coord.width() / 2;
+    const k = coord.globalK(direction);
+    const [cx, cy] = line.center();
+    const [sx, sy] = V.add([cx, cy], [-w, -w * k]);
+    const [tx, ty] = V.add([cx, cy], [w, w * k]);
+    line.startAnimate().source(sx, sy).target(tx, ty).endAnimate();
+}
+
+function updateLineByPosition(position) {
+    position = coord.global(position);
+    const k = (line.y1() - line.y2()) / (line.x1() - line.x2());
+    const [sx, sy] = V.add(position, [coord.x() - position[0], (coord.x() - position[0]) * k]);
+    const [tx, ty] = V.add(position, [coord.mx() - position[0], (coord.mx() - position[0]) * k]);
+    line.startAnimate().source(sx, sy).target(tx, ty).endAnimate();
+}
+
+function updateLine(position, direction) {
+    position = coord.global(position);
+    const k = coord.globalK(direction);
+    const [sx, sy] = V.add(position, [coord.x() - position[0], (coord.x() - position[0]) * k]);
+    const [tx, ty] = V.add(position, [coord.mx() - position[0], (coord.mx() - position[0]) * k]);
+    line.source(sx, sy).target(tx, ty);
+}
