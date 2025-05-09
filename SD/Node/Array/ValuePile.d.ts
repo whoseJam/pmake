@@ -1,8 +1,8 @@
-import { Stack } from "@/Node/Array/Stack";
+import { Pile } from "@/Node/Array/Pile";
 
 type Align = "x" | "cx" | "mx";
 
-export class ValueStack extends Stack {
+export class ValuePile extends Pile {
     align(): Align;
     align(align: Align): this;
 }

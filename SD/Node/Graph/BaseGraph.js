@@ -51,15 +51,6 @@ BaseGraph.prototype = {
     height: Factory.handlerLowPrecise("height"),
     element: BaseTree.prototype.element,
 
-    linkType(type) {
-        this._.linkType = type;
-        return this;
-    },
-    nodeType(type) {
-        this._.nodeType = type;
-        return this;
-    },
-
     nodes: BaseTree.prototype.nodes,
     nodesId: BaseTree.prototype.nodesId,
     nodeId: BaseTree.prototype.nodeId,
@@ -161,6 +152,9 @@ BaseGraph.prototype = {
     value: BaseTree.prototype.value,
     nodeValue: BaseTree.prototype.nodeValue,
     linkValue: BaseTree.prototype.linkValue,
+
+    linkType: BaseTree.prototype.linkType,
+    nodeType: BaseTree.prototype.nodeType,
 
     __insertNode(id, element) {
         id = String(id);

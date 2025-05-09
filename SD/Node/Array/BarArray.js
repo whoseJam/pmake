@@ -5,8 +5,8 @@ import { Rect } from "@/Node/SVG/Rect";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 
-export function BarArray(parent) {
-    BaseArray.call(this, parent);
+export function BarArray(target) {
+    BaseArray.call(this, target);
 
     this.type("BarArray");
 

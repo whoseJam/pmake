@@ -16,8 +16,8 @@ function focusRule(parent, child) {
     child.height(r.my() - l.y());
 }
 
-export function Code(parent, source = undefined) {
-    BaseArray.call(this, parent);
+export function Code(target, source = undefined) {
+    BaseArray.call(this, target);
 
     this.type("Code");
 

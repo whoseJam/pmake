@@ -5,8 +5,8 @@ import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 
-export function BaseArray(parent) {
-    SD2DNode.call(this, parent);
+export function BaseArray(target) {
+    SD2DNode.call(this, target);
 
     this.newLayer("elements");
 
