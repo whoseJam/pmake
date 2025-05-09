@@ -3,6 +3,7 @@ export class Interp {
     static numberInterp(object: any, key: string): (t: number) => void;
     static pixelInterp(object: any, key: string): (t: number) => void;
     static colorInterp(object: any, key: string): (t: number) => void;
+    static normalizedColorInterp(object: any, key: string): (t: number) => void;
     static stringInterp(object: any, key: string): (t: number) => void;
     static arrayInterp(object: any, key: string): (t: number) => void;
     static matrixInterp(object: any, key: string): (t: number) => void;

@@ -1,8 +1,12 @@
 import { SD3DNode } from "@/Node/SD3DNode";
+import { Scene } from "@/Node/Three/Scene";
+import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 
-export function BaseThree(parent) {
-    SD3DNode.call(this, parent);
+export function BaseThree(target) {
+    if (target instanceof Scene) ErrorLauncher.invalidArguments();
+    SD3DNode.call(this, target);
+    this._.scene = target._.scene;
 }
 
 BaseThree.prototype = {

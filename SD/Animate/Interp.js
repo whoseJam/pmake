@@ -66,6 +66,17 @@ export class Interp {
             set({ r, g, b });
         };
     }
+    static normalizedColorInterp(object, key, scale = 255) {
+        const set = setter(object, key);
+        return function (t) {
+            const fRGB = Check.isTypeOfString(this.source) ? castHexToRGB(this.source) : this.source;
+            const tRGB = Check.isTypeOfString(this.target) ? castHexToRGB(this.target) : this.target;
+            const r = (fRGB.r * (1 - t) + tRGB.r * t) / scale;
+            const g = (fRGB.g * (1 - t) + tRGB.g * t) / scale;
+            const b = (fRGB.b * (1 - t) + tRGB.b * t) / scale;
+            set({ r, g, b });
+        };
+    }
     static stringInterp(object, key) {
         const set = setter(object, key);
         return function (t) {

@@ -1,7 +1,7 @@
 import { SD3DNode } from "@/Node/SD3DNode";
-import { SDNode } from "@/Node/SDNode";
-import { RenderNode } from "@/Renderer/RenderNode";
+import { SDColor } from "@/Utility/Color";
 
 export class Cube extends SD3DNode {
-    constructor(target: SDNode | RenderNode);
+    color(): SDColor;
+    color(color: SDColor): this;
 }

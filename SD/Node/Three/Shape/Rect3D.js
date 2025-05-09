@@ -2,22 +2,21 @@ import { Interp } from "@/Animate/Interp";
 import { BaseThree } from "@/Node/Three/BaseThree";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
-import { BoxGeometry, Mesh, MeshToonMaterial } from "three";
+import { Mesh, MeshBasicMaterial, PlaneGeometry } from "three";
 
-export function Cube(parent) {
-    BaseThree.call(this, parent);
+export function Rect3D(target) {
+    BaseThree.call(this, target);
 
     this.vars.merge({
         x: 0,
         y: 0,
         z: 0,
-        rx: 0,
-        ry: 0,
-        rz: 0,
-        color: C.pureGreen,
+        width: 1,
+        height: 1,
     });
-    this._.geometry = new BoxGeometry(1, 1, 1);
-    this._.material = new MeshToonMaterial({ color: C.pureGreen });
+
+    this._.geometry = new PlaneGeometry(this.vars.width, this.vars.height);
+    this._.material = new MeshBasicMaterial({ color: C.black });
     this._.mesh = new Mesh(this._.geometry, this._.material);
     this._.scene.add(this._.mesh);
 
@@ -27,10 +26,8 @@ export function Cube(parent) {
     this.vars.associate("rx", Factory.action(this, this._.mesh.rotation, "x", Interp.numberInterp));
     this.vars.associate("ry", Factory.action(this, this._.mesh.rotation, "y", Interp.numberInterp));
     this.vars.associate("rz", Factory.action(this, this._.mesh.rotation, "z", Interp.numberInterp));
-    this.vars.associate("color", Factory.action(this, this._.material, "color", Interp.normalizedColorInterp));
 }
 
-Cube.prototype = {
+Rect3D.prototype = {
     ...BaseThree.prototype,
-    color: Factory.handler("color"),
 };
