@@ -8,26 +8,29 @@ export class Vector {
         return Vector;
     }
     static add(a, b) {
-        return [a[0] + b[0], a[1] + b[1]];
+        if (a.length === 2) return [a[0] + b[0], a[1] + b[1]];
+        return [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
     }
     static sub(a, b) {
-        return [a[0] - b[0], a[1] - b[1]];
+        if (a.length === 2) return [a[0] - b[0], a[1] - b[1]];
+        return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
     }
     static dotMul(a, b) {
-        return a[0] * b[0] + a[1] * b[1];
+        if (a.length === 2) return a[0] * b[0] + a[1] * b[1];
+        return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
     }
     static numberMul(a, b) {
-        return [a[0] * b, a[1] * b];
+        if (a.length === 2) return [a[0] * b, a[1] * b];
+        return [a[0] * b, a[1] * b, a[2] * b];
     }
     static length(a) {
-        return Math.sqrt(a[0] * a[0] + a[1] * a[1]);
+        if (a.length === 2) return Math.sqrt(a[0] * a[0] + a[1] * a[1]);
+        return Math.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
     }
     static identity(a) {
         const length = this.length(a);
-        if (ddcmp(length) > 0) {
-            return [a[0] / length, a[1] / length];
-        }
-        return [0, 0];
+        if (a.length === 2) return ddcmp(length) > 0 ? [a[0] / length, a[1] / length] : [0, 0];
+        return ddcmp(length) > 0 ? [a[0] / length, a[1] / length, a[2] / length] : [0, 0, 0];
     }
     static complexMul(a, b) {
         return [a[0] * b[0] - a[1] * b[1], a[0] * b[1] - a[1] * b[0]];

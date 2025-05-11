@@ -1,14 +1,21 @@
 export class Vector {
     static add(a: [number, number], b: [number, number]): [number, number];
+    static add(a: [number, number, number], b: [number, number, number]): [number, number, number];
     static sub(a: [number, number], b: [number, number]): [number, number];
+    static sub(a: [number, number, number], b: [number, number, number]): [number, number, number];
     static dotMul(a: [number, number], b: [number, number]): number;
+    static dotMul(a: [number, number, number], b: [number, number, number]): number;
     static numberMul(a: [number, number], b: number): [number, number];
+    static numberMul(a: [number, number, number], b: number): [number, number, number];
     static length(a: [number, number]): number;
+    static length(a: [number, number, number]): number;
     static identity(a: [number, number]): [number, number];
+    static identity(a: [number, number, number]): [number, number, number];
     static complexMul(a: [number, number], b: [number, number]): [number, number];
     static makeComplex(r: number, arc: number): [number, number];
     static rotate(a: [number, number], arc: number): [number, number];
     static norm(a: [number, number]): [number, number];
+    static norm(a: [number, number, number]): [number, number, number];
     static cross(a: [number, number], b: [number, number]): number;
     static onLeft(a: [number, number], b: [number, number]): boolean;
     static onRight(a: [number, number], b: [number, number]): boolean;

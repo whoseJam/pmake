@@ -9,8 +9,4 @@ export class OrthgraphicCamera extends BaseCamera {
     top(top: number): this;
     bottom(): number;
     bottom(bottom: number): this;
-    near(): number;
-    near(near: number): this;
-    far(): number;
-    far(far: number): this;
 }

@@ -44,11 +44,14 @@ Canvas.prototype = {
             this._.three = true;
             this._.scene = new Scene(this);
             this._.camera = new PerspectiveCamera(this);
+            this.childAs(this._.scene);
+            this.childAs(this._.camera);
             render(this, this._.scene, this._.camera);
-            this._.camera.position(5, 5, 5);
-            this._.camera.lookAt(0, 0, 0);
+            // this._.camera.position(0, 0, 5);
+            // this._.camera.lookAt(0, 0, 0);
         } else {
-            OrthographicCamera();
+            OrthographicCamera(this);
+            PerspectiveCamera(this);
         }
         return this;
     },
@@ -68,11 +71,12 @@ function render(canvas, scene, camera) {
     canvas.effect("size", () => {
         const width = canvas.width();
         const height = canvas.height();
-        renderer.setSize(width, height);
+        renderer.setSize(width, height, false);
         camera.resize(width, height);
     });
     renderer.setClearColor(C.white, 1);
     renderer.setAnimationLoop(() => {
         renderer.render(scene._.scene, camera._.camera);
     });
+    return renderer;
 }
