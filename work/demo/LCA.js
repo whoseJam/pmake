@@ -1,5 +1,5 @@
 import * as sd from "@/sd";
-import { LCA } from "../_/LCA";
+import { LCA } from "../LCA/_/LCA";
 
 const svg = sd.svg();
 const C = sd.color();
