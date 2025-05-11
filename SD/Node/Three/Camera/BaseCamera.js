@@ -24,8 +24,8 @@ export function BaseCamera(target) {
                 const s = this.source;
                 const t = this.target;
                 const tmp = [s[0] + (t[0] - s[0]) * k, s[1] + (t[1] - s[1]) * k, s[2] + (t[2] - s[2]) * k];
-                const p = self.position();
-                const answer = [p[0] + tmp[0], p[1] + tmp[1], p[2] + tmp[2]];
+                const p = self._.camera.position;
+                const answer = [p.x + tmp[0], p.y + tmp[1], p.z + tmp[2]];
                 self._.camera.lookAt(answer[0], answer[1], answer[2]);
             },
             this,

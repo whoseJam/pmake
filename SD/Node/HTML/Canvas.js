@@ -77,6 +77,19 @@ function render(canvas, scene, camera) {
     renderer.setClearColor(C.white, 1);
     renderer.setAnimationLoop(() => {
         renderer.render(scene._.scene, camera._.camera);
+        if (resizeRendererToDisplaySize(renderer)) {
+            const canvas = renderer.domElement;
+            camera.aspect(canvas.clientWidth / canvas.clientHeight);
+        }
     });
     return renderer;
+}
+
+function resizeRendererToDisplaySize(renderer) {
+    const canvas = renderer.domElement;
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    const needResize = canvas.width !== width || canvas.height !== height;
+    if (needResize) renderer.setSize(width, height, false);
+    return needResize;
 }
