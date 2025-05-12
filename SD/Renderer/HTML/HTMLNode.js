@@ -31,9 +31,11 @@ HTMLNode.prototype = {
     class: HTMLNode,
     moveTo(render) {
         if (HTMLLabel.has(render.label)) {
-            const t = this.parent.delay() + this.parent.duration();
-            new Action(t, t, this.render, render, moveTo(this), this, "moveTo");
-            this.render = render;
+            if (this.render !== render) {
+                const t = this.parent.delay() + this.parent.duration();
+                new Action(t, t, this.render, render, moveTo(this), this, "moveTo");
+                this.render = render;
+            }
         } else {
             this.moveTo(div());
         }

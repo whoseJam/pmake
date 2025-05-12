@@ -1,11 +1,11 @@
-import { Enter as EN } from "@/Node/Core/Enter";
 import { BaseElement } from "@/Node/Element/BaseElement";
+import { Circle } from "@/Node/Shape/Circle";
 import { CircleSVG } from "@/Node/SVG/CircleSVG";
 import { Rule as R } from "@/Rule/Rule";
 import { Factory } from "@/Utility/Factory";
 
-export function Vertex(parent, value) {
-    BaseElement.call(this, parent);
+export function Vertex(target, value) {
+    BaseElement.call(this, target);
 
     this.type("Vertex");
 
@@ -13,7 +13,7 @@ export function Vertex(parent, value) {
         r: 20,
     });
 
-    const background = new CircleSVG(this.layer("background")).onEnter(EN.appear("background"));
+    const background = new Circle(this);
     this.childAs("background", background, R.circleBackground());
 
     this.value(value);

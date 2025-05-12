@@ -8,7 +8,18 @@ const EN = sd.enter();
 
 sd.init(() => {});
 
-sd.main(TestDropEmptyValue);
+sd.main(TestBoxBackingSVGAndHTML);
+
+async function TestBoxBackingSVGAndHTML() {
+    const b1 = new sd.Box(svg).x(100).y(100).width(100);
+    const b2 = new sd.Box(div).x(100).y(200).width(100);
+    await sd.pause();
+    b1.startAnimate().value("hello").endAnimate();
+    b2.startAnimate().value(new sd.Button(b2)).endAnimate();
+    await sd.pause();
+    b1.startAnimate().value(null).endAnimate();
+    b2.startAnimate().value(null).endAnimate();
+}
 
 async function TestDropEmptyValue() {
     const box = new sd.Box(svg);

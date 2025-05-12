@@ -5,6 +5,8 @@ import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 export const SVGLabel = new Set(["circle", "ellipse", "image", "line", "path", "polygon", "rect", "text", "svg", "g", "marker", "defs"]);
 export const HTMLLabel = new Set(["div", "input", "button", "label", "textarea", "canvas"]);
 
+let debugCount = 0;
+
 /**
  * Change the structure of the render tree. Append or remove a render node.
  * @param {RenderNode} renderNode

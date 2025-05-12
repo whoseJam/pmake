@@ -9,8 +9,10 @@ function buttonCallback() {
     if (this._.onClick) this._.onClick();
 }
 
-export function Button(parent) {
-    BaseHTML.call(this, parent);
+export function Button(target) {
+    BaseHTML.call(this, target);
+
+    this.type("Button");
 
     this._.onClick = undefined;
 
