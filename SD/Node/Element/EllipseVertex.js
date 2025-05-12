@@ -1,6 +1,6 @@
 import { Enter as EN } from "@/Node/Core/Enter";
 import { BaseElement } from "@/Node/Element/BaseElement";
-import { Ellipse } from "@/Node/SVG/Ellipse";
+import { EllipseSVG } from "@/Node/SVG/EllipseSVG";
 import { Rule as R } from "@/Rule/Rule";
 
 export function EllipseVertex(parent, value) {
@@ -8,7 +8,7 @@ export function EllipseVertex(parent, value) {
 
     this.type("EllipseVertex");
 
-    const background = new Ellipse(this.layer("background")).onEnter(EN.appear("background"));
+    const background = new EllipseSVG(this.layer("background")).onEnter(EN.appear("background"));
     this.childAs("background", background, R.background());
 
     this.value(value);

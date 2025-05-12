@@ -3,7 +3,7 @@ import { Vector as V } from "@/Math/Vector";
 import { Axis } from "@/Node/Axis/Axis";
 import { BaseCoord } from "@/Node/Coord/BaseCoord";
 import { Enter as EN } from "@/Node/Core/Enter";
-import { Circle } from "@/Node/SVG/Circle";
+import { CircleSVG } from "@/Node/SVG/CircleSVG";
 import { Path } from "@/Node/SVG/Path";
 import { RectSVG } from "@/Node/SVG/RectSVG";
 import { Check } from "@/Utility/Check";
@@ -71,7 +71,7 @@ Coord.prototype = {
     rectWidth: elementProp1("width"),
     rectHeight: elementProp1("height"),
     drawCircle(x, y, r) {
-        const circle = new Circle(this).opacity(0).onEnter(EN.appear());
+        const circle = new CircleSVG(this).opacity(0).onEnter(EN.appear());
         if (r !== undefined) circle.r(r);
         this.vars.elements.push({
             element: circle,

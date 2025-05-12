@@ -4,12 +4,17 @@ const svg = sd.svg();
 const div = sd.div();
 const C = sd.color();
 
-sd.main(TestCircleHTML);
+sd.main(TestCircleHTMLAndSVG);
 
-async function TestCircleHTML() {
-    const circle = new sd.CircleHTML(div).cx(600).cy(300);
+async function TestCircleHTMLAndSVG() {
+    const c1 = new sd.Circle(div).cx(600).cy(300);
+    const c2 = new sd.Circle(svg).cx(700).cy(300);
     await sd.pause();
-    circle.startAnimate().r(50).cx(600).cy(300).endAnimate();
+    c1.startAnimate().r(40).cx(600).cy(300).endAnimate();
+    c2.startAnimate().r(40).endAnimate();
+    await sd.pause();
+    c1.startAnimate().x(100).y(100).endAnimate();
+    c2.startAnimate().x(200).y(100).endAnimate();
 }
 
 async function TestBasic() {

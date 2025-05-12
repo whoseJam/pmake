@@ -1,5 +1,5 @@
 import { BaseCoord } from "@/Node/Coord/BaseCoord";
-import { Circle } from "@/Node/SVG/Circle";
+import { Circle } from "@/Node/SVG/CircleSVG";
 import { Path } from "@/Node/SVG/Path";
 import { Rect } from "@/Node/SVG/RectSVG";
 

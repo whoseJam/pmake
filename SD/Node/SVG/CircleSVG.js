@@ -1,16 +1,13 @@
 import { Interp } from "@/Animate/Interp";
 import { Vector as V } from "@/Math/Vector";
 import { BaseSVG } from "@/Node/SVG/BaseSVG";
-import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
 
-export function Circle(parent) {
-    BaseSVG.call(this, parent, "circle");
+export function CircleSVG(target) {
+    BaseSVG.call(this, target, "circle");
 
-    this.type("Circle");
+    this.type("CircleSVG");
 
-    this.vars.fill = C.white;
-    this.vars.stroke = C.black;
     this.vars.merge({
         r: 20,
         cx: 20,
@@ -26,19 +23,19 @@ export function Circle(parent) {
     this._.nake.setAttribute("r", this.vars.r);
 }
 
-Circle.prototype = {
+CircleSVG.prototype = {
     ...BaseSVG.prototype,
     r: Factory.handlerLowPrecise("r"),
     cx: Factory.handlerLowPrecise("cx"),
     cy: Factory.handlerLowPrecise("cy"),
-    inRange: function (vec) {
+    inRange(vec) {
         return V.length(V.sub(this.center(), vec)) <= this.r();
     },
-    x: function (x) {
+    x(x) {
         if (x === undefined) return this.cx() - this.r();
         return this.cx(x - this.x() + this.cx());
     },
-    y: function (y) {
+    y(y) {
         if (y === undefined) return this.cy() - this.r();
         return this.cy(y - this.y() + this.cy());
     },

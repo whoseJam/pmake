@@ -4,12 +4,14 @@ const svg = sd.svg();
 const div = sd.div();
 const C = sd.color();
 
-sd.main(TestEllipseHTML);
+sd.main(TestEllipseHTMLAndSVG);
 
-async function TestEllipseHTML() {
-    const e = new sd.EllipseHTML(div).cx(600).cy(300);
+async function TestEllipseHTMLAndSVG() {
+    const e1 = new sd.Ellipse(div).cx(600).cy(300);
+    const e2 = new sd.Ellipse(svg).cx(700).cy(300);
     await sd.pause();
-    e.startAnimate().width(60).endAnimate();
+    e1.startAnimate().width(60).cx(600).endAnimate();
+    e2.startAnimate().width(60).endAnimate();
 }
 
 async function TestBasic() {

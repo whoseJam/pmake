@@ -1,15 +1,12 @@
 import { Interp } from "@/Animate/Interp";
 import { BaseSVG } from "@/Node/SVG/BaseSVG";
-import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
 
-export function Ellipse(parent) {
+export function EllipseSVG(parent) {
     BaseSVG.call(this, parent, "ellipse");
 
-    this.type("Ellipse");
+    this.type("EllipseSVG");
 
-    this.vars.fill = C.white;
-    this.vars.stroke = C.black;
     this.vars.merge({
         rx: 20,
         ry: 20,
@@ -28,7 +25,7 @@ export function Ellipse(parent) {
     this._.nake.setAttribute("ry", this.vars.ry);
 }
 
-Ellipse.prototype = {
+EllipseSVG.prototype = {
     ...BaseSVG.prototype,
     cx: Factory.handlerLowPrecise("cx"),
     cy: Factory.handlerLowPrecise("cy"),

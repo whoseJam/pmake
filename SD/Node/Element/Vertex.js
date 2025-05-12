@@ -1,6 +1,6 @@
 import { Enter as EN } from "@/Node/Core/Enter";
 import { BaseElement } from "@/Node/Element/BaseElement";
-import { Circle } from "@/Node/SVG/Circle";
+import { CircleSVG } from "@/Node/SVG/CircleSVG";
 import { Rule as R } from "@/Rule/Rule";
 import { Factory } from "@/Utility/Factory";
 
@@ -13,7 +13,7 @@ export function Vertex(parent, value) {
         r: 20,
     });
 
-    const background = new Circle(this.layer("background")).onEnter(EN.appear("background"));
+    const background = new CircleSVG(this.layer("background")).onEnter(EN.appear("background"));
     this.childAs("background", background, R.circleBackground());
 
     this.value(value);
@@ -22,7 +22,7 @@ export function Vertex(parent, value) {
 Vertex.prototype = {
     ...BaseElement.prototype,
     r: Factory.handlerLowPrecise("r"),
-    width: Circle.prototype.width,
-    height: Circle.prototype.height,
-    inRange: Circle.prototype.inRange,
+    width: CircleSVG.prototype.width,
+    height: CircleSVG.prototype.height,
+    inRange: CircleSVG.prototype.inRange,
 };
