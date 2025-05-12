@@ -1,5 +1,5 @@
 import { SDNode } from "@/Node/SDNode";
-import { Rect } from "@/Node/SVG/Rect";
+import { Rect } from "@/Node/SVG/RectSVG";
 
 export class CompFocus {
     focus(): this;

@@ -2,10 +2,10 @@ import { Interp } from "@/Animate/Interp";
 import { BaseSVG } from "@/Node/SVG/BaseSVG";
 import { Factory } from "@/Utility/Factory";
 
-export function Rect(target) {
+export function RectSVG(target) {
     BaseSVG.call(this, target, "rect");
 
-    this.type("Rect");
+    this.type("RectSVG");
 
     this.vars.merge({
         x: 0,
@@ -25,7 +25,7 @@ export function Rect(target) {
     this._.nake.setAttribute("height", this.vars.height);
 }
 
-Rect.prototype = {
+RectSVG.prototype = {
     ...BaseSVG.prototype,
     x: Factory.handlerLowPrecise("x"),
     y: Factory.handlerLowPrecise("y"),

@@ -2,7 +2,7 @@ import { Interp } from "@/Animate/Interp";
 import { BaseThree } from "@/Node/Three/BaseThree";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
-import { BufferGeometry, LineBasicMaterial, Line as LineFromThree, Mesh, MeshBasicMaterial, PlaneGeometry, Vector3 } from "three";
+import { BufferGeometry, DoubleSide, LineBasicMaterial, Line as LineFromThree, Mesh, MeshBasicMaterial, PlaneGeometry, Vector3 } from "three";
 
 export function Rect3D(target) {
     BaseThree.call(this, target);
@@ -16,7 +16,7 @@ export function Rect3D(target) {
     });
 
     this._.fillGeometry = new PlaneGeometry(this.vars.width, this.vars.height);
-    this._.fillMaterial = new MeshBasicMaterial({ color: C.white });
+    this._.fillMaterial = new MeshBasicMaterial({ color: C.green, side: DoubleSide });
     this._.fill = new Mesh(this._.fillGeometry, this._.fillMaterial);
     this._.strokeGeometry = new BufferGeometry().setFromPoints([
         // format
@@ -26,7 +26,7 @@ export function Rect3D(target) {
         new Vector3(0.5, -0.5, 0),
         new Vector3(-0.5, -0.5, 0),
     ]);
-    this._.strokeMaterial = new LineBasicMaterial({ color: C.black });
+    this._.strokeMaterial = new LineBasicMaterial({ color: C.black, side: DoubleSide });
     this._.stroke = new LineFromThree(this._.strokeGeometry, this._.strokeMaterial);
     this._.scene.add(this._.fill);
     this._.scene.add(this._.stroke);

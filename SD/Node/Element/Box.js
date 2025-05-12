@@ -1,6 +1,6 @@
 import { Enter as EN } from "@/Node/Core/Enter";
 import { BaseElement } from "@/Node/Element/BaseElement";
-import { Rect } from "@/Node/SVG/Rect";
+import { RectSVG } from "@/Node/SVG/RectSVG";
 import { Rule as R } from "@/Rule/Rule";
 
 export function Box(parent, value) {
@@ -8,7 +8,7 @@ export function Box(parent, value) {
 
     this.type("Box");
 
-    const background = new Rect(this.layer("background")).onEnter(EN.appear("background"));
+    const background = new RectSVG(this.layer("background")).onEnter(EN.appear("background"));
     this.childAs("background", background, R.background());
 
     this.value(value);

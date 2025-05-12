@@ -5,7 +5,7 @@ import { HTMLLabel, RenderNode } from "@/Renderer/RenderNode";
 
 const innerHTMLKey = new Set(["innerHTML", "text"]);
 const callbackKey = new Set(["onclick", "onchange"]);
-const styleKey = new Set(["position", "left", "top", "pointer-events", "width", "height", "border", "overflow", "transform", "opacity", "display", "min-width", "min-height", "white-space", "background-color", "color", "border-color"]);
+const styleKey = new Set(["position", "left", "top", "pointer-events", "width", "height", "border", "overflow", "transform", "opacity", "display", "min-width", "min-height", "white-space", "background-color", "color", "border-color", "border-style", "border-width", "border-radius"]);
 
 export function HTMLNode(parent, render, label) {
     RenderNode.call(this, parent, render, label);

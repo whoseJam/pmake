@@ -8,6 +8,11 @@ import { Check } from "@/Utility/Check";
 
 let id = 0;
 
+export function getTargetLayer(target) {
+    if (Check.isTypeOfSDNode(target)) return target.layer();
+    return target;
+}
+
 export function SDNode(target) {
     this.id = ++id;
     this._ = {
@@ -22,8 +27,7 @@ export function SDNode(target) {
         freezing: 0,
     };
 
-    if (Check.isTypeOfSDNode(target)) target = target.layer();
-    this._.layers.__targetLayer = target;
+    this._.layers.__targetLayer = getTargetLayer(target);
 
     this.vars = reactive({});
 }

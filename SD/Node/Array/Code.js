@@ -1,7 +1,7 @@
 import { Context } from "@/Animate/Context";
 import { BaseArray } from "@/Node/Array/BaseArray";
 import { Enter as EN } from "@/Node/Core/Enter";
-import { Rect } from "@/Node/SVG/Rect";
+import { RectSVG } from "@/Node/SVG/RectSVG";
 import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
 import { Color } from "@/Utility/Color";
@@ -54,7 +54,7 @@ export function Code(target, source = undefined) {
 
     this.childAs(
         "focus",
-        new Rect(this)
+        new RectSVG(this)
             .color(Color.BLUE)
             .opacity(0)
             .onEnter(() => {}),

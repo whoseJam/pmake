@@ -6,6 +6,6 @@ export class Factory {
     static handlerMediumPrecise(key: string);
     static handlerHighPrecise(key: string);
 
-    static action(node: SDNode, object: any, key: string, interp: (t: number) => void);
-    static actionForCamera(node: SDNode, object: any, key: string, interp: (t: number) => void);
+    static action(node: SDNode, object: any, key: string, interp: (object: any, key: string) => (t: number) => void);
+    static actionForCamera(node: SDNode, object: any, key: string, interp: (object: any, key: string) => (t: number) => void);
 }

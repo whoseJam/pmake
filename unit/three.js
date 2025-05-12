@@ -5,9 +5,9 @@ const div = sd.div();
 const canvas = new sd.Canvas(div).three();
 const camera = canvas.camera();
 const rect = new sd.Rect3D(canvas);
-const circle = new sd.Circle3D(canvas);
+// const circle = new sd.Circle3D(canvas);
 // const cube = new sd.Cube(canvas);
-const light = new sd.AmbientLight(canvas);
+// const light = new sd.AmbientLight(canvas);
 // const line = new sd.Line3D(canvas);
 console.log(camera._.camera);
 

@@ -46,12 +46,12 @@ export class Factory {
             return this;
         };
     }
-    static action(node, attrs, key, interp) {
-        let object = () => attrs;
-        if (typeof attrs === "string") object = () => node._[attrs];
-        else if (typeof attrs === "function") object = attrs;
+    static action(node, _object, key, interp) {
+        let object = () => _object;
+        if (typeof _object === "string") object = () => node._[_object];
+        else if (typeof _object === "function") object = _object;
         return function (newValue, oldValue) {
-            // console.log("node=", node, "object=", attrs, "key=", key, "l=", node.delay(), "r=", node.delay() + node.duration());
+            console.log("key=", key, "new=", newValue, "old=", oldValue);
             if (global.ACTION_TICK !== 0) {
                 const obj = object();
                 if (obj.setAttribute) obj.setAttribute(key, newValue);

@@ -1,15 +1,28 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-
-// C 是颜色模块，提供了各种各样的颜色
+const div = sd.div();
 const C = sd.color();
-const rect = new sd.Rect(svg);
-rect.cx(600).cy(300);
 
-main();
+sd.init(() => {});
 
-async function main() {
+sd.main(TestRectHTMLAndSVG);
+
+async function TestRectHTMLAndSVG() {
+    const r1 = new sd.Rect(div);
+    const r2 = new sd.Rect(svg);
+    r1.cx(600).cy(300);
+    r2.cx(700).cy(300);
+    await sd.pause();
+    r1.startAnimate().x(100).y(100).endAnimate();
+    r2.startAnimate().x(200).y(100).endAnimate();
+}
+
+async function TestBasic() {
+    const rect = new sd.Rect(svg);
+    console.log(rect);
+    rect.cx(600).cy(300);
+
     await sd.pause();
     // 可以通过 x, y 函数来设置元素坐标
     rect.startAnimate().x(100).y(100).endAnimate();
@@ -50,6 +63,6 @@ async function main() {
     rect.startAnimate().width(200).height(100).endAnimate();
     console.log(`width = ${rect.width()}`);
     console.log(`height = ${rect.height()}`);
-    
+
     await sd.pause();
 }

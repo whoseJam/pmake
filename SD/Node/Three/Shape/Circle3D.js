@@ -1,9 +1,9 @@
 import { BaseThree } from "@/Node/Three/BaseThree";
 import { Color as C } from "@/Utility/Color";
-import { BufferGeometry, CircleGeometry, LineBasicMaterial, Line as LineFromThree, Mesh, MeshBasicMaterial, Vector3 } from "three";
+import { BufferGeometry, CircleGeometry, DoubleSide, LineBasicMaterial, Line as LineFromThree, Mesh, MeshBasicMaterial, Vector3 } from "three";
 
 function getPolygonVertices(radius = 0.5) {
-    const count = 12;
+    const count = 128;
     const vertices = [];
     for (let i = 0; i <= count; i++) {
         const v = new Vector3(
@@ -27,11 +27,11 @@ export function Circle3D(target) {
         r: 0.5,
     });
 
-    this._.fillGeometry = new CircleGeometry(this.vars.r, 12);
-    this._.fillMaterial = new MeshBasicMaterial({ color: C.grey });
+    this._.fillGeometry = new CircleGeometry(this.vars.r, 128);
+    this._.fillMaterial = new MeshBasicMaterial({ color: C.grey, side: DoubleSide });
     this._.fill = new Mesh(this._.fillGeometry, this._.fillMaterial);
     this._.strokeGeometry = new BufferGeometry().setFromPoints(getPolygonVertices());
-    this._.strokeMaterial = new LineBasicMaterial({ color: C.black });
+    this._.strokeMaterial = new LineBasicMaterial({ color: C.black, side: DoubleSide });
     this._.stroke = new LineFromThree(this._.strokeGeometry, this._.strokeMaterial);
     this._.scene.add(this._.fill);
     this._.scene.add(this._.stroke);

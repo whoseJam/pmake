@@ -67,7 +67,7 @@ function render(canvas, scene, camera) {
         precision: "highp",
         canvas: canvas.canvas().nake(),
     });
-    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setPixelRatio(window.devicePixelRatio * 2);
     canvas.effect("size", () => {
         const width = canvas.width();
         const height = canvas.height();

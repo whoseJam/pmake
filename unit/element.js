@@ -1,19 +1,30 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
+const div = sd.div();
 const C = sd.color();
-const elementTypes = [sd.Vertex, sd.Box, sd.EllipseVertex];
-const elements = [];
 
-sd.init(() => {
+sd.init(() => {});
+
+sd.main(TestSvgElementWithDiv);
+
+async function TestSvgElementWithDiv() {
+    const box = new sd.Box(svg).x(100).y(100).width(70).height(30);
+    box.value(new sd.Button(div));
+    await sd.pause();
+    box.startAnimate().opacity(0.5).endAnimate();
+}
+
+async function TestDiffElement() {
+    const elementTypes = [sd.Vertex, sd.Box, sd.EllipseVertex];
+    const elements = [];
+
     for (let i = 0; i < elementTypes.length; i++) {
         const element = new elementTypes[i](svg);
         element.cx(i * 100 + 100).cy(100);
         elements.push(element);
     }
-});
 
-sd.main(async () => {
     await sd.pause();
     for (let i = 0; i < elements.length; i++) {
         elements[i].startAnimate().width(60).endAnimate();
@@ -35,4 +46,4 @@ sd.main(async () => {
     for (let i = 0; i <= 10; i++) {
         elements[i % elements.length].startAnimate().value(i).endAnimate();
     }
-});
+}
