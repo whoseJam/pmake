@@ -1,21 +1,23 @@
 import { Interp } from "@/Animate/Interp";
-import { BaseSVG } from "@/Node/SVG/BaseSVG";
+import { BaseShapeSVG } from "@/Node/SVG/Shape/BaseShapeSVG";
 import { Factory } from "@/Utility/Factory";
 
-export function RectSVG(target) {
-    BaseSVG.call(this, target, "rect");
+export function ImageSVG(target) {
+    BaseShapeSVG.call(this, target, "image");
 
-    this.type("RectSVG");
+    this.type("Image");
 
     this.vars.merge({
         x: 0,
         y: 0,
         width: 40,
         height: 40,
+        href: "",
     });
 
     this.vars.associate("x", Factory.action(this, this._.nake, "x", Interp.numberInterp));
     this.vars.associate("y", Factory.action(this, this._.nake, "y", Interp.numberInterp));
+    this.vars.associate("href", Factory.action(this, this._.nake, "href", Interp.stringInterp));
     this.vars.associate("width", Factory.action(this, this._.nake, "width", Interp.numberInterp));
     this.vars.associate("height", Factory.action(this, this._.nake, "height", Interp.numberInterp));
 
@@ -23,12 +25,14 @@ export function RectSVG(target) {
     this._.nake.setAttribute("y", this.vars.y);
     this._.nake.setAttribute("width", this.vars.width);
     this._.nake.setAttribute("height", this.vars.height);
+    this._.nake.setAttribute("preserveAspectRatio", "xMidYMid meet");
 }
 
-RectSVG.prototype = {
-    ...BaseSVG.prototype,
+ImageSVG.prototype = {
+    ...BaseShapeSVG.prototype,
     x: Factory.handlerLowPrecise("x"),
     y: Factory.handlerLowPrecise("y"),
+    href: Factory.handler("href"),
     width: Factory.handlerLowPrecise("width"),
     height: Factory.handlerLowPrecise("height"),
 };

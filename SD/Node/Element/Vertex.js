@@ -1,6 +1,6 @@
 import { BaseElement } from "@/Node/Element/BaseElement";
 import { Circle } from "@/Node/Shape/Circle";
-import { CircleSVG } from "@/Node/SVG/CircleSVG";
+import { CircleSVG } from "@/Node/SVG/Shape/CircleSVG";
 import { Rule as R } from "@/Rule/Rule";
 import { Factory } from "@/Utility/Factory";
 

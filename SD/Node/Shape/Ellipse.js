@@ -1,6 +1,6 @@
 import { EllipseHTML } from "@/Node/HTML/Shape/EllipseHTML";
 import { getTargetLayer } from "@/Node/SDNode";
-import { EllipseSVG } from "@/Node/SVG/EllipseSVG";
+import { EllipseSVG } from "@/Node/SVG/Shape/EllipseSVG";
 import { HTMLNode } from "@/Renderer/HTML/HTMLNode";
 
 export function Ellipse(target) {

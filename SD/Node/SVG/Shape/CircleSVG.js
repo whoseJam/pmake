@@ -1,10 +1,10 @@
 import { Interp } from "@/Animate/Interp";
 import { Vector as V } from "@/Math/Vector";
-import { BaseSVG } from "@/Node/SVG/BaseSVG";
+import { BaseShapeSVG } from "@/Node/SVG/Shape/BaseShapeSVG";
 import { Factory } from "@/Utility/Factory";
 
 export function CircleSVG(target) {
-    BaseSVG.call(this, target, "circle");
+    BaseShapeSVG.call(this, target, "circle");
 
     this.type("CircleSVG");
 
@@ -24,7 +24,7 @@ export function CircleSVG(target) {
 }
 
 CircleSVG.prototype = {
-    ...BaseSVG.prototype,
+    ...BaseShapeSVG.prototype,
     r: Factory.handlerLowPrecise("r"),
     cx: Factory.handlerLowPrecise("cx"),
     cy: Factory.handlerLowPrecise("cy"),

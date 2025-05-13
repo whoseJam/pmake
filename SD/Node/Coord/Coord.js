@@ -3,9 +3,9 @@ import { Vector as V } from "@/Math/Vector";
 import { Axis } from "@/Node/Axis/Axis";
 import { BaseCoord } from "@/Node/Coord/BaseCoord";
 import { Enter as EN } from "@/Node/Core/Enter";
-import { CircleSVG } from "@/Node/SVG/CircleSVG";
 import { Path } from "@/Node/SVG/Path";
-import { RectSVG } from "@/Node/SVG/RectSVG";
+import { CircleSVG } from "@/Node/SVG/Shape/CircleSVG";
+import { RectSVG } from "@/Node/SVG/Shape/RectSVG";
 import { Check } from "@/Utility/Check";
 import { PathPen } from "@/Utility/PathPen";
 

@@ -1,11 +1,26 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
+const div = sd.div();
 const domain = "http://localhost:1313";
 
 sd.init(() => {});
 
-sd.main(TestScale);
+sd.main(TestImageSVGAndHTML);
+
+async function TestImageSVGAndHTML() {
+    const i1 = new sd.ImageHTML(div)
+        .href(domain + "/img/gift.png")
+        .x(100)
+        .y(100);
+    const i2 = new sd.Image(svg)
+        .href(domain + "/img/gift.png")
+        .x(200)
+        .y(100);
+    await sd.pause();
+    i1.startAnimate().width(80).endAnimate();
+    i2.startAnimate().width(80).endAnimate();
+}
 
 async function TestScale() {
     const tree = new sd.Tree(svg);

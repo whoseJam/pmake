@@ -1,6 +1,6 @@
 import { CircleHTML } from "@/Node/HTML/Shape/CircleHTML";
 import { getTargetLayer } from "@/Node/SDNode";
-import { CircleSVG } from "@/Node/SVG/CircleSVG";
+import { CircleSVG } from "@/Node/SVG/Shape/CircleSVG";
 import { HTMLNode } from "@/Renderer/HTML/HTMLNode";
 
 export function Circle(target) {

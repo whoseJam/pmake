@@ -3,7 +3,7 @@ import { div, svg } from "@/Interact/Root";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 export const SVGLabel = new Set(["circle", "ellipse", "image", "line", "path", "polygon", "rect", "text", "svg", "g", "marker", "defs"]);
-export const HTMLLabel = new Set(["div", "input", "button", "label", "textarea", "canvas"]);
+export const HTMLLabel = new Set(["div", "input", "button", "label", "textarea", "canvas", "img"]);
 
 let debugCount = 0;
 

@@ -1,3 +1,3 @@
 import { BaseSVG } from "@/Node/SVG/BaseSVG";
 
-export class RectSVG extends BaseSVG {}
+export class BaseShapeSVG extends BaseSVG {}

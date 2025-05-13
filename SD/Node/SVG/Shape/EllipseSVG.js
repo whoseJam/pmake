@@ -1,9 +1,9 @@
 import { Interp } from "@/Animate/Interp";
-import { BaseSVG } from "@/Node/SVG/BaseSVG";
+import { BaseShapeSVG } from "@/Node/SVG/Shape/BaseShapeSVG";
 import { Factory } from "@/Utility/Factory";
 
 export function EllipseSVG(parent) {
-    BaseSVG.call(this, parent, "ellipse");
+    BaseShapeSVG.call(this, parent, "ellipse");
 
     this.type("EllipseSVG");
 
@@ -26,7 +26,7 @@ export function EllipseSVG(parent) {
 }
 
 EllipseSVG.prototype = {
-    ...BaseSVG.prototype,
+    ...BaseShapeSVG.prototype,
     cx: Factory.handlerLowPrecise("cx"),
     cy: Factory.handlerLowPrecise("cy"),
     rx: Factory.handlerLowPrecise("rx"),
