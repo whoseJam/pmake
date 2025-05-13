@@ -11,6 +11,8 @@ import { PerspectiveCamera } from "../Three/Camera/PerspectiveCamera";
 export function Canvas(target) {
     BaseHTML.call(this, target);
 
+    this.type("Canvas");
+
     this.vars.merge({
         x: 0,
         y: 0,

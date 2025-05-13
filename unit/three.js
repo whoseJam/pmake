@@ -1,34 +1,32 @@
 import * as sd from "@/sd";
 
 const C = sd.color();
+const svg = sd.svg();
 const div = sd.div();
 const canvas = new sd.Canvas(div).three();
 const camera = canvas.camera();
-const rect = new sd.Rect3D(canvas);
-// const circle = new sd.Circle3D(canvas);
-// const cube = new sd.Cube(canvas);
-// const light = new sd.AmbientLight(canvas);
-// const line = new sd.Line3D(canvas);
-console.log(camera._.camera);
-
-// canvas.canvas().nake().style["border"] = "1px solid black";
 
 sd.init(() => {});
 
-sd.main(async () => {
-    // await sd.pause();
-    // line.startAnimate().x1(-1).y1(1).endAnimate();
+sd.main(TestRect);
+
+async function TestRect() {
+    const r1 = new sd.Rect3D(canvas);
+    console.log(r1.x(), r1.y());
+    const r2 = new sd.Rect(svg).x(100).y(100);
+    const r3 = new sd.Rect(div).x(100).y(150);
     await sd.pause();
-    camera.startAnimate().position(3, 2, 5).endAnimate();
+    r1.startAnimate().width(2).endAnimate();
     await sd.pause();
-    camera.startAnimate().direction(0, -0.5, -1).endAnimate();
+    r1.startAnimate().x(1).endAnimate();
+}
+
+async function TestCircle() {
+    const c1 = new sd.Circle3D(canvas);
+    const c2 = new sd.Circle(svg).x(100).y(100);
+    const c3 = new sd.Circle(div).x(100).y(150);
     await sd.pause();
-    camera.startAnimate().position(5, 5, 5).endAnimate();
+    c1.startAnimate().r(2).endAnimate();
     await sd.pause();
-    camera.startAnimate().direction(-1, -1, -1).endAnimate();
-    // camera.startAnimate().left(-3).endAnimate();
-    // await sd.pause();
-    // light.startAnimate().color(C.grey).endAnimate();
-    // await sd.pause();
-    // light.startAnimate().intensity(10).endAnimate();
-});
+    c1.startAnimate().x(1).endAnimate();
+}

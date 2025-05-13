@@ -1,15 +1,18 @@
-import { BaseThree } from "@/Node/Three/BaseThree";
+import { Interp } from "@/Animate/Interp";
+import { BaseShape3D } from "@/Node/Three/Shape/BaseShape3D";
 import { Color as C } from "@/Utility/Color";
+import { Factory } from "@/Utility/Factory";
 import { BufferGeometry, CircleGeometry, DoubleSide, LineBasicMaterial, Line as LineFromThree, Mesh, MeshBasicMaterial, Vector3 } from "three";
 
-function getPolygonVertices(radius = 0.5) {
-    const count = 128;
+const segmentCount = 128;
+
+function getPolygonVertices(r) {
     const vertices = [];
-    for (let i = 0; i <= count; i++) {
+    for (let i = 0; i <= segmentCount; i++) {
         const v = new Vector3(
             // format
-            radius * Math.sin((2 * i * Math.PI) / count),
-            radius * Math.cos((2 * i * Math.PI) / count),
+            r * Math.sin((2 * i * Math.PI) / segmentCount),
+            r * Math.cos((2 * i * Math.PI) / segmentCount),
             0
         );
         vertices.push(v);
@@ -18,25 +21,60 @@ function getPolygonVertices(radius = 0.5) {
 }
 
 export function Circle3D(target) {
-    BaseThree.call(this, target);
+    BaseShape3D.call(this, target);
 
     this.vars.merge({
-        x: 0,
-        y: 0,
         z: 0,
         r: 0.5,
     });
 
-    this._.fillGeometry = new CircleGeometry(this.vars.r, 128);
-    this._.fillMaterial = new MeshBasicMaterial({ color: C.grey, side: DoubleSide });
-    this._.fill = new Mesh(this._.fillGeometry, this._.fillMaterial);
-    this._.strokeGeometry = new BufferGeometry().setFromPoints(getPolygonVertices());
-    this._.strokeMaterial = new LineBasicMaterial({ color: C.black, side: DoubleSide });
-    this._.stroke = new LineFromThree(this._.strokeGeometry, this._.strokeMaterial);
+    const fillGeometry = createFillGeometry(this.vars.r);
+    const fillMaterial = new MeshBasicMaterial({ color: C.white, side: DoubleSide });
+    this._.fill = new Mesh(fillGeometry, fillMaterial);
+    const strokeGeometry = createStrokeGeometry(this.vars.r);
+    const strokeMaterial = new LineBasicMaterial({ color: C.black, side: DoubleSide });
+    this._.stroke = new LineFromThree(strokeGeometry, strokeMaterial);
     this._.scene.add(this._.fill);
     this._.scene.add(this._.stroke);
+
+    const radiusHelper = createRadiusHelper(this._.fill, this._.stroke);
+    this.vars.associate("cx", Factory.action(this, this._.fill.position, "x", Interp.numberInterp));
+    this.vars.associate("cx", Factory.action(this, this._.stroke.position, "x", Interp.numberInterp));
+    this.vars.associate("cy", Factory.action(this, this._.fill.position, "y", Interp.numberInterp));
+    this.vars.associate("cy", Factory.action(this, this._.stroke.position, "y", Interp.numberInterp));
+    this.vars.associate("z", Factory.action(this, this._.fill.position, "z", Interp.numberInterp));
+    this.vars.associate("z", Factory.action(this, this._.stroke.position, "z", Interp.numberInterp));
+    this.vars.associate("r", Factory.action(this, radiusHelper, "r", Interp.numberInterp));
 }
 
 Circle3D.prototype = {
-    ...BaseThree.prototype,
+    ...BaseShape3D.prototype,
+    width(width) {
+        if (arguments.length === 0) return this.r() * 2;
+        return this.r(width / 2);
+    },
+    height(height) {
+        if (arguments.length === 0) return this.r() * 2;
+        return this.r(height / 2);
+    },
+    r: Factory.handlerLowPrecise("r"),
 };
+
+function createRadiusHelper(fill, stroke) {
+    return {
+        setAttribute(key, value) {
+            fill.geometry.dispose();
+            fill.geometry = createFillGeometry(value);
+            stroke.geometry.dispose();
+            stroke.geometry = createStrokeGeometry(value);
+        },
+    };
+}
+
+function createFillGeometry(r) {
+    return new CircleGeometry(r, segmentCount);
+}
+
+function createStrokeGeometry(r) {
+    return new BufferGeometry().setFromPoints(getPolygonVertices(r));
+}
