@@ -1,6 +1,6 @@
 import { svg } from "@/Interact/Root";
 import { Path } from "@/Node/Path/Path";
-import { BooleanOperations } from "@flatten-js/core";
+import { BooleanOperations, Polygon as PolygonLogic } from "@flatten-js/core";
 
 function ddcmp(x) {
     if (Math.abs(x) > 1e-2) return 1;
@@ -8,9 +8,6 @@ function ddcmp(x) {
 }
 
 export class Vector {
-    static getIns() {
-        return Vector;
-    }
     static add(a, b) {
         if (a.length === 2) return [a[0] + b[0], a[1] + b[1]];
         return [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
@@ -144,24 +141,64 @@ export class Vector {
 
     static polyIntersect(polygons) {
         if (!Array.isArray(polygons) && arguments.length > 1) return this.polyIntersect(arguments);
-        let result = polygons[0].toPolygon();
-        for (let i = 1; i < polygons.length; i++) result = BooleanOperations.intersect(result, polygons[i].toPolygon());
-        return castPolygonToPath(result);
+        let result = castAnyToPologonLogic(polygons[0]);
+        for (let i = 1; i < polygons.length; i++) {
+            const polygon = castAnyToPologonLogic(polygons[i]);
+            result = BooleanOperations.intersect(result, polygon);
+        }
+        return castPolygonLogicToPath(result);
+    }
+    static polyIntersectLogic(polygons) {
+        if (!Array.isArray(polygons) && arguments.length > 1) return this.polyIntersectLogic(arguments);
+        let result = castAnyToPologonLogic(polygons[0]);
+        for (let i = 1; i < polygons.length; i++) {
+            const polygon = castAnyToPologonLogic(polygons[i]);
+            result = BooleanOperations.intersect(result, polygon);
+        }
+        return result;
     }
     static polyUnion(polygons) {
         if (!Array.isArray(polygons) && arguments.length > 1) return this.polyUnion(arguments);
-        let result = polygons[0].toPolygon();
-        for (let i = 1; i < polygons.length; i++) result = BooleanOperations.unify(result, polygons[i].toPolygon());
-        return castPolygonToPath(result);
+        let result = castAnyToPologonLogic(polygons[0]);
+        for (let i = 1; i < polygons.length; i++) {
+            const polygon = castAnyToPologonLogic(polygons[i]);
+            result = BooleanOperations.unify(result, polygon);
+        }
+        return castPolygonLogicToPath(result);
+    }
+    static polyUnionLogic(polygons) {
+        if (!Array.isArray(polygons) && arguments.length > 1) return this.polyUnionLogic(arguments);
+        let result = castAnyToPologonLogic(polygons[0]);
+        for (let i = 1; i < polygons.length; i++) {
+            const polygon = castAnyToPologonLogic(polygons[i]);
+            result = BooleanOperations.unify(result, polygon);
+        }
+        return result;
+    }
+    static polySubtract(a, b) {
+        return castPolygonLogicToPath(this.polySubtractLogic(a, b));
+    }
+    static polySubtractLogic(a, b) {
+        a = castAnyToPologonLogic(a);
+        b = castAnyToPologonLogic(b);
+        return BooleanOperations.subtract(a, b);
     }
 }
 
-function castPolygonToPath(polygon) {
+function castAnyToPologonLogic(object) {
+    return object instanceof PolygonLogic ? object : object.toPolygon();
+}
+
+function castPolygonLogicToPath(polygon) {
     const str = polygon.svg();
     const regex = /d="([^"]*)"/;
     const match = str.match(regex);
     const d = match[1];
-    return new Path(svg()).d(d).fillOpacity(1);
+    const path = new Path(svg()).d(d).fillOpacity(1);
+    path.toPolygon = function () {
+        return polygon;
+    };
+    return path;
 }
 
 export function vec() {

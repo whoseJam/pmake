@@ -4,12 +4,12 @@ const svg = sd.svg();
 const C_ = sd.color();
 
 sd.init(() => {
-    VennDiagram3();
+    vennDiagram3();
 });
 
 sd.main(async () => {});
 
-function VennDiagram3() {
+function vennDiagram3() {
     const V = sd.vec();
     const arcDict = {
         0: -Math.PI / 2,

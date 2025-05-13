@@ -1,13 +1,13 @@
 import * as sd from "@/sd";
 
-export function VennDiagram1(parent = sd.svg()) {
+export function vennDiagram1(parent = sd.svg()) {
     const venn = new sd.Rect(parent).width(200).height(200);
     const A = new sd.Circle(venn);
-    A.childAs(new sd.Mathjax(A, "A"), (parent, child) => {
+    A.childAs("label", new sd.Mathjax(A, "A"), (parent, child) => {
         child.cx(parent.cx());
         child.y(parent.y() + 5);
     });
-    venn.childAs(A, (parent, child) => {
+    venn.childAs("A", A, (parent, child) => {
         child.r((parent.width() / 2) * 0.8);
         child.center(parent.center());
     });

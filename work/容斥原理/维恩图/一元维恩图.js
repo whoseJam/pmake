@@ -1,14 +1,10 @@
 import * as sd from "@/sd";
 
-import { VennDiagram1 } from "../_/VennDiagram1";
+import { vennDiagram1 } from "../_/vennDiagram1";
 
 const svg = sd.svg();
-const venn = VennDiagram1(svg);
+const venn = vennDiagram1(svg);
 
-sd.init(() => {
+sd.init(() => {});
 
-})
-
-sd.main(async () => {
-    
-})
+sd.main(async () => {});
