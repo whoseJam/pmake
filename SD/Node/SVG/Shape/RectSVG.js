@@ -1,4 +1,5 @@
 import { Interp } from "@/Animate/Interp";
+import { Rect } from "@/Node/Shape/Rect";
 import { BaseShapeSVG } from "@/Node/SVG/Shape/BaseShapeSVG";
 import { Factory } from "@/Utility/Factory";
 
@@ -27,6 +28,7 @@ export function RectSVG(target) {
 
 RectSVG.prototype = {
     ...BaseShapeSVG.prototype,
+    ...Rect.prototype,
     x: Factory.handlerLowPrecise("x"),
     y: Factory.handlerLowPrecise("y"),
     width: Factory.handlerLowPrecise("width"),
