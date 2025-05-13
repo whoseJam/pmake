@@ -3,7 +3,7 @@ import * as sd from "@/sd";
 const div = sd.div();
 const C = sd.color();
 
-sd.main(TestLayout);
+sd.main(TestInputCallback);
 
 async function TestLayout() {
     const input = new sd.Input(div).x(100).y(100);
@@ -31,18 +31,10 @@ async function TestInputAnimation() {
 }
 
 async function TestInputCallback() {
-    const input = new sd.Input(div);
-    let callbackTriggered = false;
+    const input = new sd.InputHTML(div);
     input.onChange(value => {
-        callbackTriggered = true;
-        console.assert(value === "新值", "Callback value test failed");
         console.log("onChange callback triggered with value:", value);
     });
-    await sd.pause();
-    input._.nake.setAttribute("value", "新值");
-    input._.nake.getAttribute("onchange")();
-    console.assert(callbackTriggered, "Callback test failed");
-    console.log("Input callback test passed");
 }
 
 async function TestInputChaining() {

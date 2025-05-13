@@ -157,6 +157,7 @@ SDNode.prototype = {
     },
     onClick: forward("interact", "onClick"),
     onDblClick: forward("interact", "onDblClick"),
+    onChange: forward("interact", "onChange"),
 
     onEnter(enter) {
         if (arguments.length === 0) return this._.enter;

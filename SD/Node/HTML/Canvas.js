@@ -8,8 +8,8 @@ import { WebGLRenderer } from "three";
 import { OrthographicCamera } from "../Three/Camera/OrthgraphicCamera";
 import { PerspectiveCamera } from "../Three/Camera/PerspectiveCamera";
 
-export function Canvas(parent) {
-    BaseHTML.call(this, parent);
+export function Canvas(target) {
+    BaseHTML.call(this, target);
 
     this.vars.merge({
         x: 0,

@@ -3,7 +3,18 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const div = sd.div();
 
-sd.main(TestSliderCallback);
+sd.main(TestSliderHTMLAndSVG);
+
+async function TestSliderHTMLAndSVG() {
+    const s1 = new sd.Slider(svg)
+        .x(100)
+        .y(100)
+        .onChange(v => console.log("s1 v=", v));
+    const s2 = new sd.Slider(div)
+        .x(100)
+        .y(200)
+        .onChange(v => console.log("s2 v=", v));
+}
 
 async function TestBasicSliderFunctionality() {
     const slider = new sd.Slider(div);
@@ -26,12 +37,12 @@ async function TestSliderAnimation() {
 async function TestSliderCallback() {
     const slider = new sd.Slider(div);
     let callbackTriggered = false;
-    
+
     slider.onChange(value => {
         callbackTriggered = true;
         console.log("onChange callback triggered with value:", value);
     });
-    
+
     await sd.pause();
     slider.value(25);
     console.assert(callbackTriggered, "Callback test failed");
