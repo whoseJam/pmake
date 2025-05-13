@@ -3,7 +3,7 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const C = sd.color();
 
-sd.main(TestValue);
+sd.main(TestLine);
 
 async function TestValue() {
     const line = new sd.Line(svg, new sd.Rect(svg).color(C.blue)).source(100, 100).target(300, 200);

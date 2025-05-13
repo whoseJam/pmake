@@ -1,11 +1,11 @@
 import { Interp } from "@/Animate/Interp";
 import { Vector as V } from "@/Math/Vector";
-import { BaseSVGLine } from "@/Node/SVG/BaseSVGLine";
+import { BasePathSVG } from "@/Node/SVG/Path/BasePathSVG";
 import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
 
-export function Line(parent, value) {
-    BaseSVGLine.call(this, parent, "line");
+export function LineSVG(target, value) {
+    BasePathSVG.call(this, target, "line");
 
     this.type("Line");
 
@@ -29,8 +29,8 @@ export function Line(parent, value) {
     if (!Check.isEmptyType(value)) this.value(value);
 }
 
-Line.prototype = {
-    ...BaseSVGLine.prototype,
+LineSVG.prototype = {
+    ...BasePathSVG.prototype,
     x(x) {
         const x1 = this.x1();
         const x2 = this.x2();

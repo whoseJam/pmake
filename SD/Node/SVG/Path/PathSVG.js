@@ -1,7 +1,7 @@
 import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
 import { svg } from "@/Interact/Root";
-import { BaseSVGLine } from "@/Node/SVG/BaseSVGLine";
+import { BasePathSVG } from "@/Node/SVG/Path/BasePathSVG";
 import { RenderNode } from "@/Renderer/RenderNode";
 
 let globalPath = undefined;
@@ -63,8 +63,8 @@ function getTotalLength(d) {
     }
 }
 
-export function Path(parent) {
-    BaseSVGLine.call(this, parent, "path");
+export function PathSVG(target) {
+    BasePathSVG.call(this, target, "path");
 
     this.type("Path");
 
@@ -81,8 +81,8 @@ export function Path(parent) {
     this._.nake.setAttribute("d", this.vars.d);
 }
 
-Path.prototype = {
-    ...BaseSVGLine.prototype,
+PathSVG.prototype = {
+    ...BasePathSVG.prototype,
     x(x) {
         if (arguments.length === 0) return this.vars.x;
         const [x0, y0, dx, dy, sx, sy] = [this.x(), this.y(), x - this.vars.x, 0, 1, 1];

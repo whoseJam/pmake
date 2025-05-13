@@ -1,6 +1,6 @@
 import { Vertex } from "@/Node/Element/Vertex";
+import { Line } from "@/Node/Path/Line";
 import { SD2DNode } from "@/Node/SD2DNode";
-import { Line } from "@/Node/SVG/Line";
 import { BaseTree } from "@/Node/Tree/BaseTree";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";

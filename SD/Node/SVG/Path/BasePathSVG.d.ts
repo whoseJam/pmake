@@ -1,10 +1,7 @@
-import { SDNode } from "@/Node/SDNode";
 import { BaseSVG } from "@/Node/SVG/BaseSVG";
-import { RenderNode } from "@/Renderer/RenderNode";
-import { SDRule } from "@/Rule/Rule";
 
-export class BaseSVGLine extends BaseSVG {
-    constructor(target: SDNode | RenderNode, tag: string);
+export class BasePathSVG extends BaseSVG {
+    constructor(target: SDNode | RenderNode, label: string);
     markerStart(): string;
     markerStart(marker: string): this;
     markerMid(): string;
