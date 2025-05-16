@@ -1,6 +1,5 @@
 import { Exit as EX } from "@/Node/Core/Exit";
 import { SD2DNode } from "@/Node/SD2DNode";
-import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
@@ -30,7 +29,6 @@ BaseArray.prototype = {
             const elements = this.vars.elements;
             return elements.length;
         }
-        size = Cast.castToNumber(size);
         let currentLength = this.length();
         while (currentLength < size) this.push(), currentLength++;
         while (currentLength > size) this.pop(), currentLength--;

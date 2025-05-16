@@ -140,7 +140,7 @@ export class Interp {
         };
     }
     static pathInterp(object, key) {
-        const _object = Snap(object);
+        const _object = Snap(object.nake ? object.nake() : object);
         let animateHandler = undefined;
         return function (t) {
             if (t === 0) {
@@ -151,6 +151,21 @@ export class Interp {
                     animateHandler.stop();
                     _object.attr({ d: this.target });
                 }, 50);
+            }
+        };
+    }
+    static pointsInterp(object, key) {
+        const _object = Snap(object.nake ? object.nake() : object);
+        let animateHandler = undefined;
+        return function (t) {
+            if (t === 0) {
+                if (this.l === this.r) _object.attr({ points: this.target });
+                else animateHandler = _object.animate({ points: this.target }, this.r - this.l, mina.easeinout);
+            } else if (t === 1 && this.r > this.l) {
+                setTimeout(() => {
+                    animateHandler.stop();
+                    _object.attr({ points: this.target });
+                });
             }
         };
     }

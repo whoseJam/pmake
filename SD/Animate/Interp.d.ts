@@ -10,4 +10,5 @@ export class Interp {
     static translateInterp(object: any, key: string): (t: number) => void;
     static boxInterp(object: any, key: string): (t: number) => void;
     static pathInterp(object: SVGPathElement, key: string): (t: number) => void;
+    static pointsInterp(object: SVGPolygonElement | SVGPolylineElement, key: string): (t: number) => void;
 }

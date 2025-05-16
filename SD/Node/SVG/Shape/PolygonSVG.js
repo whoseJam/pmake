@@ -1,12 +1,12 @@
 import { Interp } from "@/Animate/Interp";
-import { Polyline } from "@/Node/Path/Polyline";
-import { BasePathSVG } from "@/Node/SVG/Path/BasePathSVG";
+import { Polygon } from "@/Node/Shape/Polygon";
+import { BaseShapeSVG } from "@/Node/SVG/Shape/BaseShapeSVG";
 import { Factory } from "@/Utility/Factory";
 
-export function PolylineSVG(target, points = []) {
-    BasePathSVG.call(this, target, "polyline");
+export function PolygonSVG(target, points = []) {
+    BaseShapeSVG.call(this, target, "polygon");
 
-    this.type("PolylineSVG");
+    this.type("PolygonSVG");
 
     this.vars.merge({
         x: 0,
@@ -21,7 +21,7 @@ export function PolylineSVG(target, points = []) {
     this._.nake.setAttribute("points", this.vars.points);
 }
 
-PolylineSVG.prototype = {
-    ...BasePathSVG.prototype,
-    ...Polyline.prototype,
+PolygonSVG.prototype = {
+    ...BaseShapeSVG.prototype,
+    ...Polygon.prototype,
 };
