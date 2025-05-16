@@ -1,11 +1,12 @@
 import { Interp } from "@/Animate/Interp";
+import { Image } from "@/Node/Shape/Image";
 import { BaseShapeSVG } from "@/Node/SVG/Shape/BaseShapeSVG";
 import { Factory } from "@/Utility/Factory";
 
 export function ImageSVG(target) {
     BaseShapeSVG.call(this, target, "image");
 
-    this.type("Image");
+    this.type("ImageSVG");
 
     this.vars.merge({
         x: 0,
@@ -30,6 +31,7 @@ export function ImageSVG(target) {
 
 ImageSVG.prototype = {
     ...BaseShapeSVG.prototype,
+    ...Image.prototype,
     x: Factory.handlerLowPrecise("x"),
     y: Factory.handlerLowPrecise("y"),
     href: Factory.handler("href"),

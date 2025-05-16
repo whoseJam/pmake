@@ -18,7 +18,6 @@ export class Factory {
     static handler(key) {
         return function (value) {
             if (value === undefined) return this.vars[key];
-            console.log("key=", key, "value=", value);
             this.vars[key] = value;
             return this;
         };

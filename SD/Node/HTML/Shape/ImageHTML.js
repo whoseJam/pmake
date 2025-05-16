@@ -1,5 +1,6 @@
 import { Interp } from "@/Animate/Interp";
 import { BaseShapeHTML } from "@/Node/HTML/Shape/BaseShapeHTML";
+import { Image } from "@/Node/Shape/Image";
 import { Factory } from "@/Utility/Factory";
 
 export function ImageHTML(target) {
@@ -28,5 +29,6 @@ export function ImageHTML(target) {
 
 ImageHTML.prototype = {
     ...BaseShapeHTML.prototype,
+    ...Image.prototype,
     href: Factory.handler("href"),
 };

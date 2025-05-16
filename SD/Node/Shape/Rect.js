@@ -18,9 +18,9 @@ Rect.prototype = {
         return polygon([
             // format
             this.pos("x", "y"),
-            this.pos("x", "my"),
-            this.pos("mx", "my"),
             this.pos("mx", "y"),
+            this.pos("mx", "my"),
+            this.pos("x", "my"),
         ]);
     },
 };

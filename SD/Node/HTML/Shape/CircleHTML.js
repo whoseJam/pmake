@@ -1,5 +1,6 @@
 import { Interp } from "@/Animate/Interp";
 import { BaseShapeHTML } from "@/Node/HTML/Shape/BaseShapeHTML";
+import { Circle } from "@/Node/Shape/Circle";
 import { Factory } from "@/Utility/Factory";
 
 export function CircleHTML(target) {
@@ -24,6 +25,7 @@ export function CircleHTML(target) {
 
 CircleHTML.prototype = {
     ...BaseShapeHTML.prototype,
+    ...Circle.prototype,
     r: Factory.handlerLowPrecise("r"),
     width(width) {
         if (arguments.length === 0) return this.vars.r * 2;

@@ -1,12 +1,16 @@
-import { PolygonSVG } from "@/Node/SVG/Shape/PolygonSVG";
 import { Cast } from "@/Utility/Cast";
 import { Factory } from "@/Utility/Factory";
+import { polygon } from "@flatten-js/core";
 
 export function Polygon(target, points = []) {
+    const { PolygonSVG } = require("@/Node/SVG/Shape/PolygonSVG");
     return new PolygonSVG(target, points);
 }
 
 Polygon.prototype = {
+    toPolygon() {
+        return polygon(this.vars.points.map(v => v));
+    },
     x(x) {
         if (arguments.length === 0) return this.vars.x;
         const dx = x - this.x();

@@ -1,4 +1,5 @@
 import { Interp } from "@/Animate/Interp";
+import { Ellipse } from "@/Node/Shape/Ellipse";
 import { BaseShapeSVG } from "@/Node/SVG/Shape/BaseShapeSVG";
 import { Factory } from "@/Utility/Factory";
 
@@ -27,6 +28,7 @@ export function EllipseSVG(parent) {
 
 EllipseSVG.prototype = {
     ...BaseShapeSVG.prototype,
+    ...Ellipse.prototype,
     cx: Factory.handlerLowPrecise("cx"),
     cy: Factory.handlerLowPrecise("cy"),
     rx: Factory.handlerLowPrecise("rx"),

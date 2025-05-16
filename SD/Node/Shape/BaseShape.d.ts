@@ -1,7 +1,9 @@
 import { SD2DNode } from "@/Node/SD2DNode";
 import { HexColor, PacketColor, SDColor } from "@/Utility/Color";
+import { Polygon as PolygonLogic } from "@flatten-js/core";
 
 export class BaseShape extends SD2DNode {
+    toPolygon(): PolygonLogic;
     fill(): HexColor;
     fill(fill: SDColor): this;
     fillOpacity(): number;

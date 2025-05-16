@@ -1,5 +1,6 @@
 import { Interp } from "@/Animate/Interp";
 import { BaseShapeHTML } from "@/Node/HTML/Shape/BaseShapeHTML";
+import { Ellipse } from "@/Node/Shape/Ellipse";
 import { Factory } from "@/Utility/Factory";
 
 export function EllipseHTML(target) {
@@ -25,6 +26,7 @@ export function EllipseHTML(target) {
 
 EllipseHTML.prototype = {
     ...BaseShapeHTML.prototype,
+    ...Ellipse.prototype,
     rx: Factory.handlerLowPrecise("rx"),
     ry: Factory.handlerLowPrecise("ry"),
     width(width) {

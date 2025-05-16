@@ -1,5 +1,6 @@
 import { Interp } from "@/Animate/Interp";
 import { BaseShapeHTML } from "@/Node/HTML/Shape/BaseShapeHTML";
+import { Rect } from "@/Node/Shape/Rect";
 import { Factory } from "@/Utility/Factory";
 
 export function RectHTML(target) {
@@ -23,4 +24,5 @@ export function RectHTML(target) {
 
 RectHTML.prototype = {
     ...BaseShapeHTML.prototype,
+    ...Rect.prototype,
 };
