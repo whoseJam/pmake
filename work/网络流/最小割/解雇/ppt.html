@@ -3,8 +3,7 @@
         <h1>解雇</h1>
         <p>最大权闭合子图，当然，也是最小割的一个应用</p>
     </section>
-    <section data-background-iframe="http://43.143.204.105/problem/191" data-background-interactive>
-    </section>
+    <problem data-problemset="poj" data-problemid="2987"></problem>
     <section>
         <h2>解雇</h2>
         <p>雇佣一个员工需要付出一定的工资</p>
@@ -21,11 +20,10 @@
     <section>
         <h2>最大权闭合子图</h2>
         <p>所谓<b>闭合子图</b>就是给定一个有向图，从中选择一些点组成一个点集 $V$。对于 $V$ 中任意一个点，其后继节点都仍然在 $V$ 中</p>
-        <iframe rate="1.01"
-            data-src="./animation/闭合子图.html"
-            style="min-width: 1000px; min-height: 240px; margin-top: -40px;"></iframe>
+        <iframe data-animation="./闭合子图.js"
+            style="width: 1000px; height: 200px;"></iframe>
         <p class="fragment" style="margin-top: -40px;">
-            比如在上图中，就有：
+            比如在上图中，就有
             <ul style="width: 45%; display: inline-block;">
                 <li class="fragment">$\emptyset$</li>
                 <li class="fragment">$\{3\}$</li>
@@ -44,7 +42,7 @@
     </section>
     <section>
         <h2>最大权闭合子图</h2>
-        <p>最大权闭合子图的通用建图方式如下：</p>
+        <p>最大权闭合子图的通用建图方式如下</p>
         <ol>
             <li class="fragment">建立虚拟源点 $S$ 和虚拟汇点 $T$</li>
             <li class="fragment">$S$ 向所有收益为正数的点连边，容量为该点收益</li>
@@ -52,7 +50,7 @@
             <li class="fragment">如果两个点 $u$ 和 $v$ 之间有有向边，那么从 $u$ 连一条容量为 $\infty$ 的边指向 $v$</li>
         </ol>
         <p class="fragment">
-            答案即为：
+            答案即为
             $$
             收益为正的节点收益之和-最小割
             $$
@@ -61,10 +59,10 @@
     <section>
         <h2>最大权闭合子图</h2>
         <div style="text-align: center;">
-            <img data-src="./image/最大权闭合子图1.png" style="height: 250px;">
+            <picture data-src="./最大权闭合子图1.png" style="height: 250px;"></picture>
         </div>
         <div style="text-align: center;" class="fragment">
-            <img data-src="./image/最大权闭合子图2.png" style="height: 250px;">
+            <picture data-src="./最大权闭合子图2.png" style="height: 250px;"></picture>
         </div>
     </section>
 </section>

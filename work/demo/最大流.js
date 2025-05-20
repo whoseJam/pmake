@@ -1,5 +1,5 @@
 import * as sd from "@/sd";
-import { flowWithRegret } from "../网络流/_/FlowWithRegret";
+import { flowWithRegret } from "../网络流/最大流/_/FlowWithRegret";
 
 const svg = sd.svg();
 const C = sd.color();

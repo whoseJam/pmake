@@ -15,6 +15,7 @@
         <h2>最大流</h2>
         <iframe data-animation="./最大流例子.js"
             style="width: 1000px; height: 400px;"></iframe>
+        <p>设源点是 $A$，汇点是 $F$...</p>
         <p class="fragment">上图的最大流条数就是 $5$ 条</p>
     </section>
     <section>
@@ -23,7 +24,7 @@
         <p class="fragment">最朴素的思想，自然是不断DFS出源点到汇点的剩余容量不为 $0$ 的道路，找到这条道路的瓶颈，然后在这条道路上放尽可能多的流</p>
         <iframe data-animation="./成功的朴素最大流.js" class="fragment"
             style="width: 1000px; height: 400px;"></iframe>
-        <p class="fragment">我们把一条从源点到汇点、剩余容量不为 $0$ 的道路，叫做一条<b>增广路</b>，意指这条路可以让我们的最大流变大</p>
+        <p class="fragment">我们把一条从源点到汇点、剩余容量不为 $0$ 的道路，叫做一条<b>增广路</b>，意指这条路可以让当前流变大</p>
     </section>
     <section>
         <h2>最大流</h2>
@@ -36,24 +37,9 @@
         <p>于是，我们引入了反悔流</p>
         <iframe data-animation="./反悔最大流.js"
             style="width: 1000px; height: 400px;"></iframe>
-        <p class="fragment quote" style="margin-top: 0px;">更专业的说法叫做引入反向弧，允许网络退流</p>
-    </section>
-    <section>
-        <h2>最大流</h2>
-        <p>反向边和原图中的边总是成对出现，我们把原图中的边叫做<b>正向弧</b>，每条与正向弧成对出现的方向相反的边叫做<b>反向弧</b></p>
-        <ul>
-            <li class="fragment">假设正向弧 $(u,v)$ 的容量为 $c(u,v)$</li>
-            <li class="fragment">正向弧的流量为 $f(u,v)$</li>
-            <li class="fragment">反向弧的流量为 $f(v,u)$</li>
-        </ul>
-        <p class="fragment">则在任意一个时刻，一定有：
-            $$
-            f(u,v)+f(v,u)=c(u,v)
-            $$
-        </p>
-        <p class="fragment">我们可以把走正向弧看作流量的决策，走反向弧看作流量的反悔</p>
-        <iframe data-animation="./流量的决策和反悔.html" rate="2" class="fragment"
-            style="width: 1000px; height: 80px;">
+        <p class="fragment" style="margin-top: 0px;">反向边和原图中的边总是成对出现，我们把原图中的边叫做<b>正向弧</b>，每条与正向弧成对出现的方向相反的边叫做<b>反向弧</b><span class="fragment">，可以把走正向弧看作流量的决策，走反向弧看作流量的反悔</span></p>
+        <iframe data-animation="./流量的决策和反悔.js" class="fragment"
+            style="width: 1000px; height: 60px;">
         </iframe>
     </section>
     <section>
@@ -67,35 +53,79 @@
         <p class="fragment">不过我们发现找增广路还有很多优化的空间</p>
     </section>
     <section>
-        <h2>ISAP分层优化</h2>
-        <iframe data-animation="./ISAP分层优化的必要性.html"
-            style="width: 1000px; height: 400px;"></iframe>
-        <p class="fragment">为了避免上图中展示的这种情况，我们对原图进行分层，为每一个节点分配一个深度 $dis_u$，每一次找增广路的时候，保证如果 $u\rightarrow v$ 是一条增广路上的边，那么一定有 $dis_u=dis_v+1$</p>
-    </section>
-    <section>
-        <h2>ISAP分层优化</h2>
-        <ul>
-            <li>如果 $dis$ 标号出现了<b>断层</b>，由于我们找增广路时每一条边 $(u,v)$ 需要满足 $dis_u=dis_v+1$，那么显然不存在新的增广路</li>
-            <li class="fragment">我们用一个 $gap$ 数组记录每种层次标号有多少个，如果当前修改了最后一个某种层次标号，那么就断层了，结束算法</li>
-        </ul>
-    </section>
-    <section>
         <h2>ISAP多路增广优化</h2>
-        <p>同时，我们注意到每次如果只找一条增广路，然后就完全修改这条增广路有点浪费</p>
-        <p class="fragment">所以ISAP每次DFS实际上可能会找很多条增广路，最后同时对这些增广路进行增广</p>
-        <p class="fragment">更多细节请看代码</p>
+        <p>注意到每次搜索如果只找一条增广路，有点浪费...</p>
+        <div style="display: flex;" class="fragment">
+            <div style="width: 60%;">
+                <codeblock>
+                    <script type="text/template">
+                        int Stream(int u, int cur) { // 单路增广
+                            if (u == T) return cur;
+                            for (每一个出点 v) {
+                                设 c 为 u -> v 的剩余容量;
+                                if (c > 0) {
+                                    int output = min(cur, c);
+                                    return Stream(v, output);
+                                }
+                            }
+                            return 0;
+                        }
+                    </script>
+                </codeblock>
+            </div>
+            <div style="width: 40%;">
+                <iframe data-animation="./单路增广.js"
+                    style="width: 1000px; height: 250px;"></iframe>
+            </div>
+        </div>
+        <div style="display: flex;" class="fragment">
+            <div style="width: 60%;">
+                <codeblock>
+                    <script type="text/template">
+                        int Stream(int u, int cur) { // 多路增广
+                            if (u == T) return cur;
+                            int totalOutput = 0;
+                            for (每一个出点 v) {
+                                设 c 为 u -> v 的剩余容量;
+                                if (c > 0) {
+                                    int output = min(cur, c);
+                                    totalOutput += Stream(v, c);
+                                }
+                            }
+                            return totalOutput;
+                        }
+                    </script>
+                </codeblock>
+            </div>
+            <div style="width: 40%;">
+                <iframe data-animation="./多路增广.js"
+                    style="width: 1000px; height: 250px;"></iframe>
+            </div>
+        </div>
     </section>
-
+    <section>
+        <h2>ISAP分层优化</h2>
+        <iframe data-animation="./ISAP分层优化的必要性.js"
+            style="width: 1000px; height: 400px;"></iframe>
+    </section>
+    <section>
+        <h2>ISAP分层优化</h2>
+        <p>为了避免上图中展示的这种情况，我们对原图进行分层，为每一个节点分配一个深度 $dis$</p>
+        <iframe data-animation="./ISAP_example_1.js"
+            style="width: 1000px; height: 400px;"></iframe>
+        <p class="fragment" style="margin-top: 0px;">每次对某个节点 $u$ 增广完成后，将 $dis_u$ 自增<span class="fragment">；在找增广路的时候，保证如果 $u\rightarrow v$ 是一条增广路上的边，则一定有 $dis_u=dis_v+1$</span></p>
+        <p class="fragment quote">如果 $dis$ 标号在某时刻出现了<b>断层</b>，由于增广路上每一条边 $(u,v)$ 需要满足 $dis_u=dis_v+1$，则显然不存在新的增广路，可直接结束算法</p>
+    </section>
     <section>
         <h2>ISAP</h2>
         <p>首先是连边，新建一条连边时其实涉及到两条连边——正向弧和反向弧</p>
         <codeblock class="fragment">
             <script type="text/template">
                 struct line {
-                    ll Nxt, to, flw;
+                    int Nxt, to, flw;
                 } l[M * 2];
-                ll h[N], cnt = 1;
-                void Link(ll u, ll v, ll f) {
+                int h[N], cnt = 1;
+                void Link(int u, int v, int f) {
                     l[++cnt] = (line) { h[u], v, f }; h[u] = cnt;
                     l[++cnt] = (line) { h[v], u, 0 }; h[v] = cnt;
                 }
@@ -133,10 +163,10 @@
         <p>然后是找增广路</p>
         <codeblock style="height: 505px;">
             <script type="text/template">
-                ll Stream(ll u, ll cur) {  // 有 cur 流跑到了节点 u
-                    ll sum = 0, d;
+                int Stream(int u, int cur) {  // 有 cur 流跑到了节点 u
+                    int sum = 0, d;
                     if (u == T) return cur;
-                    for (ll i = h[u], v; i; i = l[i].Nxt) {
+                    for (int i = h[u], v; i; i = l[i].Nxt) {
                         v = l[i].to;
                         if (l[i].flw > 0 && dis[v] + 1 == dis[u]) {
                             d = Stream(v, min(cur, l[i].flw)); // 流出 d 流
@@ -149,8 +179,8 @@
                     gap[++dis[u]]++;
                     return sum;
                 }
-                ll Sap() {
-                    ll ans = 0;
+                int ISAP() {
+                    int ans = 0;
                     memset(gap, 0, sizeof(gap));
                     memset(dis, 0, sizeof(dis));
                     gap[0] = tot;
@@ -162,7 +192,7 @@
     </section>
     <section>
         <h2>ISAP</h2>
-        <iframe data-animation="./ISAP.js"
+        <iframe data-animation="./ISAP_example_2.js"
             style="width: 1000px; height: 500px;"></iframe>
     </section>
 </section>

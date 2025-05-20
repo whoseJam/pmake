@@ -21,7 +21,7 @@ export async function flowWithRegret(graph, path, args) {
     path.forEach(segment => {
         const link = graph.element(segment.from, segment.to);
         let clone = undefined;
-        if (link instanceof sd.Line) clone = new sd.Line(svg);
+        if (link instanceof sd.LineSVG) clone = new sd.Line(svg);
         else clone = new sd.Curve(svg);
         clone.source(link.source()).target(link.target()).opacity(0);
         clone.after(timestamp).opacity(1).stroke(C.red).strokeWidth(2).startAnimate().pointStoT().endAnimate().arrow();
@@ -64,6 +64,7 @@ export async function flowWithRegret(graph, path, args) {
         } else {
             const remainCapacity = reversedLink.intValue() + bottleNeck;
             reversedLink.value().after(timestamp).startAnimate().transformMath(remainCapacity).endAnimate();
+            if (remainCapacity > 0) reversedLink.after(timestamp).startAnimate().strokeDashArray([5, 0]).endAnimate();
         }
         timestamp = reversedLink.value();
     }

@@ -4,37 +4,31 @@ import { flowWithRegret } from "../_/FlowWithRegret";
 const svg = sd.svg();
 const C = sd.color();
 const R = sd.rule();
-const graph = new sd.GridGraph(svg).width(200).height(200);
+const graph = new sd.GridGraph(svg).height(200).cx(600).cy(300);
 const S = "1";
-const T = "6";
-const n = 6;
+const T = "4";
+const n = 4;
 const gap = sd.make1d(10, 0);
 const nodes = [
-    [1, "tc"],
-    [2, "lc"],
-    [3, "rc"],
-    [4, "lc"],
-    [5, "rc"],
-    [6, "bc"],
+    [1, "lc"],
+    [2, "tc"],
+    [3, "bc"],
+    [4, "rc"],
 ];
 const links = [
-    [1, 2, 4, "mx", "my"],
-    [1, 3, 2, "x", "my"],
-    [2, 3, 1, "cx", "my"],
-    [2, 4, 2, "mx", "cy"],
-    [2, 5, 4, "x", "y"],
-    [3, 5, 2, "x", "cy"],
-    [4, 6, 3, "mx", "y"],
-    [5, 6, 3, "x", "y"],
+    [1, 2, 99, "mx", "my"],
+    [1, 3, 99, "mx", "y"],
+    [2, 3, 1, "x", "cy"],
+    [2, 4, 99, "x", "my"],
+    [3, 4, 99, "x", "y"],
 ];
+let earlyFinish = false;
 
 sd.init(() => {
-    graph.at(0, 0.5).newNode(1, "A");
-    graph.at(0.25, 0).newNode(2, "B");
-    graph.at(0.25, 1).newNode(3, "C");
-    graph.at(0.75, 0).newNode(4, "D");
-    graph.at(0.75, 1).newNode(5, "E");
-    graph.at(1, 0.5).newNode(6, "F");
+    graph.at(0.5, 0).newNode(1, "A");
+    graph.at(0, 0.5).newNode(2, "B");
+    graph.at(1, 0.5).newNode(3, "C");
+    graph.at(0.5, 1).newNode(4, "D");
     links.forEach(link => {
         const rule = R.pointAtPathByRate(0.5, link[3], link[4]);
         graph.newLink(link[0], link[1]);
@@ -59,8 +53,8 @@ sd.main(async () => {
         element.childAs("label", label, R.aside(node[1]));
     });
     const dS = graph.element(S);
-    while (dS.dis < n) {
-        await Stream(graph, S, Infinity);
+    while (dS.dis < n && !earlyFinish) {
+        await stream(graph, S, Infinity);
         await sd.pause();
         for (let i = 1; i <= n; i++) {
             const v = graph.element(i);
@@ -77,7 +71,7 @@ sd.main(async () => {
 });
 
 const path = [];
-async function Stream(graph, u, lim) {
+async function stream(graph, u, lim) {
     let give = 0;
     if (String(u) === T) {
         await flowWithRegret(graph, path, { onReverseLink, textGap: 60 });
@@ -91,14 +85,14 @@ async function Stream(graph, u, lim) {
             const dv = graph.element(v);
             if (link.intValue() > 0 && dv.dis + 1 === du.dis) {
                 path.push({ from: u, to: v });
-                const d = await Stream(graph, v, Math.min(lim, link.intValue()));
+                const d = await stream(graph, v, Math.min(lim, link.intValue()));
                 give += d;
                 lim -= d;
                 path.pop();
-                if (graph.element(S).dis === n || !lim) return give;
+                if (graph.element(S).dis === n || !lim || earlyFinish) return give;
             }
         }
-        if (!--gap[du.dis]) graph.element(S).dis = n;
+        if (!--gap[du.dis]) earlyFinish = true;
         gap[++du.dis]++;
         return give;
     }

@@ -2,11 +2,10 @@
     <section>
         <h1>文理分科</h1>
     </section>
-    <section data-background-iframe="http://43.143.204.105/problem/593" data-background-interactive>
-    </section>
+    <problem data-problemset="luogu" data-problemid="P4313"></problem>
     <section>
         <h2>文理分科</h2>
-        <p>对于每个学生 $(i,j)$ 来说：</p>
+        <p>对于每个学生 $(i,j)$ 来说</p>
         <ul>
             <li class="fragment">选文科获得的收益为 $a_{i,j}$</li>
             <li class="fragment">选理科获得的收益为 $s_{i,j}$</li>
@@ -37,8 +36,7 @@
             <li class="fragment">源点向 $u$ 连一条容量为 $a$ 的连边</li>
             <li class="fragment">$u$ 向汇点连一条容量为 $s$ 的连边</li>
         </ul>
-        <iframe class="fragment"
-            data-src="./animation/文理分科基本连边.html"
+        <iframe data-animation="./文理分科基本连边.js" class="fragment"
             style="width: 1000px; height: 100px;"></iframe>
         <p class="fragment">这两条连边保证了我一定会舍弃单吃文科或者单吃理科的收益</p>
     </section>
@@ -49,14 +47,13 @@
     </section>
     <section>
         <h2>文理分科</h2>
-        <p>为了让一个学生在周围同学都选文科的情况下，可以吃到文科的额外buff：</p>
+        <p>为了让一个学生在周围同学都选文科的情况下，可以吃到文科的额外buff</p>
         <ul>
             <li class="fragment">对于节点 $u$，新建一个节点 $u$ 的文科节点 $A_u$</li>
             <li class="fragment">源点 $S$ 向 $A_u$ 连接一条容量为 $sa$ 的连边</li>
             <li class="fragment">节点 $A_u$ 向 $u$ 及其四周每个节点连一条容量为 $+\infty$ 的连边</li>
         </ul>
-        <iframe class="fragment" rate="1.01"
-            data-src="./animation/文理分科额外连边.html"
+        <iframe data-animation="./文理分科额外连边.js" class="fragment"
             style="width: 1000px; height: 300px;"></iframe>
         <p class="fragment quote">给理科加额外buff也是类似的思路，在此略过</p>
     </section>

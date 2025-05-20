@@ -16,14 +16,10 @@ sd.init(() => {
     graph.at(0, 0.5).newNode("i");
     graph.at(1, 0.5).newNode("j");
     graph.at(0.5, 1).newNode("T");
-    function link(x, y) {
-        graph.newLink(x, y);
-    }
     links.forEach(lk => {
-        link(lk.from, lk.to);
+        graph.link(lk.from, lk.to);
         const e = graph.element(lk.from, lk.to).arrow();
         const math = new sd.Mathjax(e, lk.cap);
-        math.height(math.height() * 2);
         e.value(math, R.pointAtPathByRate(0.5, lk.xloc, lk.yloc));
         e.xloc = lk.xloc;
         e.yloc = lk.yloc;
