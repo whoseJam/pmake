@@ -23,10 +23,7 @@ const links = [
     [8, 12],
 ];
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     tree.root(1);
     links.forEach(link => {
         tree.link(link[0], link[1]);
@@ -46,7 +43,7 @@ function init() {
         colArray.element(i).childAs("stk", stk, R.aside("bc"));
     }
     colArray.x(tree.mx() + 50).y(tree.y());
-}
+});
 
 async function dfs(u) {
     await sd.pause();
@@ -56,11 +53,11 @@ async function dfs(u) {
 
     const children = tree.children(u);
     for (let i = 0; i < children.length; i++) {
-        const v = children[i].nodeId;
+        const v = tree.nodeId(children[i]);
         await dfs(v);
     }
 }
 
-async function main() {
+sd.main(async () => {
     await dfs(2);
-}
+});

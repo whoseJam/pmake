@@ -1,26 +1,34 @@
 <section>
     <section>
-        <h1>Tree And Queries</h1>
+        <h1>树上数颜色</h1>
     </section>
-    <problem data-src="http://43.143.204.105/problem/2"></problem>
+    <problem data-problemset="luogu" data-problemid="U41492"></problem>
     <section>
-        <h2>Tree And Queries</h2>
-        <p class="quote">如何统计某子树内出现次数超过 $k$ 的颜色数量？</p>
-        <iframe data-animation="./animation/TreeAndQueries.html" class="fragment"
-            style="width: 1000px; height: 400px;" rate="1.01"></iframe>
+        <h2>树上数颜色</h2>
+        <p class="quote">如何暴力统计某子树内的颜色数量？</p>
+        <iframe data-animation="./树上数颜色.js" class="fragment"
+            style="width: 1000px; height: 300px;"></iframe>
         <codeblock class="fragment">
             <script type="text/template">
                 void AddCol(int c) {
+                    if (!colCount[c]) colNum++;
                     colCount[c]++;
-                    sum[colCount[c]]++;
+                }
+            </script>
+        </codeblock>
+        <codeblock class="fragment">
+            <script type="text/template">
+                void RemoveCol(int c) {
+                    if (colCount[c] == 1) colNum--;
+                    colCount[c]--;
                 }
             </script>
         </codeblock>
     </section>
     <section>
-        <h2>Tree And Queries</h2>
+        <h2>树上数颜色</h2>
         <p>然后改造为树上启发式合并</p>
-        <codeblock style="height: 465px;">
+        <codeblock>
             <script type="text/template">
                 void Dsu(int u, int f) {
                     for (int i = h[u], v; i; i = l[i].Nxt) {
@@ -38,11 +46,7 @@
                         }
                     }
                     AddCol(col[u]);
-                    for (auto query: queries[u]) {
-                        int id = query.id;
-                        int k = query.k;
-                        Ans[id] = sum[k];
-                    }
+                    Ans[u] = colNum;
                 }
             </script>
         </codeblock>

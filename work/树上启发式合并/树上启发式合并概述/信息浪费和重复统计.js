@@ -19,18 +19,15 @@ const links = [
     [8, 12],
 ];
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     tree.root(1);
     links.forEach(link => {
         tree.link(link[0], link[1]);
     });
     tree.width(400).cx(600).cy(300);
-}
+});
 
-async function main() {
+sd.main(async () => {
     await countOn(1);
     await countOn(2);
     await sd.pause();
@@ -45,8 +42,7 @@ async function main() {
     tree.startAnimate();
     add(1);
     tree.endAnimate();
-    await sd.pause();
-}
+});
 
 async function countOn(i) {
     await sd.pause();
@@ -56,18 +52,17 @@ async function countOn(i) {
     add(i);
     tree.endAnimate();
     await sd.pause();
+    focus.startAnimate().focus(null).endAnimate();
     tree.startAnimate();
     clear(i);
     tree.endAnimate();
-    await sd.pause();
-    focus.startAnimate().focus(null).endAnimate();
 }
 
 function add(u) {
     tree.color(u, C.green);
     const children = tree.children(u);
     children.forEach(child => {
-        add(child.nodeId);
+        add(tree.nodeId(child));
     });
 }
 
@@ -75,6 +70,6 @@ function clear(u) {
     tree.color(u, C.white);
     const children = tree.children(u);
     children.forEach(child => {
-        clear(child.nodeId);
+        clear(tree.nodeId(child));
     });
 }
