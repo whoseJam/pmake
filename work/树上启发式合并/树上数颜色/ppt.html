@@ -6,7 +6,7 @@
     <section>
         <h2>树上数颜色</h2>
         <p class="quote">如何暴力统计某子树内的颜色数量？</p>
-        <iframe data-animation="./树上数颜色.js" class="fragment"
+        <iframe data-animation="./暴力统计.js" class="fragment"
             style="width: 1000px; height: 300px;"></iframe>
         <codeblock class="fragment">
             <script type="text/template">
@@ -28,25 +28,19 @@
     <section>
         <h2>树上数颜色</h2>
         <p>然后改造为树上启发式合并</p>
+        <iframe data-animation="./树上启发式合并.js"
+            style="width: 1000px; height: 300px;"></iframe>
         <codeblock>
             <script type="text/template">
-                void Dsu(int u, int f) {
-                    for (int i = h[u], v; i; i = l[i].Nxt) {
-                        v = l[i].to;
-                        if (v != f && v != son[u]) {
-                            Dsu(v, u);
-                            Remove(v, u);
-                        }
+                void DSU(int u) {
+                    for (每个轻儿子 v) {
+                        DSU(v);
+                        RemoveSubtree(v);
                     }
-                    if (son[u]) Dsu(son[u], u);
-                    for (int i = h[u], v; i; i = l[i].Nxt) {
-                        v = l[i].to;
-                        if (v != f && v != son[u]) {
-                            Add(v, u);
-                        }
-                    }
-                    AddCol(col[u]);
-                    Ans[u] = colNum;
+                    if (son[u]) DSU(son[u], u);
+                    for (每个轻儿子 v) AddSubtree(v);
+                    Add(u);
+                    Ans[u] = 当前颜色种类;
                 }
             </script>
         </codeblock>

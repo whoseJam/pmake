@@ -1,10 +1,15 @@
 import * as sd from "@/sd";
-import { DepthCounter } from "./DepthCounter";
+import { ColorCounter } from "../树上数颜色/ColorCounter";
 
 const svg = sd.svg();
+const C = sd.color();
+const R = sd.rule();
+const colors = [C.green, C.blue, C.cyan, C.orange, C.purple];
 const tree = new sd.Tree(svg);
+const colArray = new ColorCounter(svg, colors);
 const focus = sd.Focus(tree);
-const depArray = new DepthCounter(svg, 8);
+const colOfNode = sd.make1d(20);
+const n = 12;
 const links = [
     [1, 2],
     [1, 3],
@@ -24,12 +29,11 @@ sd.init(() => {
     links.forEach(link => {
         tree.link(link[0], link[1]);
     });
+    for (let i = 1; i <= n; i++) {
+        tree.color(i, colors[(colOfNode[i] = sd.rand(0, colors.length - 1))]);
+    }
     tree.width(400).cx(600).y(100);
-    depArray.x(tree.mx() + 50).y(tree.y());
-});
-
-sd.main(async () => {
-    await dfs(2);
+    colArray.x(tree.mx() + 50).y(tree.y());
 });
 
 async function dfs(u) {
@@ -37,12 +41,16 @@ async function dfs(u) {
     focus.startAnimate().focus(u).endAnimate();
     await sd.pause();
     tree.startAnimate();
-    tree.element(u).strokeWidth(3).endAnimate();
+    tree.element(u).strokeWidth(3);
     tree.endAnimate();
-    depArray.startAnimate().addNode(tree.depth(u)).endAnimate();
+    colArray.startAnimate().addColor(colOfNode[u]).endAnimate();
     const children = tree.children(u);
     for (let i = 0; i < children.length; i++) {
         const v = tree.nodeId(children[i]);
-        await dfs(v, u);
+        await dfs(v);
     }
 }
+
+sd.main(async () => {
+    await dfs(2);
+});

@@ -6,7 +6,7 @@
     <section>
         <h2>星战</h2>
         <p class="quote">如何暴力统计某子树内的<b>主要颜色编号和</b>？</p>
-        <iframe data-animation="../树上数颜色/树上数颜色.html" class="fragment"
+        <iframe data-animation="./暴力统计.js" class="fragment"
             style="width: 1000px; height: 300px;"></iframe>
         <codeblock class="fragment">
             <script type="text/template">
@@ -23,26 +23,19 @@
     <section>
         <h2>星战</h2>
         <p>然后改造为树上启发式合并</p>
+        <iframe data-animation="./树上启发式合并.js"
+            style="width: 1000px; height: 300px;"></iframe>
         <codeblock>
             <script type="text/template">
-                void Dsu(ll u, ll f) {
-                    for (ll i = h[u], v; i; i = l[i].Nxt) {
-                        v = l[i].to;
-                        if (v != f && v != son[u]) {
-                            Dsu(v, u);
-                            Remove(v, u);
-                            mxCol = smCol = 0;
-                        }
+                void DSU(int u) {
+                    for (每个轻儿子 v) {
+                        DSU(v);
+                        RemoveSubtree(v); // 记得清空 mxCol 和 smCol
                     }
-                    if (son[u]) Dsu(son[u], u);
-                    for (ll i = h[u], v; i; i = l[i].Nxt) {
-                        v = l[i].to;
-                        if (v != f && v != son[u]) {
-                            Add(v, u);
-                        }
-                    }
-                    AddCol(col[u]);
-                    Ans[u] = smCol;
+                    if (son[u]) DSU(son[u], u);
+                    for (每个轻儿子 v) AddSubtree(v);
+                    Add(u);
+                    Ans[u] = 当前颜色种类;
                 }
             </script>
         </codeblock>

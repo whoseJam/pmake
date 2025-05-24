@@ -1,11 +1,11 @@
 import * as sd from "@/sd";
+import { ColorCounter } from "./ColorCounter";
 
 const svg = sd.svg();
 const C = sd.color();
-const R = sd.rule();
-const cols = [C.green, C.blue, C.cyan];
+const colors = [C.green, C.blue, C.cyan, C.orange, C.purple];
 const tree = new sd.Tree(svg);
-const colArray = new sd.Array(svg).resize(cols.length);
+const colArray = new ColorCounter(svg, colors);
 const focus = sd.Focus(tree);
 const colOfNode = sd.make1d(20);
 const n = 12;
@@ -23,44 +23,33 @@ const links = [
     [8, 12],
 ];
 
-init();
-main();
-
-function init() {
+sd.init(() => {
     tree.root(1);
     links.forEach(link => {
         tree.link(link[0], link[1]);
     });
     for (let i = 1; i <= n; i++) {
-        tree.color(i, cols[(colOfNode[i] = sd.rand(0, 2))]);
+        tree.color(i, colors[(colOfNode[i] = sd.rand(0, colors.length - 1))]);
     }
     tree.width(400).cx(600).y(100);
-    colArray.addColor = function (idx) {
-        const stk = this.element(idx).child("stk");
-        stk.push().color(stk.end(), cols[idx]);
-        return this;
-    };
-    for (let i = 0; i < cols.length; i++) {
-        colArray.value(i, new sd.Rect(colArray).color(cols[i]));
-        const stk = new sd.Stack(colArray).elementWidth(20).elementHeight(20);
-        colArray.element(i).childAs("stk", stk, R.aside("bc"));
-    }
-    colArray.cx(tree.cx()).y(tree.my() + 50);
-}
+    colArray.x(tree.mx() + 50).y(tree.y());
+});
 
 async function dfs(u) {
     await sd.pause();
     focus.startAnimate().focus(u).endAnimate();
     await sd.pause();
+    tree.startAnimate();
+    tree.element(u).strokeWidth(3);
+    tree.endAnimate();
     colArray.startAnimate().addColor(colOfNode[u]).endAnimate();
-
     const children = tree.children(u);
     for (let i = 0; i < children.length; i++) {
-        const v = children[i].nodeId;
+        const v = tree.nodeId(children[i]);
         await dfs(v);
     }
 }
 
-async function main() {
-    await dfs(1);
-}
+sd.main(async () => {
+    await dfs(2);
+});

@@ -50,15 +50,15 @@
         <h2>树上启发式合并</h2>
         <codeblock>
             <script type="text/template">
-                void Dsu(int u, int f) {
+                void DSU(int u, int f) {
                     for (int i = h[u], v; i; i = l[i].Nxt) {
                         v = l[i].to;
                         if (v != f && v != son[u]) {
-                            Dsu(v, u);    // 统计轻儿子的答案
+                            DSU(v, u);    // 统计轻儿子的答案
                             Remove(v, u); // 删除轻儿子内的所有信息
                         }
                     }
-                    if (son[u]) Dsu(son[u], u);
+                    if (son[u]) DSU(son[u], u);
                     for (int i = h[u], v; i; i = l[i].Nxt) {
                         v = l[i].to;
                         if (v != f && v != son[u]) {

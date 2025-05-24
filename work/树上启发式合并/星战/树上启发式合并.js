@@ -1,4 +1,5 @@
 import * as sd from "@/sd";
+import { DSU } from "../_/DSU";
 
 const svg = sd.svg();
 const C = sd.color();
@@ -37,6 +38,11 @@ sd.init(() => {
         stk.push().color(stk.end(), cols[idx]);
         return this;
     };
+    colArray.removeColor = function (idx) {
+        const stk = this.element(idx).child("stk");
+        stk.pop();
+        return this;
+    };
     for (let i = 0; i < cols.length; i++) {
         colArray.value(i, new sd.Rect(colArray).color(cols[i]));
         const stk = new sd.Stack(colArray).elementWidth(20).elementHeight(20);
@@ -45,19 +51,50 @@ sd.init(() => {
     colArray.x(tree.mx() + 50).y(tree.y());
 });
 
-async function dfs(u) {
+async function onAddSubtree(subtree) {
+    await sd.pause();
+    tree.startAnimate();
+    colArray.startAnimate();
+    subtree.forEach(u => {
+        colArray.addColor(colOfNode[u]);
+        tree.element(u).strokeWidth(3);
+    });
+    tree.endAnimate();
+    colArray.endAnimate();
+}
+
+async function onRemoveSubtree(subtree) {
+    await sd.pause();
+    tree.startAnimate();
+    colArray.startAnimate();
+    subtree.forEach(u => {
+        colArray.removeColor(colOfNode[u]);
+        tree.element(u).strokeWidth(1);
+    });
+    tree.endAnimate();
+    colArray.endAnimate();
+}
+
+async function onAdd(u) {
+    await sd.pause();
+    tree.startAnimate();
+    tree.element(u).strokeWidth(3);
+    tree.endAnimate();
+    colArray.startAnimate();
+    colArray.addColor(colOfNode[u]);
+    colArray.endAnimate();
+}
+
+async function onPrepareFor(u) {
     await sd.pause();
     focus.startAnimate().focus(u).endAnimate();
-    await sd.pause();
-    colArray.startAnimate().addColor(colOfNode[u]).endAnimate();
-
-    const children = tree.children(u);
-    for (let i = 0; i < children.length; i++) {
-        const v = tree.nodeId(children[i]);
-        await dfs(v);
-    }
 }
 
 sd.main(async () => {
-    await dfs(2);
+    await DSU(tree, {
+        onAdd,
+        onAddSubtree,
+        onRemoveSubtree,
+        onPrepareFor,
+    });
 });
