@@ -11,8 +11,6 @@ export function MathAtom(target) {
         fill: C.black,
     });
 
-    this._.ready = true;
-
     this.vars.associate("fill", Factory.action(this, "math", "fill", Interp.colorInterp));
     this.vars.associate("stroke", Factory.action(this, "math", "stroke", Interp.colorInterp));
 }

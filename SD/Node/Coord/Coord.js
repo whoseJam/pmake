@@ -7,6 +7,7 @@ import { Path } from "@/Node/Path/Path";
 import { CircleSVG } from "@/Node/SVG/Shape/CircleSVG";
 import { RectSVG } from "@/Node/SVG/Shape/RectSVG";
 import { Check } from "@/Utility/Check";
+import { Factory } from "@/Utility/Factory";
 import { PathPen } from "@/Utility/PathPen";
 
 export function Coord(parent) {
@@ -14,11 +15,19 @@ export function Coord(parent) {
 
     this.type("Coord");
 
+    this.vars.merge({
+        origin: "bl",
+    });
+
     this.childAs("x", new Axis(this).direction(1, 0).withTickLabel(true), (parent, child) => {
-        child.source(parent.pos("x", "my")).length(parent.width());
+        if (this.origin() === "bl") child.source(parent.pos("x", "my"));
+        else if (this.origin() === "c") child.source(parent.pos("x", "cy"));
+        child.length(parent.width());
     });
     this.childAs("y", new Axis(this).direction(0, -1).withTickLabel(true).tickLabelAlign("target"), (parent, child) => {
-        child.source(parent.pos("x", "my")).length(parent.height());
+        if (this.origin() === "bl") child.source(parent.pos("x", "my"));
+        else if (this.origin() === "c") child.source(parent.pos("cx", "my"));
+        child.length(parent.height());
     });
 }
 
@@ -54,6 +63,7 @@ Coord.prototype = {
         if (arguments.length === 1) return this.global(x[0], x[1]);
         return [this.axis("x").globalX(x), this.axis("y").globalY(y)];
     },
+    origin: Factory.handler("origin"),
     drawRect(x, y, width, height) {
         const rect = new RectSVG(this).opacity(0).onEnter(EN.appear());
         this.vars.elements.push({

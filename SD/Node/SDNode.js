@@ -66,13 +66,13 @@ SDNode.prototype = {
     newLayer() {
         ErrorLauncher.notImplementedYet("newLayer", this.type());
     },
-    attachTo(parent) {
-        if (Check.isTypeOfSDNode(parent)) {
+    attachTo(target) {
+        if (Check.isTypeOfSDNode(target)) {
             // parent is SDNode
-            this._.layer.moveTo(parent.layer());
+            this._.layer.moveTo(target.layer());
         } else {
             // parent is RenderNode
-            this._.layer.moveTo(parent);
+            this._.layer.moveTo(target);
         }
         return this;
     },

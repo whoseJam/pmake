@@ -156,6 +156,7 @@ function prevFrame() {
 }
 
 function nextFrame() {
+    // console.log("next frame triggered! window.current_frame=", window.CURRENT_FRAME);
     if (window.CURRENT_FRAME + 1 > window.MAXIMUM_FRAME) {
         if (!A.finished()) {
             A.forceToFinish();

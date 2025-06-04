@@ -3,7 +3,12 @@ import { Path } from "@/Node/SVG/Path/PathSVG";
 import { Circle } from "@/Node/SVG/Shape/CircleSVG";
 import { Rect } from "@/Node/SVG/Shape/RectSVG";
 
+type Origin = "bl" | "c";
+
 export class Coord extends BaseCoord {
+    origin(): Origin;
+    origin(origin: Origin): this;
+
     drawRect(x: number, y: number, width: number, height: number): Rect;
     rectX(rect: Rect): number | undefined;
     rectX(rect: Rect, x: number): this;

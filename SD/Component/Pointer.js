@@ -11,8 +11,8 @@ function labelRule(parent, child) {
     const direction = parent.direction();
     if (direction === "t") child.cx(parent.cx()).y(parent.my() + gap);
     if (direction === "b") child.cx(parent.cx()).my(parent.y() - gap);
-    if (direction === "l") child.cy(parent.cy()).mx(parent.x() - gap);
-    if (direction === "r") child.cy(parent.cy()).x(parent.mx() + gap);
+    if (direction === "r") child.cy(parent.cy()).mx(parent.x() - gap);
+    if (direction === "l") child.cy(parent.cy()).x(parent.mx() + gap);
 }
 
 function addPointerMap(pointer, element) {
@@ -75,8 +75,8 @@ export function Pointer(parent, label, direction = "b", gap = 3, length = 20) {
             const length = pointers[i].length();
             if (direction === "t") pointers[i].source(element.kx(k), element.my() + gap + length).target(element.kx(k), element.my() + gap);
             if (direction === "b") pointers[i].source(element.kx(k), element.y() - gap - length).target(element.kx(k), element.y() - gap);
-            if (direction === "l") pointers[i].source(element.x() - gap - length, element.ky(k)).target(element.x() - gap, element.ky(k));
-            if (direction === "r") pointers[i].source(element.mx() + gap + length, element.ky(k)).target(element.mx() + gap, element.ky(k));
+            if (direction === "r") pointers[i].source(element.x() - gap - length, element.ky(k)).target(element.x() - gap, element.ky(k));
+            if (direction === "l") pointers[i].source(element.mx() + gap + length, element.ky(k)).target(element.mx() + gap, element.ky(k));
         }
     });
     pointer.childAs(new Text(pointer, label), labelRule);

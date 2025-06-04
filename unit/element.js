@@ -6,7 +6,11 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestSvgElementWithDiv);
+sd.main(TestValueCoveredByBackgroundError);
+
+async function TestValueCoveredByBackgroundError() {
+    const vertex = new sd.Vertex(svg, new sd.Mathjax(svg, "wtf"));
+}
 
 async function TestSvgElementWithDiv() {
     const box = new sd.Box(svg).x(100).y(100).width(70).height(30);

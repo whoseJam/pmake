@@ -13,6 +13,42 @@ function isVisible(element) {
     return true;
 }
 
+class LinkList {
+    constructor() {
+        this.head = undefined;
+        this.tail = undefined;
+    }
+    push(element) {
+        if (!this.tail) {
+            this.head = this.tail = element;
+        } else {
+            this.tail.next = element;
+            element.prev = this.tail;
+            this.tail = element;
+        }
+    }
+    erase(element) {
+        if (element === this.head && element === this.tail) {
+            this.head = this.tail = undefined;
+        } else if (element === this.head) {
+            this.head = element.next;
+        } else if (element === this.tail) {
+            this.tail = element.prev;
+        } else {
+            const prev = element.prev;
+            const next = element.next;
+            prev.next = next;
+            next.prev = prev;
+        }
+    }
+    forEach(callback) {
+        for (let element = this.head; element; element = element.next) callback(element);
+    }
+    forEachReverse(callback) {
+        for (let element = this.tail; element; element = element.prev) callback(element);
+    }
+}
+
 export class ActionList {
     constructor() {
         this.actionHead = undefined;
@@ -23,6 +59,7 @@ export class ActionList {
         this.totalCount = 0; // action (by push)
         this.actions = [];
         this.actionsMap = new Map();
+        this.actionsList = new LinkList();
         this.enabled = false;
         this.frame = window.CURRRENT_FRAME;
     }
@@ -33,6 +70,7 @@ export class ActionList {
         const actionMap = this.actionsMap.get(action.owner);
         if (!actionMap[action.channel]) actionMap[action.channel] = [];
         actionMap[action.channel].push(action);
+        this.actionsList.push(action);
         if (!action.is(Action.hideFlag)) {
             this.validCount++;
             if (action.is(Action.stopFlag)) this.stopCount++;
@@ -84,6 +122,9 @@ export class ActionList {
                 this.validCount--;
             }
         });
+        otherActions.forEach(action => {
+            if (action.is(Action.hideFlag)) this.actionsList.erase(action);
+        });
         actionMap[action.channel] = otherActions.filter(action => !action.is(Action.hideFlag));
     }
     filter(condition) {
@@ -110,44 +151,29 @@ export class ActionList {
     tick(t, dt) {
         this.t = t;
         if (this.stopCount === this.validCount) return;
-        this.actionsMap.forEach(actionMap => {
-            for (const channel in actionMap) {
-                const actions = actionMap[channel];
-                actions.forEach(action => {
-                    if (action.is(Action.stopFlag)) return;
-                    if (action.ownerIsCreated() && !action.ownerIsReady()) {
-                        action.skipping += dt;
-                        return;
-                    }
-                    if (!action.t) action.t = t;
-                    const duration = this.t - action.t + action.skipping;
-                    action.tick(duration);
-                    if (action.is(Action.stopFlag)) this.stopCount++;
-                });
+        this.actionsList.forEach(action => {
+            if (action.is(Action.stopFlag)) return;
+            if (action.ownerIsCreated() && !action.ownerIsReady()) {
+                action.skipping += dt;
+                return;
             }
+            if (!action.t) action.t = t;
+            const duration = this.t - action.t + action.skipping;
+            action.tick(duration);
+            if (action.is(Action.stopFlag)) this.stopCount++;
         });
     }
     restart(t) {
-        this.actionsMap.forEach(actionMap => {
-            for (const channel in actionMap) {
-                const actions = actionMap[channel];
-                actions.forEach(action => {
-                    action.t = t;
-                    action.unset(Action.stopFlag);
-                });
-            }
+        this.actionsList.forEach(action => {
+            action.t = t;
+            action.unset(Action.stopFlag);
         });
     }
     forceToFinish() {
-        this.actionsMap.forEach(actionMap => {
-            for (const channel in actionMap) {
-                const actions = actionMap[channel];
-                actions.forEach(action => {
-                    if (action.is(Action.stopFlag)) return;
-                    action.forceToFinish();
-                    this.stopCount++;
-                });
-            }
+        this.actionsList.forEach(action => {
+            if (action.is(Action.stopFlag)) return;
+            action.forceToFinish();
+            this.stopCount++;
         });
     }
     finished() {
@@ -156,42 +182,26 @@ export class ActionList {
     rollback() {
         const other = new ActionList();
         let maxTimestamp = 0;
-        this.actionsMap.forEach(actionMap => {
-            for (const channel in actionMap) {
-                const actions = actionMap[channel];
-                actions.forEach(action => {
-                    maxTimestamp = Math.max(maxTimestamp, action.r);
-                });
-            }
+        this.actionsList.forEach(action => {
+            maxTimestamp = Math.max(maxTimestamp, action.r);
         });
-        this.actionsMap.forEach(actionMap => {
-            for (const channel in actionMap) {
-                const actions = actionMap[channel];
-                for (let i = actions.length - 1; i >= 0; i--) {
-                    const action = actions[i];
-                    const newAction = action.clone();
-                    newAction.reverse = true;
-                    newAction.l = maxTimestamp - action.r;
-                    newAction.r = maxTimestamp - action.l;
-                    newAction.source = action.target;
-                    newAction.target = action.source;
-                    other.push(newAction);
-                }
-            }
+        this.actionsList.forEachReverse(action => {
+            const newAction = action.clone();
+            newAction.reverse = true;
+            newAction.l = maxTimestamp - action.r;
+            newAction.r = maxTimestamp - action.l;
+            newAction.source = action.target;
+            newAction.target = action.source;
+            other.push(newAction);
         });
         other.enabled = true;
         return other;
     }
     replay() {
         const other = new ActionList();
-        this.actionsMap.forEach(actionMap => {
-            for (const channel in actionMap) {
-                const actions = actionMap[channel];
-                actions.forEach(action => {
-                    const newAction = action.clone();
-                    other.push(newAction);
-                });
-            }
+        this.actionsList.forEach(action => {
+            const newAction = action.clone();
+            other.push(newAction);
         });
         other.enabled = true;
         return other;
@@ -199,38 +209,28 @@ export class ActionList {
     debug() {
         console.log("---------------Action List debug---------------");
         let used = 0;
-        this.actionsMap.forEach(actionMap => {
-            for (const channel in actionMap) {
-                const actions = actionMap[channel];
-                actions.forEach(action => {
-                    console.log(action.toString(), action);
-                    used++;
-                });
-            }
+        this.actionsList.forEach(action => {
+            console.log(action.toString(), action);
+            used++;
         });
         console.log("input action count =", this.totalCount, "used action count =", this.validCount, "rate =", this.validCount / this.totalCount);
         console.log("---------------Action List debug---------------");
         console.log("");
     }
     updateWindowSize() {
-        this.actionsMap.forEach(actionMap => {
-            for (const channel in actionMap) {
-                const actions = actionMap[channel];
-                actions.forEach(action => {
-                    if (sizeKey.has(action.channel)) {
-                        const owner = action.owner;
-                        if ("opacity" in owner && (owner._.nake || owner._.BASE_MATHJAX) && isVisible(owner)) {
-                            const x = owner.x();
-                            const mx = owner.mx();
-                            const y = owner.y();
-                            const my = owner.my();
-                            window.SVG_MAXX = Math.max(window.SVG_MAXX, mx);
-                            window.SVG_MINX = Math.min(window.SVG_MINX, x);
-                            window.SVG_MAXY = Math.max(window.SVG_MAXY, my);
-                            window.SVG_MINY = Math.min(window.SVG_MINY, y);
-                        }
-                    }
-                });
+        this.actionsList.forEach(action => {
+            if (sizeKey.has(action.channel)) {
+                const owner = action.owner;
+                if ("opacity" in owner && (owner._.nake || owner._.BASE_MATHJAX) && isVisible(owner)) {
+                    const x = owner.x();
+                    const mx = owner.mx();
+                    const y = owner.y();
+                    const my = owner.my();
+                    window.SVG_MAXX = Math.max(window.SVG_MAXX, mx);
+                    window.SVG_MINX = Math.min(window.SVG_MINX, x);
+                    window.SVG_MAXY = Math.max(window.SVG_MAXY, my);
+                    window.SVG_MINY = Math.min(window.SVG_MINY, y);
+                }
             }
         });
     }
