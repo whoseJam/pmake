@@ -16,13 +16,11 @@ sd.init(() => {
     graph.at(0, 0.5).newNode("i");
     graph.at(1, 0.5).newNode("j");
     graph.at(0.5, 1).newNode("T");
-    links.forEach(lk => {
-        graph.link(lk.from, lk.to);
-        const e = graph.element(lk.from, lk.to).arrow();
-        const math = new sd.Mathjax(e, lk.cap);
-        e.value(math, R.pointAtPathByRate(0.5, lk.xloc, lk.yloc));
-        e.xloc = lk.xloc;
-        e.yloc = lk.yloc;
+    links.forEach(link => {
+        graph.link(link.from, link.to);
+        const e = graph.element(link.from, link.to).arrow();
+        const math = new sd.Mathjax(e, link.cap);
+        e.value(math, R.pointAtPathByRate(0.5, link.xloc, link.yloc));
     });
     graph.element("i", "j").doubleArrow();
 });
