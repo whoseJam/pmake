@@ -1,5 +1,4 @@
 import { Cast } from "@/Utility/Cast";
-import { Factory } from "@/Utility/Factory";
 import { polygon } from "@flatten-js/core";
 
 export function Polygon(target, points = []) {
@@ -26,8 +25,21 @@ Polygon.prototype = {
     width(width) {
         if (arguments.length === 0) return this.vars.width;
         const x = this.x();
+        const oldWidth = this.width();
         const k = width / this.width();
         this.vars.width = width;
+        console.log(
+            "points=",
+            this.points(),
+            "aftermap=",
+            this.points().map(v => [(v[0] - x) * k + x, v[1]]),
+            "k=",
+            k,
+            "width=",
+            width,
+            "old_width=",
+            oldWidth
+        );
         return this.__points(this.points().map(v => [(v[0] - x) * k + x, v[1]]));
     },
     height(height) {
@@ -47,5 +59,11 @@ Polygon.prototype = {
         this.vars.height = box.height;
         return this;
     },
-    __points: Factory.handler("points"),
+    __points(points) {
+        if (arguments.length === 0) return this.vars.points;
+        // console.log("__points=", points);
+        // console.trace();
+        this.vars.points = points;
+        return this;
+    },
 };

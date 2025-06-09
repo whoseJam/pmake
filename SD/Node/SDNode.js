@@ -150,11 +150,12 @@ SDNode.prototype = {
     },
 
     drag: forward("interact", "drag"),
-    clickable: function (type) {
+    clickable(type) {
         this._.layer.setAttribute("pointer-events", Check.isFalseType(type) ? "none" : "auto");
         this._.clickableCalled = true;
         return this;
     },
+    click: forward("interact", "click"),
     onClick: forward("interact", "onClick"),
     onDblClick: forward("interact", "onDblClick"),
     onChange: forward("interact", "onChange"),

@@ -5,6 +5,11 @@
     <problem data-source="https://www.luogu.com.cn/problem/P5787"></problem>
     <section>
         <h2>二分图判定</h2>
+        <p>有一个 $n$ 个点的图，图上有 $m$ 条边，第 $i$ 条边在 $[l_i,r_i]$ 时间段内存在</p>
+        <p class="fragment">对每一个时间段，判断该图是否为二分图</p>
+    </section>
+    <section>
+        <h2>二分图判定</h2>
         <p>二分图判定有一个并查集的实现方案</p>
         <iframe data-animation="./并查集判断二分图.js"
             style="width: 1000px; height: 300px;"></iframe>
@@ -21,11 +26,10 @@
                 </script>
             </codeblock>
         </div>
-        <p class="fragment">并查集不直接支持删除</p>
     </section>
     <section>
         <h2>二分图判定</h2>
-        <p>如果能实现一个可回退的并查集，就可以套线段树分治，在每次合并完成后检验二分图是否合法，在每个叶子节点上存储答案即可</p>
+        <p>套线段树分治即可</p>
         <iframe data-animation="./线段树分治.js"
             style="width: 1000px; height: 400px;"></iframe>
     </section>

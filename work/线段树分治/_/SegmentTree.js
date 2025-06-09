@@ -54,6 +54,7 @@ export class SegmentTree extends sd.ValueTree {
      *   onCreateMover: () => sd.SDNode;
      *   onEnter: (mover: sd.SDNode, elements: Array<sd.SDNode>) => void;
      *   onExit: (mover: sd.SDNode, count: number) => Array<sd.SDNode>;
+     *   onLeaf: (i: number) => void;
      * }} args
      */
     async dfsAysnc(args = {}) {
@@ -83,6 +84,7 @@ export class SegmentTree extends sd.ValueTree {
                 arr.unfreeze().endAnimate();
                 return elements;
             };
+        const onLeaf = args.onLeaf;
 
         const mover = await onCreateMover();
         mover.opacity(0);
@@ -129,6 +131,7 @@ export class SegmentTree extends sd.ValueTree {
             mover.moveTo(x);
             const len = await enter(x);
             if (l === r) {
+                if (onLeaf) await onLeaf(l);
                 await exit(x, len);
                 return;
             }

@@ -1,18 +1,43 @@
 import { Interp } from "@/Animate/Interp";
+import { svg } from "@/Interact/Root";
 import { Polygon } from "@/Node/Shape/Polygon";
 import { BaseShapeSVG } from "@/Node/SVG/Shape/BaseShapeSVG";
 import { Factory } from "@/Utility/Factory";
+
+let globalPolygon = undefined;
+
+function createPolygon() {
+    if (globalPolygon === undefined) {
+        globalPolygon = svg().append("polygon");
+        globalPolygon.setAttribute("fill-opacity", 0);
+        globalPolygon.setAttribute("stroke-opacity", 0);
+    }
+}
+
+function polygonToBox(points) {
+    createPolygon();
+    globalPolygon.setAttribute("points", points);
+    return globalPolygon.nake().getBBox();
+}
 
 export function PolygonSVG(target, points = []) {
     BaseShapeSVG.call(this, target, "polygon");
 
     this.type("PolygonSVG");
 
+    if (points.length >= 1) {
+        const box = polygonToBox(points);
+        this.vars.merge(box);
+    } else {
+        this.vars.merge({
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0,
+        });
+    }
+
     this.vars.merge({
-        x: 0,
-        y: 0,
-        width: 0,
-        height: 0,
         points,
     });
 
