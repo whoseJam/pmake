@@ -3,32 +3,31 @@ import { SD2DNode } from "@/Node/SD2DNode";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 
-export function BaseAxis(parent) {
-    SD2DNode.call(this, parent);
+export class BaseAxis extends SD2DNode {
+    constructor(target) {
+        super(target);
 
-    this.vars.merge({
-        ticks: 10,
-    });
+        this.vars.merge({
+            ticks: 10,
+        });
+    }
+    static log2(start, end) {
+        return {
+            scale: "log2",
+            start,
+            end,
+        };
+    }
+    static log10(start, end) {
+        return {
+            scale: "log10",
+            start,
+            end,
+        };
+    }
 }
 
-BaseAxis.log2 = function (start, end) {
-    return {
-        scale: "log2",
-        start,
-        end,
-    };
-};
-
-BaseAxis.log10 = function (start, end) {
-    return {
-        scale: "log10",
-        start,
-        end,
-    };
-};
-
-BaseAxis.prototype = {
-    ...SD2DNode.prototype,
+Object.assign(BaseAxis.prototype, {
     ticks: Factory.handler("ticks"),
     tick() {
         ErrorLauncher.notImplementedYet("tick", this.type());
@@ -97,4 +96,4 @@ BaseAxis.prototype = {
         this.forEachTick(() => count++);
         return count;
     },
-};
+});

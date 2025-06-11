@@ -1,23 +1,4 @@
-function isTypeOf(type) {
-    const label = `BASE_${type}`;
-    return function (node) {
-        if (node) return node[label];
-        return false;
-    };
-}
-
 export class Check {
-    static isTypeOfSDNode = isTypeOf("SDNODE");
-    static isTypeOfArray = isTypeOf("ARRAY");
-    static isTypeOfElement = isTypeOf("ELEMENT");
-    static isTypeOfCurve = isTypeOf("CURVE");
-    static isTypeOfGraph = isTypeOf("GRAPH");
-    static isTypeOfGrid = isTypeOf("GRID");
-    static isTypeOfHTML = isTypeOf("HTML");
-    static isTypeOfSVG = isTypeOf("SVG");
-    static isTypeOfTree = isTypeOf("TREE");
-    static isTypeOfSVGLine = isTypeOf("SVGLINE");
-    static isTypeOfThree = isTypeOf("THREE");
     static isFalseType(object) {
         return object === null || object === undefined || object === false;
     }

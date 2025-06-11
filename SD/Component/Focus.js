@@ -1,4 +1,5 @@
 import { Context } from "@/Animate/Context";
+import { SDNode } from "@/Node/SDNode";
 import { RectSVG } from "@/Node/SVG/Shape/RectSVG";
 import { Check } from "@/Utility/Check";
 import { Color as C } from "@/Utility/Color";
@@ -19,14 +20,14 @@ export function Focus(parent) {
         if (arguments.length === 0) return this.focus(parent, parent);
         else if (arguments.length === 1) {
             if (Check.isFalseType(a)) return this.focus(undefined, undefined);
-            if (Check.isTypeOfSDNode(a)) return this.focus(a, a);
+            if (a instanceof SDNode) return this.focus(a, a);
             return this.focus(parent.element(a), parent.element(a));
         } else if (arguments.length === 2) {
-            const dontNeedIndex = (Check.isTypeOfSDNode(a) || Check.isFalseType(a)) && (Check.isTypeOfSDNode(b) || Check.isFalseType(b));
+            const dontNeedIndex = (a instanceof SDNode || Check.isFalseType(a)) && (b instanceof SDNode || Check.isFalseType(b));
             if (!dontNeedIndex) {
                 if (Check.isTypeOfGrid(parent)) return this.focus(parent.element(a, b), parent.element(a, b));
-                if (!Check.isTypeOfSDNode(a)) a = parent.element(a);
-                if (!Check.isTypeOfSDNode(b)) b = parent.element(b);
+                if (!a instanceof SDNode) a = parent.element(a);
+                if (!b instanceof SDNode) b = parent.element(b);
                 return this.focus(a, b);
             }
         } else if (arguments.length === 4) {

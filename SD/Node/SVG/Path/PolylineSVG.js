@@ -3,25 +3,28 @@ import { Polyline } from "@/Node/Path/Polyline";
 import { BasePathSVG } from "@/Node/SVG/Path/BasePathSVG";
 import { Factory } from "@/Utility/Factory";
 
-export function PolylineSVG(target, points = []) {
-    BasePathSVG.call(this, target, "polyline");
+export class PolylineSVG extends BasePathSVG {
+    constructor(target, points = []) {
+        super(target, "polyline");
 
-    this.type("PolylineSVG");
+        this.type("PolylineSVG");
 
-    this.vars.merge({
-        x: 0,
-        y: 0,
-        width: 0,
-        height: 0,
-        points,
-    });
+        this.vars.merge({
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0,
+            points,
+        });
 
-    this.vars.associate("points", Factory.action(this, this._.nake, "points", Interp.pointsInterp));
+        this.vars.associate("points", Factory.action(this, this._.nake, "points", Interp.pointsInterp));
 
-    this._.nake.setAttribute("points", this.vars.points);
+        this._.nake.setAttribute("points", this.vars.points);
+    }
 }
 
-PolylineSVG.prototype = {
-    ...BasePathSVG.prototype,
+PolylineSVG.extend(Polyline);
+
+Object.assign(PolylineSVG.prototype, {
     ...Polyline.prototype,
-};
+});

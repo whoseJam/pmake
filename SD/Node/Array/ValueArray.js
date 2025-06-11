@@ -3,29 +3,30 @@ import { Enter as EN } from "@/Node/Core/Enter";
 import { Cast } from "@/Utility/Cast";
 import { Factory } from "@/Utility/Factory";
 
-export function ValueArray(target) {
-    Array.call(this, target);
+export class ValueArray extends Array {
+    constructor(target) {
+        super(target);
 
-    this.type("ValueArray");
+        this.type("ValueArray");
 
-    this.vars.merge({
-        align: "cy",
-    });
+        this.vars.merge({
+            align: "cy",
+        });
 
-    this.uneffect("array");
-    this.effect("valueArray", () => {
-        const align = this.align();
-        this.vars.elements.forEach((element, id) => {
-            this.tryUpdate(element, () => {
-                element.cx(this.x() + this.elementWidth() * (id + 0.5));
-                element[align](this[align]());
+        this.uneffect("array");
+        this.effect("array", () => {
+            const align = this.align();
+            this.vars.elements.forEach((element, id) => {
+                this.tryUpdate(element, () => {
+                    element.cx(this.x() + this.elementWidth() * (id + 0.5));
+                    element[align](this[align]());
+                });
             });
         });
-    });
+    }
 }
 
-ValueArray.prototype = {
-    ...Array.prototype,
+Object.assign(ValueArray.prototype, {
     align: Factory.handler("align"),
     insert(id, value) {
         const element = Cast.castToSDNode(this.layer("elements"), value);
@@ -39,6 +40,6 @@ ValueArray.prototype = {
         this.__insert(id, element);
         return this;
     },
-};
+});
 
 ValueArray.prototype.insertFromExistElement = ValueArray.prototype.insertFromExistValue;

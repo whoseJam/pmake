@@ -1,4 +1,5 @@
 import { Action } from "@/Animate/Action";
+import { Mathjax } from "@/Node/Text/Mathjax";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 const sizeKey = new Set(["x", "y", "cx", "cy", "width", "height", "d", "x1", "y1", "x2", "y2", "transform", "opacity", "font-size", "points", "left", "top"]);
@@ -221,7 +222,7 @@ export class ActionList {
         this.actionsList.forEach(action => {
             if (sizeKey.has(action.channel)) {
                 const owner = action.owner;
-                if ("opacity" in owner && (owner._.nake || owner._.BASE_MATHJAX) && isVisible(owner)) {
+                if ("opacity" in owner && (owner._.nake || owner instanceof Mathjax) && isVisible(owner)) {
                     const x = owner.x();
                     const mx = owner.mx();
                     const y = owner.y();

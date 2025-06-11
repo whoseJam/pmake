@@ -1,36 +1,41 @@
 import { Interp } from "@/Animate/Interp";
 import { Vector as V } from "@/Math/Vector";
+import { Line } from "@/Node/Path/Line";
 import { BasePathSVG } from "@/Node/SVG/Path/BasePathSVG";
 import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
 
-export function LineSVG(target, value) {
-    BasePathSVG.call(this, target, "line");
+export class LineSVG extends BasePathSVG {
+    constructor(target, value) {
+        super(target, "line");
 
-    this.type("Line");
+        this.type("Line");
 
-    this.vars.merge({
-        x1: 0,
-        y1: 0,
-        x2: 40,
-        y2: 40,
-    });
+        this.vars.merge({
+            x1: 0,
+            y1: 0,
+            x2: 40,
+            y2: 40,
+        });
 
-    this.vars.associate("x1", Factory.action(this, this._.nake, "x1", Interp.numberInterp));
-    this.vars.associate("y1", Factory.action(this, this._.nake, "y1", Interp.numberInterp));
-    this.vars.associate("x2", Factory.action(this, this._.nake, "x2", Interp.numberInterp));
-    this.vars.associate("y2", Factory.action(this, this._.nake, "y2", Interp.numberInterp));
+        this.vars.associate("x1", Factory.action(this, this._.nake, "x1", Interp.numberInterp));
+        this.vars.associate("y1", Factory.action(this, this._.nake, "y1", Interp.numberInterp));
+        this.vars.associate("x2", Factory.action(this, this._.nake, "x2", Interp.numberInterp));
+        this.vars.associate("y2", Factory.action(this, this._.nake, "y2", Interp.numberInterp));
 
-    this._.nake.setAttribute("x1", this.vars.x1);
-    this._.nake.setAttribute("y1", this.vars.y1);
-    this._.nake.setAttribute("x2", this.vars.x2);
-    this._.nake.setAttribute("y2", this.vars.y2);
+        this._.nake.setAttribute("x1", this.vars.x1);
+        this._.nake.setAttribute("y1", this.vars.y1);
+        this._.nake.setAttribute("x2", this.vars.x2);
+        this._.nake.setAttribute("y2", this.vars.y2);
 
-    if (!Check.isEmptyType(value)) this.value(value);
+        if (!Check.isEmptyType(value)) this.value(value);
+    }
 }
 
-LineSVG.prototype = {
-    ...BasePathSVG.prototype,
+LineSVG.extend(Line);
+
+Object.assign(LineSVG.prototype, {
+    ...Line.prototype,
     x(x) {
         const x1 = this.x1();
         const x2 = this.x2();
@@ -111,4 +116,4 @@ LineSVG.prototype = {
         this.freeze().x2(x).y2(y).unfreeze();
         return this;
     },
-};
+});

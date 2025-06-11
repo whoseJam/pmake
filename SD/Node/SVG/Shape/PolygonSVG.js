@@ -20,33 +20,36 @@ function polygonToBox(points) {
     return globalPolygon.nake().getBBox();
 }
 
-export function PolygonSVG(target, points = []) {
-    BaseShapeSVG.call(this, target, "polygon");
+export class PolygonSVG extends BaseShapeSVG {
+    constructor(target, points = []) {
+        super(target, "polygon");
 
-    this.type("PolygonSVG");
+        this.type("PolygonSVG");
 
-    if (points.length >= 1) {
-        const box = polygonToBox(points);
-        this.vars.merge(box);
-    } else {
+        if (points.length >= 1) {
+            const box = polygonToBox(points);
+            this.vars.merge(box);
+        } else {
+            this.vars.merge({
+                x: 0,
+                y: 0,
+                width: 0,
+                height: 0,
+            });
+        }
+
         this.vars.merge({
-            x: 0,
-            y: 0,
-            width: 0,
-            height: 0,
+            points,
         });
+
+        this.vars.associate("points", Factory.action(this, this._.nake, "points", Interp.pointsInterp));
+
+        this._.nake.setAttribute("points", this.vars.points);
     }
-
-    this.vars.merge({
-        points,
-    });
-
-    this.vars.associate("points", Factory.action(this, this._.nake, "points", Interp.pointsInterp));
-
-    this._.nake.setAttribute("points", this.vars.points);
 }
 
-PolygonSVG.prototype = {
-    ...BaseShapeSVG.prototype,
+PolygonSVG.extend(Polygon);
+
+Object.assign(PolygonSVG.prototype, {
     ...Polygon.prototype,
-};
+});

@@ -1,12 +1,13 @@
 import { SDNode } from "@/Node/SDNode";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
-export function SD3DNode(target) {
-    SDNode.call(this, target);
+export class SD3DNode extends SDNode {
+    constructor(target) {
+        super(target);
+    }
 }
 
-SD3DNode.prototype = {
-    ...SDNode.prototype,
+Object.assign(SD3DNode.prototype, {
     x() {
         ErrorLauncher.notImplementedYet("x", this.type());
     },
@@ -87,4 +88,4 @@ SD3DNode.prototype = {
         if (mz === undefined) return this.kz(1);
         return this.z(mz - this.lz());
     },
-};
+});

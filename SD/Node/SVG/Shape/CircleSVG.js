@@ -4,28 +4,31 @@ import { Circle } from "@/Node/Shape/Circle";
 import { BaseShapeSVG } from "@/Node/SVG/Shape/BaseShapeSVG";
 import { Factory } from "@/Utility/Factory";
 
-export function CircleSVG(target) {
-    BaseShapeSVG.call(this, target, "circle");
+export class CircleSVG extends BaseShapeSVG {
+    constructor(target) {
+        super(target, "circle");
 
-    this.type("CircleSVG");
+        this.type("CircleSVG");
 
-    this.vars.merge({
-        r: 20,
-        cx: 20,
-        cy: 20,
-    });
+        this.vars.merge({
+            r: 20,
+            cx: 20,
+            cy: 20,
+        });
 
-    this.vars.associate("r", Factory.action(this, this._.nake, "r", Interp.numberInterp));
-    this.vars.associate("cx", Factory.action(this, this._.nake, "cx", Interp.numberInterp));
-    this.vars.associate("cy", Factory.action(this, this._.nake, "cy", Interp.numberInterp));
+        this.vars.associate("r", Factory.action(this, this._.nake, "r", Interp.numberInterp));
+        this.vars.associate("cx", Factory.action(this, this._.nake, "cx", Interp.numberInterp));
+        this.vars.associate("cy", Factory.action(this, this._.nake, "cy", Interp.numberInterp));
 
-    this._.nake.setAttribute("cx", this.vars.cx);
-    this._.nake.setAttribute("cy", this.vars.cy);
-    this._.nake.setAttribute("r", this.vars.r);
+        this._.nake.setAttribute("cx", this.vars.cx);
+        this._.nake.setAttribute("cy", this.vars.cy);
+        this._.nake.setAttribute("r", this.vars.r);
+    }
 }
 
-CircleSVG.prototype = {
-    ...BaseShapeSVG.prototype,
+CircleSVG.extend(Circle);
+
+Object.assign(CircleSVG.prototype, {
     ...Circle.prototype,
     r: Factory.handlerLowPrecise("r"),
     cx: Factory.handlerLowPrecise("cx"),
@@ -49,4 +52,4 @@ CircleSVG.prototype = {
         if (height === undefined) return this.r() * 2;
         return this.r(height / 2);
     },
-};
+});

@@ -10,25 +10,29 @@ import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
 import { PathPen } from "@/Utility/PathPen";
 
-export function Coord(parent) {
-    BaseCoord.call(this, parent);
+export class Coord extends BaseCoord {
+    constructor(target, prevent = false) {
+        super(target);
 
-    this.type("Coord");
+        this.type("Coord");
 
-    this.vars.merge({
-        origin: "bl",
-    });
+        this.vars.merge({
+            origin: "bl",
+        });
 
-    this.childAs("x", new Axis(this).direction(1, 0).withTickLabel(true), (parent, child) => {
-        if (this.origin() === "bl") child.source(parent.pos("x", "my"));
-        else if (this.origin() === "c") child.source(parent.pos("x", "cy"));
-        child.length(parent.width());
-    });
-    this.childAs("y", new Axis(this).direction(0, -1).withTickLabel(true).tickLabelAlign("target"), (parent, child) => {
-        if (this.origin() === "bl") child.source(parent.pos("x", "my"));
-        else if (this.origin() === "c") child.source(parent.pos("cx", "my"));
-        child.length(parent.height());
-    });
+        if (!prevent) {
+            this.childAs("x", new Axis(this).direction(1, 0).withTickLabel(true), (parent, child) => {
+                if (this.origin() === "bl") child.source(parent.pos("x", "my"));
+                else if (this.origin() === "c") child.source(parent.pos("x", "cy"));
+                child.length(parent.width());
+            });
+            this.childAs("y", new Axis(this).direction(0, -1).withTickLabel(true).tickLabelAlign("target"), (parent, child) => {
+                if (this.origin() === "bl") child.source(parent.pos("x", "my"));
+                else if (this.origin() === "c") child.source(parent.pos("cx", "my"));
+                child.length(parent.height());
+            });
+        }
+    }
 }
 
 function elementProp1(key) {
@@ -50,8 +54,7 @@ function elementProp2(key) {
     };
 }
 
-Coord.prototype = {
-    ...BaseCoord.prototype,
+Object.assign(Coord.prototype, {
     axis(by) {
         return this.child(by);
     },
@@ -164,7 +167,7 @@ Coord.prototype = {
         for (const _element of this.vars.elements) if (_element.element === element) return _element;
         return undefined;
     },
-};
+});
 
 function valid(v) {
     return Check.isValidNumber(v[0]) && Check.isValidNumber(v[1]);

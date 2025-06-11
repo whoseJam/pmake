@@ -90,40 +90,39 @@ function cloneMathjax(element) {
     return root;
 }
 
-export function Mathjax(target, text) {
-    SD2DNode.call(this, target);
+export class Mathjax extends SD2DNode {
+    constructor(target, text) {
+        super(target);
 
-    this.type("Mathjax");
+        this.type("Mathjax");
 
-    this.vars.merge({
-        x: 0,
-        y: 0,
-        width20: 0,
-        height20: 0,
-        text: "",
-        fontSize: 20,
-        elements: [],
-        stroke: C.black,
-        fill: C.black,
-    });
+        this.vars.merge({
+            x: 0,
+            y: 0,
+            width20: 0,
+            height20: 0,
+            text: "",
+            fontSize: 20,
+            elements: [],
+            stroke: C.black,
+            fill: C.black,
+        });
 
-    this.vars.associate("x", mathjaxUpdate(this, "x", Interp.numberInterp));
-    this.vars.associate("y", mathjaxUpdate(this, "y", Interp.numberInterp));
-    this.vars.associate("fill", mathjaxUpdate(this, "fill", Interp.colorInterp));
-    this.vars.associate("stroke", mathjaxUpdate(this, "stroke", Interp.colorInterp));
-    this.vars.associate("fontSize", mathjaxUpdate(this, "font-size", Interp.numberInterp));
+        this.vars.associate("x", mathjaxUpdate(this, "x", Interp.numberInterp));
+        this.vars.associate("y", mathjaxUpdate(this, "y", Interp.numberInterp));
+        this.vars.associate("fill", mathjaxUpdate(this, "fill", Interp.colorInterp));
+        this.vars.associate("stroke", mathjaxUpdate(this, "stroke", Interp.colorInterp));
+        this.vars.associate("fontSize", mathjaxUpdate(this, "font-size", Interp.numberInterp));
 
-    this._.layer.setAttribute("font-size", 20);
-    this._.math = undefined;
-    this._.transforming = [];
+        this._.layer.setAttribute("font-size", 20);
+        this._.math = undefined;
+        this._.transforming = [];
 
-    if (text !== undefined) this.math(text);
-
-    this._.BASE_MATHJAX = true;
+        if (text !== undefined) this.math(text);
+    }
 }
 
-Mathjax.prototype = {
-    ...SD2DNode.prototype,
+Object.assign(Mathjax.prototype, {
     x: Factory.handlerLowPrecise("x"),
     y: Factory.handlerLowPrecise("y"),
     fontSize: Factory.handlerLowPrecise("fontSize"),
@@ -213,7 +212,7 @@ Mathjax.prototype = {
         buildMathAtom(created);
         return created;
     },
-};
+});
 
 /**
  * @param {Array<SVGPathElement>} paths

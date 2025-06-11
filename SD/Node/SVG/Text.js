@@ -50,39 +50,40 @@ function parseText(text) {
     return ans;
 }
 
-export function Text(target, text = "") {
-    BaseSVG.call(this, target, "text");
+export class Text extends BaseSVG {
+    constructor(target, text = "") {
+        super(target, "text");
 
-    this.type("Text");
+        this.type("Text");
 
-    this.vars.fill = C.black;
-    this.vars.strokeWidth = 0;
-    this.vars.merge({
-        x: 0,
-        y: 0,
-        text: "",
-        fontSize: 20,
-        width: 0,
-        height: 0,
-    });
+        this.vars.fill = C.black;
+        this.vars.strokeWidth = 0;
+        this.vars.merge({
+            x: 0,
+            y: 0,
+            text: "",
+            fontSize: 20,
+            width: 0,
+            height: 0,
+        });
 
-    this.vars.associate("x", Factory.action(this, this._.nake, "x", Interp.numberInterp));
-    this.vars.associate("y", Factory.action(this, this._.nake, "y", Interp.numberInterp));
-    this.vars.associate("text", Factory.action(this, this._.nake, "text", Interp.stringInterp));
-    this.vars.associate("fontSize", Factory.action(this, this._.nake, "font-size", Interp.numberInterp));
+        this.vars.associate("x", Factory.action(this, this._.nake, "x", Interp.numberInterp));
+        this.vars.associate("y", Factory.action(this, this._.nake, "y", Interp.numberInterp));
+        this.vars.associate("text", Factory.action(this, this._.nake, "text", Interp.stringInterp));
+        this.vars.associate("fontSize", Factory.action(this, this._.nake, "font-size", Interp.numberInterp));
 
-    this._.nake.setAttribute("text-anchor", "start");
-    this._.nake.setAttribute("dy", ".92em");
-    this._.nake.setAttribute("x", this.vars.x);
-    this._.nake.setAttribute("y", this.vars.y);
-    this._.nake.setAttribute("font-size", this.vars.fontSize);
-    this._.nake.setAttribute("font-family", "consolas");
+        this._.nake.setAttribute("text-anchor", "start");
+        this._.nake.setAttribute("dy", ".92em");
+        this._.nake.setAttribute("x", this.vars.x);
+        this._.nake.setAttribute("y", this.vars.y);
+        this._.nake.setAttribute("font-size", this.vars.fontSize);
+        this._.nake.setAttribute("font-family", "consolas");
 
-    if (text !== undefined && text !== null) this.text(text);
+        this.text(text);
+    }
 }
 
-Text.prototype = {
-    ...BaseSVG.prototype,
+Object.assign(Text.prototype, {
     x: Factory.handlerLowPrecise("x"),
     y: Factory.handlerLowPrecise("y"),
     fontSize(fontSize) {
@@ -135,4 +136,4 @@ Text.prototype = {
     intValue() {
         return +this.text();
     },
-};
+});

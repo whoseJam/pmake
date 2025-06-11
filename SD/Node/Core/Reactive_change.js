@@ -1,4 +1,3 @@
-import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 function hasChanged(oldValue, newValue, precise) {
@@ -169,7 +168,7 @@ export function reactive(object, father = undefined) {
         get: function (object, key, receiver) {
             traceInput(object, key);
             const value = Reflect.get(object, key, receiver);
-            if (Check.isTypeOfSDNode(value)) return value;
+            if (value instanceof SDNode) return value;
             if (typeof value === "object") {
                 return reactive(value, object);
             }

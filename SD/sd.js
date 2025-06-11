@@ -79,6 +79,7 @@ export { TextAreaSVG } from "./Node/SVG/Control/TextAreaSVG";
 export { LineSVG } from "./Node/SVG/Path/LineSVG";
 export { PathSVG } from "./Node/SVG/Path/PathSVG";
 export { PolylineSVG } from "./Node/SVG/Path/PolylineSVG";
+export { BaseShapeSVG } from "./Node/SVG/Shape/BaseShapeSVG";
 export { CircleSVG } from "./Node/SVG/Shape/CircleSVG";
 export { EllipseSVG } from "./Node/SVG/Shape/EllipseSVG";
 export { ImageSVG } from "./Node/SVG/Shape/ImageSVG";

@@ -26,7 +26,7 @@ sd.main(async () => {
     await sd.pause();
     const pointer = sd.Pointer(svg, "cur", "r", 40);
     let tot = 1;
-    tree.root(1, math(0));
+    tree.startAnimate().root(1, math(0)).endAnimate();
     let current = [[1, 0]];
     for (let i = set.dim() - 1; i >= 0; i--) {
         let next = [];

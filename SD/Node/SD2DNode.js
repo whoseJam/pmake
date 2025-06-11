@@ -2,7 +2,7 @@ import { SDNode } from "@/Node/SDNode";
 import { HTMLNode } from "@/Renderer/HTML/HTMLNode";
 import { createRenderNode } from "@/Renderer/RenderNode";
 import { SVGNode } from "@/Renderer/SVG/SVGNode";
-import { Check } from "@/Utility/Check";
+
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 
@@ -18,27 +18,31 @@ function interp(node) {
     };
 }
 
-export function SD2DNode(target) {
-    SDNode.call(this, target);
+export class SD2DNode extends SDNode {
+    constructor(target) {
+        super(target);
 
-    this.vars.merge({
-        opacity: 1,
-    });
+        this.vars.merge({
+            opacity: 1,
+        });
 
-    if (Check.isTypeOfHTML(this)) {
-        this._.layer = createRenderNode(this, this._.layers.__targetLayer, "div");
-    } else if (Check.isTypeOfSVG(this)) {
-        this._.layer = createRenderNode(this, this._.layers.__targetLayer, "g");
-    } else if (this._.layers.__targetLayer instanceof HTMLNode) {
-        this._.layer = createRenderNode(this, this._.layers.__targetLayer, "div");
-    } else {
-        this._.layer = createRenderNode(this, this._.layers.__targetLayer, "g");
+        const { BaseHTML } = require("@/Node/HTML/BaseHTML");
+        const { BaseSVG } = require("@/Node/SVG/BaseSVG");
+        if (this instanceof BaseHTML) {
+            this._.layer = createRenderNode(this, this._.layers.__targetLayer, "div");
+        } else if (this instanceof BaseSVG) {
+            this._.layer = createRenderNode(this, this._.layers.__targetLayer, "g");
+        } else if (this._.layers.__targetLayer instanceof HTMLNode) {
+            this._.layer = createRenderNode(this, this._.layers.__targetLayer, "div");
+        } else {
+            this._.layer = createRenderNode(this, this._.layers.__targetLayer, "g");
+        }
+
+        this.vars.associate("opacity", Factory.action(this, this._.layer, "opacity", interp(this)));
     }
-
-    this.vars.associate("opacity", Factory.action(this, this._.layer, "opacity", interp(this)));
 }
 
-SD2DNode.prototype = {
+Object.assign(SD2DNode.prototype, {
     ...SDNode.prototype,
     newLayer(name) {
         let layer = undefined;
@@ -126,6 +130,6 @@ SD2DNode.prototype = {
         if (my === undefined) return this.ky(1);
         return this.y(my - this.height());
     },
-};
+});
 
 SD2DNode.prototype.position = SD2DNode.prototype.pos;

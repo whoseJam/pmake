@@ -1,8 +1,10 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
+const EN = sd.enter();
 const C = sd.color();
 const R = sd.rule();
+const subtree = new sd.Triangle(svg).height(220).width(150);
 const vertex = new sd.Vertex(svg, "u");
 const c1 = new sd.Circle(svg).r(10);
 const c2 = new sd.Circle(svg).r(10);
@@ -19,9 +21,19 @@ sd.init(() => {
     stack.forEachElement((v, i) => {
         v.childAs("arr", new sd.Array(svg).resize(count[i]).elementWidth(12).elementHeight(12), R.aside("rc"));
     });
+    f1.childAs(subtree.onEnter(EN.nothing()), (parent, child) => {
+        child.cx(parent.cx()).y(parent.cy());
+    });
+    const curve = new sd.Curve(svg).source(f1.center()).target(subtree.kx(0.2), vertex.cy()).arrow();
+    sd.trim(curve, f1);
+    curve.value("min", R.pointAtPathByRate(1, "cx", "y"));
 });
 
 sd.main(async () => {
+    await sd.pause();
+    [f1, c3, c4, f2].forEach(v => {
+        array(v).startAnimate().opacity(array(v).end(), 0.2).endAnimate();
+    });
     await sd.pause();
     [vertex, c1, c2].forEach(v => {
         array(v).startAnimate();
@@ -29,10 +41,10 @@ sd.main(async () => {
         array(v).lastElement().color(C.green);
         array(v).endAnimate();
     });
-    await sd.pause();
-    const p = sd.Pointer(array(f1), "min", "b", 1, 20);
-    p.startAnimate().moveTo(array(f1).end()).endAnimate();
-    array(f1).lastElement().startAnimate().value("?").endAnimate();
+    [f1, c3, c4, f2].forEach(v => {
+        const last = array(v).end();
+        array(v).startAnimate().opacity(last, 1).color(last, C.green).endAnimate();
+    });
 });
 
 function array(vertex) {

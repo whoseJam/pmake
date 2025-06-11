@@ -5,38 +5,39 @@ import { RectSVG } from "@/Node/SVG/Shape/RectSVG";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 
-export function BarArray(target) {
-    BaseArray.call(this, target);
+export class BarArray extends BaseArray {
+    constructor(target) {
+        super(target);
 
-    this.type("BarArray");
+        this.type("BarArray");
 
-    this.vars.merge({
-        x: 0,
-        y: 0,
-        elementWidth: 40,
-        elementHeight: 40,
-        height: 0,
-    });
-
-    this.effect("barArray", () => {
-        const y = this.my();
-        let maxHeight = 0;
-        this.vars.elements.forEach((element, i) => {
-            this.tryUpdate(element, () => {
-                element.width(this.elementWidth());
-                element.height(this.elementHeight() * element.value());
-                element.x(this.x() + i * this.elementWidth());
-                element.my(y);
-                maxHeight = Math.max(maxHeight, this.elementHeight() * element.value());
-            });
+        this.vars.merge({
+            x: 0,
+            y: 0,
+            elementWidth: 40,
+            elementHeight: 40,
+            height: 0,
         });
-        this.vars.height = maxHeight;
-        this.vars.y = y - maxHeight;
-    });
+
+        this.effect("barArray", () => {
+            const y = this.my();
+            let maxHeight = 0;
+            this.vars.elements.forEach((element, i) => {
+                this.tryUpdate(element, () => {
+                    element.width(this.elementWidth());
+                    element.height(this.elementHeight() * element.value());
+                    element.x(this.x() + i * this.elementWidth());
+                    element.my(y);
+                    maxHeight = Math.max(maxHeight, this.elementHeight() * element.value());
+                });
+            });
+            this.vars.height = maxHeight;
+            this.vars.y = y - maxHeight;
+        });
+    }
 }
 
-BarArray.prototype = {
-    ...BaseArray.prototype,
+Object.assign(BarArray.prototype, {
     elementWidth: Factory.handlerLowPrecise("elementWidth"),
     elementHeight: Factory.handlerLowPrecise("elementHeight"),
     intValue(idx) {
@@ -70,6 +71,6 @@ BarArray.prototype = {
         this.__insert(id, element);
         return this;
     },
-};
+});
 
 BarArray.prototype.insertFromExistElement = BarArray.prototype.insertFromExistValue;

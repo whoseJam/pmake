@@ -2,6 +2,7 @@ import { Context } from "@/Animate/Context";
 import { Enter as EN } from "@/Node/Core/Enter";
 import { Exit as EX } from "@/Node/Core/Exit";
 import { BraceCurve } from "@/Node/Curve/BraceCurve";
+import { SDNode } from "@/Node/SDNode";
 import { Rule as R } from "@/Rule/Rule";
 import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
@@ -36,8 +37,8 @@ export function Brace(parent, location) {
     brace.braceGap = Factory.handlerLowPrecise("braceGap");
     brace.valueGap = Factory.handlerLowPrecise("valueGap");
     brace.brace = function (l, r, location, gap) {
-        if (!Check.isTypeOfSDNode(l)) l = parent.element(l);
-        if (!Check.isTypeOfSDNode(r)) r = parent.element(r);
+        if (!(l instanceof SDNode)) l = parent.element(l);
+        if (!(r instanceof SDNode)) r = parent.element(r);
         if (!Check.isFalseType(location)) this.location(location);
         if (!Check.isFalseType(gap)) this.braceGap(gap);
         if (!parent.childAs) replaceBrace(this, l, r);
@@ -96,6 +97,6 @@ export function Brace(parent, location) {
         this.childAs("value", element, labelRule);
         return this;
     };
-    if (Check.isTypeOfSDNode(parent)) parent.childAs(brace);
+    if (parent instanceof SDNode) parent.childAs(brace);
     return brace;
 }

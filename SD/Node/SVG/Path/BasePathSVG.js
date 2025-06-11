@@ -9,26 +9,26 @@ import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 
-export function BasePathSVG(parent, tag) {
-    BaseSVG.call(this, parent, tag);
+export class BasePathSVG extends BaseSVG {
+    constructor(target, tag) {
+        super(target, tag);
 
-    this.vars.merge({
-        markerStart: "",
-        markerMid: "",
-        markerEnd: "",
-        value: undefined,
-    });
+        this.vars.merge({
+            markerStart: "",
+            markerMid: "",
+            markerEnd: "",
+            value: undefined,
+        });
 
-    this.vars.fillOpacity = 0;
+        this.vars.fillOpacity = 0;
 
-    this.vars.associate("markerStart", Factory.action(this, this._.nake, "marker-start", Interp.stringInterp));
-    this.vars.associate("markerMid", Factory.action(this, this._.nake, "marker-mid", Interp.stringInterp));
-    this.vars.associate("markerEnd", Factory.action(this, this._.nake, "marker-end", Interp.stringInterp));
+        this.vars.associate("markerStart", Factory.action(this, this._.nake, "marker-start", Interp.stringInterp));
+        this.vars.associate("markerMid", Factory.action(this, this._.nake, "marker-mid", Interp.stringInterp));
+        this.vars.associate("markerEnd", Factory.action(this, this._.nake, "marker-end", Interp.stringInterp));
+    }
 }
 
-BasePathSVG.prototype = {
-    ...BaseSVG.prototype,
-    BASE_PATH_SVG: true,
+Object.assign(BasePathSVG.prototype, {
     markerStart: handlerMarker("markerStart"),
     markerMid: handlerMarker("markerMid"),
     markerEnd: handlerMarker("markerEnd"),
@@ -109,7 +109,7 @@ BasePathSVG.prototype = {
         return this;
     },
     drop: BaseElement.prototype.drop,
-};
+});
 
 function handlerMarker(key) {
     return function (marker) {

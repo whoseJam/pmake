@@ -1,5 +1,6 @@
 import { Context } from "@/Animate/Context";
 import { Line } from "@/Node/Path/Line";
+import { SDNode } from "@/Node/SDNode";
 import { Text } from "@/Node/SVG/Text";
 import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
@@ -46,7 +47,7 @@ export function Pointer(parent, label, direction = "b", gap = 3, length = 20) {
             return this;
         }
         if (arguments.length === 2) return this.moveTo(parent.element(x, y));
-        else if (arguments.length === 1 && !Check.isTypeOfSDNode(x)) return this.moveTo(parent.element(x));
+        else if (arguments.length === 1 && !(x instanceof SDNode)) return this.moveTo(parent.element(x));
         erasePointerMap(this);
         if (this.opacity() === 0 && this.duration() > 0) {
             const context = new Context(this);
@@ -80,6 +81,6 @@ export function Pointer(parent, label, direction = "b", gap = 3, length = 20) {
         }
     });
     pointer.childAs(new Text(pointer, label), labelRule);
-    if (Check.isTypeOfSDNode(parent)) parent.childAs(pointer);
+    if (parent instanceof SDNode) parent.childAs(pointer);
     return pointer;
 }

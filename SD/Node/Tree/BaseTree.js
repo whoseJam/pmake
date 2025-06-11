@@ -1,30 +1,34 @@
 import { SD2DNode } from "@/Node/SD2DNode";
+import { SDNode } from "@/Node/SDNode";
 import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 
 function castToId(tree, object) {
-    return Check.isTypeOfSDNode(object) ? tree.nodeId(object) : object;
+    return object instanceof SDNode ? tree.nodeId(object) : object;
 }
 
-export function BaseTree(parent) {
-    SD2DNode.call(this, parent);
+export class BaseTree extends SD2DNode {
+    constructor(target) {
+        super(target);
 
-    this.vars.merge({
-        x: 0,
-        y: 0,
-        links: [],
-        nodes: [],
-    });
+        this.newLayer("links");
+        this.newLayer("nodes");
 
-    this._.sdnodesMap = {}; // SDNode id -> { node: SDNode, id: TreeID } | { link: SDNode, sourceId: TreeID, targetId: TreeID }
-    this._.nodesMap = {}; // TreeID -> SDNode
-    this._.linksMap = new Map(); // TreeID -> SDNode
+        this.vars.merge({
+            x: 0,
+            y: 0,
+            links: [],
+            nodes: [],
+        });
+
+        this._.sdnodesMap = {}; // SDNode id -> { node: SDNode, id: TreeID } | { link: SDNode, sourceId: TreeID, targetId: TreeID }
+        this._.nodesMap = {}; // TreeID -> SDNode
+        this._.linksMap = new Map(); // TreeID -> SDNode
+    }
 }
 
-BaseTree.prototype = {
-    ...SD2DNode.prototype,
-    BASE_TREE: true,
+Object.assign(BaseTree.prototype, {
     x: Factory.handlerLowPrecise("x"),
     y: Factory.handlerLowPrecise("y"),
     rootId() {
@@ -32,7 +36,7 @@ BaseTree.prototype = {
     },
     nodeId(node) {
         if (node === undefined) return undefined;
-        if (Check.isTypeOfSDNode(node)) {
+        if (node instanceof SDNode) {
             if (!this._.sdnodesMap[node.id]) return undefined;
             return this._.sdnodesMap[node.id].id;
         } else {
@@ -270,7 +274,7 @@ BaseTree.prototype = {
     element() {
         if (arguments.length === 1) {
             const [node] = arguments;
-            if (Check.isTypeOfSDNode(node)) return node;
+            if (node instanceof SDNode) return node;
             const [id] = arguments;
             return this.findNodeById(id);
         } else {
@@ -496,4 +500,4 @@ BaseTree.prototype = {
         if (typeof element[method] !== "function") ErrorLauncher.methodNotFound(element, method);
         return element;
     },
-};
+});

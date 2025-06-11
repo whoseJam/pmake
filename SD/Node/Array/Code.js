@@ -16,58 +16,59 @@ function focusRule(parent, child) {
     child.height(r.my() - l.y());
 }
 
-export function Code(target, source = undefined) {
-    BaseArray.call(this, target);
+export class Code extends BaseArray {
+    constructor(target, source) {
+        super(target);
 
-    this.type("Code");
+        this.type("Code");
 
-    this.vars.merge({
-        l: undefined,
-        r: undefined,
-        x: 0,
-        y: 0,
-        width: 0,
-        height: 0,
-        fontSize: 20,
-        start: 1,
-    });
+        this.vars.merge({
+            l: undefined,
+            r: undefined,
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0,
+            fontSize: 20,
+            start: 1,
+        });
 
-    this.effect("code", () => {
-        const x = this.x();
-        let y = this.y();
-        let width = 0;
-        let height = 0;
-        const fontSize = this.fontSize();
-        const elements = this.vars.elements;
-        for (let element of elements) {
-            this.tryUpdate(element, () => {
-                element.fontSize(fontSize);
-                element.x(x).y(y);
-                y += element.height();
-                width = Math.max(width, element.width());
-                height += element.height();
-            });
-        }
-        this.vars.width = width;
-        this.vars.height = height;
-    });
+        this.effect("code", () => {
+            const x = this.x();
+            let y = this.y();
+            let width = 0;
+            let height = 0;
+            const fontSize = this.fontSize();
+            const elements = this.vars.elements;
+            for (let element of elements) {
+                this.tryUpdate(element, () => {
+                    element.fontSize(fontSize);
+                    element.x(x).y(y);
+                    y += element.height();
+                    width = Math.max(width, element.width());
+                    height += element.height();
+                });
+            }
+            this.vars.width = width;
+            this.vars.height = height;
+        });
 
-    this.childAs(
-        "focus",
-        new RectSVG(this)
-            .color(Color.BLUE)
-            .opacity(0)
-            .onEnter(() => {}),
-        focusRule
-    );
+        this.childAs(
+            "focus",
+            new RectSVG(this)
+                .color(Color.BLUE)
+                .opacity(0)
+                .onEnter(() => {}),
+            focusRule
+        );
 
-    this.newLayer("elements");
+        this.newLayer("elements");
 
-    if (source) this.code(source);
+        if (source) this.code(source);
+    }
 }
 
-Code.prototype = {
-    ...BaseArray.prototype,
+Object.assign(Code.prototype, {
     fontSize: Factory.handler("fontSize"),
     width(width) {
         if (width === undefined) return this.vars.width;
@@ -135,4 +136,4 @@ Code.prototype = {
     value() {
         return this.element.apply(this, arguments);
     },
-};
+});

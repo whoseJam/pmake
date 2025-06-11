@@ -3,23 +3,25 @@ import { SD2DNode } from "@/Node/SD2DNode";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 
-export function BaseGrid(parent) {
-    SD2DNode.call(this, parent);
+export class BaseGrid extends SD2DNode {
+    constructor(target) {
+        super(target);
 
-    this.vars.merge({
-        n: 0,
-        m: 0,
-        x: 0,
-        y: 0,
-        startN: 0,
-        startM: 0,
-        elements: [],
-    });
+        this.newLayer("elements");
+
+        this.vars.merge({
+            n: 0,
+            m: 0,
+            x: 0,
+            y: 0,
+            startN: 0,
+            startM: 0,
+            elements: [],
+        });
+    }
 }
 
-BaseGrid.prototype = {
-    ...SD2DNode.prototype,
-    BASE_GRID: true,
+Object.assign(BaseGrid.prototype, {
     startN: Factory.handler("startN"),
     startM: Factory.handler("startM"),
     endN() {
@@ -229,4 +231,4 @@ BaseGrid.prototype = {
         if (typeof element[method] !== "function") ErrorLauncher.methodNotFound(element, method);
         return element;
     },
-};
+});

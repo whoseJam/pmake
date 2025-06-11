@@ -1,6 +1,7 @@
 import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
 import { svg } from "@/Interact/Root";
+import { Path } from "@/Node/Path/Path";
 import { BasePathSVG } from "@/Node/SVG/Path/BasePathSVG";
 import { RenderNode } from "@/Renderer/RenderNode";
 
@@ -63,26 +64,30 @@ function getTotalLength(d) {
     }
 }
 
-export function PathSVG(target) {
-    BasePathSVG.call(this, target, "path");
+export class PathSVG extends BasePathSVG {
+    constructor(target) {
+        super(target, "path");
 
-    this.type("Path");
+        this.type("Path");
 
-    this.vars.merge({
-        x: 0,
-        y: 0,
-        width: 0,
-        height: 0,
-        d: "M0,0L0,0",
-    });
+        this.vars.merge({
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0,
+            d: "M0,0L0,0",
+        });
 
-    this.vars.associate("d", pathInterp(this, this._.nake));
+        this.vars.associate("d", pathInterp(this, this._.nake));
 
-    this._.nake.setAttribute("d", this.vars.d);
+        this._.nake.setAttribute("d", this.vars.d);
+    }
 }
 
-PathSVG.prototype = {
-    ...BasePathSVG.prototype,
+PathSVG.extend(Path);
+
+Object.assign(PathSVG.prototype, {
+    ...Path.prototype,
     x(x) {
         if (arguments.length === 0) return this.vars.x;
         const [x0, y0, dx, dy, sx, sy] = [this.x(), this.y(), x - this.vars.x, 0, 1, 1];
@@ -128,7 +133,7 @@ PathSVG.prototype = {
         this.vars.height = box.height;
         return this;
     },
-};
+});
 
 function update(d, x0, y0, dx, dy, sx, sy) {
     let i = 0;

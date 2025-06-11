@@ -4,20 +4,20 @@ import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 
-export function BaseArray(target) {
-    SD2DNode.call(this, target);
+export class BaseArray extends SD2DNode {
+    constructor(target) {
+        super(target);
 
-    this.newLayer("elements");
+        this.newLayer("elements");
 
-    this.vars.merge({
-        start: 0,
-        elements: [],
-    });
+        this.vars.merge({
+            start: 0,
+            elements: [],
+        });
+    }
 }
 
-BaseArray.prototype = {
-    ...SD2DNode.prototype,
-    BASE_ARRAY: true,
+Object.assign(BaseArray.prototype, {
     x: Factory.handlerLowPrecise("x"),
     y: Factory.handlerLowPrecise("y"),
     start: Factory.handler("start"),
@@ -232,4 +232,4 @@ BaseArray.prototype = {
         if (typeof element[method] !== "function") ErrorLauncher.methodNotFound(element, method);
         return element;
     },
-};
+});

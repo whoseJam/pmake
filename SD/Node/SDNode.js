@@ -9,27 +9,56 @@ import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 let id = 0;
 
 export function getTargetLayer(target) {
-    if (Check.isTypeOfSDNode(target)) return target.layer();
+    if (target instanceof SDNode) return target.layer();
     return target;
 }
 
-export function SDNode(target) {
-    this.id = ++id;
-    this._ = {
-        ready: false, // only when ready = true, the action can impact the node
-        layer: undefined,
-        layers: {},
-        parent: undefined,
-        animate: new Animate(this),
-        children: new Children(this),
-        interact: new Interact(this),
-        updaters: {},
-        freezing: 0,
-    };
+export class SDNode {
+    constructor(target) {
+        this.id = ++id;
+        this._ = {
+            ready: false, // only when ready = true, the action can impact the node
+            layer: undefined,
+            layers: {},
+            parent: undefined,
+            animate: new Animate(this),
+            children: new Children(this),
+            interact: new Interact(this),
+            updaters: {},
+            freezing: 0,
+        };
 
-    this._.layers.__targetLayer = getTargetLayer(target);
+        this._.layers.__targetLayer = getTargetLayer(target);
 
-    this.vars = reactive({});
+        this.vars = reactive({});
+    }
+    static extend(clazz) {
+        if (!this.__parentClass) this.__parentClass = [];
+        this.__parentClass.push(clazz);
+    }
+    static [Symbol.hasInstance](object) {
+        if (!object) return false;
+        let flag = false;
+        const visited = new Set();
+        const dfs = currentProto => {
+            if (currentProto === null) return;
+            if (visited.has(currentProto)) return;
+            if (currentProto === this.prototype) flag = true;
+            if (flag) return;
+            visited.add(currentProto);
+            if (currentProto.constructor.__parentClass) {
+                currentProto.constructor.__parentClass.forEach(clazz => {
+                    if (flag) return;
+                    dfs(clazz.prototype);
+                    if (flag) return;
+                });
+            }
+            if (flag) return;
+            dfs(Object.getPrototypeOf(currentProto));
+        };
+        dfs(Object.getPrototypeOf(object));
+        return flag;
+    }
 }
 
 function forward(comp, func) {
@@ -47,10 +76,7 @@ function forwardWithReturn(comp, func) {
     };
 }
 
-SDNode.prototype = {
-    ...SDNode.prototype,
-    BASE_SDNODE: true,
-
+Object.assign(SDNode.prototype, {
     type(type) {
         if (type === undefined) return this._.layer.getAttribute("type");
         this._.layer.setAttribute("type", type);
@@ -67,7 +93,7 @@ SDNode.prototype = {
         ErrorLauncher.notImplementedYet("newLayer", this.type());
     },
     attachTo(target) {
-        if (Check.isTypeOfSDNode(target)) {
+        if (target instanceof SDNode) {
             // parent is SDNode
             this._.layer.moveTo(target.layer());
         } else {
@@ -79,7 +105,7 @@ SDNode.prototype = {
 
     childAs() {
         const args = [...arguments];
-        const child = args.filter(arg => Check.isTypeOfSDNode(arg))[0];
+        const child = args.filter(arg => arg instanceof SDNode)[0];
         const rule = args.filter(arg => typeof arg === "function")[0];
         const update = () => {
             if (child._.parent !== this && !child.onEnter()) child.attachTo(this);
@@ -199,4 +225,4 @@ SDNode.prototype = {
             element.triggerEnter(this, update);
         } else update();
     },
-};
+});

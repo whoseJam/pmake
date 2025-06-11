@@ -1,4 +1,4 @@
-import { Check } from "./Check";
+import { SDNode } from "@/Node/SDNode";
 
 export class ErrorLauncher {
     static unknownKeyError(key) {
@@ -21,7 +21,7 @@ export class ErrorLauncher {
         throw new Error("The component somehow get into an invalid status.");
     }
     static nodeNotFound(node) {
-        if (Check.isTypeOfSDNode(node)) {
+        if (node instanceof SDNode) {
             console.log(node);
             throw new Error("Tree/Graph node above not found.");
         } else {
@@ -29,19 +29,17 @@ export class ErrorLauncher {
         }
     }
     static linkNotFound(source, target) {
-        if (Check.isTypeOfSDNode(source) && !Check.isTypeOfSDNode(target)) {
+        let sourceLabel;
+        let targetLabel;
+        if (source instanceof SDNode) {
             console.log("source =", source);
-            throw new Error(`Tree/Graph link[source, ${target}] not found.`);
-        } else if (!Check.isTypeOfSDNode(source) && Check.isTypeOfSDNode(target)) {
+            sourceLabel = "source";
+        } else sourceLabel = source;
+        if (target instanceof SDNode) {
             console.log("target =", target);
-            throw new Error(`Tree/Graph link[${source}, target] not found.`);
-        } else if (Check.isTypeOfSDNode(source) && Check.isTypeOfSDNode(target)) {
-            console.log("source =", source);
-            console.log("target =", target);
-            throw new Error(`Tree/Graph link[source, target] not found`);
-        } else {
-            throw new Error(`Tree/Graph link[${source}, ${target}] not found.`);
+            targetLabel = "target";
         }
+        throw new Error(`Tree/Graph link[${source},${target}] not found.`);
     }
     static lcaNotFound() {
         throw new Error("LCA NOT FOUND.");

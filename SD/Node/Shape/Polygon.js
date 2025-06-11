@@ -1,12 +1,15 @@
+import { BaseShape } from "@/Node/Shape/BaseShape";
 import { Cast } from "@/Utility/Cast";
 import { polygon } from "@flatten-js/core";
 
-export function Polygon(target, points = []) {
-    const { PolygonSVG } = require("@/Node/SVG/Shape/PolygonSVG");
-    return new PolygonSVG(target, points);
+export class Polygon extends BaseShape {
+    constructor(target, points = []) {
+        const { PolygonSVG } = require("@/Node/SVG/Shape/PolygonSVG");
+        return new PolygonSVG(target, points);
+    }
 }
 
-Polygon.prototype = {
+Object.assign(Polygon.prototype, {
     toPolygon() {
         return polygon(this.vars.points.map(v => v));
     },
@@ -25,21 +28,8 @@ Polygon.prototype = {
     width(width) {
         if (arguments.length === 0) return this.vars.width;
         const x = this.x();
-        const oldWidth = this.width();
         const k = width / this.width();
         this.vars.width = width;
-        console.log(
-            "points=",
-            this.points(),
-            "aftermap=",
-            this.points().map(v => [(v[0] - x) * k + x, v[1]]),
-            "k=",
-            k,
-            "width=",
-            width,
-            "old_width=",
-            oldWidth
-        );
         return this.__points(this.points().map(v => [(v[0] - x) * k + x, v[1]]));
     },
     height(height) {
@@ -61,9 +51,7 @@ Polygon.prototype = {
     },
     __points(points) {
         if (arguments.length === 0) return this.vars.points;
-        // console.log("__points=", points);
-        // console.trace();
         this.vars.points = points;
         return this;
     },
-};
+});

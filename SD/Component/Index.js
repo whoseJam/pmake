@@ -1,9 +1,9 @@
 import { Enter as EN } from "@/Node/Core/Enter";
 import { Exit as EX } from "@/Node/Core/Exit";
+import { BaseGrid } from "@/Node/Grid/BaseGrid";
 import { SD2DNode } from "@/Node/SD2DNode";
 import { Text } from "@/Node/SVG/Text";
 import { Rule as R } from "@/Rule/Rule";
-import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 
@@ -12,7 +12,7 @@ function asideRule(element, index, location, gap) {
 }
 
 function getStart(parent, location) {
-    if (Check.isTypeOfGrid(parent)) {
+    if (parent instanceof BaseGrid) {
         if (parent.axis() === "row") {
             return location === "t" || location === "b" ? parent.startM() : parent.startN();
         } else {
@@ -22,7 +22,7 @@ function getStart(parent, location) {
 }
 
 function getLength(parent, location) {
-    if (Check.isTypeOfGrid(parent)) {
+    if (parent instanceof BaseGrid) {
         if (parent.axis() === "row") {
             return location === "t" || location === "b" ? parent.m() : parent.n();
         } else {
@@ -36,7 +36,7 @@ function getGap(gap, parent, location) {
 }
 
 function getElement(parent, location, i) {
-    if (Check.isTypeOfGrid(parent)) {
+    if (parent instanceof BaseGrid) {
         if (parent.axis() === "row") {
             if (location === "t") {
                 for (let rowId = parent.startN(); rowId <= parent.endN(); rowId++) if (parent.endM(rowId) >= i) return parent.element(rowId, i);

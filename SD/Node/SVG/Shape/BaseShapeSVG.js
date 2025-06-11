@@ -1,9 +1,7 @@
 import { BaseSVG } from "@/Node/SVG/BaseSVG";
 
-export function BaseShapeSVG(target, label) {
-    BaseSVG.call(this, target, label);
+export class BaseShapeSVG extends BaseSVG {
+    constructor(target, label) {
+        super(target, label);
+    }
 }
-
-BaseShapeSVG.prototype = {
-    ...BaseSVG.prototype,
-};

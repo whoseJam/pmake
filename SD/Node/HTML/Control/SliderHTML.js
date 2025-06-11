@@ -1,24 +1,26 @@
+import { Slider } from "@/Node/Control/Slider";
 import { BaseControlHTML } from "@/Node/HTML/Control/BaseControlHTML";
 
-export function SliderHTML(target) {
-    BaseControlHTML.call(this, target, "input");
+export class SliderHTML extends BaseControlHTML {
+    constructor(target) {
+        super(target, "input");
 
-    this.type("SliderHTML");
+        this.type("SliderHTML");
 
-    this.vars.merge({
-        width: 80,
-        height: 20,
-    });
+        this.vars.merge({
+            width: 80,
+            height: 20,
+        });
 
-    this._.layer.setAttribute("width", `${this.vars.width}px`);
-    this._.layer.setAttribute("height", `${this.vars.height}px`);
-    this._.nake.setAttribute("type", "range");
-    this._.nake.setAttribute("min", 0);
-    this._.nake.setAttribute("max", 10);
+        this._.layer.setAttribute("width", `${this.vars.width}px`);
+        this._.layer.setAttribute("height", `${this.vars.height}px`);
+        this._.nake.setAttribute("type", "range");
+        this._.nake.setAttribute("min", 0);
+        this._.nake.setAttribute("max", 10);
+    }
 }
 
-SliderHTML.prototype = {
-    ...BaseControlHTML.prototype,
+Object.assign(SliderHTML.prototype, {
     max(value) {
         if (value === undefined) return +this._.nake.getAttribute("max");
         this._.nake.setAttribute("max", value);
@@ -34,4 +36,6 @@ SliderHTML.prototype = {
         this._.nake.setAttribute("value", value);
         return this;
     },
-};
+});
+
+SliderHTML.extend(Slider);

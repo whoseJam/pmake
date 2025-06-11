@@ -1,5 +1,5 @@
 import { Animate } from "@/Animate/Animate";
-import { Check } from "@/Utility/Check";
+import { SDNode } from "@/Node/SDNode";
 
 global.ACTION_TICK = 0;
 
@@ -70,7 +70,7 @@ export class Action {
         if (this.channel === "moveTo") return true;
         if (this.channel === "remove") return true;
         if (this.r - this.l < 1) return true;
-        if (Check.isTypeOfSDNode(this.owner)) {
+        if (this.owner instanceof SDNode) {
             return this.owner._.ready;
         } else return true;
     }
@@ -78,7 +78,7 @@ export class Action {
         if (this.channel === "appear") return true;
         if (this.channel === "moveTo") return true;
         if (this.channel === "remove") return true;
-        if (Check.isTypeOfSDNode(this.owner)) return this.owner._.created;
+        if (this.owner instanceof SDNode) return this.owner._.created;
         return true;
     }
     is(flag) {
