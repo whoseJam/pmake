@@ -183,6 +183,7 @@ Object.assign(SDNode.prototype, {
     },
     click: forward("interact", "click"),
     onClick: forward("interact", "onClick"),
+    dblClick: forward("interact". "dblClick"),
     onDblClick: forward("interact", "onDblClick"),
     onChange: forward("interact", "onChange"),
 
