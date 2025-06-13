@@ -1,8 +1,5 @@
 import { SDNode } from "@/Node/SDNode";
 
-/**
- * 定义了当一个 SDNode 在与另一个 SDNode 脱离父子关系的过程中，应该如何执行过渡动画
- */
 export class Exit {
     /**
      * 子节点逐渐从不透明变成透明，从正确的位置上消失

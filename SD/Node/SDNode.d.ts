@@ -26,21 +26,21 @@ export class SDNode {
      * Determines whether the component's aspect ratio is fixed.
      * Components with a fixed aspect ratio include sd.Text and similar elements.
      * Most components do not have a fixed aspect ratio.
-     * @returns {boolean} Returns true if the aspect ratio is fixed; otherwise, false.
+     * @returns Returns true if the aspect ratio is fixed; otherwise, false.
      */
     fixAspect(): boolean;
 
     /**
      * Retrieves the default render layer for this component.
      * The layer determines the display order and may affect visual stacking (z-index).
-     * @returns {RenderNode} The render layer associated with this component.
+     * @returns The render layer associated with this component.
      */
     layer(): RenderNode;
     /**
      * Retrieves a named render layer for this component.
      * The layer determines the display order and visual stacking (z-index).
      * @param name - The unique identifier for the render layer.
-     * @returns {RenderNode} The render layer associated with the specified name.
+     * @returns The render layer associated with the specified name.
      */
     layer(name: string): RenderNode;
     /**
@@ -70,19 +70,19 @@ export class SDNode {
     /**
      * Retrieves a child component by its identifier.
      * @param name - The unique identifier assigned to the child component.
-     * @returns {SDNode} The child component associated with the specified name.
+     * @returns The child component associated with the specified name.
      */
     child(name: string | number): SDNode;
     /**
      * Checks if a child component exists within this component.
      * @param child - The identifier or instance of the child component to check.
-     * @returns {boolean} Returns true if the chidl exists; otherwise, false.
+     * @returns Returns true if the chidl exists; otherwise, false.
      */
     hasChild(child: string | number | SDNode): boolean;
     /**
      * Removes a child component from this component.
      * @param child - The identifier or instance of the child component to remove.
-     * @returns {SDNode | undefined} The removed child component if it existed; otherwise, undefined.
+     * @returns The removed child component if it existed; otherwise, undefined.
      */
     eraseChild(child: string | number | SDNode): SDNode | undefined;
     /**
@@ -110,16 +110,12 @@ export class SDNode {
      * - All property changes between `startAnimate()` and `endAnimate()` are animated.
      *
      * @example
-     * Move a rectangle to (100, 100) and resize it to (50, 80):
-     * ```typescript
+     * // Move a rectangle to (100, 100) and resize it to (50, 80)
      * rect.startAnimate().x(100).y(100).width(50).height(80).endAnimate();
-     * ```
      *
      * @example
-     * Create a slow color transition for a circle:
-     * ```typescript
+     * // Create a slow color transition for a circle
      * circle.startAnimate(5000).color(C.red).endAnimate();
-     * ```
      */
     startAnimate(duration?: number);
     /**
@@ -147,15 +143,30 @@ export class SDNode {
     endAnimate(): this;
     /**
      * Checks if the component is currently animating.
-     * @returns {boolean} Returns true if the component is actively animating; otherwise, false.
+     * @returns Returns true if the component is actively animating; otherwise, false.
      */
     isAnimating(): boolean;
     /**
      * Retrieves the delay of current animation sequence.
      * This method returns the time offset from the animation's start time.
-     * @returns {number} The delay duration in milliseconds.
+     * @returns The delay duration in milliseconds.
      */
     delay(): number;
+    /**
+     * Creates a temporal dependency between animations, either delaying the start
+     * of this animation by a specified duration or scheduling it to start
+     * immediately after another component's animation completes.
+     *
+     * @example
+     * // Animate rectangles sequentially with temporal dependencies
+     * rect1.startAnimate().dx(100).endAnimate();
+     * rect2.after(rect1).startAnimate().dx(100).endAnimate();
+     * rect3.after(rect2).startAnimate().dx(100).endAnimate();
+     *
+     * @param delay - The delay in milliseconds before starting the animation,
+     *                or an SDNode whose animation completion triggers this animation.
+     * @returns This instance for method chaining.
+     */
     after(delay: number | SDNode): this;
     /**
      * Retrieves the duration of current animation sequence.

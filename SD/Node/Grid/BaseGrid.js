@@ -89,7 +89,7 @@ Object.assign(BaseGrid.prototype, {
             return this.forEachElement(element => element.color(color));
         } else if (arguments.length === 2) {
             const [i, j] = arguments;
-            const element = this.__getElementWithMethod(i, j);
+            const element = this.__getElementWithMethod(i, j, "color");
             return element.color();
         } else {
             const [i, j, color] = arguments;

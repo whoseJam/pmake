@@ -2,9 +2,6 @@ import { SDNode } from "@/Node/SDNode";
 import { BaseTree } from "@/Node/Tree/BaseTree";
 import { RenderNode } from "@/Renderer/RenderNode";
 
-/**
- * 箱子树组件
- */
 export class BoxTree extends BaseTree {
     constructor(target: SDNode | RenderNode);
 
