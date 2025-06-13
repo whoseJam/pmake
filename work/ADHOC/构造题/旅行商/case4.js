@@ -12,6 +12,6 @@ sd.init(() => {
 
 sd.main(async () => {
     await sd.pause();
-    sd.Link(graph.S(), graph.vertex()).startAnimate().pointStoT().endAnimate().arrow();
-    sd.Link(graph.vertex(), graph.T()).startAnimate().pointStoT().endAnimate().arrow();
+    sd.Link(graph.vertex(), graph.S()).stroke(C.textBlue).startAnimate().pointStoT().endAnimate();
+    sd.Link(graph.vertex(), graph.T()).stroke(C.textBlue).startAnimate().pointStoT().endAnimate();
 });

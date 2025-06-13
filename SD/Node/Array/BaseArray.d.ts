@@ -3,16 +3,75 @@ import { SDNode } from "@/Node/SDNode";
 import { PacketColor, SDColor } from "@/Utility/Color";
 
 export class BaseArray extends SD2DNode {
+    /**
+     * Retrieves the index of the first element in this array component.
+     * @returns The index of the first element.
+     */
     start(): number;
+    /**
+     * Sets the index of the first element in this array component.
+     *
+     * The index of the first element is 0 by default, affecting how
+     * elements are indexed.
+     * @param start - The new start index value to apply.
+     * @returns The current instance for method chaining.
+     */
     start(start: number): this;
+    /**
+     * Retrieves the index of the last element in this array component.
+     *
+     * The end index is dynamically calculated based on the start index and
+     * the number of elements in the array. It represents the highest valid
+     * index within the current array structure.
+     * @returns The index of the last element, or `this.start() - 1` if the array is empty.
+     */
     end(): number;
-    length(): number;
-    length(length: number): this;
-    resize(length: number): this;
-    idx(id: number): number;
-    indexOf(element: SDNode): number;
 
-    element(id: number): SDNode | undefined;
+    /**
+     * Retrieves the number of elements in this array component.
+     * @returns The number of elements in the array.
+     */
+    length(): number;
+    /**
+     * Adjusts the number of elements in this array component.
+     * - If the target length is **greater** than the current size:
+     *   Empty elements are appended to the end of the array.
+     * - If the target length is **less** than the current size:
+     *   Elements are removed from the end of the array.
+     * @param length - The new number of elements to set.
+     *                 Must be a non-negative integer.
+     * @returns The current instance for method chaining.
+     */
+    length(length: number): this;
+    /**
+     * Adjusts the number of elements in this array component.
+     * - If the target length is **greater** than the current size:
+     *   Empty elements are appended to the end of the array.
+     * - If the target length is **less** than the current size:
+     *   Elements are removed from the end of the array.
+     * @param length - The new number of elements to set.
+     *                 Must be a non-negative integer.
+     * @returns The current instance for method chaining.
+     */
+    resize(length: number): this;
+    /**
+     * Retrieves the index of a specific element within this array component.
+     * @param element - The SDNode instance to locate.
+     * @returns The index of the element, or -1 if not found.
+     */
+    indexOf(element: SDNode): number;
+    /**
+     * Retrieves the element at the specified index.
+     *
+     * Returns the SDNode instance at the given index, or undefined if
+     * the index is out of the valid range.
+     * @param i - The index of the element to retrieve.
+     * @returns The element at the specified index, or undefined if not found.
+     */
+    element(i: number): SDNode | undefined;
+    /**
+     *
+     */
     elements(): Array<SDNode>;
     lastElement(): SDNode | undefined;
     firstElement(): SDNode | undefined;

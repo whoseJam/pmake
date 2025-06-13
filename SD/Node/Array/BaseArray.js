@@ -37,16 +37,13 @@ Object.assign(BaseArray.prototype, {
     resize(size) {
         return this.length(size);
     },
-    idx(i) {
-        return i - this.start();
-    },
     indexOf(element) {
         for (let i = this.start(); i <= this.end(); i++) if (this.element(i) === element) return i;
         return -1;
     },
 
     element(i) {
-        const id = this.idx(i);
+        const id = this.__idx(i);
         if (0 <= id && id < this.length()) return this.vars.elements[id];
         return undefined;
     },
@@ -212,9 +209,12 @@ Object.assign(BaseArray.prototype, {
         return this;
     },
 
+    __idx(i) {
+        return i - this.start();
+    },
     __insert(id, element) {
         this.childAs(element);
-        const idx = this.idx(id);
+        const idx = this.__idx(id);
         if (idx < 0 || idx > this.length()) ErrorLauncher.outOfRangeError(id);
         this.vars.elements.splice(idx, 0, element);
         return this;
@@ -222,7 +222,7 @@ Object.assign(BaseArray.prototype, {
     __erase(id) {
         const element = this.element(id);
         const elements = this.vars.elements;
-        elements.splice(this.idx(id), 1);
+        elements.splice(this.__idx(id), 1);
         this.eraseChild(element);
         return this;
     },
