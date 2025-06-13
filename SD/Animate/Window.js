@@ -24,6 +24,7 @@ D.onKeyDown("p", prevFrame);
 function lastMainFrame() {
     if (window.SHOULD_EXPORT) A.forceToFinish();
     if (window.SHOULD_FLUSH) {
+        if (window.PUPPETEER) return;
         Message.notifyParent(); // set the animation size of parent window
         if (window.SHOULD_EXPORT) {
             throw new Error("Not Implemented Yet");

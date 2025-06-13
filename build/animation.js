@@ -34,7 +34,7 @@ function validateJSFile(sourceFilePath) {
  * @returns {NodeJS.ReadWriteStream}
  */
 function task(source, targetFolder) {
-    source = source.replace("\\", "/");
+    source = source.replaceAll("\\", "/");
     validateJSFile(source);
     const file = String(source).split("/").slice(-1)[0].split(".")[0];
     const config = getConfiguration(file);
