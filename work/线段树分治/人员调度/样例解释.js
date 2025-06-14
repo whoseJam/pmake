@@ -42,7 +42,7 @@ sd.init(() => {
             if (focus.hsj.nodeId !== tree.fatherId(node)) return;
             sd.inter(async () => {
                 const [_nodeId, _arrayId] = [focus.hsj.nodeId, focus.hsj.arrayId];
-                focus.focus(null);
+                focus.startAnimate().focus(null).endAnimate();
                 focus.hsj = undefined;
                 const box = tree.element(_nodeId).child("arr").startAnimate().dropElement(_arrayId).endAnimate();
                 node.child("arr").startAnimate().pushFromExistElement(box).endAnimate();
@@ -75,10 +75,10 @@ function elementCallback(nodeId, array) {
     const arrayId = array.indexOf(this);
     sd.inter(async () => {
         if (focus.hsj && focus.hsj.nodeId === nodeId && focus.hsj.arrayId === arrayId) {
-            focus.focus(null);
+            focus.startAnimate().focus(null).endAnimate();
             focus.hsj = undefined;
         } else {
-            focus.focus(this);
+            focus.startAnimate().focus(this).endAnimate();
             focus.hsj = {
                 nodeId,
                 arrayId,
