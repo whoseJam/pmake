@@ -57,7 +57,7 @@ export class BaseArray extends SD2DNode {
     /**
      * Retrieves the index of a specific element within this array component.
      * @param element - The SDNode instance to locate.
-     * @returns The index of the element, or -1 if not found.
+     * @returns The index of the specific element, or -1 if not found.
      */
     indexOf(element: SDNode): number;
     /**
@@ -65,36 +65,143 @@ export class BaseArray extends SD2DNode {
      *
      * Returns the SDNode instance at the given index, or undefined if
      * the index is out of the valid range.
-     * @param i - The index of the element to retrieve.
+     * @param i - The index of the specific element to retrieve.
      * @returns The element at the specified index, or undefined if not found.
      */
     element(i: number): SDNode | undefined;
     /**
+     * Retrieves all elements contained within this array component.
      *
+     * Note that the array's child count may exceed the number of elements if it contains
+     * non-element components (e.g., labels, pointers, indexes).
+     * @returns An array containing all valid SDNode elements in this component.
      */
     elements(): Array<SDNode>;
+    /**
+     * Retrieves the last element in this array component.
+     * @returns The last element, or undefined if the array is empty.
+     */
     lastElement(): SDNode | undefined;
+    /**
+     * Retrieves the first element in this array component.
+     * @returns The first element, or undefined if the array is empty.
+     */
     firstElement(): SDNode | undefined;
+    /**
+     * Iterates over each element in this array component.
+     *
+     * Executes the provided callback function once for each valid element,
+     * in ascending logical index order. The callback receives:
+     * 1. The current element (SDNode).
+     * 2. The index of the specific element.
+     * @param callback - A function to execute for each element.
+     * @returns The current instance for method chaining.
+     */
     forEachElement(callback: (element: SDNode, id: number) => void): this;
 
-    opacity(id: number): number;
-    opacity(id: number, opacity: number): this;
+    /**
+     * Retrieves the opacity value of a specific element.
+     * @param i - The index of the specific element.
+     * @returns The current opacity value of the element.
+     */
+    opacity(i: number): number;
+    /**
+     * Sets the opacity value of a specific element.
+     * @param i - The index of the specific element.
+     * @param opacity The opacity value to apply
+     * @returns The current instance for method chaining.
+     */
+    opacity(i: number, opacity: number): this;
+    /**
+     * Applies a uniform color to all elements in this array component.
+     * @param color - The color to apply.
+     * @returns The current instance for method chaining.
+     */
     color(color: SDColor): this;
-    color(id: number): PacketColor;
-    color(id: number, color: SDColor): this;
+    /**
+     * Retrieves the color of a specific element.
+     * @param i - The index of the specific element.
+     * @returns The color of the element.
+     */
+    color(i: number): PacketColor;
+    /**
+     * Sets the color of a specific element.
+     * @param i - The index of the specific element to modify.
+     * @param color - The color to apply.
+     * @returns The current instance for method chaining.
+     */
+    color(i: number, color: SDColor): this;
+    /**
+     * Sets the color of elements within the specified range [l, r].
+     * @param l - The start index of the range (inclusive).
+     * @param r - The end index of the range (inclusive).
+     * @param color - The color to apply.
+     * @returns The current instance for method chaining.
+     */
     color(l: number, r: number, color: SDColor): this;
-    text(id: number): string;
-    text(id: number, text: string): this;
-    intValue(id: number): number;
-    value(id: number): SDNode;
-    value(id: number, value: SDNode): this;
+    /**
+     * Retrieves the text content of a specific element.
+     * @param i - The index of the specific element.
+     * @returns The text content of the element.
+     */
+    text(i: number): string;
+    /**
+     * Sets the text content of a specific element.
+     * @param i - The index of the specific element.
+     * @param text - The text content to set.
+     * @returns The current instance for method chaining.
+     */
+    text(i: number, text: string): this;
+    /**
+     * Casts the value inside a specific element to its integer representation.
+     * - If the value does not exists, returns zero.
+     * - If the value cannot be casted to an integer, throws an Error.
+     * @param i - The index of the specific element.
+     * @returns The integer representation of the value.
+     */
+    intValue(i: number): number;
+    /**
+     * Retrieves the value component inside a specific element.
+     * @param i - The index of the specific element.
+     * @returns The value component instance, or undefined if no value has been set.
+     */
+    value(i: number): SDNode | undefined;
+    /**
+     * Sets the value component inside a specific element.
+     * - Replace any existing value component with the provided content.
+     * - If `value` is null/undefined, removes the current value without replacement.
+     * - Non-SDNode value is automatically converted to **`sd.Text`** instance.
+     * @param i - The index of the specific element.
+     * @param value - The content to set as the value.
+     * @returns The current component instance for method chaining.
+     */
+    value(i: number, value: SDNode): this;
 
-    insert(id: number, value: any): this;
+    /**
+     * Inserts a value at the specified position.
+     * Handles both direct value insertion and element wrapping:
+     * - If the array is using strategy value-as-element, inserts the value as-is.
+     * - If the array is using strategy value-inside-element, wraps the value in an element first.
+     * @param i - The target index for insertion.
+     * @param value - The value to insert.
+     * @returns The current instance for method chaining.
+     */
+    insert(i: number, value: any): this;
     insertFromExistValue(id: number, value: SDNode): this;
     insertFromExistElement(id: number, element: SDNode): this;
+    /**
+     * Appends a value to the end of this array component.
+     * @param value - The value to append.
+     * @returns The current instance for method chaining.
+     */
     push(value: any): this;
     pushFromExistValue(value: SDNode): this;
     pushFromExistElement(element: SDNode): this;
+    /**
+     * Appends all elements from an array to the end of this array component.
+     * @param array - The array of elements to append.
+     * @returns The current instance for method chaining.
+     */
     pushArray(array: Array<any>): this;
 
     erase(id: number): this;

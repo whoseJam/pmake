@@ -1,0 +1,45 @@
+<section>
+    <section>
+        <h1>校门外的树</h1>
+    </section>
+    <problem data-source="https://www.luogu.com.cn/problem/P1047"></problem>
+    <section>
+        <h2>校门外的树</h2>
+        <p>在一个长度为 $l$ 的区间上初始种满了树，现在需要移走部分区间中的树，区间可能有重合</p>
+        <p>给出移动完后，还有多少棵树</p>
+    </section>
+    <section>
+        <h2>校门外的树</h2>
+        <p>模拟移树过程，用一个数组标记每个位置上是否有树</p>
+        <codeblock>
+            <script type="text/template">
+                void remove(int l, int r) {
+                    for (int i = l; i <= r; i++)
+                        arr[i] = false;
+                }
+                int count() {
+                    int ans = 0;
+                    for (int i = 0; i <= l; i++)
+                        if (arr[i]) ans++;
+                    return ans;
+                }
+            </script>
+        </codeblock>
+    </section>
+    <section>
+        <h2>校门外的树</h2>
+        <p>稍微改一下数据范围，$l\le 10^6$，$m\le 10^5$，保证给出的区间长度之和不超过 $10^6$，多组数据 $T\le 10^5$，还能做吗？</p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                void remove(int l, int r) {
+                    for (int i = l; i <= r; i++)
+                        if (arr[i] != T) ans--, arr[i] = T;
+                }
+                void nextTestCase() {
+                    T++;
+                }
+            </script>
+        </codeblock>
+        <p class="fragment">可以考虑使用<b>时间戳</b>实现数组的 $O(1)$ 清空</p>
+    </section>
+</section>

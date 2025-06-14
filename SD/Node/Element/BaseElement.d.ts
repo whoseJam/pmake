@@ -134,7 +134,7 @@ export class BaseElement extends SD2DNode {
     text(): string;
     /**
      * Sets the text content of the value inside this element.
-     * - If no value exists, creates a new `sd.Text` instance to hold the text.
+     * - If no value exists, creates a new **`sd.Text`** instance to hold the text.
      * - If the current value does not support text formatting, throws a TypeError.
      * @param text - The text content to set.
      * @returns The current component instance for method chaining.
@@ -149,19 +149,15 @@ export class BaseElement extends SD2DNode {
     intValue(): number;
     /**
      * Retrieves the value component of this element.
-     *
-     * Returns the SD2DNode instance representing the value content,
-     * or undefined if no value has been set.
-     * @returns The value component instance, or undefined if absent.
+     * @returns The value component instance, or undefined if no value has been set.
      */
     value(): SD2DNode | undefined;
     /**
      * Sets the value component inside this element.
      * - Replaces any existing value component with the provided content.
      * - If `value` is null/undefined, removes the current value without replacement.
-     * - Non-SDNode values are automatically converted to SDNode instances.
-     * - Optionally, provide a responsive rule to define layout behavior between the element and its value.
-     * @param value - The content to set as the value. Non-SDNode values will be converted automatically.
+     * - Non-SDNode value is automatically converted to **`sd.Text`** instance.
+     * @param value - The content to set as the value.
      * @param rule - Optional responsive rule defining the parent-child relationship between the element and its value.
      * @returns The current component instance for method chaining.
      */

@@ -91,8 +91,8 @@ export class SDNode {
      * For child components, prefer using the parent's removal method (e.g., `parent.eraseChild()`).
      *
      * Examples:
-     * - To remove the i-th element from an `sd.Array`, use `array.erase(i)`.
-     * - To remove the (i,j)-th element from an `sd.Grid`, use `grid.erase(i, j)`.
+     * - To remove the i-th element from `sd.Array`, use `array.erase(i)`.
+     * - To remove the (i,j)-th element from `sd.Grid`, use `grid.erase(i, j)`.
      *
      * @returns The current component instance for method chaining.
      */
