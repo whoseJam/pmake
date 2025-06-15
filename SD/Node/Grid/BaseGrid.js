@@ -29,15 +29,9 @@ Object.assign(BaseGrid.prototype, {
     },
     endM(i) {
         if (arguments.length === 0) return this.startM() + this.m() - 1;
-        const _i = this.idxN(i);
+        const _i = this.__idxN(i);
         if (_i >= this.vars.elements.length || _i < 0) return this.startM() - 1;
-        return this.startM() + this.vars.elements[this.idxN(i)].length - 1;
-    },
-    idxN(i) {
-        return i - this.startN();
-    },
-    idxM(j) {
-        return j - this.startM();
+        return this.startM() + this.vars.elements[this.__idxN(i)].length - 1;
     },
     n(n) {
         if (arguments.length === 0) return this.vars.n;
@@ -53,7 +47,7 @@ Object.assign(BaseGrid.prototype, {
     },
 
     element(i, j) {
-        const [_i, _j] = [this.idxN(i), this.idxM(j)];
+        const [_i, _j] = [this.__idxN(i), this.__idxM(j)];
         if (0 <= _i && _i < this.vars.elements.length && 0 <= _j && _j < this.vars.elements[_i].length) return this.vars.elements[_i][_j];
         return undefined;
     },
@@ -199,9 +193,15 @@ Object.assign(BaseGrid.prototype, {
         return this;
     },
 
+    __idxN(i) {
+        return i - this.startN();
+    },
+    __idxM(j) {
+        return j - this.startM();
+    },
     __insert(i, j, element) {
-        const ri = this.idxN(i);
-        const rj = this.idxM(j);
+        const ri = this.__idxN(i);
+        const rj = this.__idxM(j);
         if (ri < 0) ErrorLauncher.outOfRangeError(i, j);
         this.childAs(element);
         const elements = this.vars.elements;
@@ -214,8 +214,8 @@ Object.assign(BaseGrid.prototype, {
     },
     __erase(i, j) {
         const element = this.element(i, j);
-        const ri = this.idxN(i);
-        const rj = this.idxM(j);
+        const ri = this.__idxN(i);
+        const rj = this.__idxM(j);
         const elements = this.vars.elements;
         elements[ri].splice(rj, 1);
         this.eraseChild(element);

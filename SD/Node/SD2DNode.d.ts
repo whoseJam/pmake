@@ -5,13 +5,13 @@ type YLocator = "y" | "cy" | "my";
 
 export class SD2DNode extends SDNode {
     /**
-     * Retrieves the current opacity value of this component.
-     * @returns The opacity value of the component.
+     * Retrieves the current opacity of this component.
+     * @returns The opacity of the component.
      */
     opacity(): number;
     /**
      * Sets the opacity of this component.
-     * @param opacity - The opacity value to apply, ranging from 0 (fully transparent) to 1 (fully opaque).
+     * @param opacity - The opacity to apply, ranging from 0 (fully transparent) to 1 (fully opaque).
      * @returns The current component instance for method chaining.
      */
     opacity(opacity: number): this;

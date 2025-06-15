@@ -64,13 +64,13 @@ export class BaseElement extends SD2DNode {
      */
     fill(fill: HexColor): this;
     /**
-     * Retrieves the opacity value of this element's fill color.
-     * @returns The fill opacity value, ranging from 0 (fully transparent) to 1 (fully opaque).
+     * Retrieves the opacity of this element's fill color.
+     * @returns The fill opacity, ranging from 0 (fully transparent) to 1 (fully opaque).
      */
     fillOpacity(): number;
     /**
-     * Sets the opacity value of this element's fill color.
-     * @param opacity - The opacity value to apply, ranging from 0 (fully transparent) to 1 (fully opaque).
+     * Sets the opacity of this element's fill color.
+     * @param opacity - The opacity to apply, ranging from 0 (fully transparent) to 1 (fully opaque).
      * @returns The current component instance for method chaining.
      */
     fillOpacity(opacity: number): this;
@@ -90,13 +90,13 @@ export class BaseElement extends SD2DNode {
      */
     stroke(stroke: HexColor): this;
     /**
-     * Retrieves the opacity value of this element's stroke color.
-     * @returns The stroke opacity value, ranging from 0 (fully transparent) to 1 (fully opaque).
+     * Retrieves the opacity of this element's stroke color.
+     * @returns The stroke opacity, ranging from 0 (fully transparent) to 1 (fully opaque).
      */
     strokeOpacity(): number;
     /**
-     * Sets the opacity value of this element's stroke color.
-     * @param opacity - The opacity value to apply, ranging from 0 (fully transparent) to 1 (fully opaque).
+     * Sets the opacity of this element's stroke color.
+     * @param opacity - The opacity to apply, ranging from 0 (fully transparent) to 1 (fully opaque).
      * @returns The current component instance for method chaining.
      */
     strokeOpacity(opacity: number): this;
@@ -139,7 +139,7 @@ export class BaseElement extends SD2DNode {
      * @param text - The text content to set.
      * @returns The current component instance for method chaining.
      */
-    text(text: string): this;
+    text(text: number | string): this;
     /**
      * Casts the value inside this element to its integer representation.
      * - If the value does not exists, returns zero.

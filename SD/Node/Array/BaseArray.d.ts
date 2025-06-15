@@ -14,7 +14,7 @@ export class BaseArray extends SD2DNode {
      * The index of the first element is 0 by default, affecting how
      * elements are indexed.
      * @param start - The new start index value to apply.
-     * @returns The current instance for method chaining.
+     * @returns The current component instance for method chaining.
      */
     start(start: number): this;
     /**
@@ -40,7 +40,7 @@ export class BaseArray extends SD2DNode {
      *   Elements are removed from the end of the array.
      * @param length - The new number of elements to set.
      *                 Must be a non-negative integer.
-     * @returns The current instance for method chaining.
+     * @returns The current component instance for method chaining.
      */
     length(length: number): this;
     /**
@@ -51,7 +51,7 @@ export class BaseArray extends SD2DNode {
      *   Elements are removed from the end of the array.
      * @param length - The new number of elements to set.
      *                 Must be a non-negative integer.
-     * @returns The current instance for method chaining.
+     * @returns The current component instance for method chaining.
      */
     resize(length: number): this;
     /**
@@ -62,10 +62,7 @@ export class BaseArray extends SD2DNode {
     indexOf(element: SDNode): number;
     /**
      * Retrieves the element at the specified index.
-     *
-     * Returns the SDNode instance at the given index, or undefined if
-     * the index is out of the valid range.
-     * @param i - The index of the specific element to retrieve.
+     * @param i - The index of the specific element.
      * @returns The element at the specified index, or undefined if not found.
      */
     element(i: number): SDNode | undefined;
@@ -89,33 +86,28 @@ export class BaseArray extends SD2DNode {
     firstElement(): SDNode | undefined;
     /**
      * Iterates over each element in this array component.
-     *
-     * Executes the provided callback function once for each valid element,
-     * in ascending logical index order. The callback receives:
-     * 1. The current element (SDNode).
-     * 2. The index of the specific element.
      * @param callback - A function to execute for each element.
-     * @returns The current instance for method chaining.
+     * @returns The current component instance for method chaining.
      */
     forEachElement(callback: (element: SDNode, id: number) => void): this;
 
     /**
-     * Retrieves the opacity value of a specific element.
+     * Retrieves the opacity of a specific element.
      * @param i - The index of the specific element.
-     * @returns The current opacity value of the element.
+     * @returns The opacity of the element.
      */
     opacity(i: number): number;
     /**
-     * Sets the opacity value of a specific element.
+     * Sets the opacity of a specific element.
      * @param i - The index of the specific element.
-     * @param opacity The opacity value to apply
-     * @returns The current instance for method chaining.
+     * @param opacity The opacity to apply
+     * @returns The current component instance for method chaining.
      */
     opacity(i: number, opacity: number): this;
     /**
      * Applies a uniform color to all elements in this array component.
      * @param color - The color to apply.
-     * @returns The current instance for method chaining.
+     * @returns The current component instance for method chaining.
      */
     color(color: SDColor): this;
     /**
@@ -126,9 +118,9 @@ export class BaseArray extends SD2DNode {
     color(i: number): PacketColor;
     /**
      * Sets the color of a specific element.
-     * @param i - The index of the specific element to modify.
+     * @param i - The index of the specific element.
      * @param color - The color to apply.
-     * @returns The current instance for method chaining.
+     * @returns The current component instance for method chaining.
      */
     color(i: number, color: SDColor): this;
     /**
@@ -136,32 +128,38 @@ export class BaseArray extends SD2DNode {
      * @param l - The start index of the range (inclusive).
      * @param r - The end index of the range (inclusive).
      * @param color - The color to apply.
-     * @returns The current instance for method chaining.
+     * @returns The current component instance for method chaining.
      */
     color(l: number, r: number, color: SDColor): this;
     /**
      * Retrieves the text content of a specific element.
+     *
+     * Throws an error if the element does not implement `text()`.
      * @param i - The index of the specific element.
      * @returns The text content of the element.
      */
     text(i: number): string;
     /**
      * Sets the text content of a specific element.
+     *
+     * Throws an error if the element does not implement `text()`.
      * @param i - The index of the specific element.
      * @param text - The text content to set.
-     * @returns The current instance for method chaining.
+     * @returns The current component instance for method chaining.
      */
-    text(i: number, text: string): this;
+    text(i: number, text: number | string): this;
     /**
-     * Casts the value inside a specific element to its integer representation.
-     * - If the value does not exists, returns zero.
-     * - If the value cannot be casted to an integer, throws an Error.
+     * Retrieves the integer representation of a specific element.
+     *
+     * Throws an error if the element does not implement `intValue()`.
      * @param i - The index of the specific element.
      * @returns The integer representation of the value.
      */
     intValue(i: number): number;
     /**
      * Retrieves the value component inside a specific element.
+     *
+     * Throws an error if the element does not implement `value()`.
      * @param i - The index of the specific element.
      * @returns The value component instance, or undefined if no value has been set.
      */
@@ -184,15 +182,15 @@ export class BaseArray extends SD2DNode {
      * - If the array is using strategy value-inside-element, wraps the value in an element first.
      * @param i - The target index for insertion.
      * @param value - The value to insert.
-     * @returns The current instance for method chaining.
+     * @returns The current component instance for method chaining.
      */
     insert(i: number, value: any): this;
-    insertFromExistValue(id: number, value: SDNode): this;
-    insertFromExistElement(id: number, element: SDNode): this;
+    insertFromExistValue(i: number, value: SDNode): this;
+    insertFromExistElement(i: number, element: SDNode): this;
     /**
      * Appends a value to the end of this array component.
      * @param value - The value to append.
-     * @returns The current instance for method chaining.
+     * @returns The current component instance for method chaining.
      */
     push(value: any): this;
     pushFromExistValue(value: SDNode): this;
@@ -200,16 +198,16 @@ export class BaseArray extends SD2DNode {
     /**
      * Appends all elements from an array to the end of this array component.
      * @param array - The array of elements to append.
-     * @returns The current instance for method chaining.
+     * @returns The current component instance for method chaining.
      */
     pushArray(array: Array<any>): this;
 
-    erase(id: number): this;
+    erase(i: number): this;
     pop(): this;
-    dropElement(id: number): SDNode | undefined;
+    dropElement(i: number): SDNode | undefined;
     dropFirstElement(): SDNode | undefined;
     dropLastElement(): SDNode | undefined;
-    dropValue(id: number): SDNode | undefined;
+    dropValue(i: number): SDNode | undefined;
     dropFirstValue(): SDNode | undefined;
     dropLastValue(): SDNode | undefined;
 

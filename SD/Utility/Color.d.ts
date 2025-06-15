@@ -90,4 +90,13 @@ export class Color {
     static doubleGradient: (start: HexColor, mid: HexColor, end: HexColor, l: number, m: number, r: number) => (grad: number) => HexColor;
 }
 
+/**
+ * Returns the **`Color`** module for color operations.
+ * @returns The Color module.
+ *
+ * @example
+ * const C = sd.color();
+ * element.color(C.red);
+ * element.color(C.random());
+ */
 export function color(): typeof Color;
