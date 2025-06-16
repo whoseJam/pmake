@@ -1,47 +1,88 @@
 import * as sd from "@/sd";
+import { build01TrieTreeSync } from "../../../trie/_/Build01TrieTreeSync";
 
 const svg = sd.svg();
+const V = sd.vec();
 const C = sd.color();
 const R = sd.rule();
-let cnt = 1;
-let ch = {};
 const maxl = 3;
 const values = [0, 2, 6, 7, 4, 5];
 const tree = new sd.BinaryTree(svg).width(400).cx(600).y(100).layerHeight(80);
-tree.root(1);
-ch[1] = {};
+const pathes = [];
 
 sd.init(() => {
-    values.forEach(value => insert(numberToString(value)));
+    const data = values.map(value => numberToString(value));
+    build01TrieTreeSync(tree, data, {
+        onReachEndOfString(u) {
+            tree.element(u).stroke(C.red).strokeWidth(2);
+        },
+    });
 });
 
 sd.main(async () => {
     await sd.pause();
-    tree.element(1, 7).startAnimate().stroke(C.red).endAnimate();
-    tree.element(7, 11).startAnimate().stroke(C.red).endAnimate();
-    tree.element(11, 13).startAnimate().stroke(C.red).endAnimate();
+    const math = new sd.Mathjax(svg, "{0}{1}{0}").fontSize(25).x(tree.mx()).cy(tree.y()).opacity(0).startAnimate().opacity(1).endAnimate();
+    await sd.pause();
+    math.element(1).startAnimate().color(C.red).endAnimate();
+    await sd.pause();
+    tree.startAnimate()
+        .forEachNodeInSubtree(2, node => drawLeaf(node, C.red, 3))
+        .forEachNodeInSubtree(7, node => drawLeaf(node, C.green, 3))
+        .endAnimate();
+    await sd.pause();
+    clearPathes(3);
+
+    await sd.pause();
+    math.element(1).startAnimate().color(C.black).endAnimate();
+    math.element(2).startAnimate().color(C.red).endAnimate();
+    await sd.pause();
+    tree.startAnimate()
+        .forEachNodeInSubtree(2, node => drawLeafUtill(node, C.red, 2, "1"))
+        .forEachNodeInSubtree(7, node => {
+            const id = tree.nodeId(node);
+            const color = id === "9" || id === "12" ? C.green : C.purple;
+            drawLeafUtill(node, color, 2, "1");
+        })
+        .endAnimate();
 });
 
-function insert(str) {
-    let u = 1;
-    for (let i = 0; i < str.length; i++) {
-        const c = str[i];
-        if (!ch[u][c]) {
-            ch[u][c] = makeNode();
-            tree.newNode(ch[u][c]);
-            if (c === "0") tree.leftChild(u, ch[u][c], c);
-            else tree.rightChild(u, ch[u][c], c);
-            tree.element(u, ch[u][c]).arrow();
-        }
-        u = ch[u][c];
+function clearPathes(t) {
+    while (pathes.length > 0) {
+        const path = pathes.pop();
+        path.startAnimate(t * 300)
+            .fadeStoT()
+            .endAnimate()
+            .remove();
     }
-    tree.element(u).strokeWidth(4).stroke(C.red);
 }
 
-function makeNode() {
-    const id = ++cnt;
-    ch[id] = {};
-    return id;
+function drawLeafUtill(u, color, t, limit) {
+    if (tree.leftChild(u) || tree.rightChild(u)) return;
+    pathes.push(drawPath(u, color, t, limit));
+}
+
+function drawLeaf(u, color, t) {
+    if (tree.leftChild(u) || tree.rightChild(u)) return;
+    pathes.push(drawPath(u, color, t));
+}
+
+function drawPath(u, color, t, limit = undefined) {
+    const list = [];
+    while (u && tree.nodeId(u) !== limit) {
+        list.push(u);
+        u = tree.father(u);
+    }
+    list.reverse();
+    const x = color === C.purple ? 1 : 0;
+    const pen = new sd.PathPen().MoveTo(V.add(list[0].center(), [x, 0]));
+    for (let i = 1; i < list.length; i++) pen.LinkTo(V.add(list[i].center(), [x, 0]));
+    return new sd.Path(svg)
+        .stroke(color)
+        .d(pen.toString())
+        .startAnimate(t * 300)
+        .pointStoT()
+        .endAnimate()
+        .arrow();
 }
 
 function numberToString(v) {

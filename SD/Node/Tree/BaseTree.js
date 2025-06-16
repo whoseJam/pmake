@@ -176,11 +176,13 @@ Object.assign(BaseTree.prototype, {
         this.nodesInSubtree(node).forEach(node => {
             callback(node, this.nodeId(node));
         });
+        return this;
     },
     forEachLinkInSubtree(node, callback) {
         this.linksInSubtree(node).forEach(link => {
             callback(link, this.sourceId(link), this.targetId(link));
         });
+        return this;
     },
     nodesOnPath(source, target) {
         source = this.element(source);

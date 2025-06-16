@@ -22,13 +22,17 @@ export function build01TrieTreeSync(trie, strs, args = {}) {
         for (let i = 0; i < s.length; i++) {
             const cur = trie.element(u);
             if (!cur.acch[s[i]]) {
+                let rule = undefined;
                 cur.acch[s[i]] = ++tot;
                 if (s[i] === "0") {
                     trie.leftChild(u, tot);
+                    rule = R.pointAtPathByRate(0.5, "mx", "cy", -5);
                 } else {
                     trie.rightChild(u, tot);
+                    if (i !== s.length - 1) rule = R.pointAtPathByRate(0.5, "mx", "cy", -5);
+                    else rule = R.pointAtPathByRate(0.5, "x", "cy", 5);
                 }
-                trie.element(u, tot).value(s[i], R.pointAtPathByRate(0.5, "mx", "cy", -5));
+                trie.element(u, tot).value(s[i], rule);
                 trie.element(tot).str = s.substr(0, i + 1);
                 trie.element(tot).acch = {};
                 if (onLink) onLink(+u, +tot);
