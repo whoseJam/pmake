@@ -244,9 +244,11 @@ Object.assign(BaseTree.prototype, {
         return this;
     },
     link(sourceId, targetId, value) {
+        this.freeze();
         if (!this.findNodeById(targetId)) this.newNode(targetId);
         if (!this.findNodeById(sourceId)) this.newNode(sourceId);
         this.newLink(sourceId, targetId, value);
+        this.unfreeze();
         return this;
     },
     newNode() {

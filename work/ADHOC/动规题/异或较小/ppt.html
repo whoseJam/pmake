@@ -1,0 +1,40 @@
+<section>
+    <section>
+        <h1>异或较小</h1>
+    </section>
+    <problem data-source="https://www.luogu.com.cn/problem/CF1616H"></problem>
+    <section>
+        <h2>异或较小</h2>
+        <p>给一个整数数组 $a_1, a_2, \ldots, a_n$ 和一个整数 $x$</p>
+        <p class="fragment">一个数组的子集是合法的，当且仅当该子集任意数对的异或结果不超过 $x$</p>
+        <p class="fragment">求合法的子集数量</p>
+    </section>
+    <section>
+        <h2>异或较小</h2>
+        <p>这里讨论的是<b style="color: red;">数对</b>之间的异或关系</p>
+        <p class="fragment quote">什么样的数据结构适合分析数对之间的异或关系？</p>
+        <p class="fragment">把问题放在trie树上考虑</p>
+    </section>
+    <section>
+        <h2>异或较小</h2>
+        <p class="quote">trie树上怎么选数？</p>
+        <iframe data-animation="./01trie.js"
+            style="width: 1000px; height: 300px;"></iframe>
+        <ul>
+            <li class="fragment">如果 $x$ 的某一位为 $0$，那么肯定就不能跨子树选，一个子树内的数字只能内部组合</li>
+            <li class="fragment">如果 $x$ 的某一位为 $1$，那么就可以跨子树选，但又不能跨子树乱选...</li>
+        </ul>
+        <p class="fragment">设 $f_{i,j}$ 表示在 $i$ 和 $j$ 子树内选若干个数，有多少种合法的方案</p>
+        <p class="math-fragment">
+            $$
+            \begin{cases}
+            f_{1,1}\leftarrow f_{2,7}\leftarrow f_{3,11} \leftarrow f_{4,12} \\
+            f_{1,1}\leftarrow f_{2,7}\leftarrow f_{3,11} \leftarrow f_{4,13}
+            \end{cases}
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>异或较小</h2>
+    </section>
+</section>
