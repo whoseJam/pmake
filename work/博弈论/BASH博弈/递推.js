@@ -36,9 +36,9 @@ sd.main(async () => {
     F.endAnimate();
 
     for (let i = m + 1; i <= n; i++) {
-        await sd.pause(sd.CONTINUE_FRAME);
+        await sd.pause(sd.CONTINUE_STAGE);
         F.startAnimate().color(i, C.blue).endAnimate();
-        await sd.pause(sd.CONTINUE_FRAME);
+        await sd.pause(sd.CONTINUE_STAGE);
         brace
             .startAnimate()
             .brace(i - m, i - 1, "b")
@@ -48,11 +48,11 @@ sd.main(async () => {
             flag |= F.intValue(j) === 0;
         }
 
-        await sd.pause(sd.CONTINUE_FRAME);
+        await sd.pause(sd.CONTINUE_STAGE);
         F.startAnimate()
             .value(i, flag ? 1 : 0)
             .endAnimate();
-        await sd.pause(sd.CONTINUE_FRAME);
+        await sd.pause(sd.CONTINUE_STAGE);
         brace.startAnimate().opacity(0).endAnimate();
         F.startAnimate().color(i, C.white).endAnimate();
     }

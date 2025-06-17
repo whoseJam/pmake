@@ -16,7 +16,7 @@ function extractReversedNames() {
             const contents = match[1].split(",");
             contents.forEach(content => {
                 content = content.trim();
-                if (content === "CONTINUE_FRAME") return;
+                if (content === "CONTINUE_STAGE") return;
                 if (/^[A-Z]/.test(content)) matches.push(content);
             });
         }

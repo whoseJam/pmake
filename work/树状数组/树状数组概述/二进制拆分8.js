@@ -8,7 +8,7 @@ const tree = sd.make1d(n + 5);
 const focuses = [];
 
 function lowbit(x) {
-    return x & (-x);
+    return x & -x;
 }
 
 sd.init(() => {
@@ -19,15 +19,15 @@ sd.init(() => {
         element.onClick(() => {
             sd.inter(async () => {
                 await Query(index);
-            })
-        })
+            });
+        });
         element.onDblClick(() => {
             sd.inter(async () => {
                 await Add(index, 1);
-            })
-        })
+            });
+        });
     }
-})
+});
 
 sd.main(async () => {
     await Prepare();
@@ -47,7 +47,7 @@ sd.main(async () => {
     tree[n].startAnimate().color(C.white).endAnimate();
     l1.startAnimate().opacity(0).endAnimate();
     l2.startAnimate().opacity(0).endAnimate();
-})
+});
 
 async function BuildTree() {
     for (let i = 1; i <= n; i++) {
@@ -68,7 +68,11 @@ async function Add(x, d) {
     for (let i = x; i <= n; i += lowbit(i)) {
         tree[i].after(timestamp).startAnimate().color(C.blue).endAnimate();
         const t = new sd.Text(svg, text.text()).cx(element.cx()).my(element.y());
-        t.after(timestamp).startAnimate().mx(tree[i].x() - 3).cy(tree[i].cy()).endAnimate();
+        t.after(timestamp)
+            .startAnimate()
+            .mx(tree[i].x() - 3)
+            .cy(tree[i].cy())
+            .endAnimate();
         timestamp = tree[i].delay();
         allTexts.push(t);
     }
@@ -82,7 +86,8 @@ async function Add(x, d) {
 }
 
 async function Query(x) {
-    let cur = 0, timestamp = 0;
+    let cur = 0,
+        timestamp = 0;
     for (let i = x; i > 0; i -= lowbit(i)) {
         const l = i - lowbit(i) + 1;
         const r = i;
@@ -94,20 +99,19 @@ async function Query(x) {
     await sd.pause();
     focuses.forEach(focus => focus.startAnimate().focus(null).endAnimate());
     arr.startAnimate().color(C.white).endAnimate();
-    for (let i = x; i > 0; i -= lowbit(i))
-        tree[i].startAnimate().color(C.white).endAnimate();
+    for (let i = x; i > 0; i -= lowbit(i)) tree[i].startAnimate().color(C.white).endAnimate();
 }
 
 async function Prepare() {
     for (let i = 1; i <= n; i++) {
-        await sd.pause(sd.CONTINUE_FRAME);
+        await sd.pause(sd.CONTINUE_STAGE);
         arr.startAnimate().color(1, i, C.blue).endAnimate();
-        await sd.pause(sd.CONTINUE_FRAME);
+        await sd.pause(sd.CONTINUE_STAGE);
         const result = BinarySplit(i);
-        await sd.pause(sd.CONTINUE_FRAME);
+        await sd.pause(sd.CONTINUE_STAGE);
         MakeTree(result);
     }
-    await sd.pause(sd.CONTINUE_FRAME);
+    await sd.pause(sd.CONTINUE_STAGE);
     focuses.forEach(focus => focus.startAnimate().focus(null).endAnimate());
     arr.startAnimate().color(C.white).endAnimate();
     await sd.pause();
@@ -116,10 +120,14 @@ async function Prepare() {
 function MakeTree(result) {
     for (let i = 0; i < result.length; i++) {
         const range = result[i];
-        const len = (range[1] - range[0] + 1);
+        const len = range[1] - range[0] + 1;
         const arr = new sd.Array(svg).resize(len).start(range[0]);
         arr.dx((range[0] - 1) * 40);
-        arr.opacity(0).startAnimate().dy(Math.log2(len) * (-60) - 80).opacity(1).endAnimate();
+        arr.opacity(0)
+            .startAnimate()
+            .dy(Math.log2(len) * -60 - 80)
+            .opacity(1)
+            .endAnimate();
         if (!tree[range[1]]) {
             tree[range[1]] = arr;
         } else {
@@ -130,15 +138,19 @@ function MakeTree(result) {
 
 function BinarySplit(x) {
     const result = [];
-    let curIndex = 0, curPos = 1;
+    let curIndex = 0,
+        curPos = 1;
     for (let i = 10; i >= 0; i--) {
-        if (x & (1<<i)) {
+        if (x & (1 << i)) {
             if (curIndex >= focuses.length) {
                 focuses.push(sd.Focus(arr).clickable(false));
             }
-            focuses[curIndex++].startAnimate().focus(curPos, curPos + (1<<i) - 1).endAnimate();
-            result.push([curPos, curPos + (1<<i) - 1]);
-            curPos += (1<<i);
+            focuses[curIndex++]
+                .startAnimate()
+                .focus(curPos, curPos + (1 << i) - 1)
+                .endAnimate();
+            result.push([curPos, curPos + (1 << i) - 1]);
+            curPos += 1 << i;
         }
     }
     for (let i = curIndex; i < focuses.length; i++) {

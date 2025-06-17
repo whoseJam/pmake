@@ -1,4 +1,4 @@
-import { FIRST_INTER_FRAME, LAST_INTER_FRAME, LAST_MAIN_FRAME, pause } from "@/Animate/Window";
+import { FIRST_INTER_STAGE, LAST_INTER_STAGE, LAST_MAIN_STAGE, pause } from "@/Animate/Window";
 
 let initFinished = true;
 
@@ -19,7 +19,7 @@ export async function main(callback) {
     const fn = async () => {
         if (initFinished) {
             await callback();
-            await pause(LAST_MAIN_FRAME);
+            await pause(LAST_MAIN_STAGE);
         } else {
             setTimeout(fn, 20);
         }
@@ -28,7 +28,7 @@ export async function main(callback) {
 }
 
 export async function inter(callback) {
-    await pause(FIRST_INTER_FRAME);
+    await pause(FIRST_INTER_STAGE);
     await callback();
-    await pause(LAST_INTER_FRAME);
+    await pause(LAST_INTER_STAGE);
 }

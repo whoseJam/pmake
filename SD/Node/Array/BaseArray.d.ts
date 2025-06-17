@@ -1,5 +1,5 @@
 import { SD2DNode } from "@/Node/SD2DNode";
-import { PacketColor, SDColor } from "@/Utility/Color";
+import { SDColor } from "@/Utility/Color";
 
 export class BaseArray extends SD2DNode {
     /**
@@ -105,20 +105,20 @@ export class BaseArray extends SD2DNode {
      * @param color - The color to apply.
      * @returns The current component instance for method chaining.
      */
-    color(color: SDColor): this;
+    color(color: SDColor | string): this;
     /**
      * Retrieves the color of a specific element.
      * @param i - The index of the specific element.
      * @returns The color of the element.
      */
-    color(i: number): PacketColor;
+    color(i: number): SDColor;
     /**
      * Sets the color of a specific element.
      * @param i - The index of the specific element.
      * @param color - The color to apply.
      * @returns The current component instance for method chaining.
      */
-    color(i: number, color: SDColor): this;
+    color(i: number, color: SDColor | string): this;
     /**
      * Sets the color of elements within the specified range [l, r].
      * @param l - The start index of the range (inclusive).
@@ -126,7 +126,7 @@ export class BaseArray extends SD2DNode {
      * @param color - The color to apply.
      * @returns The current component instance for method chaining.
      */
-    color(l: number, r: number, color: SDColor): this;
+    color(l: number, r: number, color: SDColor | string): this;
     /**
      * Retrieves the text content of a specific element.
      *

@@ -35,10 +35,10 @@ function lastMainFrame() {
 }
 
 export const NORMAL_FRAME = 0;
-export const LAST_MAIN_FRAME = 1;
-export const LAST_INTER_FRAME = 2;
-export const FIRST_INTER_FRAME = 3;
-export const CONTINUE_FRAME = 4;
+export const LAST_MAIN_STAGE = 1;
+export const LAST_INTER_STAGE = 2;
+export const FIRST_INTER_STAGE = 3;
+export const CONTINUE_STAGE = 4;
 
 function promiseOfFirstInterFrame() {
     if (window.IS_CONTINUING) throw new Error();
@@ -122,7 +122,7 @@ export function pause(frameType = 0) {
     if (window.SHOULD_FLUSH) {
         A.currentActionList.updateWindowSize();
         // limit frame count, to handle the infinite animation
-        if (window.CURRENT_FRAME <= window.IFRAME_MAX_FRAME && frameType !== LAST_MAIN_FRAME) {
+        if (window.CURRENT_FRAME <= window.IFRAME_MAX_FRAME && frameType !== LAST_MAIN_STAGE) {
             window.CURRENT_FRAME++;
             return 0; // no block
         } else {
@@ -133,15 +133,15 @@ export function pause(frameType = 0) {
     // A.debug();
     A.trigger();
     switch (frameType) {
-        case FIRST_INTER_FRAME:
+        case FIRST_INTER_STAGE:
             return promiseOfFirstInterFrame();
-        case LAST_INTER_FRAME:
+        case LAST_MAIN_STAGE:
             return promiseOfLastInterFrame();
-        case CONTINUE_FRAME:
+        case CONTINUE_STAGE:
             return promiseOfContinueFrame();
         case NORMAL_FRAME:
             return promiseOfNormalFrame();
-        case LAST_MAIN_FRAME:
+        case LAST_MAIN_STAGE:
             return promiseOfLastMainFrame();
     }
     throw new Error(`Unknown Frame Type ${frameType}`);

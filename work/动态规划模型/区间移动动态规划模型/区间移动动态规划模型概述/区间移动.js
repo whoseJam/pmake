@@ -15,7 +15,7 @@ sd.init(() => {
 });
 
 sd.main(async () => {
-    await sd.pause(sd.CONTINUE_FRAME);
+    await sd.pause(sd.CONTINUE_STAGE);
     arr.startAnimate().color(start, C.grey).endAnimate();
 });
 

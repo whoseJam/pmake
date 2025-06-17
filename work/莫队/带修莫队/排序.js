@@ -17,21 +17,24 @@ D.onKeyDown("s", () => {
         ranges.forEach((range, idx) => {
             const l = sd.rand(curI, Math.min(curI + B - 1, n));
             const r = sd.rand(curJ, Math.min(curJ + B - 1, n));
-            range.startAnimate().brace(l, r, "b", idx * 10 + 10).endAnimate();
-        })
+            range
+                .startAnimate()
+                .brace(l, r, "b", idx * 10 + 10)
+                .endAnimate();
+        });
         await sd.pause();
         ranges.forEach(range => {
             range.startAnimate().opacity(0).endAnimate();
-        })
-    })
-})
+        });
+    });
+});
 
 sd.init(() => {
     for (let i = 1; i <= n; i++) {
         const idx = Math.floor((i - 1) / B) & 1;
         arr.color(i, colorList[idx]);
     }
-})
+});
 
 sd.main(async () => {
     const f1 = sd.Focus(arr);
@@ -40,14 +43,22 @@ sd.main(async () => {
     const b2 = sd.Brace(arr).value("r端点所在区间");
     for (let i = 1; i <= n; i += B) {
         for (let j = i + B; j <= n; j += B) {
-            if (i === 1 && j === i + B) await sd.pause(sd.CONTINUE_FRAME);
+            if (i === 1 && j === i + B) await sd.pause(sd.CONTINUE_STAGE);
             else await sd.pause();
             curI = i;
             curJ = j;
-            b1.startAnimate().brace(i, Math.min(i + B - 1, n), "t").endAnimate();
-            b2.startAnimate().brace(j, Math.min(j + B - 1, n), "t").endAnimate();
-            f1.startAnimate().focus(i, Math.min(i + B - 1, n)).endAnimate();
-            f2.startAnimate().focus(j, Math.min(j + B - 1, n)).endAnimate();
+            b1.startAnimate()
+                .brace(i, Math.min(i + B - 1, n), "t")
+                .endAnimate();
+            b2.startAnimate()
+                .brace(j, Math.min(j + B - 1, n), "t")
+                .endAnimate();
+            f1.startAnimate()
+                .focus(i, Math.min(i + B - 1, n))
+                .endAnimate();
+            f2.startAnimate()
+                .focus(j, Math.min(j + B - 1, n))
+                .endAnimate();
         }
     }
-})
+});

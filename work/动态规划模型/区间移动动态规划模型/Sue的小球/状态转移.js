@@ -60,7 +60,7 @@ sd.init(() => {
 });
 
 sd.main(async () => {
-    await sd.pause(sd.CONTINUE_FRAME);
+    await sd.pause(sd.CONTINUE_STAGE);
     circles[l].startAnimate().stroke(C.red).strokeWidth(3).endAnimate();
 });
 

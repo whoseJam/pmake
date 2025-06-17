@@ -44,7 +44,7 @@ sd.init(() => {
 });
 
 sd.main(async () => {
-    await sd.pause(sd.CONTINUE_FRAME);
+    await sd.pause(sd.CONTINUE_STAGE);
     for (let i = 1; i <= n; i++) {
         links.push(new sd.Curve(svg).target(arr.element(i).pos("cx", "y")).source(arr.element(nxt[i]).pos("cx", "y")).bending(-0.5).startAnimate().pointTtoS().endAnimate().revArrow());
     }

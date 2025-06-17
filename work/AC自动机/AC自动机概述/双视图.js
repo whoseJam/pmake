@@ -32,7 +32,7 @@ sd.init(async () => {
 });
 
 sd.main(async () => {
-    await sd.pause(sd.CONTINUE_FRAME);
+    await sd.pause(sd.CONTINUE_STAGE);
     ac.forEachNode((node, id) => {
         if (node.cx() < ac.cx()) {
             sd.Label(node, node.str, "lc", 20, 3).opacity(0).startAnimate().opacity(1).endAnimate();

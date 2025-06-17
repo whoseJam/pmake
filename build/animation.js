@@ -27,6 +27,11 @@ function validateJSFile(sourceFilePath) {
     }
 }
 
+function truncateAtStackTrace(errorMessage) {
+    const index = errorMessage.indexOf("    at");
+    return index !== -1 ? errorMessage.substring(0, index) : errorMessage;
+}
+
 /**
  * Compile xxx.js to the target folder.
  * @param {string} source The source js file path.
@@ -43,6 +48,12 @@ function task(source, targetFolder) {
             // webpack stream
             .src(source)
             .pipe(webpack(config))
+            .on("error", error => {
+                if (global["s"]) {
+                    console.error(truncateAtStackTrace(error.message));
+                    process.exit(1);
+                }
+            })
             .pipe(gulp.dest(targetFolder))
     );
 }

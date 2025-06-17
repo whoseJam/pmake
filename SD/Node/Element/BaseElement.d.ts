@@ -3,7 +3,7 @@ import { SDNode } from "@/Node/SDNode";
 import { BaseShape } from "@/Node/Shape/BaseShape";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { SDRule } from "@/Rule/Rule";
-import { HexColor, PacketColor, SDColor } from "@/Utility/Color";
+import { SDColor } from "@/Utility/Color";
 
 export class BaseElement extends SD2DNode {
     /**
@@ -37,7 +37,7 @@ export class BaseElement extends SD2DNode {
      * Retrieves the base color applied to this element.
      * @returns The base color value of the element.
      */
-    color(): PacketColor;
+    color(): SDColor;
     /**
      * Sets the color of this element.
      *
@@ -47,12 +47,12 @@ export class BaseElement extends SD2DNode {
      * @param color - The base color to apply to the element.
      * @returns The current component instance for method chaining.
      */
-    color(color: SDColor): this;
+    color(color: SDColor | string): this;
     /**
      * Retrieves the fill color applied to this element.
      * @returns The current fill color value.
      */
-    fill(): HexColor;
+    fill(): string;
     /**
      * Sets the fill color of this element.
      *
@@ -62,7 +62,7 @@ export class BaseElement extends SD2DNode {
      * @param fill - The hexadecimal color value to apply as the fill.
      * @returns The current component instance for method chaining.
      */
-    fill(fill: HexColor): this;
+    fill(fill: string): this;
     /**
      * Retrieves the opacity of this element's fill color.
      * @returns The fill opacity, ranging from 0 (fully transparent) to 1 (fully opaque).
@@ -78,7 +78,7 @@ export class BaseElement extends SD2DNode {
      * Retrieves the stroke color applied to this element.
      * @returns The current stroke color value.
      */
-    stroke(): HexColor;
+    stroke(): string;
     /**
      * Sets the stroke color of this element.
      *
@@ -88,7 +88,7 @@ export class BaseElement extends SD2DNode {
      * @param stroke - The hexadecimal color value to apply as the stroke.
      * @returns The current component instance for method chaining.
      */
-    stroke(stroke: HexColor): this;
+    stroke(stroke: string): this;
     /**
      * Retrieves the opacity of this element's stroke color.
      * @returns The stroke opacity, ranging from 0 (fully transparent) to 1 (fully opaque).

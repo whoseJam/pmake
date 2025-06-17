@@ -1,5 +1,5 @@
 import { SD2DNode } from "@/Node/SD2DNode";
-import { PacketColor, SDColor } from "@/Utility/Color";
+import { SDColor } from "@/Utility/Color";
 
 export class BaseGrid extends SD2DNode {
     /**
@@ -114,14 +114,14 @@ export class BaseGrid extends SD2DNode {
      * @param color The color to apply.
      * @returns The current component instance for method chaining.
      */
-    color(color: SDColor): this;
+    color(color: SDColor | string): this;
     /**
      * Retrieves the color of a specific element.
      * @param i - The index along the primary dimension.
      * @param j - The index along the secondary dimension.
      * @returns The color of the element.
      */
-    color(i: number, j: number): PacketColor;
+    color(i: number, j: number): SDColor;
     /**
      * Sets the color of a specific element.
      * @param i - The index along the primary dimension.
@@ -129,7 +129,7 @@ export class BaseGrid extends SD2DNode {
      * @param color The color to apply.
      * @returns The current component instance of method chaining.
      */
-    color(i: number, j: number, color: SDColor): this;
+    color(i: number, j: number, color: SDColor | string): this;
     /**
      * Retrieves the text content of a specific element.
      * @param i - The index along the primary dimension.

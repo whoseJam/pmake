@@ -1,4 +1,4 @@
-export { CONTINUE_FRAME, pause } from "./Animate/Window";
+export { CONTINUE_STAGE, pause } from "./Animate/Window";
 export { Aside } from "./Component/Aside";
 export { Brace } from "./Component/Brace";
 export { Focus } from "./Component/Focus";
