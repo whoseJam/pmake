@@ -8,7 +8,7 @@ const grid = new sd.Grid(svg).axis("col").align("my").startN(1).startM(1);
 
 sd.init(() => {
     a.forEach(count => {
-        grid.pushRow(count);
+        grid.pushPrimary(count);
     });
     for (let i = 1; i <= n; i++) sd.MathjaxLabel(grid.element(i, a[i - 1]), `a_{${i}}`, "bc");
     for (let i = 1; i <= grid.endM(); i++) {

@@ -35,14 +35,14 @@ Object.assign(BaseGrid.prototype, {
     },
     n(n) {
         if (arguments.length === 0) return this.vars.n;
-        while (this.n() < n) this.pushRow();
-        while (this.n() > n) this.popRow();
+        while (this.n() < n) this.pushPrimary();
+        while (this.n() > n) this.popPrimary();
         return this;
     },
     m(m) {
         if (arguments.length === 0) return this.vars.m;
-        while (this.m() < m) this.pushCol();
-        while (this.m() > m) this.popCol();
+        while (this.m() < m) this.pushSecondary();
+        while (this.m() > m) this.popSecondary();
         return this;
     },
 
@@ -133,14 +133,14 @@ Object.assign(BaseGrid.prototype, {
     insertFromExistElement() {
         ErrorLauncher.notImplementedYet("insertFromExistElement", this.type());
     },
-    pushCol(count) {
+    pushSecondary(count) {
         const l = this.startN();
         const r = count === undefined ? this.endN() : l + count - 1;
         for (let i = l; i <= r; i++) this.insert(i, this.endM(i) + 1, null);
         if (l > r) this.vars.m++;
         return this;
     },
-    pushRow(count) {
+    pushPrimary(count) {
         let n = this.endN() + 1;
         let l = this.startM();
         let r = count === undefined ? this.endM() : l + count - 1;
@@ -172,7 +172,7 @@ Object.assign(BaseGrid.prototype, {
         if (!element.drop) ErrorLauncher.methodNotFound(element, "drop");
         return element.drop();
     },
-    popCol() {
+    popSecondary() {
         let erased = false;
         const elements = this.vars.elements;
         for (let i = 0; i < elements.length; i++) {
@@ -185,7 +185,7 @@ Object.assign(BaseGrid.prototype, {
         if (erased) this.vars.m--;
         return this;
     },
-    popRow() {
+    popPrimary() {
         const row = this.vars.elements.pop();
         if (!row) return this;
         row.forEach(element => this.eraseChild(element));

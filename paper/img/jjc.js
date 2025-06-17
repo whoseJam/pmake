@@ -1,7 +1,7 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-const grid = new sd.Grid(svg).pushRow(1).pushRow(2).pushRow(3).pushRow(4).pushRow(5).pushRow(5).pushRow(5).pushRow(5).startN(1).startM(1);
+const grid = new sd.Grid(svg).pushPrimary(1).pushPrimary(2).pushPrimary(3).pushPrimary(4).pushPrimary(5).pushPrimary(5).pushPrimary(5).pushPrimary(5).startN(1).startM(1);
 const data = [
     [1, 1],
     [3, 2],

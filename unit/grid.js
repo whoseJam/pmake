@@ -70,15 +70,15 @@ async function TestPushColAndRow() {
         }
     }
     await sd.pause();
-    grid.startAnimate().pushCol().endAnimate();
+    grid.startAnimate().pushSecondary().endAnimate();
     await sd.pause();
-    grid.startAnimate().pushRow().endAnimate();
+    grid.startAnimate().pushPrimary().endAnimate();
     await sd.pause();
-    grid.startAnimate().pushCol().endAnimate();
+    grid.startAnimate().pushSecondary().endAnimate();
     await sd.pause();
-    grid.startAnimate().pushRow(12).endAnimate();
+    grid.startAnimate().pushPrimary(12).endAnimate();
     await sd.pause();
-    grid.startAnimate().popCol().endAnimate();
+    grid.startAnimate().popSecondary().endAnimate();
     console.log(grid.m(), grid.n());
 }
 

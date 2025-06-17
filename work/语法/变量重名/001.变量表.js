@@ -17,11 +17,11 @@ main();
 async function main() {
     await sd.pause();
     varTable.startAnimate();
-    varTable.pushRow("a", "1");
+    varTable.pushPrimary("a", "1");
     varTable.endAnimate();
 
     await sd.pause();
-    varTable.pushRow("b", "未知");
+    varTable.pushPrimary("b", "未知");
     await sd.pause();
-    varTable.pushRow("c", "未知");
+    varTable.pushPrimary("c", "未知");
 }

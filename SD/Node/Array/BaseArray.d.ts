@@ -1,5 +1,4 @@
 import { SD2DNode } from "@/Node/SD2DNode";
-import { SDNode } from "@/Node/SDNode";
 import { PacketColor, SDColor } from "@/Utility/Color";
 
 export class BaseArray extends SD2DNode {
@@ -56,40 +55,37 @@ export class BaseArray extends SD2DNode {
     resize(length: number): this;
     /**
      * Retrieves the index of a specific element within this array component.
-     * @param element - The SDNode instance to locate.
+     * @param element - The target element to locate.
      * @returns The index of the specific element, or -1 if not found.
      */
-    indexOf(element: SDNode): number;
+    indexOf(element: SD2DNode): number;
     /**
      * Retrieves the element at the specified index.
      * @param i - The index of the specific element.
      * @returns The element at the specified index, or undefined if not found.
      */
-    element(i: number): SDNode | undefined;
+    element(i: number): SD2DNode | undefined;
     /**
      * Retrieves all elements contained within this array component.
-     *
-     * Note that the array's child count may exceed the number of elements if it contains
-     * non-element components (e.g., labels, pointers, indexes).
-     * @returns An array containing all valid SDNode elements in this component.
+     * @returns An array containing all valid elements in this component.
      */
-    elements(): Array<SDNode>;
+    elements(): Array<SD2DNode>;
     /**
      * Retrieves the last element in this array component.
      * @returns The last element, or undefined if the array is empty.
      */
-    lastElement(): SDNode | undefined;
+    lastElement(): SD2DNode | undefined;
     /**
      * Retrieves the first element in this array component.
      * @returns The first element, or undefined if the array is empty.
      */
-    firstElement(): SDNode | undefined;
+    firstElement(): SD2DNode | undefined;
     /**
      * Iterates over each element in this array component.
      * @param callback - A function to execute for each element.
      * @returns The current component instance for method chaining.
      */
-    forEachElement(callback: (element: SDNode, id: number) => void): this;
+    forEachElement(callback: (element: SD2DNode, id: number) => void): this;
 
     /**
      * Retrieves the opacity of a specific element.
@@ -153,30 +149,31 @@ export class BaseArray extends SD2DNode {
      *
      * Throws an error if the element does not implement `intValue()`.
      * @param i - The index of the specific element.
-     * @returns The integer representation of the value.
+     * @returns The integer representation of the element.
      */
     intValue(i: number): number;
     /**
-     * Retrieves the value component inside a specific element.
+     * Retrieves the value component of a specific element.
      *
      * Throws an error if the element does not implement `value()`.
      * @param i - The index of the specific element.
      * @returns The value component instance, or undefined if no value has been set.
      */
-    value(i: number): SDNode | undefined;
+    value(i: number): SD2DNode | undefined;
     /**
-     * Sets the value component inside a specific element.
+     * Sets the value component of a specific element.
      * - Replace any existing value component with the provided content.
      * - If `value` is null/undefined, removes the current value without replacement.
-     * - Non-SDNode value is automatically converted to **`sd.Text`** instance.
+     * - Non-component value is automatically converted to **`sd.Text`** instance.
      * @param i - The index of the specific element.
      * @param value - The content to set as the value.
      * @returns The current component instance for method chaining.
      */
-    value(i: number, value: SDNode): this;
+    value(i: number, value: SD2DNode): this;
 
     /**
-     * Inserts a value at the specified position.
+     * Inserts a value at a specified position.
+     *
      * Handles both direct value insertion and element wrapping:
      * - If the array is using strategy value-as-element, inserts the value as-is.
      * - If the array is using strategy value-inside-element, wraps the value in an element first.
@@ -185,16 +182,16 @@ export class BaseArray extends SD2DNode {
      * @returns The current component instance for method chaining.
      */
     insert(i: number, value: any): this;
-    insertFromExistValue(i: number, value: SDNode): this;
-    insertFromExistElement(i: number, element: SDNode): this;
+    insertFromExistValue(i: number, value: SD2DNode): this;
+    insertFromExistElement(i: number, element: SD2DNode): this;
     /**
      * Appends a value to the end of this array component.
      * @param value - The value to append.
      * @returns The current component instance for method chaining.
      */
     push(value: any): this;
-    pushFromExistValue(value: SDNode): this;
-    pushFromExistElement(element: SDNode): this;
+    pushFromExistValue(value: SD2DNode): this;
+    pushFromExistElement(element: SD2DNode): this;
     /**
      * Appends all elements from an array to the end of this array component.
      * @param array - The array of elements to append.
@@ -204,13 +201,13 @@ export class BaseArray extends SD2DNode {
 
     erase(i: number): this;
     pop(): this;
-    dropElement(i: number): SDNode | undefined;
-    dropFirstElement(): SDNode | undefined;
-    dropLastElement(): SDNode | undefined;
-    dropValue(i: number): SDNode | undefined;
-    dropFirstValue(): SDNode | undefined;
-    dropLastValue(): SDNode | undefined;
+    dropElement(i: number): SD2DNode | undefined;
+    dropFirstElement(): SD2DNode | undefined;
+    dropLastElement(): SD2DNode | undefined;
+    dropValue(i: number): SD2DNode | undefined;
+    dropFirstValue(): SD2DNode | undefined;
+    dropLastValue(): SD2DNode | undefined;
 
-    sort(comparator?: (a: SDNode, b: SDNode) => number): this;
-    sort(l: number, r: number, comparator?: (a: SDNode, b: SDNode) => number): this;
+    sort(comparator?: (a: SD2DNode, b: SD2DNode) => number): this;
+    sort(l: number, r: number, comparator?: (a: SD2DNode, b: SD2DNode) => number): this;
 }

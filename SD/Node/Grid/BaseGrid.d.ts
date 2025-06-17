@@ -1,5 +1,4 @@
 import { SD2DNode } from "@/Node/SD2DNode";
-import { SDNode } from "@/Node/SDNode";
 import { PacketColor, SDColor } from "@/Utility/Color";
 
 export class BaseGrid extends SD2DNode {
@@ -86,13 +85,13 @@ export class BaseGrid extends SD2DNode {
      * @param j - The index along the secondary dimension.
      * @returns The element at the specified position, or undefined if not found.
      */
-    element(i: number, j: number): SDNode | undefined;
+    element(i: number, j: number): SD2DNode | undefined;
     /**
      * Iterates over each element in this grid component.
      * @param callback - A function to execute for each element.
      * @returns The current component instance for method chaining.
      */
-    forEachElement(callback: (element: SDNode, i: number, j: number) => void): this;
+    forEachElement(callback: (element: SD2DNode, i: number, j: number) => void): this;
 
     /**
      * Retrieves the opacity of a specific element.
@@ -148,21 +147,58 @@ export class BaseGrid extends SD2DNode {
      * @returns The current component instance for method chaining.
      */
     text(i: number, j: number, text: number | string): this;
+    /**
+     * Retrieves the value integer representation of a specific element.
+     *
+     * Throws an error if the element does not implement `intValue()`.
+     * @param i - The index along the primary dimension.
+     * @param j - The index along the secondary dimension.
+     * @returns The integer representation of the element.
+     */
     intValue(i: number, j: number): number;
-    value(i: number, j: number): SDNode;
+    /**
+     * Retrieves the value component of a specific element.
+     *
+     * Throws an error if the element does not implement `value()`,
+     * @param i - The index along the primary dimension.
+     * @param j - The index along the secondary dimension.
+     * @returns The value component instance, or undefined if no value has been set.
+     */
+    value(i: number, j: number): SD2DNode;
+    /**
+     * Sets the value component of a specific element.
+     * - Replace any existing value component with the provided content.
+     * - If `value` is null/undefined, removes the current value without replacement.
+     * - Non-component value is automatically converted to **`sd.Text`** instance.
+     * @param i - The index along the primary dimension.
+     * @param j - The index along the secondary dimension.
+     * @param value The content to set as the value.
+     * @returns The current component instance for method chaining.
+     */
     value(i: number, j: number, value: any): this;
 
+    /**
+     * Inserts a value at a specific position.
+     *
+     * Handles both direct value insertion and element wrapping:
+     * - If the grid is using strategy value-as-element, insert the value as-is.
+     * - If the grid is using strategy value-inside-element, wrap the value in an element first.
+     * @param i - The target index for insertion along the primary dimension.
+     * @param j - The target index for insertion along the secondary dimension.
+     * @param value - The value to insert.
+     * @returns The current component instance for method chaining.
+     */
     insert(i: number, j: number, value?: any): this;
-    insertFromExistValue(i: number, j: number, value: SDNode): this;
-    insertFromExistElement(i: number, j: number, element: SDNode): this;
-    pushCol(): this;
-    pushCol(count: number): this;
-    pushRow(): this;
-    pushRow(count: number): this;
+    insertFromExistValue(i: number, j: number, value: SD2DNode): this;
+    insertFromExistElement(i: number, j: number, element: SD2DNode): this;
+    pushSecondary(): this;
+    pushSecondary(count: number): this;
+    pushPrimary(): this;
+    pushPrimary(count: number): this;
 
     erase(i: number, j: number): this;
-    dropElement(i: number, j: number): SDNode | undefined;
-    dropValue(i: number, j: number): SDNode | undefined;
-    popCol(): this;
-    popRow(): this;
+    dropElement(i: number, j: number): SD2DNode | undefined;
+    dropValue(i: number, j: number): SD2DNode | undefined;
+    popSecondary(): this;
+    popPrimary(): this;
 }
