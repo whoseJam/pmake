@@ -1,5 +1,4 @@
 import { SD2DNode } from "@/Node/SD2DNode";
-import { SDNode } from "@/Node/SDNode";
 import { Rect } from "@/Node/Shape/Rect";
 import { RenderNode } from "@/Renderer/RenderNode";
 
@@ -102,4 +101,4 @@ export class FocusPlugin extends Rect {
  * @param target - The destination to render the plugin.
  * @returns A new plugin instance.
  */
-export function Focus(target: SDNode | RenderNode): FocusPlugin;
+export function Focus(target: SD2DNode | RenderNode): FocusPlugin;
