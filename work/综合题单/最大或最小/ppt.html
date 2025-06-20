@@ -12,58 +12,59 @@
         <h2>最大或最小</h2>
         <p>数字的具体大小不重要，重要的是与 $x$ 的关系</p>
         <ul>
-            <li class="fragment">比 $x$ 更大（记为+）</li>
-            <li class="fragment">比 $x$ 更小（记为-）</li>
+            <li class="fragment">比 $x$ 更大（记为 $+$）</li>
+            <li class="fragment">比 $x$ 更小（记为 $-$）</li>
             <li class="fragment">和 $x$ 相等（目标状态）</li>
         </ul>
         <iframe data-animation="./符号表示动画.js" class="fragment"
             style="width: 1000px; height: 200px;"></iframe>
+        <p class="fragment quote">问题转化为考虑每一条由 $o$ 隔开的链的答案</p>
     </section>
     <section>
         <h2>最大或最小</h2>
-        <p class="quote">如何将一段连续的符号串变为全x？</p>
-        <p class="fragment">考虑两种情况：</p>
-        <ol>
-            <li class="fragment"><b>单调序列</b>（全部+或全部-）</li>
-            <li class="fragment"><b>交替序列</b>（+-+-...）</li>
-        </ol>
-    </section>
-    <section>
-        <h2>单调序列处理</h2>
-        <p>对于k个连续相同的符号（全+或全-）：</p>
-        <p class="fragment">操作次数 = k（直接逐个修改）</p>
+        <p class="quote">不妨从特殊的情况开始讨论</p>
+        <p class="fragment quote">假设一条链为 $o+++++o$</p>
+        <p class="fragment">直接逐个修改即可，假设有 $k$ 个 $+$，则需要操作 $k$ 次</p>
         <iframe data-animation="./单调序列动画.js" class="fragment"
-            style="width: 800px; height: 200px;"></iframe>
+            style="width: 1000px; height: 250px;"></iframe>
     </section>
     <section>
-        <h2>交替序列处理</h2>
-        <p>对于k个交替的符号（+-+-...）：</p>
-        <p class="fragment">操作次数 = k + ⌊k/2⌋</p>
-        <p class="fragment">需要在相邻操作间插入额外步骤</p>
+        <h2>最大或最小</h2>
+        <p>假设一条链为 $o+-+-+-+-+o$</p>
+        <p class="fragment">在相邻操作间插入额外步骤即可，假设长度为 $k$，则需要操作 $k+\lfloor\frac{k}{2}\rfloor$</p>
         <iframe data-animation="./交替序列动画.js" class="fragment"
-            style="width: 800px; height: 250px;"></iframe>
+            style="width: 1000px; height: 250px;"></iframe>
     </section>
     <section>
-        <h2>算法设计</h2>
-        <p>需要维护环形数组中各种符号序列的信息</p>
-        <ul>
-            <li class="fragment">将环展开成2倍长度的链</li>
-            <li class="fragment">使用线段树维护符号序列信息</li>
-            <li class="fragment">对每个x，只需考虑x-1和x的变化</li>
-        </ul>
+        <h2>最大或最小</h2>
+        <p>对于一般情况 $o+++----++--++++--+-+--o$</p>
+        <iframe data-animation="./一般序列动画.js" class="fragment"
+            style="width: 1000px; height: 250px;"></iframe>
+        <p class="fragment">答案就是
+            $$
+            \sum_{极长+-串}\lfloor\frac{len}{2}\rfloor+n
+            $$
+        </p>
+        <p class="fragment quote">那么在给定 $x$ 的情况下，我们就能 $O(n)$ 求解了</p>
     </section>
     <section>
-        <h2>线段树实现</h2>
-        <p>线段树节点存储：</p>
+        <h2>最大或最小</h2>
+        <p>最初情况下，我们让所有元素都是 $+$</p>
+        <p class="fragment">当 $x$ 逐渐增大时...</p>
         <ul>
-            <li class="fragment">区间左右端点</li>
-            <li class="fragment">左右最长同符号序列长度</li>
-            <span class="fragment">
-            <li>区间长度</li>
-            <li>总操作次数贡献</li>
-            </span>
+            <li class="fragment">让所有 $a_i=x$ 的 $i$ 的值被修改为 $o$</li>
+            <li class="fragment">让所有 $a_i=x-1$ 的 $i$ 的值被修改为 $-$</li>
         </ul>
-        <p class="fragment">合并子区间时需要判断边界符号关系</p>
+        <p class="fragment">考虑用线段树维护这个过程</p>
+    </section>
+    <section>
+        <h2>最大或最小</h2>
+        <p>线段树上维护以下几个信息</p>
+        <ul>
+            <li class="fragment">极长 $+-$ 串的最长前缀长度</li>
+            <li class="fragment">极长 $+-$ 串的最长后缀长度</li>
+            <li class="fragment">所有极长 $+-$ 串的 $\lfloor\frac{len}{2}\rfloor$ 之和</li>
+        </ul>
     </section>
 </section>
 

@@ -4,7 +4,7 @@
     </section>
     <problem data-source="https://www.luogu.com.cn/problem/P5968"></problem>
     <section>
-        <h2>题目理解</h2>
+        <h2>代表</h2>
         <p>定义一个特殊序列</p>
         <ul>
             <li class="fragment">$a_1=1$</li>
@@ -13,43 +13,8 @@
             <li class="fragment">偶数项 $a_n=a_{n-1}+r_{n-1}$</li>
         </ul>
         <p class="fragment">其中 $r_{n-1}=mex(\{|a_i-a_j|,1\le i\le j\le n-1\})$</p>
-        <iframe data-animation="./序列生成演示.js" class="fragment"
-            style="width: 1000px; height: 300px;"></iframe>
         <p class="fragment">定义 $repr(x)$ 是一个二元组 $(p,q)$，满足 $x=a_p-a_q$</p>
         <p class="fragment">给出 $x$，求 $repr(x)$</p>
         <p class="fragment quote">不妨先打表感受一下这个序列</p>
     </section>
-    <section>
-        <h2>代表</h2>
-        <ul>
-            <li class="fragment">序列增长速度极快，前 $56$ 项就能覆盖 $10^9$</li>
-            <li class="fragment">由于奇数位的倍增操作，大数和前面数的差会非常大</li>
-            <li class="fragment">能组成有效差值的主要是偶数项和前一项</li>
-        </ul>
-        <iframe data-animation="./差值分析演示.js" class="fragment"
-            style="width: 1000px; height: 300px;"></iframe>
-    </section>
-    <section>
-        <h2>解题策略</h2>
-        <p class="fragment">1. 预处理前56项及其所有可能的差值</p>
-        <p class="fragment">2. 查询时分两种情况处理：</p>
-        <ul>
-            <li class="fragment">直接命中存储的差值 → 直接返回对应位置</li>
-            <li class="fragment">更大的差值 → 计算其在序列中的位置</li>
-        </ul>
-    </section>
-    <section>
-        <h2>数学推导</h2>
-        <p>对于超出预处理范围的x：</p>
-        <p class="fragment">在表中找到最大的小于x的数b[y]</p>
-        <p class="fragment">计算出$x-y$ = 额外需要的数对数</p>
-        <p class="fragment">最终位置为：(56+(x-y)*2, 56+(x-y)*2-1)</p>
-        <iframe data-animation="./位置计算演示.js" class="fragment"
-            style="width: 1000px; height: 200px;"></iframe>
-    </section>
 </section>
-
-<!-- 动画描述：
-对动画"./序列生成演示.js"添加的描述信息：动态展示序列生成的整个过程，包括奇数项的倍增操作和偶数项基于mex的增量操作。
-对动画"./差值分析演示.js"添加的描述信息：可视化展示序列中各项之间的差值关系，突出显示偶数项和前一项的特殊差值模式。
-对动画"./位置计算演示.js"添加的描述信息：演示如何通过数学推导计算超出预处理范围的x在序列中的位置。 -->
