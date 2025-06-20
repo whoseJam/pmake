@@ -117,7 +117,7 @@ export class SDNode {
      * // Create a slow color transition for a circle
      * circle.startAnimate(5000).color(C.red).endAnimate();
      */
-    startAnimate(duration?: number);
+    startAnimate(duration?: number): this;
     /**
      * Starts an animation sequence by copying parameters from another component's animation.
      * This method clones timing properties from the specified component.

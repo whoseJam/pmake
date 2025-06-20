@@ -5,5 +5,68 @@
     <problem data-source="https://www.luogu.com.cn/problem/P5797"></problem>
     <section>
         <h2>最大或最小</h2>
+        <p>给定一个环形排列的数组，每次操作可以将一个数变为它和相邻两个数中的<b>最小值</b>或<b>最大值</b></p>    
+        <p class="fragment">对于每个 $x\in [1,m]$，计算将所有数变为 $x$ 所需的最少操作次数</p>
+    </section>
+    <section>
+        <h2>最大或最小</h2>
+        <p>数字的具体大小不重要，重要的是与 $x$ 的关系</p>
+        <ul>
+            <li class="fragment">比 $x$ 更大（记为+）</li>
+            <li class="fragment">比 $x$ 更小（记为-）</li>
+            <li class="fragment">和 $x$ 相等（目标状态）</li>
+        </ul>
+        <iframe data-animation="./符号表示动画.js" class="fragment"
+            style="width: 1000px; height: 200px;"></iframe>
+    </section>
+    <section>
+        <h2>最大或最小</h2>
+        <p class="quote">如何将一段连续的符号串变为全x？</p>
+        <p class="fragment">考虑两种情况：</p>
+        <ol>
+            <li class="fragment"><b>单调序列</b>（全部+或全部-）</li>
+            <li class="fragment"><b>交替序列</b>（+-+-...）</li>
+        </ol>
+    </section>
+    <section>
+        <h2>单调序列处理</h2>
+        <p>对于k个连续相同的符号（全+或全-）：</p>
+        <p class="fragment">操作次数 = k（直接逐个修改）</p>
+        <iframe data-animation="./单调序列动画.js" class="fragment"
+            style="width: 800px; height: 200px;"></iframe>
+    </section>
+    <section>
+        <h2>交替序列处理</h2>
+        <p>对于k个交替的符号（+-+-...）：</p>
+        <p class="fragment">操作次数 = k + ⌊k/2⌋</p>
+        <p class="fragment">需要在相邻操作间插入额外步骤</p>
+        <iframe data-animation="./交替序列动画.js" class="fragment"
+            style="width: 800px; height: 250px;"></iframe>
+    </section>
+    <section>
+        <h2>算法设计</h2>
+        <p>需要维护环形数组中各种符号序列的信息</p>
+        <ul>
+            <li class="fragment">将环展开成2倍长度的链</li>
+            <li class="fragment">使用线段树维护符号序列信息</li>
+            <li class="fragment">对每个x，只需考虑x-1和x的变化</li>
+        </ul>
+    </section>
+    <section>
+        <h2>线段树实现</h2>
+        <p>线段树节点存储：</p>
+        <ul>
+            <li class="fragment">区间左右端点</li>
+            <li class="fragment">左右最长同符号序列长度</li>
+            <span class="fragment">
+            <li>区间长度</li>
+            <li>总操作次数贡献</li>
+            </span>
+        </ul>
+        <p class="fragment">合并子区间时需要判断边界符号关系</p>
     </section>
 </section>
+
+<!-- 对动画"./符号表示动画.js"的描述：展示如何将数字数组转换为符号表示的过程（>x的显示为+，<x的显示为-，=x的保持原样）
+对动画"./单调序列动画.js"的描述：展示如何逐次操作将一段连续符号变为x的过程
+对动画"./交替序列动画.js"的描述：展示处理交替序列时需要额外插入操作的过程 -->

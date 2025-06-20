@@ -135,7 +135,7 @@ export function pause(frameType = 0) {
     switch (frameType) {
         case FIRST_INTER_STAGE:
             return promiseOfFirstInterFrame();
-        case LAST_MAIN_STAGE:
+        case LAST_INTER_STAGE:
             return promiseOfLastInterFrame();
         case CONTINUE_STAGE:
             return promiseOfContinueFrame();

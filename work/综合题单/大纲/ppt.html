@@ -1,9 +1,98 @@
 <section>
     <section>
-        <h1>大纲</h1>
+        <h1>大纲问题解析</h1>
+        <p>知识点难度分配验证</p>
     </section>
     <problem data-source="https://www.luogu.com.cn/problem/P9386"></problem>
+
     <section>
-        <h2>大纲</h2>
+        <h2>题目理解</h2>
+        <p>我们有一棵以1为根的外向树，每个节点代表一个知识点</p>
+        <ul>
+            <li class="fragment">部分节点的难度已确定（非负整数）</li>
+            <li class="fragment">部分节点的难度未确定（标记为-1）</li>
+        </ul>
+        <p class="fragment">需要验证是否能合理填充未确定的难度值</p>
+    </section>
+
+    <section>
+        <h2>核心规则</h2>
+        <p>对于每个非叶子节点x：</p>
+        <ul>
+            <li class="fragment">设max<sub>x</sub>是x依赖节点中难度的最大值</li>
+            <li class="fragment">如果只有一个依赖节点达到max<sub>x</sub>，则x难度为max<sub>x</sub></li>
+            <li class="fragment">若有多个依赖节点达到max<sub>x</sub>，则x难度为max<sub>x</sub>+1</li>
+        </ul>
+        <p class="fragment">叶子节点没有限制条件</p>
+    </section>
+
+    <section>
+        <h2>解题思路</h2>
+        <p class="quote">如何验证给定配置是否可以被填充满足条件？</p>
+        <p class="fragment quote">我们可以尝试为每个不确定的节点找出可能的取值范围</p>
+    </section>
+
+    <section>
+        <h2>取值范围确定</h2>
+        <ul>
+            <li class="fragment">确定节点：上下界都等于设定值</li>
+            <li class="fragment">不确定节点：下界=0，上界=1e9</li>
+        </ul>
+        <p class="fragment">我们需要通过树形遍历动态调整这些范围</p>
+    </section>
+
+    <section>
+        <h2>关键步骤</h2>
+        <p>从叶子节点开始后序遍历：</p>
+        <ul>
+            <li class="fragment">计算所有依赖节点的最大下界(maxn)和最大上界(maxx)</li>
+            <li class="fragment">根据依赖节点的数量调整maxn</li>
+            <li class="fragment">对于不确定节点：更新其上下界为maxn≤x≤maxx</li>
+            <li class="fragment">对于确定节点：验证其值是否在可行范围内</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>验证条件</h2>
+        <p>对于确定节点a[x]：</p>
+        <ul>
+            <li class="fragment">a[x] < maxn → 矛盾❌</li>
+            <li class="fragment">a[x] == maxn → 合理✅</li>
+            <li class="fragment">maxn < a[x] ≤ maxx → 可调整✅</li>
+            <li class="fragment">a[x] > maxx → 矛盾❌</li>
+        </ul>
+    </section>
+
+    <section>
+        <h2>样例分析</h2>
+        <p>第一组样例：</p>
+        <pre>
+3
+0 -1 0
+1 2
+2 3</pre>
+        <p class="fragment">可以填入2的难度为0</p>
+    </section>
+
+    <section>
+        <h2>样例分析</h2>
+        <p>第二组样例：</p>
+        <pre>
+3
+0 -1 0
+1 2
+1 3</pre>
+        <p class="fragment">无论2填什么值，1都无法满足条件</p>
+    </section>
+
+    <section>
+        <h2>代码实现</h2>
+        <p>核心DFS函数：</p>
+        <iframe data-animation="./大纲问题dfs动画.js"
+            style="width: 800px; height: 400px;"></iframe>
     </section>
 </section>
+<!-- ```
+
+动画描述：
+对动画"./大纲问题dfs动画.js"添加的描述信息：展示递归过程如何从叶子节点向上传播范围限制，以及在每个节点处如何合并子节点信息并验证条件 。动画将突出显示不同节点的取值范围变化和验证逻辑。 -->
