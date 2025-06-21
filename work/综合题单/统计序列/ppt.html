@@ -10,7 +10,7 @@
             <li>$a_i\in [1,m]$</li>
             <li>可以通过<b style="color: red;">删除操作</b>清空序列</li>
         </ol>
-        <p class="fragment">其中<b style="color: red;">删除操作</b>定义为，选择两个相同元素，删除它们之间的所有元素</p>
+        <p class="fragment">其中<b style="color: red;">删除操作</b>定义为，选择两个相同元素，删除它们之间的所有元素（包括被选择的元素）</p>
     </section>
     <section>
         <h2>统计序列</h2>
@@ -46,7 +46,7 @@
             g_{i-1,j}\times j\rightarrow h_{i,j} \\
             h_{i-1,j}\times j\rightarrow h_{i,j} \\
             g_{i-1,j}\times (m-j) \rightarrow g_{i,j} \\
-            h_{i-1,j}\times (m-j+1)\rightarrow f_{i,j}
+            h_{i-1,j}\times (m-j+1)\rightarrow g_{i,j}
             \end{cases}
             $$
         </p>

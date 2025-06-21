@@ -9,8 +9,8 @@
         <p class="fragment">给定树上点权 $\{a_i\}$，如果 $a_u=-1$ 则代表点 $u$ 的点权尚不确定，否则 $a_u$ 为非负整数</p>
         <p class="fragment">你需要给每一个值不确定的点赋一个非负整数，使得该树满足</p>
         <ul>
-            <li class="fragment">设 $max_u$ 表示 $u$ 的子节点的最大值</li>
-            <li class="fragment">如果存在大于一个儿子的值是 $max_u$，则 $a_u=max_u+1$</li>
+            <li class="fragment">设 $max_u$ 表示 $u$ 的子节点的最大点权</li>
+            <li class="fragment">如果存在多于一个儿子的点权是 $max_u$，则 $a_u=max_u+1$</li>
             <li class="fragment">否则 $a_u=max_u$</li>
         </ul>
         <p class="fragment">求是否有解</p>
@@ -52,14 +52,10 @@
                 <li class="fragment">如果 $a_u\ne -1$</li>
                 <ul>
                     <li class="fragment">如果 $a_u\lt limit_u$，那么已经寄了</li>
-                    <li class="fragment">如果 $a_u\ge limit_u$，则 $f_u=limit_u$ 且 $g_u$ 处于已确定状态</li>
+                    <li class="fragment">如果 $a_u\ge limit_u$，则 $f_u=a_u$ 且 $g_u$ 处于已确定状态</li>
                 </ul>
                 <li class="fragment">如果 $a_u=-1$，则 $f_u=limit_u$，且 $g_u$ 处于未确定状态</li>
             </ul>
         </ul>
     </section>
 </section>
-<!-- ```
-
-动画描述：
-对动画"./大纲问题dfs动画.js"添加的描述信息：展示递归过程如何从叶子节点向上传播范围限制，以及在每个节点处如何合并子节点信息并验证条件 。动画将突出显示不同节点的取值范围变化和验证逻辑。 -->
