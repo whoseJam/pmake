@@ -1,53 +1,74 @@
 import * as sd from "@/sd";
 
-const gridSize = 20;
-
 const svg = sd.svg();
 const C = sd.color();
+
 const grid = new sd.Grid(svg);
-grid.n(gridSize).m(gridSize);
+const bx = 6,
+    by = 6,
+    mx = 3,
+    my = 3;
 
-const startX = 0;
-const startY = 0;
-const endX = 6;
-const endY = 6;
-const horseX = 3;
-const horseY = 3;
+const s = Array.from({ length: bx + 1 }, () => Array.from({ length: by + 1 }, () => false));
 
-const horseControlPoints = [
-    [horseX + 1, horseY + 2],
-    [horseX + 2, horseY + 1],
-    [horseX + 2, horseY - 1],
-    [horseX + 1, horseY - 2],
-    [horseX - 1, horseY - 2],
-    [horseX - 2, horseY - 1],
-    [horseX - 2, horseY + 1],
-    [horseX - 1, horseY + 2],
-];
-
-const dp = Array.from({ length: gridSize }, () => Array.from({ length: gridSize }, () => 0));
+s[mx][my] = true;
+const dx = [-2, -1, 1, 2, 2, 1, -1, -2];
+const dy = [1, 2, 2, 1, -1, -2, -2, -1];
+for (let i = 0; i < 8; i++) {
+    const x = mx + dx[i];
+    const y = my + dy[i];
+    if (x >= 0 && x <= bx && y >= 0 && y <= by) {
+        s[x][y] = true;
+    }
+}
 
 sd.init(() => {
-    grid.value(startX, startY, new sd.Text(svg, "1")).color(startX, startY, C.green);
-    horseControlPoints.forEach(([x, y]) => grid.value(x, y, new sd.Text("0")).color(x, y, C.red));
-    grid.value(horseX, horseY, new sd.Text(svg, "0")).color(horseX, horseY, C.green);
+    grid.n(bx + 1).m(by + 1);
+    for (let i = 0; i <= bx; i++) {
+        for (let j = 0; j <= by; j++) {
+            const rect = new sd.Rect(svg);
+            rect.width(50)
+                .height(50)
+                .x(i * 60 + 50)
+                .y(j * 60 + 50)
+                .opacity(0.5)
+                .color(C.white)
+                .stroke(C.black);
+            if (s[i][j]) {
+                rect.color(C.red);
+            }
+            grid.insert(i, j, rect);
+            const text = new sd.Text(svg, "0").fontSize(16).fill(C.black);
+            text.cx(i * 60 + 50 + 25).cy(j * 60 + 50 + 25);
+            grid.value(i, j, text);
+        }
+    }
+    const startText = new sd.Text(svg, "1").fontSize(16).fill(C.black);
+    startText.cx(75).cy(75);
+    grid.value(0, 0, startText);
+    grid.color(0, 0, C.green);
 });
 
 sd.main(async () => {
-    dp[startX][startY] = 1;
-
-    for (let i = 0; i <= endX; i++) {
-        for (let j = 0; j <= endY; j++) {
-            if ((i === startX && j === startY) || (i === horseX && j === horseY) || horseControlPoints.some(([x, y]) => x === i && y === j)) {
-                await sd.pause();
+    const f = Array.from({ length: bx + 1 }, () => Array.from({ length: by + 1 }, () => 0));
+    f[0][0] = 1;
+    for (let i = 0; i <= bx; i++) {
+        for (let j = 0; j <= by; j++) {
+            if (s[i][j]) {
                 continue;
             }
-            if (i > 0 && dp[i - 1][j] > 0) dp[i][j] += dp[i - 1][j];
-            if (j > 0 && dp[i][j - 1] > 0) dp[i][j] += dp[i][j - 1];
-
-            if (dp[i][j] > 0) {
+            if (i > 0) {
+                f[i][j] += f[i - 1][j];
+            }
+            if (j > 0) {
+                f[i][j] += f[i][j - 1];
+            }
+            if (i !== 0 || j !== 0) {
                 await sd.pause();
-                grid.value(i, j, new sd.Text(svg, dp[i][j].toString())).color(i, j, C.blue);
+                const text = new sd.Text(svg, f[i][j].toString()).fontSize(16).fill(C.black);
+                text.cx(i * 60 + 50 + 25).cy(j * 60 + 50 + 25);
+                grid.value(i, j, text);
+                grid.color(i, j, C.blue);
             }
         }
     }

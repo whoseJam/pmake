@@ -32,7 +32,7 @@ export class Grid extends BaseGrid {
             align: "x",
         });
 
-        this.effect("graph", () => {
+        this.effect("grid", () => {
             const dict = {
                 x: this.x(),
                 y: this.y(),

@@ -1,15 +1,26 @@
 import { Enter as EN } from "@/Node/Core/Enter";
 import { Exit as EX } from "@/Node/Core/Exit";
+import { BaseGrid } from "@/Node/Grid/BaseGrid";
 import { Grid } from "@/Node/Grid/Grid";
 
-export class ValueGrid extends Grid {
+export class ValueGrid extends BaseGrid {
     constructor(target) {
         super(target);
 
         this.type("ValueGrid");
 
-        this.uneffect("graph");
-        this.effect("graph", () => {
+        this.vars.merge({
+            x: 0,
+            y: 0,
+            elementWidth: 40,
+            elementHeight: 40,
+            width: 0,
+            height: 0,
+            main: "row",
+            align: "x",
+        });
+
+        this.effect("grid", () => {
             const x = this.x();
             const y = this.y();
             const elementWidth = this.elementWidth();
@@ -30,6 +41,7 @@ export class ValueGrid extends Grid {
 }
 
 Object.assign(ValueGrid.prototype, {
+    ...Grid.prototype,
     insert(i, j, value) {
         const element = value;
         element.onEnterDefault(EN.appear("elements"));

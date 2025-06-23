@@ -12,7 +12,7 @@ export class BaseGrid extends SD2DNode {
      *
      * The starting index of primary dimension is 0 by default, affecting how
      * elements are indexed.
-     * @param start - The new start index value to apply.
+     * @param start - The start index value to apply.
      * @returns The current component instance for method chaining.
      */
     startN(start: number): this;
@@ -23,7 +23,7 @@ export class BaseGrid extends SD2DNode {
     startM(): number;
     /**
      * Sets the starting index of this grid component's secondary dimension.
-     * @param start - The new start index value to apply.
+     * @param start - The start index value to apply.
      * @returns The current component instance for method chaining.
      */
     startM(start: number): this;

@@ -33,7 +33,6 @@ export class Message {
         };
 
         window.OnInited = function () {
-            console.log("Parent Callme Inited!");
             window.parent.postMessage("inited", "*");
         };
 
@@ -44,8 +43,6 @@ export class Message {
                 window[data.operator].apply(window, data.arguments);
             }
         });
-
-        console.log("MySelf Inited!");
 
         window.parent.postMessage("inited", "*");
     }
