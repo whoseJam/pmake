@@ -44,11 +44,23 @@ export class Check {
         for (let i = 1; i <= 6; i++) if ("0123456789aAbBcCdDeEfF".indexOf(object[i]) === -1) return false;
         return true;
     }
+    static isAsyncFunction(object) {
+        if (typeof object !== "function") return false;
+        const str = object.toString();
+        return str.startsWith("async");
+    }
+    static isSyncFunction(object) {
+        if (typeof object !== "function") return false;
+        return !this.isAsyncFunction(object);
+    }
 
     static validateNumber(object, method) {
         if (!this.isValidNumber(object)) ErrorLauncher.invalidNumber(object, method);
     }
     static validateColor(object) {
         if (!this.isColor(object)) ErrorLauncher.invalidColorFormat(object);
+    }
+    static validateSyncFunction(object, method) {
+        if (!this.isSyncFunction(object)) ErrorLauncher.invalidSyncFunction(object, method);
     }
 }

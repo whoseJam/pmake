@@ -5,16 +5,12 @@ const svg = sd.svg();
 const C = sd.color();
 const charset = "cba";
 const str = "accbabbaac";
-const banned = [
-    "cb",
-    "ab",
-    "ac"
-];
+const banned = ["cb", "ab", "ac"];
 const arr = new sd.Array(svg).x(100).y(200).start(1);
 
 sd.init(() => {
     arr.pushArray(str);
-})
+});
 
 sd.main(async () => {
     await sd.pause();
@@ -22,17 +18,15 @@ sd.main(async () => {
         onCreateFirstBucket,
         onCreateBucket,
         onUpdateBucket,
-        onUpdateCurrent
-    })
-})
+        onUpdateCurrent,
+    });
+});
 
 async function onCreateFirstBucket(arr, cx) {
     const stk = new sd.Stack(svg).elementWidth(15).elementHeight(15).resize(charset.length);
     stk.cx(cx).my(arr.y() - 5);
     for (let i = 0; i < charset.length; i++) {
-        console.log(`e${i}.cy=${stk.element(i).cy()}`);
         const lb = sd.Label(stk.element(i), charset[i], "lc", 10, 3);
-        console.log(`label.cy=${lb.cy()} lalbel.height=${lb.height()} label.fontSize=${lb.fontSize()}`)
     }
     stk.opacity(0).startAnimate().opacity(1).endAnimate();
     global.firstBucket = stk;
@@ -62,7 +56,7 @@ async function onUpdateCurrent(arr, i) {
     for (let i = 0; i < charset.length; i++) {
         const link = sd.Link(firstBucket.element(i), current);
         link.startAnimate().pointStoT().endAnimate().arrow();
-        links.push(link);        
+        links.push(link);
     }
     await sd.pause();
     links.forEach(link => {

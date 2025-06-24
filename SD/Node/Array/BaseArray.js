@@ -57,6 +57,7 @@ Object.assign(BaseArray.prototype, {
         return this.element(this.end());
     },
     forEachElement(callback) {
+        Check.validateSyncFunction(callback, `${this.type()}.forEachElement`);
         this.vars.elements.forEach((element, id) => callback(element, id + this.start()));
         return this;
     },

@@ -1,8 +1,8 @@
 import { SD2DNode } from "@/Node/SD2DNode";
 import { SDNode } from "@/Node/SDNode";
+import { RectSVG } from "@/Node/SVG/Shape/RectSVG";
 import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
-import { Factory } from "@/Utility/Factory";
 
 function castToId(tree, object) {
     return object instanceof SDNode ? tree.nodeId(object) : object;
@@ -29,8 +29,8 @@ export class BaseTree extends SD2DNode {
 }
 
 Object.assign(BaseTree.prototype, {
-    x: Factory.handlerLowPrecise("x"),
-    y: Factory.handlerLowPrecise("y"),
+    x: RectSVG.prototype.x,
+    y: RectSVG.prototype.y,
     rootId() {
         return this.nodeId(this.root());
     },
@@ -173,12 +173,14 @@ Object.assign(BaseTree.prototype, {
         return linkList;
     },
     forEachNodeInSubtree(node, callback) {
+        Check.validateSyncFunction(callback, `${this.type()}.forEachNodeInSubtree`);
         this.nodesInSubtree(node).forEach(node => {
             callback(node, this.nodeId(node));
         });
         return this;
     },
     forEachLinkInSubtree(node, callback) {
+        Check.validateSyncFunction(callback, `${this.type()}.forEachLinkInSubtree`);
         this.linksInSubtree(node).forEach(link => {
             callback(link, this.sourceId(link), this.targetId(link));
         });
@@ -225,18 +227,22 @@ Object.assign(BaseTree.prototype, {
         return [...sourceList, ...targetList.reverse()];
     },
     forEachNodeOnPath(source, target, callback) {
+        Check.validateSyncFunction(callback, `${this.type()}.forEachNodeOnPath`);
         this.nodesOnPath(source, target).forEach(node => callback(node, this.nodeId(node)));
         return this;
     },
     forEachLinkOnPath(source, target, callback) {
+        Check.validateSyncFunction(callback, `${this.type()}.forEachLinkOnPath`);
         this.linksOnPath(source, target).forEach(link => callback(link, this.sourceId(link), this.targetId(link)));
         return this;
     },
     forEachNode(callback) {
+        Check.validateSyncFunction(callback, `${this.type()}.forEachNode`);
         this.vars.nodes.forEach(node => callback(node, this.nodeId(node)));
         return this;
     },
     forEachLink(callback) {
+        Check.validateSyncFunction(callback, `${this.type()}.forEachLink`);
         this.vars.links.forEach(link => callback(link, this.sourceId(link), this.targetId(link)));
         return this;
     },

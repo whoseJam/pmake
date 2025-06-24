@@ -39,7 +39,6 @@ export class Message {
         window.addEventListener("message", event => {
             const data = event.data;
             if (data.operator && data.arguments) {
-                console.log(data.operator, data.arguments);
                 window[data.operator].apply(window, data.arguments);
             }
         });

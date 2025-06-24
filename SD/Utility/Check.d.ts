@@ -10,7 +10,10 @@ export class Check {
     static isColor(object: any): boolean;
     static isSDColor(object: any): boolean;
     static isHexColor(object: any): boolean;
+    static isAsyncFucntion(object: any): boolean;
+    static isSyncFunction(object: any): boolean;
 
     static validateNumber(object: any, method: string): void;
     static validateColor(object: any): void;
+    static validateSyncFunction(object: any): void;
 }

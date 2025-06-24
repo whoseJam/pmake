@@ -1,5 +1,6 @@
 import { Exit as EX } from "@/Node/Core/Exit";
 import { SD2DNode } from "@/Node/SD2DNode";
+import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 
@@ -52,6 +53,7 @@ Object.assign(BaseGrid.prototype, {
         return undefined;
     },
     forEachElement(callback) {
+        Check.validateSyncFunction(callback, `${this.type()}.forEachElement`);
         this.vars.elements.forEach((row, i) => {
             row.forEach((element, j) => {
                 callback(element, i + this.startN(), j + this.startM());

@@ -71,7 +71,10 @@ export class ErrorLauncher {
         throw new Error(`Number ${number} is invalid. Please ensure give a valid number when calling ${method}.`);
     }
     static invalidColorFormat(color) {
-        throw new Error(`Color format ${color} is invalid. Can only process HexColor (e.g. "#ffcc3d") or { fill: HexColor, stroke: HexColor }`);
+        throw new Error(`Color format ${color} is invalid. Can only process HexColor (e.g. "#ffcc3d") or { fill: HexColor, stroke: HexColor }.`);
+    }
+    static invalidSyncFunction(callback, method) {
+        throw new Error(`Callback ${callback} is not a synchronized function. Please ensure to give a valid synchronized callback function when calling ${method}.`);
     }
 
     static warnNotImplementedYet(method) {
