@@ -2,6 +2,7 @@ import { Interp } from "@/Animate/Interp";
 import { Vector as V } from "@/Math/Vector";
 import { Circle } from "@/Node/Shape/Circle";
 import { BaseShapeSVG } from "@/Node/SVG/Shape/BaseShapeSVG";
+import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
 
 export class CircleSVG extends BaseShapeSVG {
@@ -30,9 +31,24 @@ CircleSVG.extend(Circle);
 
 Object.assign(CircleSVG.prototype, {
     ...Circle.prototype,
-    r: Factory.handlerLowPrecise("r"),
-    cx: Factory.handlerLowPrecise("cx"),
-    cy: Factory.handlerLowPrecise("cy"),
+    r(r) {
+        if (arguments.length === 0) return this.vars.r;
+        Check.validateNumber(r, `${this.type()}.r`);
+        this.vars.lpset("r", r);
+        return this;
+    },
+    cx(cx) {
+        if (arguments.length === 0) return this.vars.cx;
+        Check.validateNumber(cx, `${this.type()}.cx`);
+        this.vars.lpset("cx", cx);
+        return this;
+    },
+    cy(cy) {
+        if (arguments.length === 0) return this.vars.cy;
+        Check.validateNumber(cy, `${this.type()}.cy`);
+        this.vars.lpset("cy", cy);
+        return this;
+    },
     inRange(vec) {
         return V.length(V.sub(this.center(), vec)) <= this.r();
     },

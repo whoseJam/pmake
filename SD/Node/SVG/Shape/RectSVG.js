@@ -1,6 +1,7 @@
 import { Interp } from "@/Animate/Interp";
 import { Rect } from "@/Node/Shape/Rect";
 import { BaseShapeSVG } from "@/Node/SVG/Shape/BaseShapeSVG";
+import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
 
 export class RectSVG extends BaseShapeSVG {
@@ -32,8 +33,28 @@ RectSVG.extend(Rect);
 
 Object.assign(RectSVG.prototype, {
     ...Rect.prototype,
-    x: Factory.handlerLowPrecise("x"),
-    y: Factory.handlerLowPrecise("y"),
-    width: Factory.handlerLowPrecise("width"),
-    height: Factory.handlerLowPrecise("height"),
+    x(x) {
+        if (arguments.length === 0) return this.vars.x;
+        Check.validateNumber(x, `${this.type()}.x`);
+        this.vars.lpset("x", x);
+        return this;
+    },
+    y(y) {
+        if (arguments.length === 0) return this.vars.y;
+        Check.validateNumber(y, `${this.type()}.y`);
+        this.vars.lpset("y", y);
+        return this;
+    },
+    width(width) {
+        if (arguments.length === 0) return this.vars.width;
+        Check.validateNumber(width, `${this.type()}.width`);
+        this.vars.lpset("width", width);
+        return this;
+    },
+    height(height) {
+        if (arguments.length === 0) return this.vars.height;
+        Check.validateNumber(height, `${this.type()}.height`);
+        this.vars.lpset("height", height);
+        return this;
+    },
 });

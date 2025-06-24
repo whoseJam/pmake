@@ -1,3 +1,5 @@
+import { ErrorLauncher } from "@/Utility/ErrorLauncher";
+
 export class Check {
     static isFalseType(object) {
         return object === null || object === undefined || object === false;
@@ -25,5 +27,28 @@ export class Check {
     }
     static isTypeOfVector(object) {
         return object && typeof object[0] === "number" && typeof object[1] === "number";
+    }
+    static isColor(object) {
+        return this.isHexColor(object) || this.isSDColor(object);
+    }
+    static isSDColor(object) {
+        if (!object) return false;
+        if (typeof object !== "object") return false;
+        return this.isHexColor(object.fill) && this.isHexColor(object.stroke);
+    }
+    static isHexColor(object) {
+        if (!object) return false;
+        if (typeof object !== "string") return false;
+        if (object.length !== 7) return false;
+        if (object[0] !== "#") return false;
+        for (let i = 1; i <= 6; i++) if ("0123456789aAbBcCdDeEfF".indexOf(object[i]) === -1) return false;
+        return true;
+    }
+
+    static validateNumber(object, method) {
+        if (!this.isValidNumber(object)) ErrorLauncher.invalidNumber(object, method);
+    }
+    static validateColor(object) {
+        if (!this.isColor(object)) ErrorLauncher.invalidColorFormat(object);
     }
 }

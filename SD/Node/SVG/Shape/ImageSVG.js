@@ -1,6 +1,7 @@
 import { Interp } from "@/Animate/Interp";
 import { Image } from "@/Node/Shape/Image";
 import { BaseShapeSVG } from "@/Node/SVG/Shape/BaseShapeSVG";
+import { RectSVG } from "@/Node/SVG/Shape/RectSVG";
 import { Factory } from "@/Utility/Factory";
 
 export class ImageSVG extends BaseShapeSVG {
@@ -34,9 +35,9 @@ export class ImageSVG extends BaseShapeSVG {
 ImageSVG.extend(Image);
 
 Object.assign(ImageSVG.prototype, {
-    x: Factory.handlerLowPrecise("x"),
-    y: Factory.handlerLowPrecise("y"),
+    x: RectSVG.prototype.x,
+    y: RectSVG.prototype.y,
     href: Factory.handler("href"),
-    width: Factory.handlerLowPrecise("width"),
-    height: Factory.handlerLowPrecise("height"),
+    width: RectSVG.prototype.width,
+    height: RectSVG.prototype.height,
 });

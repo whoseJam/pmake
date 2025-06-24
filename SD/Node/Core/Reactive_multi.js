@@ -197,6 +197,18 @@ export function setPrecise(proxy, key, type) {
     objectManager.precise.set(key, type);
 }
 
+function lowPrecise(oldValue, newValue) {
+    return Math.abs(oldValue - newValue) >= 1;
+}
+
+function mediumPrecise(oldValue, newValue) {
+    return Math.abs(oldValue - newValue) >= 1e-1;
+}
+
+function highPrecise(oldValue, newValue) {
+    return Math.abs(oldValue - newValue) >= 1e-2;
+}
+
 export function reactive(object) {
     if (objectsMap.has(object)) return objectsMap.get(object).proxy;
     let associated = {};
@@ -270,6 +282,18 @@ export function reactive(object) {
             keys.push(key);
         }
         triggerUpdates(objects, keys);
+    };
+    object.lpset = function (key, value) {
+        setPrecise(proxy, key, lowPrecise);
+        proxy[key] = value;
+    };
+    object.mpset = function (key, value) {
+        setPrecise(proxy, key, mediumPrecise);
+        proxy[key] = value;
+    };
+    object.hpset = function (key, value) {
+        setPrecise(proxy, key, highPrecise);
+        proxy[key] = value;
     };
     return proxy;
 }

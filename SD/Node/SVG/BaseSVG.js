@@ -1,6 +1,7 @@
 import { Interp } from "@/Animate/Interp";
 import { SD2DNode } from "@/Node/SD2DNode";
 import { createRenderNode } from "@/Renderer/RenderNode";
+import { Check } from "@/Utility/Check";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
 
@@ -41,7 +42,8 @@ Object.assign(BaseSVG.prototype, {
     strokeDashOffset: Factory.handlerMediumPrecise("strokeDashOffset"),
     strokeDashArray: Factory.handler("strokeDashArray"),
     color(color) {
-        if (color === undefined) return { fill: this.fill(), stroke: this.stroke() };
+        if (arguments.length === 0) return { fill: this.fill(), stroke: this.stroke() };
+        Check.validateColor(color);
         if (typeof color === "string") {
             this.fill(color);
             const { Text } = require("@/Node/SVG/Text");

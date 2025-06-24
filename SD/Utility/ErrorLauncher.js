@@ -67,6 +67,13 @@ export class ErrorLauncher {
     static gridElementNotFound(rowId, colId) {
         throw new Error(`Grid element[${rowId}, ${colId}] not found.`);
     }
+    static invalidNumber(number, method) {
+        throw new Error(`Number ${number} is invalid. Please ensure give a valid number when calling ${method}.`);
+    }
+    static invalidColorFormat(color) {
+        throw new Error(`Color format ${color} is invalid. Can only process HexColor (e.g. "#ffcc3d") or { fill: HexColor, stroke: HexColor }`);
+    }
+
     static warnNotImplementedYet(method) {
         console.warn(`Function ${method} not implemented yet.`);
     }

@@ -1,6 +1,8 @@
 import { Interp } from "@/Animate/Interp";
 import { Ellipse } from "@/Node/Shape/Ellipse";
 import { BaseShapeSVG } from "@/Node/SVG/Shape/BaseShapeSVG";
+import { CircleSVG } from "@/Node/SVG/Shape/CircleSVG";
+import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
 
 export class EllipseSVG extends BaseShapeSVG {
@@ -32,10 +34,20 @@ EllipseSVG.extend(Ellipse);
 
 Object.assign(EllipseSVG.prototype, {
     ...Ellipse.prototype,
-    cx: Factory.handlerLowPrecise("cx"),
-    cy: Factory.handlerLowPrecise("cy"),
-    rx: Factory.handlerLowPrecise("rx"),
-    ry: Factory.handlerLowPrecise("ry"),
+    cx: CircleSVG.prototype.cx,
+    cy: CircleSVG.prototype.cy,
+    rx(rx) {
+        if (arguments.length === 0) return this.vars.rx;
+        Check.validateNumber(rx, `${this.type()}.rx`);
+        this.vars.lpset("rx", rx);
+        return this;
+    },
+    ry(ry) {
+        if (arguments.length === 0) return this.vars.ry;
+        Check.validateNumber(ry, `${this.type()}.ry`);
+        this.vars.lpset("ry", ry);
+        return this;
+    },
     x(x) {
         if (x === undefined) return this.cx() - this.rx();
         return this.cx(x - this.x() + this.cx());

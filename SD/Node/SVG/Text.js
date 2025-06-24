@@ -1,6 +1,7 @@
 import { Interp } from "@/Animate/Interp";
 import { svg } from "@/Interact/Root";
 import { BaseSVG } from "@/Node/SVG/BaseSVG";
+import { RectSVG } from "@/Node/SVG/Shape/RectSVG";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
 
@@ -84,8 +85,8 @@ export class Text extends BaseSVG {
 }
 
 Object.assign(Text.prototype, {
-    x: Factory.handlerLowPrecise("x"),
-    y: Factory.handlerLowPrecise("y"),
+    x: RectSVG.prototype.x,
+    y: RectSVG.prototype.y,
     fontSize(fontSize) {
         if (fontSize == undefined) return this.vars.fontSize;
         if (this.vars.fontSize > 1e-1) {

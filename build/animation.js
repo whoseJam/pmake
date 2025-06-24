@@ -74,7 +74,7 @@ function launch(selfLaunch = true) {
         console.log(colors("cyan", "Usage: animation -i <source file path> [-o <target path>]"));
         process.exit();
     }
-    if (global["l"] && !global["sd"]) utils.copyFile("./dist/sd.js", parser.parseConfig("pptOutputPath"));
+    if (global["l"] && !global["sd"] && !global["s"]) utils.copyFile("./dist/sd.js", parser.parseConfig("pptOutputPath"));
     return task(sourceFilePath, animationOutputPath);
 }
 

@@ -4,72 +4,52 @@ const svg = sd.svg();
 const C = sd.color();
 
 const grid = new sd.Grid(svg);
-const bx = 6,
-    by = 6,
-    mx = 3,
-    my = 3;
+grid.n(21).m(21).elementWidth(30).elementHeight(30);
 
-const s = Array.from({ length: bx + 1 }, () => Array.from({ length: by + 1 }, () => false));
+const startLabel = new sd.Text(svg);
+startLabel.text("1").fontSize(20).color(C.green);
 
-s[mx][my] = true;
-const dx = [-2, -1, 1, 2, 2, 1, -1, -2];
-const dy = [1, 2, 2, 1, -1, -2, -2, -1];
-for (let i = 0; i < 8; i++) {
-    const x = mx + dx[i];
-    const y = my + dy[i];
-    if (x >= 0 && x <= bx && y >= 0 && y <= by) {
-        s[x][y] = true;
-    }
-}
+const blockedLabel = new sd.Text(svg);
+blockedLabel.text("0").fontSize(20).color(C.red);
+
+const generalLabel = new sd.Text(svg);
+generalLabel.fontSize(20).color(C.black);
 
 sd.init(() => {
-    grid.n(bx + 1).m(by + 1);
-    for (let i = 0; i <= bx; i++) {
-        for (let j = 0; j <= by; j++) {
-            const rect = new sd.Rect(svg);
-            rect.width(50)
-                .height(50)
-                .x(i * 60 + 50)
-                .y(j * 60 + 50)
-                .opacity(0.5)
-                .color(C.white)
-                .stroke(C.black);
-            if (s[i][j]) {
-                rect.color(C.red);
-            }
-            grid.insert(i, j, rect);
-            const text = new sd.Text(svg, "0").fontSize(16).fill(C.black);
-            text.cx(i * 60 + 50 + 25).cy(j * 60 + 50 + 25);
-            grid.value(i, j, text);
-        }
-    }
-    const startText = new sd.Text(svg, "1").fontSize(16).fill(C.black);
-    startText.cx(75).cy(75);
-    grid.value(0, 0, startText);
-    grid.color(0, 0, C.green);
+    startLabel.x(grid.x(1) + 10).y(grid.y(1) + 20);
+    blockedLabel.x(grid.x(2) + 10).y(grid.y(2) + 20);
+    generalLabel.x(grid.x(3) + 10).y(grid.y(3) + 20);
 });
 
 sd.main(async () => {
-    const f = Array.from({ length: bx + 1 }, () => Array.from({ length: by + 1 }, () => 0));
-    f[0][0] = 1;
-    for (let i = 0; i <= bx; i++) {
-        for (let j = 0; j <= by; j++) {
-            if (s[i][j]) {
+    const bx = 6 + 2,
+        by = 6 + 2,
+        mx = 3 + 2,
+        my = 3 + 2;
+    const blocked = new Set(["3,3", "1,2", "2,1", "1,4", "2,5", "4,5", "5,4", "5,2", "4,1"]);
+    const dp = Array.from({ length: bx + 1 }, () => Array(by + 1).fill(0));
+    dp[1][1] = 1;
+
+    for (let i = 1; i <= bx; i++) {
+        for (let j = 1; j <= by; j++) {
+            await sd.pause();
+            const key = `${i},${j}`;
+            if (blocked.has(key)) {
+                const blockedText = new sd.Text(svg);
+                blockedText.text("0").fontSize(20).color(C.red);
+                blockedText.x(grid.x(i) + 10).y(grid.y(j) + 20);
                 continue;
             }
-            if (i > 0) {
-                f[i][j] += f[i - 1][j];
+            if (i === 1 && j === 1) {
+                const startText = new sd.Text(svg);
+                startText.text("1").fontSize(20).color(C.green);
+                startText.x(grid.x(i) + 10).y(grid.y(j) + 20);
+                continue;
             }
-            if (j > 0) {
-                f[i][j] += f[i][j - 1];
-            }
-            if (i !== 0 || j !== 0) {
-                await sd.pause();
-                const text = new sd.Text(svg, f[i][j].toString()).fontSize(16).fill(C.black);
-                text.cx(i * 60 + 50 + 25).cy(j * 60 + 50 + 25);
-                grid.value(i, j, text);
-                grid.color(i, j, C.blue);
-            }
+            dp[i][j] = dp[i - 1][j] + dp[i][j - 1];
+            const generalText = new sd.Text(svg);
+            generalText.text(dp[i][j].toString()).fontSize(20).color(C.black);
+            generalText.x(grid.x(i) + 10).y(grid.y(j) + 20);
         }
     }
 });
