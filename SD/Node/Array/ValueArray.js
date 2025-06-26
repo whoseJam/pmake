@@ -1,6 +1,7 @@
 import { Array } from "@/Node/Array/Array";
 import { Enter as EN } from "@/Node/Core/Enter";
 import { Cast } from "@/Utility/Cast";
+import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
 
 export class ValueArray extends Array {
@@ -8,6 +9,8 @@ export class ValueArray extends Array {
         super(target);
 
         this.type("ValueArray");
+
+        Check.validateArgumentsCountEqualTo(arguments, 1, `${this.type()}.constructor`);
 
         this.vars.merge({
             align: "cy",

@@ -3,10 +3,11 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const C = sd.color();
 const data = [3, -3, -2, 5, -4];
-const array = new sd.Array(svg).pushArray(data);
+const array = new sd.Array(svg);
 
 sd.init(() => {
     array.x(100).y(100);
+    array.value(data);
 });
 
 sd.main(async () => {

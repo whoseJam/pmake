@@ -124,8 +124,9 @@ Object.assign(BaseArray.prototype, {
         }
         return element.intValue();
     },
-    value(id, value) {
-        const element = this.__getElementWithMethod(id, "value");
+    value(i, value) {
+        Check.validateNumber(i, `${this.type()}.value`);
+        const element = this.__getElementWithMethod(i, "value");
         if (arguments.length === 1) {
             return element.value();
         } else {

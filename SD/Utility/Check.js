@@ -63,4 +63,7 @@ export class Check {
     static validateSyncFunction(object, method) {
         if (!this.isSyncFunction(object)) ErrorLauncher.invalidSyncFunction(object, method);
     }
+    static validateArgumentsCountEqualTo(args, count, method) {
+        if (args.length !== count) throw new Error(`The ${method} expect ${count} arguments, but got ${args.length} arguments.`);
+    }
 }

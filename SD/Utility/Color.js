@@ -1,3 +1,5 @@
+import { rand } from "@/Utility/Random";
+
 export class Color {
     static red = "#f14c4c";
     static blue = "#bbe0e3";

@@ -1,4 +1,5 @@
 import { Pile } from "@/Node/Array/Pile";
+import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
 
 export class ValuePile extends Pile {
@@ -6,6 +7,8 @@ export class ValuePile extends Pile {
         super(target);
 
         this.type("ValuePile");
+
+        Check.validateArgumentsCountEqualTo(arguments, 1, `${this.type()}.constructor`);
 
         this.vars.merge({
             align: "cx",

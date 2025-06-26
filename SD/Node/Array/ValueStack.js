@@ -1,5 +1,6 @@
 import { Stack } from "@/Node/Array/Stack";
 import { ValueArray } from "@/Node/Array/ValueArray";
+import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
 
 export class ValueStack extends Stack {
@@ -7,6 +8,8 @@ export class ValueStack extends Stack {
         super(target);
 
         this.type("ValueStack");
+
+        Check.validateArgumentsCountEqualTo(arguments, 1, `${this.type()}.constructor`);
 
         this.vars.merge({
             align: "cx",

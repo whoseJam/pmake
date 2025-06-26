@@ -16,4 +16,5 @@ export class Check {
     static validateNumber(object: any, method: string): void;
     static validateColor(object: any): void;
     static validateSyncFunction(object: any): void;
+    static validateArgumentsCountEqualTo(arguments: Array<any>, count: number, method: string): void;
 }

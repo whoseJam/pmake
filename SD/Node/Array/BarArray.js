@@ -2,6 +2,7 @@ import { Array } from "@/Node/Array/Array";
 import { BaseArray } from "@/Node/Array/BaseArray";
 import { Enter as EN } from "@/Node/Core/Enter";
 import { RectSVG } from "@/Node/SVG/Shape/RectSVG";
+import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 
@@ -10,6 +11,8 @@ export class BarArray extends BaseArray {
         super(target);
 
         this.type("BarArray");
+
+        Check.validateArgumentsCountEqualTo(arguments, 1, `${this.type()}.constructor`);
 
         this.vars.merge({
             x: 0,

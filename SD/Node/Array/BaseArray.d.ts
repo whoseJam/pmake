@@ -169,7 +169,7 @@ export class BaseArray extends SD2DNode {
      * @param value - The content to set as the value.
      * @returns The current component instance for method chaining.
      */
-    value(i: number, value: SD2DNode): this;
+    value(i: number, value: any): this;
 
     /**
      * Inserts a value at a specified position.
