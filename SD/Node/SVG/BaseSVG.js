@@ -23,13 +23,13 @@ export class BaseSVG extends SD2DNode {
         this._.nake.setAttribute("fill", this.vars.fill);
         this._.nake.setAttribute("stroke", this.vars.stroke);
 
-        this.vars.associate("fill", Factory.action(this, this._.nake, "fill", Interp.colorInterp));
-        this.vars.associate("stroke", Factory.action(this, this._.nake, "stroke", Interp.colorInterp));
-        this.vars.associate("fillOpacity", Factory.action(this, this._.nake, "fill-opacity", Interp.numberInterp));
-        this.vars.associate("strokeOpacity", Factory.action(this, this._.nake, "stroke-opacity", Interp.numberInterp));
-        this.vars.associate("strokeWidth", Factory.action(this, this._.nake, "stroke-width", Interp.numberInterp));
-        this.vars.associate("strokeDashOffset", Factory.action(this, this._.nake, "stroke-dashoffset", Interp.numberInterp));
-        this.vars.associate("strokeDashArray", Factory.action(this, this._.nake, "stroke-dasharray", Interp.arrayInterp));
+        this.vars.watch("fill", Factory.action(this, this._.nake, "fill", Interp.colorInterp));
+        this.vars.watch("stroke", Factory.action(this, this._.nake, "stroke", Interp.colorInterp));
+        this.vars.watch("fillOpacity", Factory.action(this, this._.nake, "fill-opacity", Interp.numberInterp));
+        this.vars.watch("strokeOpacity", Factory.action(this, this._.nake, "stroke-opacity", Interp.numberInterp));
+        this.vars.watch("strokeWidth", Factory.action(this, this._.nake, "stroke-width", Interp.numberInterp));
+        this.vars.watch("strokeDashOffset", Factory.action(this, this._.nake, "stroke-dashoffset", Interp.numberInterp));
+        this.vars.watch("strokeDashArray", Factory.action(this, this._.nake, "stroke-dasharray", Interp.arrayInterp));
     }
 }
 

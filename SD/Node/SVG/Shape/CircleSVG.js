@@ -17,9 +17,9 @@ export class CircleSVG extends BaseShapeSVG {
             cy: 20,
         });
 
-        this.vars.associate("r", Factory.action(this, this._.nake, "r", Interp.numberInterp));
-        this.vars.associate("cx", Factory.action(this, this._.nake, "cx", Interp.numberInterp));
-        this.vars.associate("cy", Factory.action(this, this._.nake, "cy", Interp.numberInterp));
+        this.vars.watch("r", Factory.action(this, this._.nake, "r", Interp.numberInterp));
+        this.vars.watch("cx", Factory.action(this, this._.nake, "cx", Interp.numberInterp));
+        this.vars.watch("cy", Factory.action(this, this._.nake, "cy", Interp.numberInterp));
 
         this._.nake.setAttribute("cx", this.vars.cx);
         this._.nake.setAttribute("cy", this.vars.cy);

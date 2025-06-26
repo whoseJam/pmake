@@ -18,10 +18,10 @@ export class EllipseSVG extends BaseShapeSVG {
             cy: 20,
         });
 
-        this.vars.associate("rx", Factory.action(this, this._.nake, "rx", Interp.numberInterp));
-        this.vars.associate("ry", Factory.action(this, this._.nake, "ry", Interp.numberInterp));
-        this.vars.associate("cx", Factory.action(this, this._.nake, "cx", Interp.numberInterp));
-        this.vars.associate("cy", Factory.action(this, this._.nake, "cy", Interp.numberInterp));
+        this.vars.watch("rx", Factory.action(this, this._.nake, "rx", Interp.numberInterp));
+        this.vars.watch("ry", Factory.action(this, this._.nake, "ry", Interp.numberInterp));
+        this.vars.watch("cx", Factory.action(this, this._.nake, "cx", Interp.numberInterp));
+        this.vars.watch("cy", Factory.action(this, this._.nake, "cy", Interp.numberInterp));
 
         this._.nake.setAttribute("cx", this.vars.cx);
         this._.nake.setAttribute("cy", this.vars.cy);

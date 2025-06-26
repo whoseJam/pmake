@@ -17,13 +17,13 @@ export function PointLight(target) {
     this._.light = new PointLightFromThree(this.vars.color, this.vars.intensity);
     this._.scene.add(this._.light);
 
-    this.vars.associate("x", Factory.action(this, this._.light.position, "x", Interp.numberInterp));
-    this.vars.associate("y", Factory.action(this, this._.light.position, "y", Interp.numberInterp));
-    this.vars.associate("z", Factory.action(this, this._.light.position, "z", Interp.numberInterp));
-    this.vars.associate("color", Factory.action(this, this._.light, "color", Interp.normalizedColorInterp));
-    this.vars.associate("intensity", Factory.action(this, this._.light, "intensity", Interp.numberInterp));
-    this.vars.associate("distance", Factory.action(this, this._.light, "distance", Interp.numberInterp));
-    this.vars.associate("decay", Factory.action(this, this._.light, "decay", Interp.numberInterp));
+    this.vars.watch("x", Factory.action(this, this._.light.position, "x", Interp.numberInterp));
+    this.vars.watch("y", Factory.action(this, this._.light.position, "y", Interp.numberInterp));
+    this.vars.watch("z", Factory.action(this, this._.light.position, "z", Interp.numberInterp));
+    this.vars.watch("color", Factory.action(this, this._.light, "color", Interp.normalizedColorInterp));
+    this.vars.watch("intensity", Factory.action(this, this._.light, "intensity", Interp.numberInterp));
+    this.vars.watch("distance", Factory.action(this, this._.light, "distance", Interp.numberInterp));
+    this.vars.watch("decay", Factory.action(this, this._.light, "decay", Interp.numberInterp));
 }
 
 PointLight.prototype = {

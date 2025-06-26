@@ -15,14 +15,14 @@ export function DirectionalLight(target) {
     this._.light = new DirectionalLightFromThree(this.vars.color);
     this._.scene.add(this._.light);
 
-    this.vars.associate("x", Factory.action(this, this._.light.position, "x", Interp.numberInterp));
-    this.vars.associate("y", Factory.action(this, this._.light.position, "y", Interp.numberInterp));
-    this.vars.associate("z", Factory.action(this, this._.light.position, "z", Interp.numberInterp));
-    this.vars.associate("rx", Factory.action(this, this._.light.rotation, "x", Interp.numberInterp));
-    this.vars.associate("ry", Factory.action(this, this._.light.rotation, "y", Interp.numberInterp));
-    this.vars.associate("rz", Factory.action(this, this._.light.rotation, "z", Interp.numberInterp));
-    this.vars.associate("color", Factory.action(this, this._.light, "color", Interp.normalizedColorInterp));
-    this.vars.associate("intensity", Factory.action(this, this._.light, "intensity", Interp.numberInterp));
+    this.vars.watch("x", Factory.action(this, this._.light.position, "x", Interp.numberInterp));
+    this.vars.watch("y", Factory.action(this, this._.light.position, "y", Interp.numberInterp));
+    this.vars.watch("z", Factory.action(this, this._.light.position, "z", Interp.numberInterp));
+    this.vars.watch("rx", Factory.action(this, this._.light.rotation, "x", Interp.numberInterp));
+    this.vars.watch("ry", Factory.action(this, this._.light.rotation, "y", Interp.numberInterp));
+    this.vars.watch("rz", Factory.action(this, this._.light.rotation, "z", Interp.numberInterp));
+    this.vars.watch("color", Factory.action(this, this._.light, "color", Interp.normalizedColorInterp));
+    this.vars.watch("intensity", Factory.action(this, this._.light, "intensity", Interp.numberInterp));
 }
 
 DirectionalLight.prototype = {

@@ -22,9 +22,9 @@ export class BasePathSVG extends BaseSVG {
 
         this.vars.fillOpacity = 0;
 
-        this.vars.associate("markerStart", Factory.action(this, this._.nake, "marker-start", Interp.stringInterp));
-        this.vars.associate("markerMid", Factory.action(this, this._.nake, "marker-mid", Interp.stringInterp));
-        this.vars.associate("markerEnd", Factory.action(this, this._.nake, "marker-end", Interp.stringInterp));
+        this.vars.watch("markerStart", Factory.action(this, this._.nake, "marker-start", Interp.stringInterp));
+        this.vars.watch("markerMid", Factory.action(this, this._.nake, "marker-mid", Interp.stringInterp));
+        this.vars.watch("markerEnd", Factory.action(this, this._.nake, "marker-end", Interp.stringInterp));
     }
 }
 

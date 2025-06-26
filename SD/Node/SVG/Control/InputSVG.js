@@ -29,7 +29,7 @@ export class InputSVG extends BaseControlSVG {
         this._.control.setAttribute("type", "text");
         this._.control.setAttribute("value", "");
 
-        this.vars.associate("label", Factory.action(this, this._.label, "text", Interp.stringInterp));
+        this.vars.watch("label", Factory.action(this, this._.label, "text", Interp.stringInterp));
     }
 }
 

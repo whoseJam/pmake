@@ -17,7 +17,7 @@ export class PolylineSVG extends BasePathSVG {
             points,
         });
 
-        this.vars.associate("points", Factory.action(this, this._.nake, "points", Interp.pointsInterp));
+        this.vars.watch("points", Factory.action(this, this._.nake, "points", Interp.pointsInterp));
 
         this._.nake.setAttribute("points", this.vars.points);
     }

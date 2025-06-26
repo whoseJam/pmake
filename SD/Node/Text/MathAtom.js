@@ -12,8 +12,8 @@ export class MathAtom extends SD2DNode {
             fill: C.black,
         });
 
-        this.vars.associate("fill", Factory.action(this, "math", "fill", Interp.colorInterp));
-        this.vars.associate("stroke", Factory.action(this, "math", "stroke", Interp.colorInterp));
+        this.vars.watch("fill", Factory.action(this, "math", "fill", Interp.colorInterp));
+        this.vars.watch("stroke", Factory.action(this, "math", "stroke", Interp.colorInterp));
     }
 }
 

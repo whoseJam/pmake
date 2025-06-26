@@ -18,10 +18,10 @@ export class LineSVG extends BasePathSVG {
             y2: 40,
         });
 
-        this.vars.associate("x1", Factory.action(this, this._.nake, "x1", Interp.numberInterp));
-        this.vars.associate("y1", Factory.action(this, this._.nake, "y1", Interp.numberInterp));
-        this.vars.associate("x2", Factory.action(this, this._.nake, "x2", Interp.numberInterp));
-        this.vars.associate("y2", Factory.action(this, this._.nake, "y2", Interp.numberInterp));
+        this.vars.watch("x1", Factory.action(this, this._.nake, "x1", Interp.numberInterp));
+        this.vars.watch("y1", Factory.action(this, this._.nake, "y1", Interp.numberInterp));
+        this.vars.watch("x2", Factory.action(this, this._.nake, "x2", Interp.numberInterp));
+        this.vars.watch("y2", Factory.action(this, this._.nake, "y2", Interp.numberInterp));
 
         this._.nake.setAttribute("x1", this.vars.x1);
         this._.nake.setAttribute("y1", this.vars.y1);

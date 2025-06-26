@@ -25,14 +25,14 @@ export function Rect3D(target) {
     this._.scene.add(this._.stroke);
 
     const sizeHelper = createSizeHelper(this, this._.fill, this._.stroke);
-    this.vars.associate("cx", Factory.action(this, this._.fill.position, "x", Interp.numberInterp));
-    this.vars.associate("cx", Factory.action(this, this._.stroke.position, "x", Interp.numberInterp));
-    this.vars.associate("cy", Factory.action(this, this._.fill.position, "y", Interp.numberInterp));
-    this.vars.associate("cy", Factory.action(this, this._.stroke.position, "y", Interp.numberInterp));
-    this.vars.associate("z", Factory.action(this, this._.fill.position, "z", Interp.numberInterp));
-    this.vars.associate("z", Factory.action(this, this._.stroke.position, "z", Interp.numberInterp));
-    this.vars.associate("width", Factory.action(this, sizeHelper, "width", Interp.numberInterp));
-    this.vars.associate("height", Factory.action(this, sizeHelper, "height", Interp.numberInterp));
+    this.vars.watch("cx", Factory.action(this, this._.fill.position, "x", Interp.numberInterp));
+    this.vars.watch("cx", Factory.action(this, this._.stroke.position, "x", Interp.numberInterp));
+    this.vars.watch("cy", Factory.action(this, this._.fill.position, "y", Interp.numberInterp));
+    this.vars.watch("cy", Factory.action(this, this._.stroke.position, "y", Interp.numberInterp));
+    this.vars.watch("z", Factory.action(this, this._.fill.position, "z", Interp.numberInterp));
+    this.vars.watch("z", Factory.action(this, this._.stroke.position, "z", Interp.numberInterp));
+    this.vars.watch("width", Factory.action(this, sizeHelper, "width", Interp.numberInterp));
+    this.vars.watch("height", Factory.action(this, sizeHelper, "height", Interp.numberInterp));
 }
 
 Rect3D.prototype = {

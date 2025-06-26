@@ -27,10 +27,10 @@ export class Canvas extends BaseHTML {
         this._.nake.setAttribute("width", "100%");
         this._.nake.setAttribute("height", "100%");
 
-        this.vars.associate("x", Factory.action(this, this._.layer, "left", Interp.pixelInterp));
-        this.vars.associate("y", Factory.action(this, this._.layer, "top", Interp.pixelInterp));
-        this.vars.associate("width", Factory.action(this, this._.layer, "width", Interp.pixelInterp));
-        this.vars.associate("height", Factory.action(this, this._.layer, "height", Interp.pixelInterp));
+        this.vars.watch("x", Factory.action(this, this._.layer, "left", Interp.pixelInterp));
+        this.vars.watch("y", Factory.action(this, this._.layer, "top", Interp.pixelInterp));
+        this.vars.watch("width", Factory.action(this, this._.layer, "width", Interp.pixelInterp));
+        this.vars.watch("height", Factory.action(this, this._.layer, "height", Interp.pixelInterp));
     }
 }
 

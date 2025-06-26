@@ -9,8 +9,8 @@ export function AmbientLight(target) {
     this._.light = new AmbientLightFromThree(this.vars.color);
     this._.scene.add(this._.light);
 
-    this.vars.associate("color", Factory.action(this, this._.light, "color", Interp.normalizedColorInterp));
-    this.vars.associate("intensity", Factory.action(this, this._.light, "intensity", Interp.numberInterp));
+    this.vars.watch("color", Factory.action(this, this._.light, "color", Interp.normalizedColorInterp));
+    this.vars.watch("intensity", Factory.action(this, this._.light, "intensity", Interp.numberInterp));
 }
 
 AmbientLight.prototype = {

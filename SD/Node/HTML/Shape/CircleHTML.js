@@ -20,8 +20,8 @@ export class CircleHTML extends BaseShapeHTML {
         this._.nake.setAttribute("border-radius", "50%");
 
         const helper = createHelper(this._.layer);
-        this.vars.associate("r", Factory.action(this, helper, "width", Interp.numberInterp));
-        this.vars.associate("r", Factory.action(this, helper, "height", Interp.numberInterp));
+        this.vars.watch("r", Factory.action(this, helper, "width", Interp.numberInterp));
+        this.vars.watch("r", Factory.action(this, helper, "height", Interp.numberInterp));
     }
 }
 

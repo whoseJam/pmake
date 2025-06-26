@@ -11,7 +11,7 @@ export class BaseElement extends SD2DNode {
      * The target can be another component or a canvas element (e.g., SVG, div).
      * If a value is provided, it will be centered within the element component by default.
      * @param target - The destination to render the component.
-     * @param value - Optional data value to associate with this component instance.
+     * @param value - Optional data value to watch with this component instance.
      *                If omitted, the component will be centered within the target.
      */
     constructor(target: SDNode | RenderNode, value?: any);

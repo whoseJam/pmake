@@ -17,18 +17,18 @@ export function OrthographicCamera(target) {
     this._.camera.position.set(this.vars.x, this.vars.y, this.vars.z);
     this._.camera.lookAt(0, 0, 0);
 
-    this.vars.associate("x", Factory.action(this, this._.camera.position, "x", Interp.numberInterp));
-    this.vars.associate("y", Factory.action(this, this._.camera.position, "y", Interp.numberInterp));
-    this.vars.associate("z", Factory.action(this, this._.camera.position, "z", Interp.numberInterp));
-    this.vars.associate("rx", Factory.action(this, this._.camera.rotation, "x", Interp.numberInterp));
-    this.vars.associate("ry", Factory.action(this, this._.camera.rotation, "y", Interp.numberInterp));
-    this.vars.associate("rz", Factory.action(this, this._.camera.rotation, "z", Interp.numberInterp));
-    this.vars.associate("left", Factory.actionForCamera(this, this._.camera, "left", Interp.numberInterp));
-    this.vars.associate("right", Factory.actionForCamera(this, this._.camera, "right", Interp.numberInterp));
-    this.vars.associate("top", Factory.actionForCamera(this, this._.camera, "top", Interp.numberInterp));
-    this.vars.associate("bottom", Factory.actionForCamera(this, this._.camera, "bottom", Interp.numberInterp));
-    this.vars.associate("near", Factory.action(this, this._.camera, "near", Interp.numberInterp));
-    this.vars.associate("far", Factory.action(this, this._.camera, "far", Interp.numberInterp));
+    this.vars.watch("x", Factory.action(this, this._.camera.position, "x", Interp.numberInterp));
+    this.vars.watch("y", Factory.action(this, this._.camera.position, "y", Interp.numberInterp));
+    this.vars.watch("z", Factory.action(this, this._.camera.position, "z", Interp.numberInterp));
+    this.vars.watch("rx", Factory.action(this, this._.camera.rotation, "x", Interp.numberInterp));
+    this.vars.watch("ry", Factory.action(this, this._.camera.rotation, "y", Interp.numberInterp));
+    this.vars.watch("rz", Factory.action(this, this._.camera.rotation, "z", Interp.numberInterp));
+    this.vars.watch("left", Factory.actionForCamera(this, this._.camera, "left", Interp.numberInterp));
+    this.vars.watch("right", Factory.actionForCamera(this, this._.camera, "right", Interp.numberInterp));
+    this.vars.watch("top", Factory.actionForCamera(this, this._.camera, "top", Interp.numberInterp));
+    this.vars.watch("bottom", Factory.actionForCamera(this, this._.camera, "bottom", Interp.numberInterp));
+    this.vars.watch("near", Factory.action(this, this._.camera, "near", Interp.numberInterp));
+    this.vars.watch("far", Factory.action(this, this._.camera, "far", Interp.numberInterp));
 }
 
 OrthographicCamera.prototype = {

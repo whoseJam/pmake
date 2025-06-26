@@ -58,11 +58,18 @@ Object.assign(BarArray.prototype, {
         value = +value;
         if (typeof value !== "number") ErrorLauncher.invalidArguments();
         const element = new RectSVG(this.layer("elements")).opacity(0);
-        element.value = function () {
-            return value;
+        element.vars.merge({
+            value,
+        });
+        element.value = function (value) {
+            if (arguments.length === 0) return this.vars.value;
+            this.vars.value = value;
+            return this;
         };
-        element.intValue = function () {
-            return value;
+        element.intValue = function (value) {
+            if (arguments.length === 0) return this.vars.value;
+            this.vars.value = value;
+            return this;
         };
         element.onEnter(EN.appear("elements"));
         this.__insert(id, element);

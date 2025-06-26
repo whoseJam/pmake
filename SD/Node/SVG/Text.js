@@ -68,10 +68,10 @@ export class Text extends BaseSVG {
             height: 0,
         });
 
-        this.vars.associate("x", Factory.action(this, this._.nake, "x", Interp.numberInterp));
-        this.vars.associate("y", Factory.action(this, this._.nake, "y", Interp.numberInterp));
-        this.vars.associate("text", Factory.action(this, this._.nake, "text", Interp.stringInterp));
-        this.vars.associate("fontSize", Factory.action(this, this._.nake, "font-size", Interp.numberInterp));
+        this.vars.watch("x", Factory.action(this, this._.nake, "x", Interp.numberInterp));
+        this.vars.watch("y", Factory.action(this, this._.nake, "y", Interp.numberInterp));
+        this.vars.watch("text", Factory.action(this, this._.nake, "text", Interp.stringInterp));
+        this.vars.watch("fontSize", Factory.action(this, this._.nake, "font-size", Interp.numberInterp));
 
         this._.nake.setAttribute("text-anchor", "start");
         this._.nake.setAttribute("dy", ".92em");

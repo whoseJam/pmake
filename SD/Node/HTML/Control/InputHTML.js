@@ -27,7 +27,7 @@ export class InputHTML extends BaseControlHTML {
         this._.nake.setAttribute("type", "text");
         this._.nake.setAttribute("value", "");
 
-        this.vars.associate("label", Factory.action(this, this._.label, "text", Interp.stringInterp));
+        this.vars.watch("label", Factory.action(this, this._.label, "text", Interp.stringInterp));
     }
 }
 

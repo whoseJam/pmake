@@ -9,8 +9,8 @@ sd.init(() => {});
 sd.main(TestRectHTMLAndSVG);
 
 async function TestRectHTMLAndSVG() {
-    const r1 = sd.Rect(div);
-    const r2 = sd.Rect(svg);
+    const r1 = new sd.Rect(div);
+    const r2 = new sd.Rect(svg);
     r1.cx(600).cy(300);
     r2.cx(700).cy(300);
     await sd.pause();

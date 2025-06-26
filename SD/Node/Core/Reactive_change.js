@@ -194,7 +194,7 @@ export function reactive(object, father = undefined) {
     });
     proxiesMap.set(proxy, object);
     objectsMap.set(object, new ObjectManager(object, proxy));
-    object.associate = function (key, callback) {
+    object.watch = function (key, callback) {
         if (arguments.length === 0) return associated;
         const keys = key.split(".");
         for (let i = 0; i < keys.length; i++) {
@@ -203,7 +203,7 @@ export function reactive(object, father = undefined) {
                 associated[keys[i]].push(callback);
             } else {
                 const str = keys.slice(i + 1).join(".");
-                proxy[keys[i]].associate(str, callback);
+                proxy[keys[i]].watch(str, callback);
             }
         }
     };

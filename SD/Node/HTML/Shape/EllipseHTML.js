@@ -21,8 +21,8 @@ export class EllipseHTML extends BaseShapeHTML {
         this._.nake.setAttribute("border-radius", "50%");
 
         const helper = createHelper(this._.layer);
-        this.vars.associate("rx", Factory.action(this, helper, "width", Interp.numberInterp));
-        this.vars.associate("ry", Factory.action(this, helper, "height", Interp.numberInterp));
+        this.vars.watch("rx", Factory.action(this, helper, "width", Interp.numberInterp));
+        this.vars.watch("ry", Factory.action(this, helper, "height", Interp.numberInterp));
     }
 }
 

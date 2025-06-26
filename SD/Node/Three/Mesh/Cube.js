@@ -21,13 +21,13 @@ export function Cube(parent) {
     this._.mesh = new Mesh(this._.geometry, this._.material);
     this._.scene.add(this._.mesh);
 
-    this.vars.associate("x", Factory.action(this, this._.mesh.position, "x", Interp.numberInterp));
-    this.vars.associate("y", Factory.action(this, this._.mesh.position, "y", Interp.numberInterp));
-    this.vars.associate("z", Factory.action(this, this._.mesh.position, "z", Interp.numberInterp));
-    this.vars.associate("rx", Factory.action(this, this._.mesh.rotation, "x", Interp.numberInterp));
-    this.vars.associate("ry", Factory.action(this, this._.mesh.rotation, "y", Interp.numberInterp));
-    this.vars.associate("rz", Factory.action(this, this._.mesh.rotation, "z", Interp.numberInterp));
-    this.vars.associate("color", Factory.action(this, this._.material, "color", Interp.normalizedColorInterp));
+    this.vars.watch("x", Factory.action(this, this._.mesh.position, "x", Interp.numberInterp));
+    this.vars.watch("y", Factory.action(this, this._.mesh.position, "y", Interp.numberInterp));
+    this.vars.watch("z", Factory.action(this, this._.mesh.position, "z", Interp.numberInterp));
+    this.vars.watch("rx", Factory.action(this, this._.mesh.rotation, "x", Interp.numberInterp));
+    this.vars.watch("ry", Factory.action(this, this._.mesh.rotation, "y", Interp.numberInterp));
+    this.vars.watch("rz", Factory.action(this, this._.mesh.rotation, "z", Interp.numberInterp));
+    this.vars.watch("color", Factory.action(this, this._.material, "color", Interp.normalizedColorInterp));
 }
 
 Cube.prototype = {

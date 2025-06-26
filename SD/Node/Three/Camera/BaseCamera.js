@@ -14,7 +14,7 @@ export function BaseCamera(target) {
     });
 
     const self = this;
-    this.vars.associate("direction", function (newValue, oldValue) {
+    this.vars.watch("direction", function (newValue, oldValue) {
         new Action(
             self.delay(),
             self.delay() + self.duration(),

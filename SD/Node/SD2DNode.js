@@ -38,7 +38,7 @@ export class SD2DNode extends SDNode {
             this._.layer = createRenderNode(this, this._.layers.__targetLayer, "g");
         }
 
-        this.vars.associate("opacity", Factory.action(this, this._.layer, "opacity", interp(this)));
+        this.vars.watch("opacity", Factory.action(this, this._.layer, "opacity", interp(this)));
     }
 }
 

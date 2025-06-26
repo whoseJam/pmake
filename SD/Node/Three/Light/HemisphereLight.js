@@ -15,8 +15,8 @@ export function HemisphereLight(target) {
     this._.light = new HemisphereLightFromThree(this.vars.skyColor, this.vars.groundColor, this.vars.intensity);
     this._.scene.add(this._.light);
 
-    this.vars.associate("skyColor", Factory.action(this, this._.light, "skyColor", Interp.normalizedColorInterp));
-    this.vars.associate("groundColor", Factory.action(this, this._.light, "groundColor", Interp.normalizedColorInterp));
+    this.vars.watch("skyColor", Factory.action(this, this._.light, "skyColor", Interp.normalizedColorInterp));
+    this.vars.watch("groundColor", Factory.action(this, this._.light, "groundColor", Interp.normalizedColorInterp));
 }
 
 HemisphereLight.prototype = {

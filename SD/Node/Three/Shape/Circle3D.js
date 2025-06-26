@@ -38,13 +38,13 @@ export function Circle3D(target) {
     this._.scene.add(this._.stroke);
 
     const radiusHelper = createRadiusHelper(this._.fill, this._.stroke);
-    this.vars.associate("cx", Factory.action(this, this._.fill.position, "x", Interp.numberInterp));
-    this.vars.associate("cx", Factory.action(this, this._.stroke.position, "x", Interp.numberInterp));
-    this.vars.associate("cy", Factory.action(this, this._.fill.position, "y", Interp.numberInterp));
-    this.vars.associate("cy", Factory.action(this, this._.stroke.position, "y", Interp.numberInterp));
-    this.vars.associate("z", Factory.action(this, this._.fill.position, "z", Interp.numberInterp));
-    this.vars.associate("z", Factory.action(this, this._.stroke.position, "z", Interp.numberInterp));
-    this.vars.associate("r", Factory.action(this, radiusHelper, "r", Interp.numberInterp));
+    this.vars.watch("cx", Factory.action(this, this._.fill.position, "x", Interp.numberInterp));
+    this.vars.watch("cx", Factory.action(this, this._.stroke.position, "x", Interp.numberInterp));
+    this.vars.watch("cy", Factory.action(this, this._.fill.position, "y", Interp.numberInterp));
+    this.vars.watch("cy", Factory.action(this, this._.stroke.position, "y", Interp.numberInterp));
+    this.vars.watch("z", Factory.action(this, this._.fill.position, "z", Interp.numberInterp));
+    this.vars.watch("z", Factory.action(this, this._.stroke.position, "z", Interp.numberInterp));
+    this.vars.watch("r", Factory.action(this, radiusHelper, "r", Interp.numberInterp));
 }
 
 Circle3D.prototype = {

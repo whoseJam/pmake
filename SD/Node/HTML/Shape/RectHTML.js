@@ -19,8 +19,8 @@ export class RectHTML extends BaseShapeHTML {
         this._.layer.setAttribute("width", `${this.vars.width}px`);
         this._.layer.setAttribute("height", `${this.vars.height}px`);
 
-        this.vars.associate("width", Factory.action(this, this._.layer, "width", Interp.pixelInterp));
-        this.vars.associate("height", Factory.action(this, this._.layer, "height", Interp.pixelInterp));
+        this.vars.watch("width", Factory.action(this, this._.layer, "width", Interp.pixelInterp));
+        this.vars.watch("height", Factory.action(this, this._.layer, "height", Interp.pixelInterp));
     }
 }
 

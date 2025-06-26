@@ -78,7 +78,7 @@ export class PathSVG extends BasePathSVG {
             d: "M0,0L0,0",
         });
 
-        this.vars.associate("d", pathInterp(this, this._.nake));
+        this.vars.watch("d", pathInterp(this, this._.nake));
 
         this._.nake.setAttribute("d", this.vars.d);
     }

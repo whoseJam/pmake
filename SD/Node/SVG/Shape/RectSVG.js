@@ -17,10 +17,10 @@ export class RectSVG extends BaseShapeSVG {
             height: 40,
         });
 
-        this.vars.associate("x", Factory.action(this, this._.nake, "x", Interp.numberInterp));
-        this.vars.associate("y", Factory.action(this, this._.nake, "y", Interp.numberInterp));
-        this.vars.associate("width", Factory.action(this, this._.nake, "width", Interp.numberInterp));
-        this.vars.associate("height", Factory.action(this, this._.nake, "height", Interp.numberInterp));
+        this.vars.watch("x", Factory.action(this, this._.nake, "x", Interp.numberInterp));
+        this.vars.watch("y", Factory.action(this, this._.nake, "y", Interp.numberInterp));
+        this.vars.watch("width", Factory.action(this, this._.nake, "width", Interp.numberInterp));
+        this.vars.watch("height", Factory.action(this, this._.nake, "height", Interp.numberInterp));
 
         this._.nake.setAttribute("x", this.vars.x);
         this._.nake.setAttribute("y", this.vars.y);

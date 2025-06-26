@@ -23,9 +23,9 @@ export class ImageHTML extends BaseShapeHTML {
         this._.nake.removeAttribute("border-color");
         this._.nake.setAttribute("object-fit", "contain");
 
-        this.vars.associate("width", Factory.action(this, this._.layer, "width", Interp.pixelInterp));
-        this.vars.associate("height", Factory.action(this, this._.layer, "height", Interp.pixelInterp));
-        this.vars.associate("href", Factory.action(this, this._.nake, "src", Interp.stringInterp));
+        this.vars.watch("width", Factory.action(this, this._.layer, "width", Interp.pixelInterp));
+        this.vars.watch("height", Factory.action(this, this._.layer, "height", Interp.pixelInterp));
+        this.vars.watch("href", Factory.action(this, this._.nake, "src", Interp.stringInterp));
     }
 }
 

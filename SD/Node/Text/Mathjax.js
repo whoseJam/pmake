@@ -108,11 +108,11 @@ export class Mathjax extends SD2DNode {
             fill: C.black,
         });
 
-        this.vars.associate("x", mathjaxUpdate(this, "x", Interp.numberInterp));
-        this.vars.associate("y", mathjaxUpdate(this, "y", Interp.numberInterp));
-        this.vars.associate("fill", mathjaxUpdate(this, "fill", Interp.colorInterp));
-        this.vars.associate("stroke", mathjaxUpdate(this, "stroke", Interp.colorInterp));
-        this.vars.associate("fontSize", mathjaxUpdate(this, "font-size", Interp.numberInterp));
+        this.vars.watch("x", mathjaxUpdate(this, "x", Interp.numberInterp));
+        this.vars.watch("y", mathjaxUpdate(this, "y", Interp.numberInterp));
+        this.vars.watch("fill", mathjaxUpdate(this, "fill", Interp.colorInterp));
+        this.vars.watch("stroke", mathjaxUpdate(this, "stroke", Interp.colorInterp));
+        this.vars.watch("fontSize", mathjaxUpdate(this, "font-size", Interp.numberInterp));
 
         this._.layer.setAttribute("font-size", 20);
         this._.math = undefined;

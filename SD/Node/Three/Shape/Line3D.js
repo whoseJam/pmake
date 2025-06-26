@@ -25,8 +25,8 @@ export function Line3D(target) {
     this._.scene.add(this._.line);
 
     const helper = createHelper(this._.curve, this._.geometry);
-    this.vars.associate("x1", Factory.action(this, helper, "x1", Interp.numberInterp));
-    this.vars.associate("y1", Factory.action(this, helper, "y1", Interp.numberInterp));
+    this.vars.watch("x1", Factory.action(this, helper, "x1", Interp.numberInterp));
+    this.vars.watch("y1", Factory.action(this, helper, "y1", Interp.numberInterp));
 }
 
 Line3D.prototype = {
