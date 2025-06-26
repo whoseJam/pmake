@@ -1,0 +1,43 @@
+{
+    "compilerOptions": {
+        "allowJs": true, // 允许编译JS文件
+        "checkJs": true, // 对JS文件进行类型检查
+        "noEmit": true, // 不生成输出文件，仅进行类型检查
+
+        /* 基本选项 */
+        "target": "ESNext", // 目标 JS 版本
+        "module": "ESNext", // 模块系统
+        "lib": ["ESNext", "DOM"], // 包含的标准库
+        "outDir": "./dist", // 输出目录
+        "rootDir": "./unit", // 源码根目录
+
+        /* 路径映射 */
+        "baseUrl": ".", // 基础路径
+        "paths": {
+            "@/*": ["SD/*"] // 将 @/ 映射到 src/
+        },
+
+        /* 严格类型检查 */
+        "strict": false, // 启用所有严格类型检查
+        "noImplicitAny": false, // 禁止隐式 any 类型
+        "strictNullChecks": false, // 严格的 null 检查
+        "strictFunctionTypes": false, // 严格的函数类型检查
+
+        /* 模块解析 */
+        "moduleResolution": "Node", // 模块解析策略
+        "esModuleInterop": true, // 支持 CommonJS 和 ES 模块互操作性
+        "skipLibCheck": true, // 跳过库文件类型检查
+        "forceConsistentCasingInFileNames": true, // 强制文件名大小写一致
+
+        /* 高级选项 */
+        "sourceMap": true, // 生成 source map
+        "declaration": true, // 生成 .d.ts 类型声明文件
+        "declarationDir": "./dist/types", // 类型声明输出目录
+        "resolveJsonModule": true, // 允许导入 JSON 文件
+        "incremental": true // 启用增量编译
+    },
+
+    /* 项目范围 */
+    "include": ["unit/rect.js"], // 包含的文件
+    "exclude": ["node_modules", "dist", "**/*.spec.ts", "SD/Three"] // 排除的文件
+}
