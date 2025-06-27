@@ -3,9 +3,6 @@ import { Device } from "@/Interact/Device";
 import { Message } from "@/Interact/Message";
 import { Root } from "@/Interact/Root";
 import { Status } from "@/Interact/Status";
-import React from "react";
-
-global.React = React;
 
 function setupButtonStyles() {
     let styleSheet;

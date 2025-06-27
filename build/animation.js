@@ -75,6 +75,7 @@ function launch(selfLaunch = true) {
         process.exit();
     }
     if (global["l"] && !global["sd"] && !global["s"]) utils.copyFile("./dist/sd.js", parser.parseConfig("pptOutputPath"));
+    if (global["l"]) utils.copyFile("./dist/consolas.ttf", parser.parseConfig("pptOutputPath"));
     return task(sourceFilePath, animationOutputPath);
 }
 
