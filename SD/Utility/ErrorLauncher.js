@@ -67,17 +67,35 @@ export class ErrorLauncher {
     static gridElementNotFound(rowId, colId) {
         throw new Error(`Grid element[${rowId}, ${colId}] not found.`);
     }
-    static invalidNumber(number, method) {
-        throw new Error(`Number ${number} is invalid. Please ensure give a valid number when calling ${method}.`);
+    static invalidNumber(number, method, i = 1, suggestions = []) {
+        throw new Error(`We expect a number for the ${generateLocation(i)} argument when calling ${method} but got <${number}>[type is ${typeof number}]. ${generateSuggestion(number, suggestions)}`);
     }
-    static invalidColorFormat(color) {
-        throw new Error(`Color format ${color} is invalid. Can only process HexColor (e.g. "#ffcc3d") or { fill: HexColor, stroke: HexColor }.`);
+    static invalidNumberOrString(object, method, i = 1, suggestion = []) {
+        throw new Error(`We expect a number or a string for the ${generateLocation(i)} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
+    }
+    static invalidColorFormat(color, method, i = 1, suggestions = []) {
+        throw new Error(`We expect a hex-color or a { fill: hex-color, stroke: hex-color } for the ${generateLocation(i)} argument when calling ${method} but got <${color}>[type is ${typeof color}]. ${generateSuggestion(color, suggestions)}`);
     }
     static invalidSyncFunction(callback, method) {
-        throw new Error(`Callback ${callback} is not a synchronized function. Please ensure to give a valid synchronized callback function when calling ${method}.`);
+        throw new Error(`We expect a synchronized function for the ${generateLocation(i)} argument when calling the ${method} but got <${callback}>[type is ${typeof callback}]. ${generateSuggestion(callback, suggestions)}`);
     }
 
     static warnNotImplementedYet(method) {
         console.warn(`Function ${method} not implemented yet.`);
     }
+}
+
+function generateSuggestion(object, suggestions) {
+    for (const suggestion of suggestions) {
+        const [check, result] = suggestion;
+        if (check(object)) return result;
+    }
+    return "";
+}
+
+function generateLocation(i) {
+    if (i === 1) return "1st";
+    if (i === 2) return "2nd";
+    if (i === 3) return "3rd";
+    return `${i}th`;
 }

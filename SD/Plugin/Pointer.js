@@ -40,7 +40,7 @@ export function Pointer(parent, label, direction = "b", gap = 3, length = 20) {
     pointer.length = Factory.handlerLowPrecise("length");
     pointer.gap = Factory.handlerLowPrecise("gap");
     pointer.moveTo = function (x, y) {
-        if (Check.isFalseType(x)) {
+        if (Check.isFalse(x)) {
             erasePointerMap(this);
             pointer.vars.element = undefined;
             this.opacity(0);

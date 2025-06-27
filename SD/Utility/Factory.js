@@ -53,7 +53,6 @@ export class Factory {
         if (typeof _object === "string") object = () => node._[_object];
         else if (typeof _object === "function") object = _object;
         return function (newValue, oldValue) {
-            // console.log("key=", key, "new=", newValue, "old=", oldValue);
             if (global.ACTION_TICK !== 0) {
                 const obj = object();
                 if (obj.setAttribute) obj.setAttribute(key, newValue);

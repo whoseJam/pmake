@@ -14,6 +14,10 @@ async function TestSliderHTMLAndSVG() {
         .x(100)
         .y(200)
         .onChange(v => console.log("s2 v=", v));
+    await sd.pause();
+    await sd.pause();
+    await sd.pause();
+    await sd.pause();
 }
 
 async function TestBasicSliderFunctionality() {

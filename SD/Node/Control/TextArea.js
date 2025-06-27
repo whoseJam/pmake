@@ -6,10 +6,10 @@ export class TextArea extends BaseControl {
     constructor(target) {
         const targetLayer = getTargetLayer(target);
         if (targetLayer instanceof HTMLNode) {
-            const { TextAreaHTML } = require("@/Node/HTML/Control/TextAreaHTML");
+            const { TextAreaHTML } = require("@/Node/Control/TextAreaHTML");
             return new TextAreaHTML(target);
         } else {
-            const { TextAreaSVG } = require("@/Node/SVG/Control/TextAreaSVG");
+            const { TextAreaSVG } = require("@/Node/Control/TextAreaSVG");
             return new TextAreaSVG(target);
         }
     }

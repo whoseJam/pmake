@@ -31,10 +31,13 @@ export class Status {
     }
 
     static updateFrameStatus() {
-        let ban = false;
-        if (window.IS_CONTINUING) ban = true;
-        if (window.IS_INTERACTING) ban = true;
-        if (window.MAXIMUM_FRAME !== window.CURRENT_FRAME) ban = true;
-        Status.frameStatus.style["backgroundColor"] = ban ? "red" : "green";
+        Status.frameStatus.style["backgroundColor"] = this.isInteractable() ? "green" : "red";
+    }
+
+    static isInteractable() {
+        if (window.IS_CONTINUING) return false;
+        if (window.IS_INTERACTING) return false;
+        if (window.MAXIMUM_FRAME !== window.CURRENT_FRAME) return false;
+        return true;
     }
 }

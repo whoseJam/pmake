@@ -58,8 +58,8 @@ export class Interp {
     static colorInterp(object, key) {
         const set = setter(object, key);
         return function (t) {
-            const fRGB = Check.isTypeOfString(this.source) ? castHexToRGB(this.source) : this.source;
-            const tRGB = Check.isTypeOfString(this.target) ? castHexToRGB(this.target) : this.target;
+            const fRGB = Check.isString(this.source) ? castHexToRGB(this.source) : this.source;
+            const tRGB = Check.isString(this.target) ? castHexToRGB(this.target) : this.target;
             const r = fRGB.r * (1 - t) + tRGB.r * t;
             const g = fRGB.g * (1 - t) + tRGB.g * t;
             const b = fRGB.b * (1 - t) + tRGB.b * t;
@@ -69,8 +69,8 @@ export class Interp {
     static normalizedColorInterp(object, key, scale = 255) {
         const set = setter(object, key);
         return function (t) {
-            const fRGB = Check.isTypeOfString(this.source) ? castHexToRGB(this.source) : this.source;
-            const tRGB = Check.isTypeOfString(this.target) ? castHexToRGB(this.target) : this.target;
+            const fRGB = Check.isString(this.source) ? castHexToRGB(this.source) : this.source;
+            const tRGB = Check.isString(this.target) ? castHexToRGB(this.target) : this.target;
             const r = (fRGB.r * (1 - t) + tRGB.r * t) / scale;
             const g = (fRGB.g * (1 - t) + tRGB.g * t) / scale;
             const b = (fRGB.b * (1 - t) + tRGB.b * t) / scale;

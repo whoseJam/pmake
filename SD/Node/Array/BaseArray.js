@@ -66,7 +66,7 @@ Object.assign(BaseArray.prototype, {
         if (arguments.length === 0) {
             return SD2DNode.prototype.opacity.call(this);
         } else if (arguments.length === 1) {
-            if (Check.isTypeOfOpacity(arguments[0])) {
+            if (Check.isOpacity(arguments[0])) {
                 const [opacity] = arguments;
                 return SD2DNode.prototype.opacity.call(this, opacity);
             } else {
@@ -83,7 +83,7 @@ Object.assign(BaseArray.prototype, {
     },
     color() {
         if (arguments.length === 1) {
-            if (Check.isTypeOfColor(arguments[0])) {
+            if (Check.isColor(arguments[0])) {
                 const [color] = arguments;
                 return this.forEachElement(element => element.color(color));
             } else {

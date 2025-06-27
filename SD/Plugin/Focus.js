@@ -19,11 +19,11 @@ export function Focus(parent) {
     focus.focus = function (a, b, c, d) {
         if (arguments.length === 0) return this.focus(parent, parent);
         else if (arguments.length === 1) {
-            if (Check.isFalseType(a)) return this.focus(undefined, undefined);
+            if (Check.isFalse(a)) return this.focus(undefined, undefined);
             if (a instanceof SDNode) return this.focus(a, a);
             return this.focus(parent.element(a), parent.element(a));
         } else if (arguments.length === 2) {
-            const dontNeedIndex = (a instanceof SDNode || Check.isFalseType(a)) && (b instanceof SDNode || Check.isFalseType(b));
+            const dontNeedIndex = (a instanceof SDNode || Check.isFalse(a)) && (b instanceof SDNode || Check.isFalse(b));
             if (!dontNeedIndex) {
                 if (Check.isTypeOfGrid(parent)) return this.focus(parent.element(a, b), parent.element(a, b));
                 if (!a instanceof SDNode) a = parent.element(a);
@@ -37,7 +37,7 @@ export function Focus(parent) {
         }
         this.freeze();
         [this.vars.element1, this.vars.element2] = [a, b];
-        if (Check.isFalseType(a)) {
+        if (Check.isFalse(a)) {
             this.unfreeze().opacity(0);
             return this;
         }

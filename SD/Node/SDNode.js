@@ -177,7 +177,7 @@ Object.assign(SDNode.prototype, {
 
     drag: forward("interact", "drag"),
     clickable(type) {
-        this._.layer.setAttribute("pointer-events", Check.isFalseType(type) ? "none" : "auto");
+        this._.layer.setAttribute("pointer-events", Check.isFalse(type) ? "none" : "auto");
         this._.clickableCalled = true;
         return this;
     },

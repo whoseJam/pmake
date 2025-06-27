@@ -28,7 +28,7 @@ export class LineSVG extends BasePathSVG {
         this._.nake.setAttribute("x2", this.vars.x2);
         this._.nake.setAttribute("y2", this.vars.y2);
 
-        if (!Check.isEmptyType(value)) this.value(value);
+        if (!Check.isEmpty(value)) this.value(value);
     }
 }
 

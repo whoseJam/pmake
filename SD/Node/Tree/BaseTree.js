@@ -297,7 +297,7 @@ Object.assign(BaseTree.prototype, {
         if (arguments.length === 0) {
             return SD2DNode.prototype.opacity.call(this);
         } else if (arguments.length === 1) {
-            if (Check.isTypeOfOpacity(arguments[0])) {
+            if (Check.isOpacity(arguments[0])) {
                 const [opacity] = arguments;
                 return SD2DNode.prototype.opacity.call(this, opacity);
             } else {
@@ -305,7 +305,7 @@ Object.assign(BaseTree.prototype, {
                 return this.nodeOpacity(node);
             }
         } else if (arguments.length === 2) {
-            if (Check.isTypeOfOpacity(arguments[1])) {
+            if (Check.isOpacity(arguments[1])) {
                 const [node, opacity] = arguments;
                 return this.nodeOpacity(node, opacity);
             } else {
@@ -331,7 +331,7 @@ Object.assign(BaseTree.prototype, {
     },
     color() {
         if (arguments.length === 1) {
-            if (Check.isTypeOfColor(arguments[0])) {
+            if (Check.isColor(arguments[0])) {
                 const [color] = arguments;
                 return this.forEachNode(node => node.color(color));
             } else {
@@ -340,7 +340,7 @@ Object.assign(BaseTree.prototype, {
                 return _node.color();
             }
         } else if (arguments.length === 2) {
-            if (Check.isTypeOfColor(arguments[1])) {
+            if (Check.isColor(arguments[1])) {
                 const [node, color] = arguments;
                 const _node = this.__getNodeWithMethod(node, "color");
                 _node.color(color);

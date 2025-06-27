@@ -1,31 +1,31 @@
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 export class Check {
-    static isFalseType(object) {
+    static isFalse(object) {
         return object === null || object === undefined || object === false;
     }
-    static isEmptyType(object) {
+    static isEmpty(object) {
         return object === null || object === undefined;
     }
-    static isNumberOrString(object) {
-        return typeof object === "number" || typeof object === "string";
-    }
-    static isTypeOfString(object) {
+    static isString(object) {
         return typeof object === "string";
     }
-    static isTypeOfOpacity(object) {
+    static isOpacity(object) {
         if (typeof object !== "number") return false;
         return 0 <= object && object <= 1;
     }
-    static isTypeOfColor(object) {
+    static isColor(object) {
         if (typeof object === "string" && object.startsWith("#")) return true;
         else if (typeof object === "object" && object.main && object.border) return true;
         return false;
     }
-    static isValidNumber(object) {
+    static isNumber(object) {
         return typeof object === "number" && !isNaN(object) && object !== Infinity && object !== -Infinity;
     }
-    static isTypeOfVector(object) {
+    static isNumberOrString(object) {
+        return typeof object === "number" || typeof object === "string";
+    }
+    static isVector(object) {
         return object && typeof object[0] === "number" && typeof object[1] === "number";
     }
     static isColor(object) {
@@ -54,14 +54,17 @@ export class Check {
         return !this.isAsyncFunction(object);
     }
 
-    static validateNumber(object, method) {
-        if (!this.isValidNumber(object)) ErrorLauncher.invalidNumber(object, method);
+    static validateNumber(object, method, i = 1, suggestions = []) {
+        if (!this.isNumber(object)) ErrorLauncher.invalidNumber(object, method, i, suggestions);
     }
-    static validateColor(object) {
-        if (!this.isColor(object)) ErrorLauncher.invalidColorFormat(object);
+    static validateNumberOrString(object, method, i = 1, suggestions = []) {
+        if (!this.isNumberOrString(object)) ErrorLauncher.invalidNumberOrString(object, method, i, suggestions);
     }
-    static validateSyncFunction(object, method) {
-        if (!this.isSyncFunction(object)) ErrorLauncher.invalidSyncFunction(object, method);
+    static validateColor(object, method, i = 1, suggestions = []) {
+        if (!this.isColor(object)) ErrorLauncher.invalidColorFormat(object, method, i, suggestions);
+    }
+    static validateSyncFunction(object, method, i = 1, suggestions = []) {
+        if (!this.isSyncFunction(object)) ErrorLauncher.invalidSyncFunction(object, method, i, suggestions);
     }
     static validateArgumentsCountEqualTo(args, count, method) {
         if (args.length !== count) throw new Error(`The ${method} expect ${count} arguments, but got ${args.length} arguments.`);

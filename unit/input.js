@@ -1,15 +1,14 @@
 import * as sd from "@/sd";
 
 const div = sd.div();
+const svg = sd.svg();
 const C = sd.color();
 
-sd.main(TestInputCallback);
+sd.main(TestInputChaining);
 
 async function TestLayout() {
     const input = new sd.Input(div).x(100).y(100);
     sd.Focus(input).focus();
-    await sd.pause();
-    input.label("aaa");
 }
 
 async function TestBasicInputFunctionality() {
@@ -38,7 +37,7 @@ async function TestInputCallback() {
 }
 
 async function TestInputChaining() {
-    const input = new sd.Input(div);
+    const input = new sd.Input(svg);
     await sd.pause();
     input
         .x(150)

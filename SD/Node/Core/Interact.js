@@ -42,7 +42,7 @@ export class Interact {
         return this;
     }
     onChange(callback) {
-        const control = this.parent.control().nake();
+        const control = this.parent._.nake.nake();
         Dom.removeEventListener(control, "change", this.onchange);
         if (callback) {
             this.onchange = event => {
@@ -53,7 +53,7 @@ export class Interact {
         return this;
     }
     onInput(callback) {
-        const control = this.parent.control().nake();
+        const control = this.parent._.nake.nake();
         Dom.removeEventListener(control, "input", this.oninput);
         if (callback) {
             this.oninput = event => {
@@ -65,7 +65,7 @@ export class Interact {
     }
     drag(arg) {
         const nake = this.parent._.layer.nake();
-        if (Check.isFalseType(arg)) {
+        if (Check.isFalse(arg)) {
             Snap(nake).undrag();
             return this;
         }

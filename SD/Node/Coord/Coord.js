@@ -170,7 +170,7 @@ Object.assign(Coord.prototype, {
 });
 
 function valid(v) {
-    return Check.isValidNumber(v[0]) && Check.isValidNumber(v[1]);
+    return Check.isNumber(v[0]) && Check.isNumber(v[1]);
 }
 
 function circleRule(parent, child) {

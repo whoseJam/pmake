@@ -133,8 +133,8 @@ export class Root {
         const my = y + height;
         const X = x + ((x - cx) * (rate - 1)) / 2;
         const Y = y + ((y - cy) * (rate - 1)) / 2;
-        if (!Check.isValidNumber(X)) return;
-        if (!Check.isValidNumber(Y)) return;
+        if (!Check.isNumber(X)) return;
+        if (!Check.isNumber(Y)) return;
         const mX = mx + ((mx - cx) * (rate - 1)) / 2;
         const mY = my + ((my - cy) * (rate - 1)) / 2;
         const W = mX > X ? mX - X : 1200;

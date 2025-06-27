@@ -39,8 +39,8 @@ export function Brace(parent, location) {
     brace.brace = function (l, r, location, gap) {
         if (!(l instanceof SDNode)) l = parent.element(l);
         if (!(r instanceof SDNode)) r = parent.element(r);
-        if (!Check.isFalseType(location)) this.location(location);
-        if (!Check.isFalseType(gap)) this.braceGap(gap);
+        if (!Check.isFalse(location)) this.location(location);
+        if (!Check.isFalse(gap)) this.braceGap(gap);
         if (!parent.childAs) replaceBrace(this, l, r);
         this.freeze();
         [this.vars.element1, this.vars.element2] = [l, r];

@@ -102,7 +102,7 @@ Object.assign(Code.prototype, {
     },
     focus(l, r) {
         const focus = this.child("focus");
-        if (Check.isFalseType(l)) {
+        if (Check.isFalse(l)) {
             this.freeze();
             this.vars.l = undefined;
             this.vars.r = undefined;

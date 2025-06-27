@@ -61,7 +61,7 @@ Object.assign(BaseElement.prototype, {
     value(value, rule) {
         if (arguments.length === 0) return this.child("value");
         if (this.hasChild("value")) this.eraseChild("value");
-        if (Check.isEmptyType(value)) return this;
+        if (Check.isEmpty(value)) return this;
         rule = getValueRule(rule);
         value = Cast.castToSDNode(this, value);
         this.childAs("value", value, rule);

@@ -1,20 +1,20 @@
 export class Check {
-    static isFalseType(object: any): boolean;
-    static isEmptyType(object: any): boolean;
+    static isFalse(object: any): boolean;
+    static isEmpty(object: any): boolean;
+    static isString(object: any): boolean;
+    static isOpacity(object: any): boolean;
+    static isNumber(object: any): boolean;
     static isNumberOrString(object: any): boolean;
-    static isTypeOfString(object: any): boolean;
-    static isTypeOfOpacity(object: any): boolean;
-    static isTypeOfColor(object: any): boolean;
-    static isValidNumber(object: any): boolean;
-    static isTypeOfVector(object: any): boolean;
+    static isVector(object: any): boolean;
     static isColor(object: any): boolean;
     static isSDColor(object: any): boolean;
     static isHexColor(object: any): boolean;
     static isAsyncFucntion(object: any): boolean;
     static isSyncFunction(object: any): boolean;
 
-    static validateNumber(object: any, method: string): void;
-    static validateColor(object: any): void;
-    static validateSyncFunction(object: any): void;
+    static validateNumber(object: any, method: string, i?: number, suggestions: Array<[(object: any) => boolean, string]>): void;
+    static validateNumberOrString(object: any, method: string, i?: number, suggestions: Array<[(object: any) => boolean, string]>): void;
+    static validateColor(object: any, method: string, i?: number, suggestions: Array<[(object: any) => boolean, string]>): void;
+    static validateSyncFunction(object: any, method: string, i?: number, suggestions: Array<[(object: any) => boolean, string]>): void;
     static validateArgumentsCountEqualTo(arguments: Array<any>, count: number, method: string): void;
 }
