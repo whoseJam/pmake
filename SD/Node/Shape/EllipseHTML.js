@@ -33,6 +33,7 @@ EllipseHTML.extend(Ellipse);
 
 Object.assign(EllipseHTML.prototype, {
     ...Ellipse.prototype,
+    ...ShapeHTML.prototype,
     rx: Factory.handlerLowPrecise("rx"),
     ry: Factory.handlerLowPrecise("ry"),
     width(width) {

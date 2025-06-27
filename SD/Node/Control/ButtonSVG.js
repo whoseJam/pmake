@@ -34,7 +34,7 @@ Object.assign(ButtonSVG.prototype, {
     ...ControlSVG.prototype,
     text(text) {
         if (arguments.length === 0) return this.vars.text;
-        Check.validateStringOrNumber(text, `${this.constructor.name}.text`);
+        Check.validateNumberOrString(text, `${this.constructor.name}.text`);
         this.vars.text = text;
         return this;
     },

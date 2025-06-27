@@ -2,6 +2,7 @@ import { Interp } from "@/Animate/Interp";
 import { BaseShape } from "@/Node/Shape/BaseShape";
 import { Rect } from "@/Node/Shape/Rect";
 import { Factory } from "@/Utility/Factory";
+import { ShapeHTML } from "./ShapeHTML";
 
 export class RectHTML extends BaseShape {
     constructor(target) {
@@ -28,4 +29,5 @@ RectHTML.extend(Rect);
 
 Object.assign(RectHTML.prototype, {
     ...Rect.prototype,
+    ...ShapeHTML.prototype,
 });

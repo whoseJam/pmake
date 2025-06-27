@@ -36,5 +36,6 @@ ImageHTML.extend(Image);
 
 Object.assign(ImageHTML.prototype, {
     ...Image.prototype,
+    ...ShapeHTML.prototype,
     href: Factory.handler("href"),
 });

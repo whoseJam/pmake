@@ -34,6 +34,7 @@ CircleSVG.extend(Circle);
 
 Object.assign(CircleSVG.prototype, {
     ...Circle.prototype,
+    ...ShapeSVG.prototype,
     r(r) {
         if (arguments.length === 0) return this.vars.r;
         Check.validateNumber(r, `${this.constructor.name}.r`);

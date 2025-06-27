@@ -36,6 +36,7 @@ RectSVG.extend(Rect);
 
 Object.assign(RectSVG.prototype, {
     ...Rect.prototype,
+    ...ShapeSVG.prototype,
     x(x) {
         if (arguments.length === 0) return this.vars.x;
         Check.validateNumber(x, `${this.constructor.name}.x`);

@@ -36,6 +36,7 @@ EllipseSVG.extend(Ellipse);
 
 Object.assign(EllipseSVG.prototype, {
     ...Ellipse.prototype,
+    ...ShapeSVG.prototype,
     cx(cx) {
         if (arguments.length === 0) return this.vars.cx;
         Check.validateNumber(cx, `${this.constructor.name}.cx`);

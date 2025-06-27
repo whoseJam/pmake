@@ -39,6 +39,7 @@ ImageSVG.extend(Image);
 
 Object.assign(ImageSVG.prototype, {
     ...Image.prototype,
+    ...ShapeSVG.prototype,
     x(x) {
         if (arguments.length === 0) return this.vars.x;
         Check.validateNumber(x, `${this.constructor.name}.x`);

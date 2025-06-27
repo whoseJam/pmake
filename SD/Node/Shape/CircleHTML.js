@@ -32,6 +32,7 @@ CircleHTML.extend(Circle);
 
 Object.assign(CircleHTML.prototype, {
     ...Circle.prototype,
+    ...ShapeHTML.prototype,
     r: Factory.handlerLowPrecise("r"),
     width(width) {
         if (arguments.length === 0) return this.vars.r * 2;

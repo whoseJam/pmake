@@ -55,4 +55,5 @@ PolygonSVG.extend(Polygon);
 
 Object.assign(PolygonSVG.prototype, {
     ...Polygon.prototype,
+    ...ShapeSVG.prototype,
 });
