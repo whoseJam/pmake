@@ -4,7 +4,7 @@ import { Check } from "@/Utility/Check";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
 
-export function ControlHTML(label) {
+export function BaseHTML(label) {
     this.vars.merge({
         x: 0,
         y: 0,
@@ -38,7 +38,7 @@ export function ControlHTML(label) {
     this.vars.watch("stroke", Factory.action(this, this._.nake, "border-color", Interp.colorInterp));
 }
 
-Object.assign(ControlHTML.prototype, {
+Object.assign(BaseHTML.prototype, {
     x(x) {
         if (arguments.length === 0) return this.vars.x;
         Check.validateNumber(x, `${this.type()}.x`);

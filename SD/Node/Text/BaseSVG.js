@@ -4,12 +4,12 @@ import { Check } from "@/Utility/Check";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
 
-export function ShapeSVG(label) {
+export function BaseSVG(label) {
     this.vars.merge({
-        fill: C.white,
+        fill: C.black,
         fillOpacity: 1,
-        stroke: C.black,
-        strokeOpacity: 1,
+        stroke: C.white,
+        strokeOpacity: 0,
         strokeWidth: 1,
         strokeDashOffset: 0,
         strokeDashArray: [1, 0],
@@ -18,6 +18,7 @@ export function ShapeSVG(label) {
     this._.nake = createRenderNode(this, this._.layer, label);
     this._.nake.setAttribute("fill", this.vars.fill);
     this._.nake.setAttribute("stroke", this.vars.stroke);
+    this._.nake.setAttribute("stroke-width", this.vars.strokeWidth);
 
     this.vars.watch("fill", Factory.action(this, this._.nake, "fill", Interp.colorInterp));
     this.vars.watch("stroke", Factory.action(this, this._.nake, "stroke", Interp.colorInterp));
@@ -28,7 +29,7 @@ export function ShapeSVG(label) {
     this.vars.watch("strokeDashArray", Factory.action(this, this._.nake, "stroke-dasharray", Interp.arrayInterp));
 }
 
-Object.assign(ShapeSVG.prototype, {
+BaseSVG.prototype = {
     fill(fill) {
         if (arguments.length === 0) return this.vars.fill;
         Check.validateColor(fill, `${this.constructor.name}.fill`);
@@ -77,12 +78,8 @@ Object.assign(ShapeSVG.prototype, {
                 stroke: this.stroke(),
             };
         Check.validateColor(color);
-        if (Check.isString(color)) {
-            this.fill(color);
-            const { Text } = require("@/Node/SVG/Text");
-            const { BasePathSVG } = require("@/Node/SVG/Path/BasePathSVG");
-            if (this instanceof Text || this instanceof BasePathSVG) this.stroke(color);
-        } else this.fill(color.fill).stroke(color.stroke);
+        if (Check.isString(color)) this.fill(color).stroke(color);
+        else this.fill(color.fill).stroke(color.stroke);
         return this;
     },
-});
+};

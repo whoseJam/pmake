@@ -2,7 +2,7 @@ import { Interp } from "@/Animate/Interp";
 import { Dom } from "@/Dom/Dom";
 import { Status } from "@/Interact/Status";
 import { BaseControl } from "@/Node/Control/BaseControl";
-import { ControlSVG } from "@/Node/Control/ControlSVG";
+import { BaseSVG } from "@/Node/Control/BaseSVG";
 import { Input } from "@/Node/Control/Input";
 import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
@@ -11,7 +11,7 @@ export class InputSVG extends BaseControl {
     constructor(target) {
         super(target);
 
-        ControlSVG.call(this, "input");
+        BaseSVG.call(this, "input");
 
         this.type("InputSVG");
 
@@ -37,7 +37,7 @@ export class InputSVG extends BaseControl {
 InputSVG.extend(Input);
 
 Object.assign(InputSVG.prototype, {
-    ...ControlSVG.prototype,
+    ...BaseSVG.prototype,
     value(value) {
         if (arguments.length === 0) return this.vars.value;
         Check.isNumberOrString(value, `${this.constructor.name}.value`);

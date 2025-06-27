@@ -1,3 +1,3 @@
-import { BaseShapeHTML } from "@/Node/HTML/Shape/BaseShapeHTML";
+import { Rect } from "@/Node/Shape/Rect";
 
-export class RectHTML extends BaseShapeHTML {}
+export class RectHTML extends Rect {}

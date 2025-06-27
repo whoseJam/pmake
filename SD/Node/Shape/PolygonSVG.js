@@ -1,8 +1,8 @@
 import { Interp } from "@/Animate/Interp";
 import { svg } from "@/Interact/Root";
 import { BaseShape } from "@/Node/Shape/BaseShape";
+import { BaseSVG } from "@/Node/Shape/BaseSVG";
 import { Polygon } from "@/Node/Shape/Polygon";
-import { ShapeSVG } from "@/Node/Shape/ShapeSVG";
 import { Factory } from "@/Utility/Factory";
 
 let globalPolygon = undefined;
@@ -25,7 +25,7 @@ export class PolygonSVG extends BaseShape {
     constructor(target, points = []) {
         super(target);
 
-        ShapeSVG.call(this, "polygon");
+        BaseSVG.call(this, "polygon");
 
         this.type("PolygonSVG");
 
@@ -55,5 +55,5 @@ PolygonSVG.extend(Polygon);
 
 Object.assign(PolygonSVG.prototype, {
     ...Polygon.prototype,
-    ...ShapeSVG.prototype,
+    ...BaseSVG.prototype,
 });

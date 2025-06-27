@@ -1,14 +1,14 @@
 import { Interp } from "@/Animate/Interp";
+import { BaseHTML } from "@/Node/Shape/BaseHTML";
 import { BaseShape } from "@/Node/Shape/BaseShape";
 import { Circle } from "@/Node/Shape/Circle";
 import { Factory } from "@/Utility/Factory";
-import { ShapeHTML } from "./ShapeHTML";
 
 export class CircleHTML extends BaseShape {
     constructor(target) {
         super(target, "div");
 
-        ShapeHTML.call(this, "div");
+        BaseHTML.call(this, "div");
 
         this.type("CircleHTML");
 
@@ -32,7 +32,7 @@ CircleHTML.extend(Circle);
 
 Object.assign(CircleHTML.prototype, {
     ...Circle.prototype,
-    ...ShapeHTML.prototype,
+    ...BaseHTML.prototype,
     r: Factory.handlerLowPrecise("r"),
     width(width) {
         if (arguments.length === 0) return this.vars.r * 2;

@@ -1,7 +1,8 @@
 import { Interp } from "@/Animate/Interp";
 import { svg } from "@/Interact/Root";
-import { BaseSVG } from "@/Node/SVG/BaseSVG";
 import { RectSVG } from "@/Node/Shape/RectSVG";
+import { BaseSVG } from "@/Node/Text/BaseSVG";
+import { BaseText } from "@/Node/Text/BaseText";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
 
@@ -51,11 +52,13 @@ function parseText(text) {
     return ans;
 }
 
-export class Text extends BaseSVG {
+export class TextSVG extends BaseText {
     constructor(target, text = "") {
-        super(target, "text");
+        super(target);
 
-        this.type("Text");
+        BaseSVG.call(this, "text");
+
+        this.type("TextSVG");
 
         this.vars.fill = C.black;
         this.vars.strokeWidth = 0;
@@ -84,7 +87,8 @@ export class Text extends BaseSVG {
     }
 }
 
-Object.assign(Text.prototype, {
+Object.assign(TextSVG.prototype, {
+    ...BaseSVG.prototype,
     x: RectSVG.prototype.x,
     y: RectSVG.prototype.y,
     fontSize(fontSize) {

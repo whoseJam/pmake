@@ -1,15 +1,17 @@
 import { Interp } from "@/Animate/Interp";
 import { Vector as V } from "@/Math/Vector";
+import { BasePath } from "@/Node/Path/BasePath";
+import { BaseSVG } from "@/Node/Path/BaseSVG";
 import { Line } from "@/Node/Path/Line";
-import { BasePathSVG } from "@/Node/SVG/Path/BasePathSVG";
-import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
 
-export class LineSVG extends BasePathSVG {
+export class LineSVG extends BasePath {
     constructor(target, value) {
-        super(target, "line");
+        super(target);
 
-        this.type("Line");
+        BaseSVG.call(this, "line");
+
+        this.type("LineSVG");
 
         this.vars.merge({
             x1: 0,
@@ -18,17 +20,17 @@ export class LineSVG extends BasePathSVG {
             y2: 40,
         });
 
-        this.vars.watch("x1", Factory.action(this, this._.nake, "x1", Interp.numberInterp));
-        this.vars.watch("y1", Factory.action(this, this._.nake, "y1", Interp.numberInterp));
-        this.vars.watch("x2", Factory.action(this, this._.nake, "x2", Interp.numberInterp));
-        this.vars.watch("y2", Factory.action(this, this._.nake, "y2", Interp.numberInterp));
-
         this._.nake.setAttribute("x1", this.vars.x1);
         this._.nake.setAttribute("y1", this.vars.y1);
         this._.nake.setAttribute("x2", this.vars.x2);
         this._.nake.setAttribute("y2", this.vars.y2);
 
-        if (!Check.isEmpty(value)) this.value(value);
+        this.vars.watch("x1", Factory.action(this, this._.nake, "x1", Interp.numberInterp));
+        this.vars.watch("y1", Factory.action(this, this._.nake, "y1", Interp.numberInterp));
+        this.vars.watch("x2", Factory.action(this, this._.nake, "x2", Interp.numberInterp));
+        this.vars.watch("y2", Factory.action(this, this._.nake, "y2", Interp.numberInterp));
+
+        this.value(value);
     }
 }
 
@@ -36,6 +38,7 @@ LineSVG.extend(Line);
 
 Object.assign(LineSVG.prototype, {
     ...Line.prototype,
+    ...BaseSVG.prototype,
     x(x) {
         const x1 = this.x1();
         const x2 = this.x2();

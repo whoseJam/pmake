@@ -2,7 +2,7 @@ import { Interp } from "@/Animate/Interp";
 import { Dom } from "@/Dom/Dom";
 import { Status } from "@/Interact/Status";
 import { BaseControl } from "@/Node/Control/BaseControl";
-import { ControlHTML } from "@/Node/Control/ControlHTML";
+import { BaseHTML } from "@/Node/Control/BaselHTML";
 import { Input } from "@/Node/Control/Input";
 import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
@@ -11,7 +11,7 @@ export class InputHTML extends BaseControl {
     constructor(target) {
         super(target);
 
-        ControlHTML.call(this, "input");
+        BaseHTML.call(this, "input");
 
         this.type("InputHTML");
 
@@ -37,7 +37,7 @@ export class InputHTML extends BaseControl {
 InputHTML.extend(Input);
 
 Object.assign(InputHTML.prototype, {
-    ...ControlHTML.prototype,
+    ...BaseHTML.prototype,
     value(value) {
         if (arguments.length === 0) return this.vars.value;
         Check.isNumberOrString(value, `${this.constructor.name}.value`);

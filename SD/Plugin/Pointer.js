@@ -1,7 +1,7 @@
 import { Context } from "@/Animate/Context";
 import { Line } from "@/Node/Path/Line";
 import { SDNode } from "@/Node/SDNode";
-import { Text } from "@/Node/SVG/Text";
+import { Text } from "@/Node/Text/Text";
 import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
 

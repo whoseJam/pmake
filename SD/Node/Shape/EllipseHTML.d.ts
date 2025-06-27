@@ -1,8 +1,3 @@
-import { BaseShapeHTML } from "@/Node/HTML/Shape/BaseShapeHTML";
+import { Ellipse } from "@/Node/Shape/Ellipse";
 
-export class EllipseHTML extends BaseShapeHTML {
-    rx(): number;
-    rx(rx: number): this;
-    ry(): number;
-    ry(ry: number): this;
-}
+export class EllipseHTML extends Ellipse {}

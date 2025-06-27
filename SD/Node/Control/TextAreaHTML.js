@@ -2,7 +2,7 @@ import { Interp } from "@/Animate/Interp";
 import { Dom } from "@/Dom/Dom";
 import { Status } from "@/Interact/Status";
 import { BaseControl } from "@/Node/Control/BaseControl";
-import { ControlHTML } from "@/Node/Control/ControlHTML";
+import { BaseHTML } from "@/Node/Control/BaselHTML";
 import { TextArea } from "@/Node/Control/TextArea";
 import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
@@ -11,7 +11,7 @@ export class TextAreaHTML extends BaseControl {
     constructor(target) {
         super(target);
 
-        ControlHTML.call(this, "textarea");
+        BaseHTML.call(this, "textarea");
 
         this.type("TextAreaHTML");
 
@@ -35,7 +35,7 @@ export class TextAreaHTML extends BaseControl {
 TextAreaHTML.extend(TextArea);
 
 Object.assign(TextAreaHTML.prototype, {
-    ...ControlHTML.prototype,
+    ...BaseHTML.prototype,
     value(value) {
         if (arguments.length === 0) return this.vars.value;
         Check.isNumberOrString(value, `${this.constructor.name}.value`);

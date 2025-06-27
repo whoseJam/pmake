@@ -1,6 +1,3 @@
-import { BaseShapeHTML } from "@/Node/HTML/Shape/BaseShapeHTML";
+import { Image } from "@/Node/Shape/Image";
 
-export class ImageHTML extends BaseShapeHTML {
-    href(): string;
-    href(href: string): this;
-}
+export class ImageHTML extends Image {}

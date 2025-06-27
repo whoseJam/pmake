@@ -1,5 +1,5 @@
-import { Text } from "@/Node/SVG/Text";
 import { Mathjax } from "@/Node/Text/Mathjax";
+import { Text } from "@/Node/Text/Text";
 import { Factory } from "@/Utility/Factory";
 
 function isMathjax(str) {

@@ -1,7 +1,7 @@
 import { Interp } from "@/Animate/Interp";
 import { BaseControl } from "@/Node/Control/BaseControl";
+import { BaseSVG } from "@/Node/Control/BaseSVG";
 import { Button } from "@/Node/Control/Button";
-import { ControlSVG } from "@/Node/Control/ControlSVG";
 import { Check } from "@/Utility/Check";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
@@ -10,7 +10,7 @@ export class ButtonSVG extends BaseControl {
     constructor(target) {
         super(target);
 
-        ControlSVG.call(this, "button");
+        BaseSVG.call(this, "button");
 
         this.type("ButtonSVG");
 
@@ -31,7 +31,7 @@ export class ButtonSVG extends BaseControl {
 ButtonSVG.extend(Button);
 
 Object.assign(ButtonSVG.prototype, {
-    ...ControlSVG.prototype,
+    ...BaseSVG.prototype,
     text(text) {
         if (arguments.length === 0) return this.vars.text;
         Check.validateNumberOrString(text, `${this.constructor.name}.text`);

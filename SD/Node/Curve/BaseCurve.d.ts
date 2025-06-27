@@ -1,4 +1,4 @@
-import { PathSVG } from "@/Node/SVG/Path/PathSVG";
+import { PathSVG } from "@/Node/Path/PathSVG";
 
 export class BaseCurve extends PathSVG {
     x1(): number;

@@ -2,8 +2,9 @@ import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
 import { svg } from "@/Interact/Root";
 import { Path } from "@/Node/Path/Path";
-import { BasePathSVG } from "@/Node/SVG/Path/BasePathSVG";
 import { RenderNode } from "@/Renderer/RenderNode";
+import { BasePath } from "./BasePath";
+import { BaseSVG } from "./BaseSVG";
 
 let globalPath = undefined;
 
@@ -64,11 +65,13 @@ function getTotalLength(d) {
     }
 }
 
-export class PathSVG extends BasePathSVG {
+export class PathSVG extends BasePath {
     constructor(target) {
-        super(target, "path");
+        super(target);
 
-        this.type("Path");
+        BaseSVG.call(this, "path");
+
+        this.type("PathSVG");
 
         this.vars.merge({
             x: 0,
@@ -88,6 +91,7 @@ PathSVG.extend(Path);
 
 Object.assign(PathSVG.prototype, {
     ...Path.prototype,
+    ...BaseSVG.prototype,
     x(x) {
         if (arguments.length === 0) return this.vars.x;
         const [x0, y0, dx, dy, sx, sy] = [this.x(), this.y(), x - this.vars.x, 0, 1, 1];

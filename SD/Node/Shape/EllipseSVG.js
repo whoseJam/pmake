@@ -1,7 +1,7 @@
 import { Interp } from "@/Animate/Interp";
 import { BaseShape } from "@/Node/Shape/BaseShape";
+import { BaseSVG } from "@/Node/Shape/BaseSVG";
 import { Ellipse } from "@/Node/Shape/Ellipse";
-import { ShapeSVG } from "@/Node/Shape/ShapeSVG";
 import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
 
@@ -9,7 +9,7 @@ export class EllipseSVG extends BaseShape {
     constructor(target) {
         super(target, "ellipse");
 
-        ShapeSVG.call(this, "ellipse");
+        BaseSVG.call(this, "ellipse");
 
         this.type("EllipseSVG");
 
@@ -36,7 +36,7 @@ EllipseSVG.extend(Ellipse);
 
 Object.assign(EllipseSVG.prototype, {
     ...Ellipse.prototype,
-    ...ShapeSVG.prototype,
+    ...BaseSVG.prototype,
     cx(cx) {
         if (arguments.length === 0) return this.vars.cx;
         Check.validateNumber(cx, `${this.constructor.name}.cx`);

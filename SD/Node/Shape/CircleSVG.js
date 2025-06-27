@@ -1,8 +1,8 @@
 import { Interp } from "@/Animate/Interp";
 import { Vector as V } from "@/Math/Vector";
 import { BaseShape } from "@/Node/Shape/BaseShape";
+import { BaseSVG } from "@/Node/Shape/BaseSVG";
 import { Circle } from "@/Node/Shape/Circle";
-import { ShapeSVG } from "@/Node/Shape/ShapeSVG";
 import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
 
@@ -10,7 +10,7 @@ export class CircleSVG extends BaseShape {
     constructor(target) {
         super(target);
 
-        ShapeSVG.call(this, "circle");
+        BaseSVG.call(this, "circle");
 
         this.type("CircleSVG");
 
@@ -34,7 +34,7 @@ CircleSVG.extend(Circle);
 
 Object.assign(CircleSVG.prototype, {
     ...Circle.prototype,
-    ...ShapeSVG.prototype,
+    ...BaseSVG.prototype,
     r(r) {
         if (arguments.length === 0) return this.vars.r;
         Check.validateNumber(r, `${this.constructor.name}.r`);

@@ -2,7 +2,7 @@ import { Interp } from "@/Animate/Interp";
 import { Dom } from "@/Dom/Dom";
 import { Status } from "@/Interact/Status";
 import { BaseControl } from "@/Node/Control/BaseControl";
-import { ControlSVG } from "@/Node/Control/ControlSVG";
+import { BaseSVG } from "@/Node/Control/BaseSVG";
 import { Slider } from "@/Node/Control/Slider";
 import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
@@ -11,7 +11,7 @@ export class SliderSVG extends BaseControl {
     constructor(target) {
         super(target);
 
-        ControlSVG.call(this, "input");
+        BaseSVG.call(this, "input");
 
         this.type("SliderSVG");
 
@@ -46,7 +46,7 @@ export class SliderSVG extends BaseControl {
 SliderSVG.extend(Slider);
 
 Object.assign(SliderSVG.prototype, {
-    ...ControlSVG.prototype,
+    ...BaseSVG.prototype,
     max(value) {
         if (arguments.length === 0) return this.vars.max;
         Check.validateNumber(+value, `${this.constructor.name}.max`);

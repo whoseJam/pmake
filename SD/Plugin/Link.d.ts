@@ -1,6 +1,6 @@
 import { BaseCurve } from "@/Node/Curve/BaseCurve";
+import { Line } from "@/Node/Path/LineSVG";
 import { SDNode } from "@/Node/SDNode";
-import { Line } from "@/Node/SVG/Path/LineSVG";
 
 type XLocation = "x" | "cx" | "mx";
 type YLocation = "y" | "cy" | "my";

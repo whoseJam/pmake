@@ -1,7 +1,7 @@
 import { Interp } from "@/Animate/Interp";
 import { BaseControl } from "@/Node/Control/BaseControl";
+import { BaseHTML } from "@/Node/Control/BaselHTML";
 import { Button } from "@/Node/Control/Button";
-import { ControlHTML } from "@/Node/Control/ControlHTML";
 import { Check } from "@/Utility/Check";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
@@ -10,7 +10,7 @@ export class ButtonHTML extends BaseControl {
     constructor(target) {
         super(target);
 
-        ControlHTML.call(this, "button");
+        BaseHTML.call(this, "button");
 
         this.type("ButtonHTML");
 
@@ -31,7 +31,7 @@ export class ButtonHTML extends BaseControl {
 ButtonHTML.extend(Button);
 
 Object.assign(ButtonHTML.prototype, {
-    ...ControlHTML.prototype,
+    ...BaseHTML.prototype,
     text(text) {
         if (arguments.length === 0) return this.vars.text;
         Check.validateNumberOrString(text, `${this.constructor.name}.text`);

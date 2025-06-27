@@ -1,8 +1,7 @@
 import { SDNode } from "@/Node/SDNode";
-import { BaseSVG } from "@/Node/SVG/BaseSVG";
 import { RenderNode } from "@/Renderer/RenderNode";
 
-export class Text extends BaseSVG {
+export class TextSVG extends Text {
     constructor(target: SDNode | RenderNode, text?: number | string);
     fontSize(): number;
     fontSize(fontSize: number): this;

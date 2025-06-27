@@ -2,7 +2,7 @@ import { Interp } from "@/Animate/Interp";
 import { Dom } from "@/Dom/Dom";
 import { Status } from "@/Interact/Status";
 import { BaseControl } from "@/Node/Control/BaseControl";
-import { ControlHTML } from "@/Node/Control/ControlHTML";
+import { BaseHTML } from "@/Node/Control/BaselHTML";
 import { Slider } from "@/Node/Control/Slider";
 import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
@@ -11,7 +11,7 @@ export class SliderHTML extends BaseControl {
     constructor(target) {
         super(target);
 
-        ControlHTML.call(this, "input");
+        BaseHTML.call(this, "input");
 
         this.type("SliderHTML");
 
@@ -46,7 +46,7 @@ export class SliderHTML extends BaseControl {
 SliderHTML.extend(Slider);
 
 Object.assign(SliderHTML.prototype, {
-    ...ControlHTML.prototype,
+    ...BaseHTML.prototype,
     max(value) {
         if (arguments.length === 0) return this.vars.max;
         Check.validateNumber(+value, `${this.constructor.name}.max`);

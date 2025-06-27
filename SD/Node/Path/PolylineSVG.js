@@ -1,11 +1,14 @@
 import { Interp } from "@/Animate/Interp";
+import { BasePath } from "@/Node/Path/BasePath";
+import { BaseSVG } from "@/Node/Path/BaseSVG";
 import { Polyline } from "@/Node/Path/Polyline";
-import { BasePathSVG } from "@/Node/SVG/Path/BasePathSVG";
 import { Factory } from "@/Utility/Factory";
 
-export class PolylineSVG extends BasePathSVG {
+export class PolylineSVG extends BasePath {
     constructor(target, points = []) {
-        super(target, "polyline");
+        super(target);
+
+        BaseSVG.call(this, "polyline");
 
         this.type("PolylineSVG");
 
@@ -17,9 +20,9 @@ export class PolylineSVG extends BasePathSVG {
             points,
         });
 
-        this.vars.watch("points", Factory.action(this, this._.nake, "points", Interp.pointsInterp));
-
         this._.nake.setAttribute("points", this.vars.points);
+
+        this.vars.watch("points", Factory.action(this, this._.nake, "points", Interp.pointsInterp));
     }
 }
 
@@ -27,4 +30,5 @@ PolylineSVG.extend(Polyline);
 
 Object.assign(PolylineSVG.prototype, {
     ...Polyline.prototype,
+    ...BaseSVG.prototype,
 });

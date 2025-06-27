@@ -1,14 +1,14 @@
 import { Interp } from "@/Animate/Interp";
+import { BaseHTML } from "@/Node/Shape/BaseHTML";
 import { BaseShape } from "@/Node/Shape/BaseShape";
 import { Ellipse } from "@/Node/Shape/Ellipse";
-import { ShapeHTML } from "@/Node/Shape/ShapeHTML";
 import { Factory } from "@/Utility/Factory";
 
 export class EllipseHTML extends BaseShape {
     constructor(target) {
         super(target, "div");
 
-        ShapeHTML.call(this, "div");
+        BaseHTML.call(this, "div");
 
         this.type("EllipseHTML");
 
@@ -33,7 +33,7 @@ EllipseHTML.extend(Ellipse);
 
 Object.assign(EllipseHTML.prototype, {
     ...Ellipse.prototype,
-    ...ShapeHTML.prototype,
+    ...BaseHTML.prototype,
     rx: Factory.handlerLowPrecise("rx"),
     ry: Factory.handlerLowPrecise("ry"),
     width(width) {

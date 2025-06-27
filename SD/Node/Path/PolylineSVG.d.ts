@@ -1,7 +1,7 @@
-import { BasePathSVG } from "@/Node/SVG/Path/BasePathSVG";
+import { Polyline } from "@/Node/Path/Polyline";
 import { RenderNode } from "@/Renderer/RenderNode";
 
-export class PolylineSVG extends BasePathSVG {
+export class PolylineSVG extends Polyline {
     constructor(target: RenderNode, points: Array<[number, number]>);
     points(): Array<[number, number]>;
     points(points: Array<[number, number]>): this;

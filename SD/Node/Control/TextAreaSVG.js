@@ -2,7 +2,7 @@ import { Interp } from "@/Animate/Interp";
 import { Dom } from "@/Dom/Dom";
 import { Status } from "@/Interact/Status";
 import { BaseControl } from "@/Node/Control/BaseControl";
-import { ControlSVG } from "@/Node/Control/ControlSVG";
+import { BaseSVG } from "@/Node/Control/BaseSVG";
 import { TextArea } from "@/Node/Control/TextArea";
 import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
@@ -11,7 +11,7 @@ export class TextAreaSVG extends BaseControl {
     constructor(target) {
         super(target);
 
-        ControlSVG.call(this, "textarea");
+        BaseSVG.call(this, "textarea");
 
         this.type("TextAreaSVG");
 
@@ -35,7 +35,7 @@ export class TextAreaSVG extends BaseControl {
 TextAreaSVG.extend(TextArea);
 
 Object.assign(TextAreaSVG.prototype, {
-    ...ControlSVG.prototype,
+    ...BaseSVG.prototype,
     value(value) {
         if (arguments.length === 0) return this.vars.value;
         Check.isNumberOrString(value, `${this.constructor.name}.value`);

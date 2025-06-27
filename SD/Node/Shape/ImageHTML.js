@@ -1,14 +1,14 @@
 import { Interp } from "@/Animate/Interp";
+import { BaseHTML } from "@/Node/Shape/BaseHTML";
 import { BaseShape } from "@/Node/Shape/BaseShape";
 import { Image } from "@/Node/Shape/Image";
-import { ShapeHTML } from "@/Node/Shape/ShapeHTML";
 import { Factory } from "@/Utility/Factory";
 
 export class ImageHTML extends BaseShape {
     constructor(target) {
         super(target);
 
-        ShapeHTML.call(this, "img");
+        BaseHTML.call(this, "img");
 
         this.type("ImageHTML");
 
@@ -36,6 +36,6 @@ ImageHTML.extend(Image);
 
 Object.assign(ImageHTML.prototype, {
     ...Image.prototype,
-    ...ShapeHTML.prototype,
+    ...BaseHTML.prototype,
     href: Factory.handler("href"),
 });

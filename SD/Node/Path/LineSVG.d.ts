@@ -1,8 +1,8 @@
+import { Line } from "@/Node/Path/Line";
 import { SDNode } from "@/Node/SDNode";
-import { BasePathSVG } from "@/Node/SVG/Path/BasePathSVG";
 import { RenderNode } from "@/Renderer/RenderNode";
 
-export class LineSVG extends BasePathSVG {
+export class LineSVG extends Line {
     constructor(target: SDNode | RenderNode, value?: any);
     x1(): number;
     x1(x: number): this;

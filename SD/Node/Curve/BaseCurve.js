@@ -1,6 +1,6 @@
 import { Vector as V } from "@/Math/Vector";
-import { LineSVG } from "@/Node/SVG/Path/LineSVG";
-import { PathSVG } from "@/Node/SVG/Path/PathSVG";
+import { LineSVG } from "@/Node/Path/LineSVG";
+import { PathSVG } from "@/Node/Path/PathSVG";
 import { Factory } from "@/Utility/Factory";
 
 export class BaseCurve extends PathSVG {

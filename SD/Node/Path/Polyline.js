@@ -2,7 +2,7 @@ import { Polygon } from "@/Node/Shape/Polygon";
 
 export class Polyline {
     constructor(target, points = []) {
-        const PolylineSVG = require("@/Node/SVG/Path/PolylineSVG");
+        const PolylineSVG = require("@/Node/Path/PolylineSVG");
         return new PolylineSVG(target, points);
     }
 }

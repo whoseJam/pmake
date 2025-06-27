@@ -1,7 +1,7 @@
 import { Interp } from "@/Animate/Interp";
 import { BaseShape } from "@/Node/Shape/BaseShape";
+import { BaseSVG } from "@/Node/Shape/BaseSVG";
 import { Rect } from "@/Node/Shape/Rect";
-import { ShapeSVG } from "@/Node/Shape/ShapeSVG";
 import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
 
@@ -9,7 +9,7 @@ export class RectSVG extends BaseShape {
     constructor(target) {
         super(target);
 
-        ShapeSVG.call(this, "rect");
+        BaseSVG.call(this, "rect");
 
         this.type("RectSVG");
 
@@ -36,7 +36,7 @@ RectSVG.extend(Rect);
 
 Object.assign(RectSVG.prototype, {
     ...Rect.prototype,
-    ...ShapeSVG.prototype,
+    ...BaseSVG.prototype,
     x(x) {
         if (arguments.length === 0) return this.vars.x;
         Check.validateNumber(x, `${this.constructor.name}.x`);

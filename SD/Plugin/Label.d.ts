@@ -1,6 +1,6 @@
 import { SDNode } from "@/Node/SDNode";
-import { Text } from "@/Node/SVG/Text";
 import { Mathjax } from "@/Node/Text/Mathjax";
+import { Text } from "@/Node/Text/TextSVG";
 
 type Location = "lt" | "lc" | "lb" | "tl" | "tc" | "tr" | "bl" | "bc" | "br" | "rt" | "rc" | "rb";
 

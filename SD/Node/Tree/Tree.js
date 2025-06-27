@@ -1,6 +1,6 @@
 import { Enter as EN } from "@/Node/Core/Enter";
 import { Vertex } from "@/Node/Element/Vertex";
-import { LineSVG } from "@/Node/SVG/Path/LineSVG";
+import { LineSVG } from "@/Node/Path/LineSVG";
 import { BaseTree } from "@/Node/Tree/BaseTree";
 import { Cast } from "@/Utility/Cast";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";

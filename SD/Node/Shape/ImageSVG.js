@@ -3,13 +3,13 @@ import { BaseShape } from "@/Node/Shape/BaseShape";
 import { Image } from "@/Node/Shape/Image";
 import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
-import { ShapeSVG } from "./ShapeSVG";
+import { BaseSVG } from "./BaseSVG";
 
 export class ImageSVG extends BaseShape {
     constructor(target) {
         super(target);
 
-        ShapeSVG.call(this, "image");
+        BaseSVG.call(this, "image");
 
         this.type("ImageSVG");
 
@@ -39,7 +39,7 @@ ImageSVG.extend(Image);
 
 Object.assign(ImageSVG.prototype, {
     ...Image.prototype,
-    ...ShapeSVG.prototype,
+    ...BaseSVG.prototype,
     x(x) {
         if (arguments.length === 0) return this.vars.x;
         Check.validateNumber(x, `${this.constructor.name}.x`);

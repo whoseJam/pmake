@@ -2,7 +2,7 @@ import { Enter as EN } from "@/Node/Core/Enter";
 import { Exit as EX } from "@/Node/Core/Exit";
 import { BaseGrid } from "@/Node/Grid/BaseGrid";
 import { SD2DNode } from "@/Node/SD2DNode";
-import { Text } from "@/Node/SVG/Text";
+import { Text } from "@/Node/Text/Text";
 import { Rule as R } from "@/Rule/Rule";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
