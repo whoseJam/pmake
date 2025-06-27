@@ -54,6 +54,9 @@ export class Check {
         return !this.isAsyncFunction(object);
     }
 
+    static validateOpacity(object, method, i = 1, suggestions = []) {
+        if (!this.isOpacity(object)) ErrorLauncher.invalidOpacity(object, method, i, suggestions);
+    }
     static validateNumber(object, method, i = 1, suggestions = []) {
         if (!this.isNumber(object)) ErrorLauncher.invalidNumber(object, method, i, suggestions);
     }

@@ -67,6 +67,9 @@ export class ErrorLauncher {
     static gridElementNotFound(rowId, colId) {
         throw new Error(`Grid element[${rowId}, ${colId}] not found.`);
     }
+    static invalidOpacity(opacity, method, i = 1, suggestions = []) {
+        throw new Error(`We expect an opacity for the ${generateLocation(i)} argument when calling ${method} but got <${opacity}>[type is ${typeof opacity}]. ${generateSuggestion(opacity, suggestions)}`);
+    }
     static invalidNumber(number, method, i = 1, suggestions = []) {
         throw new Error(`We expect a number for the ${generateLocation(i)} argument when calling ${method} but got <${number}>[type is ${typeof number}]. ${generateSuggestion(number, suggestions)}`);
     }

@@ -7,10 +7,10 @@ export class Image extends BaseShape {
     constructor(target) {
         const targetLayer = getTargetLayer(target);
         if (targetLayer instanceof HTMLNode) {
-            const { ImageHTML } = require("@/Node/HTML/Shape/ImageHTML");
+            const { ImageHTML } = require("@/Node/Shape/ImageHTML");
             return new ImageHTML(target);
         } else {
-            const { ImageSVG } = require("@/Node/SVG/Shape/ImageSVG");
+            const { ImageSVG } = require("@/Node/Shape/ImageSVG");
             return new ImageSVG(target);
         }
     }

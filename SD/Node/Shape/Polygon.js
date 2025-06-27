@@ -4,7 +4,7 @@ import { polygon } from "@flatten-js/core";
 
 export class Polygon extends BaseShape {
     constructor(target, points = []) {
-        const { PolygonSVG } = require("@/Node/SVG/Shape/PolygonSVG");
+        const { PolygonSVG } = require("@/Node/Shape/PolygonSVG");
         return new PolygonSVG(target, points);
     }
 }

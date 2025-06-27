@@ -1,7 +1,8 @@
 import { Interp } from "@/Animate/Interp";
 import { svg } from "@/Interact/Root";
+import { BaseShape } from "@/Node/Shape/BaseShape";
 import { Polygon } from "@/Node/Shape/Polygon";
-import { BaseShapeSVG } from "@/Node/SVG/Shape/BaseShapeSVG";
+import { ShapeSVG } from "@/Node/Shape/ShapeSVG";
 import { Factory } from "@/Utility/Factory";
 
 let globalPolygon = undefined;
@@ -20,9 +21,11 @@ function polygonToBox(points) {
     return globalPolygon.nake().getBBox();
 }
 
-export class PolygonSVG extends BaseShapeSVG {
+export class PolygonSVG extends BaseShape {
     constructor(target, points = []) {
-        super(target, "polygon");
+        super(target);
+
+        ShapeSVG.call(this, "polygon");
 
         this.type("PolygonSVG");
 

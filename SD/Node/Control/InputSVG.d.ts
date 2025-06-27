@@ -1,6 +1,6 @@
-import { BaseControlSVG } from "@/Node/SVG/Control/BaseControlSVG";
+import { Input } from "@/Node/Control/Input";
 
-export class InputSVG extends BaseControlSVG {
+export class InputSVG extends Input {
     value(): string;
     value(value: any): this;
     label(): string;

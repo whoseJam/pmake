@@ -1,4 +1,4 @@
-import { PolygonSVG } from "@/Node/SVG/Shape/PolygonSVG";
+import { PolygonSVG } from "@/Node/Shape/PolygonSVG";
 
 export class TriangleSVG extends PolygonSVG {
     constructor(target) {

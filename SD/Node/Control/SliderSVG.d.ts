@@ -1,10 +1,3 @@
-import { BaseControlSVG } from "@/Node/SVG/Control/BaseControlSVG";
+import { Slider } from "@/Node/Control/Slider";
 
-export class SliderSVG extends BaseControlSVG {
-    max(): number;
-    max(max: number): this;
-    min(): number;
-    min(min: number): this;
-    value(): number;
-    value(value: number): this;
-}
+export class SliderSVG extends Slider {}

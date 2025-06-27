@@ -1,11 +1,14 @@
 import { Interp } from "@/Animate/Interp";
-import { BaseShapeHTML } from "@/Node/HTML/Shape/BaseShapeHTML";
+import { BaseShape } from "@/Node/Shape/BaseShape";
 import { Image } from "@/Node/Shape/Image";
+import { ShapeHTML } from "@/Node/Shape/ShapeHTML";
 import { Factory } from "@/Utility/Factory";
 
-export class ImageHTML extends BaseShapeHTML {
+export class ImageHTML extends BaseShape {
     constructor(target) {
-        super(target, "img");
+        super(target);
+
+        ShapeHTML.call(this, "img");
 
         this.type("ImageHTML");
 

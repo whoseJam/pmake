@@ -2,7 +2,6 @@ import { SDNode } from "@/Node/SDNode";
 import { HTMLNode } from "@/Renderer/HTML/HTMLNode";
 import { createRenderNode } from "@/Renderer/RenderNode";
 import { SVGNode } from "@/Renderer/SVG/SVGNode";
-
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 
@@ -26,13 +25,7 @@ export class SD2DNode extends SDNode {
             opacity: 1,
         });
 
-        const { BaseHTML } = require("@/Node/HTML/BaseHTML");
-        const { BaseSVG } = require("@/Node/SVG/BaseSVG");
-        if (this instanceof BaseHTML) {
-            this._.layer = createRenderNode(this, this._.layers.__targetLayer, "div");
-        } else if (this instanceof BaseSVG) {
-            this._.layer = createRenderNode(this, this._.layers.__targetLayer, "g");
-        } else if (this._.layers.__targetLayer instanceof HTMLNode) {
+        if (this._.layers.__targetLayer instanceof HTMLNode) {
             this._.layer = createRenderNode(this, this._.layers.__targetLayer, "div");
         } else {
             this._.layer = createRenderNode(this, this._.layers.__targetLayer, "g");

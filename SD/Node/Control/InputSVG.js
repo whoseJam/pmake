@@ -1,13 +1,13 @@
 import { Interp } from "@/Animate/Interp";
 import { Dom } from "@/Dom/Dom";
 import { Status } from "@/Interact/Status";
+import { BaseControl } from "@/Node/Control/BaseControl";
 import { ControlSVG } from "@/Node/Control/ControlSVG";
 import { Input } from "@/Node/Control/Input";
-import { BaseControlSVG } from "@/Node/SVG/Control/BaseControlSVG";
 import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
 
-export class InputSVG extends BaseControlSVG {
+export class InputSVG extends BaseControl {
     constructor(target) {
         super(target);
 

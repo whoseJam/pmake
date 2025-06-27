@@ -1,6 +1,6 @@
-import { BaseControlSVG } from "@/Node/SVG/Control/BaseControlSVG";
+import { Button } from "@/Node/Control/Button";
 
-export class ButtonSVG extends BaseControlSVG {
+export class ButtonSVG extends Button {
     text(): string;
     text(text: string): this;
 }

@@ -1,13 +1,15 @@
 import { Interp } from "@/Animate/Interp";
+import { BaseShape } from "@/Node/Shape/BaseShape";
 import { Ellipse } from "@/Node/Shape/Ellipse";
-import { BaseShapeSVG } from "@/Node/SVG/Shape/BaseShapeSVG";
-import { CircleSVG } from "@/Node/SVG/Shape/CircleSVG";
+import { ShapeSVG } from "@/Node/Shape/ShapeSVG";
 import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
 
-export class EllipseSVG extends BaseShapeSVG {
+export class EllipseSVG extends BaseShape {
     constructor(target) {
         super(target, "ellipse");
+
+        ShapeSVG.call(this, "ellipse");
 
         this.type("EllipseSVG");
 
@@ -18,15 +20,15 @@ export class EllipseSVG extends BaseShapeSVG {
             cy: 20,
         });
 
-        this.vars.watch("rx", Factory.action(this, this._.nake, "rx", Interp.numberInterp));
-        this.vars.watch("ry", Factory.action(this, this._.nake, "ry", Interp.numberInterp));
-        this.vars.watch("cx", Factory.action(this, this._.nake, "cx", Interp.numberInterp));
-        this.vars.watch("cy", Factory.action(this, this._.nake, "cy", Interp.numberInterp));
-
         this._.nake.setAttribute("cx", this.vars.cx);
         this._.nake.setAttribute("cy", this.vars.cy);
         this._.nake.setAttribute("rx", this.vars.rx);
         this._.nake.setAttribute("ry", this.vars.ry);
+
+        this.vars.watch("rx", Factory.action(this, this._.nake, "rx", Interp.numberInterp));
+        this.vars.watch("ry", Factory.action(this, this._.nake, "ry", Interp.numberInterp));
+        this.vars.watch("cx", Factory.action(this, this._.nake, "cx", Interp.numberInterp));
+        this.vars.watch("cy", Factory.action(this, this._.nake, "cy", Interp.numberInterp));
     }
 }
 
@@ -34,8 +36,18 @@ EllipseSVG.extend(Ellipse);
 
 Object.assign(EllipseSVG.prototype, {
     ...Ellipse.prototype,
-    cx: CircleSVG.prototype.cx,
-    cy: CircleSVG.prototype.cy,
+    cx(cx) {
+        if (arguments.length === 0) return this.vars.cx;
+        Check.validateNumber(cx, `${this.constructor.name}.cx`);
+        this.vars.lpset("cx", cx);
+        return this;
+    },
+    cy(cy) {
+        if (arguments.length === 0) return this.vars.cy;
+        Check.validateNumber(cy, `${this.constructor.name}.cy`);
+        this.vars.lpset("cy", cy);
+        return this;
+    },
     rx(rx) {
         if (arguments.length === 0) return this.vars.rx;
         Check.validateNumber(rx, `${this.type()}.rx`);

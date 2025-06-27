@@ -8,10 +8,10 @@ export class Ellipse extends BaseShape {
     constructor(target) {
         const targetLayer = getTargetLayer(target);
         if (targetLayer instanceof HTMLNode) {
-            const { EllipseHTML } = require("@/Node/HTML/Shape/EllipseHTML");
+            const { EllipseHTML } = require("@/Node/Shape/EllipseHTML");
             return new EllipseHTML(target);
         } else {
-            const { EllipseSVG } = require("@/Node/SVG/Shape/EllipseSVG");
+            const { EllipseSVG } = require("@/Node/Shape/EllipseSVG");
             return new EllipseSVG(target);
         }
     }

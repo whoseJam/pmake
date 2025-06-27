@@ -1,9 +1,9 @@
 import { Interp } from "@/Animate/Interp";
-import { BaseShapeHTML } from "@/Node/HTML/Shape/BaseShapeHTML";
+import { BaseShape } from "@/Node/Shape/BaseShape";
 import { Rect } from "@/Node/Shape/Rect";
 import { Factory } from "@/Utility/Factory";
 
-export class RectHTML extends BaseShapeHTML {
+export class RectHTML extends BaseShape {
     constructor(target) {
         super(target, "div");
 

@@ -12,6 +12,7 @@ export class Check {
     static isAsyncFucntion(object: any): boolean;
     static isSyncFunction(object: any): boolean;
 
+    static validateOpacity(object: any, method: string, i?: number, suggestions: Array<[(object: any) => boolean, string]>): void;
     static validateNumber(object: any, method: string, i?: number, suggestions: Array<[(object: any) => boolean, string]>): void;
     static validateNumberOrString(object: any, method: string, i?: number, suggestions: Array<[(object: any) => boolean, string]>): void;
     static validateColor(object: any, method: string, i?: number, suggestions: Array<[(object: any) => boolean, string]>): void;

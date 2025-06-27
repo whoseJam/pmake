@@ -1,6 +1,6 @@
 import { SD2DNode } from "@/Node/SD2DNode";
 import { SDNode } from "@/Node/SDNode";
-import { RectSVG } from "@/Node/SVG/Shape/RectSVG";
+import { RectSVG } from "@/Node/Shape/RectSVG";
 import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 

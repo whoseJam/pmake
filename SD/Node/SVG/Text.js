@@ -1,7 +1,7 @@
 import { Interp } from "@/Animate/Interp";
 import { svg } from "@/Interact/Root";
 import { BaseSVG } from "@/Node/SVG/BaseSVG";
-import { RectSVG } from "@/Node/SVG/Shape/RectSVG";
+import { RectSVG } from "@/Node/Shape/RectSVG";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
 

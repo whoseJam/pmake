@@ -1,7 +1,7 @@
 import { BaseCoord } from "@/Node/Coord/BaseCoord";
+import { Circle } from "@/Node/Shape/CircleSVG";
+import { Rect } from "@/Node/Shape/RectSVG";
 import { Path } from "@/Node/SVG/Path/PathSVG";
-import { Circle } from "@/Node/SVG/Shape/CircleSVG";
-import { Rect } from "@/Node/SVG/Shape/RectSVG";
 
 type Origin = "bl" | "c";
 

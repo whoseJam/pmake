@@ -6,10 +6,10 @@ export class Rect extends BaseShape {
     constructor(target) {
         const targetLayer = getTargetLayer(target);
         if (targetLayer instanceof HTMLNode) {
-            const { RectHTML } = require("@/Node/HTML/Shape/RectHTML");
+            const { RectHTML } = require("@/Node/Shape/RectHTML");
             return new RectHTML(target);
         } else {
-            const { RectSVG } = require("@/Node/SVG/Shape/RectSVG");
+            const { RectSVG } = require("@/Node/Shape/RectSVG");
             return new RectSVG(target);
         }
     }
