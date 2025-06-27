@@ -4,10 +4,12 @@ let svg = sd.svg();
 let C = sd.color();
 let board = new sd.Text(svg);
 let r = new sd.Rect(svg).fillOpacity(0);
-let obj = new sd.Text(svg, "Hello").cx(600).cy(300).fontSize(40);
+let obj = new sd.Text(svg, "Hello").x(100).y(100).fontSize(30);
 r.x(obj.x()).y(obj.y()).width(obj.width()).height(obj.height());
 
-sd.init(() => {});
+sd.init(() => {
+    console.log(r.x(), r.y(), r.mx(), r.my());
+});
 
 sd.main(async () => {
     await sd.pause();

@@ -74,11 +74,21 @@ function getConfiguration() {
         module: {
             rules: [
                 {
-                    test: /.js$/,
+                    test: /\.(ts|tsx|js|jsx)$/,
+                    exclude: /node_modules/,
                     use: {
                         loader: "babel-loader",
                         options: {
-                            presets: ["@babel/preset-react", "@babel/preset-env"],
+                            presets: [
+                                "@babel/preset-react",
+                                "@babel/preset-env",
+                                [
+                                    "@babel/preset-typescript",
+                                    {
+                                        allowDeclareFields: true,
+                                    },
+                                ],
+                            ],
                         },
                     },
                 },

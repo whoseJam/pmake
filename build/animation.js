@@ -10,6 +10,17 @@ const colors = require("colors-console");
 const webpack = require("webpack-stream");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
+const { copyFile } = require("fs").promises;
+
+async function copyFileAsync(src, dest) {
+    try {
+        await copyFile(src, dest);
+        console.log(`文件 ${src} 已成功复制到 ${dest}`);
+    } catch (err) {
+        console.error("复制文件时出错:", err);
+    }
+}
+
 function validateJSFile(sourceFilePath) {
     if (!fs.existsSync(sourceFilePath)) {
         console.log(colors("red", `[Error] File ${sourceFilePath} not found. Please check if the input path is correct.`));
@@ -75,7 +86,7 @@ function launch(selfLaunch = true) {
         process.exit();
     }
     if (global["l"] && !global["sd"] && !global["s"]) utils.copyFile("./dist/sd.js", parser.parseConfig("pptOutputPath"));
-    if (global["l"]) utils.copyFile("./dist/consolas.ttf", parser.parseConfig("pptOutputPath"));
+    if (global["l"]) copyFileAsync("./dist/consolas.ttf", parser.parseConfig("pptOutputPath") + "/consolas.ttf");
     return task(sourceFilePath, animationOutputPath);
 }
 

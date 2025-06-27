@@ -4,7 +4,7 @@ import { SDRule } from "@/Rule/Rule";
 export class SDNode {
     /**
      * Renders the component onto the specified target.
-     * The target can be another component or a canvas element (e.g., SVG, div).
+     * The target can be another component or a canvas element (e.g., svg, div).
      * @param target - The destination to render the component.
      */
     constructor(target: SDNode | RenderNode);

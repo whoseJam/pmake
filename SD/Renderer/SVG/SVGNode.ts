@@ -2,6 +2,7 @@ import { Action } from "@/Animate/Action";
 import { Dom } from "@/Dom/Dom";
 import { svg } from "@/Interact/Root";
 import { RenderNode, SVGLabel } from "@/Renderer/RenderNode";
+import { SDNode } from "@/sd";
 
 const innerHTMLKey = new Set(["innerHTML", "text"]);
 const styleKey = new Set(["pointer-events", "min-width", "min-height", "display"]);
@@ -14,34 +15,31 @@ function moveTo(element) {
     };
 }
 
-export function SVGNode(parent, render, label) {
-    RenderNode.call(this, parent, render, label);
-    if (typeof label === "string") {
-        if (label === "view") {
-            this.element = Dom.createSVGElement("svg");
-        } else {
-            this.element = Dom.createSVGElement(label);
-        }
-        this.appear();
-    } else {
-        this.element = label;
-        this.label = Dom.tagName(label);
-        if (this.render) this.appear();
-    }
-}
+export class SVGNode extends RenderNode {
+    declare element: SVGElement;
+    class: typeof SVGNode;
 
-SVGNode.prototype = {
-    ...RenderNode.prototype,
-    class: SVGNode,
-    moveTo(render) {
-        if (SVGLabel.has(render.label)) {
-            const t = this.parent.delay() + this.parent.duration();
-            new Action(t, t, this.render, render, moveTo(this), this, "moveTo");
-            this.render = render;
+    constructor(parent: SDNode, render: RenderNode, element: string | SVGElement) {
+        if (typeof element === "string") {
+            super(parent, render, element);
+            this.element = Dom.createSVGElement(element === "view" ? "svg" : element);
+            this.appear();
         } else {
-            this.moveTo(svg());
+            super(parent, render, Dom.tagName(element));
+            this.element = element;
+            if (this.render) this.appear();
         }
-    },
+        this.class = SVGNode;
+    }
+
+    moveTo(render: RenderNode) {
+        if (!SVGLabel.has(render.label)) return this.moveTo(svg());
+        if (this.render === render) return;
+        const t = this.parent.delay() + this.parent.duration();
+        new Action(t, t, this.render, render, moveTo(this), this, "moveTo");
+        this.render = render;
+    }
+
     getAttribute(key) {
         if (innerHTMLKey.has(key)) {
             return this.element.innerHTML;
@@ -49,7 +47,8 @@ SVGNode.prototype = {
             return this.element.style[key];
         }
         return this.element.getAttribute(key);
-    },
+    }
+
     setAttribute(key, value) {
         if (typeof value.r === "number" && typeof value.g === "number" && typeof value.b === "number") value = `rgb(${value.r}, ${value.g}, ${value.b})`;
         if (innerHTMLKey.has(key)) {
@@ -61,8 +60,9 @@ SVGNode.prototype = {
         } else {
             this.element.setAttribute(key, value);
         }
-    },
+    }
+
     hasShape() {
-        return shapeKey.has(this.tag);
-    },
-};
+        return shapeKey.has(this.label);
+    }
+}

@@ -3,8 +3,11 @@ import { svg } from "@/Interact/Root";
 import { RectSVG } from "@/Node/Shape/RectSVG";
 import { BaseSVG } from "@/Node/Text/BaseSVG";
 import { BaseText } from "@/Node/Text/BaseText";
+import { TextEngine } from "@/Node/Text/TextEngine";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
+
+console.log("TextEngine=", TextEngine);
 
 let globalText = undefined;
 

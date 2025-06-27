@@ -1,22 +1,20 @@
 import { Action } from "@/Animate/Action";
 import { div, svg } from "@/Interact/Root";
+import { SDNode } from "@/Node/SDNode";
 import { HTMLNode } from "@/Renderer/HTML/HTMLNode";
+import { SVGNode } from "@/Renderer/SVG/SVGNode";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 export const SVGLabel = new Set(["circle", "ellipse", "image", "line", "path", "polygon", "rect", "text", "svg", "g", "marker", "defs"]);
-export const HTMLLabel = new Set(["div", "input", "button", "label", "textarea", "canvas", "img"]);
+export const HTMLLabel = new Set(["div", "input", "button", "textarea", "img"]);
 
-/**
- * Change the structure of the render tree. Append or remove a render node.
- * @param {RenderNode} renderNode
- * @param {SDNode} owner
- */
-function treeStructureChange(renderNode, owner) {
-    return function (t) {
+function treeStructureChange(render: RenderNode, owner: SDNode) {
+    return function (t: number) {
         if (this.target) {
             // append a render node
             if (t !== 1) return;
-            this.target.append(renderNode);
+            this.target.append(render);
+            // @ts-ignore
             owner._.created = true;
             requestAnimationFrame(() => {
                 owner._.ready = true;
@@ -24,7 +22,8 @@ function treeStructureChange(renderNode, owner) {
         } else {
             // remove a render node
             if (t !== 0) return;
-            renderNode.nake().remove();
+            render.nake().remove();
+            // @ts-ignore
             owner._.created = false;
             requestAnimationFrame(() => {
                 owner._.ready = false;
@@ -33,7 +32,7 @@ function treeStructureChange(renderNode, owner) {
     };
 }
 
-export function createRenderNode(parent, render, label) {
+export function createRenderNode(parent: SDNode, render: RenderNode, label: string) {
     const { HTMLNode } = require("@/Renderer/HTML/HTMLNode");
     const { SVGNode } = require("@/Renderer/SVG/SVGNode");
     if (SVGLabel.has(label)) {
@@ -51,40 +50,50 @@ export function createRenderNode(parent, render, label) {
     } else return new SVGNode(parent, render, label);
 }
 
-export function createHtmlNodeOnForeignObject(parent, render, label) {
-    // if (render.label && render.label === "foreignObject") {
+export function createHtmlNodeOnForeignObject(parent: SDNode, render: RenderNode, label: string) {
     return new HTMLNode(parent, render, label);
-    // }
-    // ErrorLauncher.invalidArguments();
 }
 
-export function RenderNode(parent, render, label) {
-    this.parent = parent;
-    this.render = render;
-    this.label = label;
-    this.element = undefined;
-}
+export class RenderNode {
+    parent: SDNode;
+    render: RenderNode;
+    label: string;
+    element: Element;
+    class: typeof HTMLNode | typeof SVGNode;
+    constructor(container: Element);
+    constructor(parent: SDNode | undefined, render: RenderNode | undefined, label: string);
+    constructor(arg0: Element | SDNode | undefined, arg1?: RenderNode | undefined, arg2?: string) {
+        if (arg0 instanceof Element) {
+            this.element = arg0;
+        } else {
+            this.parent = arg0;
+            this.render = arg1;
+            this.label = arg2;
+            this.element = undefined;
+        }
+    }
 
-RenderNode.prototype = {
     nake() {
         return this.element;
-    },
-    append(label) {
-        let child = label;
-        if (typeof label === "string") child = new this.class(this.parent, this, label);
-        this.nake().append(child.nake());
+    }
+
+    append(element: string | RenderNode) {
+        const child: RenderNode = typeof element === "string" ? new this.class(this.parent, this, element) : element;
+        this.appendNake(child.nake());
         return child;
-    },
-    appendNake(nake) {
-        this.nake().append(nake);
-    },
-    moveTo() {
+    }
+
+    appendNake(element: Element) {
+        this.nake().append(element);
+    }
+
+    moveTo(render: RenderNode) {
         ErrorLauncher.notImplementedYet("moveTo");
-    },
+    }
+
     appear() {
         if (this.parent === undefined) {
-            if (this.render.nake) this.render.nake().appendChild(this.nake());
-            else this.render.appendChild(this.nake());
+            this.render.append(this);
             return;
         }
         if (this.parent.delay) {
@@ -97,18 +106,22 @@ RenderNode.prototype = {
             new Action(t, t, undefined, this.render, treeStructureChange(this, this.parent), this, "appear");
             new Action(t, t, 0, 1, () => {}, this.parent, "opacity");
         }
-    },
+    }
+
     remove() {
         const t = this.parent.delay() + this.parent.duration();
         new Action(t, t, this.render, undefined, treeStructureChange(this, this.parent), this, "remove");
-    },
-    setAttribute() {
-        ErrorLauncher.notImplementedYet("setAttribute");
-    },
-    getAttribute() {
+    }
+
+    getAttribute(key) {
         ErrorLauncher.notImplementedYet("getAttribute");
-    },
+    }
+
+    setAttribute(key, value) {
+        ErrorLauncher.notImplementedYet("setAttribute");
+    }
+
     hasShape() {
         return true;
-    },
-};
+    }
+}

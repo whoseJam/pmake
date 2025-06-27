@@ -1,4 +1,5 @@
 import { HTMLNode } from "@/Renderer/HTML/HTMLNode";
+import { RenderNode } from "@/Renderer/RenderNode";
 import { SVGNode } from "@/Renderer/SVG/SVGNode";
 import { Check } from "@/Utility/Check";
 
@@ -75,7 +76,7 @@ export class Root {
         window.RATE = 1;
 
         if (true) {
-            this.svg = new HTMLNode(undefined, document.body, "div");
+            this.svg = new HTMLNode(undefined, new RenderNode(document.body), "div");
             this.svg.setAttribute("width", "100%");
             this.svg.setAttribute("height", "100%");
             this.svg.setAttribute("position", "absolute");
@@ -87,7 +88,7 @@ export class Root {
         }
 
         if (true) {
-            this.div = new HTMLNode(undefined, document.body, "div");
+            this.div = new HTMLNode(undefined, new RenderNode(document.body), "div");
             this.div.setAttribute("width", "100vw");
             this.div.setAttribute("height", "100vh");
             this.div.setAttribute("overflow", "hidden");
