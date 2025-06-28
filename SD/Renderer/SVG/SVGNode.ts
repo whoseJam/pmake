@@ -15,6 +15,18 @@ function moveTo(element: SVGNode) {
     };
 }
 
+function parseText(text: string) {
+    let ans = "";
+    text = String(text);
+    for (let i = 0; i < text.length; i++) {
+        if (text[i] === " ") ans += "&emsp;";
+        else if (text[i] === "<") ans += "&lt;";
+        else if (text[i] === ">") ans += "&gt;";
+        else ans += text[i];
+    }
+    return ans;
+}
+
 export class SVGNode extends RenderNode {
     declare element: SVGElement;
     class: typeof SVGNode;
@@ -48,6 +60,7 @@ export class SVGNode extends RenderNode {
     setAttribute(key: string, value: any) {
         if (typeof value.r === "number" && typeof value.g === "number" && typeof value.b === "number") value = `rgb(${value.r}, ${value.g}, ${value.b})`;
         if (innerHTMLKey.has(key)) {
+            if (key === "text") value = parseText(value);
             this.element.innerHTML = value;
         } else if (styleKey.has(key)) {
             this.element.style[key] = value;

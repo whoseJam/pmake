@@ -7,18 +7,6 @@ import { TextEngine } from "@/Node/Text/TextEngine";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
 
-function parseText(text) {
-    let ans = "";
-    text = String(text);
-    for (let i = 0; i < text.length; i++) {
-        if (text[i] === " ") ans += "&emsp;";
-        else if (text[i] === "<") ans += "&lt;";
-        else if (text[i] === ">") ans += "&gt;";
-        else ans += text[i];
-    }
-    return ans;
-}
-
 export class TextSVG extends BaseText {
     constructor(target, text = "") {
         super(target);
@@ -107,8 +95,7 @@ Object.assign(TextSVG.prototype, {
     },
     text(text) {
         if (text === undefined) return this.vars.text;
-        const parsedText = parseText(String(text));
-        const nextText = parsedText === "" ? parseText(" ") : parsedText;
+        text = String(text);
         const box = TextEngine.boundingBox(text, this.vars.family, this.vars.fontSize);
         if (this.duration() > 0) {
             const context = new Context(this);
@@ -120,23 +107,23 @@ Object.assign(TextSVG.prototype, {
                 {
                     family: "consolas",
                     x: this.x(),
-                    my: this.my(),
+                    y: this.y(),
                     text: this.vars.text,
                     size: this.fontSize(),
                 },
                 {
                     family: "consolas",
                     x: this.x(),
-                    my: this.y() + box.height,
-                    text: nextText,
+                    y: this.y(),
+                    text,
                     size: this.fontSize(),
                 }
             );
             context.till(1, 1);
-            this.vars.text = nextText;
+            this.vars.text = text;
             this.opacity(1);
             context.recover();
-        } else this.vars.text = nextText;
+        } else this.vars.text = text;
         this.vars.setTogether({
             width: box.width,
             height: box.height,
