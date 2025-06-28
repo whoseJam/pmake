@@ -63,7 +63,7 @@ export class Interp {
             const r = fRGB.r * (1 - t) + tRGB.r * t;
             const g = fRGB.g * (1 - t) + tRGB.g * t;
             const b = fRGB.b * (1 - t) + tRGB.b * t;
-            set({ r, g, b });
+            set(`rgb(${r},${g},${b})`);
         };
     }
     static normalizedColorInterp(object, key, scale = 255) {

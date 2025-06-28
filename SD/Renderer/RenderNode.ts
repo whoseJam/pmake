@@ -8,46 +8,23 @@ import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 export const SVGLabel = new Set(["circle", "ellipse", "image", "line", "path", "polygon", "rect", "text", "svg", "g", "marker", "defs"]);
 export const HTMLLabel = new Set(["div", "input", "button", "textarea", "img"]);
 
-function treeStructureChange(render: RenderNode, owner: SDNode) {
-    return function (t: number) {
-        if (this.target) {
-            // append a render node
-            if (t !== 1) return;
-            this.target.append(render);
-            // @ts-ignore
-            owner._.created = true;
-            requestAnimationFrame(() => {
-                owner._.ready = true;
-            });
-        } else {
-            // remove a render node
-            if (t !== 0) return;
-            render.nake().remove();
-            // @ts-ignore
-            owner._.created = false;
-            requestAnimationFrame(() => {
-                owner._.ready = false;
-            });
-        }
-    };
-}
-
-export function createRenderNode(parent: SDNode, render: RenderNode, label: string) {
+export function createRenderNode(parent: SDNode, render: RenderNode, element: string | Element) {
     const { HTMLNode } = require("@/Renderer/HTML/HTMLNode");
     const { SVGNode } = require("@/Renderer/SVG/SVGNode");
-    if (SVGLabel.has(label)) {
+    if (typeof element !== "string") return new SVGNode(parent, render, element);
+    if (SVGLabel.has(element)) {
         if (SVGLabel.has(render.label)) {
-            return new SVGNode(parent, render, label);
+            return new SVGNode(parent, render, element);
         } else {
-            return new SVGNode(parent, svg(), label);
+            return new SVGNode(parent, svg(), element);
         }
-    } else if (HTMLLabel.has(label)) {
+    } else if (HTMLLabel.has(element)) {
         if (HTMLLabel.has(render.label)) {
-            return new HTMLNode(parent, render, label);
+            return new HTMLNode(parent, render, element);
         } else {
-            return new HTMLNode(parent, div(), label);
+            return new HTMLNode(parent, div(), element);
         }
-    } else return new SVGNode(parent, render, label);
+    } else return new SVGNode(parent, render, element);
 }
 
 export function createHtmlNodeOnForeignObject(parent: SDNode, render: RenderNode, label: string) {
@@ -72,55 +49,83 @@ export class RenderNode {
             this.element = undefined;
         }
     }
-
     nake() {
         return this.element;
     }
-
+    __append(element: RenderNode | Element) {
+        if (element instanceof RenderNode) this.nake().append(element.nake());
+        else this.nake().append(element);
+    }
+    __remove() {
+        this.nake().remove();
+    }
     append(element: string | RenderNode) {
-        const child: RenderNode = typeof element === "string" ? new this.class(this.parent, this, element) : element;
-        this.appendNake(child.nake());
-        return child;
+        if (typeof element === "string") {
+            const child = new this.class(this.parent, this, element);
+            this.__append(child);
+            return child;
+        }
+        element.moveTo(this);
+        return element;
     }
-
-    appendNake(element: Element) {
-        this.nake().append(element);
-    }
-
     moveTo(render: RenderNode) {
         ErrorLauncher.notImplementedYet("moveTo");
     }
-
     appear() {
         if (this.parent === undefined) {
-            this.render.append(this);
+            this.render.__append(this);
             return;
         }
-        if (this.parent.delay) {
-            const l = this.parent.delay();
-            const r = this.parent.delay() + this.parent.duration();
-            new Action(l, r, undefined, this.render, treeStructureChange(this, this.parent), this, "appear");
-            new Action(l, r, 0, 1, () => {}, this.parent, "opacity");
-        } else {
-            const t = 0;
-            new Action(t, t, undefined, this.render, treeStructureChange(this, this.parent), this, "appear");
-            new Action(t, t, 0, 1, () => {}, this.parent, "opacity");
+        const render = this;
+        const node = this.parent;
+        function structure(t: number) {
+            if (this.target && t === 1) {
+                this.target.__append(render);
+                node._.created = true;
+                requestAnimationFrame(() => {
+                    node._.ready = true;
+                });
+            }
+            if (!this.target && t === 0) {
+                render.__remove();
+                node._.created = false;
+                requestAnimationFrame(() => {
+                    node._.ready = false;
+                });
+            }
         }
-    }
-
-    remove() {
         const t = this.parent.delay() + this.parent.duration();
-        new Action(t, t, this.render, undefined, treeStructureChange(this, this.parent), this, "remove");
+        new Action(t, t, undefined, this.render, structure, this, "appear");
+        new Action(t, t, 0, 1, undefined, this.parent, "opacity");
     }
-
-    getAttribute(key) {
+    remove() {
+        const render = this;
+        const node = this.parent;
+        function structure(t: number) {
+            if (this.target && t === 1) {
+                this.target.__append(render);
+                node._.created = true;
+                requestAnimationFrame(() => {
+                    node._.ready = true;
+                });
+            }
+            if (!this.target && t === 0) {
+                render.__remove();
+                node._.created = false;
+                requestAnimationFrame(() => {
+                    node._.ready = false;
+                });
+            }
+        }
+        const t = this.parent.delay() + this.parent.duration();
+        new Action(t, t, this.render, undefined, structure, this, "remove");
+    }
+    getAttribute(key: string) {
         ErrorLauncher.notImplementedYet("getAttribute");
     }
-
-    setAttribute(key, value) {
+    setAttribute(key: string, value: any) {
         ErrorLauncher.notImplementedYet("setAttribute");
     }
-
     hasShape() {
         return true;
     }

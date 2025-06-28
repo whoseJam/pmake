@@ -8,17 +8,16 @@ const innerHTMLKey = new Set(["innerHTML", "text"]);
 const styleKey = new Set(["pointer-events", "min-width", "min-height", "display"]);
 const shapeKey = new Set(["circle", "ellipse", "foreignObject", "fragment", "image", "line", "path", "rect", "svg", "text", "polygon", "polyline"]);
 
-function moveTo(element) {
-    return function (t) {
+function moveTo(element: SVGNode) {
+    return function (t: number) {
         if (t !== 1) return;
-        this.target.append(element);
+        this.target.__append(element);
     };
 }
 
 export class SVGNode extends RenderNode {
     declare element: SVGElement;
     class: typeof SVGNode;
-
     constructor(parent: SDNode, render: RenderNode, element: string | SVGElement) {
         if (typeof element === "string") {
             super(parent, render, element);
@@ -31,7 +30,6 @@ export class SVGNode extends RenderNode {
         }
         this.class = SVGNode;
     }
-
     moveTo(render: RenderNode) {
         if (!SVGLabel.has(render.label)) return this.moveTo(svg());
         if (this.render === render) return;
@@ -39,8 +37,7 @@ export class SVGNode extends RenderNode {
         new Action(t, t, this.render, render, moveTo(this), this, "moveTo");
         this.render = render;
     }
-
-    getAttribute(key) {
+    getAttribute(key: string) {
         if (innerHTMLKey.has(key)) {
             return this.element.innerHTML;
         } else if (styleKey.has(key)) {
@@ -48,8 +45,7 @@ export class SVGNode extends RenderNode {
         }
         return this.element.getAttribute(key);
     }
-
-    setAttribute(key, value) {
+    setAttribute(key: string, value: any) {
         if (typeof value.r === "number" && typeof value.g === "number" && typeof value.b === "number") value = `rgb(${value.r}, ${value.g}, ${value.b})`;
         if (innerHTMLKey.has(key)) {
             this.element.innerHTML = value;
@@ -61,7 +57,6 @@ export class SVGNode extends RenderNode {
             this.element.setAttribute(key, value);
         }
     }
-
     hasShape() {
         return shapeKey.has(this.label);
     }

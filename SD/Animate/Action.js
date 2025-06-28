@@ -45,12 +45,12 @@ export class Action {
         if (this.l < this.r - 1) {
             const k0 = easeInOut((t - this.l) / (this.r - this.l));
             const k1 = this.is(Action.firstCallFlag) ? 0 : t > this.r ? 1 : k0;
-            this.callback(k1);
+            if (this.callback) this.callback(k1);
             if (k1 === 1) this.set(Action.stopFlag);
             this.unset(Action.firstCallFlag);
         } else {
             const k1 = this.is(Action.firstCallFlag) ? 0 : 1;
-            this.callback(k1);
+            if (this.callback) this.callback(k1);
             if (k1 === 1) this.set(Action.stopFlag);
             this.unset(Action.firstCallFlag);
             if (k1 === 0) this.tick(t);

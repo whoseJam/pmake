@@ -1,47 +1,11 @@
+import { Context } from "@/Animate/Context";
 import { Interp } from "@/Animate/Interp";
-import { svg } from "@/Interact/Root";
 import { RectSVG } from "@/Node/Shape/RectSVG";
 import { BaseSVG } from "@/Node/Text/BaseSVG";
 import { BaseText } from "@/Node/Text/BaseText";
 import { TextEngine } from "@/Node/Text/TextEngine";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
-
-console.log("TextEngine=", TextEngine);
-
-let globalText = undefined;
-
-function createText() {
-    if (globalText === undefined) {
-        globalText = svg().append("text");
-        globalText.setAttribute("fill-opacity", 0);
-        globalText.setAttribute("stroke-opacity", 0);
-        globalText.setAttribute("font-family", "consolas");
-    }
-}
-
-function widthToFontSize(text, width) {
-    createText();
-    globalText.setAttribute("text", text);
-    globalText.setAttribute("font-size", 20);
-    const box = globalText.nake().getBBox();
-    return (width / box.width) * 20;
-}
-
-function heightToFontSize(text, height) {
-    createText();
-    globalText.setAttribute("text", text);
-    globalText.setAttribute("font-size", 20);
-    const box = globalText.nake().getBBox();
-    return (height / box.height) * 20;
-}
-
-function fontSizeToBox(text, fontSize) {
-    createText();
-    globalText.setAttribute("text", text);
-    globalText.setAttribute("font-size", fontSize);
-    return globalText.nake().getBBox();
-}
 
 function parseText(text) {
     let ans = "";
@@ -69,6 +33,7 @@ export class TextSVG extends BaseText {
             x: 0,
             y: 0,
             text: "",
+            family: "consolas",
             fontSize: 20,
             width: 0,
             height: 0,
@@ -78,13 +43,23 @@ export class TextSVG extends BaseText {
         this.vars.watch("y", Factory.action(this, this._.nake, "y", Interp.numberInterp));
         this.vars.watch("text", Factory.action(this, this._.nake, "text", Interp.stringInterp));
         this.vars.watch("fontSize", Factory.action(this, this._.nake, "font-size", Interp.numberInterp));
+        this.vars.watch("fill", fill => {
+            if (this._.transforming) this._.transforming.fill(fill);
+        });
+        this.vars.watch("stroke", stroke => {
+            if (this._.transforming) this._.transforming.stroke(stroke);
+        });
+        this.vars.watch("fontSize", fontSize => {
+            if (this._.transforming) this._.transforming.fontSize(fontSize);
+        });
 
         this._.nake.setAttribute("text-anchor", "start");
-        this._.nake.setAttribute("dy", ".92em");
+        this._.nake.setAttribute("alignment-baseline", "text-before-edge");
         this._.nake.setAttribute("x", this.vars.x);
         this._.nake.setAttribute("y", this.vars.y);
         this._.nake.setAttribute("font-size", this.vars.fontSize);
         this._.nake.setAttribute("font-family", "consolas");
+        this._.transforming = undefined;
 
         this.text(text);
     }
@@ -114,7 +89,7 @@ Object.assign(TextSVG.prototype, {
             const k = width / this.vars.width;
             this.fontSize(this.fontSize() * k);
         } else {
-            const fontSize = widthToFontSize(this.vars.text, width);
+            const fontSize = TextEngine.widthToFontSize(this.vars.text, this.vars.family, width);
             this.fontSize(fontSize);
         }
         return this;
@@ -125,7 +100,7 @@ Object.assign(TextSVG.prototype, {
             const k = height / this.vars.height;
             this.fontSize(this.fontSize() * k);
         } else {
-            const fontSize = heightToFontSize(this.vars.text, height);
+            const fontSize = TextEngine.heightToFontSize(this.vars.text, this.vars.family, height);
             this.fontSize(fontSize);
         }
         return this;
@@ -133,8 +108,35 @@ Object.assign(TextSVG.prototype, {
     text(text) {
         if (text === undefined) return this.vars.text;
         const parsedText = parseText(String(text));
-        this.vars.text = parsedText === "" ? parseText(" ") : parsedText;
-        const box = fontSizeToBox(this.vars.text, this.vars.fontSize);
+        const nextText = parsedText === "" ? parseText(" ") : parsedText;
+        const box = TextEngine.boundingBox(text, this.vars.family, this.vars.fontSize);
+        if (this.duration() > 0) {
+            const context = new Context(this);
+            context.till(0, 0);
+            this.opacity(0);
+            context.till(0, 1);
+            this._.transforming = TextEngine.transformText(
+                this,
+                {
+                    family: "consolas",
+                    x: this.x(),
+                    my: this.my(),
+                    text: this.vars.text,
+                    size: this.fontSize(),
+                },
+                {
+                    family: "consolas",
+                    x: this.x(),
+                    my: this.y() + box.height,
+                    text: nextText,
+                    size: this.fontSize(),
+                }
+            );
+            context.till(1, 1);
+            this.vars.text = nextText;
+            this.opacity(1);
+            context.recover();
+        } else this.vars.text = nextText;
         this.vars.setTogether({
             width: box.width,
             height: box.height,

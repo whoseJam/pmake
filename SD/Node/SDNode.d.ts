@@ -2,6 +2,8 @@ import { RenderNode } from "@/Renderer/RenderNode";
 import { SDRule } from "@/Rule/Rule";
 
 export class SDNode {
+    _: Record<string, any>;
+
     /**
      * Renders the component onto the specified target.
      * The target can be another component or a canvas element (e.g., svg, div).

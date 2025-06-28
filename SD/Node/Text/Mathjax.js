@@ -168,6 +168,7 @@ Object.assign(Mathjax.prototype, {
         const oldMath = this._.math;
         this._.math = newMath;
         this._.transforming = oldMath ? [oldMath] : [];
+        return this;
         updateMath(this, newMath);
         buildMathAtom(this);
         oldMath?.remove();

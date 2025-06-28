@@ -2,6 +2,7 @@ import { SDNode } from "@/Node/SDNode";
 import { HTMLNode } from "@/Renderer/HTML/HTMLNode";
 import { createRenderNode } from "@/Renderer/RenderNode";
 import { SVGNode } from "@/Renderer/SVG/SVGNode";
+import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 
@@ -48,7 +49,12 @@ Object.assign(SD2DNode.prototype, {
         layer.setAttribute("layer", name);
         return this;
     },
-    opacity: Factory.handlerMediumPrecise("opacity"),
+    opacity(opacity) {
+        if (arguments.length === 0) return this.vars.opacity;
+        Check.validateOpacity(opacity, `${this.constructor.name}.opacity`);
+        this.vars.mpset("opacity", opacity);
+        return this;
+    },
     inRange(point) {
         return this.x() <= point[0] && point[0] <= this.mx() && this.y() <= point[1] && point[1] <= this.my();
     },

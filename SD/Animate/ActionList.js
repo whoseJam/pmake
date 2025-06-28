@@ -66,7 +66,7 @@ export class ActionList {
     }
     push(action) {
         this.totalCount++;
-        this.trim(action);
+        if (action.callback !== undefined) this.trim(action);
         if (!this.actionsMap.has(action.owner)) this.actionsMap.set(action.owner, {});
         const actionMap = this.actionsMap.get(action.owner);
         if (!actionMap[action.channel]) actionMap[action.channel] = [];
