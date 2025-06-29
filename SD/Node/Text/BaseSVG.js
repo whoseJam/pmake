@@ -30,18 +30,6 @@ export function BaseSVG(label) {
 }
 
 BaseSVG.prototype = {
-    fill(fill) {
-        if (arguments.length === 0) return this.vars.fill;
-        Check.validateColor(fill, `${this.constructor.name}.fill`);
-        this.vars.fill = fill;
-        return this;
-    },
-    stroke(stroke) {
-        if (arguments.length === 0) return this.vars.stroke;
-        Check.validateColor(stroke, `${this.constructor.name}.stroke`);
-        this.vars.stroke = stroke;
-        return this;
-    },
     fillOpacity(opacity) {
         if (arguments.length === 0) return this.vars.fillOpacity;
         Check.validateOpacity(opacity, `${this.constructor.name}.fillOpacity`);
@@ -69,17 +57,6 @@ BaseSVG.prototype = {
     strokeDashArray(array) {
         if (arguments.length === 0) return this.vars.strokeDashArray;
         this.vars.strokeDashArray = array;
-        return this;
-    },
-    color(color) {
-        if (arguments.length === 0)
-            return {
-                fill: this.fill(),
-                stroke: this.stroke(),
-            };
-        Check.validateColor(color);
-        if (Check.isString(color)) this.fill(color).stroke(color);
-        else this.fill(color.fill).stroke(color.stroke);
         return this;
     },
 };

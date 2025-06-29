@@ -42,7 +42,7 @@ export class SVGNode extends RenderNode {
         }
         this.class = SVGNode;
     }
-    moveTo(render: RenderNode) {
+    moveTo(render: RenderNode): void {
         if (!SVGLabel.has(render.label)) return this.moveTo(svg());
         if (this.render === render) return;
         const t = this.parent.delay() + this.parent.duration();
@@ -57,7 +57,7 @@ export class SVGNode extends RenderNode {
         }
         return this.element.getAttribute(key);
     }
-    setAttribute(key: string, value: any) {
+    setAttribute(key: string, value: any): void {
         if (typeof value.r === "number" && typeof value.g === "number" && typeof value.b === "number") value = `rgb(${value.r}, ${value.g}, ${value.b})`;
         if (innerHTMLKey.has(key)) {
             if (key === "text") value = parseText(value);

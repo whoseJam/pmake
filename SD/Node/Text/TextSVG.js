@@ -1,9 +1,9 @@
 import { Context } from "@/Animate/Context";
 import { Interp } from "@/Animate/Interp";
-import { RectSVG } from "@/Node/Shape/RectSVG";
 import { BaseSVG } from "@/Node/Text/BaseSVG";
 import { BaseText } from "@/Node/Text/BaseText";
 import { TextEngine } from "@/Node/Text/TextEngine";
+import { Check } from "@/Utility/Check";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
 
@@ -38,7 +38,7 @@ export class TextSVG extends BaseText {
             if (this._.transforming) this._.transforming.stroke(stroke);
         });
         this.vars.watch("fontSize", fontSize => {
-            if (this._.transforming) this._.transforming.fontSize(fontSize);
+            if (this._.transforming) this._.transforming.fontSizeByText(fontSize);
         });
 
         this._.nake.setAttribute("text-anchor", "start");
@@ -55,24 +55,23 @@ export class TextSVG extends BaseText {
 
 Object.assign(TextSVG.prototype, {
     ...BaseSVG.prototype,
-    x: RectSVG.prototype.x,
-    y: RectSVG.prototype.y,
-    fontSize(fontSize) {
-        if (fontSize == undefined) return this.vars.fontSize;
+    fontSize(size) {
+        if (arguments.length === 0) return this.vars.fontSize;
+        Check.validateNumber(size, `${this.constructor.name}.fontSize`);
         if (this.vars.fontSize > 1e-1) {
-            const k = fontSize / this.vars.fontSize;
+            const k = size / this.vars.fontSize;
             this.vars.width *= k;
             this.vars.height *= k;
         } else {
-            const box = fontSizeToBox(this.vars.text, fontSize);
+            const box = TextEngine.fontSizeToBox(this.vars.text, fontSize);
             this.vars.width = box.width;
             this.vars.height = box.height;
         }
-        this.vars.fontSize = fontSize;
+        this.vars.lpset("fontSize", size);
         return this;
     },
     width(width) {
-        if (width === undefined) return this.vars.width;
+        if (arguments.length === 0) return this.vars.width;
         if (this.vars.width > 1e-1) {
             const k = width / this.vars.width;
             this.fontSize(this.fontSize() * k);
@@ -83,7 +82,7 @@ Object.assign(TextSVG.prototype, {
         return this;
     },
     height(height) {
-        if (height === undefined) return this.vars.height;
+        if (arguments.length === 0) return this.vars.height;
         if (this.vars.height > 1e-1) {
             const k = height / this.vars.height;
             this.fontSize(this.fontSize() * k);

@@ -4,7 +4,7 @@ const svg = sd.svg();
 const C = sd.color();
 const T = 500;
 
-sd.main(Test12);
+sd.main(Test1);
 
 async function Test12() {
     const math = new sd.Mathjax(svg, "a+b=c").center(100, 100);
@@ -143,10 +143,12 @@ async function Test2() {
 }
 
 async function Test1() {
+    const math = new sd.Mathjax(svg, "a^2").x(100).y(100).fontSize(100);
+    const rect = new sd.Rect(svg).x(100).y(100).width(200).height(200).fillOpacity(0).stroke(C.red);
     await sd.pause();
-    const math = new sd.Mathjax(svg, "{aaaa}{b}{c}{dddd}").fontSize(40).x(100).y(100);
+    math.startAnimate().text("2a").color(C.textBlue).endAnimate();
     await sd.pause();
-    math.startAnimate().transformMath("{a}{c}{b}{d}", { 1: 1, 2: 3, 3: 2, 4: 4 }).fontSize(20).endAnimate();
+    math.startAnimate().text("3q").fontSize(180).endAnimate();
 }
 
 async function Test0() {

@@ -5,7 +5,7 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestSpaceAndEnter);
+sd.main(TestTextTransform);
 
 async function TestSpaceAndEnter() {
     const text = new sd.Text(svg).fontSize(100).text("a a a");
