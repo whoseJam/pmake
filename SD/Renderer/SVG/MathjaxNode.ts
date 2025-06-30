@@ -1,3 +1,4 @@
+import { Dom } from "@/Dom/Dom";
 import { SDNode } from "@/Node/SDNode";
 import { TextEngine } from "@/Node/Text/TextEngine";
 import { RenderNode } from "@/Renderer/RenderNode";
@@ -11,34 +12,28 @@ export function createMathjaxRenderNode(parent: SDNode, render: RenderNode, elem
         svg.setAttribute(key, svg.children[1].getAttribute(key));
         svg.children[1].removeAttribute(key);
     }
+    for (const key of ["fill", "stroke", "x", "y", ["font-size", "fontSize"]]) {
+        // @ts-ignore
+        if (typeof key === "string") svg.setAttribute(key, parent.vars[key]);
+        // @ts-ignore
+        else svg.setAttribute(key[0], parent.vars[key[1]]);
+    }
     return new MathjaxNode(parent, render, svg);
 }
 
-const scale = 5 / 100;
-
 export class MathjaxNode extends SVGNode {
-    x: number;
-    y: number;
-    sx: number;
-    sy: number;
-    ix: number;
-    iy: number;
-    constructor(parent: SDNode, render: RenderNode, element: SVGElement) {
-        super(parent, render, element);
-        this.x = 0;
-        this.y = 0;
-        this.ix = 0;
-        this.iy = 0;
-        TextEngine.adjustMathjax(this);
+    constructor(other: MathjaxNode);
+    constructor(parent: SDNode, render: RenderNode, element: SVGElement);
+    constructor(arg0: MathjaxNode | SDNode, arg1?: RenderNode, arg2?: SVGElement) {
+        if (arg0 instanceof SDNode) {
+            super(arg0, arg1, arg2);
+            TextEngine.adjustMathjax(this);
+        } else {
+            const element = Dom.deepClone(arg0.element);
+            super(arg0.parent, arg0.render, element);
+        }
     }
-    getAttribute(key: string) {
-        if (key === "x") return this.ix;
-        if (key === "y") return this.iy;
-        return super.getAttribute(key);
-    }
-    setAttribute(key: string, value: any): void {
-        if (key === "x") return super.setAttribute("x", value - this.x);
-        if (key === "y") return super.setAttribute("y", value - this.y);
-        super.setAttribute(key, value);
+    clone(): MathjaxNode {
+        return new MathjaxNode(this);
     }
 }

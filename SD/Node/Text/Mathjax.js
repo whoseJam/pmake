@@ -24,6 +24,8 @@ export class Mathjax extends BaseText {
             stroke: C.black,
             fill: C.black,
         });
+        this._.frame = 0;
+        this._.transformings = [];
 
         const math = () => {
             return this._.math;
@@ -34,14 +36,30 @@ export class Mathjax extends BaseText {
         this.vars.watch("fill", Factory.action(this, math, "fill", Interp.colorInterp));
         this.vars.watch("stroke", Factory.action(this, math, "stroke", Interp.colorInterp));
         this.vars.watch("fontSize", Factory.action(this, math, "font-size", Interp.numberInterp));
+        this.vars.watch("x", x => {
+            if (this.duration() === 0) return;
+            this.__flushTransformings();
+            this.__currentTransforming(() => this.__createMathjax("x", x));
+        });
+        this.vars.watch("y", y => {
+            if (this.duration() === 0) return;
+            this.__flushTransformings();
+            this.__currentTransforming(() => this.__createMathjax("y", y));
+        });
         this.vars.watch("fill", fill => {
-            if (this._.transforming) this._.transforming.fill(fill);
+            if (this.duration() === 0) return;
+            this.__flushTransformings();
+            this.__currentTransforming(transforming => transforming.fill(fill));
         });
         this.vars.watch("stroke", stroke => {
-            if (this._.transforming) this._.transforming.stroke(stroke);
+            if (this.duration() === 0) return;
+            this.__flushTransformings();
+            this.__currentTransforming(transforming => transforming.stroke(stroke));
         });
         this.vars.watch("fontSize", fontSize => {
-            if (this._.transforming) this._.transforming.fontSizeByMathjax(fontSize);
+            if (this.duration() === 0) return;
+            this.__flushTransformings();
+            this.__currentTransforming(() => this.__createMathjax("font-size", fontSize));
         });
 
         this.text(text);
@@ -87,11 +105,6 @@ Object.assign(Mathjax.prototype, {
         text = String(text);
         if (text.startsWith("$")) text = text.slice(1, -1);
         const math = createMathjaxRenderNode(this, this._.layer, text);
-        math.setAttribute("x", this.vars.x);
-        math.setAttribute("y", this.vars.y);
-        math.setAttribute("font-size", this.vars.fontSize);
-        math.setAttribute("fill", this.vars.fill);
-        math.setAttribute("stroke", this.vars.stroke);
         const box = TextEngine.mathjaxBoundingBox(math);
         if (this.duration() > 0) {
             const context = new Context(this);
@@ -99,17 +112,91 @@ Object.assign(Mathjax.prototype, {
             this.opacity(0);
             this._.math.remove();
             context.till(0, 1);
-            this._.transforming = TextEngine.transformMathjax(this, this._.math, math);
+            this.__createTransforming(this._.math, math);
             context.till(1, 1);
-            this.vars.text = text;
             this.opacity(1);
             context.recover();
-        } else this.vars.text = text;
+        }
         this._.math = math;
         this.vars.setTogether({
+            text,
             width: box.width,
             height: box.height,
         });
         return this;
+    },
+    __subtextAttribute(subtext, attribute, operator) {
+        const math = this.__cloneMathjax();
+        const matched = TextEngine.findSubtextInMathjax(math, subtext);
+        const update = match => {
+            if (!match) return;
+            const { element, start, length } = match;
+            for (let i = start; i < start + length; i++) {
+                for (const key in attribute) {
+                    element.children[i].setAttribute(key, attribute[key]);
+                }
+            }
+        };
+        if (operator === "all") matched.forEach(update);
+        else if (operator === "first") update(matched[0]);
+        else if (operator === "last") update(matched[matched.length - 1]);
+        else update(matched[operator]);
+        if (this.duration() > 0) {
+            const context = new Context(this);
+            context.till(0, 0);
+            this.opacity(0);
+            this._.math.remove();
+            context.till(0, 1);
+            this.__createTransforming(this._.math, math);
+            context.till(1, 1);
+            this.opacity(1);
+            context.recover();
+        }
+        this._.math = math;
+        return this;
+    },
+    __cloneMathjax() {
+        const math = this._.math.clone();
+        math.setAttribute("x", this.vars.x);
+        math.setAttribute("y", this.vars.y);
+        math.setAttribute("font-size", this.vars.fontSize);
+        math.setAttribute("fill", this.vars.fill);
+        math.setAttribute("stroke", this.vars.stroke);
+        return math;
+    },
+    __flushTransformings() {
+        if (this._.frame !== window.CURRENT_FRAME) {
+            this._.frame = window.CURRENT_FRAME;
+            this._.transformings = [];
+        }
+    },
+    __currentTransforming(callback) {
+        const l = this.delay();
+        const r = this.delay() + this.duration();
+        for (const transforming of this._.transformings) {
+            if (transforming.l === l && transforming.r === r) {
+                callback(transforming);
+                return;
+            }
+        }
+    },
+    __createMathjax(key, value) {
+        const math = this.__cloneMathjax();
+        math.setAttribute(key, value);
+        this.__createTransforming(this._.math, math);
+        this._.math.remove();
+        this._.math = math;
+    },
+    __createTransforming(source, target) {
+        this.__flushTransformings();
+        const l = this.delay();
+        const r = this.delay() + this.duration();
+        for (const transforming of this._.transformings) {
+            if (transforming.l === l && transforming.r === r) {
+                transforming.replayByMathjax(target);
+                return;
+            }
+        }
+        this._.transformings.push(TextEngine.transformMathjax(this, source, target));
     },
 });

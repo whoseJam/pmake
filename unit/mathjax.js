@@ -4,7 +4,7 @@ const svg = sd.svg();
 const C = sd.color();
 const T = 500;
 
-sd.main(Test1);
+sd.main(Test3);
 
 async function Test12() {
     const math = new sd.Mathjax(svg, "a+b=c").center(100, 100);
@@ -129,22 +129,23 @@ async function Test4() {
 }
 
 async function Test3() {
-    await sd.pause();
     const math = new sd.Mathjax(svg, "{a^2}{+}{b^2}{=}{c^2}").fontSize(40).x(100).y(300);
     await sd.pause();
-    math.startAnimate(T).transformMath("{a^2}{=}{c^2}{-}{b^2}", { 1: 1, 2: 4, 3: 5, 4: 2, 5: 3 }).endAnimate();
+    math.startAnimate(T).text("{a^2}{=}{c^2}{-}{b^2}", { 1: 1, 2: 4, 3: 5, 4: 2, 5: 3 }).endAnimate();
 }
 
 async function Test2() {
-    await sd.pause();
     const math = new sd.Mathjax(svg, "a^2+b^2=c^2").fontSize(40).x(100).y(200);
     await sd.pause();
-    math.startAnimate(T).transformMath("a^2=c^2-b^2").endAnimate();
+    math.startAnimate(T).text("a^2=c^2-b^2").endAnimate();
 }
 
 async function Test1() {
-    const math = new sd.Mathjax(svg, "a^2").x(100).y(100).fontSize(100);
-    const rect = new sd.Rect(svg).x(100).y(100).width(200).height(200).fillOpacity(0).stroke(C.red);
+    const math = new sd.Mathjax(svg, "a^2b^2c^2d^2").x(100).y(100).fontSize(100);
+    math._.math.setAttribute("id", "fuck");
+    const mx = math.mx();
+    await sd.pause();
+    math.startAnimate().color(C.textBlue).subtextColorAll("b^2", C.red).fontSize(50).mx(mx).subtextColorLast("2", C.pureBlue).endAnimate();
     await sd.pause();
     math.startAnimate().text("2a").color(C.textBlue).endAnimate();
     await sd.pause();
@@ -154,11 +155,11 @@ async function Test1() {
 async function Test0() {
     const math = new sd.Mathjax(svg, "").x(100).y(100);
     await sd.pause();
-    math.startAnimate().transformMath("1234").fontSize(40).endAnimate();
+    math.startAnimate().text("1234").fontSize(40).endAnimate();
     await sd.pause();
-    math.startAnimate().transformMath("5678").fontSize(20).endAnimate();
+    math.startAnimate().text("5678").fontSize(20).endAnimate();
     await sd.pause();
-    math.startAnimate().transformMath("1234").color(C.textBlue).fontSize(40).endAnimate();
+    math.startAnimate().text("1234").color(C.textBlue).fontSize(40).endAnimate();
     await sd.pause();
     math.startAnimate().color(C.purple).endAnimate();
 }

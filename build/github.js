@@ -43,7 +43,6 @@ module.exports = function (targetPath) {
         .src(URLS_TO_BE_PROCESSED, { base: "." })
         .pipe(
             through.obj(function (file, enc, done) {
-                // 1. 跳过黑名单文件
                 if (file.isNull()) return done(null, file);
                 const relativePath = path.relative(global["projectRoot"], file.path);
                 if (BLACK_LIST.has(relativePath)) return done(null, null);

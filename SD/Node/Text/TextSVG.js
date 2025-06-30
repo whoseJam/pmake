@@ -165,22 +165,6 @@ Object.assign(TextSVG.prototype, {
     intValue() {
         return +this.text();
     },
-    subtextColor(subtext, color, i = 0) {
-        if (typeof color === "string") color = { fill: color, stroke: color };
-        return this.__subtextAttribute(subtext, color, i);
-    },
-    subtextColorAll(subtext, color) {
-        if (typeof color === "string") color = { fill: color, stroke: color };
-        return this.__subtextAttribute(subtext, color, "all");
-    },
-    subtextColorFirst(subtext, color) {
-        if (typeof color === "string") color = { fill: color, stroke: color };
-        return this.__subtextAttribute(subtext, color, "first");
-    },
-    subtextColorLast(subtext, color) {
-        if (typeof color === "string") color = { fill: color, stroke: color };
-        return this.__subtextAttribute(subtext, color, "last");
-    },
     __subtextAttribute(subtext, attribute, operator) {
         const attr = this._.attr;
         const text = this.vars.text;

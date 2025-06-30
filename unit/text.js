@@ -11,9 +11,6 @@ async function TestGridDp() {
     const n = 5;
     const grid = new sd.Grid(svg).n(n).m(n).startN(1).startM(1);
     grid.forEachElement((element, i, j) => element.value(i === 1 && j === 1 ? 1 : 0));
-    await sd.pause();
-    grid.startAnimate().text(1, 1, 10).endAnimate();
-    return;
     for (let i = 1; i <= n; i++) {
         for (let j = 1; j <= n; j++) {
             if (i === 1 && j === 1) continue;

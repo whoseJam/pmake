@@ -53,10 +53,15 @@ export class RenderNode {
         return this.element;
     }
     __append(element: RenderNode | Element) {
+        if (element.getAttribute("id") === "fuck") console.log("append element=", element);
         if (element instanceof RenderNode) this.nake().append(element.nake());
         else this.nake().append(element);
     }
     __remove() {
+        if (this.nake().getAttribute("id") === "fuck") {
+            console.log("remove nake=", this.nake(), "old parent=", this.nake().parentNode);
+            setTimeout(() => this.nake().remove(), 20);
+        }
         this.nake().remove();
     }
     append(element: string | RenderNode) {
@@ -79,14 +84,14 @@ export class RenderNode {
         const render = this;
         const node = this.parent;
         function structure(t: number) {
-            if (this.target && t === 1) {
+            if (this.target && t === 0) {
                 this.target.__append(render);
                 node._.created = true;
                 requestAnimationFrame(() => {
                     node._.ready = true;
                 });
             }
-            if (!this.target && t === 0) {
+            if (!this.target && t === 1) {
                 render.__remove();
                 node._.created = false;
                 requestAnimationFrame(() => {
@@ -94,9 +99,10 @@ export class RenderNode {
                 });
             }
         }
-        const t = this.parent.delay() + this.parent.duration();
-        new Action(t, t, undefined, this.render, structure, this, "appear");
-        new Action(t, t, 0, 1, undefined, this.parent, "opacity");
+        const l = this.parent.delay();
+        const r = this.parent.delay() + this.parent.duration();
+        new Action(l, r, undefined, this.render, structure, this, "appear");
+        new Action(l, r, 0, 1, undefined, this.parent, "opacity");
     }
     remove() {
         const render = this;
@@ -117,8 +123,9 @@ export class RenderNode {
                 });
             }
         }
-        const t = this.parent.delay() + this.parent.duration();
-        new Action(t, t, this.render, undefined, structure, this, "remove");
+        const l = this.parent.delay();
+        const r = this.parent.delay() + this.parent.duration();
+        new Action(l, r, this.render, undefined, structure, this, "remove");
     }
     getAttribute(key: string) {
         ErrorLauncher.notImplementedYet("getAttribute");

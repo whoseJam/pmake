@@ -216,20 +216,13 @@ class TransformingPathGroup {
         }
         this.target = t;
     }
-    rebuildByMathjax(math: MathjaxNode) {
+    replayByMathjax(math: MathjaxNode) {
         const t = TextEngine.getMathjaxPaths(math);
         this.target = t;
+        this.play();
     }
     replayByText(target) {
         this.rebuildByText(target.text, target.family, target.size, target.attr, target.x, target.y);
-        this.play();
-    }
-    fontSizeByMathjax(size) {
-        const math = this.parent._.math;
-        const size_ = math.getAttribute("font-size");
-        math.setAttribute("font-size", size);
-        this.rebuildByMathjax(math);
-        math.setAttribute("font-size", size_);
         this.play();
     }
 }
@@ -247,8 +240,6 @@ function getTextWidth(font, text, fontSize) {
     }
     return width;
 }
-
-let cnt = 0;
 
 export class TextEngine {
     static textSVG = undefined;
@@ -436,6 +427,77 @@ export class TextEngine {
         const transform = `${root.getAttribute("transform")} translate(${-ibbox.x},0)`;
         root.setAttribute("transform", transform);
         render.__append(math);
+    }
+    static findSubtextInMathjax(math: MathjaxNode, subtext: string) {
+        // @ts-ignore
+        const mml = new DOMParser().parseFromString(MathJax.tex2mml(subtext), "text/xml").documentElement;
+        function nodeContentSVG(s: SVGElement) {
+            const use = s.querySelector("use");
+            const unicode = use.getAttribute("data-c");
+            return String.fromCodePoint(parseInt(unicode, 16));
+        }
+        function nodeContentHTML(m: HTMLElement) {
+            function toMathLetter(char, style = "italic") {
+                const styles = {
+                    italic: { lower: 0x1d44e, upper: 0x1d434 }, // 斜体
+                    bold: { lower: 0x1d41a, upper: 0x1d400 }, // 粗体
+                    bolditalic: { lower: 0x1d482, upper: 0x1d468 }, // 粗斜体
+                    script: { lower: 0x1d4b6, upper: 0x1d49c }, // 手写体
+                    double: { lower: 0x1d4ea, upper: 0x1d4d0 }, // 双线体
+                };
+                if (!styles[style]) throw new Error(`Unsupported style: ${style}`);
+                const code = char.charCodeAt(0);
+                if (code >= 0x61 && code <= 0x7a) {
+                    const offset = styles[style].lower - 0x61;
+                    return String.fromCodePoint(code + offset);
+                } else if (code >= 0x41 && code <= 0x5a) {
+                    const offset = styles[style].upper - 0x41;
+                    return String.fromCodePoint(code + offset);
+                }
+                return char;
+            }
+            return toMathLetter(m.textContent);
+        }
+        function matchRecursively(s: SVGElement, m: HTMLElement) {
+            if (s.getAttribute("data-mml-node") !== m.tagName.toLowerCase()) return false;
+            if (m.childElementCount === 0) {
+                const scharacter = nodeContentSVG(s);
+                const mcharacter = nodeContentHTML(m);
+                return scharacter === mcharacter;
+            }
+            if (s.children.length !== m.children.length) return false;
+            for (let i = 0; i < s.children.length; i++) {
+                if (!matchRecursively(s.children[i] as SVGElement, m.children[i] as HTMLElement)) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        function match(s: SVGElement, m: HTMLElement, start: number) {
+            if (start + m.children.length > s.children.length) return false;
+            for (let i = 0; i < m.children.length; i++)
+                if (!matchRecursively(s.children[i + start] as SVGElement, m.children[i] as HTMLElement)) {
+                    return false;
+                }
+            return true;
+        }
+        const matched = [];
+        function walk(s: SVGElement, m: HTMLElement) {
+            for (let start = 0; start < s.children.length; start++) {
+                if (match(s, m, start)) {
+                    matched.push({
+                        element: s,
+                        start,
+                        length: m.children.length,
+                    });
+                }
+            }
+            for (let i = 0; i < s.children.length; i++) {
+                walk(s.children[i] as SVGElement, m);
+            }
+        }
+        walk(math.nake().children[1] as SVGElement, mml);
+        return matched;
     }
     static cloneMathjax(element: SVGElement): SVGElement {
         let root = Dom.deepClone(element);

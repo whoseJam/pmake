@@ -39,4 +39,20 @@ Object.assign(BaseText.prototype, {
         else this.fill(color.fill).stroke(color.stroke);
         return this;
     },
+    subtextColor(subtext, color, i = 0) {
+        if (typeof color === "string") color = { fill: color, stroke: color };
+        return this.__subtextAttribute(subtext, color, i);
+    },
+    subtextColorAll(subtext, color) {
+        if (typeof color === "string") color = { fill: color, stroke: color };
+        return this.__subtextAttribute(subtext, color, "all");
+    },
+    subtextColorFirst(subtext, color) {
+        if (typeof color === "string") color = { fill: color, stroke: color };
+        return this.__subtextAttribute(subtext, color, "first");
+    },
+    subtextColorLast(subtext, color) {
+        if (typeof color === "string") color = { fill: color, stroke: color };
+        return this.__subtextAttribute(subtext, color, "last");
+    },
 });
