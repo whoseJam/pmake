@@ -35,7 +35,7 @@ function extractReversedNames() {
  * @returns {NodeJS.ReadWriteStream}
  */
 module.exports = function (targetFolder) {
-    utils.copyFonts();
+    utils.copyFonts("./dist/fonts", targetFolder);
     const config = getConfiguration();
     return (
         gulp

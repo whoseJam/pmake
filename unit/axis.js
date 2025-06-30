@@ -10,10 +10,12 @@ sd.main(TestLogTicks);
 async function TestLogTicks() {
     const start = 1;
     const end = 16;
-    const axis = new sd.Axis(svg).x(100).y(100).ticks(sd.BaseAxis.log2(start, end)).withTickLabel(true);
-    for (let i = start; i <= end; i++) {
-        new sd.Circle(svg).r(3).color(C.black).center(axis.global(i));
-    }
+    const axis = new sd.Axis(svg).x(100).y(100).ticks(2);
+    await sd.pause();
+    axis.withTickLabel(true); //.ticks(sd.BaseAxis.log2(start, end)).withTickLabel(true);
+    // for (let i = start; i <= end; i++) {
+    //     new sd.Circle(svg).r(3).color(C.black).center(axis.global(i));
+    // }
 }
 
 async function TestLocal() {

@@ -94,7 +94,9 @@ export class TextSVG extends BaseText {
             this.__flushTransformings();
             this.__currentTransforming(() => this.__createTransforming({ family: oldFamily }, { family: newFamily }));
         });
-        this.effect("html", () => (this.vars.html = parseToHTML.call(this)));
+        this.effect("html", () => {
+            this.vars.html = parseToHTML.call(this);
+        });
 
         this._.nake.setAttribute("text-anchor", "start");
         this._.nake.setAttribute("alignment-baseline", "text-before-edge");
@@ -104,7 +106,10 @@ export class TextSVG extends BaseText {
         this._.nake.setAttribute("font-family", "Consolas");
         this._.transforming = undefined;
 
+        console.log("before Set text content, global allow=", GlobalAllow());
+
         this.text(text);
+        console.log("after Set text content, global allow=", GlobalAllow());
     }
 }
 

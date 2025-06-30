@@ -27,12 +27,12 @@ class Queue {
     has(callback) {
         return callback[this.label];
     }
-    execute(init = false) {
+    execute() {
         while (this.queue.length > 0) {
             const callback = this.queue[0];
             this.queue.shift();
             const effectManager = effectsMap.get(callback);
-            if (init || effectManager.anyInputHasChanged()) callback();
+            if (effectManager.anyInputHasChanged()) callback();
             callback[this.label] = false;
         }
     }
@@ -55,6 +55,10 @@ const afterEffects = [];
 let globalAllowUpdate = true;
 let globalActiveEffect = undefined;
 let globalFreeze = 0;
+
+global.GlobalAllow = function () {
+    return globalAllowUpdate;
+};
 
 class EffectManager {
     constructor(effect) {
@@ -98,6 +102,10 @@ class EffectManager {
         return hasChanged(old.value, object[key], objectManager.precise.get(key));
     }
     anyInputHasChanged() {
+        if (!this.inited) {
+            this.inited = true;
+            return true;
+        }
         for (let i = 0; i < this.in.length; i++) {
             const old = this.in[i];
             const objectManager = objectsMap.get(old.object);
@@ -236,6 +244,9 @@ export function reactive(object) {
                 }
             }
             Reflect.set(object, key, value, receiver);
+            if (key === "x") {
+                console.log("GlobalAllow=", GlobalAllow(), "value=", value);
+            }
             triggerUpdate(object, key);
             return true;
         },
@@ -307,12 +318,7 @@ export function reactive(object) {
 export function effect(innerEffect, tag) {
     const effect = () => {
         window.EFFECT_COUNT++;
-        let tmpEffect = undefined;
-        let tmpQueue = undefined;
-        if (globalActiveEffect) {
-            [tmpEffect, tmpQueue] = [globalActiveEffect, effectQueue.queue];
-            [globalActiveEffect, effectQueue.queue] = [undefined, []];
-        }
+        if (globalActiveEffect) throw new Error("Invalid Status");
         globalActiveEffect = effect;
         const effectManager = effectsMap.get(effect);
         const out = effectManager.out;
@@ -320,10 +326,6 @@ export function effect(innerEffect, tag) {
         innerEffect();
         effectManager.outputUpdate(out);
         globalActiveEffect = undefined;
-        if (tmpEffect) {
-            [globalActiveEffect, effectQueue.queue] = [tmpEffect, tmpQueue];
-            [tmpEffect, tmpQueue] = [undefined, undefined];
-        }
     };
     let freeze = 0;
     effect.freeze = function () {
@@ -341,13 +343,21 @@ export function effect(innerEffect, tag) {
     };
     effectsMap.set(effect, new EffectManager(effect));
     afterEffects.push([]);
-    globalAllowUpdate = false;
-    effectQueue.pushBack(effect);
-    effect.tag = tag || innerEffect;
-    effectQueue.execute(true);
-    globalAllowUpdate = true;
-    const callbacks = afterEffects.shift();
-    callbacks.forEach(callback => callback());
+    if (!globalAllowUpdate) {
+        effectQueue.pushBack(effect);
+        effect.tag = tag || innerEffect;
+        const callbacks = afterEffects.shift();
+        callbacks.forEach(callback => callback());
+        console.log("effect in effect! current effect queue=", effectQueue.queue.length);
+    } else {
+        globalAllowUpdate = false;
+        effectQueue.pushBack(effect);
+        effect.tag = tag || innerEffect;
+        effectQueue.execute(true);
+        globalAllowUpdate = true;
+        const callbacks = afterEffects.shift();
+        callbacks.forEach(callback => callback());
+    }
     return effect;
 }
 
