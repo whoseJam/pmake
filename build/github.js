@@ -1,6 +1,7 @@
 const gulp = require("gulp");
 const path = require("path");
 const through = require("through2");
+const stripComments = require("gulp-strip-comments");
 
 const URLS_TO_BE_PROCESSED = [
     // urls to be processed
@@ -42,10 +43,32 @@ module.exports = function (targetPath) {
         .src(URLS_TO_BE_PROCESSED, { base: "." })
         .pipe(
             through.obj(function (file, enc, done) {
+                // 1. 跳过黑名单文件
                 if (file.isNull()) return done(null, file);
                 const relativePath = path.relative(global["projectRoot"], file.path);
                 if (BLACK_LIST.has(relativePath)) return done(null, null);
-                return done(null, file);
+
+                if (!relativePath.endsWith("js") || !relativePath.endsWith("ts")) file.__skipComments = true;
+                if (file.isBuffer()) {
+                    const content = file.contents.toString();
+                    if (content.startsWith("#!/usr/bin/env node")) {
+                        file.__skipComments = true;
+                    }
+                }
+                done(null, file);
+            })
+        )
+        .pipe(
+            through.obj(function (file, enc, done) {
+                if (file.__skipComments) {
+                    done(null, file);
+                } else {
+                    const stripStream = stripComments();
+                    stripStream.write(file);
+                    stripStream.once("data", processedFile => {
+                        done(null, processedFile);
+                    });
+                }
             })
         )
         .pipe(gulp.dest(targetPath));
