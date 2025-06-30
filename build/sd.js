@@ -1,11 +1,10 @@
 const fs = require("fs");
 const gulp = require("gulp");
 const path = require("path");
+const utils = require("./utils");
 const webpack = require("webpack-stream");
 const TerserPlugin = require("terser-webpack-plugin");
 const JavaScriptObfuscator = require("webpack-obfuscator");
-
-const fonts = ["Consolas.ttf", "Arial.ttf", "Times New Roman.ttf"];
 
 function extractReversedNames() {
     const filePath = path.join(__dirname, "../SD/sd.js");
@@ -36,10 +35,7 @@ function extractReversedNames() {
  * @returns {NodeJS.ReadWriteStream}
  */
 module.exports = function (targetFolder) {
-    fonts.forEach(font => {
-        console.log("source=", `./dist/fonts/${font}`, "target=", `${targetFolder}/${font}`);
-        fs.copyFileSync(`./dist/fonts/${font}`, `${targetFolder}/${font}`);
-    });
+    utils.copyFonts();
     const config = getConfiguration();
     return (
         gulp
