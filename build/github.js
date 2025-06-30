@@ -47,20 +47,13 @@ module.exports = function (targetPath) {
                 if (file.isNull()) return done(null, file);
                 const relativePath = path.relative(global["projectRoot"], file.path);
                 if (BLACK_LIST.has(relativePath)) return done(null, null);
-
-                if (!relativePath.endsWith("js") || !relativePath.endsWith("ts")) file.__skipComments = true;
-                if (file.isBuffer()) {
-                    const content = file.contents.toString();
-                    if (content.startsWith("#!/usr/bin/env node")) {
-                        file.__skipComments = true;
-                    }
-                }
+                if (relativePath.startsWith("SD")) file.__removeComments = true;
                 done(null, file);
             })
         )
         .pipe(
             through.obj(function (file, enc, done) {
-                if (file.__skipComments) {
+                if (!file.__removeComments) {
                     done(null, file);
                 } else {
                     const stripStream = stripComments();
