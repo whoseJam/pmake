@@ -263,6 +263,7 @@ export function reactive(object) {
     object.setTogether = function (items) {
         const objects = [];
         const keys = [];
+        const callbacks = [];
         for (const key in items) {
             const value = items[key];
             if (proxiesMap.get(object)) object = proxiesMap.get(object);
@@ -274,13 +275,18 @@ export function reactive(object) {
             if (associated[key]) {
                 if (hasChanged(oldValue, newValue) || (Array.isArray(object) && key === "length")) {
                     associated[key].forEach(callback => {
-                        callback(newValue, oldValue);
+                        callbacks.push(() => {
+                            callback(newValue, oldValue);
+                        });
                     });
                 }
             }
             objects.push(object);
             keys.push(key);
         }
+        callbacks.forEach(callback => {
+            callback();
+        });
         triggerUpdates(objects, keys);
     };
     object.lpset = function (key, value) {

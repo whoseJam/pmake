@@ -5,7 +5,35 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestTextTransform);
+sd.main(TestGridDp);
+
+async function TestGridDp() {
+    const n = 5;
+    const grid = new sd.Grid(svg).n(n).m(n).startN(1).startM(1);
+    grid.forEachElement((element, i, j) => element.value(i === 1 && j === 1 ? 1 : 0));
+    await sd.pause();
+    grid.startAnimate().text(1, 1, 10).endAnimate();
+    return;
+    for (let i = 1; i <= n; i++) {
+        for (let j = 1; j <= n; j++) {
+            if (i === 1 && j === 1) continue;
+            await sd.pause();
+            const d1 = i > 1 ? grid.intValue(i - 1, j) : 0;
+            const d2 = j > 1 ? grid.intValue(i, j - 1) : 0;
+            grid.startAnimate()
+                .text(i, j, d1 + d2)
+                .endAnimate();
+        }
+    }
+}
+
+async function TestSubtext() {
+    const text = new sd.Text(svg).fontSize(100).text("abcabcabc");
+    await sd.pause();
+    text.startAnimate().subtextColor("bc", C.red).fontSize(180).endAnimate();
+    await sd.pause();
+    text.startAnimate().subtextColor("c", C.textBlue).x(100).endAnimate();
+}
 
 async function TestSpaceAndEnter() {
     const text = new sd.Text(svg).fontSize(100).text("a a a");
@@ -15,16 +43,16 @@ async function TestSpaceAndEnter() {
 }
 
 async function Test() {
-    const text = new sd.Text(svg).fontSize(180).text("ww").x(100).y(100);
-    const r = new sd.Rect(svg)
+    const text = new sd.Text(svg).fontSize(180).text("0").cx(100).y(100);
+    const rect = new sd.Rect(svg)
         .fillOpacity(0)
         .x(text.x())
         .y(text.y())
         .width(text.width() + 2)
         .height(text.height());
     await sd.pause();
-    text.startAnimate().text("w").fontSize(100).endAnimate();
-    r.x(text.x())
+    text.startAnimate().text("10").fontSize(100).cx(100).endAnimate();
+    rect.x(text.x())
         .y(text.y())
         .width(text.width() + 2)
         .height(text.height());

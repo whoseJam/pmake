@@ -16,29 +16,33 @@ class TransformingPath {
     d: string;
     transform: { a: number; b: number; c: number; d: number; e: number; f: number };
     character: string;
-    stroke: string;
     fill: string;
+    stroke: string;
+    strokeWidth: number;
     path: SVGPathElement;
     constructor(d, transform, character = undefined) {
         this.d = d;
         this.transform = transform;
         this.character = character;
-        this.stroke = C.black;
         this.fill = C.black;
+        this.stroke = C.black;
+        this.strokeWidth = 0;
     }
-    cloneVisionPropertyFrom(path) {
+    cloneVisionPropertyFrom(path: TransformingPath) {
         this.character = path.character;
-        this.stroke = path.stroke;
         this.fill = path.fill;
+        this.stroke = path.stroke;
+        this.strokeWidth = path.strokeWidth;
         return this;
     }
-    init(group) {
+    init(group: SVGNode) {
         if (!this.path) this.path = Dom.createSVGElement("path") as SVGPathElement;
         const transform = this.transform;
         this.path.setAttribute("d", this.d);
         this.path.setAttribute("transform", `matrix(${transform.a},${transform.b},${transform.c},${transform.d},${transform.e},${transform.f})`);
-        this.path.setAttribute("stroke", this.stroke);
         this.path.setAttribute("fill", this.fill);
+        this.path.setAttribute("stroke", this.stroke);
+        this.path.setAttribute("stroke-width", String(this.strokeWidth));
         group.__append(this.path);
     }
 }
@@ -48,10 +52,14 @@ class TransformingPathGroup {
     source: Array<TransformingPath>;
     target: Array<TransformingPath>;
     group: SVGNode;
+    l: number;
+    r: number;
     constructor(parent) {
         this.parent = parent;
         this.source = [];
         this.target = [];
+        this.l = parent.delay();
+        this.r = parent.delay() + parent.duration();
     }
     fillSource() {
         if (this.source.length < this.target.length) {
@@ -139,8 +147,6 @@ class TransformingPathGroup {
         this.init();
         for (const source of this.source) source.init(this.group);
 
-        const l = this.parent.delay();
-        const r = this.parent.delay() + this.parent.duration();
         const matrixEqual = (a, b) => {
             for (const key of ["a", "b", "c", "d", "e", "f"]) if (a[key] !== b[key]) return false;
             return true;
@@ -150,14 +156,23 @@ class TransformingPathGroup {
             const target = this.target[i];
             const path = source.path;
             if (!target) {
-                new Action(l, r, 1, 0, Interp.numberInterp(path, "opacity"), path, "opacity");
+                new Action(this.l, this.r, 1, 0, Interp.numberInterp(path, "opacity"), path, "opacity");
             } else {
                 const sd = source.d;
                 const td = target.d;
-                new Action(l, r, sd, td, Interp.pathInterp(path, "d"), path, "d");
+                new Action(this.l, this.r, sd, td, Interp.pathInterp(path, "d"), path, "d");
                 const sm = source.transform;
                 const tm = target.transform;
-                if (!matrixEqual(sm, tm)) new Action(l, r, sm, tm, Interp.matrixInterp(path, "transform"), path, "transform");
+                if (!matrixEqual(sm, tm)) new Action(this.l, this.r, sm, tm, Interp.matrixInterp(path, "transform"), path, "transform");
+                const sf = source.fill;
+                const tf = target.fill;
+                if (sf !== tf) new Action(this.l, this.r, sf, tf, Interp.colorInterp(path, "fill"), path, "fill");
+                const ss = source.stroke;
+                const ts = target.stroke;
+                if (ss !== ts) new Action(this.l, this.r, ss, ts, Interp.colorInterp(path, "stroke"), path, "stroke");
+                const sw = source.strokeWidth;
+                const tw = target.strokeWidth;
+                if (sw !== tw) new Action(this.l, this.r, sw, tw, Interp.numberInterp(path, "stroke-width"), path, "stroke-width");
             }
         }
         context.till(1, 1);
@@ -165,31 +180,38 @@ class TransformingPathGroup {
         context.recover();
     }
     fill(fill) {
-        const l = this.parent.delay();
-        const r = this.parent.delay() + this.parent.duration();
         for (const path of this.source) {
-            new Action(l, r, path.fill, fill, Interp.colorInterp(path.path, "fill"), path, "fill");
+            new Action(this.l, this.r, path.fill, fill, Interp.colorInterp(path.path, "fill"), path, "fill");
             path.fill = fill;
         }
     }
     stroke(stroke) {
-        const l = this.parent.delay();
-        const r = this.parent.delay() + this.parent.duration();
         for (const path of this.source) {
-            new Action(l, r, path.stroke, stroke, Interp.colorInterp(path.path, "stroke"), path, "stroke");
+            new Action(this.l, this.r, path.stroke, stroke, Interp.colorInterp(path.path, "stroke"), path, "stroke");
             path.stroke = stroke;
         }
     }
-    rebuildByText(text, family, size) {
+    strokeWidth(width) {
+        for (const path of this.source) {
+            new Action(this.l, this.r, path.strokeWidth, width, Interp.numberInterp(path.path, "strokeWidth"), path, "strokeWidth");
+            path.strokeWidth = width;
+        }
+    }
+    rebuildByText(text, family, size, attr, x, y) {
         const t = [];
-        const targetPaths = TextEngine.getPaths(text, family, size, this.parent.x(), this.parent.y());
+        const targetPaths = TextEngine.getPaths(text, family, size, x, y);
+        const getAttribute = (attr, i, key, default_) => {
+            if (attr[i] === undefined) return default_;
+            if (attr[i][key] === undefined) return default_;
+            return attr[i][key];
+        };
         for (let i = 0; i < targetPaths.length; i++) {
             const path = targetPaths[i];
-            const d = path.toPathData(0);
+            const d = path.toPathData(4);
             if (!d) continue;
             const p = new TransformingPath(d, { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 }, text[i]);
-            p.stroke = this.parent.stroke();
-            p.fill = this.parent.fill();
+            p.stroke = getAttribute(attr, i, "stroke", this.parent.stroke());
+            p.fill = getAttribute(attr, i, "fill", this.parent.fill());
             t.push(p);
         }
         this.target = t;
@@ -198,8 +220,8 @@ class TransformingPathGroup {
         const t = TextEngine.getMathjaxPaths(math);
         this.target = t;
     }
-    fontSizeByText(size) {
-        this.rebuildByText(this.parent.text(), "consolas", size);
+    replayByText(target) {
+        this.rebuildByText(target.text, target.family, target.size, target.attr, target.x, target.y);
         this.play();
     }
     fontSizeByMathjax(size) {
@@ -346,7 +368,6 @@ export class TextEngine {
             for (let i = 0; i < current.transform.baseVal.length; i++) matrix = multiply(matrix, current.transform.baseVal[i].matrix);
             fill = current.getAttribute("fill") || fill;
             stroke = current.getAttribute("stroke") || stroke;
-            console.log("current=", current, "fill=", fill, "stroke=", stroke);
             if (!Dom.tagName(current)) return;
             if (Dom.tagName(current) === "defs") return;
             if (Dom.tagName(current) === "path") return;
@@ -374,22 +395,30 @@ export class TextEngine {
         const t = [];
         const sourcePaths = this.getPaths(source.text, source.family, source.size, source.x, source.y);
         const targetPaths = this.getPaths(target.text, target.family, target.size, target.x, target.y);
+        const getAttribute = (object, i, key, default_) => {
+            if (!object.attr) return default_;
+            if (object.attr[i] === undefined) return default_;
+            if (object.attr[i][key] === undefined) return default_;
+            return object.attr[i][key];
+        };
         for (let i = 0; i < sourcePaths.length; i++) {
             const path = sourcePaths[i];
-            const d = path.toPathData(0);
+            const d = path.toPathData(4);
             if (!d) continue;
             const p = new TransformingPath(d, { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 }, source.text[i]);
-            p.stroke = parent.stroke();
-            p.fill = parent.fill();
+            p.fill = getAttribute(source, i, "fill", parent.fill());
+            p.stroke = getAttribute(source, i, "stroke", parent.stroke());
+            p.strokeWidth = getAttribute(source, i, "strokeWidth", parent.strokeWidth());
             s.push(p);
         }
         for (let i = 0; i < targetPaths.length; i++) {
             const path = targetPaths[i];
-            const d = path.toPathData(0);
+            const d = path.toPathData(4);
             if (!d) continue;
             const p = new TransformingPath(d, { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 }, target.text[i]);
-            p.stroke = parent.stroke();
-            p.fill = parent.fill();
+            p.fill = getAttribute(target, i, "fill", parent.fill());
+            p.stroke = getAttribute(target, i, "stroke", parent.stroke());
+            p.strokeWidth = getAttribute(target, i, "strokeWidth", parent.strokeWidth());
             t.push(p);
         }
         return this.transformPaths(parent, s, t);

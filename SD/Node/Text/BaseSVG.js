@@ -8,9 +8,9 @@ export function BaseSVG(label) {
     this.vars.merge({
         fill: C.black,
         fillOpacity: 1,
-        stroke: C.white,
+        stroke: C.black,
         strokeOpacity: 0,
-        strokeWidth: 1,
+        strokeWidth: 0,
         strokeDashOffset: 0,
         strokeDashArray: [1, 0],
     });
