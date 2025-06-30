@@ -246,7 +246,9 @@ export class TextEngine {
     static mathjaxSVG = undefined;
     static fonts = {};
     static init() {
-        this.load("consolas");
+        this.load("Arial");
+        this.load("Consolas");
+        this.load("Times New Roman");
         this.textSVG = svg().append("text");
         this.textSVG.setAttribute("fill-opacity", 0);
         this.textSVG.setAttribute("stroke-opacity", 0);
@@ -255,8 +257,13 @@ export class TextEngine {
         this.mathjaxSVG.setAttribute("opacity", 0);
         this.mathjaxSVG.setAttribute("font-size", 20);
     }
+    static fontExists(family) {
+        return this.fonts[family] !== undefined;
+    }
     static load(family) {
-        const url = `http://localhost:8080/${family}.ttf`;
+        const currentScript = document.currentScript;
+        const domain = currentScript.getAttribute("src").split("/").slice(0, -1).join("/");
+        const url = `${domain}/${family}.ttf`;
         fetch(url)
             .then(res => res.arrayBuffer())
             .then(buffer => {

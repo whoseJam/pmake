@@ -50,7 +50,7 @@ export class TextSVG extends BaseText {
             y: 0,
             text: "",
             html: "",
-            family: "consolas",
+            fontFamily: "Consolas",
             fontSize: 20,
             width: 0,
             height: 0,
@@ -63,25 +63,36 @@ export class TextSVG extends BaseText {
         this.vars.watch("y", Factory.action(this, this._.nake, "y", Interp.numberInterp));
         this.vars.watch("html", Factory.action(this, this._.nake, "innerHTML", Interp.stringInterp));
         this.vars.watch("fontSize", Factory.action(this, this._.nake, "font-size", Interp.numberInterp));
+        this.vars.watch("fontFamily", Factory.action(this, this._.nake, "font-family", Interp.stringInterp));
         this.vars.watch("x", (newX, oldX) => {
+            if (this.duration() === 0) return;
             this.__flushTransformings();
             this.__currentTransforming(() => this.__createTransforming({ x: oldX }, { x: newX }));
         });
         this.vars.watch("y", (newY, oldY) => {
+            if (this.duration() === 0) return;
             this.__flushTransformings();
             this.__currentTransforming(() => this.__createTransforming({ y: oldY }, { y: newY }));
         });
         this.vars.watch("fill", fill => {
+            if (this.duration() === 0) return;
             this.__flushTransformings();
             this.__currentTransforming(transforming => transforming.fill(fill));
         });
         this.vars.watch("stroke", stroke => {
+            if (this.duration() === 0) return;
             this.__flushTransformings();
             this.__currentTransforming(transforming => transforming.stroke(stroke));
         });
         this.vars.watch("fontSize", (newSize, oldSize) => {
+            if (this.duration() === 0) return;
             this.__flushTransformings();
             this.__currentTransforming(() => this.__createTransforming({ size: oldSize }, { size: newSize }));
+        });
+        this.vars.watch("fontFamily", (newFamily, oldFamily) => {
+            if (this.duration() === 0) return;
+            this.__flushTransformings();
+            this.__currentTransforming(() => this.__createTransforming({ family: oldFamily }, { family: newFamily }));
         });
         this.effect("html", () => (this.vars.html = parseToHTML.call(this)));
 
@@ -90,7 +101,7 @@ export class TextSVG extends BaseText {
         this._.nake.setAttribute("x", this.vars.x);
         this._.nake.setAttribute("y", this.vars.y);
         this._.nake.setAttribute("font-size", this.vars.fontSize);
-        this._.nake.setAttribute("font-family", "consolas");
+        this._.nake.setAttribute("font-family", "Consolas");
         this._.transforming = undefined;
 
         this.text(text);
@@ -114,13 +125,18 @@ Object.assign(TextSVG.prototype, {
         this.vars.lpset("fontSize", size);
         return this;
     },
+    fontFamily(family) {
+        if (arguments.length === 0) return this.vars.fontFamily;
+        this.vars.fontFamily = family;
+        return this;
+    },
     width(width) {
         if (arguments.length === 0) return this.vars.width;
         if (this.vars.width > 1e-1) {
             const k = width / this.vars.width;
             this.fontSize(this.fontSize() * k);
         } else {
-            const fontSize = TextEngine.widthToFontSize(this.vars.text, this.vars.family, width);
+            const fontSize = TextEngine.widthToFontSize(this.text(), this.fontFamily(), width);
             this.fontSize(fontSize);
         }
         return this;
@@ -131,21 +147,21 @@ Object.assign(TextSVG.prototype, {
             const k = height / this.vars.height;
             this.fontSize(this.fontSize() * k);
         } else {
-            const fontSize = TextEngine.heightToFontSize(this.vars.text, this.vars.family, height);
+            const fontSize = TextEngine.heightToFontSize(this.text(), this.fontFamily(), height);
             this.fontSize(fontSize);
         }
         return this;
     },
     text(text) {
-        if (text === undefined) return this.vars.text;
+        if (arguments.length === 0) return this.vars.text;
         text = String(text);
         const attr = make1d(text.length, {
             fill: this.fill(),
             stroke: this.stroke(),
         });
         this._.attr = attr;
-        const box = TextEngine.boundingBox(text, this.vars.family, this.vars.fontSize);
-        if (this.duration() > 0) {
+        const box = TextEngine.boundingBox(text, this.fontFamily(), this.fontSize());
+        if (this.duration() > 0 && TextEngine.fontExists(this.fontFamily())) {
             const context = new Context(this);
             context.till(0, 0);
             this.opacity(0);
@@ -157,6 +173,26 @@ Object.assign(TextSVG.prototype, {
         }
         this.vars.setTogether({
             text,
+            width: box.width,
+            height: box.height,
+        });
+        return this;
+    },
+    fontFamily(family) {
+        if (arguments.length === 0) return this.vars.fontFamily;
+        const box = TextEngine.boundingBox(this.text(), family, this.fontSize());
+        if (this.duration() > 0 && TextEngine.fontExists(family)) {
+            const context = new Context(this);
+            context.till(0, 0);
+            this.opacity(0);
+            context.till(0, 1);
+            this.__createTransforming({ family: this.fontFamily() }, { family });
+            context.till(1, 1);
+            this.opacity(1);
+            context.recover();
+        }
+        this.vars.setTogether({
+            fontFamily: family,
             width: box.width,
             height: box.height,
         });
@@ -185,7 +221,7 @@ Object.assign(TextSVG.prototype, {
         else if (operator === "first") update(matched[0]);
         else if (operator === "last") update(matched[matched.length - 1]);
         else update(matched[operator]);
-        if (this.duration() > 0) {
+        if (this.duration() > 0 && TextEngine.fontExists(this.vars.family)) {
             const context = new Context(this);
             context.till(0, 0);
             this.opacity(0);

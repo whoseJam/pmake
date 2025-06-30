@@ -5,7 +5,17 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestGridDp);
+sd.main(TestFontFamily);
+
+async function TestFontFamily() {
+    const text = new sd.Text(svg, "Hello").x(100).y(100);
+    await sd.pause();
+    text.startAnimate().fontSize(100).endAnimate();
+    await sd.pause();
+    text.startAnimate().fontFamily("Arial").endAnimate();
+    await sd.pause();
+    text.startAnimate().fontFamily("Times New Roman").endAnimate();
+}
 
 async function TestGridDp() {
     const n = 5;
