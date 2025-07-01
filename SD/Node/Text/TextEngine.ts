@@ -235,7 +235,7 @@ class TransformingPathGroup {
 class Transforming {
     parent: SDNode;
     groups: Array<TransformingPathGroup>;
-    groupKeys: Array<string>;
+    groupKeys: Array<any>;
     l: number;
     r: number;
     mapping: any;
@@ -302,22 +302,61 @@ class Transforming {
             return result;
         };
         const deleted = make1d(targetPaths.length, false);
-        for (const [key, value] of this.mapping) {
-            global.debug = true;
-            const t = TextEngine.findFirstSubtextInMathjax(target, value);
-            if (t === undefined) continue;
-            const tl = t.element.children[t.start].range[0];
-            const tr = t.element.children[t.start + t.length - 1].range[1];
-            for (let i = 0; i < this.groupKeys.length; i++) {
-                if (this.groupKeys[i] === key) {
-                    this.groups[i].replayByMathjax(
-                        targetPaths,
-                        generateValid(i => tl <= i && i < tr)
-                    );
+        const dfs = current => {
+            current.deleted = true;
+            for (let i = 0; i < current.children.length; i++) dfs(current.children[i]);
+        };
+        for (const item of this.mapping) {
+            if (item.length === 1) {
+                const [key, value] = item;
+                const t = TextEngine.findFirstSubtextInMathjax(target, value);
+                if (t === undefined) continue;
+                const tl = t.element.children[t.start].range[0];
+                const tr = t.element.children[t.start + t.length - 1].range[1];
+                for (let i = t.start; i < t.start + t.length; i++) dfs(t.element.children[i]);
+                for (let i = tl; i < tr; i++) deleted[i] = true;
+                for (let i = 0; i < this.groupKeys.length; i++) {
+                    if (this.groupKeys[i] === key) {
+                        this.groups[i].replayByMathjax(
+                            targetPaths,
+                            generateValid(i => tl <= i && i < tr)
+                        );
+                    }
+                }
+            } else if (item.length === 2) {
+                const [node, value] = item;
+                const t = TextEngine.findFirstSubtextInMathjax(target, value);
+                if (t === undefined) continue;
+                const tl = t.element.children[t.start].range[0];
+                const tr = t.element.children[t.start + t.length - 1].range[1];
+                for (let i = t.start; i < t.start + t.length; i++) dfs(t.element.children[i]);
+                for (let i = tl; i < tr; i++) deleted[i] = true;
+                for (let i = 0; i < this.groupKeys.length; i++) {
+                    if (this.groupKeys[i][0] === node && this.groupKeys[i][1] === value) {
+                        this.groups[i].replayByMathjax(
+                            targetPaths,
+                            generateValid(i => tl <= i && i < tr)
+                        );
+                    }
+                }
+            } else if (item.length === 3) {
+                const [node, key, value] = item;
+                const s = TextEngine.findFirstSubtextInMathjax(node._.math, key);
+                const t = TextEngine.findFirstSubtextInMathjax(target, value);
+                if (s === undefined || t === undefined) continue;
+                const tl = t.element.children[t.start].range[0];
+                const tr = t.element.children[t.start + t.length - 1].range[1];
+                for (let i = t.start; i < t.start + t.length; i++) dfs(t.element.children[i]);
+                for (let i = tl; i < tr; i++) deleted[i] = true;
+                for (let i = 0; i < this.groupKeys.length; i++) {
+                    if (this.groupKeys[i][0] === node && this.groupKeys[i][1] === key && this.groupKeys[i][2] === value) {
+                        this.groups[i].replayByMathjax(
+                            targetPaths,
+                            generateValid(i => tl <= i && i < tr)
+                        );
+                    }
                 }
             }
-            for (let i = tl; i < tr; i++) deleted[i] = true;
-            global.debug = false;
         }
         this.groups[this.groups.length - 1].replayByMathjax(
             targetPaths,
@@ -477,6 +516,16 @@ export class TextEngine {
                 return [ssrc.getAttribute("d"), data];
             }
         };
+        const hex = (rgb: string) => {
+            if (rgb.startsWith("rgb")) {
+                const content = rgb.slice(5, -1);
+                const r = (+content.split(",")[0]).toString(16).padStart(2, "0");
+                const g = (+content.split(",")[1]).toString(16).padStart(2, "0");
+                const b = (+content.split(",")[2]).toString(16).padStart(2, "0");
+                return `#${r}${g}${b}`;
+            }
+            return rgb;
+        };
         const dfs = (current, matrix: { a: number; b: number; c: number; d: number; e: number; f: number }, fill: string, stroke: string) => {
             const l = paths.length;
             for (let i = 0; i < current.transform.baseVal.length; i++) matrix = multiply(matrix, current.transform.baseVal[i].matrix);
@@ -488,8 +537,8 @@ export class TextEngine {
             if (Dom.tagName(current) === "rect" || Dom.tagName(current) === "use") {
                 const [d, character] = extract(current, defs);
                 const p = new TransformingPath(d, matrix, character);
-                p.fill = fill;
                 p.stroke = stroke;
+                p.fill = fill;
                 paths.push(p);
             }
             for (const child of current.children) dfs(child, matrix, fill, stroke);
@@ -497,7 +546,7 @@ export class TextEngine {
             current.range = [l, r];
             current.deleted = undefined;
         };
-        dfs(root, initialMatrix(), element.getAttribute("fill"), element.getAttribute("stroke"));
+        dfs(root, initialMatrix(), hex(element.getAttribute("fill")), hex(element.getAttribute("stroke")));
         return paths;
     }
     static transformPaths(parent, source, target) {
@@ -587,10 +636,10 @@ export class TextEngine {
                 const tr = t.element.children[t.start + t.length - 1].range[1];
                 for (let i = s.start; i < s.start + s.length; i++) dfs(s.element.children[i]);
                 for (let i = t.start; i < t.start + t.length; i++) dfs(t.element.children[i]);
-                const sourceGroup = sourcePaths.slice(sl, sr);
-                const targetGroup = targetPaths.slice(tl, tr);
                 for (let i = sl; i < sr; i++) deleted1[i] = true;
                 for (let i = tl; i < tr; i++) deleted2[i] = true;
+                const sourceGroup = sourcePaths.slice(sl, sr);
+                const targetGroup = targetPaths.slice(tl, tr);
                 transforming.groupKeys.push(key);
                 transforming.groups.push(this.transformPaths(parent, sourceGroup, targetGroup));
             } else if (item.length === 2) {
@@ -600,13 +649,15 @@ export class TextEngine {
                 const tl = t.element.children[t.start].range[0];
                 const tr = t.element.children[t.start + t.length - 1].range[1];
                 for (let i = t.start; i < t.start + t.length; i++) dfs(t.element.children[i]);
+                for (let i = tl; i < tr; i++) deleted2[i] = true;
                 const sourceGroup = TextEngine.getMathjaxPaths(node._.math);
                 const targetGroup = targetPaths.slice(tl, tr);
                 if (auto) node.remove();
-                transforming.groupKeys.push(node);
+                transforming.groupKeys.push([node, value]);
                 transforming.groups.push(this.transformPaths(parent, sourceGroup, targetGroup));
             } else if (item.length === 3) {
                 const [node, key, value] = item;
+                global.debug = true;
                 const sourcePaths = this.getMathjaxPaths(node._.math);
                 const s = this.findFirstSubtextInMathjax(node._.math, key);
                 const t = this.findFirstSubtextInMathjax(target, value);
@@ -616,22 +667,12 @@ export class TextEngine {
                 const tl = t.element.children[t.start].range[0];
                 const tr = t.element.children[t.start + t.length - 1].range[1];
                 for (let i = t.start; i < t.start + t.length; i++) dfs(t.element.children[i]);
-                const sourceGroup = sourcePaths.slice(sl, sr);
-                const targetGroup = targetPaths.slice(tl, tr);
                 for (let i = tl; i < tr; i++) deleted2[i] = true;
-                transforming.groupKeys.push(key);
+                const sourceGroup = sourcePaths.slice(sl, sr);
+                global.debug = false;
+                const targetGroup = targetPaths.slice(tl, tr);
+                transforming.groupKeys.push([node, key, value]);
                 transforming.groups.push(this.transformPaths(parent, sourceGroup, targetGroup));
-            } else {
-                // TODO
-                // const node = item.node;
-                // const value = item.target;
-                // const t = this.findFirstSubtextInMathjax(target, value);
-                // if (t === undefined) continue;
-                // const tl = t.element.children[t.start].range[0];
-                // const tr = t.element.children[t.start + t.length - 1].range[1];
-                // for (let i = t.start; i < t.start + t.length; i++) dfs(t.element.children[i]);
-                // transforming.groupKeys.push(node);
-                // transforming.groups.push(this.transformPaths(parent, sourceGroup, targetGroup));
             }
         }
         const sourceGroup = [];

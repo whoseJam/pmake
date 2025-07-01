@@ -4,7 +4,53 @@ const svg = sd.svg();
 const C = sd.color();
 const T = 500;
 
-sd.main(Test9);
+sd.main(Test11);
+
+async function Test11() {
+    const m1 = new sd.Mathjax(svg, "1").x(100).y(100).color(C.textBlue).fontSize(50);
+    // const m2 = new sd.Mathjax(svg, "2").x(100).y(200).fontSize(50);
+    // const m3 = new sd.Mathjax(svg, "3").x(200).y(100).fontSize(50);
+    // const m4 = new sd.Mathjax(svg, "4").x(200).y(200).fontSize(50);
+    await sd.pause();
+    const math = new sd.Mathjax(svg)
+        .x(400)
+        .y(100)
+        .startAnimate(5000)
+        .text("1+2+3+4", [
+            [m1, "1", "1"],
+            // [m2, "2"],
+            // [m3, "3"],
+            // [m4, "4"],
+        ])
+        .subtextColor("1", C.textBlue)
+        .endAnimate();
+}
+
+async function Test10() {
+    const data = [
+        ["?", "?"],
+        ["?", "?"],
+    ];
+    function matrix(data) {
+        let ans = "\\begin{pmatrix}";
+        for (let i = 0; i < data.length; i++) {
+            for (let j = 0; j < data[i].length; j++) {
+                ans += String(data[i][j]);
+                if (j !== data[i].length - 1) ans += " &";
+                else ans += "\\\\";
+            }
+        }
+        ans += "\\end{pmatrix}";
+        return ans;
+    }
+    const math = new sd.Mathjax(svg, matrix(data)).x(100).y(100);
+    const value = new sd.Mathjax(svg, "8").x(100).y(300);
+    await sd.pause();
+    data[0][0] = 8;
+    math.startAnimate()
+        .text(matrix(data), [[value, "8"]])
+        .endAnimate();
+}
 
 async function Test9() {
     const math = new sd.Mathjax(svg, "(x_i,y_i)").cx(100).cy(100);
