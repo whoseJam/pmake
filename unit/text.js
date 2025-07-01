@@ -5,7 +5,20 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestFontFamily);
+sd.main(TestTextTransform);
+
+async function TestMapTransform() {
+    const text = new sd.Text(svg, "HA").fontSize(150).x(100).y(100);
+    await sd.pause();
+    text.startAnimate().text("IIa", { H: "II" }).fontFamily("Times New Roman").subtextColorAll("Ia", C.textBlue).endAnimate();
+}
+
+async function TestTextClone() {
+    const text = new sd.Text(svg, "Hello").x(100).y(100);
+    await sd.pause();
+    const subtext = text.subtextCloneAll("He");
+    subtext.x(100).y(200);
+}
 
 async function TestFontFamily() {
     const text = new sd.Text(svg, "Hello").x(100).y(100);

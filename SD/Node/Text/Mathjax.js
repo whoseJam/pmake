@@ -100,8 +100,8 @@ Object.assign(Mathjax.prototype, {
         }
         return this;
     },
-    text(text) {
-        if (text === undefined) return this.vars.text;
+    text(text, mapping = [], auto = true) {
+        if (arguments.length === 0) return this.vars.text;
         text = String(text);
         if (text.startsWith("$")) text = text.slice(1, -1);
         const math = createMathjaxRenderNode(this, this._.layer, text);
@@ -112,7 +112,7 @@ Object.assign(Mathjax.prototype, {
             this.opacity(0);
             this._.math.remove();
             context.till(0, 1);
-            this.__createTransforming(this._.math, math);
+            this.__createTransforming(this._.math, math, mapping, auto);
             context.till(1, 1);
             this.opacity(1);
             context.recover();
@@ -187,7 +187,7 @@ Object.assign(Mathjax.prototype, {
         this._.math.remove();
         this._.math = math;
     },
-    __createTransforming(source, target) {
+    __createTransforming(source, target, mapping = [], auto = true) {
         this.__flushTransformings();
         const l = this.delay();
         const r = this.delay() + this.duration();
@@ -197,6 +197,6 @@ Object.assign(Mathjax.prototype, {
                 return;
             }
         }
-        this._.transformings.push(TextEngine.transformMathjax(this, source, target));
+        this._.transformings.push(TextEngine.transformMathjax(this, source, target, mapping, auto));
     },
 });

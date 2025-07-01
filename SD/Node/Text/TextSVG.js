@@ -75,11 +75,15 @@ export class TextSVG extends BaseText {
             this.__currentTransforming(() => this.__createTransforming({ y: oldY }, { y: newY }));
         });
         this.vars.watch("fill", fill => {
+            this._.attr.forEach(a => (a.fill = fill));
+            this.vars.html = parseToHTML.call(this);
             if (this.duration() === 0) return;
             this.__flushTransformings();
             this.__currentTransforming(transforming => transforming.fill(fill));
         });
         this.vars.watch("stroke", stroke => {
+            this._.attr.forEach(a => (a.stroke = stroke));
+            this.vars.html = parseToHTML.call(this);
             if (this.duration() === 0) return;
             this.__flushTransformings();
             this.__currentTransforming(transforming => transforming.stroke(stroke));
@@ -104,12 +108,8 @@ export class TextSVG extends BaseText {
         this._.nake.setAttribute("y", this.vars.y);
         this._.nake.setAttribute("font-size", this.vars.fontSize);
         this._.nake.setAttribute("font-family", "Consolas");
-        this._.transforming = undefined;
-
-        console.log("before Set text content, global allow=", GlobalAllow());
 
         this.text(text);
-        console.log("after Set text content, global allow=", GlobalAllow());
     }
 }
 
@@ -157,7 +157,7 @@ Object.assign(TextSVG.prototype, {
         }
         return this;
     },
-    text(text) {
+    text(text, mapping = {}) {
         if (arguments.length === 0) return this.vars.text;
         text = String(text);
         const attr = make1d(text.length, {
@@ -171,7 +171,7 @@ Object.assign(TextSVG.prototype, {
             context.till(0, 0);
             this.opacity(0);
             context.till(0, 1);
-            this.__createTransforming({ text: this.vars.text }, { text });
+            this.__createTransforming({ text: this.vars.text }, { text }, mapping);
             context.till(1, 1);
             this.opacity(1);
             context.recover();
@@ -206,12 +206,41 @@ Object.assign(TextSVG.prototype, {
     intValue() {
         return +this.text();
     },
-    __subtextAttribute(subtext, attribute, operator) {
+    subtextCloneAll(subtext) {
         const attr = this._.attr;
+        const text = this.vars.text;
+        const matched = make1d(text.length, false);
+        for (let i = 0; i + subtext.length <= text.length; i++) {
+            if (text.slice(i, i + subtext.length) === subtext) {
+                for (let j = i; j < i + subtext.length; j++) matched[j] = true;
+            }
+        }
+        let cloneText = "";
+        const cloneAttr = [];
+        for (let i = 0; i < text.length; i++) {
+            if (matched[i]) cloneText += text[i];
+            else cloneText += " ";
+            cloneAttr.push({
+                fill: attr[i].fill,
+                strokeL: attr[i].stroke,
+            });
+        }
+        const cloned = new TextSVG(this.layer().render, cloneText);
+        cloned._.attr = cloneAttr;
+        cloned.vars.html = parseToHTML.call(cloned);
+        return cloned;
+    },
+    __subtextAttribute(subtext, attribute, operator) {
+        const attr = this._.attr.map(a => {
+            return {
+                fill: a.fill,
+                stroke: a.stroke,
+            };
+        });
         const text = this.vars.text;
         const matched = [];
         for (let i = 0; i + subtext.length <= text.length; i++) {
-            if (text.slice(i, i + text.length) === subtext) matched.push(i, i + text.length);
+            if (text.slice(i, i + subtext.length) === subtext) matched.push([i, i + subtext.length]);
         }
         const update = match => {
             if (!match) return;
@@ -226,7 +255,7 @@ Object.assign(TextSVG.prototype, {
         else if (operator === "first") update(matched[0]);
         else if (operator === "last") update(matched[matched.length - 1]);
         else update(matched[operator]);
-        if (this.duration() > 0 && TextEngine.fontExists(this.vars.family)) {
+        if (this.duration() > 0 && TextEngine.fontExists(this.fontFamily())) {
             const context = new Context(this);
             context.till(0, 0);
             this.opacity(0);
@@ -256,14 +285,14 @@ Object.assign(TextSVG.prototype, {
             }
         }
     },
-    __createTransforming(source, target) {
+    __createTransforming(source, target, mapping = {}) {
         this.__flushTransformings();
         const config = config => {
             return {
                 text: config.text || this.text(),
                 size: config.size || this.fontSize(),
                 attr: config.attr || this._.attr,
-                family: config.family || this.vars.family,
+                family: config.family || this.fontFamily(),
                 x: config.x || this.x(),
                 y: config.y || this.y(),
             };
@@ -272,10 +301,10 @@ Object.assign(TextSVG.prototype, {
         const r = this.delay() + this.duration();
         for (const transforming of this._.transformings) {
             if (transforming.l === l && transforming.r === r) {
-                transforming.replayByText(config(target));
+                transforming.replayByText(config(target), mapping);
                 return;
             }
         }
-        this._.transformings.push(TextEngine.transformText(this, config(source), config(target)));
+        this._.transformings.push(TextEngine.transformText(this, config(source), config(target), mapping));
     },
 });

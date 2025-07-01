@@ -56,10 +56,6 @@ let globalAllowUpdate = true;
 let globalActiveEffect = undefined;
 let globalFreeze = 0;
 
-global.GlobalAllow = function () {
-    return globalAllowUpdate;
-};
-
 class EffectManager {
     constructor(effect) {
         this.effect = effect;
@@ -244,9 +240,6 @@ export function reactive(object) {
                 }
             }
             Reflect.set(object, key, value, receiver);
-            if (key === "x") {
-                console.log("GlobalAllow=", GlobalAllow(), "value=", value);
-            }
             triggerUpdate(object, key);
             return true;
         },

@@ -13,6 +13,8 @@ export class BaseText extends SD2DNode {
     stroke(stroke: string): this;
     color(): SDColor;
     color(color: string | SDColor): this;
+    strokeWidth(): number;
+    strokeWidth(width: number): this;
     subtextColor(text: string, color: string | SDColor, i: number): this;
     subtextColorAll(subtext: string, color: string | SDColor): this;
     subtextColorFirst(text: string, color: string | SDColor): this;

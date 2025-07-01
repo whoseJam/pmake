@@ -4,101 +4,95 @@ const svg = sd.svg();
 const C = sd.color();
 const T = 500;
 
-sd.main(Test3);
-
-async function Test12() {
-    const math = new sd.Mathjax(svg, "a+b=c").center(100, 100);
-    await sd.pause();
-    math.startAnimate().color(C.textBlue).endAnimate();
-    console.log(math.color());
-    await sd.pause();
-    math.startAnimate().transformMath("k").endAnimate();
-}
-
-async function Test11() {
-    const math1 = new sd.Mathjax(svg, "\\varphi").center(100, 100);
-    const math2 = new sd.Mathjax(svg, "\\sigma").center(150, 200).color(C.textBlue);
-    const math3 = new sd.Mathjax(svg, "\\omega").center(200, 100).color(C.red);
-    await sd.pause();
-    const math = new sd.Mathjax(svg).center(150, 150);
-    math.startAnimate().transformMathFrom("\\infty", [math1, math2, math3]).fontSize(40).endAnimate();
-}
-
-async function Test10() {
-    const math = new sd.Mathjax(svg, "({x_i},{y_i})\\sum_{i=1}^{n}{(a+b)^{2}}").x(100).y(100);
-    const m1 = math.createMath(5);
-    sd.Focus(svg).focus(m1);
-    await sd.pause();
-    m1.startAnimate().dy(100).endAnimate();
-    await sd.pause();
-    m1.startAnimate().dy(100).endAnimate();
-}
+sd.main(Test9);
 
 async function Test9() {
-    const math = new sd.Mathjax(svg, "({x_i},{y_i})").cx(100).cy(100);
+    const math = new sd.Mathjax(svg, "(x_i,y_i)").cx(100).cy(100);
     await sd.pause();
-    math.startAnimate(T).transformMath("({1},{3})", { 1: 1, 2: 2 }).endAnimate();
+    math.startAnimate(T).text("(1,3)", { x_i: 1, y_i: 3 }).endAnimate();
     await sd.pause();
-    const m1 = math.createMath(1);
-    const m3 = math.createMath(2);
+    const sum = new sd.Mathjax(svg).cx(100).cy(200);
+    sum.startAnimate(T)
+        .text("\\sum_{i=1}^3 i", [
+            [math, "1", "1"],
+            [math, "3", "3"],
+        ])
+        .endAnimate();
     await sd.pause();
-    const sum = new sd.Mathjax(svg, "").cx(100).cy(200);
-    sum.startAnimate(T).transformMathFrom("\\sum_{i={1}}^{3}i", [m1, m3], { 1: 2, 2: 3 }).endAnimate();
+    sum.startAnimate(T).text("1+2+3").endAnimate();
     await sd.pause();
-    sum.startAnimate(T).transformMath("{1}+{2}+{3}").endAnimate();
-    await sd.pause();
-    const s1 = sum.createMath(1);
-    const s2 = sum.createMath(2);
-    const s3 = sum.createMath(3);
     const two = new sd.Mathjax(svg, "a+b+c").opacity(0).cx(200).cy(150).startAnimate().opacity(1);
-    two.startAnimate(T).transformMathFrom("a^{1}+b^{2}+c^{3}", [s1, s2, s3], { 1: 1, 2: 2, 3: 3 }).endAnimate();
     await sd.pause();
-    two.startAnimate(T).transformMath("a^{3}+b^{1}+c^{2}", { 1: 2, 2: 3, 3: 1 }).endAnimate();
+    two.startAnimate(T)
+        .text("a^1+b^2+c^3", [
+            [sum, "1", "1"],
+            [sum, "2", "2"],
+            [sum, "3", "3"],
+        ])
+        .endAnimate();
     await sd.pause();
-    two.startAnimate(T).transformMath("c^3+a^1+b^2").endAnimate();
+    two.startAnimate(T).text("a^3+b^1+c^2", { 1: 1, 2: 2, 3: 3 }).endAnimate();
     await sd.pause();
-    two.startAnimate(T).transformMath("\\mu").fontSize(40).endAnimate();
+    two.startAnimate(T).text("c^3+a^1+b^2").endAnimate();
     await sd.pause();
-    sum.startAnimate(T).transformMath("\\varphi").fontSize(40).endAnimate();
+    two.startAnimate(T).text("\\mu").fontSize(40).endAnimate();
     await sd.pause();
-    math.startAnimate().transformMath("\\sigma").fontSize(40).endAnimate();
+    sum.startAnimate(T).text("\\varphi").fontSize(40).endAnimate();
     await sd.pause();
-    const final = new sd.Mathjax(svg).cx(125).cy(125).startAnimate(T).transformMathFrom("{\\infty}", [two, sum, math]).endAnimate();
+    math.startAnimate().text("\\sigma").fontSize(40).endAnimate();
+    // await sd.pause();
+    // const final = new sd.Mathjax(svg)
+    //     .cx(125)
+    //     .cy(125)
+    //     .startAnimate(T)
+    //     .text("{\\infty}", [
+    //         [two, "\\infty"],
+    //         [sum, "\\infty"],
+    //         [math, "\\infty"],
+    //     ])
+    //     .endAnimate();
 }
 
 async function Test8() {
-    await sd.pause();
-    const math = new sd.Mathjax(svg, "\\frac{{15}}{{20}}").cx(300).cy(400);
-    await sd.pause();
-    math.startAnimate().transformMath("\\frac{{3}}{{4}}", { 1: 1, 2: 2 }).cx(300).cy(400).endAnimate();
-}
-
-async function Test7() {
-    await sd.pause();
-    const math = new sd.Mathjax(svg, "\\sum_{i=1}^{n}{(a+b)^2}").x(500).y(400);
-    await sd.pause();
-    math.element(1).startAnimate().color(C.textBlue).endAnimate();
-    math.element(2).startAnimate().color(C.red).endAnimate();
-    math.element(3).startAnimate().color(C.purple).endAnimate();
-    await sd.pause();
-    math.startAnimate().transformMath("{a+b}={c}").endAnimate();
-    await sd.pause();
     const m1 = new sd.Mathjax(svg, "a").x(700).y(100);
     const m2 = new sd.Mathjax(svg, "b").x(800).y(100);
     const m3 = new sd.Mathjax(svg, "c").x(900).y(100);
     const m = new sd.Mathjax(svg, "ttt").x(800).y(200);
     await sd.pause();
-    m.startAnimate().transformMathFrom("\\sum_{i=1}^{n}{a+b}", [m1, m2, m3], { 1: 1, 2: 2, 3: 3 }).endAnimate();
+    m.startAnimate()
+        .text("\\sum_{i=1}^{n}{a+b}", [
+            [m1, "i=1"],
+            [m2, "n"],
+            [m3, "a+b"],
+        ])
+        .fontSize(50)
+        .x(100)
+        .subtextColor("a+b", C.textBlue)
+        .endAnimate();
+}
+
+async function Test7() {
+    const math = new sd.Mathjax(svg, "\\sum_{i=1}^n(a+b)^2").fontSize(50).x(100).y(100);
+    await sd.pause();
+    math.startAnimate();
+    math.subtextColor("i=1", C.textBlue);
+    math.subtextColor("n", C.red);
+    math.subtextColor("(a+b)^2", C.purple);
+    math.endAnimate();
+    await sd.pause();
+    math.startAnimate();
+    math.text("{a+b}={c}", { "a+b": "a+b" });
+    math.subtextColor("a+b", C.purple);
+    math.endAnimate();
 }
 
 async function Test6() {
-    await sd.pause();
     const n = 15;
     const maths = [];
     for (let i = 1; i <= n; i++) {
         maths.push(
             new sd.Mathjax(svg)
-                .math(`\\frac{{${i}}}{{${n}}}`)
+                .text(`\\frac{${i}}{${n}}`)
                 .cx(500 + i * 40)
                 .y(300)
         );
@@ -106,43 +100,44 @@ async function Test6() {
     await sd.pause();
     for (let i = 1; i <= n; i++) {
         const gcd = getGCD(i, n);
+        const mapping = {};
+        mapping[i] = i / gcd;
+        mapping[n] = n / gcd;
         maths[i - 1]
             .startAnimate(T)
-            .transformMath(`\\frac{{${i / gcd}}}{{${n / gcd}}}`, { 1: 1, 2: 2 })
+            .text(`\\frac{${i / gcd}}{${n / gcd}}`, mapping)
             .cx(500 + i * 40)
             .endAnimate();
     }
 }
 
 async function Test5() {
-    await sd.pause();
     const math = new sd.Mathjax(svg, "\\sum_{i=1}^{10}{i}").x(500).y(200);
     await sd.pause();
-    math.startAnimate(T).transformMath("{1+2+3+4+5+6+7+8+9+10}", { 3: 1 }).endAnimate();
+    math.startAnimate(T).text("1+2+3+4+5+6+7+8+9+10", { "i=1": "1+2+3+4+5+6+7+8+9+10" }).endAnimate();
 }
 
 async function Test4() {
+    const math = new sd.Mathjax(svg, "\\frac a b=c").fontSize(40).x(500).y(100);
     await sd.pause();
-    const math = new sd.Mathjax(svg, "\\frac{{a}}{{b}}={c}").fontSize(40).x(500).y(100);
-    await sd.pause();
-    math.startAnimate(T).transformMath("{a}={b}{c}", { 1: 1, 2: 2, 3: 3 }).endAnimate();
+    math.startAnimate(T).text("a=bc", { a: "a", b: "b", c: "c" }).endAnimate();
 }
 
 async function Test3() {
-    const math = new sd.Mathjax(svg, "{a^2}{+}{b^2}{=}{c^2}").fontSize(40).x(100).y(300);
+    const math = new sd.Mathjax(svg, "a^2+b^2=c^2").fontSize(40).x(100).y(300);
     await sd.pause();
-    math.startAnimate(T).text("{a^2}{=}{c^2}{-}{b^2}", { 1: 1, 2: 4, 3: 5, 4: 2, 5: 3 }).endAnimate();
+    math.startAnimate(T).text("a^2=c^2-b^2", { "a^2": "a^2", "b^2": "b^2", "c^2": "c^2", "=": "=" }).endAnimate();
 }
 
 async function Test2() {
-    const math = new sd.Mathjax(svg, "a^2+b^2=c^2").fontSize(40).x(100).y(200);
+    const math = new sd.Mathjax(svg, "a^2+b^2=c^2").fontSize(180).x(100).y(200);
+    const rect = new sd.Rect(svg).fillOpacity(0).x(math.x()).y(math.y()).width(math.width()).height(math.height());
     await sd.pause();
     math.startAnimate(T).text("a^2=c^2-b^2").endAnimate();
 }
 
 async function Test1() {
     const math = new sd.Mathjax(svg, "a^2b^2c^2d^2").x(100).y(100).fontSize(100);
-    math._.math.setAttribute("id", "fuck");
     const mx = math.mx();
     await sd.pause();
     math.startAnimate().color(C.textBlue).subtextColorAll("b^2", C.red).fontSize(50).mx(mx).subtextColorLast("2", C.pureBlue).endAnimate();

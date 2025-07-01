@@ -53,15 +53,10 @@ export class RenderNode {
         return this.element;
     }
     __append(element: RenderNode | Element) {
-        if (element.getAttribute("id") === "fuck") console.log("append element=", element);
         if (element instanceof RenderNode) this.nake().append(element.nake());
         else this.nake().append(element);
     }
     __remove() {
-        if (this.nake().getAttribute("id") === "fuck") {
-            console.log("remove nake=", this.nake(), "old parent=", this.nake().parentNode);
-            setTimeout(() => this.nake().remove(), 20);
-        }
         this.nake().remove();
     }
     append(element: string | RenderNode) {
