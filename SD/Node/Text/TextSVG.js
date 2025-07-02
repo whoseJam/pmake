@@ -157,7 +157,7 @@ Object.assign(TextSVG.prototype, {
         }
         return this;
     },
-    text(text, mapping = {}) {
+    text(text, mapping = {}, auto = true) {
         if (arguments.length === 0) return this.vars.text;
         text = String(text);
         const attr = make1d(text.length, {
@@ -171,7 +171,7 @@ Object.assign(TextSVG.prototype, {
             context.till(0, 0);
             this.opacity(0);
             context.till(0, 1);
-            this.__createTransforming({ text: this.vars.text }, { text }, mapping);
+            this.__createTransforming({ text: this.vars.text }, { text }, mapping, auto);
             context.till(1, 1);
             this.opacity(1);
             context.recover();
@@ -285,7 +285,7 @@ Object.assign(TextSVG.prototype, {
             }
         }
     },
-    __createTransforming(source, target, mapping = {}) {
+    __createTransforming(source, target, mapping = {}, auto = true) {
         this.__flushTransformings();
         const config = config => {
             return {
@@ -305,6 +305,6 @@ Object.assign(TextSVG.prototype, {
                 return;
             }
         }
-        this._.transformings.push(TextEngine.transformText(this, config(source), config(target), mapping));
+        this._.transformings.push(TextEngine.transformText(this, config(source), config(target), mapping, auto));
     },
 });

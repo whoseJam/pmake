@@ -5,19 +5,47 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestTextTransform);
+sd.main(TestTransformFromOtherSubtext);
+
+async function TestTransformFromOtherSubtext() {
+    const t123 = new sd.Text(svg, "123").x(100).y(100).fontSize(50);
+    const text = new sd.Text(svg).x(500).y(200).fontSize(60);
+    await sd.pause();
+    text.startAnimate()
+        .text("1+3", [
+            [t123, "1", "1"],
+            [t123, "3", "3"],
+        ])
+        .endAnimate();
+}
+
+async function TestTransformFromOther() {
+    const t1 = new sd.Text(svg, "1").x(100).y(100).fontSize(50);
+    const t2 = new sd.Text(svg, "2").x(200).y(100).fontSize(50);
+    const t3 = new sd.Text(svg, "3").x(100).y(200).fontSize(50);
+    const t4 = new sd.Text(svg, "4").x(200).y(200).fontSize(50);
+    const text = new sd.Text(svg).x(500).y(200).fontSize(30);
+    await sd.pause();
+    text.startAnimate()
+        .text("1+2+3+4", [
+            [t1, "1"],
+            [t2, "2"],
+            [t3, "3"],
+            [t4, "4"],
+        ])
+        .endAnimate();
+}
+
+async function TestTransformFromEmpty() {
+    const text = new sd.Text(svg).x(100).y(100).fontSize(150);
+    await sd.pause();
+    text.startAnimate().text("hello").subtextColor("l", C.textBlue).endAnimate();
+}
 
 async function TestMapTransform() {
     const text = new sd.Text(svg, "HA").fontSize(150).x(100).y(100);
     await sd.pause();
     text.startAnimate().text("IIa", { H: "II" }).fontFamily("Times New Roman").subtextColorAll("Ia", C.textBlue).endAnimate();
-}
-
-async function TestTextClone() {
-    const text = new sd.Text(svg, "Hello").x(100).y(100);
-    await sd.pause();
-    const subtext = text.subtextCloneAll("He");
-    subtext.x(100).y(200);
 }
 
 async function TestFontFamily() {

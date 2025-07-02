@@ -19,7 +19,7 @@ class TransformingPath {
     character: string;
     fill: string;
     stroke: string;
-    strokeWidth: number;
+    status: string;
     path: SVGPathElement;
     constructor(d, transform, character = undefined) {
         this.d = d;
@@ -27,6 +27,7 @@ class TransformingPath {
         this.character = character;
         this.fill = C.black;
         this.stroke = C.black;
+        this.status = "normal";
     }
     cloneVisionPropertyFrom(path: TransformingPath) {
         this.character = path.character;
@@ -41,6 +42,7 @@ class TransformingPath {
         this.path.setAttribute("transform", `matrix(${transform.a},${transform.b},${transform.c},${transform.d},${transform.e},${transform.f})`);
         this.path.setAttribute("fill", this.fill);
         this.path.setAttribute("stroke", this.stroke);
+        this.path.setAttribute("stroke-width", "0");
         group.__append(this.path);
     }
 }
@@ -66,15 +68,8 @@ class TransformingPathGroup {
             const gap = Math.floor(this.source.length / count);
             if (this.source.length === 0) {
                 for (let i = this.target.length - 1; i >= 0; i--) {
-                    const matrix = this.target[i].transform;
-                    const path = new TransformingPath(this.target[i].d, {
-                        a: 0,
-                        b: 0,
-                        c: 0,
-                        d: 0,
-                        e: matrix.e,
-                        f: matrix.f,
-                    }).cloneVisionPropertyFrom(this.target[i]);
+                    const path = new TransformingPath(this.target[i].d, this.target[i].transform).cloneVisionPropertyFrom(this.target[i]);
+                    path.status = "opacity:0->1";
                     source.push(path);
                 }
             } else if (gap > 0) {
@@ -107,7 +102,11 @@ class TransformingPathGroup {
             const target = [];
             const count = this.source.length - this.target.length;
             const gap = Math.floor(this.target.length / count);
-            if (gap > 0) {
+            if (this.target.length === 0) {
+                for (let i = 0; i < this.source.length; i++) {
+                    this.source[i].status = "opacity:1->0";
+                }
+            } else if (gap > 0) {
                 let current = 0;
                 for (let i = this.target.length - 1; i >= 0; i--) {
                     if ((this.target.length - 1 - i) % gap === 0 && current < count) {
@@ -133,6 +132,7 @@ class TransformingPathGroup {
         }
     }
     init() {
+        for (const source of this.source) source.status = "normal";
         this.fillSource();
         this.fillTarget();
     }
@@ -153,8 +153,10 @@ class TransformingPathGroup {
             const source = this.source[i];
             const target = this.target[i];
             const path = source.path;
-            if (!target) {
-                new Action(this.l, this.r, 1, 0, Interp.numberInterp(path, "opacity"), path, "opacity");
+            if (source.status !== "normal") {
+                const so = +source.status.slice(8, 9);
+                const to = +source.status.slice(11);
+                new Action(this.l, this.r, so, to, Interp.numberInterp(path, "opacity"), path, "opacity");
             } else {
                 const sd = source.d;
                 const td = target.d;
@@ -170,10 +172,6 @@ class TransformingPathGroup {
                 const ts = target.stroke;
                 if (ss !== ts) new Action(this.l, this.r, ss, ts, Interp.colorInterp(path, "stroke"), path, "stroke");
                 source.stroke = target.stroke;
-                const sw = source.strokeWidth;
-                const tw = target.strokeWidth;
-                if (sw !== tw) new Action(this.l, this.r, sw, tw, Interp.numberInterp(path, "stroke-width"), path, "stroke-width");
-                source.strokeWidth = target.strokeWidth;
             }
         }
         context.till(1, 1);
@@ -192,40 +190,34 @@ class TransformingPathGroup {
             path.stroke = stroke;
         }
     }
-    strokeWidth(width) {
-        for (const path of this.source) {
-            new Action(this.l, this.r, path.strokeWidth, width, Interp.numberInterp(path.path, "strokeWidth"), path, "strokeWidth");
-            path.strokeWidth = width;
-        }
-    }
-    rebuildByText(text, family, size, attr, x, y, valid) {
-        const t = [];
-        const targetPaths = TextEngine.getPaths(text, family, size, x, y);
-        const getAttribute = (attr, i, key, default_) => {
-            if (attr[i] === undefined) return default_;
-            if (attr[i][key] === undefined) return default_;
-            return attr[i][key];
-        };
-        for (let i = 0; i < targetPaths.length; i++) {
-            const path = targetPaths[i];
-            const d = path.toPathData(4);
-            if (!d) continue;
-            if (Array.isArray(valid) && !valid[i]) continue;
-            const p = new TransformingPath(d, { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 }, text[i]);
-            p.fill = getAttribute(attr, i, "fill", this.parent.fill());
-            p.stroke = getAttribute(attr, i, "stroke", this.parent.stroke());
-            p.strokeWidth = getAttribute(attr, i, "strokeWidth", this.parent.strokeWidth());
-            t.push(p);
-        }
-        this.target = t;
-    }
-    replayByMathjax(target: Array<TransformingPath>, valid: Array<boolean>) {
+    replay(target: Array<TransformingPath>, valid: Array<boolean>) {
         this.target = target.filter((path, i) => !Array.isArray(valid) || valid[i]);
         this.play();
     }
-    replayByText(target, valid: Array<boolean>) {
-        this.rebuildByText(target.text, target.family, target.size, target.attr, target.x, target.y, valid);
-        this.play();
+}
+
+class TextMatching {
+    text: string;
+    deleted: Array<boolean>;
+    constructor(text: string) {
+        this.text = text;
+        this.deleted = make1d(text.length, false);
+    }
+    match(subtext: string) {
+        for (let i = 0; i < this.text.length; i++) {
+            let matched = true;
+            for (let j = 0; j < subtext.length && matched; j++) {
+                if (this.text[i + j] !== subtext[j] || this.deleted[i + j]) matched = false;
+            }
+            if (matched) return i;
+        }
+        return -1;
+    }
+    remove(subtext: string, i: number, callback?: (i: number) => void) {
+        for (let j = i; j < i + subtext.length; j++) {
+            this.deleted[j] = true;
+            if (callback) callback(j);
+        }
     }
 }
 
@@ -251,45 +243,27 @@ class Transforming {
         this.groups.forEach(group => group.stroke(stroke));
     }
     replayByText(target) {
-        const text = (str: string) => {
-            const t = [];
-            for (let i = 0; i < str.length; i++) {
-                t.push({ char: str[i], deleted: false });
-            }
-            return t;
-        };
-        const substr = (str: Array<{ char: string; deleted: boolean }>, sub: string) => {
-            for (let i = 0; i < str.length; i++) {
-                let flag = true;
-                for (let j = 0; j < sub.length && flag; j++) if (str[i + j].char != sub[j] || str[i + j].deleted) flag = false;
-                if (!flag) continue;
-                for (let j = 0; j < sub.length; j++) str[i + j].deleted = true;
-                return i;
-            }
-            return -1;
-        };
+        const targetText = target.text;
+        const targetPaths = TextEngine.getTextPaths(this.parent, target);
+        const matching = new TextMatching(targetText);
         const generateValid = check => {
             const result = [];
             for (let i = 0; i < targetText.length; i++) result.push(check(i));
             return result;
         };
-        const targetText = text(target.text);
-        for (const [key, value] of this.mapping) {
-            const t = substr(targetText, value);
+        for (const item of this.mapping) {
+            const t = matching.match(item.target);
             if (t === -1) continue;
+            matching.remove(item.target, t);
             for (let i = 0; i < this.groupKeys.length; i++) {
-                if (this.groupKeys[i] === key) {
-                    this.groups[i].replayByText(
-                        target,
-                        generateValid(i => t <= i && i < t + value.length)
-                    );
+                if (this.groupKeys[i] === item) {
+                    const check = i => t <= i && i < t + item.target.length;
+                    this.groups[i].replay(targetPaths, generateValid(check));
                 }
             }
         }
-        this.groups[this.groups.length - 1].replayByText(
-            target,
-            generateValid(i => !targetText[i].deleted)
-        );
+        const check = i => !matching.deleted[i];
+        this.groups[this.groups.length - 1].replay(targetPaths, generateValid(check));
     }
     replayByMathjax(target: MathjaxNode) {
         const targetPaths = TextEngine.getMathjaxPaths(target);
@@ -378,9 +352,34 @@ function getTextWidth(font, text, fontSize) {
 
 function processMapping(mapping: any) {
     const result = [];
-    for (const key in mapping) {
-        const value = mapping[key];
-        result.push([key, value]);
+    if (Array.isArray(mapping)) {
+        for (const item of mapping) {
+            if (item.length === 2) {
+                // ["aa", "bb"] [text, "aa"]
+                result.push({
+                    source: item[0],
+                    target: item[1],
+                });
+            } else {
+                // [text, "aa", "bb"]
+                result.push({
+                    source: {
+                        object: item[0],
+                        subtext: item[1],
+                    },
+                    target: item[2],
+                });
+            }
+        }
+    } else {
+        const result = [];
+        for (const key in mapping) {
+            const value = mapping[key];
+            result.push({
+                source: key,
+                target: value,
+            });
+        }
     }
     return result;
 }
@@ -465,6 +464,35 @@ export class TextEngine {
         const height = (ascender + descender + lineGap) * scale;
         const offset = -descender * scale;
         return font.getPaths(text, x, y + height + offset, size);
+    }
+    static getTextPaths(parent, config?) {
+        if (arguments.length === 1) {
+            config = {
+                text: parent.text(),
+                family: parent.fontFamily(),
+                size: parent.fontSize(),
+                x: parent.x(),
+                y: parent.y(),
+            };
+        }
+        const paths = [];
+        const targetPaths = TextEngine.getPaths(config.text, config.family, config.size, config.x, config.y);
+        const getAttribute = (attr, i, key, default_) => {
+            if (attr === undefined) return default_;
+            if (attr[i] === undefined) return default_;
+            if (attr[i][key] === undefined) return default_;
+            return attr[i][key];
+        };
+        for (let i = 0; i < targetPaths.length; i++) {
+            const path = targetPaths[i];
+            const d = path.toPathData(4);
+            if (!d) continue;
+            const p = new TransformingPath(d, { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 }, config.text[i]);
+            p.fill = getAttribute(config.attr, i, "fill", parent.fill());
+            p.stroke = getAttribute(config.attr, i, "stroke", parent.stroke());
+            paths.push(p);
+        }
+        return paths;
     }
     static getMathjaxPaths(element: MathjaxNode) {
         const defs = element.nake().children[0];
@@ -553,65 +581,62 @@ export class TextEngine {
         group.play();
         return group;
     }
-    static transformText(parent, source, target, mapping = []) {
-        if (!Array.isArray(mapping)) mapping = processMapping(mapping);
-        const text = (str: string) => {
-            const t = [];
-            for (let i = 0; i < str.length; i++) {
-                t.push({ char: str[i], deleted: false });
-            }
-            return t;
-        };
-        const sourceText = text(source.text);
-        const targetText = text(target.text);
-        const sourcePaths = this.getPaths(source.text, source.family, source.size, source.x, source.y);
-        const targetPaths = this.getPaths(target.text, target.family, target.size, target.x, target.y);
-        const getAttribute = (object, i, key, default_) => {
-            if (object[i] === undefined) return default_;
-            if (object[i][key] === undefined) return default_;
-            return object[i][key];
-        };
-        const substr = (str: Array<{ char: string; deleted: boolean }>, sub: string) => {
-            for (let i = 0; i < str.length; i++) {
-                let flag = true;
-                for (let j = 0; j < sub.length && flag; j++) if (str[i + j].char != sub[j] || str[i + j].deleted) flag = false;
-                if (!flag) continue;
-                for (let j = 0; j < sub.length; j++) str[i + j].deleted = true;
-                return i;
-            }
-            return -1;
-        };
-        const transformingPath = (attr, text, paths, i, group) => {
-            const path = paths[i];
-            const d = path.toPathData(4);
-            if (!d) return;
-            const p = new TransformingPath(d, { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 }, text[i]);
-            p.fill = getAttribute(attr, i, "fill", parent.fill());
-            p.stroke = getAttribute(attr, i, "stroke", parent.stroke());
-            p.strokeWidth = getAttribute(attr, i, "strokeWidth", parent.strokeWidth());
-            group.push(p);
-        };
+    static transformText(parent, source, target, mapping = [], auto = true) {
+        mapping = processMapping(mapping);
+        const sourceText = source.text;
+        const targetText = target.text;
+        const sourceMatching = new TextMatching(sourceText);
+        const targetMatching = new TextMatching(targetText);
+        const sourcePaths = this.getTextPaths(parent, source);
+        const targetPaths = this.getTextPaths(parent, target);
         const transforming = new Transforming(parent, mapping);
-        for (const [key, value] of mapping) {
-            const s = substr(sourceText, key);
-            const t = substr(targetText, value);
-            if (s === -1 || t === -1) continue;
-            const sourceGroup = [];
+        const matchSourcePaths = item => {
+            if (typeof item.source === "string") {
+                const s = sourceMatching.match(item.source);
+                if (s === -1) return undefined;
+                return sourcePaths.slice(s, s + item.source.length);
+            } else if (item.source.object) {
+                const text = item.source.object;
+                const text_ = text.text();
+                const subtext = item.source.subtext;
+                const paths = this.getTextPaths(text);
+                for (let i = 0; i < text_.length; i++) if (text_.slice(i, i + subtext.length) === subtext) return paths.slice(i, i + subtext.length);
+                return undefined;
+            } else {
+                const text = item.source;
+                return this.getTextPaths(text);
+            }
+        };
+        const removeSourcePaths = item => {
+            if (typeof item.source === "string") {
+                const s = sourceMatching.match(item.source);
+                sourceMatching.remove(item.source, s);
+            } else if (item.source.object) {
+            } else {
+                const text = item.source;
+                if (auto) text.remove();
+            }
+        };
+        for (const item of mapping) {
+            const sourceGroup = matchSourcePaths(item);
+            if (sourceGroup === undefined) continue;
             const targetGroup = [];
-            for (let i = s; i < s + key.length; i++) transformingPath(source.attr, source.text, sourcePaths, i, sourceGroup);
-            for (let i = t; i < t + value.length; i++) transformingPath(target.attr, target.text, targetPaths, i, targetGroup);
-            transforming.groupKeys.push(key);
+            const t = targetMatching.match(item.target);
+            if (t === -1) continue;
+            removeSourcePaths(item);
+            targetMatching.remove(item.target, t, i => targetGroup.push(targetPaths[i]));
+            transforming.groupKeys.push(item);
             transforming.groups.push(this.transformPaths(parent, sourceGroup, targetGroup));
         }
         const sourceGroup = [];
         const targetGroup = [];
-        for (let i = 0; i < sourceText.length; i++) if (!sourceText[i].deleted) transformingPath(source.attr, source.text, sourcePaths, i, sourceGroup);
-        for (let i = 0; i < targetText.length; i++) if (!targetText[i].deleted) transformingPath(target.attr, target.text, targetPaths, i, targetGroup);
+        for (let i = 0; i < sourceText.length; i++) if (!sourceMatching.deleted[i]) sourceGroup.push(sourcePaths[i]);
+        for (let i = 0; i < targetText.length; i++) if (!targetMatching.deleted[i]) targetGroup.push(targetPaths[i]);
         transforming.groups.push(this.transformPaths(parent, sourceGroup, targetGroup));
         return transforming;
     }
     static transformMathjax(parent: SDNode, source: MathjaxNode, target: MathjaxNode, mapping = [], auto = true) {
-        if (!Array.isArray(mapping)) mapping = processMapping(mapping);
+        mapping = processMapping(mapping);
         const sourcePaths = this.getMathjaxPaths(source);
         const targetPaths = this.getMathjaxPaths(target);
         const deleted1 = make1d(sourcePaths.length, false);

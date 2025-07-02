@@ -8,19 +8,19 @@ sd.main(Test11);
 
 async function Test11() {
     const m1 = new sd.Mathjax(svg, "1").x(100).y(100).color(C.textBlue).fontSize(50);
-    // const m2 = new sd.Mathjax(svg, "2").x(100).y(200).fontSize(50);
-    // const m3 = new sd.Mathjax(svg, "3").x(200).y(100).fontSize(50);
-    // const m4 = new sd.Mathjax(svg, "4").x(200).y(200).fontSize(50);
+    const m2 = new sd.Mathjax(svg, "2").x(100).y(200).fontSize(50);
+    const m3 = new sd.Mathjax(svg, "3").x(200).y(100).fontSize(50);
+    const m4 = new sd.Mathjax(svg, "4").x(200).y(200).fontSize(50);
     await sd.pause();
     const math = new sd.Mathjax(svg)
         .x(400)
         .y(100)
-        .startAnimate(5000)
+        .startAnimate()
         .text("1+2+3+4", [
             [m1, "1", "1"],
-            // [m2, "2"],
-            // [m3, "3"],
-            // [m4, "4"],
+            [m2, "2"],
+            [m3, "3"],
+            [m4, "4"],
         ])
         .subtextColor("1", C.textBlue)
         .endAnimate();
