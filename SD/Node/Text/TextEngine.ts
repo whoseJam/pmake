@@ -252,6 +252,12 @@ class MathjaxMatching {
             if (callback) callback(i);
         }
     }
+    forEachElement(matched: { element: Element; start: number; length: number }, callback: (element: Element) => void) {
+        const element = matched.element;
+        for (let i = matched.start; i < matched.start + matched.length; i++) {
+            callback(element.children[i]);
+        }
+    }
 }
 
 class Transforming {
@@ -610,8 +616,16 @@ export class TextEngine {
             const targetGroup = [];
             const t = targetMatching.match(item.target);
             if (t === -1) continue;
+            const fill = sameAttribute(sourceGroup, "fill");
+            const stroke = sameAttribute(sourceGroup, "stroke");
             removeSourcePaths(item);
-            targetMatching.remove(item.target, t, i => targetGroup.push(targetPaths[i]));
+            targetMatching.remove(item.target, t, i => {
+                targetGroup.push(targetPaths[i]);
+                targetPaths[i].fill = fill || targetPaths[i].fill;
+                target.attr[i].fill = fill || target.attr[i].fill;
+                targetPaths[i].stroke = stroke || targetPaths[i].stroke;
+                target.attr[i].stroke = stroke || target.attr[i].stroke;
+            });
             transforming.groupKeys.push(item);
             transforming.groups.push(this.transformPaths(parent, sourceGroup, targetGroup));
         }
@@ -667,8 +681,18 @@ export class TextEngine {
             const targetGroup = [];
             const t = targetMatching.match(item.target);
             if (t === undefined) continue;
+            const fill = sameAttribute(sourceGroup, "fill");
+            const stroke = sameAttribute(sourceGroup, "stroke");
             removeSourcePaths(item);
-            targetMatching.remove(t, i => targetGroup.push(targetPaths[i]));
+            targetMatching.forEachElement(t, element => {
+                if (fill) this.setAttributeInSubtree(element, "fill", fill);
+                if (stroke) this.setAttributeInSubtree(element, "stroke", stroke);
+            });
+            targetMatching.remove(t, i => {
+                targetGroup.push(targetPaths[i]);
+                targetPaths[i].fill = fill || targetPaths[i].fill;
+                targetPaths[i].stroke = stroke || targetPaths[i].stroke;
+            });
             transforming.groupKeys.push(item);
             transforming.groups.push(this.transformPaths(parent, sourceGroup, targetGroup));
         }
@@ -770,23 +794,14 @@ export class TextEngine {
     static findFirstSubtextInMathjax(math: MathjaxNode, subtext: string, matching?: MathjaxMatching) {
         return this.findSubtextInMathjax(math, subtext, 1, matching)[0];
     }
-    static cloneMathjax(element: SVGElement): SVGElement {
-        let root = Dom.deepClone(element);
-        while (Dom.parent(element)) {
-            const parent = Dom.parent(element);
-            const parent_ = Dom.clone(parent);
-            if (Dom.tagName(parent) === "svg") {
-                const defs = Dom.deepClone(parent.children[0]);
-                parent_.append(defs);
-                parent_.append(root);
-                root = parent_;
-                break;
-            } else {
-                parent_.append(root);
-                root = parent_;
-                element = parent as SVGElement;
-            }
-        }
-        return root;
+    static setAttributeInSubtree(root: Element, key: string, value: string) {
+        root.setAttribute(key, value);
+        for (let i = 0; i < root.children.length; i++) this.setAttributeInSubtree(root.children[i], key, value);
     }
+}
+
+function sameAttribute(array: Array<any>, key: string) {
+    if (array.length === 0) return undefined;
+    for (let i = 1; i < array.length; i++) if (array[i][key] !== array[0][key]) return undefined;
+    return array[0][key];
 }

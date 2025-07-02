@@ -4,7 +4,19 @@ const svg = sd.svg();
 const C = sd.color();
 const T = 500;
 
-sd.main(Test0);
+sd.main(TestColorCover);
+
+async function TestColorCover() {
+    const math = new sd.Mathjax(svg, "\\sum_{i=1}^n(a+b)^2").x(100).y(100).fontSize(50);
+    await sd.pause();
+    math.startAnimate().subtextColor("a+b", C.orange).endAnimate();
+    await sd.pause();
+    math.startAnimate().subtextColor("i=1", C.grey).endAnimate();
+    await sd.pause();
+    math.startAnimate().subtextColor("(a+b)^2", C.textBlue).endAnimate();
+    await sd.pause();
+    math.startAnimate().subtextColor("2", C.red).endAnimate();
+}
 
 async function Test11() {
     const m1 = new sd.Mathjax(svg, "1").x(100).y(100).color(C.textBlue).fontSize(50);
@@ -22,7 +34,6 @@ async function Test11() {
             [m3, "3"],
             [m4, "4"],
         ])
-        .subtextColor("1", C.textBlue)
         .endAnimate();
 }
 

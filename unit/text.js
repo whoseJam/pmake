@@ -5,7 +5,7 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestTransformFromEmpty);
+sd.main(TestTransformFromOther);
 
 async function TestTransformFromOtherSubtext() {
     const t123 = new sd.Text(svg, "123").x(100).y(100).fontSize(50);
@@ -20,7 +20,7 @@ async function TestTransformFromOtherSubtext() {
 }
 
 async function TestTransformFromOther() {
-    const t1 = new sd.Text(svg, "1").x(100).y(100).fontSize(50);
+    const t1 = new sd.Text(svg, "1").x(100).y(100).fontSize(50).fill(C.textBlue);
     const t2 = new sd.Text(svg, "2").x(200).y(100).fontSize(50);
     const t3 = new sd.Text(svg, "3").x(100).y(200).fontSize(50);
     const t4 = new sd.Text(svg, "4").x(200).y(200).fontSize(50);
@@ -33,6 +33,7 @@ async function TestTransformFromOther() {
             [t3, "3"],
             [t4, "4"],
         ])
+        .subtextColor("3", C.red)
         .endAnimate();
 }
 
