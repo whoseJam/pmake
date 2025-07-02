@@ -7,7 +7,7 @@ import { BaseGrid } from "@/Node/Grid/BaseGrid";
  */
 export class ValueGrid extends BaseGrid {
     /**
-     * Retrieves the axis orientation of this grid component.
+     * Gets the axis orientation of this grid component.
      * @returns The axis orientation.
      */
     axis(): "row" | "col";
@@ -23,7 +23,7 @@ export class ValueGrid extends BaseGrid {
     axis(axis: "row" | "col"): this;
 
     /**
-     * Retrieves the alignment mode of this grid component.
+     * Gets the alignment mode of this grid component.
      * @returns The alignment mode.
      */
     align(): "x" | "y" | "cx" | "cy" | "mx" | "my";
@@ -39,7 +39,7 @@ export class ValueGrid extends BaseGrid {
      */
     align(align: "x" | "y" | "cx" | "cy" | "mx" | "my"): this;
     /**
-     * Retrieves the virtual element width of this grid component.
+     * Gets the virtual element width of this grid component.
      * @returns The uniform width of all grid elements.
      */
     elementWidth(): number;
@@ -53,7 +53,7 @@ export class ValueGrid extends BaseGrid {
      */
     elementWidth(width: number): this;
     /**
-     * Retrieves the virtual element height of this grid component.
+     * Gets the virtual element height of this grid component.
      * @returns The uniform height of all grid elements.
      */
     elementHeight(): number;

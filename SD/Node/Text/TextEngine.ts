@@ -27,13 +27,11 @@ class TransformingPath {
         this.character = character;
         this.fill = C.black;
         this.stroke = C.black;
-        this.strokeWidth = 0;
     }
     cloneVisionPropertyFrom(path: TransformingPath) {
         this.character = path.character;
         this.fill = path.fill;
         this.stroke = path.stroke;
-        this.strokeWidth = path.strokeWidth;
         return this;
     }
     init(group: SVGNode) {
@@ -43,7 +41,6 @@ class TransformingPath {
         this.path.setAttribute("transform", `matrix(${transform.a},${transform.b},${transform.c},${transform.d},${transform.e},${transform.f})`);
         this.path.setAttribute("fill", this.fill);
         this.path.setAttribute("stroke", this.stroke);
-        this.path.setAttribute("stroke-width", String(this.strokeWidth));
         group.__append(this.path);
     }
 }

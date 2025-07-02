@@ -12,7 +12,7 @@ export class SDNode {
     constructor(target: SDNode | RenderNode);
 
     /**
-     * Retrieves the type label of this component.
+     * Gets the type label of this component.
      * Returns undefined if the type was not defined during component initialization.
      * @returns {string | undefined} The type label if defined; otherwise, undefined.
      */
@@ -33,13 +33,13 @@ export class SDNode {
     fixAspect(): boolean;
 
     /**
-     * Retrieves the default render layer for this component.
+     * Gets the default render layer for this component.
      * The layer determines the display order and may affect visual stacking (z-index).
      * @returns The render layer associated with this component.
      */
     layer(): RenderNode;
     /**
-     * Retrieves a named render layer for this component.
+     * Gets a named render layer for this component.
      * The layer determines the display order and visual stacking (z-index).
      * @param name - The unique identifier for the render layer.
      * @returns The render layer associated with the specified name.
@@ -70,7 +70,7 @@ export class SDNode {
      */
     childAs(name?: string | number, child: SDNode, rule?: SDRule): this;
     /**
-     * Retrieves a child component by its identifier.
+     * Gets a child component by its identifier.
      * @param name - The unique identifier assigned to the child component.
      * @returns The child component associated with the specified name.
      */
@@ -149,7 +149,7 @@ export class SDNode {
      */
     isAnimating(): boolean;
     /**
-     * Retrieves the delay of current animation sequence.
+     * Gets the delay of current animation sequence.
      * This method returns the time offset from the animation's start time.
      * @returns The delay duration in milliseconds.
      */
@@ -171,7 +171,7 @@ export class SDNode {
      */
     after(delay: number | SDNode): this;
     /**
-     * Retrieves the duration of current animation sequence.
+     * Gets the duration of current animation sequence.
      */
     duration(): number;
 

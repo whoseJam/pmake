@@ -5,7 +5,7 @@ type YLocator = "y" | "cy" | "my";
 
 export class SD2DNode extends SDNode {
     /**
-     * Retrieves the current opacity of this component.
+     * Gets the current opacity of this component.
      * @returns The opacity of the component.
      */
     opacity(): number;

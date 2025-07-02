@@ -3,7 +3,7 @@ import { SDColor } from "@/Utility/Color";
 
 export class BaseArray extends SD2DNode {
     /**
-     * Retrieves the index of the first element in this array component.
+     * Gets the index of the first element in this array component.
      * @returns The index of the first element.
      */
     start(): number;
@@ -17,7 +17,7 @@ export class BaseArray extends SD2DNode {
      */
     start(start: number): this;
     /**
-     * Retrieves the index of the last element in this array component.
+     * Gets the index of the last element in this array component.
      *
      * The end index is dynamically calculated based on the start index and
      * the number of elements in the array. It represents the highest valid
@@ -27,7 +27,7 @@ export class BaseArray extends SD2DNode {
     end(): number;
 
     /**
-     * Retrieves the number of elements in this array component.
+     * Gets the number of elements in this array component.
      * @returns The number of elements in the array.
      */
     length(): number;
@@ -54,29 +54,29 @@ export class BaseArray extends SD2DNode {
      */
     resize(length: number): this;
     /**
-     * Retrieves the index of a specific element within this array component.
+     * Gets the index of a specific element within this array component.
      * @param element - The target element to locate.
      * @returns The index of the specific element, or -1 if not found.
      */
     indexOf(element: SD2DNode): number;
     /**
-     * Retrieves the element at the specified index.
+     * Gets the element at the specified index.
      * @param i - The index of the specific element.
      * @returns The element at the specified index, or undefined if not found.
      */
     element(i: number): SD2DNode | undefined;
     /**
-     * Retrieves all elements contained within this array component.
+     * Gets all elements contained within this array component.
      * @returns An array containing all valid elements in this component.
      */
     elements(): Array<SD2DNode>;
     /**
-     * Retrieves the last element in this array component.
+     * Gets the last element in this array component.
      * @returns The last element, or undefined if the array is empty.
      */
     lastElement(): SD2DNode | undefined;
     /**
-     * Retrieves the first element in this array component.
+     * Gets the first element in this array component.
      * @returns The first element, or undefined if the array is empty.
      */
     firstElement(): SD2DNode | undefined;
@@ -88,7 +88,7 @@ export class BaseArray extends SD2DNode {
     forEachElement(callback: (element: SD2DNode, id: number) => void): this;
 
     /**
-     * Retrieves the opacity of a specific element.
+     * Gets the opacity of a specific element.
      * @param i - The index of the specific element.
      * @returns The opacity of the element.
      */
@@ -107,7 +107,7 @@ export class BaseArray extends SD2DNode {
      */
     color(color: SDColor | string): this;
     /**
-     * Retrieves the color of a specific element.
+     * Gets the color of a specific element.
      * @param i - The index of the specific element.
      * @returns The color of the element.
      */
@@ -128,7 +128,7 @@ export class BaseArray extends SD2DNode {
      */
     color(l: number, r: number, color: SDColor | string): this;
     /**
-     * Retrieves the text content of a specific element.
+     * Gets the text content of a specific element.
      *
      * Throws an error if the element does not implement `text()`.
      * @param i - The index of the specific element.
@@ -145,7 +145,7 @@ export class BaseArray extends SD2DNode {
      */
     text(i: number, text: number | string): this;
     /**
-     * Retrieves the integer representation of a specific element.
+     * Gets the integer representation of a specific element.
      *
      * Throws an error if the element does not implement `intValue()`.
      * @param i - The index of the specific element.
@@ -153,7 +153,7 @@ export class BaseArray extends SD2DNode {
      */
     intValue(i: number): number;
     /**
-     * Retrieves the value component of a specific element.
+     * Gets the value component of a specific element.
      *
      * Throws an error if the element does not implement `value()`.
      * @param i - The index of the specific element.

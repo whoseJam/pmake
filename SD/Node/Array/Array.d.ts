@@ -7,7 +7,7 @@ import { BaseArray } from "@/Node/Array/BaseArray";
  */
 export class Array extends BaseArray {
     /**
-     * Retrieves the element width of this array component.
+     * Gets the element width of this array component.
      * @returns The uniform width of all array elements.
      */
     elementWidth(): number;
@@ -18,7 +18,7 @@ export class Array extends BaseArray {
      */
     elementWidth(width: number): this;
     /**
-     * Retrieves the element height of this array component.
+     * Gets the element height of this array component.
      * @returns The uniform height of all array elements.
      */
     elementHeight(): number;

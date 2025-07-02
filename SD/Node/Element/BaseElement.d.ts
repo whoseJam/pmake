@@ -17,7 +17,7 @@ export class BaseElement extends SD2DNode {
     constructor(target: SDNode | RenderNode, value?: any);
 
     /**
-     * Retrieves the scaling factor applied to this component.
+     * Gets the scaling factor applied to this component.
      * @returns The scaling factor used for proportional sizing.
      */
     rate(): number;
@@ -34,7 +34,7 @@ export class BaseElement extends SD2DNode {
      */
     rate(rate: number): this;
     /**
-     * Retrieves the base color applied to this element.
+     * Gets the base color applied to this element.
      * @returns The base color value of the element.
      */
     color(): SDColor;
@@ -49,22 +49,22 @@ export class BaseElement extends SD2DNode {
      */
     color(color: SDColor | string): this;
     /**
-     * Retrieves the fill color applied to this element.
+     * Gets the fill color of this element component.
      * @returns The current fill color value.
      */
     fill(): string;
     /**
-     * Sets the fill color of this element.
+     * Sets the fill color of this element component.
      *
      * This method sets the color used to fill the element's background.
      * Note that this color setting affects only the element itself and does not
      * influence the color of any nested components.
-     * @param fill - The hexadecimal color value to apply as the fill.
+     * @param fill - The hexadecimal color value to apply.
      * @returns The current component instance for method chaining.
      */
     fill(fill: string): this;
     /**
-     * Retrieves the opacity of this element's fill color.
+     * Gets the opacity of this element's fill color.
      * @returns The fill opacity, ranging from 0 (fully transparent) to 1 (fully opaque).
      */
     fillOpacity(): number;
@@ -75,7 +75,7 @@ export class BaseElement extends SD2DNode {
      */
     fillOpacity(opacity: number): this;
     /**
-     * Retrieves the stroke color applied to this element.
+     * Gets the stroke color applied to this element.
      * @returns The current stroke color value.
      */
     stroke(): string;
@@ -90,7 +90,7 @@ export class BaseElement extends SD2DNode {
      */
     stroke(stroke: string): this;
     /**
-     * Retrieves the opacity of this element's stroke color.
+     * Gets the opacity of this element's stroke color.
      * @returns The stroke opacity, ranging from 0 (fully transparent) to 1 (fully opaque).
      */
     strokeOpacity(): number;
@@ -101,7 +101,7 @@ export class BaseElement extends SD2DNode {
      */
     strokeOpacity(opacity: number): this;
     /**
-     * Retrieves the stroke width of this element.
+     * Gets the stroke width of this element.
      * @returns The stroke width value in pixels.
      */
     strokeWidth(): number;
@@ -117,7 +117,7 @@ export class BaseElement extends SD2DNode {
     strokeWidth(width: number): this;
 
     /**
-     * Retrieves the background component of this element.
+     * Gets the background component of this element.
      *
      * Every element is guaranteed to have a background component,
      * which can be styled independently with fill, opacity, etc.
@@ -148,7 +148,7 @@ export class BaseElement extends SD2DNode {
      */
     intValue(): number;
     /**
-     * Retrieves the value component of this element.
+     * Gets the value component of this element.
      * @returns The value component instance, or undefined if no value has been set.
      */
     value(): SD2DNode | undefined;

@@ -3,7 +3,7 @@ import { SDColor } from "@/Utility/Color";
 
 export class BaseGrid extends SD2DNode {
     /**
-     * Retrieves the starting index of this grid component's primary dimension.
+     * Gets the starting index of this grid component's primary dimension.
      * @returns The index of the first element in the grid component's primary layout.
      */
     startN(): number;
@@ -17,7 +17,7 @@ export class BaseGrid extends SD2DNode {
      */
     startN(start: number): this;
     /**
-     * Retrieves the starting index of this grid component's secondary dimension.
+     * Gets the starting index of this grid component's secondary dimension.
      * @returns The index of the first element in the grid component's secondary layout.
      */
     startM(): number;
@@ -28,25 +28,25 @@ export class BaseGrid extends SD2DNode {
      */
     startM(start: number): this;
     /**
-     * Retrieves the ending index of this grid component's primary dimension.
+     * Gets the ending index of this grid component's primary dimension.
      * @returns The ending index in the grid component's primary layout.
      */
     endN(): number;
     /**
-     * Retrieves the ending index of this grid component's secondary dimension.
+     * Gets the ending index of this grid component's secondary dimension.
      *
      * Returns the maximum last element index across all primary elements if their lengths vary.
      * @returns The ending index in the grid component's secondary layout.
      */
     endM(): number;
     /**
-     * Retrieves the ending index of a specific primary element's secondary dimension.
+     * Gets the ending index of a specific primary element's secondary dimension.
      * @param i - The index of the specific primary element.
      * @returns The ending index in the specified primary element's secondary dimension.
      */
     endM(i: number): number;
     /**
-     * Retrieves the number of primary elements in this grid component.
+     * Gets the number of primary elements in this grid component.
      * @returns The count of elements along the primary dimension.
      */
     n(): number;
@@ -62,7 +62,7 @@ export class BaseGrid extends SD2DNode {
      */
     n(n: number): this;
     /**
-     * Retrieves the length of primary elements in this grid component.
+     * Gets the length of primary elements in this grid component.
      *
      * Returns the maximum length across all primary elements if their lengths vary.
      * @returns The count of secondary elements in the longest primary element.
@@ -80,7 +80,7 @@ export class BaseGrid extends SD2DNode {
     m(m: number): this;
 
     /**
-     * Retrieves the element at the specified indices.
+     * Gets the element at the specified indices.
      * @param i - The index along the primary dimension.
      * @param j - The index along the secondary dimension.
      * @returns The element at the specified position, or undefined if not found.
@@ -94,7 +94,7 @@ export class BaseGrid extends SD2DNode {
     forEachElement(callback: (element: SD2DNode, i: number, j: number) => void): this;
 
     /**
-     * Retrieves the opacity of a specific element.
+     * Gets the opacity of a specific element.
      * @param i - The index along the primary dimension.
      * @param j - The index along the secondary dimension.
      * @returns The opacity of the element.
@@ -116,7 +116,7 @@ export class BaseGrid extends SD2DNode {
      */
     color(color: SDColor | string): this;
     /**
-     * Retrieves the color of a specific element.
+     * Gets the color of a specific element.
      * @param i - The index along the primary dimension.
      * @param j - The index along the secondary dimension.
      * @returns The color of the element.
@@ -131,7 +131,7 @@ export class BaseGrid extends SD2DNode {
      */
     color(i: number, j: number, color: SDColor | string): this;
     /**
-     * Retrieves the text content of a specific element.
+     * Gets the text content of a specific element.
      * @param i - The index along the primary dimension.
      * @param j - The index along the secondary dimension.
      * @returns The text content of the element.
@@ -148,7 +148,7 @@ export class BaseGrid extends SD2DNode {
      */
     text(i: number, j: number, text: number | string): this;
     /**
-     * Retrieves the value integer representation of a specific element.
+     * Gets the value integer representation of a specific element.
      *
      * Throws an error if the element does not implement `intValue()`.
      * @param i - The index along the primary dimension.
@@ -157,7 +157,7 @@ export class BaseGrid extends SD2DNode {
      */
     intValue(i: number, j: number): number;
     /**
-     * Retrieves the value component of a specific element.
+     * Gets the value component of a specific element.
      *
      * Throws an error if the element does not implement `value()`,
      * @param i - The index along the primary dimension.

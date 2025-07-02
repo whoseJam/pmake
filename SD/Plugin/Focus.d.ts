@@ -65,7 +65,7 @@ export class FocusPlugin extends Rect {
      */
     focus(cancel: null | undefined | false): this;
     /**
-     * Retrieves the padding rate for the focused region.
+     * Gets the padding rate for the focused region.
      * @returns The padding rate.
      */
     rate(): number;
@@ -80,7 +80,7 @@ export class FocusPlugin extends Rect {
      */
     rate(rate: number): this;
     /**
-     * Retrieves the padding length for the focused region.
+     * Gets the padding length for the focused region.
      * @returns The padding length.
      */
     gap(): number;

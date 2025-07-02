@@ -7,7 +7,7 @@ import { BaseGrid } from "@/Node/Grid/BaseGrid";
  */
 export class Grid extends BaseGrid {
     /**
-     * Retrieves the axis orientation of this grid component.
+     * Gets the axis orientation of this grid component.
      * @returns The axis orientation.
      */
     axis(): "row" | "col";
@@ -17,13 +17,13 @@ export class Grid extends BaseGrid {
      * Determines the primary layout direction. Defaults to "row".
      * - "row": Elements are laid out horizontally first.
      * - "col": Elements are laid out vertically first.
-     * @param axis - The axis orientation ot apply.
+     * @param axis - The axis orientation to apply.
      * @returns The current component instance for method chaining.
      */
     axis(axis: "row" | "col"): this;
 
     /**
-     * Retrieves the alignment mode of this grid component.
+     * Gets the alignment mode of this grid component.
      * @returns The alignment mode.
      */
     align(): "x" | "y" | "cx" | "cy" | "mx" | "my";
@@ -39,7 +39,7 @@ export class Grid extends BaseGrid {
      */
     align(align: "x" | "y" | "cx" | "cy" | "mx" | "my"): this;
     /**
-     * Retrieves the element width of this grid component.
+     * Gets the element width of this grid component.
      * @returns The uniform width of all grid elements.
      */
     elementWidth(): number;
@@ -50,7 +50,7 @@ export class Grid extends BaseGrid {
      */
     elementWidth(width: number): this;
     /**
-     * Retrieves the element height of this grid component.
+     * Gets the element height of this grid component.
      * @returns The uniform height of all grid elements.
      */
     elementHeight(): number;
