@@ -4,7 +4,7 @@ const svg = sd.svg();
 const C = sd.color();
 const T = 500;
 
-sd.main(Test11);
+sd.main(Test0);
 
 async function Test11() {
     const m1 = new sd.Mathjax(svg, "1").x(100).y(100).color(C.textBlue).fontSize(50);
@@ -105,7 +105,7 @@ async function Test8() {
     const m3 = new sd.Mathjax(svg, "c").x(900).y(100);
     const m = new sd.Mathjax(svg, "ttt").x(800).y(200);
     await sd.pause();
-    m.startAnimate()
+    m.startAnimate(T)
         .text("\\sum_{i=1}^{n}{a+b}", [
             [m1, "i=1"],
             [m2, "n"],
@@ -146,9 +146,10 @@ async function Test6() {
     await sd.pause();
     for (let i = 1; i <= n; i++) {
         const gcd = getGCD(i, n);
-        const mapping = {};
-        mapping[i] = i / gcd;
-        mapping[n] = n / gcd;
+        const mapping = [
+            [i, i / gcd],
+            [n, n / gcd],
+        ];
         maths[i - 1]
             .startAnimate(T)
             .text(`\\frac{${i / gcd}}{${n / gcd}}`, mapping)
