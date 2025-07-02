@@ -4,19 +4,11 @@ import { Matrix } from "../_/Matrix";
 const svg = sd.svg();
 const C = sd.color();
 const data1 = [
-    [1, 2],
-    [3, 4],
-    [5, 6],
+    [1, 1],
+    [1, 0],
 ];
-const data2 = [
-    [4, 3],
-    [2, 1],
-];
-const data3 = [
-    ["?", "?"],
-    ["?", "?"],
-    ["?", "?"],
-];
+const data2 = [[1], [1]];
+const data3 = [["?"], ["?"]];
 const matrix1 = new Matrix(svg, data1);
 const matrix2 = new Matrix(svg, data2);
 const matrix3 = new Matrix(svg, data3);
@@ -29,6 +21,26 @@ sd.init(() => {
 });
 
 sd.main(async () => {
+    let data2_ = data2;
+    let data3_ = data3;
+    let matrix2_ = matrix2;
+    let matrix3_ = matrix3;
+    for (let n = 1; n <= 5; n++) {
+        await multiply(data1, data2_, data3_, matrix1, matrix2_, matrix3_);
+        await sd.pause();
+        const x2 = matrix2_.x();
+        const x3 = matrix3_.x();
+        matrix3_.startAnimate().x(x2).endAnimate();
+        matrix2_.startAnimate().opacity(0).endAnimate();
+        matrix2_.x(x3);
+        for (let i = 0; i < data2.length; i++) matrix2_.element(i, 0).text("?");
+        matrix2_.startAnimate().opacity(1).endAnimate();
+        [data2_, data3_] = [data3_, data2_];
+        [matrix2_, matrix3_] = [matrix3_, matrix2_];
+    }
+});
+
+async function multiply(data1, data2, data3, matrix1, matrix2, matrix3) {
     for (let i = 0; i < data3.length; i++) {
         for (let j = 0; j < data3[i].length; j++) {
             await sd.pause();
@@ -46,12 +58,13 @@ sd.main(async () => {
                 mapping.push([matrix1.element(i, k), data1[i][k], data1[i][k]]);
                 mapping.push([matrix2.element(k, j), data2[k][j], data2[k][j]]);
             }
+            data3[i][j] = sum;
             matrix1.endAnimate();
             matrix2.endAnimate();
             await sd.pause();
             const cx = (matrix1.x() + matrix3.mx()) / 2;
             const math = new sd.Mathjax(svg)
-                .x(100)
+                .x(70)
                 .y(matrix1.my() + 40)
                 .startAnimate()
                 .text(ans, mapping)
@@ -72,4 +85,10 @@ sd.main(async () => {
             matrix2.endAnimate();
         }
     }
-});
+    await sd.pause();
+    matrix3.startAnimate();
+    matrix3.forEachElement(element => {
+        element.subtextColor(element.text(), C.black);
+    });
+    matrix3.endAnimate();
+}

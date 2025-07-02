@@ -4,7 +4,29 @@ const svg = sd.svg();
 const C = sd.color();
 const T = 500;
 
-sd.main(TestColorCover);
+sd.main(TestInstantSwitch);
+
+async function TestInstantSwitch() {
+    const math = new sd.Mathjax(svg, "1").x(100).y(100).fontSize(50);
+    await sd.pause();
+    math.text("?");
+}
+
+async function TestFibnacci() {
+    const fn1 = new sd.Mathjax(svg, "f_{n-1}").x(100).y(100).fontSize(40);
+    const fn2 = new sd.Mathjax(svg, "f_{n-2}").x(100).y(200).fontSize(40);
+    await sd.pause();
+    const sum = new sd.Mathjax(svg)
+        .x(500)
+        .y(100)
+        .fontSize(60)
+        .startAnimate()
+        .text("f_{n-1}+f_{n-2}", [
+            [fn1, "f_{n-1}"],
+            [fn2, "f_{n-2}"],
+        ])
+        .endAnimate();
+}
 
 async function TestColorCover() {
     const math = new sd.Mathjax(svg, "\\sum_{i=1}^n(a+b)^2").x(100).y(100).fontSize(50);

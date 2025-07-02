@@ -306,7 +306,7 @@ class Transforming {
     }
     replayByMathjax(target: MathjaxNode) {
         const targetMath = target;
-        const targetPaths = TextEngine.getMathjaxPaths(target);
+        const targetPaths = TextEngine.getMathjaxPaths(target, this.parent);
         const matching = new MathjaxMatching(targetMath, targetPaths.length);
         const generateValid = check => {
             const result = [];
@@ -488,7 +488,7 @@ export class TextEngine {
         }
         return paths;
     }
-    static getMathjaxPaths(element: MathjaxNode) {
+    static getMathjaxPaths(element: MathjaxNode, parent) {
         const defs = element.nake().children[0];
         const root = element.nake().children[1];
         const paths = [];
@@ -564,7 +564,8 @@ export class TextEngine {
             const r = paths.length;
             current.range = [l, r];
         };
-        dfs(root, initialMatrix(), hex(element.getAttribute("fill")), hex(element.getAttribute("stroke")));
+        // dfs(root, initialMatrix(), hex(element.getAttribute("fill")), hex(element.getAttribute("stroke")));
+        dfs(root, initialMatrix(), parent.fill(), parent.stroke());
         return paths;
     }
     static transformPaths(parent, source, target) {
@@ -638,8 +639,8 @@ export class TextEngine {
     }
     static transformMathjax(parent: SDNode, source: MathjaxNode, target: MathjaxNode, mapping = [], auto = true) {
         mapping = processMapping(mapping);
-        const sourcePaths = this.getMathjaxPaths(source);
-        const targetPaths = this.getMathjaxPaths(target);
+        const sourcePaths = this.getMathjaxPaths(source, parent);
+        const targetPaths = this.getMathjaxPaths(target, parent);
         const sourceMatching = new MathjaxMatching(source, sourcePaths.length);
         const targetMatching = new MathjaxMatching(target, targetPaths.length);
         const transforming = new Transforming(parent, mapping);
@@ -656,13 +657,13 @@ export class TextEngine {
                 const subtext = item.source.subtext;
                 const matched = this.findFirstSubtextInMathjax(math._.math, subtext);
                 if (!matched) return undefined;
-                const paths = this.getMathjaxPaths(math._.math);
+                const paths = this.getMathjaxPaths(math._.math, math);
                 const l = matched.element.children[matched.start].range[0];
                 const r = matched.element.children[matched.start + matched.length - 1].range[1];
                 return paths.slice(l, r);
             } else {
                 const math = item.source;
-                return this.getMathjaxPaths(math._.math);
+                return this.getMathjaxPaths(math._.math, math);
             }
         };
         const removeSourcePaths = item => {
@@ -746,9 +747,17 @@ export class TextEngine {
             }
             return toMathLetter(m.textContent);
         }
+        function nodeTagSVG(s: SVGElement) {
+            if (s.getAttribute("data-mjx-texclass")) return s.getAttribute("data-mjx-texclass").toLowerCase();
+            return s.getAttribute("data-mml-node");
+        }
+        function nodeTagHTML(m: HTMLElement) {
+            if (m.getAttribute("data-mjx-texclass")) return m.getAttribute("data-mjx-texclass").toLowerCase();
+            return m.tagName.toLowerCase();
+        }
         function matchRecursively(s: SVGElement, m: HTMLElement) {
             if (matching && matching.elementDeleted.has(s)) return false;
-            if (s.getAttribute("data-mml-node") !== m.tagName.toLowerCase()) return false;
+            if (nodeTagSVG(s) !== nodeTagHTML(m)) return false;
             if (m.childElementCount === 0) {
                 const scharacter = nodeContentSVG(s);
                 const mcharacter = nodeContentHTML(m);
@@ -797,6 +806,10 @@ export class TextEngine {
     static setAttributeInSubtree(root: Element, key: string, value: string) {
         root.setAttribute(key, value);
         for (let i = 0; i < root.children.length; i++) this.setAttributeInSubtree(root.children[i], key, value);
+    }
+    static removeAttributeInSubtree(root: Element, key: string) {
+        root.removeAttribute(key);
+        for (let i = 0; i < root.children.length; i++) this.removeAttributeInSubtree(root.children[i], key);
     }
 }
 

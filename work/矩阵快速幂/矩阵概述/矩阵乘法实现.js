@@ -20,6 +20,10 @@ const data3 = [
 const matrix1 = new Matrix(svg, data1);
 const matrix2 = new Matrix(svg, data2);
 const matrix3 = new Matrix(svg, data3);
+const pI = sd.Pointer(matrix1, "i", "r");
+const pJ = sd.Pointer(matrix2, "j", "b");
+const pK1 = sd.Pointer(matrix1, "k", "b");
+const pK2 = sd.Pointer(matrix2, "k", "r");
 
 sd.init(() => {
     matrix2.cy(matrix1.cy()).x(matrix1.mx() + 50);
@@ -32,6 +36,8 @@ sd.main(async () => {
     for (let i = 0; i < data3.length; i++) {
         for (let j = 0; j < data3[i].length; j++) {
             await sd.pause();
+            pI.startAnimate().moveTo(i, 0).endAnimate();
+            pJ.startAnimate().moveTo(0, j).endAnimate();
             matrix1.startAnimate();
             matrix2.startAnimate();
             let sum = 0;
@@ -56,6 +62,14 @@ sd.main(async () => {
                 .startAnimate()
                 .text(ans, mapping)
                 .endAnimate();
+            await sd.pause();
+            for (let k = 0; k < data1[0].length; k++) {
+                pK1.startAnimate().moveTo(0, k).endAnimate();
+                pK2.startAnimate().moveTo(k, 0).endAnimate();
+            }
+            await sd.pause();
+            pK1.startAnimate().moveTo(null).endAnimate();
+            pK2.startAnimate().moveTo(null).endAnimate();
             await sd.pause();
             math.startAnimate().text(sum).cx(cx).color(C.red).endAnimate();
             await sd.pause();

@@ -47,11 +47,13 @@ export class Mathjax extends BaseText {
             this.__currentTransforming(() => this.__createMathjax("y", y));
         });
         this.vars.watch("fill", fill => {
+            if (this._.math) TextEngine.removeAttributeInSubtree(this._.math.nake(), "fill");
             if (this.duration() === 0) return;
             this.__flushTransformings();
             this.__currentTransforming(transforming => transforming.fill(fill));
         });
         this.vars.watch("stroke", stroke => {
+            if (this._.math) TextEngine.removeAttributeInSubtree(this._.math.nake(), "stroke");
             if (this.duration() === 0) return;
             this.__flushTransformings();
             this.__currentTransforming(transforming => transforming.stroke(stroke));
@@ -116,7 +118,7 @@ Object.assign(Mathjax.prototype, {
             context.till(1, 1);
             this.opacity(1);
             context.recover();
-        }
+        } else this._.math?.remove();
         this._.math = math;
         this.vars.setTogether({
             text,
@@ -133,7 +135,7 @@ Object.assign(Mathjax.prototype, {
             const { element, start, length } = match;
             for (let i = start; i < start + length; i++) {
                 for (const key in attribute) {
-                    element.children[i].setAttribute(key, attribute[key]);
+                    TextEngine.setAttributeInSubtree(element.children[i], key, attribute[key]);
                 }
             }
         };
@@ -151,7 +153,7 @@ Object.assign(Mathjax.prototype, {
             context.till(1, 1);
             this.opacity(1);
             context.recover();
-        }
+        } else this._.math?.remove();
         this._.math = math;
         return this;
     },

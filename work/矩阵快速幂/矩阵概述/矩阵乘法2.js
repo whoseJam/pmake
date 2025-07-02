@@ -46,12 +46,8 @@ sd.main(async () => {
                 .x(120)
                 .y(matrix1.my() + 40)
                 .startAnimate()
-                .text(ans, mapping);
-            for (let k = 0; k < data1[0].length; k++) {
-                math.subtextColorAll(data1[i][k], C.textBlue);
-                math.subtextColorAll(data2[k][j], C.textBlue);
-            }
-            math.endAnimate();
+                .text(ans, mapping)
+                .endAnimate();
             await sd.pause();
             matrix3.element(i, j).fontSize(15);
             matrix3.startAnimate();

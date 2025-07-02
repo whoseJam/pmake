@@ -55,12 +55,8 @@ sd.main(async () => {
                 .x(100)
                 .y(matrix1.my() + 40)
                 .startAnimate()
-                .text(ans, mapping);
-            for (let k = 0; k < data1[0].length; k++) {
-                math.subtextColorAll(data1[i][k], C.textBlue);
-                math.subtextColorAll(data2[k][j], C.textBlue);
-            }
-            math.endAnimate();
+                .text(ans, mapping)
+                .endAnimate();
             await sd.pause();
             math.startAnimate().text(sum).cx(cx).color(C.red).endAnimate();
             await sd.pause();

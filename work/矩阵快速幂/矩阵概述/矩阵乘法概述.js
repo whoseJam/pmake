@@ -12,12 +12,12 @@ const matrix3 = new sd.Rect(svg).width(C * L).height(A * L);
 
 sd.init(() => {
     matrix2.x(matrix1.mx() + 50).cy(matrix1.cy());
+    matrix3.x(matrix2.mx() + 50).cy(matrix1.cy());
     sd.Label(matrix1, "$A$", "tc");
     sd.Label(matrix2, "$B$", "tc");
-    matrix3.x(matrix2.mx() + 100);
-    matrix3.cy(matrix2.cy());
-    new sd.Text(svg, "=").cx((matrix2.mx() + matrix3.x()) / 2).cy(matrix2.cy());
     sd.Label(matrix3, "$C$", "tc");
+    new sd.Text(svg, "×").cx((matrix1.mx() + matrix2.x()) / 2).cy(matrix1.cy());
+    new sd.Text(svg, "=").cx((matrix2.mx() + matrix3.x()) / 2).cy(matrix1.cy());
 });
 
 sd.main(async () => {

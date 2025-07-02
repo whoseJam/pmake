@@ -4,22 +4,15 @@ import { Matrix } from "../_/Matrix";
 const svg = sd.svg();
 const C = sd.color();
 const data1 = [
-    [1, 2],
-    [3, 4],
-    [5, 6],
+    [7, 8, 9],
+    [4, 5, 6],
+    [1, 2, 3],
 ];
-const data2 = [
-    [4, 3],
-    [2, 1],
-];
-const data3 = [
-    ["?", "?"],
-    ["?", "?"],
-    ["?", "?"],
-];
+const data2 = [["A"], ["B"], ["C"]];
+const data3 = [["?"], ["?"], ["?"]];
 const matrix1 = new Matrix(svg, data1);
 const matrix2 = new Matrix(svg, data2);
-const matrix3 = new Matrix(svg, data3);
+const matrix3 = new Matrix(svg, data3).width(150);
 
 sd.init(() => {
     matrix2.cy(matrix1.cy()).x(matrix1.mx() + 50);
@@ -40,7 +33,7 @@ sd.main(async () => {
             for (let k = 0; k < data1[0].length; k++) {
                 matrix1.color(i, k, C.textBlue);
                 matrix2.color(k, j, C.textBlue);
-                ans += String(data1[i][k]) + "\\times " + String(data2[k][j]);
+                ans += String(data1[i][k]) + String(data2[k][j]);
                 sum += data1[i][k] * data2[k][j];
                 if (k !== data1[0].length - 1) ans += "+";
                 mapping.push([matrix1.element(i, k), data1[i][k], data1[i][k]]);
@@ -49,18 +42,16 @@ sd.main(async () => {
             matrix1.endAnimate();
             matrix2.endAnimate();
             await sd.pause();
-            const cx = (matrix1.x() + matrix3.mx()) / 2;
             const math = new sd.Mathjax(svg)
-                .x(100)
+                .x(120)
                 .y(matrix1.my() + 40)
                 .startAnimate()
                 .text(ans, mapping)
                 .endAnimate();
             await sd.pause();
-            math.startAnimate().text(sum).cx(cx).color(C.red).endAnimate();
-            await sd.pause();
+            matrix3.element(i, j).fontSize(15);
             matrix3.startAnimate();
-            matrix3.element(i, j).text(sum, [[math, sum]]);
+            matrix3.element(i, j).text(ans, [[math, ans]]);
             matrix3.endAnimate();
             matrix1.startAnimate();
             matrix2.startAnimate();
