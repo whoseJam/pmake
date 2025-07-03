@@ -29,7 +29,7 @@ function parseText(text: string) {
 
 export class SVGNode extends RenderNode {
     declare element: SVGElement;
-    class: typeof SVGNode;
+    declare class: typeof SVGNode;
     constructor(parent: SDNode, render: RenderNode, element: string | SVGElement) {
         if (typeof element === "string") {
             super(parent, render, element);

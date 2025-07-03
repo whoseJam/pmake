@@ -1,5 +1,6 @@
 const gulp = require("gulp");
 const sd = load("./build/sd");
+const type = require("./build/type");
 const animation = require("./build/animation");
 const animationGroup = require("./build/animationGroup");
 const github = load("./build/github");
@@ -46,6 +47,10 @@ gulp.task("theme", async () => {
     global["theme"] = true;
     const pptOutputPath = global["o"] || parser.parseConfig("pptOutputPath");
     return theme(pptOutputPath);
+});
+
+gulp.task("type", () => {
+    return type.launch(false);
 });
 
 gulp.task("animation", () => {

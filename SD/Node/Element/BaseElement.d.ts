@@ -50,7 +50,7 @@ export class BaseElement extends SD2DNode {
     color(color: SDColor | string): this;
     /**
      * Gets the fill color of this element component.
-     * @returns The current fill color value.
+     * @returns The fill color.
      */
     fill(): string;
     /**

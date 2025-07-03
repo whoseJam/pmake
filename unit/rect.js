@@ -13,6 +13,7 @@ async function TestRectHTMLAndSVG() {
     const r2 = new sd.Rect(svg);
     r1.cx(600).cy(300);
     r2.cx(700).cy(300);
+    r2.fill(C.RED);
     await sd.pause();
     r1.startAnimate().x(100).y(100).endAnimate();
     r2.startAnimate().x(200).y(100).endAnimate();
