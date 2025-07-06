@@ -6,6 +6,21 @@ const T = 500;
 
 sd.main(TestDigitFade);
 
+async function TestColorTransformThenCover() {
+    const m1 = new sd.Mathjax(svg, "1").x(100).y(100);
+    const m2 = new sd.Mathjax(svg, "2").x(100).y(200);
+    await sd.pause();
+    const math = new sd.Mathjax(svg).x(200).y(100);
+    math.startAnimate()
+        .text("12", [
+            [m1, "1"],
+            [m2, "2"],
+        ])
+        .endAnimate();
+    await sd.pause();
+    math.startAnimate().color(C.textBlue).endAnimate();
+}
+
 async function TestDigitFade() {
     const math = new sd.Mathjax(svg, "123456");
     await sd.pause();

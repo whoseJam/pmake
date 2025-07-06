@@ -78,15 +78,16 @@ export class RenderNode {
         }
         const render = this;
         const node = this.parent;
+        const LLLLLL = this.parent.delay() + this.parent.duration();
         function structure(t: number) {
-            if (this.target && t === 0) {
+            if (this.target && t === 1) {
                 this.target.__append(render);
                 node._.created = true;
                 requestAnimationFrame(() => {
                     node._.ready = true;
                 });
             }
-            if (!this.target && t === 1) {
+            if (!this.target && t === 0) {
                 render.__remove();
                 node._.created = false;
                 requestAnimationFrame(() => {
@@ -122,7 +123,7 @@ export class RenderNode {
         const r = this.parent.delay() + this.parent.duration();
         new Action(l, r, this.render, undefined, structure, this, "remove");
     }
-    getAttribute(key: string) {
+    getAttribute(key: string): any {
         ErrorLauncher.notImplementedYet("getAttribute");
     }
     setAttribute(key: string, value: any) {

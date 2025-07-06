@@ -25,6 +25,8 @@ export class Mathjax extends BaseText {
             fill: C.black,
         });
         this._.frame = 0;
+        this._.fills = [];
+        this._.strokes = [];
         this._.transformings = [];
 
         const math = () => {
@@ -46,10 +48,11 @@ export class Mathjax extends BaseText {
             this.__flushTransformings();
             this.__currentTransforming(() => this.__createMathjax("y", y));
         });
-        this.vars.watch("fill", fill => {
+        this.vars.watch("fill", (newFill, oldFill) => {
             if (this.duration() === 0) return;
             this.__flushTransformings();
-            this.__currentTransforming(transforming => transforming.fill(fill));
+            this.__createFill(newFill, oldFill);
+            this.__currentTransforming(transforming => transforming.fill(newFill));
         });
         this.vars.watch("stroke", stroke => {
             if (this.duration() === 0) return;
@@ -105,16 +108,14 @@ Object.assign(Mathjax.prototype, {
         text = String(text);
         if (text.startsWith("$")) text = text.slice(1, -1);
         const math = createMathjaxRenderNode(this, this._.layer, text);
-        const box = TextEngine.mathjaxBoundingBox(math);
+        const box = TextEngine.mathjaxBoundingBox(math, false);
         if (this.duration() > 0) {
             const context = new Context(this);
             context.till(0, 0);
-            this.opacity(0);
             this._.math.remove();
             context.till(0, 1);
             this.__createTransforming(this._.math, math, mapping, auto);
             context.till(1, 1);
-            this.opacity(1);
             context.recover();
         } else this._.math?.remove();
         this._.math = math;
@@ -145,12 +146,10 @@ Object.assign(Mathjax.prototype, {
         if (this.duration() > 0) {
             const context = new Context(this);
             context.till(0, 0);
-            this.opacity(0);
             this._.math.remove();
             context.till(0, 1);
             this.__createTransforming(this._.math, math);
             context.till(1, 1);
-            this.opacity(1);
             context.recover();
         } else this._.math?.remove();
         this._.math = math;
@@ -169,6 +168,8 @@ Object.assign(Mathjax.prototype, {
         if (this._.frame !== window.CURRENT_FRAME) {
             this._.frame = window.CURRENT_FRAME;
             this._.transformings = [];
+            this._.fills = [];
+            this._.strokes = [];
         }
     },
     __currentTransforming(callback) {
@@ -185,8 +186,36 @@ Object.assign(Mathjax.prototype, {
         const math = this.__cloneMathjax();
         math.setAttribute(key, value);
         this.__createTransforming(this._.math, math);
+        // console.log("Create Mathjax")
         this._.math.remove();
         this._.math = math;
+    },
+    __createFill(newFill, oldFill) {
+        const l = this.delay();
+        const r = this.delay() + this.duration();
+        for (const fill of this._.fills) {
+            if (fill.l === l && fill.r === r) {
+                this._.fills.target = newFill;
+                return;
+            }
+        }
+        this._.fills.push({
+            l,
+            r,
+            source: oldFill,
+            target: newFill,
+        });
+    },
+    __sourceFill() {
+        const l = this.delay();
+        const r = this.delay() + this.duration();
+        for (const fill of this._.fills) {
+            if (fill.l === l && fill.r === r) return fill.source;
+        }
+        return C.black;
+    },
+    __sourceStroke() {
+        return C.black;
     },
     __createTransforming(source, target, mapping = [], auto = true) {
         this.__flushTransformings();

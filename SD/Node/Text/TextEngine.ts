@@ -4,6 +4,7 @@ import { Interp } from "@/Animate/Interp";
 import { Dom } from "@/Dom/Dom";
 import { svg } from "@/Interact/Root";
 import { SDNode } from "@/Node/SDNode";
+import { Mathjax } from "@/Node/Text/Mathjax";
 import { Text } from "@/Node/Text/Text";
 import { createRenderNode } from "@/Renderer/RenderNode";
 import { MathjaxNode } from "@/Renderer/SVG/MathjaxNode";
@@ -140,7 +141,7 @@ class TransformingPathGroup {
         const context = new Context(this.parent);
         context.till(0, 0);
         if (this.group) this.group.remove();
-        this.group = createRenderNode(this.parent, svg(), "g");
+        this.group = createRenderNode(this.parent, this.parent.layer(), "g");
         context.till(0, 1);
         this.init();
         for (const source of this.source) source.init(this.group);
@@ -252,6 +253,14 @@ class MathjaxMatching {
             if (callback) callback(i);
         }
     }
+    matchedAll(matched: { element: Element; start: number; length: number }) {
+        const element = matched.element;
+        // @ts-ignore
+        const l = element.children[matched.start].range[0];
+        // @ts-ignore
+        const r = element.children[matched.start + matched.length - 1].range[1];
+        return l === 0 && r === this.pathDeleted.length;
+    }
     forEachElement(matched: { element: Element; start: number; length: number }, callback: (element: Element) => void) {
         const element = matched.element;
         for (let i = matched.start; i < matched.start + matched.length; i++) {
@@ -306,7 +315,7 @@ class Transforming {
     }
     replayByMathjax(target: MathjaxNode) {
         const targetMath = target;
-        const targetPaths = TextEngine.getMathjaxPaths(target, this.parent);
+        const targetPaths = TextEngine.getMathjaxPaths(target, this.parent as Mathjax);
         const matching = new MathjaxMatching(targetMath, targetPaths.length);
         const generateValid = check => {
             const result = [];
@@ -426,18 +435,20 @@ export class TextEngine {
         }
     }
     static mathjaxBoundingBox(math: MathjaxNode) {
-        const render = math.render;
+        const parentNode = math.nake().parentNode;
         this.mathjaxSVG.__append(math);
         const bbox = this.mathjaxSVG.nake().getBBox();
-        render.__append(math);
+        if (parentNode) parentNode.appendChild(math.nake());
+        else math.__remove();
         return bbox;
     }
     static mathjaxBoundingBoxAndInnerBoundingBox(math: MathjaxNode) {
-        const render = math.render;
+        const parentNode = math.nake().parentNode;
         this.mathjaxSVG.__append(math);
         const bbox = this.mathjaxSVG.nake().getBBox();
         const ibbox = (math.nake().children[1] as SVGGElement).getBBox();
-        render.__append(math);
+        if (parentNode) parentNode.appendChild(math.nake());
+        else math.__remove();
         return [bbox, ibbox];
     }
     static widthToFontSize(text, family, width) {
@@ -488,7 +499,7 @@ export class TextEngine {
         }
         return paths;
     }
-    static getMathjaxPaths(element: MathjaxNode, parent) {
+    static getMathjaxPaths(element: MathjaxNode, parent: Mathjax, old: boolean = false) {
         const defs = element.nake().children[0];
         const root = element.nake().children[1];
         const paths = [];
@@ -535,16 +546,6 @@ export class TextEngine {
                 return [ssrc.getAttribute("d"), data];
             }
         };
-        const hex = (rgb: string) => {
-            if (rgb.startsWith("rgb")) {
-                const content = rgb.slice(5, -1);
-                const r = (+content.split(",")[0]).toString(16).padStart(2, "0");
-                const g = (+content.split(",")[1]).toString(16).padStart(2, "0");
-                const b = (+content.split(",")[2]).toString(16).padStart(2, "0");
-                return `#${r}${g}${b}`;
-            }
-            return rgb;
-        };
         const dfs = (current, matrix: { a: number; b: number; c: number; d: number; e: number; f: number }, fill: string, stroke: string) => {
             const l = paths.length;
             for (let i = 0; i < current.transform.baseVal.length; i++) matrix = multiply(matrix, current.transform.baseVal[i].matrix);
@@ -564,7 +565,8 @@ export class TextEngine {
             const r = paths.length;
             current.range = [l, r];
         };
-        dfs(root, initialMatrix(), hex(element.getAttribute("fill")), hex(element.getAttribute("stroke")));
+        // @ts-ignore
+        dfs(root, initialMatrix(), old ? parent.__sourceFill() : parent.fill(), old ? parent.__sourceStroke() : parent.stroke());
         return paths;
     }
     static transformPaths(parent, source, target) {
@@ -575,6 +577,7 @@ export class TextEngine {
         return group;
     }
     static transformText(parent, source, target, mapping = [], auto = true) {
+        // TODO: white space make sourcePaths.length !== sourceMatching.deleted.length
         mapping = processMapping(mapping);
         const sourceText = source.text;
         const targetText = target.text;
@@ -631,12 +634,12 @@ export class TextEngine {
         }
         const sourceGroup = [];
         const targetGroup = [];
-        for (let i = 0; i < sourceText.length; i++) if (!sourceMatching.deleted[i]) sourceGroup.push(sourcePaths[i]);
-        for (let i = 0; i < targetText.length; i++) if (!targetMatching.deleted[i]) targetGroup.push(targetPaths[i]);
+        for (let i = 0; i < sourcePaths.length; i++) if (!sourceMatching.deleted[i]) sourceGroup.push(sourcePaths[i]);
+        for (let i = 0; i < targetPaths.length; i++) if (!targetMatching.deleted[i]) targetGroup.push(targetPaths[i]);
         transforming.groups.push(this.transformPaths(parent, sourceGroup, targetGroup));
         return transforming;
     }
-    static transformMathjax(parent: SDNode, source: MathjaxNode, target: MathjaxNode, mapping = [], auto = true) {
+    static transformMathjax(parent: Mathjax, source: MathjaxNode, target: MathjaxNode, mapping = [], auto = true) {
         mapping = processMapping(mapping);
         const sourcePaths = this.getMathjaxPaths(source, parent);
         const targetPaths = this.getMathjaxPaths(target, parent);
@@ -685,8 +688,16 @@ export class TextEngine {
             const stroke = sameAttribute(sourceGroup, "stroke");
             removeSourcePaths(item);
             targetMatching.forEachElement(t, element => {
-                if (fill) this.setAttributeInSubtree(element, "fill", fill);
-                if (stroke) this.setAttributeInSubtree(element, "stroke", stroke);
+                if (fill) {
+                    if (targetMatching.matchedAll(t)) parent.fill(fill);
+                    // @ts-ignore
+                    else if (fill !== parent.__sourceFill()) this.setAttributeInSubtree(element, "fill", fill);
+                }
+                if (stroke) {
+                    if (targetMatching.matchedAll(t)) parent.stroke(stroke);
+                    // @ts-ignore
+                    else if (stroke !== parent.__sourceStroke()) this.setAttributeInSubtree(element, "stroke", stroke);
+                }
             });
             targetMatching.remove(t, i => {
                 targetGroup.push(targetPaths[i]);
@@ -703,14 +714,17 @@ export class TextEngine {
         transforming.groups.push(this.transformPaths(parent, sourceGroup, targetGroup));
         return transforming;
     }
+    /**
+     * This method will not put the math element back to the layer, since appear will do it.
+     * @param math
+     */
     static adjustMathjax(math: MathjaxNode) {
-        const render = math.render;
         this.mathjaxSVG.__append(math);
         const root = math.nake().children[1] as SVGGElement;
         const ibbox = root.getBBox();
         const transform = `${root.getAttribute("transform")} translate(${-ibbox.x},0)`;
         root.setAttribute("transform", transform);
-        render.__append(math);
+        math.__remove();
     }
     static findSubtextInMathjax(math: MathjaxNode, subtext: string, limit = Infinity, matching?: MathjaxMatching) {
         // @ts-ignore
@@ -764,7 +778,10 @@ export class TextEngine {
             if (nodeTagSVG(s) !== nodeTagHTML(m)) return false;
             if (m.childElementCount === 0) {
                 const mcharacter = nodeContentHTML(m);
-                const scharacter = nodeContentSVG(s, 0, [...mcharacter].length);
+                const length = [...mcharacter].length;
+                if (s.children.length !== length) return false;
+                if (matching) for (let i = 0; i < length; i++) if (matching.elementDeleted.has(s.children[i])) return false;
+                const scharacter = nodeContentSVG(s, 0, length);
                 return scharacter === mcharacter;
             }
             if (s.children.length !== m.children.length) return false;
@@ -779,7 +796,9 @@ export class TextEngine {
             if (start + m.children.length > s.children.length) return false;
             if (m.childElementCount === 0) {
                 const mcharacter = nodeContentHTML(m);
-                const scharacter = nodeContentSVG(s, start, [...mcharacter].length);
+                const length = [...mcharacter].length;
+                if (matching) for (let i = 0; i < length; i++) if (matching.elementDeleted.has(s.children[i + start])) return false;
+                const scharacter = nodeContentSVG(s, start, length);
                 return scharacter === mcharacter;
             }
             for (let i = 0; i < m.children.length; i++)

@@ -39,7 +39,6 @@ export class SVGNode extends RenderNode {
             super(parent, render, Dom.tagName(element));
             this.element = element;
             if (this.render) this.appear();
-            else throw new Error("What happend!");
         }
         this.class = SVGNode;
     }

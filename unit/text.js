@@ -5,7 +5,7 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestTransformFromOther);
+sd.main(TestSpaceAndEnter);
 
 async function TestTransformFromOtherSubtext() {
     const t123 = new sd.Text(svg, "123").x(100).y(100).fontSize(50);

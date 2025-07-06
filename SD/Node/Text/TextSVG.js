@@ -9,7 +9,7 @@ import { make1d } from "@/Utility/Util";
 
 function parseToHTML() {
     const attr = this._.attr;
-    const template = this.vars.text;
+    const text = this.text();
     const equal = (i, j) => {
         if (attr[i].fill !== attr[j].fill) return false;
         if (attr[i].stroke !== attr[j].stroke) return false;
@@ -27,11 +27,11 @@ function parseToHTML() {
         return ans;
     };
     let html = "";
-    for (let l = 0, r; l < template.length; l = r + 1) {
+    for (let l = 0, r; l < text.length; l = r + 1) {
         r = l;
-        while (r + 1 < template.length && equal(l, r + 1)) r++;
+        while (r + 1 < text.length && equal(l, r + 1)) r++;
         html = html + `<tspan fill='${attr[l].fill}' stroke='${attr[l].stroke}' alignment-baseline='text-before-edge'>`;
-        html = html + parseText(template.slice(l, r + 1));
+        html = html + parseText(text.slice(l, r + 1));
         html = html + "</tspan>";
     }
     return html;
@@ -169,15 +169,15 @@ Object.assign(TextSVG.prototype, {
         if (this.duration() > 0 && TextEngine.fontExists(this.fontFamily())) {
             const context = new Context(this);
             context.till(0, 0);
-            this.opacity(0);
+            this.vars.html = " ";
             context.till(0, 1);
             this.__createTransforming({ text: this.vars.text }, { text }, mapping, auto);
             context.till(1, 1);
-            this.opacity(1);
+            this.vars.html = "";
+            this.vars.text = text;
             context.recover();
-        }
+        } else this.vars.text = text;
         this.vars.setTogether({
-            text,
             width: box.width,
             height: box.height,
         });
@@ -189,15 +189,16 @@ Object.assign(TextSVG.prototype, {
         if (this.duration() > 0 && TextEngine.fontExists(family)) {
             const context = new Context(this);
             context.till(0, 0);
-            this.opacity(0);
+            this.vars.html = " ";
             context.till(0, 1);
             this.__createTransforming({ family: this.fontFamily() }, { family });
             context.till(1, 1);
-            this.opacity(1);
+            this.vars.html = "";
+            this.vars.fontFamily = family;
+            this.vars.html = parseToHTML.call(this);
             context.recover();
-        }
+        } else this.vars.fontFamily = family;
         this.vars.setTogether({
-            fontFamily: family,
             width: box.width,
             height: box.height,
         });
@@ -232,18 +233,25 @@ Object.assign(TextSVG.prototype, {
         else if (operator === "first") update(matched[0]);
         else if (operator === "last") update(matched[matched.length - 1]);
         else update(matched[operator]);
+        console.log("Start!");
+        global.debug = true;
         if (this.duration() > 0 && TextEngine.fontExists(this.fontFamily())) {
             const context = new Context(this);
             context.till(0, 0);
-            this.opacity(0);
+            this.vars.html = " ";
             context.till(0, 1);
             this.__createTransforming({ attr: this._.attr }, { attr });
             context.till(1, 1);
-            this.opacity(1);
+            this._.attr = attr;
+            this.vars.html = "";
+            this.vars.html = parseToHTML.call(this);
             context.recover();
+        } else {
+            this._.attr = attr;
+            this.vars.html = parseToHTML.call(this);
         }
-        this._.attr = attr;
-        this.vars.html = parseToHTML.call(this);
+        global.debug = false;
+        console.log("End!");
         return this;
     },
     __flushTransformings() {

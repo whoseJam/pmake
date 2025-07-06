@@ -87,8 +87,6 @@ async function multiply(data1, data2, data3, matrix1, matrix2, matrix3) {
     }
     await sd.pause();
     matrix3.startAnimate();
-    matrix3.forEachElement(element => {
-        element.subtextColor(element.text(), C.black);
-    });
+    matrix3.color(C.black);
     matrix3.endAnimate();
 }
