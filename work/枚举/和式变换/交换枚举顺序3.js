@@ -34,9 +34,9 @@ sd.main(async () => {
     for (let d = 1; d <= n; d++) {
         await sd.pause();
         grid.startAnimate();
-        pj.moveTo(1, j);
+        pj.moveTo(1, d);
         grid.color(C.white);
-        for (let i = j; i <= n; i += d) grid.color(i, j, C.blue);
+        for (let i = d; i <= n; i += d) grid.color(i, d, C.blue);
         grid.endAnimate();
     }
     await sd.pause();

@@ -2,8 +2,25 @@
     <section>
         <h1>百钱买百鸡</h1>
     </section>
-    <problem data-source="https://www.luogu.com.cn/problem/T117116"></problem>
+    <problem data-source="https://www.luogu.com.cn/problem/T494531"></problem>
     <section>
         <h2>百钱买百鸡</h2>
+        <p>公鸡一只 $a$ 元，母鸡一只 $b$ 元，小鸡一只 $c$ 元</p>
+        <p class="fragment">买 $100$ 只鸡正好花了 $100$ 元</p>
+        <p class="fragment">求出所有的购买方案</p>
+    </section>
+    <section>
+        <h2>百钱买百鸡</h2>
+        <p>不难找到一个枚举空间 $\{(x,y,z)|x\in [1,100],y\in[1,100],z\in [1,100]\}$</p>
+        <p class="fragment">这里的 $x,y,z$ 分别表示公鸡，母鸡和小鸡的数量，由于只会买 $100$ 只鸡，所以每种鸡的数量不会超过 $100$</p>
+        <p class="fragment quote">如何对每种枚举的方案，进行合法性检查？</p>
+        <p class="fragment math-fragment">
+            $$
+            \begin{cases}
+            x+y+z=100 \\
+            ax+by+cz=100 \\
+            \end{cases}
+            $$
+        </p>
     </section>
 </section>

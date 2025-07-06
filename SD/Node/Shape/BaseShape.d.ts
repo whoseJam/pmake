@@ -21,7 +21,7 @@ export class BaseShape extends SD2DNode {
      */
     fillOpacity(): number;
     /**
-     * Sets the fill opacity of this shape component.
+     * Sets the fill opacity of this shape component. Default to `1`.
      * @param opacity - The fill opacity to apply.
      * @returns The current component instance for method chaining.
      */
@@ -43,7 +43,7 @@ export class BaseShape extends SD2DNode {
      */
     strokeOpacity(): number;
     /**
-     * Sets the stroke opacity of this shape component.
+     * Sets the stroke opacity of this shape component. Default to `1`.
      * @param opacity - The stroke opacity to apply.
      * @returns The current component instance for method chaining.
      */
@@ -91,5 +91,5 @@ export class BaseShape extends SD2DNode {
      * @param color - The color to apply.
      * @returns The current component instance for method chaining.
      */
-    color(color: SDColor | string): this;
+    color(color: string | SDColor): this;
 }

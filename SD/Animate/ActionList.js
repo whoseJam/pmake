@@ -33,8 +33,10 @@ class LinkList {
             this.head = this.tail = undefined;
         } else if (element === this.head) {
             this.head = element.next;
+            this.head.prev = undefined;
         } else if (element === this.tail) {
             this.tail = element.prev;
+            this.tail.next = undefined;
         } else {
             const prev = element.prev;
             const next = element.next;
@@ -58,7 +60,6 @@ export class ActionList {
         this.stopCount = 0; // action (hide = false & stop = true)
         this.validCount = 0; // action (hide = false)
         this.totalCount = 0; // action (by push)
-        this.actions = [];
         this.actionsMap = new Map();
         this.actionsList = new LinkList();
         this.enabled = false;
@@ -92,8 +93,10 @@ export class ActionList {
          */
         if (before.l === before.r && after.l === after.r && after.l === before.l && before.source === after.target) {
             after.source = before.source;
-            if (after.source === after.target) before.set(Action.hideFlag);
-            else before.set(Action.stopFlag);
+            if (after.source === after.target) {
+                before.set(Action.hideFlag);
+                before.hideBy = after;
+            } else before.set(Action.stopFlag);
             return;
         }
 
@@ -109,6 +112,7 @@ export class ActionList {
         if (before.l === after.l && before.r === after.r && before.l !== before.r) {
             after.source = before.source;
             before.set(Action.hideFlag);
+            before.hideby = after;
             return;
         }
     }
@@ -128,27 +132,7 @@ export class ActionList {
         });
         actionMap[action.channel] = otherActions.filter(action => !action.is(Action.hideFlag));
     }
-    filter(condition) {
-        this.actions = this.actions.filter(condition);
-    }
-    firstTick() {
-        // this.zeroAction = 0;
-        // this.actions.sort((a, b) => {
-        //     if (a.l !== b.l) return a.l - b.l;
-        //     return a.r - b.r;
-        // });
-        // this.actions.forEach(action => {
-        //     if (action.l === 0 && action.r === 0) this.zeroAction++;
-        // });
-        // if (this.zeroAction >= 100) {
-        //     this.actions.forEach(action => {
-        //         if (action.l !== 0 || action.r !== 0) {
-        //             action.l += this.zeroAction / 3;
-        //             action.r += this.zeroAction / 3;
-        //         }
-        //     });
-        // }
-    }
+    firstTick() {}
     tick(t, dt) {
         this.t = t;
         if (this.stopCount === this.validCount) return;

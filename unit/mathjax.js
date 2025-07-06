@@ -4,7 +4,23 @@ const svg = sd.svg();
 const C = sd.color();
 const T = 500;
 
-sd.main(TestInstantSwitch);
+sd.main(TestDigitFade);
+
+async function TestDigitFade() {
+    const math = new sd.Mathjax(svg, "123456");
+    await sd.pause();
+    math.startAnimate().text("12345", { 12345: 12345 }).endAnimate();
+    await sd.pause();
+    math.startAnimate().text("1234", { 1234: 1234 }).endAnimate();
+    await sd.pause();
+    math.startAnimate().text("123", { 123: 123 }).endAnimate();
+}
+
+async function TestDigitSplit() {
+    const math = new sd.Mathjax(svg, "a^{123456}").x(100).y(100).fontSize(50);
+    await sd.pause();
+    math.subtextColor("345", C.red);
+}
 
 async function TestInstantSwitch() {
     const math = new sd.Mathjax(svg, "1").x(100).y(100).fontSize(50);
@@ -220,7 +236,9 @@ async function Test1() {
     const math = new sd.Mathjax(svg, "a^2b^2c^2d^2").x(100).y(100).fontSize(100);
     const mx = math.mx();
     await sd.pause();
-    math.startAnimate().color(C.textBlue).subtextColorAll("b^2", C.red).fontSize(50).mx(mx).subtextColorLast("2", C.pureBlue).endAnimate();
+    math.startAnimate().subtextColorAll("b^2", C.red).endAnimate();
+    await sd.pause();
+    math.startAnimate().color(C.textBlue).subtextColorAll("a^2", C.orange).fontSize(50).mx(mx).subtextColorLast("2", C.pureBlue).endAnimate();
     await sd.pause();
     math.startAnimate().text("2a").color(C.textBlue).endAnimate();
     await sd.pause();

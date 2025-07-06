@@ -103,14 +103,14 @@ export class RenderNode {
         const render = this;
         const node = this.parent;
         function structure(t: number) {
-            if (this.target && t === 1) {
+            if (this.target && t === 0) {
                 this.target.__append(render);
                 node._.created = true;
                 requestAnimationFrame(() => {
                     node._.ready = true;
                 });
             }
-            if (!this.target && t === 0) {
+            if (!this.target && t === 1) {
                 render.__remove();
                 node._.created = false;
                 requestAnimationFrame(() => {

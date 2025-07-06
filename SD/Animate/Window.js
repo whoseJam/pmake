@@ -130,7 +130,7 @@ export function pause(frameType = 0) {
             return 0;
         }
     }
-    // A.debug();
+    A.debug();
     A.trigger();
     switch (frameType) {
         case FIRST_INTER_STAGE:

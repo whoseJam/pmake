@@ -4,7 +4,7 @@ const svg = sd.svg();
 const C = sd.color();
 const R = sd.rule();
 const n = 4;
-const grid = new sd.Grid(svg).n(n).m(n).startN(1).startM(1);
+const grid = new sd.Grid(svg).n(n).m(n).startN(1).startM(1).elementWidth(50).elementHeight(50);
 
 sd.init(() => {
     for (let i = 1; i <= n; i++) {

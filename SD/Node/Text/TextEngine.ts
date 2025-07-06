@@ -133,7 +133,6 @@ class TransformingPathGroup {
         }
     }
     init() {
-        for (const source of this.source) source.status = "normal";
         this.fillSource();
         this.fillTarget();
     }
@@ -158,7 +157,8 @@ class TransformingPathGroup {
                 const so = +source.status.slice(8, 9);
                 const to = +source.status.slice(11);
                 new Action(this.l, this.r, so, to, Interp.numberInterp(path, "opacity"), path, "opacity");
-            } else {
+            }
+            if (target) {
                 const sd = source.d;
                 const td = target.d;
                 new Action(this.l, this.r, sd, td, Interp.pathInterp(path, "d"), path, "d");
@@ -564,8 +564,7 @@ export class TextEngine {
             const r = paths.length;
             current.range = [l, r];
         };
-        // dfs(root, initialMatrix(), hex(element.getAttribute("fill")), hex(element.getAttribute("stroke")));
-        dfs(root, initialMatrix(), parent.fill(), parent.stroke());
+        dfs(root, initialMatrix(), hex(element.getAttribute("fill")), hex(element.getAttribute("stroke")));
         return paths;
     }
     static transformPaths(parent, source, target) {
@@ -716,23 +715,28 @@ export class TextEngine {
     static findSubtextInMathjax(math: MathjaxNode, subtext: string, limit = Infinity, matching?: MathjaxMatching) {
         // @ts-ignore
         const mml = new DOMParser().parseFromString(MathJax.tex2mml(String(subtext)), "text/xml").documentElement;
-        function nodeContentSVG(s: SVGElement) {
+        function nodeContentSVG(s: SVGElement, start: number, length: number) {
+            if (s.tagName === "use") {
+                const unicode = s.getAttribute("data-c");
+                return String.fromCodePoint(parseInt(unicode, 16));
+            }
             let content = "";
             const uses = s.querySelectorAll("use");
-            for (const use of uses) {
-                const unicode = use.getAttribute("data-c");
+            if (start + length > uses.length) return content;
+            for (let i = start; i < start + length; i++) {
+                const unicode = uses[i].getAttribute("data-c");
                 content += String.fromCodePoint(parseInt(unicode, 16));
             }
             return content;
         }
-        function nodeContentHTML(m: HTMLElement) {
-            function toMathLetter(char, style = "italic") {
+        function nodeContentHTML(m: HTMLElement): string {
+            function toMathLetter(char: string, style = "italic"): string {
                 const styles = {
-                    italic: { lower: 0x1d44e, upper: 0x1d434 }, // 斜体
-                    bold: { lower: 0x1d41a, upper: 0x1d400 }, // 粗体
-                    bolditalic: { lower: 0x1d482, upper: 0x1d468 }, // 粗斜体
-                    script: { lower: 0x1d4b6, upper: 0x1d49c }, // 手写体
-                    double: { lower: 0x1d4ea, upper: 0x1d4d0 }, // 双线体
+                    italic: { lower: 0x1d44e, upper: 0x1d434 },
+                    bold: { lower: 0x1d41a, upper: 0x1d400 },
+                    bolditalic: { lower: 0x1d482, upper: 0x1d468 },
+                    script: { lower: 0x1d4b6, upper: 0x1d49c },
+                    double: { lower: 0x1d4ea, upper: 0x1d4d0 },
                 };
                 if (!styles[style]) throw new Error(`Unsupported style: ${style}`);
                 const code = char.charCodeAt(0);
@@ -759,8 +763,8 @@ export class TextEngine {
             if (matching && matching.elementDeleted.has(s)) return false;
             if (nodeTagSVG(s) !== nodeTagHTML(m)) return false;
             if (m.childElementCount === 0) {
-                const scharacter = nodeContentSVG(s);
                 const mcharacter = nodeContentHTML(m);
+                const scharacter = nodeContentSVG(s, 0, [...mcharacter].length);
                 return scharacter === mcharacter;
             }
             if (s.children.length !== m.children.length) return false;
@@ -773,6 +777,11 @@ export class TextEngine {
         }
         function match(s: SVGElement, m: HTMLElement, start: number) {
             if (start + m.children.length > s.children.length) return false;
+            if (m.childElementCount === 0) {
+                const mcharacter = nodeContentHTML(m);
+                const scharacter = nodeContentSVG(s, start, [...mcharacter].length);
+                return scharacter === mcharacter;
+            }
             for (let i = 0; i < m.children.length; i++)
                 if (!matchRecursively(s.children[i + start] as SVGElement, m.children[i] as HTMLElement)) {
                     return false;
@@ -782,14 +791,25 @@ export class TextEngine {
         const matched = [];
         function walk(s: SVGElement, m: HTMLElement) {
             for (let start = 0; start < s.children.length; start++) {
-                if (match(s, m, start)) {
-                    matched.push({
-                        element: s,
-                        start,
-                        length: m.children.length,
-                    });
-                    match(s, m, start);
-                    if (matched.length >= limit) return;
+                if (m.children.length === 1) {
+                    const m_ = m.children[0] as HTMLElement;
+                    if (nodeTagSVG(s) === nodeTagHTML(m_) && match(s, m_, start)) {
+                        matched.push({
+                            element: s,
+                            start,
+                            length: m_.children.length || [...nodeContentHTML(m_)].length,
+                        });
+                        if (matched.length >= limit) return;
+                    }
+                } else {
+                    if (match(s, m, start)) {
+                        matched.push({
+                            element: s,
+                            start,
+                            length: m.children.length || [...nodeContentHTML(m)].length,
+                        });
+                        if (matched.length >= limit) return;
+                    }
                 }
             }
             for (let i = 0; i < s.children.length; i++) {

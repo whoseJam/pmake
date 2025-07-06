@@ -114,7 +114,7 @@ export class BaseGrid extends SD2DNode {
      * @param color The color to apply.
      * @returns The current component instance for method chaining.
      */
-    color(color: SDColor | string): this;
+    color(color: string | SDColor): this;
     /**
      * Gets the color of a specific element.
      * @param i - The index along the primary dimension.
@@ -129,7 +129,7 @@ export class BaseGrid extends SD2DNode {
      * @param color The color to apply.
      * @returns The current component instance of method chaining.
      */
-    color(i: number, j: number, color: SDColor | string): this;
+    color(i: number, j: number, color: string | SDColor): this;
     /**
      * Gets the text content of a specific element.
      * @param i - The index along the primary dimension.

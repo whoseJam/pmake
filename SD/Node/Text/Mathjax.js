@@ -47,13 +47,11 @@ export class Mathjax extends BaseText {
             this.__currentTransforming(() => this.__createMathjax("y", y));
         });
         this.vars.watch("fill", fill => {
-            if (this._.math) TextEngine.removeAttributeInSubtree(this._.math.nake(), "fill");
             if (this.duration() === 0) return;
             this.__flushTransformings();
             this.__currentTransforming(transforming => transforming.fill(fill));
         });
         this.vars.watch("stroke", stroke => {
-            if (this._.math) TextEngine.removeAttributeInSubtree(this._.math.nake(), "stroke");
             if (this.duration() === 0) return;
             this.__flushTransformings();
             this.__currentTransforming(transforming => transforming.stroke(stroke));
@@ -128,6 +126,7 @@ Object.assign(Mathjax.prototype, {
         return this;
     },
     __subtextAttribute(subtext, attribute, operator) {
+        subtext = String(subtext);
         const math = this.__cloneMathjax();
         const matched = TextEngine.findSubtextInMathjax(math, subtext);
         const update = match => {

@@ -206,31 +206,8 @@ Object.assign(TextSVG.prototype, {
     intValue() {
         return +this.text();
     },
-    subtextCloneAll(subtext) {
-        const attr = this._.attr;
-        const text = this.vars.text;
-        const matched = make1d(text.length, false);
-        for (let i = 0; i + subtext.length <= text.length; i++) {
-            if (text.slice(i, i + subtext.length) === subtext) {
-                for (let j = i; j < i + subtext.length; j++) matched[j] = true;
-            }
-        }
-        let cloneText = "";
-        const cloneAttr = [];
-        for (let i = 0; i < text.length; i++) {
-            if (matched[i]) cloneText += text[i];
-            else cloneText += " ";
-            cloneAttr.push({
-                fill: attr[i].fill,
-                strokeL: attr[i].stroke,
-            });
-        }
-        const cloned = new TextSVG(this.layer().render, cloneText);
-        cloned._.attr = cloneAttr;
-        cloned.vars.html = parseToHTML.call(cloned);
-        return cloned;
-    },
     __subtextAttribute(subtext, attribute, operator) {
+        subtext = String(subtext);
         const attr = this._.attr.map(a => {
             return {
                 fill: a.fill,

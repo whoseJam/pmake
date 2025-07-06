@@ -8,7 +8,14 @@ const EN = sd.enter();
 
 sd.init(() => {});
 
-sd.main(TestBoxBackingSVGAndHTML);
+sd.main(TestType);
+
+async function TestType() {
+    const box = new sd.Box(svg, "123");
+    await sd.pause();
+    const text = box.value();
+    text.x(100).y(100).text("456");
+}
 
 async function TestBoxBackingSVGAndHTML() {
     const b1 = new sd.Box(svg).x(100).y(100).width(100);
@@ -55,10 +62,12 @@ async function TestLayout() {
 }
 
 async function TestWithHTML() {
-    const box = new sd.Box(svg, new sd.Button(div));
-    await sd.pause();
-    box.value().startAnimate().opacity(0.5).endAnimate();
-    box.startAnimate().opacity(0.5).endAnimate();
+    // const box = new sd.Box(svg, new sd.Button(div));
+    // await sd.pause();
+    // /** @type {sd.Button} */
+    // const value = box.value();
+    // value.startAnimate().opacity(0.5).endAnimate();
+    // box.startAnimate().opacity(0.5).endAnimate();
 }
 
 async function TestIntValue() {
