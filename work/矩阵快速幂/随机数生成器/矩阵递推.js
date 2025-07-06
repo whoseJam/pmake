@@ -7,11 +7,11 @@ const data1 = [
     ["?", "?"],
     ["?", "?"],
 ];
-const data2 = [["f_{n-1}"], ["f_{n-2}"]];
-const data3 = [["f_{n}"], ["f_{n-1}"]];
+const data2 = [["X_{n}"], ["c"]];
+const data3 = [["X_{n+1}"], ["c"]];
 const data4 = [
-    [1, 1],
-    [1, 0],
+    ["a", 1],
+    [0, 1],
 ];
 const matrix1 = new Matrix(svg, data1);
 const matrix2 = new Matrix(svg, data2);

@@ -19,7 +19,7 @@
             f_t(u)=\sum_{(v,u)\in E}f_{t-1}(v)
             $$
         </p>
-        <p class="fragment">如果我们用一个邻接矩阵来存边，$G(u,v)=1$ 表示边存在，$G(u,v)=0$ 表示边不存在，那么我们可以改写上式为：
+        <p class="fragment">如果我们用一个邻接矩阵来存边，$G(u,v)=1$ 表示边存在，$G(u,v)=0$ 表示边不存在，那么我们可以改写上式为
             $$
             f_t(u)=\sum_{v=1}^nG(v,u)f_{t-1}(v)
             $$
@@ -27,14 +27,14 @@
     </section>
     <section>
         <h2>可乐</h2>
-        <p>对数字敏感的同学应该能从 $f_t(u)=\sum_{v=1}^nG(v,u)f_{t-1}(v)$ 中看出来矩阵乘法的影子了：</p>
+        <p>对数字敏感的同学应该能从 $f_t(u)=\sum_{v=1}^nG(v,u)f_{t-1}(v)$ 中看出来矩阵乘法的影子了</p>
         <p class="fragment">
             $$
             \begin{pmatrix}
-            G(1,1)  &G(1,2) &\cdots &G(1,n) \\
-            G(2,1)  &G(2,2) &\cdots &G(2,n) \\
+            G(1,1)  &G(2,1) &\cdots &G(n,1) \\
+            G(1,2)  &G(2,2) &\cdots &G(n,2) \\
             \vdots  &\vdots &\ddots &\vdots \\
-            G(n,1)  &G(n,2) &\cdots &G(n,n)
+            G(1,n)  &G(2,n) &\cdots &G(n,n)
             \end{pmatrix}
             \begin{pmatrix}
             f_{t-1}(1)\\
@@ -50,5 +50,17 @@
             \end{pmatrix}
             $$
         </p>
+    </section>
+    <section>
+        <h2>可乐</h2>
+        <iframe data-animation="./矩阵乘法与图1.js"
+            data-maxFrame="2"
+            style="width: 1000px; height: 600px;"></iframe>
+    </section>
+    <section>
+        <h2>可乐</h2>
+        <iframe data-animation="./矩阵乘法与图2.js"
+            data-maxFrame="2"
+            style="width: 1000px; height: 600px;"></iframe>
     </section>
 </section>
