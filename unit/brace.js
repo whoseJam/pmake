@@ -1,15 +1,29 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-const arr = new sd.Array(svg).resize(10).x(100).y(100);
-const stk = new sd.Stack(svg).resize(10).x(800).y(100);
-const grid = new sd.Grid(svg).n(3).m(5).x(100).y(200);
 
-sd.init(() => {
+sd.init(() => {});
 
-})
+sd.main(TestValueAndBrace);
 
-sd.main(async () => {
+async function TestValueAndBrace() {
+    const arr = new sd.Array(svg).resize(10).x(100).y(100);
+    const brace = sd.Brace(arr, "t");
+    await sd.pause();
+    brace.value("hello").startAnimate().brace(1, 3).endAnimate();
+}
+
+async function TestMathjaxValue() {
+    const arr = new sd.Array(svg).resize(10).x(100).y(100);
+    const brace = sd.Brace(arr, "t");
+    await sd.pause();
+    brace.startAnimate().brace(1, 3).value("$a^2+b^2$").endAnimate();
+}
+
+async function TestBasic() {
+    const arr = new sd.Array(svg).resize(10).x(100).y(100);
+    const stk = new sd.Stack(svg).resize(10).x(800).y(100);
+    const grid = new sd.Grid(svg).n(3).m(5).x(100).y(200);
     const brace1 = sd.Brace(arr);
     await sd.pause();
     brace1.startAnimate().brace(1, 3).endAnimate();
@@ -50,5 +64,4 @@ sd.main(async () => {
     await sd.pause();
     v1.startAnimate().dx(-100).endAnimate();
     v2.startAnimate().dx(100).endAnimate();
-})
-
+}

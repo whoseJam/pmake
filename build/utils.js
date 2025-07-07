@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const colors = require("colors-console");
 
 module.exports = {
     copyFile(src, dest) {
@@ -24,7 +25,7 @@ module.exports = {
             process.exit();
         }
         try {
-            fs.accessSync(sourceFilePath, fs.constants.R_OK);
+            fs.accessSync(src, fs.constants.R_OK);
         } catch (err) {
             console.log(colors("red", `[Error] Cannot read the file. Check file permissions.`));
             process.exit();

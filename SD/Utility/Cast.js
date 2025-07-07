@@ -1,14 +1,21 @@
-import { Text } from "@/Node/Text/Text";
+import { Check } from "@/Utility/Check";
 
 export class Cast {
-    static castToSDNode(target, any, id) {
-        if (any === null || any === undefined) {
+    static castToSDNode(target, object, id) {
+        if (object === null || object === undefined) {
+            const { Text } = require("@/Node/Text/Text");
             if (id !== undefined) return new Text(target, id).opacity(0);
             return null;
         }
-        if (typeof any === "function") return any(target).opacity(0);
-        if (typeof any === "string" || typeof any === "number") return new Text(target, any).opacity(0);
-        return any;
+        if (typeof object === "function") return object(target).opacity(0);
+        if (Check.isNumberOrString(object)) {
+            const { Text } = require("@/Node/Text/Text");
+            const { Mathjax } = require("@/Node/Text/Mathjax");
+            object = String(object);
+            if (object.startsWith("$") && object.endsWith("$")) return new Mathjax(target, object).opacity(0);
+            return new Text(target, object).opacity(0);
+        }
+        return object;
     }
     static castHexToRGB(hex) {
         hex = hex.replace("#", "");
@@ -18,14 +25,8 @@ export class Cast {
         return { r: r, g: g, b: b };
     }
     static castToArray(value) {
-        if (typeof value === "number") return [value];
+        if (Check.isNumber(value)) return [value];
         return value;
-    }
-    static castToViewBox(object) {
-        if (typeof object === "string") {
-            const args = object.split(" ");
-            return { x: +args[0], y: +args[1], width: +args[2], height: +args[3] };
-        } else throw new Error("Not Implemented Yet");
     }
     static castPointsToBox(points) {
         let x = Infinity;

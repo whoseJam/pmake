@@ -6,13 +6,13 @@ const LOCATION_KEY = new Set(["tl", "tc", "tr", "lt", "lc", "lb", "bl", "bc", "b
 class AsidePlugin {
     gap(gap) {
         if (arguments.length === 0) return this.vars.gap;
-        Check.validateNumber(gap, `AsidePlugin.aside`);
+        Check.validateNumber(gap, "AsidePlugin.aside");
         this.vars.lpset("gap", gap);
         return this;
     }
     location(location) {
         if (arguments.length === 0) return this.vars.location;
-        Check.validateLocation(location, LOCATION_KEY, `AsidePlugin.location`, 1, [() => true, "For aside plugin, here is 9 types of locations which are 'tl', 'tc', 'tr', 'lt', 'lc', 'lb', 'bl', 'bc', 'br', 'rt', 'rc', 'rb'."]);
+        Check.validateLocation(location, LOCATION_KEY, "AsidePlugin.location", 1, [() => true, "For aside plugin, here are 12 types of locations which are 'tl', 'tc', 'tr', 'lt', 'lc', 'lb', 'bl', 'bc', 'br', 'rt', 'rc', 'rb'."]);
         this.vars.location = location;
         return this;
     }
