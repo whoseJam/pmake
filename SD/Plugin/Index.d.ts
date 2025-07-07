@@ -52,4 +52,11 @@ class IndexPlugin extends SD2DNode {
     fontSize(fontSize: number): this;
 }
 
+/**
+ * Creates a **`sd.IndexPlugin`** instance.
+ * @param target
+ * @param location
+ * @param fontSize
+ * @param gap
+ */
 export function Index(target: SDNode, location?: string, fontSize?: number, gap?: number): IndexPlugin;

@@ -1,15 +1,59 @@
 import { SDNode } from "@/Node/SDNode";
-import { Mathjax } from "@/Node/Text/Mathjax";
-import { Text } from "@/Node/Text/TextSVG";
+import { BaseText } from "@/Node/Text/BaseText";
 
-type Location = "lt" | "lc" | "lb" | "tl" | "tc" | "tr" | "bl" | "bc" | "br" | "rt" | "rc" | "rb";
-
-export class CompLabel {
-    location(): Location;
-    location(location: Location): this;
+class LabelPlugin {
+    /**
+     * Gets the gap between this label component and its target component.
+     * @returns The gap.
+     */
     gap(): number;
+    /**
+     * Sets the gap between this label component and its target component.
+     * @param gap - The gap to apply.
+     * @returns The current component instance for method chaining.
+     */
     gap(gap: number): this;
+    /**
+     * Gets the location of this label component relatives to its target component.
+     * @returns The location.
+     */
+    location(): string;
+    /**
+     * Sets the location of this label component relatives to its target component. Default to `"lc"`.
+     * - "lt": left-top.
+     * - "lc": left-center.
+     * - "lb": left-bottom.
+     * - "rt": right-top.
+     * - "rc": right-center.
+     * - "rb": right-bottom.
+     * - "tl": top-left.
+     * - "tc": top-center.
+     * - "tr": top-right.
+     * - "bl": bottom-left.
+     * - "bc": bottom-center.
+     * - "br": bottom-right.
+     * @param location - The location to apply.
+     * @returns The current component instance for method chaining.
+     */
+    location(location: string): this;
 }
 
-export function Label(parent: SDNode, text: string, location: Location, fontSize: number, gap: number): CompLabel & Text;
-export function MathjaxLabel(parent: SDNode, text: string, location: Location, fontSize: number, gap: number): CompLabel & Mathjax;
+/**
+ * Creates a **`sd.LabelPlugin`** instance.
+ * @param target
+ * @param text
+ * @param location
+ * @param fontSize
+ * @param gap
+ */
+export function Label(target: SDNode, text: string, location?: string, fontSize?: number, gap?: number): LabelPlugin & BaseText;
+
+/**
+ * Creates a **`sd.LabelPlugin`** instance.
+ * @param target
+ * @param text
+ * @param location
+ * @param fontSize
+ * @param gap
+ */
+export function MathjaxLabel(target: SDNode, text: string, location?: string, fontSize?: number, gap?: number): LabelPlugin & BaseText;

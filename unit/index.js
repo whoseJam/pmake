@@ -13,7 +13,11 @@ async function TestIndexTarget() {
     await sd.pause();
     index.startAnimate().target(arr).endAnimate();
     await sd.pause();
+    arr.startAnimate().dx(300).endAnimate();
+    await sd.pause();
     index.startAnimate().freeze().target(stk).location("l").unfreeze().endAnimate();
+    await sd.pause();
+    stk.startAnimate().dx(200).endAnimate();
 }
 
 async function TestGridIndex() {

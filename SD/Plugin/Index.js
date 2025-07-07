@@ -1,4 +1,5 @@
 import { Enter as EN } from "@/Node/Core/Enter";
+import { Exit as EX } from "@/Node/Core/Exit";
 import { BaseGrid } from "@/Node/Grid/BaseGrid";
 import { SD2DNode } from "@/Node/SD2DNode";
 import { Text } from "@/Node/Text/Text";
@@ -10,16 +11,18 @@ const LOCATION_KEY = new Set(["l", "r", "t", "b"]);
 const LOCATION_KEY_SUGGESTION = [() => true, "For self plugin, here are 4 types of locations which are 'l', 'r', 't', 'b'."];
 
 class IndexPlugin {
-    target(target) {
-        if (arguments.length === 0) return this.vars.target;
-        Check.validateSDNode(target, "IndexPlugin.target");
-        this.vars.target = target;
-        return this;
-    }
     gap(gap) {
         if (arguments.length === 0) return this.vars.gap;
         Check.validateNumber(gap, "IndexPlugin.gap");
         this.vars.lpset("gap", gap);
+        return this;
+    }
+    target(target) {
+        if (arguments.length === 0) return this.vars.target;
+        Check.validateSDNode(target, "IndexPlugin.target");
+        this.vars.target.eraseChild(this.onExit(EX.nothing()));
+        this.vars.target = target;
+        this.vars.target.childAs(this);
         return this;
     }
     location(location) {

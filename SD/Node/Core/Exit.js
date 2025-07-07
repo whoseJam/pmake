@@ -1,6 +1,9 @@
 import { svg } from "@/Interact/Root";
 
 export class Exit {
+    static nothing(layer) {
+        return function (element) {};
+    }
     static fade() {
         return function (element) {
             element.opacity(0);

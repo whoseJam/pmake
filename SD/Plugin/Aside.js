@@ -2,6 +2,7 @@ import { Rule as R } from "@/Rule/Rule";
 import { Check } from "@/Utility/Check";
 
 const LOCATION_KEY = new Set(["tl", "tc", "tr", "lt", "lc", "lb", "bl", "bc", "br", "rt", "rc", "rb"]);
+const LOCATION_KEY_SUGGESTION = [() => true, "For aside plugin, here are 12 types of locations which are 'tl', 'tc', 'tr', 'lt', 'lc', 'lb', 'bl', 'bc', 'br', 'rt', 'rc', 'rb'."];
 
 class AsidePlugin {
     gap(gap) {
@@ -12,22 +13,28 @@ class AsidePlugin {
     }
     location(location) {
         if (arguments.length === 0) return this.vars.location;
-        Check.validateLocation(location, LOCATION_KEY, "AsidePlugin.location", 1, [() => true, "For aside plugin, here are 12 types of locations which are 'tl', 'tc', 'tr', 'lt', 'lc', 'lb', 'bl', 'bc', 'br', 'rt', 'rc', 'rb'."]);
+        Check.validateLocation(location, LOCATION_KEY, "AsidePlugin.location", 1, LOCATION_KEY_SUGGESTION);
         this.vars.location = location;
         return this;
     }
 }
 
 export function Aside(target, self, location = "lc", gap = 5) {
+    Check.validateLocation(location, LOCATION_KEY, "Aside", 3, LOCATION_KEY_SUGGESTION);
+    Check.validateNumber(gap, "Aside", 4);
+
     self.vars.merge({
         gap,
         location,
     });
+
     self.gap = AsidePlugin.prototype.gap;
     self.location = AsidePlugin.prototype.location;
+
     target.childAs(self, function (parent, child) {
         const rule = R.aside(child.vars.location, child.vars.gap);
         rule(parent, child);
     });
+
     return self;
 }
