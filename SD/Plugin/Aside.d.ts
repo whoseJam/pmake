@@ -45,5 +45,6 @@ class AsidePlugin {
  * @param aside
  * @param location
  * @param gap
+ * @returns A new plugin instance.
  */
 export function Aside<T>(target: SDNode, aside: T, location: string, gap: number): T & AsidePlugin;

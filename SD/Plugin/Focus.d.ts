@@ -1,104 +1,81 @@
-import { SD2DNode } from "@/Node/SD2DNode";
+import { SDNode } from "@/Node/SDNode";
 import { Rect } from "@/Node/Shape/Rect";
 import { RenderNode } from "@/Renderer/RenderNode";
 
-export class FocusPlugin extends Rect {
+class FocusPlugin extends Rect {
     /**
-     * Sets focus on the target component.
-     * @returns The current plugin instance for method chaining.
+     * Sets focus on the initialization target component.
+     * @returns The current component instance for method chaining.
      */
     focus(): this;
     /**
-     * Sets focus on a specific element within the target array component.
-     *
-     * Throws an error if the target component is not an instance of `sd.BaseArray`.
+     * Sets focus on a specific element within the initialization target component.
+     * - Throws an error if the initialization target component is not an instance of `sd.BaseArray`, `sd.BaseTree` or `sd.BaseGraph`.
      * @param i - The index of the specific element.
-     * @returns The current plugin instance for method chaining.
+     * @returns The current component instance for method chaining.
      */
     focus(i: number): this;
     /**
-     * Sets focus on a range of elements within the target array component.
-     *
-     * Throws an error if the target component is not an instance of `sd.BaseArray`.
+     * Sets focus on a range of elements within the initialization target component.
+     * - Throws an error if the initialization target component is not an instance of `sd.BaseArray`.
      * @param l - The left index of the range.
      * @param r - The right index of the range.
-     * @returns The current plugin instance for method chaining.
+     * @returns The current component instance for method chaining.
      */
     focus(l: number, r: number): this;
     /**
-     * Sets focus on a specific element within the target grid component.
-     *
-     * Throws an error if the target component is not an instance of `sd.BaseGrid`.
+     * Sets focus on a specific element within the initialization target component.
+     * - Throws an error if the initialization target component is not an instance of `sd.BaseGrid`.
      * @param i - The index along the primary dimension.
      * @param j - The index along the secondary dimension.
-     * @returns The current plugin instance for method chaining.
+     * @returns The current component instance for method chaining.
      */
     focus(i: number, j: number): this;
     /**
-     * Sets focus on a region within the target grid component.
-     *
-     * Throws an error if the target component is not an instance of `sd.BaseGrid`.
+     * Sets focus on a region of elements within the initialization target component.
+     * - Throws an error if the initialization target component is not an instance of `sd.BaseGrid`.
      * @param i1
      * @param j1
      * @param i2
      * @param j2
-     * @returns The current plugin instance for method chaining.
+     * @returns The current component instance for method chaining.
      */
     focus(i1: number, j1: number, i2: number, j2: number): this;
     /**
-     * Sets focus on the target element.
+     * Sets focus on the target component.
      * @param target
-     * @returns The current plugin instance for method chaining.
+     * @returns The current component instance for method chaining.
      */
-    focus(target: SD2DNode): this;
+    focus(target: SDNode): this;
     /**
      * Sets focus on a region defined by two target components.
      * @param target1 - The first component defining the focus region.
      * @param target2 - The second component defining the focus region.
-     * @returns The current plugin instance for method chaining.
+     * @returns The current component instance for method chaining.
      */
-    focus(target1: SD2DNode, target2: SD2DNode): this;
+    focus(target1: SDNode, target2: SDNode): this;
     /**
-     * Clears the current focus plugin.
+     * Removes the current focus region.
      * @param cancel
-     * @returns The current plugin instance for method chaining.
+     * @returns The current component instance for method chaining.
      */
     focus(cancel: null | undefined | false): this;
     /**
-     * Gets the padding rate for the focused region.
-     * @returns The padding rate.
-     */
-    rate(): number;
-    /**
-     * Sets the padding rate for the focused region.
-     *
-     * The padding rate determines the amount of padding around focused region.
-     * A higher rate increases the space between the target element and the border of focus plugin.
-     * Default value is 1.
-     * @param rate The padding rate to apply.
-     * @returns The current plugin instance for method chaining.
-     */
-    rate(rate: number): this;
-    /**
-     * Gets the padding length for the focused region.
-     * @returns The padding length.
+     * Gets the gap between the focus component and its target components.
+     * @returns The gap.
      */
     gap(): number;
     /**
-     * Sets the padding length for the focused region.
-     *
-     * The padding length determines the amount of padding around focused region.
-     * A higher length increases the space between the target element and the border of focus plugin.
-     * Default value is 0.
-     * @param gap The padding length to apply.
-     * @returns The current plugin instance for method chaining.
+     * Sets the gap between the focus component and its target components. Default to `0`.
+     * @param gap - The gap to apply.
+     * @returns The current component instance for method chaining.
      */
     gap(gap: number): this;
 }
 
 /**
  * Creates a **`sd.FocusPlugin`** instance to highlight a region.
- * @param target - The destination to render the plugin.
+ * @param target
  * @returns A new plugin instance.
  */
-export function Focus(target: SD2DNode | RenderNode): FocusPlugin;
+export function Focus(target: SDNode | RenderNode): FocusPlugin;
