@@ -3,7 +3,7 @@ import { SDNode } from "@/Node/SDNode";
 
 class IndexPlugin extends SD2DNode {
     /**
-     * Gets the target component of this index compoent.
+     * Gets the target component of this index component.
      * @returns The target component.
      */
     target(): any;

@@ -335,13 +335,11 @@ export function effect(innerEffect, tag) {
         innerEffect();
     };
     effectsMap.set(effect, new EffectManager(effect));
-    afterEffects.push([]);
     if (!globalAllowUpdate) {
         effectQueue.pushBack(effect);
         effect.tag = tag || innerEffect;
-        const callbacks = afterEffects.shift();
-        callbacks.forEach(callback => callback());
     } else {
+        afterEffects.push([]);
         globalAllowUpdate = false;
         effectQueue.pushBack(effect);
         effect.tag = tag || innerEffect;

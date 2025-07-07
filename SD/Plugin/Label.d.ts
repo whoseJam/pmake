@@ -3,6 +3,17 @@ import { BaseText } from "@/Node/Text/BaseText";
 
 class LabelPlugin {
     /**
+     * Gets the target component of this label component.
+     * @returns The target component.
+     */
+    target(): any;
+    /**
+     * Sets the target component of this label component.
+     * @param target - The target component to apply.
+     * @returns The current component instance for method chaining.
+     */
+    target(target: SDNode): this;
+    /**
      * Gets the gap between this label component and its target component.
      * @returns The gap.
      */
