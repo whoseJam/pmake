@@ -175,6 +175,7 @@ Object.assign(TextSVG.prototype, {
             context.till(1, 1);
             this.vars.html = "";
             this.vars.text = text;
+            this.vars.html = parseToHTML.call(this);
             context.recover();
         } else this.vars.text = text;
         this.vars.setTogether({

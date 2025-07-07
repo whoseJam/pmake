@@ -47,12 +47,8 @@ export class ErrorLauncher {
     static whatHappened() {
         throw new Error("What happened???");
     }
-    static notImplementedYet(method, clazz) {
-        if (arguments.length === 2) {
-            throw new Error(`Function ${clazz}.${method} not implemented yet.`);
-        } else {
-            throw new Error(`Function ${method} not implemented yet.`);
-        }
+    static notImplementedYet(method: string) {
+        throw new Error(`Function ${method} not implemented yet.`);
     }
     static failToParseAsIntValue(text) {
         throw new Error(`Fail to parse ${text} as int value.`);
@@ -67,33 +63,36 @@ export class ErrorLauncher {
     static gridElementNotFound(rowId, colId) {
         throw new Error(`Grid element[${rowId}, ${colId}] not found.`);
     }
-    static invalidOpacity(opacity, method, i = 1, suggestions = []) {
-        throw new Error(`We expect an opacity for the ${generateLocation(i)} argument when calling ${method} but got <${opacity}>[type is ${typeof opacity}]. ${generateSuggestion(opacity, suggestions)}`);
+    static invalidOpacity(object: any, method: string, i = 1, suggestions = []) {
+        throw new Error(`We expect an opacity for the ${generateLocation(i)} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
     }
-    static invalidNumber(number, method, i = 1, suggestions = []) {
-        throw new Error(`We expect a number for the ${generateLocation(i)} argument when calling ${method} but got <${number}>[type is ${typeof number}]. ${generateSuggestion(number, suggestions)}`);
+    static invalidNumber(object: any, method: string, i = 1, suggestions = []) {
+        throw new Error(`We expect a number for the ${generateLocation(i)} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
     }
-    static invalidNumberOrString(object, method, i = 1, suggestions = []) {
+    static invalidNumberOrString(object: any, method: string, i = 1, suggestions = []) {
         throw new Error(`We expect a number or a string for the ${generateLocation(i)} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
     }
-    static invalidColor(color, method, i = 1, suggestions = []) {
-        throw new Error(`We expect a hex-color or a { fill: hex-color, stroke: hex-color } for the ${generateLocation(i)} argument when calling ${method} but got <${color}>[type is ${typeof color}]. ${generateSuggestion(color, suggestions)}`);
+    static invalidColor(object: any, method: string, i = 1, suggestions = []) {
+        throw new Error(`We expect a hex-color or a { fill: hex-color, stroke: hex-color } for the ${generateLocation(i)} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
     }
-    static invalidSDColor(color, method, i = 1, suggestions = []) {
-        throw new Error(`We expect a { fill: hex-color, stroke: hex-color } for the ${generateLocation(i)} argument when calling ${method} but got <${color}>[type is ${typeof color}]. ${generateSuggestion(color, suggestions)}`);
+    static invalidSDColor(object: any, method: string, i = 1, suggestions = []) {
+        throw new Error(`We expect a { fill: hex-color, stroke: hex-color } for the ${generateLocation(i)} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
     }
-    static invalidHexColor(color, method, i = 1, suggestions = []) {
-        throw new Error(`We expect a hex-color for the ${generateLocation(i)} argument when calling ${method} but got <${color}>[type is ${typeof color}]. ${generateSuggestion(color, suggestions)}`);
+    static invalidHexColor(object: any, method: string, i = 1, suggestions = []) {
+        throw new Error(`We expect a hex-color for the ${generateLocation(i)} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
     }
-    static invalidSyncFunction(callback, method, i = 1, suggestions = []) {
-        throw new Error(`We expect a synchronized function for the ${generateLocation(i)} argument when calling the ${method} but got <${callback}>[type is ${typeof callback}]. ${generateSuggestion(callback, suggestions)}`);
+    static invalidSyncFunction(object: any, method: string, i = 1, suggestions = []) {
+        throw new Error(`We expect a synchronized function for the ${generateLocation(i)} argument when calling the ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
+    }
+    static invalidLocation(object: any, method: string, i = 1, suggestions = []) {
+        throw new Error(`We expect a location-string for the ${generateLocation(i)} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
     }
     static warnNotImplementedYet(method) {
         console.warn(`Function ${method} not implemented yet.`);
     }
 }
 
-function generateSuggestion(object, suggestions) {
+function generateSuggestion(object: any, suggestions: Array<[(object: any) => boolean, string]>) {
     for (const suggestion of suggestions) {
         const [check, result] = suggestion;
         if (check(object)) return result;
@@ -101,7 +100,7 @@ function generateSuggestion(object, suggestions) {
     return "";
 }
 
-function generateLocation(i) {
+function generateLocation(i: number) {
     if (i === 1) return "1st";
     if (i === 2) return "2nd";
     if (i === 3) return "3rd";

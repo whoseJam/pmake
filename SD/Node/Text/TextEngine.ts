@@ -416,8 +416,12 @@ export class TextEngine {
                 this.fonts[family] = opentype.parse(buffer);
             });
     }
-    static boundingBox(text, family, size) {
-        if (!this.fonts[family]) {
+    static boundingBox(text: string, family: string, size: number) {
+        function hasChinese(str) {
+            const regex = /[\u4e00-\u9fa5]/;
+            return regex.test(str);
+        }
+        if (!this.fonts[family] || hasChinese(text)) {
             this.textSVG.setAttribute("text", text);
             this.textSVG.setAttribute("font-size", size);
             this.textSVG.setAttribute("font-family", family);

@@ -5,7 +5,13 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestSpaceAndEnter);
+sd.main(TestSelfReplace);
+
+async function TestSelfReplace() {
+    const text = new sd.Text(svg, "1").x(100).y(100).fontSize(50);
+    await sd.pause();
+    text.startAnimate().text("1").endAnimate();
+}
 
 async function TestTransformFromOtherSubtext() {
     const t123 = new sd.Text(svg, "123").x(100).y(100).fontSize(50);

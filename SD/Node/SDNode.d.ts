@@ -3,6 +3,7 @@ import { SDRule } from "@/Rule/Rule";
 
 export class SDNode {
     _: Record<string, any>;
+    vars: any;
 
     /**
      * Renders the component onto the specified target.
@@ -63,12 +64,13 @@ export class SDNode {
 
     /**
      * Appends a child component to this component.
-     * @param name - Optional identifier for the child component. Used to retrieve the child via its name later.
+     * @param name - identifier for the child component. Used to retrieve the child via its name later.
      * @param child - The child component to append.
      * @param rule - Optional responsive rule defining the parent-child relationship.
      * @returns The current component instance for method chaining.
      */
-    childAs(name?: string | number, child: SDNode, rule?: SDRule): this;
+    childAs(name: string | number, child: SDNode, rule?: SDRule): this;
+    childAs(child: SDNode, rule?: SDRule): this;
     /**
      * Gets a child component by its identifier.
      * @param name - The unique identifier assigned to the child component.

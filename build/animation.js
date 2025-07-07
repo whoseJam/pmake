@@ -1,7 +1,5 @@
 #!/usr/bin/env node
 
-const w = require("webpack");
-const fs = require("fs");
 const gulp = require("gulp");
 const path = require("path");
 const utils = require("./utils");
@@ -9,23 +7,6 @@ const parser = require("./parser");
 const colors = require("colors-console");
 const webpack = require("webpack-stream");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
-
-function validateJSFile(sourceFilePath) {
-    if (!fs.existsSync(sourceFilePath)) {
-        console.log(colors("red", `[Error] File ${sourceFilePath} not found. Please check if the input path is correct.`));
-        process.exit();
-    }
-    if (!sourceFilePath.toLowerCase().endsWith(".js")) {
-        console.log(colors("red", `[Error] Invalid file type. The file must be a JavaScript (.js) file.`));
-        process.exit();
-    }
-    try {
-        fs.accessSync(sourceFilePath, fs.constants.R_OK);
-    } catch (err) {
-        console.log(colors("red", `[Error] Cannot read the file. Check file permissions.`));
-        process.exit();
-    }
-}
 
 function truncateAtStackTrace(errorMessage) {
     const index = errorMessage.indexOf("    at");
@@ -40,7 +21,7 @@ function truncateAtStackTrace(errorMessage) {
  */
 function task(source, targetFolder) {
     source = source.replaceAll("\\", "/");
-    validateJSFile(source);
+    utils.validateJSFile(source);
     const file = String(source).split("/").slice(-1)[0].split(".")[0];
     const config = getConfiguration(file);
     return (

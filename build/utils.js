@@ -1,14 +1,10 @@
 const fs = require("fs");
-const gulp = require("gulp");
+const path = require("path");
 
 module.exports = {
-    /**
-     * @param {string} src
-     * @param {string} dest
-     * @returns {NodeJS.ReadWriteStream}
-     */
     copyFile(src, dest) {
-        return gulp.src(src).pipe(gulp.dest(dest));
+        const name = path.basename(src);
+        fs.copyFileSync(src, `${dest}/${name}`);
     },
     copyFonts(src, dest) {
         const fonts = ["Consolas.ttf", "Arial.ttf", "Times New Roman.ttf"];
@@ -17,5 +13,21 @@ module.exports = {
             if (fs.existsSync(`${dest}/${font}`)) return;
             fs.copyFileSync(`${src}/${font}`, `${dest}/${font}`);
         });
+    },
+    validateJSFile(src) {
+        if (!fs.existsSync(src)) {
+            console.log(colors("red", `[Error] File ${src} not found. Please check if the input path is correct.`));
+            process.exit();
+        }
+        if (!src.toLowerCase().endsWith(".js")) {
+            console.log(colors("red", `[Error] Invalid file type. The file must be a JavaScript (.js) file.`));
+            process.exit();
+        }
+        try {
+            fs.accessSync(sourceFilePath, fs.constants.R_OK);
+        } catch (err) {
+            console.log(colors("red", `[Error] Cannot read the file. Check file permissions.`));
+            process.exit();
+        }
     },
 };
