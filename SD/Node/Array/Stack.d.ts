@@ -1,7 +1,3 @@
-import { Array } from "@/Node/Array/Array";
-import { SDNode } from "@/Node/SDNode";
-import { RenderNode } from "@/Renderer/RenderNode";
+import { BaseArray } from "@/Node/Array/BaseArray";
 
-export class Stack extends Array {
-    constructor(target: SDNode | RenderNode);
-}
+export class Stack extends BaseArray {}

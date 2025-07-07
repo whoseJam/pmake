@@ -8,7 +8,7 @@ class AsidePlugin {
     gap(): number;
     /**
      * Sets the gap between the aside component and its target component. Default to `5`.
-     * @param gap The gap to apply.
+     * @param gap - The gap to apply.
      * @returns The current component instance for method chaining.
      */
     gap(gap: number): this;
@@ -31,7 +31,7 @@ class AsidePlugin {
      * - "bl": bottom-left.
      * - "bc": bottom-center.
      * - "br": bottom-right.
-     * @param location The location to apply.
+     * @param location - The location to apply.
      * @returns The current component instance for method chaining.
      */
     location(location: string): this;

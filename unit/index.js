@@ -2,7 +2,19 @@ import * as sd from "@/sd";
 
 const svg = sd.svg();
 
-sd.main(TestGridIndex);
+sd.main(TestIndexTarget);
+
+async function TestIndexTarget() {
+    const grid = new sd.Grid(svg).x(100).y(100).startN(1).startM(1).n(5).m(3);
+    const arr = new sd.Array(svg).x(100).y(500).start(1).resize(5);
+    const stk = new sd.Stack(svg).x(500).y(100).resize(8).start(2);
+    await sd.pause();
+    const index = sd.Index(grid, "t").opacity(0).startAnimate().opacity(1).endAnimate();
+    await sd.pause();
+    index.startAnimate().target(arr).endAnimate();
+    await sd.pause();
+    index.startAnimate().freeze().target(stk).location("l").unfreeze().endAnimate();
+}
 
 async function TestGridIndex() {
     const locations = ["b", "l", "r", "t"];

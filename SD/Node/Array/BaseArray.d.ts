@@ -1,7 +1,8 @@
+import { SD2DNode } from "@/Node/SD2DNode";
 import { SDNode } from "@/Node/SDNode";
 import { SDColor } from "@/Utility/Color";
 
-export class BaseArray extends SDNode {
+export class BaseArray extends SD2DNode {
     /**
      * Gets the index of the first element in this array component.
      * @returns The index of the first element.

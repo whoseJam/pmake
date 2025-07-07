@@ -98,9 +98,6 @@ export class TextSVG extends BaseText {
             this.__flushTransformings();
             this.__currentTransforming(() => this.__createTransforming({ family: oldFamily }, { family: newFamily }));
         });
-        this.effect("html", () => {
-            this.vars.html = parseToHTML.call(this);
-        });
 
         this._.nake.setAttribute("text-anchor", "start");
         this._.nake.setAttribute("alignment-baseline", "text-before-edge");
@@ -177,7 +174,10 @@ Object.assign(TextSVG.prototype, {
             this.vars.text = text;
             this.vars.html = parseToHTML.call(this);
             context.recover();
-        } else this.vars.text = text;
+        } else {
+            this.vars.text = text;
+            this.vars.html = parseToHTML.call(this);
+        }
         this.vars.setTogether({
             width: box.width,
             height: box.height,
@@ -234,8 +234,6 @@ Object.assign(TextSVG.prototype, {
         else if (operator === "first") update(matched[0]);
         else if (operator === "last") update(matched[matched.length - 1]);
         else update(matched[operator]);
-        console.log("Start!");
-        global.debug = true;
         if (this.duration() > 0 && TextEngine.fontExists(this.fontFamily())) {
             const context = new Context(this);
             context.till(0, 0);
@@ -251,8 +249,6 @@ Object.assign(TextSVG.prototype, {
             this._.attr = attr;
             this.vars.html = parseToHTML.call(this);
         }
-        global.debug = false;
-        console.log("End!");
         return this;
     },
     __flushTransformings() {

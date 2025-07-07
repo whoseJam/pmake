@@ -7,6 +7,7 @@ import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
 
 const LOCATION_KEY = new Set(["l", "r", "t", "b"]);
+const LOCATION_KEY_SUGGESTION = [() => true, "For brace plugin, here are 4 types of locations which are 'l', 'r', 't', 'b'."];
 
 class BracePlugin {
     value(value, rule) {
@@ -61,13 +62,14 @@ class BracePlugin {
     }
     location(location) {
         if (arguments.length === 0) return this.vars.location;
-        Check.validateLocation(location, LOCATION_KEY, "BracePlugin.location", [() => true, "For brace plugin, here are 4 types of locations which are 'l', 'r', 't', 'b'."]);
+        Check.validateLocation(location, LOCATION_KEY, "BracePlugin.location", LOCATION_KEY_SUGGESTION);
         this.vars.location = location;
         return this;
     }
 }
 
 export function Brace(target, location = "t") {
+    Check.validateLocation(location, LOCATION_KEY, "Brace", 2, LOCATION_KEY_SUGGESTION);
     const self = new BraceCurve(target).opacity(0);
     self.vars.merge({
         target,

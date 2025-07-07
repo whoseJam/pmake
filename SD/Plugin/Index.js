@@ -1,113 +1,132 @@
 import { Enter as EN } from "@/Node/Core/Enter";
-import { Exit as EX } from "@/Node/Core/Exit";
 import { BaseGrid } from "@/Node/Grid/BaseGrid";
 import { SD2DNode } from "@/Node/SD2DNode";
 import { Text } from "@/Node/Text/Text";
 import { Rule as R } from "@/Rule/Rule";
-import { ErrorLauncher } from "@/Utility/ErrorLauncher";
-import { Factory } from "@/Utility/Factory";
+import { Check } from "@/Utility/Check";
+import { ObjectPool } from "@/Utility/Pool/ObjectPool";
 
-function asideRule(element, index, location, gap) {
-    R.aside(location + "c", gap)(element, index);
+const LOCATION_KEY = new Set(["l", "r", "t", "b"]);
+const LOCATION_KEY_SUGGESTION = [() => true, "For self plugin, here are 4 types of locations which are 'l', 'r', 't', 'b'."];
+
+class IndexPlugin {
+    target(target) {
+        if (arguments.length === 0) return this.vars.target;
+        Check.validateSDNode(target, "IndexPlugin.target");
+        this.vars.target = target;
+        return this;
+    }
+    gap(gap) {
+        if (arguments.length === 0) return this.vars.gap;
+        Check.validateNumber(gap, "IndexPlugin.gap");
+        this.vars.lpset("gap", gap);
+        return this;
+    }
+    location(location) {
+        if (arguments.length === 0) return this.vars.location;
+        Check.validateLocation(location, LOCATION_KEY, "IndexPlugin.location");
+        this.vars.location = location;
+        return this;
+    }
+    fontSize(size) {
+        if (arguments.length === 0) return this.vars.fontSize;
+        Check.validateNumber(size, "IndexPlugin.fontSize");
+        this.vars.fontSize = size;
+        return this;
+    }
 }
 
-function getStart(parent, location) {
-    if (parent instanceof BaseGrid) {
-        if (parent.axis() === "row") {
-            return location === "t" || location === "b" ? parent.startM() : parent.startN();
-        } else {
-            return location === "t" || location === "b" ? parent.startN() : parent.startM();
-        }
-    } else return parent.start();
-}
+export function Index(target, location = "t", fontSize = 15, gap = 3) {
+    Check.validateLocation(location, LOCATION_KEY, "Index", 2, LOCATION_KEY_SUGGESTION);
+    Check.validateNumber(fontSize, "Index", 3);
+    Check.validateNumber(gap, "Index", 4);
 
-function getLength(parent, location) {
-    if (parent instanceof BaseGrid) {
-        if (parent.axis() === "row") {
-            return location === "t" || location === "b" ? parent.m() : parent.n();
-        } else {
-            return location === "t" || location === "b" ? parent.n() : parent.m();
-        }
-    } else return parent.length();
-}
-
-function getGap(gap, parent, location) {
-    return gap + (location === "l" || location === "r") * 3;
-}
-
-function getElement(parent, location, i) {
-    if (parent instanceof BaseGrid) {
-        if (parent.axis() === "row") {
-            if (location === "t") {
-                for (let rowId = parent.startN(); rowId <= parent.endN(); rowId++) if (parent.endM(rowId) >= i) return parent.element(rowId, i);
-                ErrorLauncher.invalidComponentStatus();
-            }
-            if (location === "b") {
-                for (let rowId = parent.endN(); rowId >= parent.startN(); rowId--) if (parent.endM(rowId) >= i) return parent.element(rowId, i);
-                ErrorLauncher.invalidComponentStatus();
-            }
-            if (location === "l") return parent.element(i, parent.startM());
-            if (location === "r") return parent.element(i, parent.endM(i));
-        } else {
-            if (location === "t") return parent.element(i, parent.startM());
-            if (location === "b") return parent.element(i, parent.endM(i));
-            if (location === "l") {
-                for (let rowId = parent.startN(); rowId <= parent.endN(); rowId++) if (parent.endM(rowId) >= i) return parent.element(rowId, i);
-                ErrorLauncher.invalidComponentStatus();
-            }
-            if (location === "r") {
-                for (let rowId = parent.endN(); rowId >= parent.startN(); rowId--) if (parent.endM(rowId) >= i) return parent.element(rowId, i);
-                ErrorLauncher.invalidComponentStatus();
-            }
-        }
-    } else return parent.element(i);
-}
-
-export function Index(parent, location = "t", fontSize = 15, gap = 3) {
-    const index = new SD2DNode(parent);
-    index.type("Index");
-    index.vars.merge({
-        gap: gap,
-        location: location,
-        fontSize: fontSize,
-        elements: [],
+    const self = new SD2DNode(target);
+    self.type("Index");
+    self.vars.merge({
+        target,
+        gap,
+        location,
+        fontSize,
     });
-    index.gap = Factory.handlerLowPrecise("gap");
-    index.location = Factory.handler("location");
-    index.fontSize = Factory.handlerLowPrecise("fontSize");
-    index.effect("fontSize", () => {
-        index.vars.elements.forEach(element => {
-            element.fontSize(index.fontSize());
-        });
-    });
-    index.effect("index", () => {
-        const map = {};
-        const location = index.location();
-        const gap = getGap(index.gap(), parent, location);
-        const start = getStart(parent, location);
-        const length = getLength(parent, location);
-        index.vars.elements.forEach(element => (map[element.intValue()] = element));
+    self.gap = IndexPlugin.prototype.gap;
+    self.target = IndexPlugin.prototype.target;
+    self.location = IndexPlugin.prototype.location;
+    self.fontSize = IndexPlugin.prototype.fontSize;
+
+    const indexPool = createIndexPool(self);
+
+    self.effect("index", () => {
+        const target = self.vars.target;
+        const location = self.location();
+        const gap = self.gap() + (location === "l" || location === "r") * 3;
+        const start = getStart(target, location);
+        const length = getLength(target, location);
+        indexPool.beforeAllocate();
         for (let i = start; i < start + length; i++) {
-            if (!map[i]) {
-                const element = new Text(index, i).opacity(0);
-                element.onEnter(EN.appear());
-                element.onExit(EX.fade());
-                index.childAs(element);
-                index.vars.elements.push(element);
-            } else delete map[i];
-        }
-        for (let id in map) {
-            const element = map[id];
-            index.eraseChild(element);
-            index.vars.elements.splice(index.vars.elements.indexOf(element), 1);
-        }
-        index.vars.elements.forEach(element => {
-            const i = element.intValue();
-            index.tryUpdate(element, () => {
-                asideRule(getElement(parent, location, i), element, location, gap);
+            const index = indexPool.allocate(i);
+            self.tryUpdate(index, () => {
+                asideRule(getElement(target, location, i), index, location, gap);
             });
-        });
+        }
+        indexPool.afterAllocate();
     });
-    parent.childAs(index);
-    return index;
+    target.childAs(self);
+    return self;
+}
+
+function createIndexPool(index) {
+    return new ObjectPool({
+        onIdle(text) {
+            text.opacity(0);
+        },
+        getIdle(text) {
+            return text.onEnter(EN.appear());
+        },
+        getUsed(text) {
+            return text.onEnter(EN.moveTo());
+        },
+        onCreate(i) {
+            const text = new Text(index, i);
+            index.childAs(text);
+            return text;
+        },
+    });
+}
+
+function asideRule(element, self, location, gap) {
+    R.aside(location + "c", gap)(element, self);
+}
+
+function getStart(target, location) {
+    if (target instanceof BaseGrid) {
+        if (target.axis() === "row") return location === "t" || location === "b" ? target.startM() : target.startN();
+        return location === "t" || location === "b" ? target.startN() : target.startM();
+    }
+    return target.start();
+}
+
+function getLength(target, location) {
+    if (target instanceof BaseGrid) {
+        if (target.axis() === "row") return location === "t" || location === "b" ? target.m() : target.n();
+        return location === "t" || location === "b" ? target.n() : target.m();
+    }
+    return target.length();
+}
+
+function getElement(target, location, i) {
+    if (target instanceof BaseGrid) {
+        if (target.axis() === "row") {
+            if (location === "t") for (let rowId = target.startN(); rowId <= target.endN(); rowId++) if (target.endM(rowId) >= i) return target.element(rowId, i);
+            if (location === "b") for (let rowId = target.endN(); rowId >= target.startN(); rowId--) if (target.endM(rowId) >= i) return target.element(rowId, i);
+            if (location === "l") return target.element(i, target.startM());
+            if (location === "r") return target.element(i, target.endM(i));
+        } else {
+            if (location === "t") return target.element(i, target.startM());
+            if (location === "b") return target.element(i, target.endM(i));
+            if (location === "l") for (let rowId = target.startN(); rowId <= target.endN(); rowId++) if (target.endM(rowId) >= i) return target.element(rowId, i);
+            if (location === "r") for (let rowId = target.endN(); rowId >= target.startN(); rowId--) if (target.endM(rowId) >= i) return target.element(rowId, i);
+        }
+    }
+    return target.element(i);
 }

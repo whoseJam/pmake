@@ -87,7 +87,10 @@ export class ErrorLauncher {
     static invalidLocation(object: any, method: string, i = 1, suggestions = []) {
         throw new Error(`We expect a location-string for the ${generateLocation(i)} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
     }
-    static warnNotImplementedYet(method) {
+    static invalidSDNode(object: any, method: string, i = 1, suggestions = []) {
+        throw new Error(`We expect a SDNode for the ${generateLocation(i)} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
+    }
+    static warnNotImplementedYet(method: string) {
         console.warn(`Function ${method} not implemented yet.`);
     }
 }

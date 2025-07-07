@@ -341,7 +341,6 @@ export function effect(innerEffect, tag) {
         effect.tag = tag || innerEffect;
         const callbacks = afterEffects.shift();
         callbacks.forEach(callback => callback());
-        console.log("effect in effect! current effect queue=", effectQueue.queue.length);
     } else {
         globalAllowUpdate = false;
         effectQueue.pushBack(effect);

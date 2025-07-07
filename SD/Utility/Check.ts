@@ -73,6 +73,10 @@ export class Check {
     static validateLocation(object: any, locations: ReadonlySet<string>, method: string, i = 1, suggestions = []) {
         if (!locations.has(object)) ErrorLauncher.invalidLocation(object, method, i, suggestions);
     }
+    static validateSDNode(object: any, method: string, i = 1, suggestions = []) {
+        const { SDNode } = require("@/Node/SDNode");
+        if (!(object instanceof SDNode)) ErrorLauncher.invalidSDNode(object, method, i, suggestions);
+    }
     static validateArgumentsCountEqualTo(args: Array<any>, count: number, method: string) {
         if (args.length !== count) throw new Error(`The ${method} expect ${count} arguments, but got ${args.length} arguments.`);
     }
