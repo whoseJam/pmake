@@ -1,6 +1,10 @@
-export class CompStress {
-    stress(): this;
-    stress(rate: number): this;
+class StressPlugin {
+    stress(scale?: number): this;
 }
 
-export function Stress<T>(parent: T): CompStress & T;
+/**
+ * Creates a **`sd.StressPlugin`** instance.
+ * @param target
+ * @returns A new plugin instance.
+ */
+export function Stress<T>(target: T): StressPlugin & T;
