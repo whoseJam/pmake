@@ -193,7 +193,7 @@ class TransformingPathGroup {
         }
     }
     replay(target: Array<TransformingPath>, valid: Array<boolean>) {
-        this.target = target.filter((path, i) => !Array.isArray(valid) || valid[i]);
+        this.target = target.filter((path, i) => (!Array.isArray(valid) || valid[i]) && path !== undefined);
         this.play();
     }
 }
@@ -495,11 +495,13 @@ export class TextEngine {
         for (let i = 0; i < targetPaths.length; i++) {
             const path = targetPaths[i];
             const d = path.toPathData(4);
-            if (!d) continue;
-            const p = new TransformingPath(d, { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 }, config.text[i]);
-            p.fill = getAttribute(config.attr, i, "fill", parent.fill());
-            p.stroke = getAttribute(config.attr, i, "stroke", parent.stroke());
-            paths.push(p);
+            if (!d) paths.push(undefined);
+            else {
+                const p = new TransformingPath(d, { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 }, config.text[i]);
+                p.fill = getAttribute(config.attr, i, "fill", parent.fill());
+                p.stroke = getAttribute(config.attr, i, "stroke", parent.stroke());
+                paths.push(p);
+            }
         }
         return paths;
     }
@@ -581,7 +583,6 @@ export class TextEngine {
         return group;
     }
     static transformText(parent, source, target, mapping = [], auto = true) {
-        // TODO: white space make sourcePaths.length !== sourceMatching.deleted.length
         mapping = processMapping(mapping);
         const sourceText = source.text;
         const targetText = target.text;
@@ -594,17 +595,17 @@ export class TextEngine {
             if (typeof item.source === "string") {
                 const s = sourceMatching.match(item.source);
                 if (s === -1) return undefined;
-                return sourcePaths.slice(s, s + item.source.length);
+                return sourcePaths.slice(s, s + item.source.length).filter(path => path !== undefined);
             } else if (item.source.object) {
                 const text = item.source.object;
                 const text_ = text.text();
                 const subtext = item.source.subtext;
                 const paths = this.getTextPaths(text);
-                for (let i = 0; i < text_.length; i++) if (text_.slice(i, i + subtext.length) === subtext) return paths.slice(i, i + subtext.length);
+                for (let i = 0; i < text_.length; i++) if (text_.slice(i, i + subtext.length) === subtext) return paths.slice(i, i + subtext.length).filter(path => path !== undefined);
                 return undefined;
             } else {
                 const text = item.source;
-                return this.getTextPaths(text);
+                return this.getTextPaths(text).filter(path => path !== undefined);
             }
         };
         const removeSourcePaths = item => {
@@ -627,6 +628,7 @@ export class TextEngine {
             const stroke = sameAttribute(sourceGroup, "stroke");
             removeSourcePaths(item);
             targetMatching.remove(item.target, t, i => {
+                if (!targetPaths[i]) return;
                 targetGroup.push(targetPaths[i]);
                 targetPaths[i].fill = fill || targetPaths[i].fill;
                 target.attr[i].fill = fill || target.attr[i].fill;
@@ -638,8 +640,8 @@ export class TextEngine {
         }
         const sourceGroup = [];
         const targetGroup = [];
-        for (let i = 0; i < sourcePaths.length; i++) if (!sourceMatching.deleted[i]) sourceGroup.push(sourcePaths[i]);
-        for (let i = 0; i < targetPaths.length; i++) if (!targetMatching.deleted[i]) targetGroup.push(targetPaths[i]);
+        for (let i = 0; i < sourcePaths.length; i++) if (!sourceMatching.deleted[i] && sourcePaths[i]) sourceGroup.push(sourcePaths[i]);
+        for (let i = 0; i < targetPaths.length; i++) if (!targetMatching.deleted[i] && targetPaths[i]) targetGroup.push(targetPaths[i]);
         transforming.groups.push(this.transformPaths(parent, sourceGroup, targetGroup));
         return transforming;
     }
