@@ -7,7 +7,7 @@ import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
 
 const LOCATION_KEY = new Set(["l", "r", "t", "b"]);
-const LOCATION_KEY_SUGGESTION = [() => true, "For brace plugin, here are 4 types of locations which are 'l', 'r', 't', 'b'."];
+const LOCATION_KEY_SUGGESTION = [() => true, "For brace component, here are 4 types of locations which are 'l', 'r', 't', 'b'."];
 
 class BracePlugin {
     value(value, rule) {
@@ -27,8 +27,8 @@ class BracePlugin {
     brace(l, r, location, gap) {
         if (Check.isNumber(l)) l = this.vars.target.element(l);
         if (Check.isNumber(r)) r = this.vars.target.element(r);
-        if (!Check.isFalse(gap)) this.braceGap(gap);
-        if (!Check.isFalse(location)) this.location(location);
+        if (arguments.length >= 3) this.location(location);
+        if (arguments.length >= 4) this.braceGap(gap);
         if (!(this.vars.target instanceof SDNode)) replaceBrace(this, l, r);
         if (this.duration() > 0 && this.opacity() === 0) {
             const context = new Context(this);
@@ -70,7 +70,9 @@ class BracePlugin {
 
 export function Brace(target, location = "t") {
     Check.validateLocation(location, LOCATION_KEY, "Brace", 2, LOCATION_KEY_SUGGESTION);
+
     const self = new BraceCurve(target).opacity(0);
+
     self.vars.merge({
         target,
         element1: undefined,
@@ -79,6 +81,7 @@ export function Brace(target, location = "t") {
         braceGap: 5,
         valueGap: 5,
     });
+
     self.value = BracePlugin.prototype.value;
     self.valueFromExist = BracePlugin.prototype.valueFromExist;
     self.brace = BracePlugin.prototype.brace;
@@ -118,7 +121,9 @@ export function Brace(target, location = "t") {
             }
         }
     });
+
     if (target instanceof SDNode) target.childAs(self);
+
     return self;
 }
 

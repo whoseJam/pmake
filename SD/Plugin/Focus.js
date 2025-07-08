@@ -36,7 +36,13 @@ class FocusPlugin {
             b = this.vars.target.element(c, d);
             return this.focus(a, b);
         }
-        if (Check.isEmpty(a)) return this.opacity(0);
+        if (Check.isEmpty(a)) {
+            this.vars.setTogether({
+                element1: undefined,
+                element2: undefined,
+            });
+            return this.opacity(0);
+        }
         if (this.duration() > 0 && this.opacity() === 0) {
             const context = new Context(this);
             context.till(0, 0);

@@ -4,10 +4,20 @@ const svg = sd.svg();
 
 sd.init(() => {});
 
-sd.main(TestWithArray);
+sd.main(TestPointerGap);
+
+async function TestPointerGap() {
+    const axis = new sd.FixGapAxis(svg).x(100).y(100);
+    const p1 = sd.Pointer(axis).moveTo(axis.tick(1));
+    const p2 = sd.Pointer(axis).moveTo(axis.tick(1));
+    const p3 = sd.Pointer(axis).moveTo(axis.tick(1));
+    await sd.pause();
+    axis.startAnimate();
+    p2.moveTo(axis.tick(5));
+    axis.endAnimate();
+}
 
 async function TestWithArray() {
-    const svg = sd.svg();
     const n = 7;
     const arr = new sd.Array(svg).x(100).y(100).resize(n);
     sd.Pointer(arr, "start", "b").moveTo(arr.start());
