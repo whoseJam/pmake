@@ -18,4 +18,23 @@
         <iframe data-animation="./造海船.js"
             style="width: 1000px; height: 500px;"></iframe>
     </section>
+    <section>
+        <h2>造海船</h2>
+        <iframe data-animation="./序列特征.js"
+            style="width: 1000px; height: 200px;"></iframe>
+        <codeblock class="fragment">
+            <script type="text/template">
+                while (l <= r) {
+                    int mid = (l + r) >> 1;
+                    if (...) l = mid + 1;
+                    else r = mid - 1;
+                }
+                // l or r ?
+            </script>
+        </codeblock>
+        <ul>
+            <li class="fragment">用 $mid$ 长度去切原木，假设算出可以切 $F(mid)$ 根木材<span class="fragment">，则填 $F(mid)\ge k$</span></li>
+            <li class="fragment">$r$ 是答案</li>
+        </ul>
+    </section>
 </section>

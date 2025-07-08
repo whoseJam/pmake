@@ -55,13 +55,13 @@ class PointerPlugin {
         return this;
     }
     moveTo(x, y) {
-        if (arguments.length === 2) return this.moveTo(this.vars.target.element(x, y));
-        else if (arguments.length === 1 && !(x instanceof SDNode)) return this.moveTo(this.vars.target.element(x));
         if (Check.isEmpty(x)) {
             erasePointerMap(this);
             this.vars.element = undefined;
             return this.opacity(0);
         }
+        if (arguments.length === 2) return this.moveTo(this.vars.target.element(x, y));
+        else if (arguments.length === 1 && !(x instanceof SDNode)) return this.moveTo(this.vars.target.element(x));
         erasePointerMap(this);
         if (this.duration() > 0 && this.opacity() === 0) {
             const context = new Context(this);
@@ -121,7 +121,6 @@ export function Pointer(target, text = "", direction = "b", pointerGap = 3, leng
             if (direction === "r") pointer.source(x - gap - length, y).target(x - gap, y);
             if (direction === "l") pointer.source(x + gap + length, y).target(x + gap, y);
         }
-        console.log("pointers=", pointers, "gapLength=", gapLength, "elementLength=", elementlength);
         if (gapLength <= elementlength) {
             pointers.forEach((pointer, i) => {
                 const k = (i + 1) / (pointers.length + 1);

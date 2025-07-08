@@ -30,6 +30,7 @@ sd.main(async () => {
 });
 
 async function update(value) {
+    length.startAnimate().text(value).endAnimate();
     let ans = 0;
     for (let i = 0; i < L.length; i++) {
         arrs[i].startAnimate();
