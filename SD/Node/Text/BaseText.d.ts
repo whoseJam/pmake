@@ -9,7 +9,7 @@ export class BaseText extends SD2DNode {
      */
     fontSize(): number;
     /**
-     * Sets the font size of this text component. Default to `20`.
+     * Sets the font size of this text component. Defaults to `20`.
      * @param fontSize - The font size to apply.
      * @returns The current component instance for method chaining.
      */
@@ -31,7 +31,7 @@ export class BaseText extends SD2DNode {
      */
     fill(): string;
     /**
-     * Sets the fill color of this text component. Default to `C.black`.
+     * Sets the fill color of this text component. Defaults to `C.black`.
      * @param fill - The fill color to apply.
      * @returns The current component instance for method chaining.
      */
@@ -42,7 +42,7 @@ export class BaseText extends SD2DNode {
      */
     stroke(): string;
     /**
-     * Sets the stroke color of this text component. Default to `C.black`.
+     * Sets the stroke color of this text component. Defaults to `C.black`.
      * @param stroke - The stroke color to apply.
      * @returns The current component instance for method chaining.
      */
@@ -62,7 +62,7 @@ export class BaseText extends SD2DNode {
      * Sets the color of a matched subtext in this text component.
      * @param subtext - The subtext to match.
      * @param color - The color to apply.
-     * @param i - Optional index specifying which matched subtext to be colored. Default to `1`.
+     * @param i - Optional index specifying which matched subtext to be colored. Defaults to `1`.
      * @returns The current component instance for method chaining.
      */
     subtextColor(subtext: string, color: string | SDColor, i?: number): this;

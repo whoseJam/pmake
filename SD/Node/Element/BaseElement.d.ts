@@ -28,7 +28,7 @@ export class BaseElement extends SD2DNode {
      */
     rate(): number;
     /**
-     * Sets the visual representation scaling factor of this element component. Default to `1.2`.
+     * Sets the visual representation scaling factor of this element component. Defaults to `1.2`.
      *
      * This method adjusts the perceived size of the component's value display.
      * A higher rate value results in a smaller visual representation, while a lower
@@ -77,7 +77,7 @@ export class BaseElement extends SD2DNode {
      */
     stroke(): string;
     /**
-     * Sets the stroke color of this element component. Default to `C.black`.
+     * Sets the stroke color of this element component. Defaults to `C.black`.
      * @param stroke - The stroke color to apply.
      * @returns The current component instance for method chaining.
      */
@@ -99,7 +99,7 @@ export class BaseElement extends SD2DNode {
      */
     strokeWidth(): number;
     /**
-     * Sets the stroke width for this element component. Default to `1`.
+     * Sets the stroke width for this element component. Defaults to `1`.
      * @param width - The stroke width to apply.
      * @returns The current component instance for method chaining.
      */

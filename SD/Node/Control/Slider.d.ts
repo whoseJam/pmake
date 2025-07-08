@@ -7,7 +7,7 @@ export class Slider extends BaseControl {
      */
     max(): number;
     /**
-     * Sets the maximum value of the slider component's range. Default to `10`.
+     * Sets the maximum value of the slider component's range. Defaults to `10`.
      * @param max - The maximum value to apply.
      * @returns The current component instance for method chaining.
      */
@@ -18,7 +18,7 @@ export class Slider extends BaseControl {
      */
     min(): number;
     /**
-     * Sets the minimum value of the slider component's range. Default to `0`.
+     * Sets the minimum value of the slider component's range. Defaults to `0`.
      * @param min - The minimum value to apply.
      * @returns The current component instance for method chaining.
      */

@@ -45,13 +45,16 @@ export function Index(target, location = "t", fontSize = 15, gap = 3) {
     Check.validateNumber(gap, "Index", 4);
 
     const self = new SD2DNode(target);
+
     self.type("Index");
+
     self.vars.merge({
         target,
         gap,
         location,
         fontSize,
     });
+
     self.gap = IndexPlugin.prototype.gap;
     self.target = IndexPlugin.prototype.target;
     self.location = IndexPlugin.prototype.location;
@@ -74,7 +77,9 @@ export function Index(target, location = "t", fontSize = 15, gap = 3) {
         }
         indexPool.afterAllocate();
     });
+
     target.childAs(self);
+
     return self;
 }
 

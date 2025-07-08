@@ -4,7 +4,7 @@ const svg = sd.svg();
 
 sd.init(() => {});
 
-sd.main(TestTreeBug);
+sd.main(TestBasic);
 
 async function TestTreeBug() {
     const t1 = new sd.Tree(svg).x(100).y(100).root(1);

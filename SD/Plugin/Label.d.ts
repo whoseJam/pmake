@@ -30,7 +30,7 @@ class LabelPlugin {
      */
     location(): string;
     /**
-     * Sets the location of this label component relatives to its target component. Default to `"lc"`.
+     * Sets the location of this label component relatives to its target component. Defaults to `"lc"`.
      * - "lt": left-top.
      * - "lc": left-center.
      * - "lb": left-bottom.
@@ -66,5 +66,6 @@ export function Label(target: SDNode, text: string, location?: string, fontSize?
  * @param location
  * @param fontSize
  * @param gap
+ * @returns A new plugin instance.
  */
 export function MathjaxLabel(target: SDNode, text: string, location?: string, fontSize?: number, gap?: number): LabelPlugin & BaseText;

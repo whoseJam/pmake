@@ -15,7 +15,7 @@ export class BasePath extends SD2DNode {
      */
     fill(): string;
     /**
-     * Sets the fill color of this path component. Default to 'C.white'.
+     * Sets the fill color of this path component. Defaults to 'C.white'.
      * @param fill - The fill color to apply.
      * @returns The current component instance for method chaining.
      */
@@ -26,7 +26,7 @@ export class BasePath extends SD2DNode {
      */
     fillOpacity(): number;
     /**
-     * Sets the fill opacity of this shape component. Default to `0`.
+     * Sets the fill opacity of this shape component. Defaults to `0`.
      * @param opacity - The fill opacity to apply.
      * @returns The current component instance for method chaining.
      */
@@ -80,7 +80,7 @@ export class BasePath extends SD2DNode {
      */
     strokeDashArray(): Array<number>;
     /**
-     * Sets teh stroke dash array of this path component. Default to `[1, 0]`.
+     * Sets teh stroke dash array of this path component. Defaults to `[1, 0]`.
      * @param array - The stroke dash array to apply.
      * @returns The current component instance for method chaining.
      */

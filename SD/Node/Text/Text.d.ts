@@ -9,7 +9,7 @@ export class Text extends BaseText {
     /**
      * Sets the font family of this text component.
      *
-     * Only "Consolas", "Arial" and "Times New Roman" are supported. Default to "Consolas".
+     * Only "Consolas", "Arial" and "Times New Roman" are supported. Defaults to "Consolas".
      * @param family - The font family to apply.
      * @returns The current component instance for method chaining.
      */

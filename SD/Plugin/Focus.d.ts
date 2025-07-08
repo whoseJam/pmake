@@ -66,7 +66,7 @@ class FocusPlugin extends Rect {
      */
     gap(): number;
     /**
-     * Sets the gap between the focus component and its target components. Default to `0`.
+     * Sets the gap between the focus component and its target components. Defaults to `0`.
      * @param gap - The gap to apply.
      * @returns The current component instance for method chaining.
      */

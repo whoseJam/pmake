@@ -20,7 +20,7 @@ export class BracePlugin extends BraceCurve {
      */
     location(): string;
     /**
-     * Sets the location of the brace component relative to its target components. Default to `"t"`.
+     * Sets the location of the brace component relative to its target components. Defaults to `"t"`.
      * - "l": left.
      * - "r": right.
      * - "t": top.
@@ -35,7 +35,7 @@ export class BracePlugin extends BraceCurve {
      */
     braceGap(): number;
     /**
-     * Sets the gap between the brace component and its target components. Default to `5`.
+     * Sets the gap between the brace component and its target components. Defaults to `5`.
      * @param gap - The gap to apply.
      * @returns The current component instance for method chaining.
      */
@@ -46,7 +46,7 @@ export class BracePlugin extends BraceCurve {
      */
     valueGap(): number;
     /**
-     * Sets the gap between the brace component and its value component. Default to `5`.
+     * Sets the gap between the brace component and its value component. Defaults to `5`.
      * @param gap - The gap to apply.
      * @returns The current component instance for method chaining.
      */
@@ -56,7 +56,7 @@ export class BracePlugin extends BraceCurve {
 /**
  * Creates a **`sd.BracePlugin`** instance to brace a region.
  * @param target - The destination to render the plugin.
- * @param location - The location of the brace component. Default to 't'.
+ * @param location - The location of the brace component. Defaults to 't'.
  * @returns A new plugin instance.
  */
 export function Brace(target: SDNode | RenderNode, location?: string): BracePlugin;

@@ -1,55 +1,78 @@
-import { Context } from "@/Animate/Context";
-import { svg } from "@/Interact/Root";
 import { Exit as EX } from "@/Node/Core/Exit";
 import { Line } from "@/Node/Path/Line";
-import { Factory } from "@/Utility/Factory";
 import { trim } from "@/Utility/Trim";
 
-export function Link(sourceElement, targetElement, type = Line, sourceXLocation = "cx", sourceYLocation = "cy", targetXLocation = "cx", targetYLocation = "cy") {
-    const link = new type(svg());
-    link.vars.merge({
-        element1: sourceElement,
-        element2: targetElement,
-        xlocation1: sourceXLocation,
-        ylocation1: sourceYLocation,
-        xlocation2: targetXLocation,
-        ylocation2: targetYLocation,
-    });
-    link.effect("element", () => {
-        if (link.vars.update) link.vars.update = false;
-        const element1 = link.vars.element1;
-        const element2 = link.vars.element2;
-        link.source(element1[link.vars.xlocation1](), element1[link.vars.ylocation1]());
-        link.target(element2[link.vars.xlocation2](), element2[link.vars.ylocation2]());
-    });
-    link.effect("trim", () => {
-        const element1 = link.vars.element1;
-        const element2 = link.vars.element2;
-        trim(link, element1, element2);
-    });
-    link.sourceElement = function (element) {
-        if (element === undefined) return this.vars.element1;
-        const context = new Context(this);
-        this.vars.element1.eraseChild(this.onExit(EX.drop()));
-        context.recover();
-        this.vars.element1 = element;
-        element.childAs(this);
+class LinkPlugin {
+    sourceElement(source) {
+        if (arguments.length === 0) return this.vars.element1;
+        console.log("source=", source);
+        this.vars.element1.eraseChild(this.onExit(EX.nothing()));
+        this.vars.element1 = source;
+        this.vars.element1.childAs(this);
         return this;
-    };
-    link.targetElement = function (element) {
-        if (element === undefined) return this.vars.element2;
-        const context = new Context(this);
-        this.vars.element2.eraseChild(this.onExit(EX.drop()));
-        context.recover();
-        this.vars.element2 = element;
-        element.childAs(this);
+    }
+    targetElement(target) {
+        if (arguments.length === 0) return this.vars.element2;
+        this.vars.element2.eraseChild(this.onExit(EX.nothing()));
+        this.vars.element2 = target;
+        this.vars.element2.childAs(this);
         return this;
-    };
-    link.sourceXLocation = Factory.handler("xlocation1");
-    link.sourceYLocation = Factory.handler("ylocation1");
-    link.targetXLocation = Factory.handler("xlocation2");
-    link.targetYLocation = Factory.handler("ylocation2");
-    sourceElement.childAs(link);
-    targetElement.childAs(link);
-    return link;
+    }
+    sourceLocationX(location) {
+        if (arguments.length === 0) return this.vars.sx;
+        this.vars.sx = location;
+        return this;
+    }
+    sourceLocationY(location) {
+        if (arguments.length === 0) return this.vars.sy;
+        this.vars.sy = location;
+        return this;
+    }
+    targetLocationX(location) {
+        if (arguments.length === 0) return this.vars.tx;
+        this.vars.tx = location;
+        return this;
+    }
+    targetLocationY(location) {
+        if (arguments.length === 0) return this.vars.ty;
+        this.vars.ty = location;
+        return this;
+    }
+}
+
+export function Link(source, target, clazz = Line, sx = "cx", sy = "cy", tx = "cx", ty = "cy") {
+    const self = new clazz(target);
+    self.vars.merge({
+        element1: source,
+        element2: target,
+        sx,
+        sy,
+        tx,
+        ty,
+    });
+
+    self.sourceElement = LinkPlugin.prototype.sourceElement;
+    self.targetElement = LinkPlugin.prototype.targetElement;
+    self.sourceLocationX = LinkPlugin.prototype.sourceLocationX;
+    self.sourceLocationY = LinkPlugin.prototype.sourceLocationY;
+    self.targetLocationX = LinkPlugin.prototype.targetLocationX;
+    self.targetLocationY = LinkPlugin.prototype.targetLocationY;
+
+    self.effect("element", () => {
+        if (self.vars.update) self.vars.update = false;
+        const element1 = self.vars.element1;
+        const element2 = self.vars.element2;
+        self.source(element1[self.sourceLocationX()](), element1[self.sourceLocationY()]());
+        self.target(element2[self.targetLocationX()](), element2[self.targetLocationY()]());
+    });
+    self.effect("trim", () => {
+        const element1 = self.vars.element1;
+        const element2 = self.vars.element2;
+        trim(self, element1, element2);
+    });
+
+    source.childAs(self);
+    target.childAs(self);
+
+    return self;
 }

@@ -19,7 +19,7 @@ class IndexPlugin extends SD2DNode {
      */
     gap(): number;
     /**
-     * Sets the gap between this index component and its target component. Default to `3`.
+     * Sets the gap between this index component and its target component. Defaults to `3`.
      * @param gap - The gap to apply.
      * @returns The current component instance for method chaining.
      */
@@ -30,7 +30,7 @@ class IndexPlugin extends SD2DNode {
      */
     location(): string;
     /**
-     * Sets the location of this index component relative to its target component. Default to `"t"`.
+     * Sets the location of this index component relative to its target component. Defaults to `"t"`.
      * - "l": left.
      * - "r": right.
      * - "t": top.
@@ -45,7 +45,7 @@ class IndexPlugin extends SD2DNode {
      */
     fontSize(): number;
     /**
-     * Sets the font size of this index component. Default to `15`.
+     * Sets the font size of this index component. Defaults to `15`.
      * @param fontSize - The font size to apply.
      * @returns The current component instance for method chaining.
      */

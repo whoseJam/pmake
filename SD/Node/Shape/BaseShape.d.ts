@@ -10,7 +10,7 @@ export class BaseShape extends SD2DNode {
      */
     fill(): string;
     /**
-     * Sets the fill color of this shape component. Default to `C.white`.
+     * Sets the fill color of this shape component. Defaults to `C.white`.
      * @param fill - The fill color to apply.
      * @returns The current component instance for method chaining.
      */
@@ -21,7 +21,7 @@ export class BaseShape extends SD2DNode {
      */
     fillOpacity(): number;
     /**
-     * Sets the fill opacity of this shape component. Default to `1`.
+     * Sets the fill opacity of this shape component. Defaults to `1`.
      * @param opacity - The fill opacity to apply.
      * @returns The current component instance for method chaining.
      */
@@ -32,7 +32,7 @@ export class BaseShape extends SD2DNode {
      */
     stroke(): string;
     /**
-     * Sets the stroke color of this shape component. Default to `C.black`.
+     * Sets the stroke color of this shape component. Defaults to `C.black`.
      * @param stroke - The stroke color to apply.
      * @returns The current component instance for method chaining.
      */
@@ -43,7 +43,7 @@ export class BaseShape extends SD2DNode {
      */
     strokeOpacity(): number;
     /**
-     * Sets the stroke opacity of this shape component. Default to `1`.
+     * Sets the stroke opacity of this shape component. Defaults to `1`.
      * @param opacity - The stroke opacity to apply.
      * @returns The current component instance for method chaining.
      */
@@ -54,7 +54,7 @@ export class BaseShape extends SD2DNode {
      */
     strokeWidth(): number;
     /**
-     * Sets the stroke width of this shape component. Default to `1`.
+     * Sets the stroke width of this shape component. Defaults to `1`.
      * @param width - The stroke width to apply.
      * @returns The current component instance for method chaining.
      */
@@ -65,7 +65,7 @@ export class BaseShape extends SD2DNode {
      */
     strokeDashOffset(): number;
     /**
-     * Sets the stroke dash offset of this shape component. Default to `0`.
+     * Sets the stroke dash offset of this shape component. Defaults to `0`.
      * @param offset - The stroke dash offset to apply.
      * @returns The current component instance for method chaining.
      */
@@ -76,7 +76,7 @@ export class BaseShape extends SD2DNode {
      */
     strokeDashArray(): Array<number>;
     /**
-     * Sets the stroke dash array of this shape component. Default to `[1, 0]`.
+     * Sets the stroke dash array of this shape component. Defaults to `[1, 0]`.
      * @param array - The stroke dash array to apply.
      * @returns The current component instance for method chaining.
      */
