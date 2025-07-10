@@ -49,32 +49,31 @@ function init(x) {
     const node = tree.element(x);
     node.onClick(() => {
         node.onClick(() => {
-            node.onClick(() => {});
-            expand(x);
+            node.onClick(null);
+            sd.inter(async () => {
+                expand(x);
+            });
         });
-        attachTitleTo(data[x].hover, node);
-        node.color(C.green);
+        sd.inter(async () => {
+            node.startAnimate().color(C.green).endAnimate();
+        });
     });
 }
 
 function expand(x) {
+    tree.startAnimate().freeze();
     const children = data[x].children;
     for (let i = 0; i < children.length; i++) {
         const child = children[i];
-        const condition = child.condition;
         const to = child.to;
         tree.link(x, to);
         const link = tree.element(x, to).arrow();
         const rect = new sd.Box(link, i + 1).width(20).height(20);
-        attachTitleTo(condition, rect);
         link.value(rect);
         init(to);
     }
     if (children.length === 0) {
         tree.color(x, C.orange);
     }
-}
-
-function attachTitleTo(titleText, element) {
-    element.title(titleText);
+    tree.unfreeze().endAnimate();
 }

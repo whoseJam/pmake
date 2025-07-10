@@ -23,8 +23,12 @@ export class BaseText extends SD2DNode {
      * Sets the text content of this text component.
      * @param text - The text content to apply.
      * @returns The current component instance for method chaining.
+     * @example
+     * // Sets the text content of this text component from "1" to "2".
+     * const text = new sd.Text(svg, "1");
+     * text.startAnimate().text("2").endAnimate();
      */
-    text(text: string): this;
+    text(text: number | string): this;
     /**
      * Gets the fill color of this text component.
      * @returns The fill color.
@@ -56,6 +60,9 @@ export class BaseText extends SD2DNode {
      * Sets the color of this text component.
      * @param color - The color to apply.
      * @returns The current component instance for method chaining.
+     * @example
+     * // Sets the color of this text component to red.
+     * text.startAnimate().color(C.red).endAnimate();
      */
     color(color: string | SDColor): this;
     /**

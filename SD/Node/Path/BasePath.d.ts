@@ -1,4 +1,5 @@
 import { SD2DNode } from "@/Node/SD2DNode";
+import { SDRule } from "@/Rule/Rule";
 import { SDColor } from "@/Utility/Color";
 
 /**
@@ -138,9 +139,37 @@ export class BasePath extends SD2DNode {
      * @returns The current component instance for method chaining.
      */
     doubleArrow(arrow: null | undefined | false): this;
+    /**
+     * Makes a path component gradually appear from the starting point to the ending point while the component is in animation process.
+     * @returns The current component instance for method chaining.
+     * @example
+     * // Makes a line component appear with an arrow at the ending point.
+     * line.startAnimate().pointStoT().endAnimate().arrow();
+     */
     pointStoT(): this;
+    /**
+     * Makes a path component gradually appear from the ending point to the starting point while the component is in animation process.
+     * @returns The current component instance for method chaining.
+     * @example
+     * // Makes a line component appear with an arrow at the starting point.
+     * line.startAnimate().pointTtoS().endAnimate().revArrow();
+     */
     pointTtoS(): this;
+    /**
+     * Makes a path component gradually fade from the starting point to the ending point while the component is in animation process.
+     * @returns The current component instance for method chaining.
+     * @example
+     * // Makes a line component with an arrow at the ending point fade.
+     * line.startAnimate().fadeStoT().endAnimate().arrow(null);
+     */
     fadeStoT(): this;
+    /**
+     * Makes a path component gradually fade from the ending point to the starting point while the component is in animation process.
+     * @returns The current component instance for method chaining.
+     * @example
+     * // Makes a lien component with an arrow at the starting point fade.
+     * line.startAnimate().fadeTtoS().endAnimate().revArrow(null);
+     */
     fadeTtoS(): this;
     /**
      * Gets the coordinates of a point along this path component at a specified fractinal position.

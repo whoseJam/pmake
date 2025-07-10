@@ -69,26 +69,26 @@ export class SDNode {
      * @param rule - Optional responsive rule defining the parent-child relationship.
      * @returns The current component instance for method chaining.
      */
-    childAs(name: string | number, child: SDNode, rule?: SDRule): this;
+    childAs(name: number | string, child: SDNode, rule?: SDRule): this;
     childAs(child: SDNode, rule?: SDRule): this;
     /**
      * Gets a child component by its identifier.
      * @param name - The unique identifier assigned to the child component.
      * @returns The child component associated with the specified name.
      */
-    child(name: string | number): SDNode;
+    child(name: number | string): SDNode;
     /**
      * Checks if a child component exists within this component.
      * @param child - The identifier or instance of the child component to check.
      * @returns Returns true if the chidl exists; otherwise, false.
      */
-    hasChild(child: string | number | SDNode): boolean;
+    hasChild(child: number | string | SDNode): boolean;
     /**
      * Removes a child component from this component.
      * @param child - The identifier or instance of the child component to remove.
      * @returns The removed child component if it existed; otherwise, undefined.
      */
-    eraseChild(child: string | number | SDNode): SDNode | undefined;
+    eraseChild(child: number | string | SDNode): SDNode | undefined;
     /**
      * Removes this component from the scene.
      * Note: This method only handles self-removal and does not update parent-child relationships.
