@@ -70,7 +70,7 @@ export function Index(target, location = "t", fontSize = 15, gap = 3) {
         const length = getLength(target, location);
         indexPool.beforeAllocate();
         for (let i = start; i < start + length; i++) {
-            const index = indexPool.allocate(i);
+            const index = indexPool.allocate(i).fontSize(self.fontSize());
             self.tryUpdate(index, () => {
                 asideRule(getElement(target, location, i), index, location, gap);
             });

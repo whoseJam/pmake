@@ -140,7 +140,9 @@ export class BasePath extends SD2DNode {
      */
     doubleArrow(arrow: null | undefined | false): this;
     /**
-     * Makes a path component gradually appear from the starting point to the ending point while the component is in animation process.
+     * Makes a path component gradually appear from the starting point to the ending point.
+     *
+     * This component must be animated currently.
      * @returns The current component instance for method chaining.
      * @example
      * // Makes a line component appear with an arrow at the ending point.
@@ -148,7 +150,9 @@ export class BasePath extends SD2DNode {
      */
     pointStoT(): this;
     /**
-     * Makes a path component gradually appear from the ending point to the starting point while the component is in animation process.
+     * Makes a path component gradually appear from the ending point to the starting point.
+     *
+     * This component must be animated currently.
      * @returns The current component instance for method chaining.
      * @example
      * // Makes a line component appear with an arrow at the starting point.
@@ -156,7 +160,9 @@ export class BasePath extends SD2DNode {
      */
     pointTtoS(): this;
     /**
-     * Makes a path component gradually fade from the starting point to the ending point while the component is in animation process.
+     * Makes a path component gradually fade from the starting point to the ending point.
+     *
+     * This component must be animated currently.
      * @returns The current component instance for method chaining.
      * @example
      * // Makes a line component with an arrow at the ending point fade.
@@ -164,7 +170,9 @@ export class BasePath extends SD2DNode {
      */
     fadeStoT(): this;
     /**
-     * Makes a path component gradually fade from the ending point to the starting point while the component is in animation process.
+     * Makes a path component gradually fade from the ending point to the starting point.
+     *
+     * This component must be animated currently.
      * @returns The current component instance for method chaining.
      * @example
      * // Makes a lien component with an arrow at the starting point fade.

@@ -11,7 +11,7 @@ const pointerMap = {};
 
 class PointerPlugin {
     value(value, rule) {
-        if (arguments.length === 0) return this.value("value");
+        if (arguments.length === 0) return this.child("value");
         if (this.hasChild("value")) this.eraseChild("value");
         if (Check.isEmpty(value)) return this;
         value = Cast.castToSDNode(this, value);
@@ -160,6 +160,8 @@ export function Pointer(target, text = "", direction = "b", pointerGap = 3, leng
     if (target instanceof SDNode) target.childAs(self);
 
     self.value(text);
+
+    console.log("text=", text, "self.value=", self.value());
 
     return self;
 }

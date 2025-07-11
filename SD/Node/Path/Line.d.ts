@@ -49,36 +49,36 @@ export class Line extends BasePath {
      */
     y2(y: number): this;
     /**
-     * Gets the coordinate of the starting point.
+     * Gets the coordinate of the starting point of this line component.
      * @returns The coordinate.
      */
     source(): [number, number];
     /**
-     * Sets the coordinate of the starting point.
+     * Sets the coordinate of the starting point of this line component.
      * @param vector - The coordinate to apply.
      * @returns The current component instance for method chaining.
      */
     source(vector: [number, number]): this;
     /**
-     * Sets the coordinate of the starting point.
+     * Sets the coordinate of the starting point of this line component.
      * @param x - The x coordinate to apply.
      * @param y - The y coordinate to apply.
      * @returns The current component instance for method chaining.
      */
     source(x: number, y: number): this;
     /**
-     * Gets the coordinate of the ending point.
+     * Gets the coordinate of the ending point of this line component.
      * @returns The coordinate.
      */
     target(): [number, number];
     /**
-     * Sets the coordinate of the ending point.
+     * Sets the coordinate of the ending point of this line component.
      * @param vector - The coordinate to apply.
      * @returns The current component instance for method chaining.
      */
     target(vector: [number, number]): this;
     /**
-     * Sets the coordinate of the ending point.
+     * Sets the coordinate of the ending point of this line component.
      * @param x - The x coordinate to apply.
      * @param y - The y coordinate to apply.
      * @returns The coordinate.

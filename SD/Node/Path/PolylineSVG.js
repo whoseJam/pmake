@@ -3,6 +3,7 @@ import { BasePath } from "@/Node/Path/BasePath";
 import { BaseSVG } from "@/Node/Path/BaseSVG";
 import { Polyline } from "@/Node/Path/Polyline";
 import { Factory } from "@/Utility/Factory";
+import { PathEngine } from "./PathEngine";
 
 export class PolylineSVG extends BasePath {
     constructor(target, points = []) {
@@ -31,4 +32,13 @@ PolylineSVG.extend(Polyline);
 Object.assign(PolylineSVG.prototype, {
     ...Polyline.prototype,
     ...BaseSVG.prototype,
+    getPointAtLength(length) {
+        return PathEngine.getPolylinePointAtLength(this.points(), length);
+    },
+    getPointAtRate(k) {
+        return PathEngine.getPolylinePointAtRate(this.points(), k);
+    },
+    totalLength() {
+        return PathEngine.getPolylineTotalLength();
+    },
 });

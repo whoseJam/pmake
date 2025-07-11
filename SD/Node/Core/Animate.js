@@ -64,8 +64,4 @@ export class Animate {
         this.check();
         return this.end - this.start;
     }
-    isAnimating() {
-        this.check();
-        return this.animating;
-    }
 }

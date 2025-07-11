@@ -8,7 +8,6 @@ export class Animate {
     startAnimate(other: SDNode): void;
     startAnimate(start: number, end: number): void;
     endAnimate(): void;
-    isAnimating(): boolean;
     delay(): number;
     after(delay: number): void;
     after(other: SDNode): void;

@@ -16,51 +16,48 @@ sd.init(() => {
         sd.Label(st.element(m - 1, i), i, "bc", 20, 3);
     }
     for (let i = 0; i < m; i++) {
-        sd.Label(st.element(m - 1 - i, 1), new sd.Mathjax(svg, `2^${i}`).height(20), "lc", 20);
+        sd.Label(st.element(m - 1 - i, 1), `$2^${i}$`, "lc", 20);
     }
-})
+});
 
 sd.main(async () => {
     st.opacity(0);
     await sd.pause();
     st.startAnimate().opacity(1).endAnimate();
-    for (let i = 1; i <= n; i++)
-        await show(i, 0);
-})
+    for (let i = 1; i <= n; i++) await show(i, 0);
+});
 
 async function show(pos, i) {
-    if (pos + (1<<i) - 1 <= n) {
+    if (pos + (1 << i) - 1 <= n) {
         await sd.pause();
-        let l = pos, r = (1<<i) + pos - 1;
+        let l = pos,
+            r = (1 << i) + pos - 1;
         arr.startAnimate();
-        for (let j = l; j <= r; j++)
-            arr.color(j, C.orange);
+        for (let j = l; j <= r; j++) arr.color(j, C.orange);
         arr.endAnimate();
         let rct = new sd.Rect(svg).strokeWidth(3).stroke(C.red);
         rct.x(arr.element(l).x()).y(arr.element(l).y());
-        rct.width(arr.elementWidth() * (r-l+1));
+        rct.width(arr.elementWidth() * (r - l + 1));
         rct.height(arr.elementHeight());
         rct.opacity(0).fillOpacity(0);
         rct.startAnimate().opacity(1).endAnimate();
         rct.startAnimate();
-        {   let elem = st.element(m - i - 1, pos);
+        {
+            let elem = st.element(m - i - 1, pos);
             rct.x(elem.x()).y(elem.y());
             rct.width(elem.width());
             rct.height(elem.height());
         }
         rct.endAnimate();
-        st.after(rct);
+        let mx = -Infinity;
+        for (let j = l; j <= r; j++) mx = Math.max(mx, data[j]);
         st.startAnimate();
         st.color(m - i - 1, pos, C.orange);
+        st.value(m - i - 1, pos, mx);
         st.endAnimate();
-        let mx = -Infinity;
-        for (let j = l; j <= r; j++)
-            mx = Math.max(mx, data[j]);
-        st.startAnimate().value(m - i - 1, pos, mx).endAnimate();
         await sd.pause();
         arr.startAnimate();
-        for (let j = l; j <= r; j++)
-            arr.color(j, C.white);
+        for (let j = l; j <= r; j++) arr.color(j, C.white);
         arr.endAnimate();
         st.startAnimate();
         st.color(m - i - 1, pos, C.white);

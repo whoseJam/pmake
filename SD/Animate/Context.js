@@ -3,10 +3,9 @@ export class Context {
         this.parent = parent;
         this.start = parent.delay();
         this.duration = parent.duration();
-        this.isAnimating = parent.isAnimating();
     }
     till(l, r) {
-        if (this.isAnimating) {
+        if (this.duration > 0) {
             const parent = this.parent;
             parent.endAnimate();
             parent.after(this.start + this.duration * l);
@@ -20,7 +19,7 @@ export class Context {
         };
     }
     recover() {
-        if (this.isAnimating) {
+        if (this.duration > 0) {
             const parent = this.parent;
             parent.endAnimate();
             parent.after(this.start);

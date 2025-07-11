@@ -125,7 +125,6 @@ Object.assign(SDNode.prototype, {
 
     startAnimate: forward("animate", "startAnimate"),
     endAnimate: forward("animate", "endAnimate"),
-    isAnimating: forwardWithReturn("animate", "isAnimating"),
     delay: forwardWithReturn("animate", "delay"),
     after: forward("animate", "after"),
     duration: forwardWithReturn("animate", "duration"),

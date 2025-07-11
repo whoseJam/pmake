@@ -91,41 +91,33 @@ export class SDNode {
     eraseChild(child: number | string | SDNode): SDNode | undefined;
     /**
      * Removes this component from the scene.
-     * Note: This method only handles self-removal and does not update parent-child relationships.
-     * For child components, prefer using the parent's removal method (e.g., `parent.eraseChild()`).
-     *
-     * Examples:
-     * - To remove the i-th element from `sd.Array`, use `array.erase(i)`.
-     * - To remove the (i,j)-th element from `sd.Grid`, use `grid.erase(i, j)`.
-     *
      * @returns The current component instance for method chaining.
      */
     remove(): this;
-
     /**
      * Starts an animation sequence with optional custom duration.
-     * During this sequence, all property changes are animated instead of applied immediately.
+     * During this sequence, all property changes are automatically animated instead of applied immediately.
+     * Any child in the component tree will also be animated.
      *
-     * @param duration - Animation duration in milliseconds (default: 300ms).
-     * @returns The current component instance for method chaining.
-     *
-     * @remarks
      * - Call `endAnimate()` to finalize the animation sequence.
      * - All property changes between `startAnimate()` and `endAnimate()` are animated.
-     *
+     * @param duration - Animation duration in milliseconds (default: 300ms).
+     * @returns The current component instance for method chaining.*
      * @example
      * // Move a rectangle to (100, 100) and resize it to (50, 80)
      * rect.startAnimate().x(100).y(100).width(50).height(80).endAnimate();
-     *
      * @example
      * // Create a slow color transition for a circle
      * circle.startAnimate(5000).color(C.red).endAnimate();
+     * @example
+     * parent.startAnimate();
+     * parent.color(C.blue);
+     * child.color(C.yellow); // The child component will also be animated.
+     * parent.endAnimate();
      */
     startAnimate(duration?: number): this;
     /**
-     * Starts an animation sequence by copying parameters from another component's animation.
-     * This method clones timing properties from the specified component.
-     *
+     * Starts an animation sequence by copying parameters from another component.
      * @param other - The source component whose animation parameters will be copied.
      * @returns The current component instance for method chaining.
      */
@@ -140,16 +132,10 @@ export class SDNode {
     startAnimate(start: number, end: number): this;
     /**
      * Finalizes and applies the current animation sequence.
-     * Call this method after configuring properties with `startAnimate()` to trigger the animation.
-     *
+     * - Call this method after configuring properties with `startAnimate()` to finish the animation.
      * @returns The current component instance for method chaining.
      */
     endAnimate(): this;
-    /**
-     * Checks if the component is currently animating.
-     * @returns Returns true if the component is actively animating; otherwise, false.
-     */
-    isAnimating(): boolean;
     /**
      * Gets the delay of current animation sequence.
      * This method returns the time offset from the animation's start time.
@@ -180,13 +166,61 @@ export class SDNode {
     freeze(): this;
     unfreeze(): this;
     freezing(): boolean;
-    rule(): (parent: SDNode, child: SDNode) => void;
-    rule(rule: (parent: SDNode, child: SDNode) => void): this;
+    /**
+     * Gets the responsive rule of this component.
+     * @returns The responsive rule.
+     */
+    rule(): SDRule;
+    /**
+     * Sets the responsive rule of this component.
+     *
+     * In most cases it is suggested to define the responsive rule via `childAs`.
+     * @param rule - The responsive rule to apply.
+     * @returns The current component instance for method chaining.
+     * @example
+     * // Defines a custom responsive rule.
+     * parent.childAs(child, (parent, child) => {
+     *     child.center(parent.center());
+     * });
+     * // Use a preset layout rule.
+     * parent.childAs(child, R.aside("rc")); // right center.
+     */
+    rule(rule: SDRule): this;
+    /**
+     * Removes the responsive rule of this component.
+     * @returns The current component instance for method chaining.
+     */
     eraseRule(): this;
+    /**
+     * Defines a responsive effect on this component.
+     *
+     * This method is intended for advanced use cases requiring deep customization.
+     * In most cases prefer using responsive rules instead of responsive effects.
+     * @param name - The name of the responsive effect.
+     * @param callback - The effect.
+     * @returns The current component instance for method chaining.
+     */
     effect(name: string, callback: () => void): this;
+    /**
+     * Removes a specified responsive effect on this component.
+     * @param name - The name of the responsive effect.
+     * @returns The current component instance for method chaining.
+     */
     uneffect(name: string): this;
+    /**
+     * Removes all responsive effect on this component.
+     * @returns The current component instance for method chaining.
+     */
     uneffectAll(): this;
-    triggerEffect(): this;
+    /**
+     * Triggers a specified responsive effect defined on this component.
+     *
+     * In most cases responsive effects are to activate automatically by the responsive system.
+     * Do not use this method unless you truely understand what are you doing.
+     * @param name - The name of the effect to be triggered.
+     * @returns The current component instance for method chaining.
+     */
+    triggerEffect(name: string): this;
 
     drag(type: true | false | null | undefined): this;
     drag(onDrag: (dx: number, dy: number) => [number, number]): this;
