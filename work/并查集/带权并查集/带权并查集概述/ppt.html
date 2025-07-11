@@ -15,8 +15,10 @@
         <p class="fragment">
             此处的 $dis(x\rightarrow y)$ 就是 $x$ 到 $y$ 的<b>相对距离</b>
         </p>
+        <iframe data-animation="./相对距离.js" class="fragment"
+            style="width: 1000px; height: 100px;"></iframe>
         <div class="fragment quote">
-            例如 $dis(x\rightarrow y)=5$，我们实际上有无穷多组 $(x,y)$ 满足这个相对距离关系：<br>
+            例如 $dis(x\rightarrow y)=5$，我们实际上有无穷多组 $(x,y)$ 满足这个相对距离关系<br>
             <ul>
                 <li>$x=0,y=5$</li>
                 <li>$x=6,y=11$</li>
@@ -26,7 +28,7 @@
     </section>
     <section>
         <h2>带权并查集</h2>
-        <p>假设有 $n$ 个变量 $x_1,x_2...x_n$，给出 $m$ 对相对距离关系，形如：
+        <p>假设有 $n$ 个变量 $x_1,x_2...x_n$，给出 $m$ 对相对距离关系，形如
             $$
             dis(x_a\rightarrow x_b)=k
             $$
@@ -74,23 +76,20 @@
             </script>
         </codeblock>
         <p class="fragment">在并查集路径压缩的时候，需要顺便维护 $dis$ 数组</p>
-        <div class="fragment">
-            <div class="left">
-                <codeblock>
-                    <script type="text/template">
-                        int GetFa(int x) {
-                            if (fa[x] == x) return x;
-                            int tmp = fa[x];
-                            fa[x] = GetFa(fa[x]);
-                            dis[x] += dis[tmp];
-                            return fa[x];
-                        }
-                    </script>
-                </codeblock>
-            </div>
-            <div class="right">
-                <picture height="300px" data-src="./image/带权并查集路径压缩.png"></picture>
-            </div>
+        <div class="fragment" style="display: flex; align-items: center;">
+            <codeblock>
+                <script type="text/template">
+                    int F(int x) {
+                        if (fa[x] == x) return x;
+                        int f = fa[x];
+                        fa[x] = F(fa[x]);
+                        dis[x] += dis[f];
+                        return fa[x];
+                    }
+                </script>
+            </codeblock>
+            <iframe data-animation="./带权并查集路径压缩.js"
+                style="width: 1000px; height: 300px;"></iframe>
         </div>
     </section>
     <section>
@@ -98,7 +97,7 @@
         <codeblock>
             <script type="text/template">
                 bool Merge(int x, int y, int d) {
-                    int fx = GetFa(x), fy = GetFa(y);
+                    int fx = F(x), fy = F(y);
                     if (fx != fy) {
                         fa[fx] = fy;
                         dis[fx] = d + dis[y] - dis[x];
@@ -107,6 +106,7 @@
                 }
             </script>
         </codeblock>
-        <picture class="fragment" data-src="./image/带权并查集合并.png"></picture>
+        <iframe data-animation="./带权并查集合并.js"
+            style="width: 1000px; height: 200px;"></iframe>
     </section>
 </section>

@@ -2,6 +2,7 @@ import { mapTo } from "@/Math/Math";
 import { Box } from "@/Node/Element/Box";
 import { DAG } from "@/Node/Graph/DAG";
 import { Factory } from "@/Utility/Factory";
+import { trim } from "@/Utility/Trim";
 import { layout as DAGLayout } from "dagre";
 
 export class BoxDAG extends DAG {
@@ -18,8 +19,8 @@ export class BoxDAG extends DAG {
         this._.nodeType = Box;
         const graph = this._.graph;
 
-        this.uneffect("nodes");
-        this.effect("nodes", () => {
+        this.uneffect("graph");
+        this.effect("graph", () => {
             this._.graph.setGraph({
                 align: this.align(),
                 rankdir: this.rankDir(),
@@ -37,6 +38,17 @@ export class BoxDAG extends DAG {
                     node.width(this.elementWidth());
                     node.height(this.elementHeight());
                     node.center(position(layout));
+                });
+            });
+            this.forEachLink((link, sourceId, targetId) => {
+                const source = this.findNodeById(sourceId);
+                const target = this.findNodeById(targetId);
+                this.tryUpdate(link, () => {
+                    link.source(source.center());
+                    link.target(target.center());
+                    if (link.effect("curve")) link.triggerEffect("curve");
+                    trim(link, source, target);
+                    if (link.effect("curve")) link.triggerEffect("curve");
                 });
             });
         });

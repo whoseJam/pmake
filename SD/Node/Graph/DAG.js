@@ -3,6 +3,7 @@ import { Enter as EN } from "@/Node/Core/Enter";
 import { BaseGraph } from "@/Node/Graph/BaseGraph";
 import { Cast } from "@/Utility/Cast";
 import { Factory } from "@/Utility/Factory";
+import { trim } from "@/Utility/Trim";
 import { layout as DAGLayout, graphlib as DAGLib } from "dagre";
 
 export class DAG extends BaseGraph {
@@ -22,7 +23,8 @@ export class DAG extends BaseGraph {
             return {};
         });
 
-        this.effect("nodes", () => {
+        this.uneffect("links");
+        this.effect("graph", () => {
             this._.graph.setGraph({
                 align: this.align(),
                 rankdir: this.rankDir(),
@@ -38,6 +40,17 @@ export class DAG extends BaseGraph {
                 const layout = this._.graph.node(id);
                 this.tryUpdate(node, () => {
                     node.center(position(layout));
+                });
+            });
+            this.forEachLink((link, sourceId, targetId) => {
+                const source = this.findNodeById(sourceId);
+                const target = this.findNodeById(targetId);
+                this.tryUpdate(link, () => {
+                    link.source(source.center());
+                    link.target(target.center());
+                    if (link.effect("curve")) link.triggerEffect("curve");
+                    trim(link, source, target);
+                    if (link.effect("curve")) link.triggerEffect("curve");
                 });
             });
         });

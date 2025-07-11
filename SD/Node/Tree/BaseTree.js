@@ -495,7 +495,7 @@ Object.assign(BaseTree.prototype, {
         this._.linksMap.delete([sourceId, targetId]);
         const link = this.findLinkById(sourceId, targetId);
         this.eraseChild(link);
-        this.vars.links.splice(this.vars.link.indexOf(link), 1);
+        this.vars.links.splice(this.vars.links.indexOf(link), 1);
         return this;
     },
     __getNodeWithMethod(node, method) {
