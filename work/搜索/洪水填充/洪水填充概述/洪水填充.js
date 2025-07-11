@@ -11,7 +11,6 @@ const links = [
     [6, 7],
     [3, 8],
     [3, 9],
-    [1, 9],
 ];
 const vis = sd.make1d(40);
 

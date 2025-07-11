@@ -1,16 +1,15 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-const R = sd.rule();
 const C = sd.color();
-const n = 3;
+const n = 4;
+const k = 3;
 const tree = new sd.ValueTree(svg).width(1000).dy(22);
 const arr = [];
-const used = sd.make1d(n + 5, false);
 let tot = 0;
 
 sd.init(() => {
-    dfs(1);
+    dfs(1, 1);
     tree.forEachNode(node => node.opacity(0));
     tree.forEachLink(link => link.opacity(0));
     tree.nodeOpacity(1, 1);
@@ -23,18 +22,15 @@ sd.init(() => {
 
 sd.main(async () => {});
 
-function dfs(d) {
+function dfs(d, lim) {
     const current = ++tot;
-    tree.newNode(current, makePermutation(arr));
-    if (d === n + 1) return current;
-    for (let i = 1; i <= n; i++) {
-        if (!used[i]) {
-            used[i] = true;
-            arr.push(i);
-            tree.newLink(current, dfs(d + 1));
-            used[i] = false;
-            arr.pop();
-        }
+    tree.newNode(current, makeDivide(arr));
+    if (d === k + 1) return current;
+    for (let i = lim; i <= n; i++) {
+        if (sum(arr) + i * (k - d + 1) > n) break;
+        arr.push(i);
+        tree.newLink(current, dfs(d + 1, i));
+        arr.pop();
     }
     return current;
 }
@@ -53,11 +49,21 @@ async function clickNode(x) {
         });
     });
     if (tree.children(element).length === 0) {
-        element.startAnimate().color(C.orange).endAnimate();
+        element
+            .startAnimate()
+            .color(sum(element) === n && element.length() === k ? C.orange : C.red)
+            .endAnimate();
     }
 }
 
-function makePermutation(arr) {
-    const result = arr.length === 0 ? new sd.Text(tree, "空数组") : new sd.Array(tree).elementWidth(20).elementHeight(20).pushArray(arr);
-    return result;
+function makeDivide(arr) {
+    if (arr.length === 0) return new sd.Text(tree, "空数组");
+    return new sd.Array(svg).elementWidth(20).elementHeight(20).pushArray(arr);
+}
+
+function sum(arr) {
+    let ans = 0;
+    if (arr instanceof sd.Array) arr.forEachElement(element => (ans += element.intValue()));
+    else for (const a of arr) ans += a;
+    return ans;
 }

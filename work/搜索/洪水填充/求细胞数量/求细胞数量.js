@@ -4,13 +4,13 @@ const svg = sd.svg();
 const I = sd.input();
 const C = sd.color();
 const n = 4;
-const m = 5;
+const m = 10;
 const data = I.readCharMatrix(
     `
-00000
-00*00
-0*0*0
-00*00`,
+0234500067
+1034560500
+2045600671
+0000000089`,
     n,
     m
 );
@@ -29,9 +29,9 @@ sd.main(async () => {
         for (let j = 1; j <= m; j++) {
             await sd.pause();
             focus.startAnimate().focus(i, j).endAnimate();
-            if (data[i][j] != "0" || vis[i][j]) continue;
+            if (data[i][j] == "0" || vis[i][j]) continue;
             await sd.pause();
-            dfs(i, j, C.rand());
+            dfs(i, j, C.random());
         }
     }
 });
@@ -44,7 +44,7 @@ function dfs(x, y, col) {
     for (let i = 0; i < 4; i++) {
         const tx = x + dx[i];
         const ty = y + dy[i];
-        if (1 <= tx && tx <= n && 1 <= ty && ty <= m && data[tx][ty] == "0") {
+        if (1 <= tx && tx <= n && 1 <= ty && ty <= m && data[tx][ty] != "0") {
             if (!vis[tx][ty]) {
                 dfs(tx, ty, col);
             }

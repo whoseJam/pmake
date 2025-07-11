@@ -10,6 +10,9 @@ sd.init(() => {
     sd.Brace(arr)
         .brace(1, d - 1)
         .value("d-1个确定的元素");
+    sd.Brace(arr)
+        .brace(1, d - 1, "b")
+        .value("sum=n");
     sd.Pointer(arr, "当前正在枚举的元素", "t")
         .moveTo(d - 1)
         .dx(40);
