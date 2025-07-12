@@ -1,15 +1,14 @@
 <section>
     <section>
-        <h1>IncDec Sequence</h1>
+        <h1>增减序列</h1>
         <p>有时候我们不需要写差分，但是使用了差分的思想</p>
     </section>
-    <section data-background-iframe="http://43.143.204.105/problem/1057" data-background-interactive>
-    </section>
+    <problem data-source="https://www.luogu.com.cn/problem/P4552"></problem>
     <section>
-        <h2>IncDec Sequence</h2>
+        <h2>增减序列</h2>
         <p>经过若干次区间 $\pm 1$ 操作后，让序列所有元素相同，最小化操作次数，以及求最终得到的序列有多少种</p>
-        <p class="fragment">如果我们把原序列 $\{a\}$ 做一个差分，得到其差分序列 $\{d\}$......</p>
-        <p class="fragment">则原问题可以转化为，对差分序列 $\{d\}$ 做若干次点对操作，每次点对操作选择一前一后两个位置，可以让：</p>
+        <p class="fragment">如果我们把原序列 $\{a\}$ 做一个差分，得到其差分序列 $\{d\}$...</p>
+        <p class="fragment">则原问题可以转化为，对差分序列 $\{d\}$ 做若干次点对操作，每次点对操作选择一前一后两个位置，可以让</p>
         <ul class="fragment">
             <li>前面那个位置 $+1$，后面那个位置 $-1$</li>
             <li>或者前面那个位置 $-1$，后面那个位置 $+1$</li>
@@ -17,14 +16,14 @@
         <p class="fragment">最后使得差分序列 $\{d\}$ 的 $[2,n]$ 区间内的元素全是 $0$，最小化操作次数，以及求最终得到的差分序列 $\{d\}$ 有多少种</p>
     </section>
     <section>
-        <h2>IncDec Sequence</h2>
+        <h2>增减序列</h2>
         <p>先考虑最小化操作次数</p>
         <p class="fragment">由于每次点对操作，一定会让一个位置 $+1$，一个位置 $-1$</p>
         <p class="fragment">所以我们统计出差分序列 $\{d\}$ 的 $[2,n]$ 这个区间中，正数之和 $pos$ 和负数之和 $neg$</p>
         <p class="fragment">那么最小操作次数就是 $max(pos,neg)$</p>
     </section>
     <section>
-        <h2>IncDec Sequence</h2>
+        <h2>增减序列</h2>
         <p>接下来考虑最终得到的 $\{d\}$ 有多少种</p>
         <p class="fragment">$\{d\}$ 有多少种，取决于 $d_1$ 有多少种</p>
         <p class="fragment">在前 $min(pos,neg)$ 次操作中，我们要操作的位置肯定是不涉及到 $d_1$ 的</p>

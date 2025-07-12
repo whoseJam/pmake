@@ -4,12 +4,12 @@
     </section>
     <section>
         <h2>差分</h2>
-        <p>假设有一个整数序列 $\{a\}=\{a_1,a_2...a_n\}$，对于这个整数序列，我们构造一个与之等长的整数序列 $\{d\}=\{d_1,d_2...d_n\}$，满足：
+        <p>假设有一个整数序列 $\{a\}=\{a_1,a_2...a_n\}$，对于这个整数序列，我们构造一个与之等长的整数序列 $\{d\}=\{d_1,d_2...d_n\}$，满足
             $$d_i=a_i-a_{i-1}$$
         </p>
         <p>特殊地，我们把 $a_0$ 看作是 $0$，那么 $d_1=a_1-a_0=a_1$</p>
         <p class="fragment">那么 $\{d\}$ 序列就是 $\{a\}$ 序列的差分序列，当然我们也可以叫 $\{d\}$ 序列为 $\{a\}$ 序列的<b>差分数组</b></p>
-        <p class="fragment">上述定义让我们可以用 $\{a\}$ 来表示 $\{d\}$ ，我们来试试用 $\{d\}$ 表示 $\{a\}$：</p>
+        <p class="fragment">上述定义让我们可以用 $\{a\}$ 来表示 $\{d\}$ ，我们来试试用 $\{d\}$ 表示 $\{a\}$</p>
         <p class="fragment">
             $$
             \begin{aligned}
@@ -21,7 +21,7 @@
     </section>
     <section>
         <h2>差分</h2>
-        <p>所以我们可以总结出 $\{a\}$ 和 $\{d\}$ 的关系：</p>
+        <p>所以我们可以总结出 $\{a\}$ 和 $\{d\}$ 的关系</p>
         <ul class="fragment">
             <li>站在 $\{a\}$ 的角度，$\{d\}$ 是 $\{a\}$ 的差分数组</li>
             <li>站在 $\{d\}$ 的角度，$\{a\}$ 是 $\{d\}$ 的前缀和数组</li>
@@ -30,7 +30,7 @@
     <section>
         <h2>差分</h2>
         <p>又或者，我们可以把<b>差分</b>和<b>前缀和</b>当作两种互逆的操作</p>
-        <p class="fragment">当然，也可以把它们理解成函数、运算，这都不太重要，我们只需要关注：</p>
+        <p class="fragment">当然，也可以把它们理解成函数、运算，这都不太重要，我们只需要关注</p>
         <ul>
             <li class="fragment">
                 <b>差分</b>这种操作，吞进去一个长度为 $n$ 的序列 $\{A\}$，吐出来一个长度为 $n$ 的序列 $\{B\}$，满足 $B_i=A_i-A_{i-1}$，运算时间复杂度为 $O(n)$
@@ -45,14 +45,14 @@
     </section>
     <section>
         <h2>差分</h2>
-        <iframe data-animation="./animation/差分和前缀和互换.html"
+        <iframe data-animation="./差分和前缀和互换.js"
             style="width: 1000px; height: 500px;"></iframe>
     </section>
     <section>
         <h2>序列加法</h2>
         <p>在继续讲解差分之前，我们先来看看序列加法是什么东西</p>
         <p class="fragment">我们可以允许两个长度相同的序列进行“加法”操作</p>
-        <p class="fragment">具体来说，如果：</p>
+        <p class="fragment">具体来说，如果</p>
         <ul>
             <li class="fragment">$\{A\}=\{A_1,A_2...A_n\}$</li>
             <li class="fragment">$\{B\}=\{B_1,B_2...B_n\}$</li>
@@ -65,13 +65,13 @@
     </section>
     <section>
         <h2>序列加法</h2>
-        <iframe data-animation="./animation/序列加法.html"
+        <iframe data-animation="./序列加法.js"
             style="width: 1000px; height: 500px"></iframe>
     </section>
 
     <section>
         <h2>序列加法和差分</h2>
-        <p>在这里先给出序列加法和序列差分的关系：
+        <p>在这里先给出序列加法和序列差分的关系
             $$
             Dlt(\{A\}+\{B\})=Dlt(\{A\})+Dlt(\{B\})
             $$
@@ -79,7 +79,7 @@
         <div class="fragment quote">
             <h3>证明过程</h3>
             <p>
-                我们考察答案序列的第 $i$ 项：
+                我们考察答案序列的第 $i$ 项
                 $$
                 \begin{aligned}
                 Dlt(\{A\}+\{B\})_i&=(A_i+B_i)-(A_{i-1}+B_{i-1}) \\
@@ -93,7 +93,7 @@
     </section>
     <section>
         <h2>序列加法和前缀和</h2>
-        <p>在这里先直接给出序列加法和序列前缀和的关系：
+        <p>在这里先直接给出序列加法和序列前缀和的关系
             $$
             Sum(\{A\}+\{B\})=Sum(\{A\})+Sum(\{B\})
             $$
@@ -101,7 +101,7 @@
         <div class="fragment quote">
             <h3>证明过程</h3>
             <p>
-                我们仍然考察序列的第 $i$ 项：
+                我们仍然考察序列的第 $i$ 项
                 $$
                 \begin{aligned}
                 Sum(\{A\}+\{B\})_i&=\sum_{k=1}^i(A_k+B_k) \\
