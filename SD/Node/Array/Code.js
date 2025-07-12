@@ -1,7 +1,7 @@
 import { Context } from "@/Animate/Context";
 import { BaseArray } from "@/Node/Array/BaseArray";
 import { Enter as EN } from "@/Node/Core/Enter";
-import { RectSVG } from "@/Node/Shape/RectSVG";
+import { Rect } from "@/Node/Shape/Rect";
 import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
 import { Color } from "@/Utility/Color";
@@ -53,15 +53,7 @@ export class Code extends BaseArray {
             this.vars.height = height;
         });
 
-        this.childAs(
-            "focus",
-            new RectSVG(this)
-                .color(Color.BLUE)
-                .opacity(0)
-                .onEnter(() => {}),
-            focusRule
-        );
-
+        this.childAs("focus", new Rect(this).color(Color.BLUE).opacity(0).onEnter(EN.nothing()), focusRule);
         this.newLayer("elements");
 
         if (source) this.code(source);
@@ -110,20 +102,20 @@ Object.assign(Code.prototype, {
             focus.opacity(0);
             return this;
         } else if (arguments.length === 1) return this.focus(l, l);
-        if (focus.opacity() === 0) {
+        if (this.duration() > 0 && focus.opacity() === 0) {
             const context = new Context(focus);
-            focus.startAnimate(context.tillc(0, 0));
-            this.freeze();
-            this.vars.l = l;
-            this.vars.r = r;
-            this.unfreeze();
-            focus.startAnimate(context.tillc(0, 1));
+            context.till(0, 0);
+            this.vars.setTogether({
+                l,
+                r,
+            });
+            context.till(0, 1);
             focus.opacity(1);
         } else {
-            this.freeze();
-            this.vars.l = l;
-            this.vars.r = r;
-            this.unfreeze();
+            this.vars.setTogether({
+                l,
+                r,
+            });
         }
         return this;
     },
