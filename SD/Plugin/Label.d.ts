@@ -53,9 +53,9 @@ class LabelPlugin {
  * Creates a **`sd.LabelPlugin`** instance.
  * @param target
  * @param text
- * @param location
- * @param fontSize
- * @param gap
+ * @param location - Defaults to `"lc"`.
+ * @param fontSize - Defaults to `20`.
+ * @param gap - Defaults to `10`.
  */
 export function Label(target: SDNode, text: string, location?: string, fontSize?: number, gap?: number): LabelPlugin & BaseText;
 
@@ -63,9 +63,9 @@ export function Label(target: SDNode, text: string, location?: string, fontSize?
  * Creates a **`sd.LabelPlugin`** instance.
  * @param target
  * @param text
- * @param location
- * @param fontSize
- * @param gap
+ * @param location - Defaults to `"lc"`.
+ * @param fontSize - Defaults to `20`.
+ * @param gap - Defaults to `10`.
  * @returns A new plugin instance.
  */
 export function MathjaxLabel(target: SDNode, text: string, location?: string, fontSize?: number, gap?: number): LabelPlugin & BaseText;
