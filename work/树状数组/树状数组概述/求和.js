@@ -7,10 +7,9 @@ const n = 12;
 const arr = new sd.Array(svg).start(1);
 const tree = sd.make1d(n + 5);
 const pI = sd.Pointer(arr, "i", "t", 5, 30, 5);
-const focuses = [];
 
 function lowbit(x) {
-    return x & (-x);
+    return x & -x;
 }
 
 sd.init(() => {
@@ -21,15 +20,14 @@ sd.init(() => {
         element.onClick(() => {
             sd.inter(async () => {
                 await Query(index);
-            })
-        })
+            });
+        });
     }
     Prepare();
     BuildTree();
-})
+});
 
-sd.main(async () => {
-})
+sd.main(async () => {});
 
 async function Query(x) {
     const allLinks = [];
@@ -43,12 +41,15 @@ async function Query(x) {
             if (i === 0) pI.startAnimate().cx(0).endAnimate();
             else pI.startAnimate().moveTo(i).endAnimate();
             l.target(pI.pos("cx", "cy", +5));
-            l.startAnimate().pointStoT().value(new sd.Text(svg, `L(${last})`).fontSize(10), R.pointAtPathByRate(0.5, "cx", "y", 0, 5)).endAnimate().arrow();
+            l.startAnimate()
+                .pointStoT()
+                .value(new sd.Text(svg, `L(${last})`).fontSize(10), R.pointAtPathByRate(0.5, "cx", "y", 0, 5))
+                .endAnimate()
+                .arrow();
             allLinks.push(l);
             if (i === 0) break;
             last -= lowbit(last);
         }
-        await sd.pause();
         tree[i].startAnimate().color(C.orange).endAnimate();
     }
     await sd.pause();
@@ -78,11 +79,11 @@ function Prepare() {
 function MakeTree(result) {
     for (let i = 0; i < result.length; i++) {
         const range = result[i];
-        const len = (range[1] - range[0] + 1);
+        const len = range[1] - range[0] + 1;
         if (!tree[range[1]]) {
             const arr = new sd.Array(svg).resize(len).start(range[0]);
             arr.dx((range[0] - 1) * 40);
-            arr.dy(Math.log2(len) * (-60) - 80);
+            arr.dy(Math.log2(len) * -60 - 80);
             tree[range[1]] = arr;
         }
     }
@@ -92,9 +93,9 @@ function BinarySplit(x) {
     const result = [];
     let curPos = 1;
     for (let i = 10; i >= 0; i--) {
-        if (x & (1<<i)) {
-            result.push([curPos, curPos + (1<<i) - 1]);
-            curPos += (1<<i);
+        if (x & (1 << i)) {
+            result.push([curPos, curPos + (1 << i) - 1]);
+            curPos += 1 << i;
         }
     }
     return result;

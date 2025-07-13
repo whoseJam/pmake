@@ -4,10 +4,10 @@
     </section>
     <section>
         <h2>动态连续和查询问题</h2>
-        <p>给定一个 $n$ 个元素的数组 $A_1,A_2...A_n$，你的任务是设计一种数据结构，支持以下两种操作：</p>
+        <p>给定一个 $n$ 个元素的数组 $\{A_i\}$，你的任务是设计一种数据结构，支持以下两种操作：</p>
         <ol>
-            <li><code>Add x d</code>：让 $A_x$ 的数值增加 $d$</li>
-            <li><code>Query l r</code>：求 $A_l+A_{l+1}+...+A_r$ 的和</li>
+            <li>$Add(x,d)$：让 $A_x$ 的数值增加 $d$</li>
+            <li>$Query(l,r)$：求 $A_l+A_{l+1}+...+A_r$ 的和</li>
         </ol>
         <p class="fragment">假设总共有 $m$ 次操作，如何才能让 $Add$ 和 $Query$ 都快速地完成呢？</p>
     </section>
@@ -76,7 +76,7 @@
                 <li>$18=(10010)_2$，则 $lowbit(18)=(10)_2=2$</li>
             </ul>
         </div>
-        <p class="fragment">在程序中，我们可以这么来计算 $lowbit(x)$：</p>
+        <p class="fragment">在程序中，我们可以这么来计算 $lowbit(x)$</p>
         <codeblock class="fragment">
             <script type="text/template">
                 int lowbit(int x) {
