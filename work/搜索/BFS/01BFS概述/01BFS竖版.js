@@ -51,7 +51,7 @@ sd.main(async () => {
         Q.startAnimate().color(0, C.blue).endAnimate();
         graph.startAnimate().color(u, C.blue).endAnimate();
 
-        const to = graph.outLinks(u, "undirected");
+        const to = graph.outLinks(u, "undirect");
         for (let i = 0; i < to.length; i++) {
             const v = graph.toNodeId(to[i], u);
             const w = to[i].intValue();

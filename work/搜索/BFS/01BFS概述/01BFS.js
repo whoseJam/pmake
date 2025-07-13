@@ -14,7 +14,7 @@ const links = [
     [3, 4, 1],
     [4, 5, 1],
     [5, 6, 0],
-    [4, 6, 0]
+    [4, 6, 0],
 ];
 
 sd.init(() => {
@@ -32,15 +32,17 @@ sd.init(() => {
         addLink(link[0], link[1], link[2]);
     });
     sd.Label(Q, "队列Q", "lc");
-    Q.x(graph.x()).y(graph.my() + 60).push(1);
+    Q.x(graph.x())
+        .y(graph.my() + 60)
+        .push(1);
     for (let i = 1; i <= 6; i++) {
-        const text = (i === 1) ? "dis=0" : "dis=inf"; 
-        const label = sd.Label(graph.element(i), text, disLoc[i-1]);
+        const text = i === 1 ? "dis=0" : "dis=inf";
+        const label = sd.Label(graph.element(i), text, disLoc[i - 1]);
         graph.element(i).label = label;
         graph.element(i).dis = Infinity;
     }
     graph.element(1).dis = 0;
-})
+});
 sd.main(async () => {
     while (Q.length()) {
         await sd.pause();
@@ -49,16 +51,21 @@ sd.main(async () => {
         Q.startAnimate().color(0, C.blue).endAnimate();
         graph.startAnimate().color(u, C.blue).endAnimate();
 
-        const to = graph.outLinks(u, "undirected");
+        const to = graph.outLinks(u, "undirect");
         for (let i = 0; i < to.length; i++) {
             const v = graph.toNodeId(to[i], u);
             const w = to[i].intValue();
             const nodeV = graph.element(v);
             if (nodeV.dis > nodeU.dis + w) {
                 await sd.pause();
-                nodeV.label.startAnimate().opacity(0).endAnimate()
-                .text(`dis=${nodeV.dis = nodeU.dis + w}`)
-                .startAnimate().opacity(1).endAnimate();
+                nodeV.label
+                    .startAnimate()
+                    .opacity(0)
+                    .endAnimate()
+                    .text(`dis=${(nodeV.dis = nodeU.dis + w)}`)
+                    .startAnimate()
+                    .opacity(1)
+                    .endAnimate();
                 if (w === 0) {
                     await sd.pause();
                     Q.startAnimate().insert(1, v).endAnimate();
