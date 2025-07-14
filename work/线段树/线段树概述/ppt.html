@@ -4,46 +4,32 @@
     </section>
     <section>
         <h2>区间查询问题</h2>
-        <p>给定一个 $n$ 个元素的数组 $A_1,A_2...A_n$，你需要设计一种数据结构，支持以下两种操作：</p>
+        <p>给定一个 $n$ 个元素的数组 $\{A_i\}$，你需要设计一种数据结构，支持以下若干种操作</p>
         <ol>
-            <li><code>Add(x, d)</code>：让 $A_x$ 的数值增加 $d$（$d$ 可正可负）</li>
-            <li><code>QueryMax(l, r)</code>：求 $[l,r]$ 这个范围内的区间最大值</li>
-            <li><code>QueryMin(l, r)</code>：求 $[l,r]$ 这个范围内的区间最小值</li>
-            <li><code>QuerySum(l, r)</code>：求 $[l,r]$ 这个范围内的区间和</li>
+            <li class="fragment">$Add(x,d)$：让 $A_x$ 的数值增加 $d$（$d$ 可正可负）</li>
+            <li class="fragment">$QueryMax(l,r)$：求 $[l,r]$ 这个范围内的区间最大值</li>
+            <li class="fragment">$QueryMin(l,r)$：求 $[l,r]$ 这个范围内的区间最小值</li>
+            <li class="fragment">$QuerySum(l,r)$：求 $[l,r]$ 这个范围内的区间和</li>
         </ol>
     </section>
     <section>
         <h2>分析</h2>
-        <p>
-            朴素做法低效的原因是，所有的维护都是针对<b>元素</b>的
-            而题目中的所有维护都是针对<b>区间</b>的
-        </p>
-        <p class="fragment">
-            我们的优化也从这里入手，假设我们设计一种数据结构，
-            能<b>直接维护所需处理的区间</b>，那么也就能更加有效地解决这个问题了
-        </p>
-    </section>
-    <section>
-        <h2>简化问题</h2>
-        <p>我们对问题做一个抽象，我们需要支持序列上：</p>
+        <p>朴素做法低效的原因是，所有的维护都是针对<b style="color: purple;">元素</b>的<span class="fragment">，而题目中的所有维护都是针对<b style="color: red;">区间</b>的</span><span class="fragment">假设我们设计一种数据结构，能<b style="color: red;">直接维护所需处理的区间</b>，那么也就能更加有效地解决这个问题了</span></p>
         <ul>
             <li class="fragment">单点修改</li>
             <li class="fragment">区间查询</li>
         </ul>
-    </section>
-    <section>
-        <h2>线段树</h2>
-        <iframe data-animation="./线段树锁定单点.js"
+        <iframe data-animation="./线段树锁定单点.js" class="fragment"
             data-viewBox="60 40 900 450"
-            style="width: 1000px; height: 500px;"></iframe>
+            style="width: 1000px; height: 450px;"></iframe>
     </section>
     <section>
         <h2>线段树</h2>
-        <p>对于原问题而言，我们显然需要维护一个区间的：</p>
+        <p>对于原问题而言，我们显然需要维护一个区间的</p>
         <ul>
-            <li>最小值，用<code>mn</code>来存储</li>
-            <li>最大值，用<code>mx</code>来存储</li>
-            <li>区间和，用<code>sm</code>来存储</li>
+            <li class="fragment">最小值，用于处理 $QueryMin$</li>
+            <li class="fragment">最大值，用于处理 $QueryMax$</li>
+            <li class="fragment">区间和，用于处理 $QuerySum$</li>
         </ul>
         <codeblock class="fragment">
             <script type="text/template">
@@ -52,15 +38,14 @@
                 } t[N * 4];
             </script>
         </codeblock>
-        <iframe class="fragment"
-            style="width: 1000px; height: 300px;"
-            data-src="./animation/线段树节点结构定义.html"> 
+        <iframe data-animation="./线段树节点结构定义.js" class="fragment"
+            style="width: 1000px; height: 300px;"> 
         </iframe>
     </section>
     <section>
         <h2>线段树</h2>
-        <p>我们并未存储某个节点的左右儿子编号，因为我们可以采用堆式建树：</p>
-        <iframe data-animation="./animation/线段树的节点编号.html"
+        <p>我们并未存储某个节点的左右儿子编号，因为我们可以采用堆式建树</p>
+        <iframe data-animation="./线段树的节点编号.js"
             style="width: 1000px; height: 300px;"></iframe>
         <p class="fragment">
             在这种建树方案中，每个节点 $x$ 的左儿子编号一定是 $2x$，右儿子编号一定是 $2x+1$
@@ -69,34 +54,27 @@
             <script type="text/template">
                 #define lc (x << 1)
                 #define rc (x << 1 | 1)
-
-                // 当我想访问 x 的左儿子时
-                t[lc]......
-
-                // 当我想访问 x 的右儿子时
-                t[rc]......
+                // 当访问 x 的左儿子时
+                t[lc]...
+                // 当访问 x 的右儿子时
+                t[rc]...
             </script>
         </codeblock>
     </section>
     <section>
         <h2>线段树的建立</h2>
-        <ul>
-            <li>把线段树结构建立出来</li>
-            <li>初始化每条线段的特征</li>
-        </ul>
+        <iframe data-animation="./线段树节点结构定义.js"
+            style="width: 1000px; height: 300px;"></iframe>
         <codeblock>
             <script type="text/template">
-                void pushUp(int x) {
+                void pushUp(int x) { // 合并两个区间的特征
                     t[x].mn = min(t[lc].mn, t[rc].mn);
                     t[x].mx = max(t[lc].mx, t[rc].mx);
                     t[x].sm = t[lc].sm + t[rc].sm;
                 }
                 void build(int x, int l, int r) {
                     t[x].l = l; t[x].r = r; // 建立线段树结构
-                    if (l == r) { // x 是一个叶子节点，对应一个长度为 1 的区间
-                        t[x].mn = t[x].mx = t[x].sm = a[l]; // 初始化线段特征
-                        return;
-                    }
+                    if (l == r) { t[x].mn = t[x].mx = t[x].sm = a[l]; return; }
                     int mid = (l + r) >> 1;
                     build(lc, l, mid);
                     build(rc, mid + 1, r);
@@ -106,33 +84,11 @@
         </codeblock>
     </section>
     <section>
-        <h2>线段树</h2>
-        <codeblock>
-            <script type="text/template">
-                void pushUp(int x) {
-                    t[x].mn = min(t[lc].mn, t[rc].mn);
-                    t[x].mx = max(t[lc].mx, t[rc].mx);
-                    t[x].sm = t[lc].sm + t[rc].sm;
-                }
-            </script>
-        </codeblock>
-        <iframe style="width: 1000px; height: 300px;"
-            data-src="./animation/线段树节点结构定义.html"> 
-        </iframe>
-        <p class="fragment">通过 $pushUp$，我们可以很方便地<b>合并两个区间的特征</b>，得到<b>一个更大的区间的特征</b></p>
-    </section>
-
-    <section>
         <h2>线段树单点修改</h2>
         <codeblock>
             <script type="text/template">
                 void update(int x, int pos, int d) {
-                    if (t[x].l == t[x].r) {
-                        t[x].mn += d;
-                        t[x].mx += d;
-                        t[x].sm += d;
-                        return;
-                    }
+                    if (t[x].l == t[x].r) {t[x].mn+=d;t[x].mx+=d;t[x].sm+=d;return;}
                     int mid = (t[x].l + t[x].r) >> 1;
                     if (pos <= mid) update(lc, pos, d);
                     else update(rc, pos, d);
@@ -140,21 +96,52 @@
                 }
             </script>
         </codeblock>
-        <iframe data-animation="./animation/线段树修改单点.html"
-            style="width: 1000px; height: 350px;"></iframe>
+        <iframe data-animation="./线段树修改单点.js"
+            style="width: 1000px; height: 400px;"></iframe>
     </section>
     <section>
         <h2>线段树区间查询</h2>
         <codeblock>
             <script type="text/template">
-                int querySum(int x, int l, int r) {
-                    if (t[x].r < l || t[x].l > r) return 0;
-                    if (l <= t[x].l && t[x].r <= r) return t[x].sum;
-                    return querySum(lc, l, r) + querySum(rc, l, r);
+                int querySum(int x, int ql, int qr) {
+                    if (ql <= t[x].l && t[x].r <= qr) return t[x].sum;
+                    int mid = (l + r) >> 1, sum = 0;
+                    if (ql <= mid) sum += querySum(lc, ql, qr);
+                    if (qr > mid) sum += querySum(lc, ql, qr);
+                    return sum;
                 }
             </script>
         </codeblock>
-        <iframe data-animation="./animation/线段树查询区间.html"
-            style="width: 1000px; height: 350px;"></iframe>
+        <iframe data-animation="./线段树查询区间.js"
+            style="width: 1000px; height: 400px;"></iframe>
     </section>
+    <section>
+        <h2>线段树区间查询</h2>
+        <codeblock>
+            <script type="text/template">
+                int querySum(int x, int ql, int qr) {
+                    if (qr < t[x].l || ql > t[x].r) return 0;
+                    if (ql <= t[x].l && t[x].r <= qr) return t[x].sum;
+                    return querySum(lc, ql, qr) + querySum(rc, ql, qr);
+                }
+            </script>
+        </codeblock>
+        <iframe data-animation="./线段树查询区间naive.js"
+            style="width: 1000px; height: 400px;"></iframe>
+    </section>
+    <section>
+        <h2>线段树区间查询</h2>
+        <codeblock>
+            <script type="text/template">
+                int querySum(int x, int ql, int qr) {
+                    if (ql <= t[x].l && t[x].r <= qr) return t[x].sum;
+                    int mid = (l + r) >> 1;
+                    if (qr <= mid) return querySum(lc, ql, qr);
+                    if (ql > mid) return querySum(rc, ql, qr);
+                    return querySum(lc, ql, qr) + querySum(lc, ql, qr);
+                }
+            </script>
+        </codeblock>
+        <iframe data-animation="./线段树查询区间.js"
+            style="width: 1000px; height: 400px;"></iframe>
 </section>

@@ -1,0 +1,26 @@
+<section>
+    <section>
+        <h1>马拉松</h1>
+    </section>
+    <problem data-src="http://43.143.204.105/problem/922"></problem>
+    <section>
+        <h2>马拉松</h2>
+        <p>有 $n$ 个地点</p>
+        <p class="fragment">每次询问选定第 $l$ 个到第 $r$ 个地点，求顺次通过这些地点，允许跳过<b>恰好一个地点</b>的情况下，行走的最短距离</p>
+    </section>
+    <section>
+        <h2>马拉松</h2>
+        <iframe data-animation="./马拉松.js"
+            style="width: 1000px; height: 350px;"></iframe>
+        <p class="quote">我们能否用一条线段维护一段检查点的总路程长度？</p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                void pushUp(int x) {
+                    int mid = (t[x].l + t[x].r) >> 1;
+                    t[x].dis = t[lc].dis + t[rc].dis + dis(mid, mid + 1);
+                }
+            </script>
+        </codeblock>
+        <p class="fragment quote">如何维护<b style="color: red;">允许跳过恰好一个地点</b>的情况下，节省的最大距离？</p>
+    </section>
+</section>
