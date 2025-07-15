@@ -25,4 +25,46 @@
         <iframe data-animation="./负权与负环.js" class="fragment"
             style="width: 1000px; height: 200px;" rate="1.01"></iframe>
     </section>
+    <section>
+        <h2>SPFA</h2>
+        <p>我们用一个队列 $Q$ 来存放那些<b>可能</b>可以用来松弛其他点的节点</p>
+        <p class="fragment">最初情况下，$Q$ 里面只存放了起点 $s$</p>
+        <p class="fragment">每一轮迭代，我们取出队头 $u$，然后尝试用 $u$ 更新其邻接点</p>
+        <ul>
+            <li class="fragment">如果某个邻接点 $v$ 最短路被更新了，那么 $v$ 的最短路就变小了</li>
+            <li class="fragment">那么 $v$ <b>就有可能可以用来松弛更新周围的点</b></li>
+            <li class="fragment">那么 $v$ 就应该入队</li>
+        </ul>
+        <p class="fragment">有一个小优化是，如果此时 $v$ 已经在队列中了，就不需要再将其入队了</p>
+    </section>
+    <section>
+        <h2>SPFA</h2>
+        <iframe data-animation="./SPFA.js"
+            style="min-width: 1000px; min-height: 500px;"></iframe>
+    </section>
+    <section>
+        <h2>SPFA</h2>
+        <codeblock>
+            <script type="text/template">
+                void SPFA(int S) {
+                    queue < int > q;
+                    for (int i = 1; i <= n; i++) dis[i] = inf;
+                    dis[S] = 0; inq[S] = 1; q.push(S);
+                    while (q.size()) {
+                        int u = q.front(); q.pop(); inq[u] = 0;
+                        for (int i = h[u], v; i; i = l[i].Nxt) {
+                            v = l[i].to;
+                            if (dis[v] > dis[u] + l[i].val) {
+                                dis[v] = dis[u] + l[i].val;
+                                if (!inq[v]) {
+                                    q.push(v);
+                                    inq[v] = 1;
+                                }
+                            }
+                        }
+                    }
+                }
+            </script>
+        </codeblock>
+    </section>
 </section>
