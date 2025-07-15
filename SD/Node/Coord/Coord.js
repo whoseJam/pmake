@@ -73,8 +73,6 @@ Object.assign(Coord.prototype, {
             element: rect,
             x,
             y,
-            width,
-            height,
         });
         this.childAs(rect, rectRule);
         return rect;
@@ -182,11 +180,8 @@ function circleRule(parent, child) {
 function rectRule(parent, child) {
     const element = parent.__getElement(child);
     const rect = element.element;
-    const [minX, maxY] = parent.global(element.x, element.y);
-    const [maxX, minY] = parent.global(element.x + element.width, element.y + element.height);
     parent.tryUpdate(rect, () => {
-        rect.width(maxX - minX).x(minX);
-        rect.height(maxY - minY).y(minY);
+        rect.center(parent.global(element.x, element.y));
     });
 }
 

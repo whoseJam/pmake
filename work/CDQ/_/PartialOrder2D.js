@@ -1,13 +1,12 @@
 import * as sd from "@/sd";
 
 /**
- *
  * @param {sd.BaseArary} arr
  * @param {{
- *  onMoveI: (i: number) => void;
- *  onSortDim1: () => void;
- *  onQuery: (i: number) => void;
- *  onInsert: (i: number) => void;
+ *  onMoveI: (i: number) => void | Promise<any>;
+ *  onSortDim1: () => void | Promise<any>;
+ *  onQuery: (i: number) => void | Promise<any>;
+ *  onInsert: (i: number) => void | Promise<any>;
  * }} args
  */
 export async function dataStructurePO2D(arr, args) {

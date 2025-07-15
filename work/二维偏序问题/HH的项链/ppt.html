@@ -2,7 +2,7 @@
     <section>
         <h1>HH的项链</h1>
     </section>
-    <problem data-src="http://43.143.204.105/problem/470"></problem>
+    <problem data-source="https://www.luogu.com.cn/problem/P1972"></problem>
     <section>
         <h2>HH的项链</h2>
         <p>给出一个数组，多次询问一个区间内<b>有多少种</b>数字</p>
@@ -10,12 +10,15 @@
     <section>
         <h2>HH的项链</h2>
         <p class="quote">如何表示一段区间内的不同数字的数量？能不能用数学的语言表述呢？</p>
+        <p class="fragment">当我们对一段区间的数字种类进行统计的时候，假设想要统计 $a_i$，干扰统计的因素是这段区间内与 $a_i$ 相同的数字<span class="fragment">——我们不希望它们被统计多次</span></p>
+        <p class="fragment">不妨考虑在每种数字在子区间内<b style="color: purple;">第一次出现</b>的位置上做统计</p>
     </section>
     <section>
         <h2>HH的项链</h2>
-        <iframe data-animation="./animation/HH的项链.html"
+        <p>记录 $prev_i$ 表示和 $a_i$ 相同的上一个数字的位置，如果 $i$ 左边没有和 $a_i$ 相同的数字了，则 $prev_i=0$</p>
+        <iframe data-animation="./HH的项链.js" class="fragment"
             style="width: 1000px; height: 300px;"></iframe>
-        <p class="fragment">对于一次询问 $[L,R]$ 来说，不同数字的数量即为：
+        <p class="fragment">对于一次询问 $[L,R]$ 来说，不同数字的数量即为
             $$
             \sum_{L\le i\le R}[prev_i\lt L]
             $$
@@ -23,12 +26,12 @@
     </section>
     <section>
         <h2>HH的项链</h2>
-        <p>问题转化为：</p>
+        <p>问题转化为</p>
         <ul>
             <li class="fragment">有 $n$ 个可能对询问产生贡献的点，第 $i$ 个点的坐标为 $(prev_i,i)$</li>
             <li class="fragment">有 $m$ 次询问 $[L_j,R_j]$</li>
         </ul>
-        <p class="fragment">对每次询问 $j$，需要统计有多少个 $i$，使得 $(i,j)$ 满足：
+        <p class="fragment">对每次询问 $j$，需要统计有多少个 $i$，使得 $(i,j)$ 满足
             $$
             \left\{
             \begin{aligned}
@@ -51,7 +54,7 @@
             \right.
             $$
         </p>
-        <iframe data-animation="./animation/HH的项链坐标轴.html"
-            style="width: 1000px; height: 300px;"></iframe>
+        <iframe data-animation="./计算过程.js"
+            style="width: 1000px; height: 400px;"></iframe>
     </section>
 </section>
