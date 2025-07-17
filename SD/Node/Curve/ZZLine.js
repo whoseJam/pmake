@@ -1,6 +1,10 @@
 import { Vector as V } from "@/Math/Vector";
-import { BaseCurve, curveHandler } from "@/Node/Curve/BaseCurve";
+import { BaseCurve } from "@/Node/Curve/BaseCurve";
+import { Check } from "@/Utility/Check";
 import { PathPen } from "@/Utility/PathPen";
+
+const LOCATION_KEY = new Set(["l", "r", "t", "b"]);
+const LOCATION_KEY_SUGGESTION = [() => true, "For ZZLine component, here are 4 types of locations which are 'l', 'r', 't', 'b'."];
 
 export class ZZLine extends BaseCurve {
     constructor(target) {
@@ -13,9 +17,9 @@ export class ZZLine extends BaseCurve {
             location: "b",
         });
 
-        this.effect("curve", () => {
-            const s = this.source();
-            const t = this.target();
+        this._.curve = (source, target) => {
+            const s = source;
+            const t = target;
             const bending = this.bending();
             const location = this.location();
             // index     - 变化量参考轴
@@ -33,13 +37,26 @@ export class ZZLine extends BaseCurve {
 
             const pen = new PathPen();
             pen.MoveTo(s).LinkTo(ds).LinkTo(dt).LinkTo(t);
+            return pen.toString();
+        };
 
-            this.d(pen.toString());
+        this.effect("curve", () => {
+            this.d(this._.curve(this.source(), this.target()));
         });
     }
 }
 
 Object.assign(ZZLine.prototype, {
-    bending: curveHandler("bending"),
-    location: curveHandler("location"),
+    bending(bending) {
+        if (arguments.length === 0) return this.vars.bending;
+        Check.validateNumber(bending, `${this.constructor.name}.bending`);
+        this.vars.mpset("bending", bending);
+        return this;
+    },
+    location(location) {
+        if (arguments.length === 0) return this.vars.location;
+        Check.validateLocation(location, LOCATION_KEY, `${this.constructor.name}.location`, 1, LOCATION_KEY_SUGGESTION);
+        this.vars.location = location;
+        return this;
+    },
 });

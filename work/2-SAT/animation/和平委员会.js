@@ -1,5 +1,5 @@
 import * as sd from "@/sd";
-import { 有向图Tarjan } from "../../Tarjan/animation/Tarjan";
+import { 有向图Tarjan } from "../../Tarjan/_/Tarjan";
 
 const svg = sd.svg();
 const C = sd.color();

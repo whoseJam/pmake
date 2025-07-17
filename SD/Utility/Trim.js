@@ -7,7 +7,7 @@ function trimSource(link, source) {
         if (source.inRange(link.at(mid))) l = mid;
         else r = mid;
     }
-    if (l < 1e-2) return 0;
+    if (link.totalLength() * l <= 1) return 0;
     return l;
 }
 
@@ -20,7 +20,7 @@ function trimTarget(link, target) {
         if (target.inRange(link.at(mid))) r = mid;
         else l = mid;
     }
-    if (l > 1 - 1e-2) return 1;
+    if (link.totalLength() * (1 - l) <= 1) return 1;
     return l;
 }
 
@@ -29,8 +29,7 @@ export function trim(link, source, target) {
     const t = trimTarget(link, target);
     const ls = link.at(s);
     const lt = link.at(t);
-    link.freeze();
+    // TO FIX
     link.source(ls);
     link.target(lt);
-    link.unfreeze();
 }

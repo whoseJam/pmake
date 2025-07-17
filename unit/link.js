@@ -4,7 +4,15 @@ const svg = sd.svg();
 
 sd.init(() => {});
 
-sd.main(TestBasic);
+sd.main(TestMove);
+
+async function TestMove() {
+    const b1 = new sd.Box(svg).x(100).y(100);
+    const b2 = new sd.Box(svg).x(100).y(200);
+    sd.Link(b1, b2, sd.Curve).arrow();
+    await sd.pause();
+    b2.startAnimate().scale(0.5).endAnimate();
+}
 
 async function TestTreeBug() {
     const t1 = new sd.Tree(svg).x(100).y(100).root(1);

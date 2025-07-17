@@ -43,7 +43,7 @@ sd.main(async () => {
             const value = plane.value(x, i);
             const circle = plane.circle(x, i);
             sd.Link(value, circle).startAnimate().pointStoT().endAnimate().arrow();
-            sd.Link(circle, sum.element(y)).opacity(0).after(300).opacity(1).startAnimate().pointStoT().endAnimate().arrow();
+            const l = sd.Link(circle, sum.element(y)).opacity(0).after(300).opacity(1).startAnimate().pointStoT().endAnimate().arrow();
             await sd.pause();
             brace.startAnimate().brace(plane.minY(), y).endAnimate();
             sum.startAnimate().color(plane.minY(), y, C.blue).endAnimate();

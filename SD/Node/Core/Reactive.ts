@@ -1,0 +1,535 @@
+import { SDNode } from "@/Node/SDNode";
+import { ErrorLauncher } from "@/Utility/ErrorLauncher";
+
+function hasChanged(v1: any, v2: any, precise?: (v1: number, v2: number) => boolean) {
+    if (typeof v1 === "number" && typeof v2 === "number") {
+        if (typeof precise === "function") return precise(v1, v2);
+        return Math.abs(v1 - v2) > 1e-2;
+    }
+    return v1 !== v2;
+}
+
+class Variable {
+    key: string;
+    value: any;
+    object: any;
+}
+
+class Queue {
+    label: string;
+    queue: Array<Effect>;
+    constructor(name: string) {
+        this.label = `in${name}Queue`;
+        this.queue = [];
+    }
+    length() {
+        return this.queue.length;
+    }
+    pushFront(effect: Effect) {
+        effect[this.label] = true;
+        this.queue.unshift(effect);
+    }
+    pushBack(effect: Effect) {
+        effect[this.label] = true;
+        this.queue.push(effect);
+    }
+    has(callback) {
+        return callback[this.label];
+    }
+    execute() {
+        while (this.queue.length > 0) {
+            const effect = this.queue.shift();
+            if (effect.anyInputHasChanged()) effect.trigger();
+            effect[this.label] = false;
+        }
+    }
+    transfer(filter: (effect: Effect) => boolean, queue: Queue) {
+        const effects = [];
+        for (const effect of this.queue) {
+            if (filter(effect)) {
+                queue.pushBack(effect);
+                effect[this.label] = false;
+            } else effects.push(effect);
+        }
+        this.queue = effects;
+    }
+}
+
+const proxiesMap: WeakMap<ProxyHandler<any>, any> = new WeakMap(); // proxy -> object
+const objectsMap: WeakMap<any, ObjectManager> = new WeakMap(); // object -> ObjectManager
+const effectQueue = new Queue("Effect");
+const freezeQueue = new Queue("Freeze");
+const afterEffects: Array<Array<() => void>> = [];
+let globalAllowUpdate = true;
+let globalActiveEffect = undefined;
+let globalFreeze = 0;
+
+class Effect {
+    callback: () => void;
+    count: number;
+    in: Array<Variable>;
+    out: Array<Variable>;
+    inited: boolean;
+    constructor(callback: () => void) {
+        this.callback = callback;
+        this.count = 0;
+        this.in = [];
+        this.out = [];
+        this.inited = false;
+        if (globalActiveEffect) {
+            effectQueue.pushBack(this);
+        } else {
+            afterEffects.push([]);
+            globalAllowUpdate = false;
+            effectQueue.pushBack(this);
+            effectQueue.execute();
+            globalAllowUpdate = true;
+            const callbacks = afterEffects.shift();
+            callbacks.forEach(callback => callback());
+        }
+    }
+    trigger() {
+        if (globalActiveEffect) ErrorLauncher.whatHappened();
+        globalActiveEffect = this;
+        const out = this.out;
+        this.clear();
+        this.call();
+        this.outputUpdate(out);
+        globalActiveEffect = undefined;
+    }
+    freeze() {
+        this.count++;
+    }
+    freezing() {
+        return this.count;
+    }
+    unfreeze() {
+        this.count--;
+        if (this.count === 0) transferMeltingEffect();
+    }
+    call() {
+        this.callback();
+    }
+    clear() {
+        this.in.forEach(variable => {
+            const objectManager = objectsMap.get(variable.object);
+            objectManager.outputEffects(variable.key)?.delete(this);
+        });
+        this.out.forEach(variable => {
+            const objectManager = objectsMap.get(variable.object);
+            objectManager.inputEffects(variable.key)?.delete(this);
+        });
+        [this.in, this.out] = [[], []];
+    }
+    pushInput(object: any, key: string, value: any) {
+        for (let i = 0; i < this.in.length; i++) {
+            if (this.in[i].key === key && this.in[i].object === object) {
+                this.in[i].value = value;
+                return;
+            }
+        }
+        this.in.push({ object, key, value });
+    }
+    pushOutput(object: any, key: string, value: any) {
+        for (let i = 0; i < this.out.length; i++) {
+            if (this.out[i].key === key && this.out[i].object === object) {
+                this.out[i].value = value;
+                return;
+            }
+        }
+        this.out.push({ object, key, value });
+    }
+    inputHasChanged(object: any, key: string) {
+        const objectManager = objectsMap.get(object);
+        const old = this.in.find(variable => variable.key === key && variable.object === object);
+        if (!old) ErrorLauncher.whatHappened();
+        return hasChanged(old.value, object[key], objectManager.precise.get(key));
+    }
+    anyInputHasChanged() {
+        if (!this.inited) {
+            this.inited = true;
+            return true;
+        }
+        for (let i = 0; i < this.in.length; i++) {
+            const old = this.in[i];
+            const objectManager = objectsMap.get(old.object);
+            if (hasChanged(old.value, old.object[old.key], objectManager.precise.get(old.key))) return true;
+        }
+        return false;
+    }
+    whichInputHasChanged() {
+        for (let i = 0; i < this.in.length; i++) {
+            const old = this.in[i];
+            const objectManager = objectsMap.get(old.object);
+            if (hasChanged(old.value, old.object[old.key], objectManager.precise.get(old.key))) return [old.key, old.value, old.object[old.key]];
+        }
+    }
+    outputUpdate(out: Array<Variable>) {
+        this.out.forEach(current => {
+            const objectManager = objectsMap.get(current.object);
+            const old = out.find(variable => variable.key === current.key && variable.object === current.object);
+            if (!old) {
+                const outEffectsSet = objectManager.outputEffects(current.key);
+                outEffectsSet?.forEach(effect => {
+                    if (effectQueue.has(effect)) return;
+                    effectQueue.pushBack(effect);
+                });
+            } else {
+                const outEffectsSet = objectManager.outputEffects(current.key);
+                outEffectsSet?.forEach(effect => {
+                    const _in = effect.in;
+                    let i = 0;
+                    for (; i < _in.length; i++) if (_in[i].key === current.key) break;
+                    if (!hasChanged(current.value, _in[i].value, objectManager.precise.get(current.key))) return;
+                    if (effectQueue.has(effect)) return;
+                    effectQueue.pushBack(effect);
+                });
+            }
+        });
+    }
+}
+
+class ObjectManager {
+    proxy: ProxyHandler<any>;
+    object: any;
+    inEffects: Map<string, Set<Effect>>;
+    outEffects: Map<string, Set<Effect>>;
+    precise: Map<string, (v1: number, v2: number) => boolean>;
+    constructor(object: any, proxy: ProxyHandler<any>) {
+        this.proxy = proxy;
+        this.object = object;
+        this.inEffects = new Map();
+        this.outEffects = new Map();
+        this.precise = new Map();
+    }
+    inputEffects(key: string): Set<Effect> | undefined {
+        const inEffectsSet = this.inEffects.get(key);
+        return inEffectsSet ? inEffectsSet : undefined;
+    }
+    outputEffects(key: string): Set<Effect> | undefined {
+        const outEffectsSet = this.outEffects.get(key);
+        return outEffectsSet ? outEffectsSet : undefined;
+    }
+    pushInput(key: string, effect: Effect) {
+        let inEffectsSet = this.inEffects.get(key);
+        if (!inEffectsSet) {
+            inEffectsSet = new Set();
+            this.inEffects.set(key, inEffectsSet);
+        }
+        inEffectsSet.add(effect);
+    }
+    pushOutput(key: string, effect: Effect) {
+        let outEffectsSet = this.outEffects.get(key);
+        if (!outEffectsSet) {
+            outEffectsSet = new Set();
+            this.outEffects.set(key, outEffectsSet);
+        }
+        outEffectsSet.add(effect);
+    }
+}
+
+function transferMeltingEffect() {
+    freezeQueue.transfer(effect => {
+        return effect.freezing() === 0 && !effectQueue.has(effect);
+    }, effectQueue);
+    if (!globalAllowUpdate) return;
+    afterEffects.push([]);
+    globalAllowUpdate = false;
+    effectQueue.execute();
+    globalAllowUpdate = true;
+    const callbacks = afterEffects.shift();
+    callbacks.forEach(callback => callback());
+}
+
+export function afterEffect(callback: () => void) {
+    if (afterEffects.length > 0) afterEffects[afterEffects.length - 1].push(callback);
+    else callback();
+}
+
+export function freeze() {
+    globalFreeze++;
+}
+
+export function unfreeze() {
+    globalFreeze--;
+    if (globalFreeze === 0) transferMeltingEffect();
+}
+
+export function setPrecise(proxy: ProxyHandler<any>, key: string, type: (v1: number, v2: number) => boolean) {
+    const object = proxiesMap.get(proxy);
+    const objectManager = objectsMap.get(object);
+    objectManager.precise.set(key, type);
+}
+
+export function reactive(object: any) {
+    if (objectsMap.has(object)) return objectsMap.get(object).proxy;
+    let associated = {};
+    const proxy = new Proxy(object, {
+        get(object, key: string, receiver) {
+            const value = Reflect.get(object, key, receiver);
+            traceInput(object, key, value);
+            if (value instanceof SDNode) return value;
+            if (typeof value === "object") {
+                return reactive(value);
+            }
+            return value;
+        },
+        set(object, key: string, value, receiver) {
+            if (proxiesMap.get(object)) object = proxiesMap.get(object);
+            if (proxiesMap.get(value)) value = proxiesMap.get(value);
+            traceOutput(object, key, value);
+            const newValue = value;
+            const oldValue = Reflect.get(object, key, receiver);
+            if (associated[key]) {
+                if (hasChanged(oldValue, newValue) || (Array.isArray(object) && key === "length")) {
+                    associated[key].forEach(callback => {
+                        callback(newValue, oldValue);
+                    });
+                }
+            }
+            Reflect.set(object, key, value, receiver);
+            triggerUpdate(object, key);
+            return true;
+        },
+    });
+    proxiesMap.set(proxy, object);
+    objectsMap.set(object, new ObjectManager(object, proxy));
+    object.watch = function (key: string, callback: (vn: any, vo: any) => void) {
+        if (arguments.length === 0) return associated;
+        const keys = key.split(".");
+        for (let i = 0; i < keys.length; i++) {
+            if (i === keys.length - 1) {
+                if (!associated[keys[i]]) associated[keys[i]] = [];
+                associated[keys[i]].push(callback);
+            } else {
+                const str = keys.slice(i + 1).join(".");
+                proxy[keys[i]].watch(str, callback);
+            }
+        }
+    };
+    object.merge = function (otherObject) {
+        for (let key in otherObject) {
+            object[key] = otherObject[key];
+        }
+    };
+    object.setTogether = function (items) {
+        const objects = [];
+        const keys = [];
+        const callbacks = [];
+        for (const key in items) {
+            let value = items[key];
+            if (proxiesMap.get(object)) object = proxiesMap.get(object);
+            if (proxiesMap.get(value)) value = proxiesMap.get(value);
+            traceOutput(object, key, value);
+            const newValue = value;
+            const oldValue = object[key];
+            object[key] = value;
+            if (associated[key]) {
+                if (hasChanged(oldValue, newValue) || (Array.isArray(object) && key === "length")) {
+                    associated[key].forEach(callback => {
+                        callbacks.push(() => {
+                            callback(newValue, oldValue);
+                        });
+                    });
+                }
+            }
+            objects.push(object);
+            keys.push(key);
+        }
+        callbacks.forEach(callback => {
+            callback();
+        });
+        triggerUpdates(objects, keys);
+    };
+    object.lpset = function (key: string, value: number) {
+        setPrecise(proxy, key, lowPrecise);
+        proxy[key] = value;
+    };
+    object.mpset = function (key: string, value: number) {
+        setPrecise(proxy, key, mediumPrecise);
+        proxy[key] = value;
+    };
+    object.hpset = function (key: string, value: number) {
+        setPrecise(proxy, key, highPrecise);
+        proxy[key] = value;
+    };
+    return proxy;
+}
+
+function lowPrecise(v1: number, v2: number) {
+    return Math.abs(v1 - v2) >= 1;
+}
+
+function mediumPrecise(v1: number, v2: number) {
+    return Math.abs(v1 - v2) >= 1e-1;
+}
+
+function highPrecise(v1: number, v2: number) {
+    return Math.abs(v1 - v2) >= 1e-2;
+}
+
+export function effect(callback: () => void) {
+    return new Effect(callback);
+}
+
+export function object(proxy: ProxyHandler<any>) {
+    if (proxiesMap.get(proxy)) return proxiesMap.get(proxy);
+    return proxy;
+}
+
+export function uneffect(effect: Effect) {
+    effect.clear();
+}
+
+function traceInput(object: any, key: string, value: any) {
+    if (!globalActiveEffect) return;
+    const effect = globalActiveEffect as Effect;
+    effect.pushInput(object, key, value);
+    const objectManager = objectsMap.get(object);
+    objectManager.pushOutput(key, effect);
+}
+
+function traceOutput(object: any, key: string, value: any) {
+    if (!globalActiveEffect) return;
+    const effect = globalActiveEffect as Effect;
+    effect.pushOutput(object, key, value);
+    const objectManager = objectsMap.get(object);
+    objectManager.pushInput(key, effect);
+}
+
+function collectEffectOnDAG(queue: Queue, object: any, key: string) {
+    const visitedObject = new Map();
+    const visitedEffect = new Map();
+    function dfs(object, key, lastEffect = undefined) {
+        if (!visitedObject.has(object)) visitedObject.set(object, new Map());
+        if (!visitedObject.get(object).has(key)) visitedObject.get(object).set(key, new Set());
+        if (lastEffect && visitedObject.get(object).get(key).has(lastEffect)) return;
+        if (lastEffect) visitedObject.get(object).get(key).add(lastEffect);
+        const objectManager = objectsMap.get(object);
+        const outEffectsSet = objectManager.outputEffects(key);
+        outEffectsSet?.forEach(effect => {
+            if (!visitedEffect.has(effect)) {
+                visitedEffect.set(effect, {
+                    degree: 0,
+                });
+            }
+            if (lastEffect && lastEffect !== effect) visitedEffect.get(effect).degree++;
+            effect.out.forEach(variable => {
+                dfs(variable.object, variable.key, effect);
+            });
+        });
+    }
+    dfs(object, key);
+    const tmpQueue = [];
+    visitedEffect.forEach((node, effect) => {
+        if (node.degree === 0) tmpQueue.push(effect);
+    });
+    if (tmpQueue.length === 0) collectEffect(queue, object, key);
+    while (tmpQueue.length > 0) {
+        const effect = tmpQueue.shift();
+        if (effect.freezing() + globalFreeze > 0) {
+            if (!freezeQueue.has(effect)) freezeQueue.pushBack(effect);
+            continue;
+        } else queue.pushBack(effect);
+        effect.out.forEach(variable => {
+            const objectManager = objectsMap.get(variable.object);
+            const outEffectsSet = objectManager.outputEffects(variable.key);
+            outEffectsSet?.forEach(nextEffect => {
+                if (!--visitedEffect.get(nextEffect).degree) {
+                    tmpQueue.push(nextEffect);
+                }
+            });
+        });
+    }
+}
+
+function collectEffectOnDAGFromMultipleVars(queue: Queue, objects: Array<any>, keys: Array<string>) {
+    if (objects.length !== keys.length) ErrorLauncher.whatHappened();
+    const visitedObject = new Map();
+    const visitedEffect = new Map();
+    function dfs(object, key, lastEffect = undefined) {
+        if (!visitedObject.has(object)) visitedObject.set(object, new Map());
+        if (!visitedObject.get(object).has(key)) visitedObject.get(object).set(key, new Set());
+        if (lastEffect && visitedObject.get(object).get(key).has(lastEffect)) return;
+        if (lastEffect) visitedObject.get(object).get(key).add(lastEffect);
+        const objectManager = objectsMap.get(object);
+        const outEffectsSet = objectManager.outputEffects(key);
+        outEffectsSet?.forEach(effect => {
+            if (!visitedEffect.has(effect)) {
+                visitedEffect.set(effect, {
+                    degree: 0,
+                });
+            }
+            if (lastEffect && lastEffect !== effect) visitedEffect.get(effect).degree++;
+            effect.out.forEach(variable => {
+                dfs(variable.object, variable.key, effect);
+            });
+        });
+    }
+    for (let i = 0; i < objects.length; i++) dfs(objects[i], keys[i]);
+    const tmpQueue = [];
+    visitedEffect.forEach((node, effect) => {
+        if (node.degree === 0) tmpQueue.push(effect);
+    });
+    if (tmpQueue.length === 0) {
+        for (let i = 0; i < objects.length; i++) collectEffect(queue, objects[i], keys[i]);
+    }
+    while (tmpQueue.length > 0) {
+        const effect = tmpQueue.shift();
+        if (effect.freezing() + globalFreeze > 0) {
+            freezeQueue.pushBack(effect);
+            continue;
+        } else {
+            queue.pushBack(effect);
+        }
+        effect.out.forEach(variable => {
+            const objectManager = objectsMap.get(variable.object);
+            const outEffectsSet = objectManager.outputEffects(variable.key);
+            outEffectsSet?.forEach(nextEffect => {
+                if (!--visitedEffect.get(nextEffect).degree) {
+                    tmpQueue.push(nextEffect);
+                }
+            });
+        });
+    }
+}
+
+function collectEffect(queue: Queue, object: any, key: string) {
+    const objectManager = objectsMap.get(object);
+    const outEffectsSet = objectManager.outputEffects(key);
+    outEffectsSet?.forEach(effect => {
+        if (!effect.inputHasChanged(object, key)) return;
+        if (queue.has(effect)) return;
+        if (effect.freezing() + globalFreeze > 0) freezeQueue.pushBack(effect);
+        else queue.pushBack(effect);
+    });
+}
+
+function triggerUpdate(object: any, key: string) {
+    if (!globalAllowUpdate) return;
+    afterEffects.push([]);
+    globalAllowUpdate = false;
+    collectEffectOnDAG(effectQueue, object, key);
+    effectQueue.execute();
+    globalAllowUpdate = true;
+    const callbacks = afterEffects.shift();
+    callbacks.forEach(callback => callback());
+}
+
+function triggerUpdates(objects: Array<any>, keys: Array<string>) {
+    if (!globalAllowUpdate) return;
+    afterEffects.push([]);
+    globalAllowUpdate = false;
+    collectEffectOnDAGFromMultipleVars(effectQueue, objects, keys);
+    effectQueue.execute();
+    globalAllowUpdate = true;
+    const callbacks = afterEffects.shift();
+    callbacks.forEach(callback => callback());
+}
+
+export function checkEffect(effect: Effect) {
+    console.log("effect=", effect.callback);
+    console.log(effect.in);
+    console.log(effect.out);
+    console.log("");
+}

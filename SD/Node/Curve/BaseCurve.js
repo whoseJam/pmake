@@ -1,7 +1,6 @@
 import { Vector as V } from "@/Math/Vector";
-import { LineSVG } from "@/Node/Path/LineSVG";
 import { PathSVG } from "@/Node/Path/PathSVG";
-import { Factory } from "@/Utility/Factory";
+import { Check } from "@/Utility/Check";
 
 export class BaseCurve extends PathSVG {
     constructor(target) {
@@ -12,18 +11,56 @@ export class BaseCurve extends PathSVG {
             y1: 0,
             x2: 40,
             y2: 40,
-            update: false,
         });
     }
 }
 
 Object.assign(BaseCurve.prototype, {
-    x1: Factory.handler("x1"),
-    y1: Factory.handler("y1"),
-    x2: Factory.handler("x2"),
-    y2: Factory.handler("y2"),
-    source: LineSVG.prototype.source,
-    target: LineSVG.prototype.target,
+    x1(x1) {
+        if (arguments.length === 0) return this.vars.x1;
+        Check.validateNumber(x1, `${this.constructor.name}.x1`);
+        this.vars.lpset("x1", x1);
+        return this;
+    },
+    y1(y1) {
+        if (arguments.length === 0) return this.vars.y1;
+        Check.validateNumber(y1, `${this.constructor.name}.y1`);
+        this.vars.lpset("y1", y1);
+        return this;
+    },
+    x2(x2) {
+        if (arguments.length === 0) return this.vars.x2;
+        Check.validateNumber(x2, `${this.constructor.name}.x2`);
+        this.vars.lpset("x2", x2);
+        return this;
+    },
+    y2(y2) {
+        if (arguments.length === 0) return this.vars.y2;
+        Check.validateNumber(y2, `${this.constructor.name}.y2`);
+        this.vars.lpset("y2", y2);
+        return this;
+    },
+    source(x, y) {
+        if (arguments.length === 0) {
+            return [this.x1(), this.y1()];
+        } else if (arguments.length === 1) {
+            const point = arguments[0];
+            return this.source(point[0], point[1]);
+        }
+        this.freeze().x1(x).y1(y).unfreeze();
+        return this;
+    },
+    target(x, y) {
+        if (arguments.length === 0) {
+            return [this.x2(), this.y2()];
+        } else if (arguments.length === 1) {
+            const point = arguments[0];
+            return this.target(point[0], point[1]);
+        }
+        // console.log("set target x=", x, "y=", y); TO FIX
+        this.freeze().x2(x).y2(y).unfreeze();
+        return this;
+    },
     dx(dx) {
         this.freeze();
         this.source(V.add(this.source(), [dx, 0]));
@@ -39,12 +76,3 @@ Object.assign(BaseCurve.prototype, {
         return this;
     },
 });
-
-export function curveHandler(key) {
-    return function (value) {
-        if (value === undefined) return this.vars[key];
-        this.vars[key] = value;
-        this.vars.update = true;
-        return this;
-    };
-}

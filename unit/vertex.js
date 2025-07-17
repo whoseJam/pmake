@@ -1,8 +1,15 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
+const C = sd.color();
 
-sd.main(TestLayout);
+sd.main(TestText);
+
+async function TestText() {
+    const vertex = new sd.Vertex(svg).x(100).y(100);
+    await sd.pause();
+    vertex.startAnimate().value("123").endAnimate();
+}
 
 async function TestLayout() {
     function addFocus(node) {

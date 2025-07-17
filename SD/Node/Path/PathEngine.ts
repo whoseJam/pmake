@@ -1,4 +1,5 @@
 import { svg } from "@/Interact/Root";
+import { SD2DNode } from "../SD2DNode";
 
 export class PathEngine {
     static pathSVG = undefined;
@@ -61,6 +62,55 @@ export class PathEngine {
             return this.polylineSVG.nake().getTotalLength();
         } catch (err) {
             return 0;
+        }
+    }
+    static __trimPathSource(source: SD2DNode) {
+        if (!source) return 0;
+        const t = this.pathSVG.nake().getTotalLength();
+        let l = 0;
+        let r = 1;
+        while (r - l > 1e-3) {
+            const mid = (l + r) / 2.0;
+            const length = t * mid;
+            const point = this.pathSVG.nake().getPointAtLength(length);
+            if (source.inRange([point.x, point.y])) l = mid;
+            else r = mid;
+        }
+        if (t * l <= 1) return 0;
+        return l;
+    }
+    static __trimPathTarget(target: SD2DNode) {
+        if (!target) return 1;
+        const t = this.pathSVG.nake().getTotalLength();
+        let l = 0;
+        let r = 1;
+        while (r - l > 1e-3) {
+            const mid = (l + r) / 2.0;
+            const length = t * mid;
+            const point = this.pathSVG.nake().getPointAtLength(length);
+            if (target.inRange([point.x, point.y])) r = mid;
+            else l = mid;
+        }
+        if (t * (1 - l) <= 1) return 1;
+        return l;
+    }
+    static trimPath(d: string, source: SD2DNode, target: SD2DNode) {
+        try {
+            this.pathSVG.setAttribute("d", d);
+            const length = this.pathSVG.nake().getTotalLength();
+            const s = this.__trimPathSource(source);
+            const t = this.__trimPathTarget(target);
+            const ps = this.pathSVG.nake().getPointAtLength(s * length);
+            const pt = this.pathSVG.nake().getPointAtLength(t * length);
+            return [
+                [ps.x, ps.y],
+                [pt.x, pt.y],
+            ];
+        } catch (err) {
+            return [
+                [0, 0],
+                [0, 0],
+            ];
         }
     }
 }

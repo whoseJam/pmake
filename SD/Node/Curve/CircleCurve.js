@@ -1,4 +1,5 @@
-import { BaseCurve, curveHandler } from "@/Node/Curve/BaseCurve";
+import { BaseCurve } from "@/Node/Curve/BaseCurve";
+import { Check } from "@/Utility/Check";
 import { PathPen } from "@/Utility/PathPen";
 
 export class CircleCurve extends BaseCurve {
@@ -11,19 +12,28 @@ export class CircleCurve extends BaseCurve {
             r: 20,
         });
 
-        this.effect("curve", () => {
+        this._.curve = (source, target) => {
             const r = this.r();
-            const x1 = this.x1();
-            const y1 = this.y1();
-            let x2 = this.x2();
-            const y2 = this.y2();
+            const x1 = source[0];
+            const y1 = source[1];
+            let x2 = target[0];
+            const y2 = target[1];
             if (x1 === x2 && y1 === y2) x2++;
             const pen = new PathPen().MoveTo(x1, y1).Arc(r, r, 0, 1, 1, x2, y2);
-            this.d(pen.toString());
+            return pen.toString();
+        };
+
+        this.effect("curve", () => {
+            this.d(this._.curve(this.source(), this.target()));
         });
     }
 }
 
 Object.assign(CircleCurve.prototype, {
-    r: curveHandler("r"),
+    r(r) {
+        if (arguments.length === 0) return this.vars.r;
+        Check.validateNumber(r, `${this.constructor.name}.r`);
+        this.vars.lpset("r", r);
+        return this;
+    },
 });

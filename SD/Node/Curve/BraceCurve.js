@@ -1,5 +1,6 @@
 import { Vector as V } from "@/Math/Vector";
-import { BaseCurve, curveHandler } from "@/Node/Curve/BaseCurve";
+import { BaseCurve } from "@/Node/Curve/BaseCurve";
+import { Check } from "@/Utility/Check";
 import { PathPen } from "@/Utility/PathPen";
 
 export class BraceCurve extends BaseCurve {
@@ -12,9 +13,9 @@ export class BraceCurve extends BaseCurve {
             bending: 5,
         });
 
-        this.effect("curve", () => {
-            const vs = this.source();
-            const vt = this.target();
+        this._.curve = (source, target) => {
+            const vs = source;
+            const vt = target;
             const vc = V.numberMul(V.add(vs, vt), 0.5);
             const d = V.numberMul(V.norm(V.sub(vt, vs)), this.bending());
             const dl = V.rotate(d, -Math.PI / 2);
@@ -30,11 +31,20 @@ export class BraceCurve extends BaseCurve {
             pen.MoveTo(vs).Quad(p1, p2);
             pen.LinkTo(c1).Quad(c2, c).Quad(c2, c3);
             pen.LinkTo(p3).Quad(p4, vt);
-            this.d(pen.toString());
+            return pen.toString();
+        };
+
+        this.effect("curve", () => {
+            this.d(this._.curve(this.source(), this.target()));
         });
     }
 }
 
 Object.assign(BraceCurve.prototype, {
-    bending: curveHandler("bending"),
+    bending(bending) {
+        if (arguments.length === 0) return this.vars.bending;
+        Check.validateNumber(bending, `${this.constructor.name}.bending`);
+        this.vars.lpset("bending", bending);
+        return this;
+    },
 });

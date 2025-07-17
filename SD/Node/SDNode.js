@@ -173,6 +173,9 @@ Object.assign(SDNode.prototype, {
         this._.updaters[name].trigger();
         return this;
     },
+    hasEffect(name) {
+        return this._.updaters[name] !== undefined;
+    },
 
     drag: forward("interact", "drag"),
     clickable(type) {

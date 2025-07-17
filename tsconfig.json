@@ -15,10 +15,15 @@
             "@/*": ["SD/*"]
         },
 
-        "strict": false,
-        "noImplicitAny": false,
-        "strictNullChecks": false,
-        "strictFunctionTypes": false,
+        // "strict": false,
+        // "noImplicitAny": false,
+        // "strictNullChecks": false,
+        // "strictFunctionTypes": false,
+
+        "strict": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
 
         "moduleResolution": "Node",
         "esModuleInterop": true,

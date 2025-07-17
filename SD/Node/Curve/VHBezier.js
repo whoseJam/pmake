@@ -8,9 +8,9 @@ export class VHBezier extends BaseCurve {
 
         this.type("VHBezier");
 
-        this.effect("curve", () => {
-            const v1 = [this.x1(), this.y1()];
-            const v2 = [this.x2(), this.y2()];
+        this._.curve = (source, target) => {
+            const v1 = source;
+            const v2 = target;
             let d = V.sub(v2, v1);
             let p1;
             let p2;
@@ -24,7 +24,11 @@ export class VHBezier extends BaseCurve {
                 p2 = [v2[0] - d[0] * 0.5, v2[1]];
             }
             const pen = new PathPen().MoveTo(v1).Quad(p1, pm).Quad(p2, v2);
-            this.d(pen.toString());
+            return pen.toString();
+        };
+
+        this.effect("curve", () => {
+            this.d(this._.curve(this.source(), this.target()));
         });
     }
 }

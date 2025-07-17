@@ -1,5 +1,6 @@
 import { Exit as EX } from "@/Node/Core/Exit";
 import { Line } from "@/Node/Path/Line";
+import { PathEngine } from "@/Node/Path/PathEngine";
 import { trim } from "@/Utility/Trim";
 
 class LinkPlugin {
@@ -40,6 +41,32 @@ class LinkPlugin {
     }
 }
 
+function trimSource(link, source) {
+    if (!source) return 0;
+    let l = 0,
+        r = 1;
+    while (r - l > 1e-3) {
+        const mid = (l + r) / 2.0;
+        if (source.inRange(link.at(mid))) l = mid;
+        else r = mid;
+    }
+    if (link.totalLength() * l <= 1) return 0;
+    return l;
+}
+
+function trimTarget(link, target) {
+    if (!target) return 1;
+    let l = 0,
+        r = 1;
+    while (r - l > 1e-3) {
+        const mid = (l + r) / 2.0;
+        if (target.inRange(link.at(mid))) r = mid;
+        else l = mid;
+    }
+    if (link.totalLength() * (1 - l) <= 1) return 1;
+    return l;
+}
+
 export function Link(source, target, clazz = Line, sx = "cx", sy = "cy", tx = "cx", ty = "cy") {
     const self = new clazz(target);
     self.vars.merge({
@@ -58,17 +85,22 @@ export function Link(source, target, clazz = Line, sx = "cx", sy = "cy", tx = "c
     self.targetLocationX = LinkPlugin.prototype.targetLocationX;
     self.targetLocationY = LinkPlugin.prototype.targetLocationY;
 
-    self.effect("element", () => {
-        if (self.vars.update) self.vars.update = false;
+    const curve = self._.curve;
+    if (curve) self.uneffect("curve");
+
+    self.effect("link", () => {
         const element1 = self.vars.element1;
         const element2 = self.vars.element2;
-        self.source(element1[self.sourceLocationX()](), element1[self.sourceLocationY()]());
-        self.target(element2[self.targetLocationX()](), element2[self.targetLocationY()]());
-    });
-    self.effect("trim", () => {
-        const element1 = self.vars.element1;
-        const element2 = self.vars.element2;
-        trim(self, element1, element2);
+        const source = [element1[self.sourceLocationX()](), element1[self.sourceLocationY()]()];
+        const target = [element2[self.targetLocationX()](), element2[self.targetLocationY()]()];
+        if (curve) {
+            const d = curve(source, target);
+            const [ps, pt] = PathEngine.trimPath(d, element1, element2);
+            self.source(ps).target(pt).d(curve(ps, pt));
+        } else {
+            self.source(source).target(target);
+            trim(self, element1, element2);
+        }
     });
 
     source.childAs(self);

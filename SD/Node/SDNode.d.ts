@@ -221,6 +221,7 @@ export class SDNode {
      * @returns The current component instance for method chaining.
      */
     triggerEffect(name: string): this;
+    hasEffect(name: string): boolean;
 
     drag(type: true | false | null | undefined): this;
     drag(onDrag: (dx: number, dy: number) => [number, number]): this;

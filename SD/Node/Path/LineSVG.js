@@ -3,6 +3,7 @@ import { Vector as V } from "@/Math/Vector";
 import { BasePath } from "@/Node/Path/BasePath";
 import { BaseSVG } from "@/Node/Path/BaseSVG";
 import { Line } from "@/Node/Path/Line";
+import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
 
 export class LineSVG extends BasePath {
@@ -95,10 +96,30 @@ Object.assign(LineSVG.prototype, {
         const v2 = this.target();
         return V.length(V.sub(v1, v2));
     },
-    x1: Factory.handlerLowPrecise("x1"),
-    y1: Factory.handlerLowPrecise("y1"),
-    x2: Factory.handlerLowPrecise("x2"),
-    y2: Factory.handlerLowPrecise("y2"),
+    x1(x1) {
+        if (arguments.length === 0) return this.vars.x1;
+        Check.validateNumber(x1, `${this.constructor.name}.x1`);
+        this.vars.lpset("x1", x1);
+        return this;
+    },
+    y1(y1) {
+        if (arguments.length === 0) return this.vars.y1;
+        Check.validateNumber(y1, `${this.constructor.name}.y1`);
+        this.vars.lpset("y1", y1);
+        return this;
+    },
+    x2(x2) {
+        if (arguments.length === 0) return this.vars.x2;
+        Check.validateNumber(x2, `${this.constructor.name}.x2`);
+        this.vars.lpset("x2", x2);
+        return this;
+    },
+    y2(y2) {
+        if (arguments.length === 0) return this.vars.y2;
+        Check.validateNumber(y2, `${this.constructor.name}.y2`);
+        this.vars.lpset("y2", y2);
+        return this;
+    },
     source(x, y) {
         if (arguments.length === 0) {
             return [this.x1(), this.y1()];

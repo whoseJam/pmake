@@ -19,7 +19,9 @@ window.SVG_MAXX = 0;
 window.SVG_MAXY = 0;
 
 D.onKeyDown("n", nextFrame);
+D.onKeyDown("N", nextFrame);
 D.onKeyDown("p", prevFrame);
+D.onKeyDown("P", prevFrame);
 
 function lastMainFrame() {
     if (window.SHOULD_EXPORT) A.forceToFinish();
