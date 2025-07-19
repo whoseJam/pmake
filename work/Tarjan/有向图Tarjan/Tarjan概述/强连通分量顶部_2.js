@@ -17,7 +17,6 @@ sd.init(() => {
     pen.linkTo(40, 20);
     path.d(pen.toString());
     path.arrow();
-
     const top = v.pos("cx", "y");
     fromRoot = new sd.Line(svg)
         .source(V.add(top, [60, -40]))

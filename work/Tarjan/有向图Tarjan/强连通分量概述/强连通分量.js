@@ -28,6 +28,17 @@ sd.init(() => {
         g.newLink(link[0], link[1]);
         g.element(link[0], link[1]).arrow();
     });
+    g.forEachNode(node => {
+        let selected = false;
+        node.onClick(() => {
+            sd.inter(async () => {
+                node.startAnimate()
+                    .color(selected ? C.white : C.orange)
+                    .endAnimate();
+                selected ^= 1;
+            });
+        });
+    });
 });
 
 sd.main(async () => {});

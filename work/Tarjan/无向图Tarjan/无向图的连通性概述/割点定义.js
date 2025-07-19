@@ -1,7 +1,9 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-const graph = new sd.GridGraph(svg).cx(600).cy(300);
+const C = sd.color();
+const graph = new sd.GridGraph(svg).scale(0.5);
+const points = [3, 6];
 const data = [
     [1, 2],
     [1, 3],
@@ -27,4 +29,29 @@ sd.init(() => {
     });
 });
 
-sd.main(async () => {});
+sd.main(async () => {
+    for (let i = 0; i < points.length; i++) {
+        await sd.pause();
+        graph.startAnimate();
+        graph.color(points[i], C.red);
+        if (i >= 1) graph.color(points[i - 1], C.white);
+        graph.endAnimate();
+    }
+    await sd.pause();
+    graph
+        .element(points[points.length - 1])
+        .startAnimate()
+        .color(C.white)
+        .endAnimate();
+    graph.forEachNode(node => {
+        let selected = false;
+        node.onClick(() => {
+            sd.inter(async () => {
+                node.startAnimate()
+                    .color(selected ? C.white : C.orange)
+                    .endAnimate();
+                selected ^= 1;
+            });
+        });
+    });
+});

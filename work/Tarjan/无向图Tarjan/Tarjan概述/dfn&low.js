@@ -1,5 +1,5 @@
 import * as sd from "@/sd";
-import { linkTo } from "../../_/LinkTo";
+import { linkToWithArrow } from "../../_/LinkTo";
 import { tarjan } from "../_/Tarjan";
 import { TreeGraph } from "../_/TreeGraph";
 
@@ -55,19 +55,11 @@ sd.main(async () => {
         },
         async onTreeLink(u, v, link) {
             await sd.pause();
-            linkTo(link, C.textBlue);
+            linkToWithArrow(link, C.textBlue);
         },
         async onAncestorLink(u, v, link) {
             await sd.pause();
-            linkTo(link, C.red);
-        },
-        async onForwardLink(u, v, link) {
-            await sd.pause();
-            linkTo(link, C.orange);
-        },
-        async onCrossLink(u, v, link) {
-            await sd.pause();
-            linkTo(link, C.purple);
+            linkToWithArrow(link, C.red);
         },
     });
     low[8] = 1; // ???

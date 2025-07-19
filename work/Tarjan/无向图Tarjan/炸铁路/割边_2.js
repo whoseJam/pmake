@@ -4,7 +4,9 @@ const svg = sd.svg();
 const R = sd.rule();
 const V = sd.vec();
 const tri = new sd.Triangle(svg).height(140).width(100);
-const v = new sd.Vertex(svg, "u").center(tri.pos("cx", "y"));
+const u = new sd.Vertex(svg, "u").dx(80).dy(-80);
+const v = new sd.Vertex(svg, "v").center(tri.pos("cx", "y"));
+let fromRoot;
 
 sd.init(() => {
     const path = new sd.Path(svg);
@@ -16,10 +18,10 @@ sd.init(() => {
     pen.linkTo(40, 20);
     path.d(pen.toString());
     path.arrow();
-
-    const top = v.pos("cx", "y");
-    new sd.Line(svg)
-        .source(V.add(top, [60, -40]))
+    sd.Link(u, v).arrow();
+    const top = V.add(u.center(), [u.r() / Math.sqrt(2), -u.r() / Math.sqrt(2)]);
+    fromRoot = new sd.Line(svg)
+        .source(V.add(top, [30, -30]))
         .target(top)
         .arrow()
         .value("...", R.pointAtPathByRate(0, "x", "cy"));
@@ -29,7 +31,6 @@ sd.main(async () => {
     await sd.pause();
     const c1 = new sd.Curve(svg);
     c1.source(V.add(v.pos("cx", "my"), [20, 80]));
-    c1.target(v.center());
-    sd.trim(c1, null, v);
+    c1.target(fromRoot.at(0.2));
     c1.startAnimate().pointStoT().endAnimate().arrow();
 });
