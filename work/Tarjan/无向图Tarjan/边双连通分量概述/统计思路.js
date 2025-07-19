@@ -37,7 +37,6 @@ sd.main(async () => {
             linkToWithArrow(link, C.red);
         },
         onBCC(u) {
-            console.log("onBCC u=", u);
             BCC.push(u);
             seq.push("pop");
         },

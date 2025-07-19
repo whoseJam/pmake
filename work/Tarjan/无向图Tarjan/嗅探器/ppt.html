@@ -1,0 +1,23 @@
+<section>
+    <section>
+        <h1>嗅探器</h1>
+    </section>
+    <problem data-source="https://www.luogu.com.cn/problem/P5058"></problem>
+    <section>
+        <h2>嗅探器</h2>
+        <p>不妨以 $a$ 为根，把DFS树建出来，看看有哪些点是可以放嗅探器的...</p>
+        <div style="display: flex;">
+            <iframe data-animation="./嗅探器.js"
+                style="width: 1000px; height: 400px;"></iframe>
+            <div style="width: 500px;">
+                <ul>
+                    <li class="fragment">放嗅探器的位置一定是一个割点</li>
+                    <p class="fragment quote">割点一定能放嗅探器吗？</p>
+                    <li class="fragment">割点不一定能放嗅探器<span class="fragment">，因为割点不一定会割掉 $a\leftrightarrow b$ 之间的通路</span></li>
+                    <li class="fragment">嗅探器一定在 $a\leftrightarrow b$ 这条树链上</li>
+                    <li class="fragment">$low(u)\ge dfn(fa_u)$，则 $fa_u$ 上可以放嗅探器</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</section>

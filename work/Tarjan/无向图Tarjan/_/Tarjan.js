@@ -10,6 +10,8 @@ import * as sd from "@/sd";
  *  onUpdateLow: (u: number, low: number) => void | Promise<any>;
  *  onBCC: (u: number) => void | Promise<any>;
  *  onNotBCC: (u: number, low: number, ancestor: number) => void | Promise<any>;
+ *  onArticulationPoint: (u: number) => void | Promise<any>;
+ *  onBridge: (u: number, v: number, link: any) => void | Promise<any>;
  *  onPopStack: (u: number) => void | Promise<any>;
  * }} args
  */
@@ -21,16 +23,23 @@ export async function tarjan(graph, args) {
     const onUpdateLow = args.onUpdateLow;
     const onBCC = args.onBCC;
     const onNotBCC = args.onNotBCC;
+    const onArticulationPoint = args.onArticulationPoint;
+    const onBridge = args.onBridge;
     const onPopStack = args.onPopStack;
     const n = graph.nodes().length;
+    const isa = sd.make1d(n + 5);
     const low = sd.make1d(n + 5);
     const dfn = sd.make1d(n + 5);
     const prt = sd.make1d(n + 5);
     const stk = sd.make1d(n + 5);
     let tot = 0;
+    let top = 0;
+    let cnt = 0;
     async function dfs(u) {
         low[u] = dfn[u] = ++tot;
         if (onAddLowAndDfn) await onAddLowAndDfn(u, tot, tot);
+        stk[++top] = u;
+        if (onPushStack) await onPushStack(u);
         const [links, nodes] = graph.outLinksAndNodes(u);
         for (let i = 0; i < links.length; i++) {
             const v = +graph.nodeId(nodes[i]);
@@ -41,6 +50,13 @@ export async function tarjan(graph, args) {
                 await dfs(v);
                 low[u] = Math.min(low[u], low[v]);
                 if (onUpdateLow) await onUpdateLow(u, low[u]);
+                if (low[v] > dfn[u]) {
+                    if (onBridge) await onBridge(u, v, links[i]);
+                }
+                if (low[v] >= dfn[u]) {
+                    isa[u] = true;
+                    if (u === 1) cnt++;
+                }
             } else {
                 if (onAncestorLink) await onAncestorLink(u, v, links[i]);
                 low[u] = Math.min(low[u], dfn[v]);
@@ -60,6 +76,17 @@ export async function tarjan(graph, args) {
         }
     }
     await dfs(1);
+    for (let i = 1; i <= n; i++) {
+        if (i !== 1) {
+            if (isa[i]) {
+                if (onArticulationPoint) await onArticulationPoint(i);
+            }
+        } else {
+            if (cnt >= 2) {
+                if (onArticulationPoint) await onArticulationPoint(i);
+            }
+        }
+    }
 }
 
 /**
@@ -97,7 +124,6 @@ export async function tarjanForNestedGraph(graph, args) {
         low[g][x] = dfn[g][x] = ++tot;
         if (onAddLowAndDfn) await onAddLowAndDfn(u, tot, tot);
         stk[++top] = u;
-        ins[g][x] = true;
         if (onPushStack) await onPushStack(u);
         const [links, nodes, ids] = graph.outLinksAndNodes(u);
         for (let i = 0; i < links.length; i++) {
@@ -119,7 +145,6 @@ export async function tarjanForNestedGraph(graph, args) {
             while (top) {
                 const cur = stk[top--];
                 if (onPopStack) await onPopStack(cur);
-                ins[cur[0]][cur[1]] = false;
                 if (equal(cur, u)) break;
             }
         }
