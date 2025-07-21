@@ -10,7 +10,7 @@ const movingGrid = new sd.Grid(svg).elementWidth(20).elementHeight(20).startN(1)
 const n = 3;
 const [sx, sy] = [1, 1];
 const [fx, fy] = [3, 3];
-const visited = sd.make2d(n + 1);
+const visited = sd.make2d(n + 1, n + 1);
 const directions = [
     [1, 0],
     [0, 1],

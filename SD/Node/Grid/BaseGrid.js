@@ -118,7 +118,7 @@ Object.assign(BaseGrid.prototype, {
     },
     value(i, j, value) {
         const element = this.__getElementWithMethod(i, j, "value");
-        if (arguments.length === 1) {
+        if (arguments.length === 2) {
             return element.value();
         } else {
             element.value(value);

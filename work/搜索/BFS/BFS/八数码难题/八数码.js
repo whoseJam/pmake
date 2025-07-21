@@ -1,12 +1,14 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-const tree = new sd.ValueTree(svg).width(1000).layerHeight(70);
-tree.cx(600).y(50);
+const tree = new sd.ValueTree(svg).width(1000).layerHeight(70).cx(600).y(50);
 let tot = 1;
 
-init();
-main();
+sd.init(() => {
+    tree.root(1, makeGrid("283104765"));
+});
+
+sd.main(async () => {});
 
 function makeGrid(str) {
     const myId = tot;
@@ -18,7 +20,8 @@ function makeGrid(str) {
         for (let y = 0; y < 3; y++) {
             const idx = x * 3 + y;
             if (str[idx] == "0") {
-                x0 = x; y0 = y;
+                x0 = x;
+                y0 = y;
                 continue;
             }
             grid.value(x, y, str[idx]);
@@ -43,14 +46,6 @@ function makeGrid(str) {
     return grid;
 }
 
-function init() {
-    tree.root(1, makeGrid("283104765"));
-}
-
-async function main() {
-    await sd.pause();
-}
-
 function convertGridToStr(grid, x1, y1, x2, y2) {
     const charGrid = sd.make2d(3, 3);
     for (let i = 0; i < 3; i++)
@@ -63,8 +58,6 @@ function convertGridToStr(grid, x1, y1, x2, y2) {
     charGrid[x1][y1] = charGrid[x2][y2];
     charGrid[x2][y2] = tmp;
     let str = "";
-    for (let i = 0; i < 3; i++)
-        for (let j = 0; j < 3; j++)
-            str = str + charGrid[i][j];
+    for (let i = 0; i < 3; i++) for (let j = 0; j < 3; j++) str = str + charGrid[i][j];
     return str;
 }
