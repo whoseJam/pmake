@@ -18,10 +18,7 @@
             \end{aligned}
             $$
         </p>
-    </section>
-    <section>
-        <h2>差分</h2>
-        <p>所以我们可以总结出 $\{a\}$ 和 $\{d\}$ 的关系</p>
+        <p class="fragment">所以我们可以总结出 $\{a\}$ 和 $\{d\}$ 的关系</p>
         <ul class="fragment">
             <li>站在 $\{a\}$ 的角度，$\{d\}$ 是 $\{a\}$ 的差分数组</li>
             <li>站在 $\{d\}$ 的角度，$\{a\}$ 是 $\{d\}$ 的前缀和数组</li>
@@ -29,8 +26,14 @@
     </section>
     <section>
         <h2>差分</h2>
-        <p>又或者，我们可以把<b>差分</b>和<b>前缀和</b>当作两种互逆的操作</p>
-        <p class="fragment">当然，也可以把它们理解成函数、运算，这都不太重要，我们只需要关注</p>
+        <iframe data-animation="./差分对前缀和的影响.js"
+            style="width: 1000px; height: 200px; margin-top: 20px;"></iframe>
+        <p class="fragment">只需要修改 $\{d\}$ 中的一个元素，$\{a\}$ 的一堆元素就会跟着变化<span class="fragment">——这给予了我们快速完成区间修改的能力</span></p>
+        <p class="fragment quote">为了更完备地对差分和前缀和所产生的奇妙联动进行研究，接下来，我们对差分操作和前缀和操作进行更加形式化的定义</p>
+    </section>
+    <section>
+        <h2>差分</h2>
+        <p>我们可以把<b>差分</b>和<b>前缀和</b>当作两种互逆的操作</p>
         <ul>
             <li class="fragment">
                 <b>差分</b>这种操作，吞进去一个长度为 $n$ 的序列 $\{A\}$，吐出来一个长度为 $n$ 的序列 $\{B\}$，满足 $B_i=A_i-A_{i-1}$，运算时间复杂度为 $O(n)$
@@ -57,7 +60,7 @@
             <li class="fragment">$\{A\}=\{A_1,A_2...A_n\}$</li>
             <li class="fragment">$\{B\}=\{B_1,B_2...B_n\}$</li>
         </ul>
-        <p class="fragment">则 $\{A\}+\{B\}$ 的结果也是一个长度为 $n$ 的序列，我们不妨叫它 $\{C\}$ 序列，$\{C\}$ 满足：
+        <p class="fragment">则 $\{A\}+\{B\}$ 的结果也是一个长度为 $n$ 的序列，我们不妨叫它 $\{C\}$ 序列，$\{C\}$ 满足
             $$C_i=A_i+B_i$$
         </p>
         <p class="fragment">所谓序列相加就是这么简单，两个序列相加就是序列上对应位置相加</p>
@@ -115,14 +118,14 @@
     </section>
     <section>
         <h2>差分</h2>
-        <p>有的时候题目可能想让我们维护一个长度为 $n$ 的序列 $\{A\}$，题目会对 $\{A\}$ 做 $m$ 次修改，每次修改 $i$ 也可以表示为一个增量序列 ${C_i}$，即：</p>
+        <p>有的时候题目可能想让我们维护一个长度为 $n$ 的序列 $\{A\}$，题目会对 $\{A\}$ 做 $m$ 次修改，每次修改 $i$ 也可以表示为一个增量序列 ${C_i}$，即</p>
         <p class="fragment">
             $$
             \{A\}=\{C_1\}+\{C_2\}+...+\{C_m\}
             $$
         </p>
         <p class="fragment">暴力做序列加法，时间复杂度显然是 $O(nm)$ 的</p>
-        <p class="fragment">如果我们同时对等式左右先取差分，再取前缀和......</p>
+        <p class="fragment">如果我们同时对等式左右先取差分，再取前缀和...</p>
         <div style="width: 35%; display: inline-block;">
             <p class="fragment">
                 $$
