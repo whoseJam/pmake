@@ -18,6 +18,15 @@ export class Device {
     static onKeyDownOnce(key, callback) {
         this.deviceOnceMap[key] = callback;
     }
+    static keyDown(key) {
+        if (this.deviceMap[key]) {
+            this.deviceMap[key]();
+        }
+        if (this.deviceOnceMap[key]) {
+            this.deviceOnceMap[key]();
+            this.deviceOnceMap[key] = undefined;
+        }
+    }
 }
 
 export function device() {

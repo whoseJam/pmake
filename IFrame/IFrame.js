@@ -40,7 +40,7 @@ window.ResetAnimationSize = function (id, url) {
 
 window.addEventListener("message", event => {
     const data = event.data;
-    if (data.operator && data.arguments) {
+    if (data.operator && data.arguments && typeof window[data.operator] === "function") {
         window[data.operator].apply(window, data.arguments);
     }
 });
