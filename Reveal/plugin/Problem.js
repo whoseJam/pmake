@@ -31,8 +31,7 @@ function getURL(element) {
     }
     const problemset = element.getAttribute("data-problemset");
     const problemid = element.getAttribute("data-problemid");
-    console.log("problemset=", problemset, "problemid=", problemid);
-    if (problemid && problemset) return `https://whosejam.site/#/problem/${problemset}/${problemid}`;
+    if (problemid && problemset) return `https://whosejam.site/problem/${problemset}/${problemid}`;
     console.error(`Problem ${element} Seem Do Not Have a Valid URL`);
     return "";
 }
