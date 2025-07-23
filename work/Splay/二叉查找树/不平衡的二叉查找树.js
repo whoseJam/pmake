@@ -20,8 +20,7 @@ const links = [
 
 sd.init(() => {
     tree.root(1, 12);
-    for (let i = 1; i < data.length; i++)
-        tree.newNode(data[i][0], data[i][1]);
+    for (let i = 1; i < data.length; i++) tree.newNode(data[i][0], data[i][1]);
     data.forEach(item => {
         const node = tree.element(item[0]);
         sd.Label(node, item[2], "rc", 20, 4);
@@ -31,13 +30,12 @@ sd.init(() => {
         if (link.lc) tree.leftChild(x, link.lc);
         if (link.rc) tree.rightChild(x, link.rc);
     });
-    tree.update();
     instr.x(400).y(tree.root().y());
-})
+});
 
 sd.main(async () => {
     await find(1, 2);
-})
+});
 
 async function find(x, value) {
     await sd.pause();

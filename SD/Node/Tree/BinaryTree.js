@@ -19,6 +19,12 @@ export class BinaryTree extends Tree {
 }
 
 Object.assign(BinaryTree.prototype, {
+    __eraseLink(x, y) {
+        const element = this.element(x);
+        if (String(this._.childrenMap[element.id][0]) === this.nodeId(y)) this._.childrenMap[element.id][0] = undefined;
+        else this._.childrenMap[element.id][1] = undefined;
+        Tree.prototype.__eraseLink.call(this, x, y);
+    },
     newNode(id, value) {
         const element = new this._.nodeType(this.layer("nodes")).opacity(0);
         this._.childrenMap[element.id] = [undefined, undefined];
@@ -84,14 +90,8 @@ Object.assign(BinaryTree.prototype, {
         const nodes = [];
         const traversal = node => {
             nodes.push(node);
-            if (this.leftChild(node)) {
-                console.log("left=", this.leftChild(node));
-                traversal(this.leftChild(node));
-            }
-            if (this.rightChild(node)) {
-                console.log("right=", this.rightChild(node));
-                traversal(this.rightChild(node));
-            }
+            if (this.leftChild(node)) traversal(this.leftChild(node));
+            if (this.rightChild(node)) traversal(this.rightChild(node));
         };
         if (arguments.length === 0) traversal(this.root());
         else traversal(this.element(node));
