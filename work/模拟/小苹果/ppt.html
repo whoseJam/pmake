@@ -17,8 +17,10 @@
     </section>
     <section>
         <h2>小苹果</h2>
-        <p>对第一个问题，不难想到一种高效的模拟方式</p>
-        <codeblock>
+        <iframe data-animation="./样例解释.js"
+            style="width: 1000px; height: 100px;"></iframe>
+        <p>对第一个问题，不妨考虑每一轮丢苹果会丢掉多少个</p>
+        <codeblock class="fragment">
             <script type="text/template">
                 while (appleCount > 0) {
                     appleCount -= ceil(appleCount / 3);
