@@ -18,13 +18,13 @@
         <p class="math-fragment">
             $$
             \begin{aligned}
-            answer&=\sum_{y=1}^n\sum_{l=1}^n\sum_{r=l}^n(2n-2) \\
-            &=(2n-2)\sum_{y=1}^n\sum_{l=1}^n\sum_{r=l}^n1 \\
-            &=(2n-2)(\sum_{y=1}^n1)(\sum_{l=1}^n\sum_{r=l}^n1) \\
-            &=(2n-2)n(\sum_{l=1}^n\sum_{r=l}^n1) \\
-            &=(2n-2)n(\sum_{l=1}^n(n-l+1)) \\
-            &=(2n-2)n(\sum_{t=1}^nt) \\
-            &=n^2(n+1)(n-1)
+            answer&=\sum_{y=1}^n\sum_{l=1}^n\sum_{r=l+1}^n(2n-2) \\
+            &=(2n-2)\sum_{y=1}^n\sum_{l=1}^n\sum_{r=l+1}^n1 \\
+            &=(2n-2)(\sum_{y=1}^n1)(\sum_{l=1}^n\sum_{r=l+1}^n1) \\
+            &=(2n-2)n(\sum_{l=1}^n\sum_{r=l+1}^n1) \\
+            &=(2n-2)n(\sum_{l=1}^n(n-l)) \\
+            &\stackrel{t=n-l}{=}(2n-2)n(\sum_{t=0}^{n-1}t) \\
+            &=n^2(n-1)^2
             \end{aligned}
             $$
         </p>
