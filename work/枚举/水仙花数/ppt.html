@@ -18,5 +18,18 @@
         <p class="fragment">假设想要对 $456$ 检查...</p>
         <iframe data-animation="./取数.js" class="fragment"
             style="width: 1000px; height: 150px;"></iframe>
+        <codeblock class="fragment">
+            <script type="text/template">
+                int sum(int x) {
+                    int ans = 0;
+                    while (x) {
+                        int r = x % 10;
+                        ans += r * r;
+                        x /= 10;
+                    }
+                    return ans;
+                }
+            </script>
+        </codeblock>
     </section>
 </section>

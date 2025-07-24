@@ -1,0 +1,32 @@
+<section>
+    <section>
+        <h1>三角计数</h1>
+    </section>
+    <problem data-problemset="self" data-problemid="000026"></problem>
+    <section>
+        <h2>三角计数</h2>
+        <iframe data-animation="./枚举方法.js"
+            style="width: 1000px; height: 300px;"></iframe>
+        <p class="fragment">
+            $$
+            answer=\sum_{y=1}^n\sum_{l=1}^n\sum_{r=l}^n(2n-2)
+            $$
+        </p>
+    </section>
+    <section>
+        <h2>三角计数</h2>
+        <p class="math-fragment">
+            $$
+            \begin{aligned}
+            answer&=\sum_{y=1}^n\sum_{l=1}^n\sum_{r=l}^n(2n-2) \\
+            &=(2n-2)\sum_{y=1}^n\sum_{l=1}^n\sum_{r=l}^n1 \\
+            &=(2n-2)(\sum_{y=1}^n1)(\sum_{l=1}^n\sum_{r=l}^n1) \\
+            &=(2n-2)n(\sum_{l=1}^n\sum_{r=l}^n1) \\
+            &=(2n-2)n(\sum_{l=1}^n(n-l+1)) \\
+            &=(2n-2)n(\sum_{t=1}^nt) \\
+            &=n^2(n+1)(n-1)
+            \end{aligned}
+            $$
+        </p>
+    </section>
+</section>
