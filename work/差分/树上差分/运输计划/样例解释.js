@@ -1,25 +1,10 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-const div = sd.div();
 const C = sd.color();
 const R = sd.rule();
 const t = new sd.Tree(svg).width(1100).cx(600).y(100);
 const grid = new sd.Grid(svg).elementWidth(50);
-const maxLength = new sd.Text(svg, "1");
-const slider = new sd.Slider(svg)
-    .width(300)
-    .min(1)
-    .max(20)
-    .value(1)
-    .x(t.cx())
-    .my(t.y() - 30)
-    .onChange(value => {
-        sd.inter(async () => {
-            await update(value);
-        });
-    });
-sd.Aside(slider, maxLength, "rc");
 const n = 20;
 const pathes = [
     [16, 6, C.red],
@@ -76,7 +61,6 @@ function distance(a, b) {
 
 sd.init(() => {
     dfs(1);
-    sd.Label(slider, "maxLength");
     pathes.forEach((path, i) => {
         const [a, b, color] = path;
         makePath(a, b, color);
@@ -87,8 +71,7 @@ sd.init(() => {
 });
 
 sd.main(async () => {
-    await sd.pause(sd.CONTINUE_STAGE);
-    await update(1);
+    await sd.pause();
 });
 
 function makePath(a, b, color) {
@@ -97,14 +80,4 @@ function makePath(a, b, color) {
     const B = t.element(b);
     l.source(A.cx(), A.cy()).target(B.cx(), B.cy()).arrow();
     sd.trim(l, A, B);
-}
-
-async function update(value) {
-    maxLength.startAnimate().text(value).endAnimate();
-    grid.startAnimate();
-    for (let i = 0; i < grid.n(); i++) {
-        if (grid.intValue(i, 1) > value) grid.color(i, 0, C.grey).color(i, 1, C.grey);
-        else grid.color(i, 0, C.white).color(i, 1, C.white);
-    }
-    grid.endAnimate();
 }
