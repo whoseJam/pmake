@@ -35,6 +35,6 @@ Object.assign(Curve.prototype, {
         if (arguments.length === 0) return this.vars.bending;
         Check.validateNumber(bending, `${this.constructor.name}.bending`);
         this.vars.mpset("bending", bending);
-        return this.vars.bending;
+        return this;
     },
 });

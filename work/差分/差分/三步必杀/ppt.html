@@ -14,41 +14,20 @@
     </section>
     <section>
         <h2>三步必杀</h2>
-        <p>那么每次操作，对应的增量序列 $\{A\}$就是
+        <p>那么每次操作，对应的增量序列 $\{c\}$就是
             $$
-            \{A\}=\{0,0...0,s,s+d,s+2d...e,0,0...0\}
+            \{c\}=\{0,0...0,s,s+d,s+2d...e,0,0...0\}
             $$
         </p>
         <p class="fragment">做一次差分试试
             $$
-            Dlt(\{A\})=\{0,0...0,s,d,d...d,-e,0,0...0\}
+            D(\{c\})=\{0,0...0,s,d,d...d,-e,0,0...0\}
             $$
         </p>
         <p class="fragment">看上去一次差分还不够，再做一次差分试试
             $$
-            Dlt(Dlt(\{A\}))=\{0,0...0,s,d-s,0,0...0,-e-d,e,0,0...0\}
+            D(D(\{c\}))=\{0,0...0,s,d-s,0,0...0,-e-d,e,0,0...0\}
             $$
         </p>
-        <p class="fragment">设这个二阶差分序列叫做 $D2$，那么 $D2_{l}=s$，$D2_{l+1}=d-s$，$D2_{r+1}=-e-d$，$D2_{r+2}=e$</p>
-    </section>
-    <section>
-        <h2>三步必杀</h2>
-        <codeblock>
-            <script type="text/template">
-                n = read(); m = read();
-                for (ll i = 1, l, r, s, e; i <= m; i++) {
-                    l = read(); r = read(); s = read(); e = read();
-                    if (l == r) { tmp[l] += s; continue; }
-                    ll d = (e - s) / (r - l);
-                    D[l] += s;
-                    D[l + 1] += d - s;
-                    D[r + 1] += -e - d;
-                    D[r + 2] += e;
-                }
-                for (ll i = 1; i <= n; i++) D[i] += D[i - 1];
-                for (ll i = 1; i <= n; i++) D[i] += D[i - 1];
-                for (ll i = 1; i <= n; i++) D[i] += tmp[i];
-            </script>
-        </codeblock>
     </section>
 </section>

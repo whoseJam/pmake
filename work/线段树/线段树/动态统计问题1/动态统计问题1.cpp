@@ -22,7 +22,7 @@ int read(){
 	return s*f;
 }
 
-const int inf=0x3f3f3f3f;
+const int inf=1e9+7;
 const int N=100005;
 int a[N],n,m;
 
@@ -58,8 +58,9 @@ int Query(int x,int l,int r){
 }
 
 int main(){
-	n=read();m=read();
+	n=read();
 	for(int i=1;i<=n;i++)a[i]=read();
+	m=read();
 	Build(1,1,n);
 	for(int i=1;i<=m;i++){
 		char opt[10];scanf("%s",opt);
