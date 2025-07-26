@@ -12,17 +12,20 @@
     <section>
         <h2>棋盘问题</h2>
         <p>以正方形为例</p>
-        <p class="math-fragment">
-            $$
-            \begin{aligned}
-            sqr&=\sum_{i=1}^n\sum_{j=1}^m\sum_{x=i}^n\sum_{y=j}^m[x-i=y-j] \\
-            &=\sum_{i=1}^n\sum_{j=1}^m\sum_{d=1}^{min(n-i+1,m-j+1)}1 \\
-            &=\sum_{d=1}^{min(n,m)}\sum_{i=1}^{n-d+1}\sum_{j=1}^{m-d+1}1 \\
-            &=\sum_{d=1}^{min(n,m)}\sum_{i=1}^{n-d+1}(m-d+1) \\
-            &=\sum_{d=1}^{min(n,m)}(n-d+1)(m-d+1)
-            \end{aligned}
-            $$
-        </p>
+        <div style="display: flex; align-items: center;">
+            <iframe data-animation="./枚举正方形.js"
+                style="width: 1000px; height: 300px;"></iframe>
+            <p class="math-fragment">
+                $$
+                \begin{aligned}
+                sqr&=\sum_{i=1}^n\sum_{j=1}^m\sum_{d=1}^{min(n-i+1,m-j+1)}1 \\
+                &=\sum_{d=1}^{min(n,m)}\sum_{i=1}^{n-d+1}\sum_{j=1}^{m-d+1}1 \\
+                &=\sum_{d=1}^{min(n,m)}\sum_{i=1}^{n-d+1}(m-d+1) \\
+                &=\sum_{d=1}^{min(n,m)}(n-d+1)(m-d+1)
+                \end{aligned}
+                $$
+            </p>
+        </div>
     </section>
     <section>
         <h2>棋盘问题</h2>
@@ -43,13 +46,10 @@
     </section>
     <section>
         <h2>棋盘问题</h2>
-        <p class="math-fragment">
+        <p>那么长方形的数量自然是所有矩形的数量减去正方形的数量</p>
+        <p class="fragment">
             $$
-            \begin{aligned}
-            rct&=\sum_{i=1}^n\sum_{j=1}^m\sum_{x=i}^n\sum_{y=j}^m[x-i\ne y-j] \\
-            &=\sum_{i=1}^n\sum_{j=1}^m\sum_{x=i}^n\sum_{y=j}^m(1-[x-i=y-j]) \\
-            &=\sum_{i=1}^n\sum_{j=1}^m\sum_{x=i}^n\sum_{y=j}^m 1 - sqr
-            \end{aligned}
+            rct=\sum_{i=1}^n\sum_{j=1}^m\sum_{x=i}^n\sum_{y=j}^m 1 - sqr
             $$
         </p>
     </section>

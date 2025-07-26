@@ -16,7 +16,7 @@ sd.init(() => {
 
 sd.main(async () => {
     const pi = sd.Pointer(grid, "i", "r", 5, 20);
-    const pj = sd.Pointer(grid, "j", "b", 5, 20);
+    const pj = sd.Pointer(grid, "d", "b", 5, 20);
     for (let i = 1; i <= n; i++) {
         await sd.pause();
         grid.startAnimate();

@@ -8,14 +8,14 @@ const block1 = new sd.Code(
 int prim[M], tot;
 Sieve(); // O(n) 线性筛
 for (int i = 1; i <= tot; i++)
-    if (prim[i] <= n) ans += 1 / prim[i];
+    if (prim[i] <= n) ans += prim[i];
 `
 );
 const block2 = new sd.Code(
     svg,
     `
 for (int i = 1; i <= n; i++)
-    if (isPrime(i)) ans += 1 / i;
+    if (isPrime(i)) ans += i;
 `
 );
 
