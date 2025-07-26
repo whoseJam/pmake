@@ -7,7 +7,7 @@ const arr = new sd.Array(svg).start(1);
 
 sd.init(() => {
     arr.resize(n);
-})
+});
 
 sd.main(async () => {
     await sd.pause();
@@ -15,19 +15,19 @@ sd.main(async () => {
     p.startAnimate().moveTo(n).endAnimate();
     const b = sd.Brace(arr);
     b.startAnimate().brace(1, n, "b", 3).value(new sd.Mathjax(b, "a_1+a_2+...+a_i\\equiv j")).endAnimate();
-    
+
     await sd.pause();
     const p1 = sd.Pointer(arr, "i+1", "b", 3, 20);
     const math = new sd.Mathjax(svg, "?");
-    arr.startAnimate()
+    arr.startAnimate();
     arr.push();
     arr.lastElement().value(math, R.centerOnly());
     p1.moveTo(n + 1);
     arr.endAnimate();
     for (let i = 1; i <= 9; i++) {
         await sd.pause();
-        math.startAnimate().transformMath(String(i)).endAnimate();
+        math.startAnimate().text(String(i)).endAnimate();
     }
     await sd.pause();
-    math.startAnimate().transformMath("k").endAnimate();
-})
+    math.startAnimate().text("k").endAnimate();
+});
