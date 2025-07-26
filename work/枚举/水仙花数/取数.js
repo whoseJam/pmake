@@ -36,6 +36,6 @@ sd.main(async () => {
             .opacity(1);
     }
     sum.forEachElement(element => {
-        element.startAnimate().text(`${element.text()}^2`).endAnimate();
+        element.startAnimate().text(`${element.text()}^3`).endAnimate();
     });
 });

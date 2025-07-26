@@ -7,7 +7,7 @@
         <h2>水仙花数</h2>
         <p>求所有的三位数 $\overline{abc}$，满足
             $$
-            a^2+b^2+c^2=\overline{abc}
+            a^3+b^3+c^3=\overline{abc}
             $$
         </p>
     </section>
@@ -24,7 +24,7 @@
                     int ans = 0;
                     while (x) {
                         int r = x % 10;
-                        ans += r * r;
+                        ans += r * r * r;
                         x /= 10;
                     }
                     return ans;
