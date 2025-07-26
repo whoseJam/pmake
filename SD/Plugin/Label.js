@@ -43,6 +43,8 @@ export function Label(target, text, location = "lc", fontSize = 20, gap = 10) {
     self.target = LabelPlugin.prototype.target;
     self.location = LabelPlugin.prototype.location;
 
+    self.fontSize(fontSize);
+
     self.effect("label", () => {
         const target = self.vars.target;
         const rule = R.aside(self.location(), self.gap());

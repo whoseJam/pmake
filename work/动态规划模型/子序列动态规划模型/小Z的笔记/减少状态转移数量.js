@@ -7,6 +7,7 @@ const charset = "cba";
 const str = "accbabbaac";
 const banned = ["cb", "ab", "ac"];
 const arr = new sd.Array(svg).x(100).y(200).start(1);
+let firstBucket;
 
 sd.init(() => {
     arr.pushArray(str);
@@ -29,7 +30,7 @@ async function onCreateFirstBucket(arr, cx) {
         const lb = sd.Label(stk.element(i), charset[i], "lc", 10, 3);
     }
     stk.opacity(0).startAnimate().opacity(1).endAnimate();
-    global.firstBucket = stk;
+    firstBucket = stk;
 }
 
 async function onCreateBucket(arr, i) {
@@ -40,7 +41,6 @@ async function onCreateBucket(arr, i) {
 
 async function onUpdateBucket(arr, j) {
     await sd.pause();
-    const firstBucket = global.firstBucket;
     const current = arr.element(j).label;
     const link = sd.Link(current, firstBucket.element(charIndex(arr.text(j))));
     link.startAnimate().pointStoT().endAnimate().arrow();
@@ -50,7 +50,6 @@ async function onUpdateBucket(arr, j) {
 
 async function onUpdateCurrent(arr, i) {
     await sd.pause();
-    const firstBucket = global.firstBucket;
     const current = arr.element(i).label;
     const links = [];
     for (let i = 0; i < charset.length; i++) {

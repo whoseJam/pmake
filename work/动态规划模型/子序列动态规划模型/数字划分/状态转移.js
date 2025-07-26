@@ -23,15 +23,15 @@ sd.init(() => {
 
 sd.main(async () => {
     await sd.pause();
-    s.element(0).value().startAnimate().transformMath("0").endAnimate();
-    f.element(0).value().startAnimate().transformMath("1").endAnimate();
+    s.element(0).value().startAnimate().text("0").endAnimate();
+    f.element(0).value().startAnimate().text("1").endAnimate();
 
     await sd.pause();
     zeroIndex.forEach(idx => {
         const box = s.element(idx);
         box.startAnimate();
         box.color(C.green);
-        box.value().transformMath("0");
+        box.value().text("0");
         box.endAnimate();
         f.element(idx).startAnimate().color(C.green).endAnimate();
         sd.Link(f.element(0), f.element(idx), sd.Curve, "cx", "my", "cx", "my").startAnimate().pointStoT().endAnimate().arrow();
