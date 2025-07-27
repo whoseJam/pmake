@@ -13,14 +13,32 @@ sd.init(() => {
     tree.forEachNode(node => node.opacity(0));
     tree.forEachLink(link => link.opacity(0));
     tree.nodeOpacity(1, 1);
-    tree.element(1).onClick(() => {
-        sd.inter(async () => {
-            await clickNode(1);
-        });
-    });
 });
 
-sd.main(async () => {});
+sd.main(async () => {
+    let current = [1];
+    let next = [];
+    while (current.length > 0) {
+        await sd.pause();
+        for (const x of current) {
+            const children = tree.children(x);
+            for (const child of children) {
+                child.startAnimate().opacity(1).endAnimate();
+                const link = tree.element(x, child);
+                link.opacity(1).startAnimate().pointStoT().endAnimate().arrow();
+                next.push(+tree.nodeId(child));
+                if (tree.children(child).length === 0) {
+                    child
+                        .after(0)
+                        .startAnimate()
+                        .color(sum(child) === n && child.length() === k ? C.orange : C.red)
+                        .endAnimate();
+                }
+            }
+        }
+        [current, next] = [next, []];
+    }
+});
 
 function dfs(d, lim) {
     const current = ++tot;
@@ -33,27 +51,6 @@ function dfs(d, lim) {
         arr.pop();
     }
     return current;
-}
-
-async function clickNode(x) {
-    const element = tree.element(x);
-    element.onClick(null);
-    tree.children(element).forEach(child => {
-        const link = tree.element(x, child);
-        link.opacity(1).startAnimate().pointStoT().endAnimate().arrow();
-        child.startAnimate().opacity(1).endAnimate();
-        child.onClick(() => {
-            sd.inter(async () => {
-                await clickNode(tree.nodeId(child));
-            });
-        });
-    });
-    if (tree.children(element).length === 0) {
-        element
-            .startAnimate()
-            .color(sum(element) === n && element.length() === k ? C.orange : C.red)
-            .endAnimate();
-    }
 }
 
 function makeDivide(arr) {

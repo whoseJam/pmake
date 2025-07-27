@@ -37,6 +37,7 @@ function dfs(x, y) {
         if (1 <= tx && tx <= n && 1 <= ty && ty <= n && map[tx][ty] === 0 && !visited[tx][ty]) {
             visited[tx][ty] = 1;
             tree.newLink(current, (v = dfs(tx, ty)));
+            tree.element(current, v).arrow();
             tree.element(current, v).next = [tx, ty];
             visited[tx][ty] = 0;
         }
@@ -49,7 +50,7 @@ function makeGrid(x, y) {
     for (let i = 1; i <= n; i++)
         for (let j = 1; j <= n; j++) {
             if (visited[i][j]) grid.color(i, j, C.grey);
-            if (map[i][j]) grid.value(i, j, "1");
+            if (map[i][j]) grid.value(i, j, "#");
         }
     grid.value(x, y, new sd.Circle(grid).color(C.orange));
     return grid;

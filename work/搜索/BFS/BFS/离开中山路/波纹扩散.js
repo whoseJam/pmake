@@ -5,18 +5,18 @@ const C = sd.color();
 const I = sd.input();
 const R = sd.rule();
 const EN = sd.enter();
-const grad = C.gradient(C.textBlue, C.white, 0, 5);
-const n = 3;
+const grad = C.gradient(C.textBlue, C.white, 0, 10);
+const n = 6;
 const [sx, sy] = [1, 1];
 const visited = sd.make2d(n + 1, n + 1, false);
-const memory = new sd.Grid(svg).elementWidth(60).elementHeight(60).n(n).m(n).startN(1).startM(1);
+const memory = new sd.Grid(svg).n(n).m(n).startN(1).startM(1);
 const directions = [
     [0, 1],
     [-1, 0],
     [1, 0],
     [0, -1],
 ];
-const map = I.readIntMatrix(`0 1 0 0 0 0 0 0 0`, n, n);
+const map = I.readIntMatrix(`0 1 0 0 0 0 0 0 0 1 0 0 1 0 0 0 0 0 0 0 1 0 1 0 0 0 0 0 0 1`, n, n);
 
 sd.init(() => {
     for (let i = 1; i <= n; i++)

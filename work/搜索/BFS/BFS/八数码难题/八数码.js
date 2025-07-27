@@ -1,7 +1,7 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-const tree = new sd.ValueTree(svg).width(1000).layerHeight(70).cx(600).y(50);
+const tree = new sd.ValueTree(svg).width(1000).layerHeight(140).cx(600).y(50);
 let tot = 1;
 
 sd.init(() => {
@@ -30,18 +30,20 @@ function makeGrid(str) {
     const dx = [1, 0, -1, 0];
     const dy = [0, 1, 0, -1];
     grid.onClick(() => {
-        grid.onClick(() => {});
-        tree.freeze();
-        for (let i = 0; i < 4; i++) {
-            const tx = x0 + dx[i];
-            const ty = y0 + dy[i];
-            if (0 <= tx && tx < 3 && 0 <= ty && ty < 3) {
-                let newStr = convertGridToStr(grid, x0, y0, tx, ty);
-                tree.newNode(++tot, makeGrid(newStr));
-                tree.newLink(myId, tot);
+        sd.inter(async () => {
+            grid.onClick(null);
+            tree.startAnimate().freeze();
+            for (let i = 0; i < 4; i++) {
+                const tx = x0 + dx[i];
+                const ty = y0 + dy[i];
+                if (0 <= tx && tx < 3 && 0 <= ty && ty < 3) {
+                    let newStr = convertGridToStr(grid, x0, y0, tx, ty);
+                    tree.newNode(++tot, makeGrid(newStr));
+                    tree.newLink(myId, tot);
+                }
             }
-        }
-        tree.unfreeze();
+            tree.unfreeze().endAnimate();
+        });
     });
     return grid;
 }
