@@ -2,19 +2,20 @@ import * as sd from "@/sd";
 
 const svg = sd.svg();
 const C = sd.color();
+const R = sd.rule();
 
 const graph = new sd.GridGraph(svg).width(100).height(250);
 const Q = new sd.Array(svg);
 const disLoc = ["tc", "lc", "rc", "rc", "lc", "bc"];
 const links = [
-    [1, 2, 0],
-    [1, 3, 1],
-    [2, 3, 1],
-    [2, 5, 0],
-    [3, 4, 1],
-    [4, 5, 1],
-    [5, 6, 0],
-    [4, 6, 0],
+    [1, 2, 0, "mx", "cy"],
+    [1, 3, 1, "x", "cy"],
+    [2, 3, 1, "cx", "y"],
+    [2, 5, 0, "mx", "cy"],
+    [3, 4, 1, "x", "cy"],
+    [4, 5, 1, "cx", "my"],
+    [5, 6, 0, "mx", "cy"],
+    [4, 6, 0, "x", "cy"],
 ];
 
 sd.init(() => {
@@ -24,12 +25,11 @@ sd.init(() => {
     graph.at(0.7, 1).newNode(4);
     graph.at(0.7, 0).newNode(5);
     graph.at(1, 0.5).newNode(6);
-    function addLink(u, v, w) {
-        graph.newLink(u, v);
-        graph.element(u, v).value(w);
-    }
     links.forEach(link => {
-        addLink(link[0], link[1], link[2]);
+        const x = link[3] || "cx";
+        const y = link[4] || "cy";
+        graph.newLink(link[0], link[1]);
+        graph.element(link[0], link[1]).value(link[2], R.pointAtPathByRate(0.5, x, y));
     });
     sd.Label(Q, "队列Q", "lc");
     Q.x(graph.x())
@@ -60,9 +60,8 @@ sd.main(async () => {
                 await sd.pause();
                 nodeV.label
                     .startAnimate()
-                    .opacity(0)
-                    .endAnimate()
-                    .text(`dis=${(nodeV.dis = nodeU.dis + w)}`);
+                    .text(`dis=${(nodeV.dis = nodeU.dis + w)}`)
+                    .endAnimate();
                 nodeV.label.startAnimate().opacity(1).endAnimate();
                 if (w === 0) {
                     await sd.pause();
