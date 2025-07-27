@@ -27,6 +27,7 @@ export class SliderSVG extends BaseControl {
         this._.nake.setAttribute("min", this.vars.min);
         this._.nake.setAttribute("max", this.vars.max);
         this._.nake.setAttribute("value", this.vars.value);
+        this._.nake.setAttribute("width", "97%");
 
         Dom.addEventListener(this._.nake.nake(), "mousedown", e => {
             if (!Status.isInteractable()) e.preventDefault();
