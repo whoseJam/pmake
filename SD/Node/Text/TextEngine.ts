@@ -407,9 +407,7 @@ export class TextEngine {
         return this.fonts[family] !== undefined;
     }
     static load(family) {
-        const currentScript = document.currentScript;
-        const domain = currentScript.getAttribute("src").split("/").slice(0, -1).join("/");
-        const url = `${domain}/public/fonts/${family}.ttf`;
+        const url = `https://whosejam.site/public/fonts/${family}.ttf`;
         fetch(url)
             .then(res => res.arrayBuffer())
             .then(buffer => {
