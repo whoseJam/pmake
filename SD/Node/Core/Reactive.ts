@@ -39,7 +39,7 @@ class Queue {
     execute() {
         while (this.queue.length > 0) {
             const effect = this.queue.shift();
-            if (effect.anyInputHasChanged()) effect.trigger();
+            if (effect.anyInputHasChanged()) effect.__trigger();
             effect[this.label] = false;
         }
     }
@@ -89,6 +89,17 @@ class Effect {
         }
     }
     trigger() {
+        globalAllowUpdate = false;
+        if (globalActiveEffect) ErrorLauncher.whatHappened();
+        globalActiveEffect = this;
+        const out = this.out;
+        this.clear();
+        this.call();
+        this.outputUpdate(out);
+        globalActiveEffect = undefined;
+        globalAllowUpdate = true;
+    }
+    __trigger() {
         if (globalActiveEffect) ErrorLauncher.whatHappened();
         globalActiveEffect = this;
         const out = this.out;
@@ -288,7 +299,7 @@ export function reactive(object: any) {
                 }
             }
             Reflect.set(object, key, value, receiver);
-            triggerUpdate(object, key);
+            __triggerUpdate(object, key);
             return true;
         },
     });
@@ -339,7 +350,7 @@ export function reactive(object: any) {
         callbacks.forEach(callback => {
             callback();
         });
-        triggerUpdates(objects, keys);
+        __triggerUpdates(objects, keys);
     };
     object.lpset = function (key: string, value: number) {
         setPrecise(proxy, key, lowPrecise);
@@ -505,7 +516,7 @@ function collectEffect(queue: Queue, object: any, key: string) {
     });
 }
 
-function triggerUpdate(object: any, key: string) {
+function __triggerUpdate(object: any, key: string) {
     if (!globalAllowUpdate) return;
     afterEffects.push([]);
     globalAllowUpdate = false;
@@ -516,7 +527,7 @@ function triggerUpdate(object: any, key: string) {
     callbacks.forEach(callback => callback());
 }
 
-function triggerUpdates(objects: Array<any>, keys: Array<string>) {
+function __triggerUpdates(objects: Array<any>, keys: Array<string>) {
     if (!globalAllowUpdate) return;
     afterEffects.push([]);
     globalAllowUpdate = false;

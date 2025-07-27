@@ -5,7 +5,23 @@ const colors = require("colors-console");
 module.exports = {
     copyFile(src, dest) {
         const name = path.basename(src);
+        console.log("copy ", src, "to ", `${dest}/${name}`);
         fs.copyFileSync(src, `${dest}/${name}`);
+    },
+    /**
+     *
+     * @param {*} src
+     * @param {*} dest
+     */
+    copyFolder(src, dest) {
+        if (!fs.existsSync(dest)) fs.mkdirSync(dest, { recursive: true });
+        const entries = fs.readdirSync(src, { withFileTypes: true });
+        for (const entry of entries) {
+            const srcPath = path.join(src, entry.name);
+            const destPath = path.join(dest, entry.name);
+            if (entry.isDirectory()) this.copyFolder(srcPath, destPath);
+            else this.copyFile(srcPath, dest);
+        }
     },
     copyFonts(src, dest) {
         const fonts = ["Consolas.ttf", "Arial.ttf", "Times New Roman.ttf"];

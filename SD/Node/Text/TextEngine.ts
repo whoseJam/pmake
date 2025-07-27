@@ -409,7 +409,7 @@ export class TextEngine {
     static load(family) {
         const currentScript = document.currentScript;
         const domain = currentScript.getAttribute("src").split("/").slice(0, -1).join("/");
-        const url = `${domain}/fonts/${family}.ttf`;
+        const url = `${domain}/public/fonts/${family}.ttf`;
         fetch(url)
             .then(res => res.arrayBuffer())
             .then(buffer => {

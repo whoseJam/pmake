@@ -6,7 +6,7 @@ const C = sd.color();
 const axis = new sd.FixGapAxis(svg).ticks(20);
 const LLIM = 0;
 const RLIM = 20;
-const at = sd.rand(LLIM, RLIM - 1);
+const at = sd.rand(LLIM + 5, RLIM - 5);
 
 sd.Label(axis, "序列", "lc");
 
