@@ -8,15 +8,16 @@
         <p>设 $C$ 是一条项链，$f(C)$ 表示此项链的美丽度</p>
         <p class="fragment">
             $$
-            f(C)=\sum_{枚举每种珠子i}(v_i)^{cnt}
+            f(C)=\sum_{枚举每种珠子i}(v_i)^{cnt_i}
             $$
         </p>
         <p class="fragment math-fragment">
             $$
             \begin{aligned}
             answer&=\sum_{枚举每条项链C}f(C) \\
-            &=\sum_{枚举每条项链C}\sum_{枚举每种珠子i}(v_i)^{cnt}\\
-            &=\sum_{枚举每种珠子i}(v_i)^{cnt}[有多少条项链恰好含有cnt个珠子i]
+            &=\sum_{枚举每条项链C}\sum_{枚举每种珠子i}(v_i)^{cnt_i}\\
+            &=\sum_{枚举每种珠子i\\cnt_i}(v_i)^{cnt_i}\sum_{枚举每条项链C}[C中恰好有cnt_i个珠子i] \\
+            &=\sum_{枚举每种珠子i}(v_i)^{cnt_i}[有多少条项链恰好有cnt_i个珠子i]
             \end{aligned}
             $$
         </p>

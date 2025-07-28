@@ -10,20 +10,20 @@ const pL = sd.Pointer(arr, "l", "b");
 const pR = sd.Pointer(arr, "r", "b");
 const M = 6;
 
-new sd.Mathjax(svg, `sum(S_i)\\ge${M}`).mx(arr.cx() - 10).my(arr.y() - 60);
-const sumLabel = new sd.Mathjax(svg, "sum(S_i)=0").x(arr.cx() + 10).my(arr.y() - 60);
+new sd.Mathjax(svg, `sum(F_i)\\ge${M}`).mx(arr.cx() - 10).my(arr.y() - 60);
+const sumLabel = new sd.Mathjax(svg, "sum(F_i)=0").x(arr.cx() + 10).my(arr.y() - 60);
 sd.Label(arr, "S", "lc");
 sd.Label(spy, "F", "lc");
 
 sd.init(() => {});
 
 sd.main(async () => {
-    const brace = sd.Brace(spy).location("b").value("$max\\{F_i\\}$");
+    const brace = sd.Brace(spy).location("b").value("$max\\{S_i\\}$");
     for (let i = 0, j = 0, sum = 0; i < tstData.length; i++) {
         await sd.pause();
         if (i > 0) {
             sum -= tstData[i - 1];
-            sumLabel.startAnimate().text(`sum(S_i)=${sum}`, { "sum(S_i)=": "sum(S_i)=" }).endAnimate();
+            sumLabel.startAnimate().text(`sum(F_i)=${sum}`, { "sum(F_i)=": "sum(F_i)=" }).endAnimate();
         }
         arr.startAnimate();
         pL.moveTo(i);
@@ -31,7 +31,7 @@ sd.main(async () => {
         while (j < tstData.length && sum < M) {
             await sd.pause();
             sum += tstData[j];
-            sumLabel.startAnimate().text(`sum(S_i)=${sum}`, { "sum(S_i)=": "sum(S_i)=" }).endAnimate();
+            sumLabel.startAnimate().text(`sum(F_i)=${sum}`, { "sum(F_i)=": "sum(F_i)=" }).endAnimate();
             arr.startAnimate();
             pR.moveTo(j);
             arr.endAnimate();

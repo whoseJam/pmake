@@ -5,23 +5,21 @@
     <problem data-source="https://loj.ac/p/10121"></problem>
     <section>
         <h2>与众不同</h2>
-        <p>多次询问一个序列中某个区间 $[L,R]$ 内，最长的互不相同的子区间 $[l,r]$ 的长度</p>
+        <p>多次询问一个序列中某个区间 $[L,R]$ 内，最长的<b style="color: red;">元素互不相同</b>的子区间 $[l,r]$ 的长度</p>
         <p class="fragment">
             $$
-            \mathop{max}\limits_{l=L}^R\mathop{max}\limits_{r=l}^R(r-l+1)[unique(a_l,a_{l+1},...,a_r)]
+            \mathop{max}\limits_{\begin{aligned}L\le l\le R, l\le r\le R\\unique(a_l,a_{l+1},...,&a_r)\end{aligned} }(r-l+1)
             $$
         </p>
-        <p class="fragment quote">和干草捆一样，试试枚举区间的左端点...</p>
+        <p class="fragment quote">和干草捆一样，试试固定区间的左端点...</p>
         <p class="fragment">
             $$
-            \mathop{max}\limits_{r=l}^R(r-l+1)[unique(a_l,a_{l+1},...,a_r)]
+            \mathop{max}\limits_{\begin{aligned}l\le r\le R\\unique(a_l,a_{l+1}&,...,a_r)\end{aligned} }(r-l+1)
             $$
         </p>
         <iframe data-animation="./贪心.js" class="fragment"
             style="width: 1000px; height: 150px;"></iframe>
         <ul>
-            <li class="fragment">如果 $R\le r$，那么以 $l$ 为左端点的区间的<b style="color: purple;">贡献</b>为 $r-l+1$</li>
-            <li class="fragment">如果 $R\gt r$，那么以 $l$ 为左端点的区间的<b style="color: purple;">贡献</b>为 $R-l+1$</li>
             <li class="fragment">设 $l$ 为左端点的互不相同子区间的<b style="color: red;">最右端点为 $F_l$</b>，那么 $l$ 为左端点的区间的贡献为 $min(R,F_l)-l+1$</li>
         </ul>
     </section>
@@ -30,7 +28,7 @@
         <p class="math-fragment">
             $$
             \begin{aligned}
-            Q(L,R)&=\mathop{max}\limits_{l=L}^R\mathop{max}\limits_{r=l}^R(r-l+1)[unique(a_l,a_{l+1},...,a_r)] \\
+            Q(L,R)&=\mathop{max}\limits_{\begin{aligned}L\le l\le R, l\le r\le R\\unique(a_l,a_{l+1},...,&a_r)\end{aligned} }(r-l+1) \\
             &=\mathop{max}\limits_{l=L}^R \{min(R,F_l)-l+1\}
             \end{aligned}
             $$

@@ -26,6 +26,9 @@ sd.main(async () => {
     const pR = sd.Pointer(arr, "r").startAnimate().moveTo(r).endAnimate();
     await sd.pause();
     const value = pR.value();
-    console.log("value=", value, "value.text=", value.text());
     value.startAnimate().text("r(Fl)", { r: "r" }).endAnimate();
+    await sd.pause();
+    const brace = sd.Brace(arr, "b").brace(2, 8).braceGap(50).startAnimate().pointTtoS().value("Q(L,R)").endAnimate();
+    await sd.pause();
+    brace.startAnimate().brace(2, 4).endAnimate();
 });
