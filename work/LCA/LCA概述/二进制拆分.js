@@ -13,7 +13,7 @@ sd.init(() => {
     arr.cx(250);
     ans.x(arr.x()).y(arr.my() + 60);
     sd.Label(arr, kDepth);
-})
+});
 
 sd.main(async () => {
     await sd.pause();
@@ -23,15 +23,18 @@ sd.main(async () => {
         await sd.pause();
         p.startAnimate().moveTo(i).endAnimate();
         await sd.pause();
-        const color = (arr.text(i) === "0") ? C.grey : C.green;
+        const color = arr.text(i) === "0" ? C.grey : C.green;
         arr.startAnimate().color(i, color).endAnimate();
         if (color === C.green) {
-            expr = expr + (cnt === 0 ? "" : "+") + (1<<arr.length()-i-1);
+            const old = ans.text();
+            expr = expr + (cnt === 0 ? "" : "+") + (1 << (arr.length() - i - 1));
             cnt++;
-            ans.math(expr);
+            ans.startAnimate()
+                .text(expr, [[old, old]])
+                .endAnimate();
         }
     }
-})
+});
 
 function getBinaryExpression(a) {
     let result = "";

@@ -48,7 +48,7 @@ function unique(count) {
 }
 
 function drawPath(u, v, col) {
-    while (u !== v) {
+    while (String(u) !== String(v)) {
         if (tree.depth(u) < tree.depth(v)) {
             let tmp = u;
             u = v;
@@ -61,12 +61,12 @@ function drawPath(u, v, col) {
 }
 
 function drawLink(u, v, color) {
-    u = tree.element(u);
-    v = tree.element(v);
+    const du = tree.element(u);
+    const dv = tree.element(v);
     const dy = color === C.red ? -2 : 2;
     new sd.Line(svg)
-        .source([u.cx(), u.cy() + dy])
-        .target([v.cx(), v.cy() + dy])
+        .source([du.cx(), du.cy() + dy])
+        .target([dv.cx(), dv.cy() + dy])
         .strokeWidth(3)
         .stroke(color)
         .opacity(0)

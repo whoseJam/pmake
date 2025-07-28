@@ -12,18 +12,12 @@ const links = [
     [5, 8],
     [6, 9],
     [6, 10],
-    [7, 11],
 ];
 
 sd.init(() => {
     links.forEach(link => tree.link(link[0], link[1]));
 });
 
-sd.main(async () => {});
-
-function rootAs(u) {
-    const links = tree.links();
-    const nodes = tree.nodes();
-    tree.freeze();
-    tree.dropLink();
-}
+sd.main(async () => {
+    await sd.pause();
+});

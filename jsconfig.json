@@ -8,4 +8,6 @@
             "@/*": ["./SD/*"]
         }
     },
+    "include": ["work/**/*.js", "题库/**/*.js", "SD/**/*.js"],
+    "exclude": ["node_modules", "dist", "build", "public", "test", "coverage"]
 }

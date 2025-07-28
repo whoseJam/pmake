@@ -20,10 +20,3 @@ sd.init(() => {
 });
 
 sd.main(async () => {});
-
-function rootAs(u) {
-    const links = tree.links();
-    const nodes = tree.nodes();
-    tree.freeze();
-    tree.dropLink();
-}
