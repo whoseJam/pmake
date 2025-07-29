@@ -123,7 +123,7 @@
     </section>
     <section>
         <h2>差分</h2>
-        <p>有的时候题目可能想让我们维护一个长度为 $n$ 的序列 $\{a\}$，题目会对 $\{a\}$ 做 $m$ 次修改，每次修改 $i$ 也可以表示为一个增量序列 ${c_i}$，即</p>
+        <p>有的时候题目可能想让我们维护一个长度为 $n$ 的序列，题目会对做 $m$ 次修改，每次修改 $i$ 可以表示为一个增量序列 ${c_i}$，即</p>
         <p class="fragment">
             $$
             \{a\}=\{c_1\}+\{c_2\}+...+\{c_m\}
@@ -132,8 +132,10 @@
         <p class="fragment">暴力做序列加法，时间复杂度显然是 $O(nm)$ 的</p>
         <p class="fragment">如果我们同时对等式左右先取差分，再取前缀和...</p>
         <iframe data-animation="./变换.js" class="fragment"
-            style="width: 1000px; height: 50px;"></iframe>
-        <p class="fragment" style="margin-top: 45px;">而 $D(\{C_i\})$ 极有可能会变成一个非常稀疏的序列，即这个序列的大部分位置都是 $0$，只有少数几个位置是不为 $0$ 的，在这种情况下做序列加法，只需要对少数几个不为 $0$ 的位置做序列加法即可，最后我们得到了 $D(\{C_1\})+D(\{C_2\})+...+D(\{C_m\})$，再把它做一个序列前缀和，还原出 $\{A\}$ 来</p>
+            style="width: 1000px; height: 30px;"></iframe>
+        <p class="fragment" style="margin-top: 45px;">而 $D(\{c_i\})$ 极有可能会变成一个非常稀疏的序列，即这个序列的大部分位置都是 $0$，只有少数几个位置是不为 $0$ 的...</p>
+        <iframe data-animation="./稀疏与稠密.js" class="fragment"
+            style="width: 1000px; height: 150px;"></iframe>
         <p class="fragment">时间复杂度被优化成 $O(n+m)$</p>
     </section>
 </section>

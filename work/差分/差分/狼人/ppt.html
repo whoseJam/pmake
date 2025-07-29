@@ -28,14 +28,13 @@
         <iframe data-animation="./狼人.js" class="fragment"
             style="width: 1000px; height: 300px;"></iframe>
         <ul class="fragment">理论可行</ul>
-        <p class="fragment">$$S(S(D(D(\{a\}))))=\{a\}$$</p>
-        <p class="fragment">$$S(S(D(D(\{c_1\}+\{c_2\}+...+\{c_n\}))))=S(S(D(D(\{c_1\}))+D(D(\{c_2\}))+...+D(D(\{c_n\}))))$$</p>
     </section>
     <section>
         <h2>狼人</h2>
         <table style="font-size: 18px; width: 1300px; margin-left: -180px;">
             <thead>
-                <tr>
+                <tr style="font-size: 13px;">
+                    <th style="font-size: 18px;">序列位置</th>
                     <th>$p-3v$</th>
                     <th>$p-3v+1$</th>
                     <th>$p-3v+2$</th>
@@ -56,6 +55,7 @@
             </thead>
             <tbody>
                 <tr class="fragment">
+                    <td>$\{c\}$</td>
                     <td>$0$</td>
                     <td>$1$</td>
                     <td>$2$</td>
@@ -74,6 +74,7 @@
                     <td>$0$</td>
                 </tr>
                 <tr class="fragment">
+                    <td>$D(\{c\})$</td>
                     <td>$0$</td>
                     <td>$1$</td>
                     <td>$1$</td>
@@ -92,6 +93,7 @@
                     <td>$0$</td>
                 </tr>
                 <tr class="fragment">
+                    <td>$D(D(\{c\}))$</td>
                     <td>$0$</td>
                     <td>$1$</td>
                     <td>$0$</td>
@@ -111,27 +113,10 @@
                 </tr>
             </tbody>
         </table>
-        <p class="fragment">所以我们发现做两次差分能让操作对应的增量序列变得简单，当所有操作都执行完毕后再做两次前缀和就能还原得到真正的 $\{s\}$ 序列</p>
-        <pre class="fragment"><code data-trim data-line-numbers class="cpp"><script type="text/template">
-            n = read(); m = read();
-            for (int i = 1, v, p; i <= n; i++) {
-                v = read();
-                p = read();
-                d[p - 3 * v + 1]++;
-                d[p - 2 * v + 1] -= 2;
-                d[p + 1] += 2;
-                d[p + 2 * v + 1] -= 2;
-                d[p + 3 * v + 1]++;
-            }
-            for (int i = -30000; i <= m; i++) d[i] += d[i - 1];
-            for (int i = -30000; i <= m; i++) d[i] += d[i - 1];
-            for (int i = 1; i <= m; i++) {
-                cout << d[i] << ' ';
-            }
-        </script></code></pre>
-    </section>
-    <section>
-        <h2>狼人</h2>
-        <p>本题我们得到的启发是，先做一次差分看看，如果不够，再做一次</p>
+        <div class="fragment">
+            <iframe data-animation="./二维差分.js"
+                style="width: 1000px; height: 300px;"></iframe>
+            <p style="text-align: center; margin-top: 0px; font-size: 20px;">以 $p=7,v=2$ 为例</p>
+        </div>
     </section>
 </section>
