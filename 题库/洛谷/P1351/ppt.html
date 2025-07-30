@@ -12,13 +12,13 @@
         <p class="fragment">设 $m$ 的邻接点权值构成的集合为 <b style="color: red;">$S_m$</b></p>
         <ul>
             <li class="fragment">最大联合权值=$max(S_m)secmax(S_m)$</li>
-            <li class="fragment">联合权值之和=$\frac{\sum_{i\in S_m}\sum_{j\in S_m}ij[i\ne j]}{2}$</li>
+            <li class="fragment">联合权值之和=$\sum_{i\in S_m}\sum_{j\in S_m}ij[i\ne j]$</li>
         </ul>
         <p class="fragment math-fragment">
             $$
             \begin{aligned}
-            answer&=(\sum_{i\in S_m}\sum_{j\in S_m}ij[i\ne j])/2 \\
-            &=((\sum_{i\in S_m}i)(\sum_{j\in S_m}j)-\sum_{i\in S_m}i^2)/2 \\
+            answer&=(\sum_{i\in S_m}\sum_{j\in S_m}ij[i\ne j]) \\
+            &=(\sum_{i\in S_m}i)(\sum_{j\in S_m}j)-\sum_{i\in S_m}i^2 \\
             \end{aligned}
             $$
         </p>
@@ -29,11 +29,11 @@
             style="width: 1000px; height: 200px;"></iframe>
         <ul>
             <li>最大联合权值=$max(S_m)secmax(S_m)$</li>
-            <li>联合权值之和=$\frac{\sum_{i\in S_m}\sum_{j\in S_m}ij[i\ne j]}{2}$</li>
+            <li>联合权值之和=$\sum_{i\in S_m}\sum_{j\in S_m}ij[i\ne j]$</li>
         </ul>
         <p>
             $$
-            answer=((\sum_{i\in S_m}i)(\sum_{j\in S_m}j)-\sum_{i\in S_m}i^2)/2
+            answer=(\sum_{i\in S_m}i)(\sum_{j\in S_m}j)-\sum_{i\in S_m}i^2
             $$
         </p>
         <codeblock class="fragment">
@@ -41,11 +41,11 @@
                 for (int m = 1; m <= n; m++) {
                     int a = 0;
                     int b = 0;
-                    for (int v : G[m]) {
+                    for (int v : S[m]) {
                         a += v;
                         b += v * v;
                     }
-                    ans += (a * a - b) / 2;
+                    ans += (a * a - b);
                 }
             </script>
         </codeblock>
