@@ -68,9 +68,9 @@
             style="width: 1000px; height: 300px;"></iframe>
         <codeblock>
             <script type="text/template">
-                int getFa(int x) {
+                int F(int x) {
                     if (fa[x] == x) return x;
-                    return fa[x] = getFa(fa[x]);
+                    return fa[x] = F(fa[x]);
                 } 
             </script>
         </codeblock>
