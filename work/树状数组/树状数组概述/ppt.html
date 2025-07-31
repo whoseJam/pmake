@@ -6,22 +6,22 @@
         <h2>动态连续和查询问题</h2>
         <p>给定一个 $n$ 个元素的数组 $\{A_i\}$，你的任务是设计一种数据结构，支持以下两种操作：</p>
         <ol>
-            <li>$Add(x,d)$：让 $A_x$ 的数值增加 $d$</li>
-            <li>$Query(l,r)$：求 $A_l+A_{l+1}+...+A_r$ 的和</li>
+            <li><code>Add(x, d)</code>：让 $A_x$ 的数值增加 $d$</li>
+            <li><code>Query(l, r)</code>：求 $A_l+A_{l+1}+...+A_r$ 的值</li>
         </ol>
-        <p class="fragment">假设总共有 $m$ 次操作，如何才能让 $Add$ 和 $Query$ 都快速地完成呢？</p>
+        <p class="fragment">假设总共有 $m$ 次操作，如何才能让 <code>Add</code> 和 <code>Query</code> 都快速地完成呢？</p>
     </section>
     <section>
         <h2>分析</h2>
         <iframe data-animation="./直接数组模拟.js"
             style="width: 1000px; height: 300px;"></iframe>
-        <p>如果直接用数组模拟，那么 $Add$ 可以 $O(1)$ 完成，$Query$ 是 $O(n)$ 的，总复杂度为 $O(nm)$</p>
+        <p>如果直接用数组模拟，那么 <code>Add</code> 可以 $O(1)$ 完成，<code>Query</code> 是 $O(n)$ 的，总复杂度为 $O(nm)$</p>
     </section>
     <section>
         <h2>分析</h2>
         <iframe data-animation="./前缀和模拟.js"
             style="width: 1000px; height: 400px;"></iframe>
-        <p>如果另外维护一个前缀和数组 $\{S\}$ 来存储 $A_1$ 到 $A_n$ 的和，那么 $Query$ 可以 $O(1)$ 完成，$Add$ 是 $O(n)$ 的，总时间复杂度还是 $O(nm)$</p>
+        <p>如果另外维护一个前缀和数组 $\{S\}$ 来存储 $A_1$ 到 $A_n$ 的和，那么 <code>Query</code> 可以 $O(1)$ 完成，<code>Add</code> 是 $O(n)$ 的，总时间复杂度还是 $O(nm)$</p>
     </section>
     <section>
         <h2>分析</h2>
@@ -35,12 +35,12 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>$Query$ 时间复杂度</td>
+                    <td><code>Query</code> 时间复杂度</td>
                     <td>$O(n)$</td>
                     <td>$O(1)$</td>
                 </tr>
                 <tr>
-                    <td>$Add$ 时间复杂度</td>
+                    <td><code>Add</code> 时间复杂度</td>
                     <td>$O(1)$</td>
                     <td>$O(n)$</td>
                 </tr>
@@ -55,8 +55,8 @@
             data-viewBoxDelta="-20 0 40 0"
             style="width: 1000px; height: 400px;"></iframe>
         <ul>
-            <li class="fragment">对于 $Query$ 类操作来说，任意一个前缀和一定能被 $O(logn)$ 算出</li>
-            <li class="fragment">对于 $Add$ 类操作来说，任意一个位置最多被 $O(logn)$ 个区间覆盖</li>
+            <li class="fragment">对于 <code>Query</code> 类操作来说，任意一个前缀和一定能被 $O(logn)$ 算出</li>
+            <li class="fragment">对于 <code>Add</code> 类操作来说，任意一个位置最多被 $O(logn)$ 个区间覆盖</li>
         </ul>
         <p class="fragment quote">可以发现我有意把<b>有效区间</b>排列为树形结构，而有效区间又恰好有 $n$ 个，是一个数组能放下的东西<span class="fragment">，这玩意就是树状数组</span></p>
     </section>
