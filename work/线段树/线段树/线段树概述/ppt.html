@@ -6,10 +6,10 @@
         <h2>区间查询问题</h2>
         <p>给定一个 $n$ 个元素的数组 $\{A_i\}$，你需要设计一种数据结构，支持以下若干种操作</p>
         <ol>
-            <li class="fragment">$Add(x,d)$：让 $A_x$ 的数值增加 $d$（$d$ 可正可负）</li>
-            <li class="fragment">$QueryMax(l,r)$：求 $[l,r]$ 这个范围内的区间最大值</li>
-            <li class="fragment">$QueryMin(l,r)$：求 $[l,r]$ 这个范围内的区间最小值</li>
-            <li class="fragment">$QuerySum(l,r)$：求 $[l,r]$ 这个范围内的区间和</li>
+            <li class="fragment"><code>Add(x, d)</code>：让 $A_x$ 的数值增加 $d$（$d$ 可正可负）</li>
+            <li class="fragment"><code>QueryMax(l, r)</code>：求 $[l,r]$ 这个范围内的区间最大值</li>
+            <li class="fragment"><code>QueryMin(l, r)</code>：求 $[l,r]$ 这个范围内的区间最小值</li>
+            <li class="fragment"><code>QuerySum(l, r)</code>：求 $[l,r]$ 这个范围内的区间和</li>
         </ol>
     </section>
     <section>
@@ -27,9 +27,9 @@
         <h2>线段树</h2>
         <p>对于原问题而言，我们显然需要维护一个区间的</p>
         <ul>
-            <li class="fragment">最小值，用于处理 $QueryMin$</li>
-            <li class="fragment">最大值，用于处理 $QueryMax$</li>
-            <li class="fragment">区间和，用于处理 $QuerySum$</li>
+            <li class="fragment">最小值，用于处理 <code>QueryMin</code></li>
+            <li class="fragment">最大值，用于处理 <code>QueryMax</code></li>
+            <li class="fragment">区间和，用于处理 <code>QuerySum</code></li>
         </ul>
         <codeblock class="fragment">
             <script type="text/template">

@@ -4,13 +4,13 @@ import { TagAnalyzer } from "../_/TagAnalyzer";
 const svg = sd.svg();
 const R = sd.rule();
 const C = sd.color();
-const analyzer = new TagAnalyzer(svg, 4, null, "$rev_x$");
+const analyzer = new TagAnalyzer(svg, 4, null, "$r_x$").width(600);
 const lc = x => x * 2;
 const rc = x => x * 2 + 1;
 
 sd.init(() => {
-    analyzer.element(2).childAs("tag", new sd.Mathjax(svg, "rev_l"), R.aside("rc"));
-    analyzer.element(3).childAs("tag", new sd.Mathjax(svg, "rev_r"), R.aside("rc"));
+    analyzer.element(2).childAs("tag", new sd.Mathjax(svg, "r_l"), R.aside("rc"));
+    analyzer.element(3).childAs("tag", new sd.Mathjax(svg, "r_r"), R.aside("rc"));
 });
 
 sd.main(async () => {
@@ -26,13 +26,13 @@ sd.main(async () => {
     await sd.pause();
     const rev = analyzer.tag();
     rev.startAnimate()
-        .text("rev_x\\otimes 1", [
+        .text("r_x\\otimes 1", [
             [tag, "1"],
-            ["rev_x", "rev_x"],
+            ["r_x", "r_x"],
         ])
         .endAnimate();
     await sd.pause();
-    rev.startAnimate().text("rev_x'").endAnimate();
+    rev.startAnimate().text("r_x").endAnimate();
     await sd.pause();
     analyzer.element(1).startAnimate().color(C.white).endAnimate();
     await onPushDown(1);
@@ -42,7 +42,7 @@ function pushRev(x) {
     const node = analyzer.element(x);
     const rev = node.child("tag");
     rev.startAnimate()
-        .text(rev.text() + "\\otimes rev_x'", [[rev.text(), rev.text()]])
+        .text(rev.text() + "\\otimes r_x", [[rev.text(), rev.text()]])
         .endAnimate();
 }
 
