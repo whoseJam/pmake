@@ -21,4 +21,7 @@ sd.init(() => {
     sd.Label(plane.axis("y"), "a轴", "tc");
 });
 
-sd.main(async () => {});
+sd.main(async () => {
+    await sd.pause();
+    sd.Label(plane.circles()[6], "$(i,a_i)$", "bc", 15).opacity(0).startAnimate().opacity(1).endAnimate();
+});
