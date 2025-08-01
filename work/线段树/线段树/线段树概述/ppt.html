@@ -105,9 +105,9 @@
             <script type="text/template">
                 int querySum(int x, int ql, int qr) {
                     if (ql <= t[x].l && t[x].r <= qr) return t[x].sum;
-                    int mid = (l + r) >> 1, sum = 0;
+                    int mid = (t[x].l + t[x].r) >> 1, sum = 0;
                     if (ql <= mid) sum += querySum(lc, ql, qr);
-                    if (qr > mid) sum += querySum(lc, ql, qr);
+                    if (qr > mid) sum += querySum(rc, ql, qr);
                     return sum;
                 }
             </script>
@@ -135,10 +135,10 @@
             <script type="text/template">
                 int querySum(int x, int ql, int qr) {
                     if (ql <= t[x].l && t[x].r <= qr) return t[x].sum;
-                    int mid = (l + r) >> 1;
+                    int mid = (t[x].l + t[x].r) >> 1;
                     if (qr <= mid) return querySum(lc, ql, qr);
                     if (ql > mid) return querySum(rc, ql, qr);
-                    return querySum(lc, ql, qr) + querySum(lc, ql, qr);
+                    return querySum(lc, ql, qr) + querySum(rc, ql, qr);
                 }
             </script>
         </codeblock>

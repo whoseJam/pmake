@@ -11,6 +11,12 @@ function convertTag(target, tag) {
 }
 
 export class TagAnalyzer extends sd.ValueTree {
+    /**
+     * @param {sd.SDNode|sd.RenderNode} target
+     * @param {number} n
+     * @param {string | null} sum
+     * @param {string | null} tag
+     */
     constructor(target, n, sum, tag) {
         super(target);
         this.width(400).layerHeight(80);
