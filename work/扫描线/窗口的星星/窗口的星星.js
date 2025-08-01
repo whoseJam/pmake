@@ -7,7 +7,12 @@ const H = 2;
 const stars = [];
 const layer = svg.append("g");
 const coord = new sd.Coord(svg);
-const rect = coord.drawRect(0, 0, W, H).fillOpacity(0);
+const rect = new sd.Rect(svg)
+    .width(coord.globalX(W) - coord.globalX(0))
+    .height(coord.globalY(0) - coord.globalY(H))
+    .x(coord.globalX(2))
+    .my(coord.globalY(2))
+    .fillOpacity(0);
 const data = [
     [5, 5],
     [6, 7],

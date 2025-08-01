@@ -81,12 +81,12 @@
         <p>区间加，就是定位到对应区间，然后给它加上懒标记而已</p>
         <codeblock class="fragment">
             <script type="text/template">
-                void add(int x, int l, int r, int d) {
-                    if (t[x].l > r || t[x].r < l) return;
-                    if (l <= t[x].l && t[x].r <= r) { pushAdd(x, d); return; }
+                void add(int x, int ql, int qr, int d) {
+                    if (t[x].l > qr || t[x].r < ql) return;
+                    if (ql <= t[x].l && t[x].r <= qr) { pushAdd(x, d); return; }
                     pushDown(x);
-                    add(lc, l, r, d);
-                    add(rc, l, r, d);
+                    add(lc, ql, qr, d);
+                    add(rc, ql, qr, d);
                     pushUp(x);
                 }
             </script>
@@ -94,11 +94,11 @@
         <p class="fragment">区间查询最小值，记得在递归的时候把标记下放</p>
         <codeblock class="fragment">
             <script type="text/template">
-                int queryMin(int x, int l, int r) {
-                    if (t[x].l > r || t[x].r < l) return inf;
-                    if (l <= t[x].l && t[x].r <= r) return t[x].mn;
+                int queryMin(int x, int ql, int qr) {
+                    if (t[x].l > qr || t[x].r < ql) return inf;
+                    if (ql <= t[x].l && t[x].r <= qr) return t[x].mn;
                     pushDown(x);
-                    return min(queryMin(lc, l, r), queryMin(rc, l, r));
+                    return min(queryMin(lc, ql, qr), queryMin(rc, ql, qr));
                 }
             </script>
         </codeblock>
