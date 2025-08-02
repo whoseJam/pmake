@@ -17,7 +17,8 @@ const data = [
     [8, 4],
     [7, 6],
 ];
-const rect = new sd.Rect(svg).fillOpacity(0.5).fill(C.red).opacity(0);
+const rect = new sd.Rect(svg).fillOpacity(0.5).strokeOpacity(0).fill(C.red).opacity(0);
+const query = new sd.Rect(svg).fillOpacity(0.5).strokeOpacity(0).fill(C.green).opacity(0);
 const plane = new Plane(svg, data);
 
 sd.init(() => {
@@ -27,12 +28,20 @@ sd.init(() => {
 
 sd.main(async () => {
     await sd.pause();
-    focus(mn[0], mn[1], mx[0], mx[1]);
+    focus(rect, mn[0], mn[1], mx[0], mx[1]);
     await sd.pause();
     draw(mn[0] - 1, mn[1] - 1, C.red);
     draw(mn[0] - 1, mx[1] - 1, C.blue);
     draw(mx[0] - 1, mn[1] - 1, C.blue);
     draw(mx[0] - 1, mx[1] - 1, C.red);
+    await sd.pause();
+    focus(query, 1, 1, mx[0], mx[1]);
+    await sd.pause();
+    focus(query, 1, 1, mn[0], mx[1]);
+    await sd.pause();
+    focus(query, 1, 1, mx[0], mn[1]);
+    await sd.pause();
+    focus(query, 1, 1, mn[0], mn[1]);
 });
 
 function draw(x, y, color) {
@@ -47,7 +56,7 @@ function draw(x, y, color) {
         .endAnimate();
 }
 
-function focus(x1, y1, x2, y2) {
+function focus(rect, x1, y1, x2, y2) {
     const p1 = plane.global(x1, y2);
     const p2 = plane.global(x2, y1);
     if (rect.opacity() === 0) {

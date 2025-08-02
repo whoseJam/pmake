@@ -2,21 +2,23 @@ import * as sd from "@/sd";
 
 const svg = sd.svg();
 const C = sd.color();
-const rect = new sd.Rect(svg).fillOpacity(0.5).fill(C.red).opacity(0);
-const coord = new sd.FixGapCoord(svg).ticks("x", 15);
+const rect = new sd.Rect(svg).fillOpacity(0.5).fill(C.red).opacity(0).strokeOpacity(0);
+const [X, Y] = [15, 6];
+const coord = new sd.FixGapCoord(svg).ticks("y", Y).ticks("x", X);
 const at = [8, 4];
 const data = [
     [1, 2],
     [3, 1],
     [5, 3],
-    [2, 7],
-    [4, 9],
+    [2, 1],
+    [4, 6],
     [10, 5],
     [8, 4],
     [7, 6],
     [13, 1],
     [12, 3],
-    [11, 7],
+    [11, 2],
+    [14, 6],
 ];
 
 sd.init(() => {
@@ -29,11 +31,11 @@ sd.main(async () => {
     await sd.pause();
     focus(0, 0, at[0], at[1]);
     await sd.pause();
-    focus(0, at[1], at[0], 10);
+    focus(0, at[1], at[0], Y);
     await sd.pause();
-    focus(at[0], 0, 15, at[1]);
+    focus(at[0], 0, X, at[1]);
     await sd.pause();
-    focus(at[0], at[1], 15, 10);
+    focus(at[0], at[1], X, Y);
 });
 
 function focus(x1, y1, x2, y2) {

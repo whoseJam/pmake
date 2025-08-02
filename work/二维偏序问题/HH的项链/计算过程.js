@@ -29,7 +29,7 @@ sd.init(() => {
     queries.sort((q1, q2) => {
         return q1[0] - q2[0];
     });
-    sd.Label(plane.axis("x"), "prev/L轴", "rc");
+    sd.Label(plane.axis("x"), "p轴", "rc");
     sd.Label(plane.axis("y"), "i轴", "tc");
     values.cx(plane.cx()).y(plane.my() + 40);
     sum.mx(plane.x()).my(plane.my()).opacity(0);

@@ -15,7 +15,7 @@ const data = [
     [8, 4],
     [7, 6],
 ];
-const rect = new sd.Rect(svg).fillOpacity(0.5).fill(C.red).opacity(0);
+const rect = new sd.Rect(svg).fillOpacity(0.5).strokeOpacity(0).fill(C.red).opacity(0);
 const plane = new Plane(svg, data);
 
 sd.init(() => {
