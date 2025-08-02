@@ -1,0 +1,66 @@
+<section>
+    <section>
+        <h1>模与同余</h1>
+        <p>%%%%%</p>
+    </section>
+    <section>
+        <h2>模</h2>
+        <p>在这里提到的模单纯指C/C++中的取模运算</p>
+        <ul>
+            <li class="fragment"><code>5 % 3 = </code><code class="fragment">2</code></li>
+            <li class="fragment"><code>-5 % 3 = </code><code class="fragment">-2</code></li>
+            <li class="fragment"><code>5 % -3 = </code><code class="fragment">2</code></li>
+            <li class="fragment"><code>-5 % -3 = </code><code class="fragment">-2</code></li>
+        </ul>
+        <p class="fragment">答案的正负仅取决于被模数的正负</p>
+        <p class="fragment">答案的绝对值直接看把被模数、模数的负号摘掉后，取模的结果</p>
+        <p class="fragment">
+            $$
+            a \% b = a-\lfloor\frac a b \rfloor b
+            $$
+        </p>
+        <codeblock class="fragment">
+            <script type="text/template">
+                int Mod(int a, int b) {
+                    return a - (a / b) * b;
+                }
+                int main() {
+                    assert(5 % 3 == Mod(5, 3));
+                    assert(-5 % 3 == Mod(-5, 3));
+                    assert(5 % -3 == Mod(5, -3));
+                    assert(-5 % -3 == Mod(-5, -3));
+                    return 0;
+                }
+            </script>
+        </codeblock>
+    </section>
+    <section>
+        <h2>同余</h2>
+        <p>给定正整数 $m$，若用 $m$ 去除两个整数 $a$ 和 $b$ 所得的余数相同，则称 $a$ 和 $b$ 在模 $m$ 意义下<b>同余</b>，记作 $a\equiv b(mod\ m)$</p>
+        <p class="fragment quote">对于一个负数 $a$，其模 $m$ 所得的余数可以被认为是 <code>(a % m + m) % m</code></p>
+        <p class="fragment">如果 $a\equiv b(mod\ m)$，则可以得到下面两个比较显然的结论</p>
+        <ul>
+            <li class="fragment">$m|(a-b)$</li>
+            <li class="fragment">存在某个整数 $k$，使得 $a=b+km$</li>
+        </ul>
+    </section>
+    <section>
+        <h2>质因数分解</h2>
+        <p>任意一个正整数 $N$，总是能被表示为若干个质因子的乘积
+            $$
+            N=p_1^{a_1}p_2^{a_2}...p_k^{a_k}
+            $$
+        </p>
+        <p class="fragment">如果一个数字 $A$ 是另一个数字 $B$ 的因子，设
+            $$
+            \begin{cases}
+            A=p_1^{a_1}p_2^{a_2}...p_k^{a_k} \\
+            B=p_1^{b_1}p_2^{b_2}...p_k^{b_k}
+            \end{cases}
+            $$
+        </p>
+        <p class="fragment">则一定有 $a_1\le b_1,a_2\le b_2,...,a_n\le b_n$</p>
+        <iframe data-animation="./约数与质因子分解.js" class="fragment"
+            style="width: 1000px; height: 300px;"></iframe>
+    </section>
+</section>
