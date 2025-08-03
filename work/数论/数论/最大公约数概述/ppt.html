@@ -1,32 +1,10 @@
 <section>
     <section>
-        <h1>gcd</h1>
+        <h1>最大公约数</h1>
     </section>
     <section>
-        <h2>约数和倍数</h2>
-        <p>两个正整数 $a$ 和 $b$，如果 $a$ 是 $b$ 的约数，那么 $b$ 就是 $a$ 的倍数</p>
-        <p class="fragment">我们可以认为，存在一个整数 $k$，使得 $ka=b$</p>
-        <ul>
-            <li class="fragment">$2$ 是 $4$ 的约数，$4$ 是 $2$ 的倍数</li>
-            <li class="fragment">$3$ 是 $15$ 的约数，$15$ 是 $3$ 的倍数</li>
-            <li class="fragment">$6$ 是 $18$ 的约数，$18$ 是 $6$ 的倍数</li>
-        </ul>
-    </section>
-    <section>
-        <h2>最大公约数</h2>
-        <p>如果 $d$ 既是 $a$ 的约数，又是 $b$ 的约数，那么 $d$ 就是 $a$ 和 $b$ 的公约数</p>
-        <ul>
-            <li class="fragment">$12$ 和 $18$ 的公约数有 $1,2,3,6$</li>
-        </ul>
-        <p class="fragment">两个数字所有的公约数中，最大的那一个叫做这两个数字的最大公约数</p>
-        <ul>
-            <li class="fragment">$12$ 和 $18$ 的最大公约数为 $6$</li>
-            <li class="fragment">容易发现，两个数字的任意公约数，一定是其最大公约数 $x$ 的约数</li>
-        </ul>
-    </section>
-    <section>
-        <h2>gcd</h2>
-        <p>我们通常gcd表示两个数字的最大公约数，我们有以下方法可以用于求解 $a$ 和 $b$ 的gcd：</p>
+        <h2><ruby>最大公约数<rt>greeatest common divisor</rt></ruby></h2>
+        <p>我们通常 $gcd$ 表示两个数字的最大公约数，有以下方法可以用于求解 $a$ 和 $b$ 的 $gcd$</p>
         <table>
             <thead>
                 <tr>
@@ -48,7 +26,6 @@
                 </tr>
             </tbody>
         </table>
-        <p class="quote">gcd，即greatest common divisor，最大的公共的约数</p>
     </section>
     <section>
         <h2>辗转相减法</h2>
@@ -140,5 +117,21 @@
                 return gcd(b, a % b);
             }
         </script></code></pre>
+    </section>
+    <section>
+        <h2>最大公约数</h2>
+        <p>如果 $C=gcd(A,B)$，且
+            $$
+            \begin{cases}
+            A=p_1^{a_1}p_2^{a_2}...p_k^{a_k} \\
+            B=p_1^{b_1}p_2^{b_2}...p_k^{b_k} 
+            \end{cases}
+            $$
+        </p>
+        <p class="fragment">则
+            $$
+            C=p_1^{min(a_1,b_1)}p_2^{min(a_2,b_2)}...p_k^{min(a_k,b_k)}
+            $$
+        </p>
     </section>
 </section>

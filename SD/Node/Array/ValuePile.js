@@ -1,4 +1,6 @@
 import { Pile } from "@/Node/Array/Pile";
+import { Enter as EN } from "@/Node/Core/Enter";
+import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
 
@@ -29,4 +31,16 @@ export class ValuePile extends Pile {
 
 Object.assign(ValuePile.prototype, {
     align: Factory.handler("align"),
+    insert(id, value) {
+        const element = Cast.castToSDNode(this.layer("elements"), value);
+        element.onEnter(EN.appear("elements"));
+        this.__insert(id, element);
+        return this;
+    },
+    insertFromExistValue(id, value) {
+        const element = value;
+        element.onEnter(EN.moveTo("elements"));
+        this.__insert(id, element);
+        return this;
+    },
 });

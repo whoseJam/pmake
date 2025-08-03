@@ -1,5 +1,0 @@
-gcd和lcm：
-#913.两仪剑法：http://43.143.204.105/problem/913
-
-Exgcd：
-#1068.Exgcd：https://www.luogu.com.cn/problem/P5656
