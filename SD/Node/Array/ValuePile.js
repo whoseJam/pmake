@@ -1,8 +1,6 @@
 import { Pile } from "@/Node/Array/Pile";
-import { Enter as EN } from "@/Node/Core/Enter";
-import { Cast } from "@/Utility/Cast";
-import { Check } from "@/Utility/Check";
-import { Factory } from "@/Utility/Factory";
+import { ValueArray } from "@/Node/Array/ValueArray";
+import { ValueStack } from "@/Node/Array/ValueStack";
 
 export class ValuePile extends Pile {
     constructor(target) {
@@ -10,18 +8,21 @@ export class ValuePile extends Pile {
 
         this.type("ValuePile");
 
-        Check.validateArgumentsCountEqualTo(arguments, 1, `${this.type()}.constructor`);
-
         this.vars.merge({
             align: "cx",
+            justify: "cy",
         });
 
         this.uneffect("array");
+
         this.effect("array", () => {
             const align = this.align();
+            const justify = this.justify();
             this.vars.elements.forEach((element, i) => {
                 this.tryUpdate(element, () => {
-                    element.cy(this.my() - this.elementHeight() * (i + 0.5));
+                    if (justify === "y") element.y(this.y() + this.elementHeight() * i);
+                    else if (justify === "cy") element.cy(this.y() + this.elementHeight() * (i + 0.5));
+                    else element.my(this.y() + this.elementHeight() * (i + 1));
                     element[align](this[align]());
                 });
             });
@@ -30,17 +31,9 @@ export class ValuePile extends Pile {
 }
 
 Object.assign(ValuePile.prototype, {
-    align: Factory.handler("align"),
-    insert(id, value) {
-        const element = Cast.castToSDNode(this.layer("elements"), value);
-        element.onEnter(EN.appear("elements"));
-        this.__insert(id, element);
-        return this;
-    },
-    insertFromExistValue(id, value) {
-        const element = value;
-        element.onEnter(EN.moveTo("elements"));
-        this.__insert(id, element);
-        return this;
-    },
+    align: ValueStack.prototype.align,
+    justify: ValueStack.prototype.justify,
+    insert: ValueArray.prototype.insert,
+    insertFromExistValue: ValueArray.prototype.insertFromExistValue,
+    insertFromExistElement: ValueArray.prototype.insertFromExistElement,
 });

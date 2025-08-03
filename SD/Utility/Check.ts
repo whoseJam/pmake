@@ -76,6 +76,12 @@ export class Check {
     static validateDirection(object: any, directions: ReadonlySet<string>, method: string, i = 1, suggestions = []) {
         if (!directions.has(object)) ErrorLauncher.invalidDirection(object, method, i, suggestions);
     }
+    static validateAlign(object: any, aligns: ReadonlySet<string>, method: string, i = 1, suggestions = []) {
+        if (!aligns.has(object)) ErrorLauncher.invalidAlign(object, method, i, suggestions);
+    }
+    static validateJustify(object: any, justifies: ReadonlySet<string>, method: string, i = 1, suggestions = []) {
+        if (!justifies.has(object)) ErrorLauncher.invalidJustify(object, method, i, suggestions);
+    }
     static validateSDNode(object: any, method: string, i = 1, suggestions = []) {
         const { SDNode } = require("@/Node/SDNode");
         if (!(object instanceof SDNode)) ErrorLauncher.invalidSDNode(object, method, i, suggestions);

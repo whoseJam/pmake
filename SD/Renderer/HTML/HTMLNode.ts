@@ -1,12 +1,36 @@
 import { Action } from "@/Animate/Action";
 import { Dom } from "@/Dom/Dom";
 import { div } from "@/Interact/Root";
+import { SDNode } from "@/Node/SDNode";
 import { HTMLLabel, RenderNode } from "@/Renderer/RenderNode";
-import { SDNode } from "@/sd";
 
-const innerHTMLKey = new Set(["innerHTML", "text"]);
-const styleKey = new Set(["position", "left", "top", "pointer-events", "width", "height", "border", "overflow", "transform", "opacity", "display", "min-width", "min-height", "white-space", "background-color", "color", "border-color", "border-style", "border-width", "border-radius", "aspect-ratio", "object-fit"]);
-const callbackKey = new Set(["onclick", "onchange"]);
+const INNER_HTML_KEY = new Set(["innerHTML", "text"]);
+const CALLBACK_KEY = new Set(["onclick", "onchange"]);
+const STYLE_KEY = new Set([
+    // css style key
+    "position",
+    "left",
+    "top",
+    "pointer-events",
+    "width",
+    "height",
+    "border",
+    "overflow",
+    "transform",
+    "opacity",
+    "display",
+    "min-width",
+    "min-height",
+    "white-space",
+    "background-color",
+    "color",
+    "border-color",
+    "border-style",
+    "border-width",
+    "border-radius",
+    "aspect-ratio",
+    "object-fit",
+]);
 
 function moveTo(element: HTMLNode) {
     return function (t: number) {
@@ -38,14 +62,14 @@ export class HTMLNode extends RenderNode {
         this.render = render;
     }
     getAttribute(key: string) {
-        if (innerHTMLKey.has(key)) {
+        if (INNER_HTML_KEY.has(key)) {
             return this.element.innerHTML;
         } else if (key === "value") {
             const interactable = this.element as HTMLInputElement;
             return interactable.value;
-        } else if (styleKey.has(key)) {
+        } else if (STYLE_KEY.has(key)) {
             return this.element.style[key];
-        } else if (callbackKey.has(key)) {
+        } else if (CALLBACK_KEY.has(key)) {
             return this.element[key];
         } else {
             return this.element.getAttribute(key);
@@ -53,28 +77,28 @@ export class HTMLNode extends RenderNode {
     }
     setAttribute(key: string, value: any) {
         if (typeof value.r === "number" && typeof value.g === "number" && typeof value.b === "number") value = `rgb(${value.r}, ${value.g}, ${value.b})`;
-        if (innerHTMLKey.has(key)) {
+        if (INNER_HTML_KEY.has(key)) {
             this.element.innerHTML = value;
         } else if (key === "value") {
             const interactable = this.element as HTMLInputElement;
             interactable.value = value;
-        } else if (styleKey.has(key)) {
+        } else if (STYLE_KEY.has(key)) {
             this.element.style[key] = value;
-        } else if (callbackKey.has(key)) {
+        } else if (CALLBACK_KEY.has(key)) {
             this.element[key] = value;
         } else {
             this.element.setAttribute(key, value);
         }
     }
     removeAttribute(key: string) {
-        if (innerHTMLKey.has(key)) {
+        if (INNER_HTML_KEY.has(key)) {
             this.element.innerHTML = "";
         } else if (key === "value") {
             const interactable = this.element as HTMLInputElement;
             interactable.value = undefined;
-        } else if (styleKey.has(key)) {
+        } else if (STYLE_KEY.has(key)) {
             this.element.style.removeProperty(key);
-        } else if (callbackKey.has(key)) {
+        } else if (CALLBACK_KEY.has(key)) {
             this.element[key] = undefined;
         } else {
             this.element.removeAttribute(key);

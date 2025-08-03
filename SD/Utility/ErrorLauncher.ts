@@ -90,6 +90,12 @@ export class ErrorLauncher {
     static invalidDirection(object: any, method: string, i = 1, suggestions = []) {
         throw new Error(`We expect a direction-string for the ${generateLocation(i)} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
     }
+    static invalidAlign(object: any, method: string, i = 1, suggestions = []) {
+        throw new Error(`We expect a align-string for the ${generateLocation(i)} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
+    }
+    static invalidJustify(object: any, method: string, i = 1, suggestions = []) {
+        throw new Error(`We expect a justify-string for the ${generateLocation(i)} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
+    }
     static invalidSDNode(object: any, method: string, i = 1, suggestions = []) {
         throw new Error(`We expect a SDNode for the ${generateLocation(i)} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
     }

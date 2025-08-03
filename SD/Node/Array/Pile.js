@@ -1,15 +1,13 @@
 import { Array } from "@/Node/Array/Array";
 import { BaseArray } from "@/Node/Array/BaseArray";
+import { Stack } from "@/Node/Array/Stack";
 import { Check } from "@/Utility/Check";
-import { Factory } from "@/Utility/Factory";
 
 export class Pile extends BaseArray {
     constructor(target) {
         super(target);
 
         this.type("Pile");
-
-        Check.validateArgumentsCountEqualTo(arguments, 1, `${this.type()}.constructor`);
 
         this.vars.merge({
             x: 0,
@@ -19,7 +17,7 @@ export class Pile extends BaseArray {
         });
 
         this.effect("array", () => {
-            this.vars.elements.forEach((element, i) => {
+            this.forEachElement((element, i) => {
                 this.tryUpdate(element, () => {
                     element.width(this.elementWidth());
                     element.height(this.elementHeight());
@@ -33,22 +31,23 @@ export class Pile extends BaseArray {
 
 Object.assign(Pile.prototype, {
     y(y) {
-        if (y === undefined) return this.my() - this.height();
-        this.my(y + this.height());
+        if (arguments.length === 0) return this.my() - this.height();
+        return this.my(y + this.height());
+    },
+    my(my) {
+        if (arguments.length === 0) return this.vars.my;
+        Check.validateNumber(my, `${this.constructor.name}.my`);
+        this.vars.my = my;
         return this;
     },
-    my: Factory.handlerLowPrecise("my"),
-    elementWidth: Factory.handlerLowPrecise("elementWidth"),
-    elementHeight: Factory.handlerLowPrecise("elementHeight"),
+    width(width) {
+        if (arguments.length === 0) return this.elementWidth();
+        return this.elementWidth(width);
+    },
+    height: Stack.prototype.height,
     insert: Array.prototype.insert,
     insertFromExistValue: Array.prototype.insertFromExistValue,
     insertFromExistElement: Array.prototype.insertFromExistElement,
-    height(height) {
-        if (height === undefined) return this.elementHeight() * this.length();
-        const length = Math.max(this.length(), 1);
-        this.elementHeight(height / length);
-        return this;
-    },
+    elementWidth: Array.prototype.elementWidth,
+    elementHeight: Array.prototype.elementHeight,
 });
-
-Pile.prototype.width = Pile.prototype.elementWidth;

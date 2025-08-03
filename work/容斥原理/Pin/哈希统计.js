@@ -21,8 +21,10 @@ sd.init(() => {
         });
     });
 
-    sd.Brace(stk).brace(0, n - 1, "l").value("n个串");
-})
+    sd.Brace(stk)
+        .brace(0, n - 1, "l")
+        .value("n个串");
+});
 
 sd.main(async () => {
     await sd.pause();
@@ -43,5 +45,5 @@ sd.main(async () => {
         const value = new sd.Text(svg, "Hash Value");
         l.childAs(value, R.aside("rc", 20));
         value.opacity(0).startAnimate().opacity(1).endAnimate();
-    })
-})
+    });
+});

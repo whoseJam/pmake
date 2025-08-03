@@ -1,11 +1,13 @@
+import { SD2DNode } from "@/Nod/SD2DNode";
 import { BaseArray } from "@/Node/Array/BaseArray";
+import { Box } from "@/Node/Element/Box";
 
 /**
  * Array component implementing the value-inside-element strategy.
  *
- * Render a uniform array where each element is an **`sd.Box`** instance.
+ * Render a uniform array where each element is a **`sd.Box`** instance.
  */
-export class Array extends BaseArray {
+export class Array<E = Box, V = SD2DNode> extends BaseArray<E, V> {
     /**
      * Gets the element width of this array component.
      * @returns The uniform width of all array elements.

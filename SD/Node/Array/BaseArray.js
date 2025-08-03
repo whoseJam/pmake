@@ -2,7 +2,6 @@ import { Exit as EX } from "@/Node/Core/Exit";
 import { SD2DNode } from "@/Node/SD2DNode";
 import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
-import { Factory } from "@/Utility/Factory";
 
 export class BaseArray extends SD2DNode {
     constructor(target) {
@@ -18,14 +17,29 @@ export class BaseArray extends SD2DNode {
 }
 
 Object.assign(BaseArray.prototype, {
-    x: Factory.handlerLowPrecise("x"),
-    y: Factory.handlerLowPrecise("y"),
-    start: Factory.handler("start"),
+    x(x) {
+        if (arguments.length === 0) return this.vars.x;
+        Check.validateNumber(x, `${this.constructor.name}.x`);
+        this.vars.lpset("x", x);
+        return this;
+    },
+    y(y) {
+        if (arguments.length === 0) return this.vars.y;
+        Check.validateNumber(y, `${this.constructor.name}.y`);
+        this.vars.lpset("y", y);
+        return this;
+    },
+    start(start) {
+        if (arguments.length === 0) return this.vars.start;
+        Check.validateNumber(start, `${this.constructor.name}.start`);
+        this.vars.lpset("start", start);
+        return this;
+    },
     end() {
         return this.start() + this.length() - 1;
     },
     length(size) {
-        if (size === undefined) {
+        if (arguments.length === 0) {
             const elements = this.vars.elements;
             return elements.length;
         }
@@ -41,7 +55,6 @@ Object.assign(BaseArray.prototype, {
         for (let i = this.start(); i <= this.end(); i++) if (this.element(i) === element) return i;
         return -1;
     },
-
     element(i) {
         const id = this.__idx(i);
         if (0 <= id && id < this.length()) return this.vars.elements[id];
@@ -57,7 +70,7 @@ Object.assign(BaseArray.prototype, {
         return this.element(this.end());
     },
     forEachElement(callback) {
-        Check.validateSyncFunction(callback, `${this.type()}.forEachElement`);
+        Check.validateSyncFunction(callback, `${this.constructor.name}.forEachElement`);
         this.vars.elements.forEach((element, id) => callback(element, id + this.start()));
         return this;
     },

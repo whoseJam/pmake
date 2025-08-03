@@ -90,16 +90,11 @@ Object.assign(SDNode.prototype, {
         return name === undefined ? this._.layer : this._.layers[name];
     },
     newLayer() {
-        ErrorLauncher.notImplementedYet("newLayer", this.type());
+        ErrorLauncher.notImplementedYet("newLayer", `${this.constructor.name}.newLayer`);
     },
     attachTo(target) {
-        if (target instanceof SDNode) {
-            // parent is SDNode
-            this._.layer.moveTo(target.layer());
-        } else {
-            // parent is RenderNode
-            this._.layer.moveTo(target);
-        }
+        if (target instanceof SDNode) this._.layer.moveTo(target.layer());
+        else this._.layer.moveTo(target);
         return this;
     },
 

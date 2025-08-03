@@ -1,8 +1,12 @@
 import { Stack } from "@/Node/Array/Stack";
+import { SD2DNode } from "@/Node/SD2DNode";
 
-export class ValueStack extends Stack {
-    align(): string;
-    align(align: string): this;
-    justify(): string;
-    justify(justify: string): this;
+type Align = "x" | "cx" | "mx";
+type Justify = "y" | "cy" | "my";
+
+export class ValueStack extends Stack<SD2DNode, SD2DNode> {
+    align(): Align;
+    align(align: Align): this;
+    justify(): Justify;
+    justify(justify: Justify): this;
 }

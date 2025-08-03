@@ -4,9 +4,23 @@ import { svg } from "@/Interact/Root";
 import { RenderNode, SVGLabel } from "@/Renderer/RenderNode";
 import { SDNode } from "@/sd";
 
-const innerHTMLKey = new Set(["innerHTML", "text"]);
-const styleKey = new Set(["pointer-events", "min-width", "min-height", "display"]);
-const shapeKey = new Set(["circle", "ellipse", "foreignObject", "fragment", "image", "line", "path", "rect", "svg", "text", "polygon", "polyline"]);
+const INNER_HTML_KEY = new Set(["innerHTML", "text"]);
+const STYLE_KEY = new Set(["pointer-events", "min-width", "min-height", "display"]);
+const SHAPE_KEY = new Set([
+    // shape key
+    "circle",
+    "ellipse",
+    "foreignObject",
+    "fragment",
+    "image",
+    "line",
+    "path",
+    "rect",
+    "svg",
+    "text",
+    "polygon",
+    "polyline",
+]);
 
 function moveTo(element: SVGNode) {
     return function (t: number) {
@@ -50,19 +64,19 @@ export class SVGNode extends RenderNode {
         this.render = render;
     }
     getAttribute(key: string) {
-        if (innerHTMLKey.has(key)) {
+        if (INNER_HTML_KEY.has(key)) {
             return this.element.innerHTML;
-        } else if (styleKey.has(key)) {
+        } else if (STYLE_KEY.has(key)) {
             return this.element.style[key];
         }
         return this.element.getAttribute(key);
     }
     setAttribute(key: string, value: any): void {
         if (typeof value.r === "number" && typeof value.g === "number" && typeof value.b === "number") value = `rgb(${value.r}, ${value.g}, ${value.b})`;
-        if (innerHTMLKey.has(key)) {
+        if (INNER_HTML_KEY.has(key)) {
             if (key === "text") value = parseText(value);
             this.element.innerHTML = value;
-        } else if (styleKey.has(key)) {
+        } else if (STYLE_KEY.has(key)) {
             this.element.style[key] = value;
         } else if (key === "viewBox" && typeof value === "object") {
             this.element.setAttribute(key, `${value.x} ${value.y} ${value.width} ${value.height}`);
@@ -71,6 +85,6 @@ export class SVGNode extends RenderNode {
         }
     }
     hasShape() {
-        return shapeKey.has(this.label);
+        return SHAPE_KEY.has(this.label);
     }
 }

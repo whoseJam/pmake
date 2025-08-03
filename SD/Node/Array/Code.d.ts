@@ -1,9 +1,10 @@
 import { BaseArray } from "@/Node/Array/BaseArray";
 import { SDNode } from "@/Node/SDNode";
+import { Text } from "@/Node/Text/Text";
 import { RenderNode } from "@/Renderer/RenderNode";
 
-export class Code extends BaseArray {
-    constructor(target: SDNode | RenderNode, source?: string);
+export class Code extends BaseArray<Text, Text> {
+    constructor(target: SDNode | RenderNode, code?: string);
     l(): number;
     r(): number;
     fontSize(): number;

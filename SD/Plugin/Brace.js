@@ -7,7 +7,7 @@ import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
 
 const LOCATION_KEY = new Set(["l", "r", "t", "b"]);
-const LOCATION_KEY_SUGGESTION = [() => true, "For BracePlugin component, here are 4 types of locations which are 'l', 'r', 't', 'b'."];
+const LOCATION_KEY_SUGGESTION = [() => true, "For brace component, here are 4 types of locations which are 'l', 'r', 't', 'b'."];
 
 class BracePlugin {
     value(value, rule) {

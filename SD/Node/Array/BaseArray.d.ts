@@ -1,8 +1,7 @@
 import { SD2DNode } from "@/Node/SD2DNode";
-import { SDNode } from "@/Node/SDNode";
 import { SDColor } from "@/Utility/Color";
 
-export class BaseArray extends SD2DNode {
+export class BaseArray<E, V> extends SD2DNode {
     /**
      * Gets the index of the first element in this array component.
      * @returns The index of the first element.
@@ -59,7 +58,7 @@ export class BaseArray extends SD2DNode {
      * @param element - The target element to locate.
      * @returns The index of the specific element, or -1 if not found.
      */
-    indexOf(element: SDNode): number;
+    indexOf(element: E): number;
     /**
      * Gets the element at the specified index.
      * @param i - The index of the specific element.
@@ -70,23 +69,23 @@ export class BaseArray extends SD2DNode {
      * Gets all elements contained within this array component.
      * @returns An array containing all valid elements in this component.
      */
-    elements(): Array<any>;
+    elements(): Array<E>;
     /**
      * Gets the last element in this array component.
      * @returns The last element, or undefined if the array is empty.
      */
-    lastElement(): any;
+    lastElement(): E;
     /**
      * Gets the first element in this array component.
      * @returns The first element, or undefined if the array is empty.
      */
-    firstElement(): any;
+    firstElement(): E;
     /**
      * Iterates over each element in this array component.
      * @param callback - A function to execute for each element.
      * @returns The current component instance for method chaining.
      */
-    forEachElement(callback: (element: any, id: number) => void): this;
+    forEachElement(callback: (element: E, id: number) => void): this;
 
     /**
      * Gets the opacity of a specific element.
@@ -160,7 +159,7 @@ export class BaseArray extends SD2DNode {
      * @param i - The index of the specific element.
      * @returns The value component instance, or undefined if no value has been set.
      */
-    value(i: number): any;
+    value(i: number): V;
     /**
      * Sets the value component of a specific element.
      * - Replace any existing value component with the provided content.
@@ -183,32 +182,32 @@ export class BaseArray extends SD2DNode {
      * @returns The current component instance for method chaining.
      */
     insert(i: number, value: any): this;
-    insertFromExistValue(i: number, value: SDNode): this;
-    insertFromExistElement(i: number, element: SDNode): this;
+    insertFromExistValue(i: number, value: V): this;
+    insertFromExistElement(i: number, element: E): this;
     /**
      * Appends a value to the end of this array component.
      * @param value - The value to append.
      * @returns The current component instance for method chaining.
      */
     push(value: any): this;
-    pushFromExistValue(value: SDNode): this;
-    pushFromExistElement(element: SDNode): this;
+    pushFromExistValue(value: V): this;
+    pushFromExistElement(element: E): this;
     /**
      * Appends all elements from an array to the end of this array component.
      * @param array - The array of elements to append.
      * @returns The current component instance for method chaining.
      */
-    pushArray(array: Array<any>): this;
+    pushArray(array: Array<any> | string): this;
 
     erase(i: number): this;
     pop(): this;
-    dropElement(i: number): any;
-    dropFirstElement(): any;
-    dropLastElement(): any;
-    dropValue(i: number): any;
-    dropFirstValue(): any;
-    dropLastValue(): any;
+    dropElement(i: number): E;
+    dropFirstElement(): E;
+    dropLastElement(): E;
+    dropValue(i: number): V;
+    dropFirstValue(): V;
+    dropLastValue(): V;
 
-    sort(comparator?: (a: any, b: any) => number): this;
-    sort(l: number, r: number, comparator?: (a: any, b: any) => number): this;
+    sort(comparator?: (a: E, b: E) => number): this;
+    sort(l: number, r: number, comparator?: (a: E, b: E) => number): this;
 }

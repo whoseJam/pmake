@@ -6,7 +6,6 @@ import { trim } from "@/Utility/Trim";
 class LinkPlugin {
     sourceElement(source) {
         if (arguments.length === 0) return this.vars.element1;
-        console.log("source=", source);
         this.vars.element1.eraseChild(this.onExit(EX.nothing()));
         this.vars.element1 = source;
         this.vars.element1.childAs(this);

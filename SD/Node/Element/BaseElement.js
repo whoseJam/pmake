@@ -5,7 +5,6 @@ import { Rule as R } from "@/Rule/Rule";
 import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
-import { Factory } from "@/Utility/Factory";
 
 export class BaseElement extends SD2DNode {
     constructor(target) {
@@ -17,23 +16,50 @@ export class BaseElement extends SD2DNode {
             width: 40,
             height: 40,
             rate: 1.3,
-            value: undefined,
+            value: null,
         });
     }
 }
 
 Object.assign(BaseElement.prototype, {
-    x: Factory.handlerLowPrecise("x"),
-    y: Factory.handlerLowPrecise("y"),
-    width: Factory.handlerLowPrecise("width"),
-    height: Factory.handlerLowPrecise("height"),
-    rate: Factory.handlerMediumPrecise("rate"),
+    x(x) {
+        if (arguments.length === 0) return this.vars.x;
+        Check.validateNumber(x, `${this.constructor.name}.x`);
+        this.vars.lpset("x", x);
+        return this;
+    },
+    y(y) {
+        if (arguments.length === 0) return this.vars.y;
+        Check.validateNumber(y, `${this.constructor.name}.y`);
+        this.vars.lpset("y", y);
+        return this;
+    },
+    width(width) {
+        if (arguments.length === 0) return this.vars.width;
+        Check.validateNumber(width, `${this.constructor.name}.width`);
+        this.vars.lpset("width", width);
+        return this;
+    },
+    height(height) {
+        if (arguments.length === 0) return this.vars.height;
+        Check.validateNumber(height, `${this.constructor.name}.height`);
+        this.vars.lpset("height", height);
+        return this;
+    },
+    rate(rate) {
+        if (arguments.length === 0) return this.vars.rate;
+        Check.validateNumber(rate, `${this.constructor.name}.rate`);
+        this.vars.mpset("rate", rate);
+        return this;
+    },
     color: backgroundHandler("color"),
     fill: backgroundHandler("fill"),
     fillOpacity: backgroundHandler("fillOpacity"),
     stroke: backgroundHandler("stroke"),
     strokeOpacity: backgroundHandler("strokeOpacity"),
     strokeWidth: backgroundHandler("strokeWidth"),
+    strokeDashOffset: backgroundHandler("strokeDashOffset"),
+    strokeDashArray: backgroundHandler("strokeDashArray"),
     background() {
         return this.child("background");
     },
@@ -62,16 +88,14 @@ Object.assign(BaseElement.prototype, {
         if (arguments.length === 0) return this.child("value");
         if (this.hasChild("value")) this.eraseChild("value");
         if (Check.isEmpty(value)) return this;
-        rule = getValueRule(rule);
         value = Cast.castToSDNode(this, value);
-        this.childAs("value", value, rule);
+        this.childAs("value", value, rule || valueRule);
         return this;
     },
     valueFromExist(value, rule) {
         if (this.hasChild("value")) this.eraseChild("value");
-        rule = getValueRule(rule);
         value.onEnter(EN.moveTo());
-        this.childAs("value", value, rule);
+        this.childAs("value", value, rule || valueRule);
         return this;
     },
     drop() {
@@ -92,12 +116,7 @@ function backgroundHandler(key) {
     };
 }
 
-function getValueRule(rule) {
-    return (
-        rule ||
-        function (parent, child) {
-            const rate = parent.rate();
-            R.centerFixAspect(rate)(parent, child);
-        }
-    );
+function valueRule(parent, child) {
+    const rate = parent.rate();
+    R.centerFixAspect(rate)(parent, child);
 }

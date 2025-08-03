@@ -30,6 +30,7 @@ export { Coord } from "./Node/Coord/Coord";
 export { FixGapCoord } from "./Node/Coord/FixGapCoord";
 export { enter } from "./Node/Core/Enter";
 export { exit } from "./Node/Core/Exit";
+export { checkEffect, effect, freeze, uneffect, unfreeze } from "./Node/Core/Reactive";
 export { Bezier } from "./Node/Curve/Bezier";
 export { BraceCurve } from "./Node/Curve/BraceCurve";
 export { CircleCurve } from "./Node/Curve/CircleCurve";

@@ -1,8 +1,15 @@
 import { BaseArray } from "@/Node/Array/BaseArray";
-import { RenderNode } from "@/Renderer/RenderNode";
+import { Rect } from "@/Node/Shape/Rect";
 
-export class BarArray extends BaseArray {
-    constructor(parent: SDNod | RenderNode);
+export class BarElement extends Rect {
+    text(): string;
+    text(text: string): this;
+    intValue(): number;
+    value(): number;
+    value(value: number): this;
+}
+
+export class BarArray extends BaseArray<BarElement, number> {
     elementWidth(): number;
     elementWidth(width: number): this;
     elementHeight(): number;
