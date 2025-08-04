@@ -1,12 +1,8 @@
 import { Enter as EN } from "@/Node/Core/Enter";
-import { Vertex } from "@/Node/Element/Vertex";
-import { LineSVG } from "@/Node/Path/LineSVG";
 import { BaseTree } from "@/Node/Tree/BaseTree";
+import { TreeEngine } from "@/Node/Tree/TreeEngine";
 import { Cast } from "@/Utility/Cast";
-import { ErrorLauncher } from "@/Utility/ErrorLauncher";
-import { Factory } from "@/Utility/Factory";
-import { trim } from "@/Utility/Trim";
-import { hierarchy, stratify, tree } from "d3";
+import { Check } from "@/Utility/Check";
 
 export class Tree extends BaseTree {
     constructor(target) {
@@ -14,11 +10,7 @@ export class Tree extends BaseTree {
 
         this.type("Tree");
 
-        this._.nodeType = Vertex;
-        this._.linkType = LineSVG;
-
         this.vars.merge({
-            r: 20,
             width: 300,
             height: 0,
             layout: "vertical",
@@ -26,65 +18,27 @@ export class Tree extends BaseTree {
         });
 
         this.effect("tree", () => {
-            const mode = this.layout();
-            let data, root, layout, result, convert;
-            try {
-                const template = stratify();
-                template.id(d => this.nodeId(d));
-                template.parentId(d => {
-                    const father = this.father(d);
-                    return father ? this.nodeId(father) : undefined;
+            if (this.vars.structure) this.vars.structure = false;
+            const layout = this.layout();
+            const [x_, y_] = this.pos("x", "y");
+            if (layout === "vertical") {
+                this.vars.height = (this.depth() - 1) * this.layerGap();
+                TreeEngine.layout(this, {
+                    width: this.width(),
+                    height: this.height(),
+                    location(node) {
+                        return [x_ + node.x, y_ + node.y];
+                    },
                 });
-                data = template(this.vars.nodes);
-                root = hierarchy(data);
-                if (mode === "vertical") {
-                    this.vars.height = root.height * this.layerGap();
-                    layout = tree().size([this.width(), this.height()]);
-                    convert = node => [this.x() + node.x, this.y() + node.y];
-                } else {
-                    this.vars.width = root.height * this.layerGap();
-                    layout = tree().size([this.height(), this.width()]);
-                    convert = node => [this.x() + node.y, this.y() + node.x];
-                }
-                result = layout(root);
-                const nodes = result.descendants();
-                const nodesMap = new Map();
-                nodes.forEach(node => {
-                    nodesMap.set(node.data.data, node);
+            } else {
+                this.vars.width = (this.depth() - 1) * this.layerGap();
+                TreeEngine.layout(this, {
+                    width: this.height(),
+                    height: this.width(),
+                    location(node) {
+                        return [x_ + node.y, y_ + node.x];
+                    },
                 });
-                this.forEachNode(node => {
-                    const layout = nodesMap.get(node);
-                    this.tryUpdate(node, () => {
-                        node.center(convert(layout));
-                    });
-                });
-                this.forEachLink((link, sourceId, targetId) => {
-                    const source = this.findNodeById(sourceId);
-                    const target = this.findNodeById(targetId);
-                    this.tryUpdate(link, () => {
-                        link.source(source.center());
-                        link.target(target.center());
-                        trim(link, source, target);
-                    });
-                });
-            } catch (error) {
-                if (error.message === "no root" || error.message === "multiple roots") {
-                    this.forEachNode(node => {
-                        if (this.inRange(node.center())) return;
-                        this.tryUpdate(node, () => {
-                            node.center(this.x(), this.y());
-                        });
-                    });
-                    this.forEachLink((link, sourceId, targetId) => {
-                        const source = this.findNodeById(sourceId);
-                        const target = this.findNodeById(targetId);
-                        this.tryUpdate(link, () => {
-                            link.source(source.center());
-                            link.target(target.center());
-                            trim(link, source, target);
-                        });
-                    });
-                } else ErrorLauncher.whatHappened();
             }
         });
     }
@@ -164,59 +118,13 @@ Object.assign(Tree.prototype, {
         }
         return this;
     },
-    layerGap: Factory.handlerLowPrecise("layerGap"),
-    layerWidth: Factory.handlerLowPrecise("layerGap"),
-    layerHeight: Factory.handlerLowPrecise("layerGap"),
+    layerGap(gap) {
+        if (arguments.length === 0) return this.vars.layerGap;
+        Check.validateNumber(gap, `${this.constructor.name}.layerGap`);
+        this.vars.lpset("layerGap", gap);
+        return this;
+    },
 });
 
-export function D3Layout(mode, convert, size) {
-    let data, root, layout, result;
-    try {
-        const template = stratify();
-        template.id(d => this.nodeId(d));
-        template.parentId(d => {
-            const father = this.father(d);
-            return father ? this.nodeId(father) : undefined;
-        });
-        data = template(this.vars.nodes);
-        root = hierarchy(data);
-        if (mode === "vertical") {
-            this.vars.height = root.height * this.layerHeight();
-            layout = tree().size([this.width(), this.height()]);
-        } else {
-            this.vars.width = root.height * this.layerWidth();
-            layout = tree().size([this.height(), this.width()]);
-        }
-        result = layout(root);
-        const nodes = result.descendants();
-        const nodesMap = new Map();
-        nodes.forEach(node => {
-            nodesMap.set(node.data.data, node);
-        });
-        this.forEachNode(node => {
-            const layout = nodesMap.get(node);
-            this.tryUpdate(node, () => {
-                if (size) size(node);
-                node.center(convert(layout));
-            });
-        });
-        this.forEachLink((link, sourceId, targetId) => {
-            const source = this.findNodeById(sourceId);
-            const target = this.findNodeById(targetId);
-            this.tryUpdate(link, () => {
-                link.source(source.center());
-                link.target(target.center());
-                trim(link, source, target);
-            });
-        });
-    } catch (err) {
-        // this.forEachNode(node => {
-        //     if (node._.first) {
-        //         if (size) size(node);
-        //         node.center(this.center());
-        //         node._.first = undefined;
-        //     }
-        // });
-        return;
-    }
-}
+Tree.prototype.layerWidth = Tree.prototype.layerGap;
+Tree.prototype.layerHeight = Tree.prototype.layerGap;

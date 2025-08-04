@@ -1,40 +1,9 @@
-import { SDNode } from "@/Node/SDNode";
-import { BaseTree } from "@/Node/Tree/BaseTree";
-import { RenderNode } from "@/Renderer/RenderNode";
+import { Box } from "@/Node/Element/Box";
+import { Tree } from "@/Node/Tree/Tree";
 
-export class BoxTree extends BaseTree {
-    constructor(target: SDNode | RenderNode);
-
-    /**
-     * 获取箱子的宽度
-     */
+export class BoxTree extends Tree<Box> {
     elementWidth(): number;
-
-    /**
-     * 设置箱子的宽度
-     * @param width
-     */
     elementWidth(width: number): this;
-
-    /**
-     * 获取箱子的高度
-     */
     elementHeight(): number;
-
-    /**
-     * 设置箱子的高度
-     * @param height
-     */
     elementHeight(height: number): this;
-
-    /**
-     * 获取树的层高
-     */
-    layerHeight(): number;
-
-    /**
-     * 设置树的层高
-     * @param height
-     */
-    layerHeight(height: number): this;
 }

@@ -242,4 +242,5 @@ export class SDNode {
     onExit(exit: (element: SDNode) => void): this;
     onExitDefault(exit: (element: SDNode) => void): this;
     triggerExit(): this;
+    tryUpdate(element: SDNode, update: () => void): void;
 }

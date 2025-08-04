@@ -174,11 +174,11 @@ Object.assign(BaseArray.prototype, {
         return this;
     },
 
-    erase(id) {
-        const element = this.element(id);
-        if (!element) ErrorLauncher.arrayElementNotFound(id);
+    erase(i) {
+        const element = this.element(i);
+        if (!element) ErrorLauncher.arrayElementNotFound(i);
         element.onExitDefault(EX.fade());
-        this.__erase(id);
+        this.__erase(i);
         return this;
     },
     pop() {
@@ -234,10 +234,10 @@ Object.assign(BaseArray.prototype, {
         this.vars.elements.splice(idx, 0, element);
         return this;
     },
-    __erase(id) {
-        const element = this.element(id);
+    __erase(i) {
+        const element = this.element(i);
         const elements = this.vars.elements;
-        elements.splice(this.__idx(id), 1);
+        elements.splice(this.__idx(i), 1);
         this.eraseChild(element);
         return this;
     },

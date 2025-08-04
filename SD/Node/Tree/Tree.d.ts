@@ -1,9 +1,13 @@
-import { SDNode } from "@/Node/SDNode";
+import { Vertex } from "@/Node/Element/Vertex";
+import { Line } from "@/Node/Path/Line";
+import { SD2DNode } from "@/Node/SD2DNode";
 import { BaseTree } from "@/Node/Tree/BaseTree";
 
-export class Tree extends BaseTree {
-    layout(): "vertical" | "horizontal";
-    layout(mode: "vertical" | "horizontal"): this;
+type Layout = "vertical" | "horizontal";
+
+export class Tree<NodeElement = Vertex, NodeValue = SD2DNode, LinkElement = Line, LinkValue = SD2DNode> extends BaseTree<NodeElement, NodeValue, LinkElement, LinkValue> {
+    layout(): Layout;
+    layout(layout: Layout): this;
     layerGap(): number;
     layerGap(gap: number): this;
     layerWidth(): number;
@@ -11,5 +15,3 @@ export class Tree extends BaseTree {
     layerHeight(): number;
     layerHeight(height: number): this;
 }
-
-export function D3Layout(mode: "vertical" | "horizontal", transX: (node: { x: number; y: number }) => number, transY: (node: { x: number; y: number }) => number, setSize: (node: SDNode, limit: number) => void);

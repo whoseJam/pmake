@@ -8,6 +8,6 @@
             "@/*": ["./SD/*"]
         }
     },
-    "include": ["work/**/*.js", "题库/**/*.js", "SD/**/*.js", "unit/**/*.js"],
+    "include": ["work/**/*.js", "题库/**/*.js", "SD/**/*.js", "unit/**/*.js", "SD/Node/Tree/TreeEngine.ts"],
     "exclude": ["node_modules", "dist", "build", "public", "test", "coverage"]
 }

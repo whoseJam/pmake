@@ -1,16 +1,11 @@
-import { HorizontalTree } from "@/Node/Tree/HorizontalTree";
 import { ValueTree } from "@/Node/Tree/ValueTree";
 
-export class HorizontalValueTree extends HorizontalTree {
+export class HorizontalValueTree extends ValueTree {
     constructor(target) {
         super(target);
 
         this.type("HorizontalValueTree");
 
-        this.vars.merge({
-            layerWidth: 60,
-        });
+        this.layout("horizontal");
     }
 }
-
-HorizontalValueTree.prototype.newNode = ValueTree.prototype.newNode;

@@ -1,6 +1,7 @@
+import { Vertex } from "@/Node/Element/Vertex";
+import { Line } from "@/Node/Path/Line";
 import { SD2DNode } from "@/Node/SD2DNode";
 import { SDNode } from "@/Node/SDNode";
-import { RectSVG } from "@/Node/Shape/RectSVG";
 import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
@@ -20,17 +21,30 @@ export class BaseTree extends SD2DNode {
             y: 0,
             links: [],
             nodes: [],
+            structure: false,
         });
 
         this._.sdnodesMap = {}; // SDNode id -> { node: SDNode, id: TreeID } | { link: SDNode, sourceId: TreeID, targetId: TreeID }
-        this._.nodesMap = {}; // TreeID -> SDNode
+        this._.nodesMap = new Map(); // TreeID -> SDNode
         this._.linksMap = new Map(); // TreeID -> SDNode
+        this._.nodeType = Vertex;
+        this._.linkType = Line;
     }
 }
 
 Object.assign(BaseTree.prototype, {
-    x: RectSVG.prototype.x,
-    y: RectSVG.prototype.y,
+    x(x) {
+        if (arguments.length === 0) return this.vars.x;
+        Check.validateNumber(x, `${this.constructor.name}.x`);
+        this.vars.lpset("x", x);
+        return this;
+    },
+    y(y) {
+        if (arguments.length === 0) return this.vars.y;
+        Check.validateNumber(y, `${this.constructor.name}.y`);
+        this.vars.lpset("y", y);
+        return this;
+    },
     rootId() {
         return this.nodeId(this.root());
     },
@@ -121,8 +135,9 @@ Object.assign(BaseTree.prototype, {
     },
     depth(x) {
         if (arguments.length === 0) {
-            const root = this.stratify();
-            return root ? root.height : 0;
+            let depth = 0;
+            this.forEachNode(node => (depth = Math.max(depth, this.depth(node))));
+            return depth;
         } else {
             let depth = 1;
             while (this.father(x)) (x = this.father(x)), depth++;
@@ -247,8 +262,19 @@ Object.assign(BaseTree.prototype, {
         return this;
     },
     root(id, value) {
-        if (id === undefined) return this.findNode(node => this.father(node) === undefined);
-        this.newNode(id, value);
+        if (arguments.length === 0) return this.findNode(node => this.father(node) === undefined);
+        else if (!this.element(id)) return this.newNode(id, value);
+        return this.rootAs(id);
+    },
+    rootAs(id) {
+        const dfs = x => {
+            const father = this.father(x);
+            if (!father) return;
+            dfs(father);
+            this.__reverseLink(this.nodeId(father), this.nodeId(x));
+        };
+        dfs(this.element(id));
+        this.vars.structure = true;
         return this;
     },
     link(sourceId, targetId, value) {
@@ -280,6 +306,15 @@ Object.assign(BaseTree.prototype, {
     cut(x, y) {
         this.__eraseLink(x, y);
         return this;
+    },
+    erase() {
+        if (arguments.length === 1) {
+            const [node] = arguments;
+            return this.__eraseNode(this.nodeId(node));
+        } else {
+            const [source, target] = arguments;
+            return this.__eraseLink(this.nodeId(source), this.nodeId(target));
+        }
     },
     element() {
         if (arguments.length === 1) {
@@ -461,41 +496,58 @@ Object.assign(BaseTree.prototype, {
         dfs(root, 1);
         return result[this.nodeId(root)];
     },
-
     linkType(type) {
+        if (arguments.length === 0) return this._.linkType;
         this._.linkType = type;
         return this;
     },
     nodeType(type) {
+        console.log("this=", this);
+        console.log("type=", type, "current=", this._.nodeType);
+        if (arguments.length === 0) return this._.nodeType;
         this._.nodeType = type;
         return this;
     },
-
-    __insertNode(id, element) {
+    __insertNode(id, node) {
         id = String(id);
-        this._.sdnodesMap[element.id] = { node: element, id };
-        this._.nodesMap[id] = element;
-        this.childAs(element);
-        this.vars.nodes.push(element);
+        this._.sdnodesMap[node.id] = { node, id };
+        this._.nodesMap[id] = node;
+        this.childAs(node);
+        this.vars.nodes.push(node);
         return this;
     },
-    __insertLink(sourceId, targetId, element) {
+    __insertLink(sourceId, targetId, link) {
         [sourceId, targetId] = [String(sourceId), String(targetId)];
-        this._.sdnodesMap[element.id] = { link: element, sourceId, targetId };
-        this._.linksMap.set([sourceId, targetId], element);
-        this.childAs(element);
-        this.vars.links.push(element);
+        this._.sdnodesMap[link.id] = { link, sourceId, targetId };
+        this._.linksMap.set([sourceId, targetId], link);
+        this.childAs(link);
+        this.vars.links.push(link);
         return this;
     },
-    __eraseNode() {
-        ErrorLauncher.notImplementedYet("__eraseNode", this.type());
+    __reverseLink(sourceId, targetId) {
+        [sourceId, targetId] = [String(sourceId), String(targetId)];
+        const link = this.element(sourceId, targetId);
+        this._.sdnodesMap[link.id] = { link, sourceId: targetId, targetId: sourceId };
+        this._.linksMap.delete([sourceId, targetId]);
+        this._.linksMap.set([targetId, sourceId], link);
+        return this;
+    },
+    __eraseNode(id) {
+        id = String(id);
+        this._.nodesMap.delete(id);
+        const node = this.element(id);
+        const nodes = this.vars.nodes;
+        nodes.splice(nodes.indexOf(node), 1);
+        this.eraseChild(node);
+        return this;
     },
     __eraseLink(sourceId, targetId) {
         [sourceId, targetId] = [String(sourceId), String(targetId)];
         this._.linksMap.delete([sourceId, targetId]);
         const link = this.findLinkById(sourceId, targetId);
+        const links = this.vars.links;
+        links.splice(links.indexOf(link), 1);
         this.eraseChild(link);
-        this.vars.links.splice(this.vars.links.indexOf(link), 1);
         return this;
     },
     __getNodeWithMethod(node, method) {

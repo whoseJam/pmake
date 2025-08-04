@@ -64,7 +64,7 @@ export class BaseArray<E, V> extends SD2DNode {
      * @param i - The index of the specific element.
      * @returns The element at the specified index, or undefined if not found.
      */
-    element(i: number): any;
+    element(i: number): E | undefined;
     /**
      * Gets all elements contained within this array component.
      * @returns An array containing all valid elements in this component.
@@ -74,19 +74,18 @@ export class BaseArray<E, V> extends SD2DNode {
      * Gets the last element in this array component.
      * @returns The last element, or undefined if the array is empty.
      */
-    lastElement(): E;
+    lastElement(): E | undefined;
     /**
      * Gets the first element in this array component.
      * @returns The first element, or undefined if the array is empty.
      */
-    firstElement(): E;
+    firstElement(): E | undefined;
     /**
      * Iterates over each element in this array component.
      * @param callback - A function to execute for each element.
      * @returns The current component instance for method chaining.
      */
     forEachElement(callback: (element: E, id: number) => void): this;
-
     /**
      * Gets the opacity of a specific element.
      * @param i - The index of the specific element.
