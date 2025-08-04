@@ -18,13 +18,12 @@
         <h2>Exgcd</h2>
         <p>我们知道用Exgcd求解得到一组特解 $x=x_0,y=y_0$ 后，其通解为
             $$
-            \left\{
-            \begin{aligned}
-            x&=x_0+sd_x \\
-            y&=y_0-sd_y
-            \end{aligned}
-            \right.
+            \begin{cases}
+            x=x_0+sd_x \\
+            y=y_0-sd_y
+            \end{cases}
             $$
+            其中 $d_x=\frac{b}{gcd(a,b)},d_y=\frac{a}{gcd(a,b)}$
         </p>
         <p class="fragment">为了保证 $x$ 和 $y$ 都是正整数，我们可以列出如下两个方程
             $$

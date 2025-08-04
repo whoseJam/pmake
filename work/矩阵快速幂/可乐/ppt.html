@@ -7,9 +7,31 @@
     <section>
         <h2>可乐</h2>
         <p>给定一张图，一个机器人在图上移动，每个单位时刻可以选择自爆，向周围某个邻接点移动，站着不动，求 $t$ 个时刻后的行为方案总数</p>
-        <p class="fragment">我们先处理一下自爆的情况，我们新建一个虚拟点 $B$，每个点都向 $B$ 点连一条单向边，$B$ 没有任何出边，那么当从某个原图中的点 $u$ 移动到 $B$ 时，就相当于自爆了</p>
-        <p class="fragment">再处理一下站着不动的情况，我们对每个原图中的点 $u$，都连出一条从自己指向自己的连边，那么站着不动可以视为是走了一条 $u\rightarrow u$ 的边</p>
-        <p class="fragment">至此，问题可以转化为，给定一张图，一个机器人每个单位时刻在图上走一条边，求 $t$ 个时刻后的行为方案总数</p>
+        <div style="display: flex; align-items: center;">
+            <div>
+                <iframe data-animation="./样例解释.js"
+                    style="width: 1000px; height: 200px;"></iframe>
+                <p style="text-align: center; font-size: 20px;">$t=2$</p>
+            </div>
+            <div class="fragment" style="width: 500px;">
+                <ul>
+                    <li>$1\rightarrow bomb$</li>
+                    <li>$1\rightarrow 1\rightarrow bomb$</li>
+                    <li>$1\rightarrow 2\rightarrow bomb$</li>
+                    <li>$1\rightarrow 1\rightarrow 1$</li>
+                    <li>$1\rightarrow 1\rightarrow 2$</li>
+                    <li>$1\rightarrow 2\rightarrow 1$</li>
+                    <li>$1\rightarrow 2\rightarrow 2$</li>
+                    <li>$1\rightarrow 2\rightarrow 3$</li>
+                </ul>
+            </div>
+        </div>
+        <p class="fragment quote" style="margin-top: 0px;">自爆和站着不动有点麻烦</p>
+        <ul>
+            <li class="fragment">处理一下自爆的情况，我们新建一个虚拟点 $B$，每个点都向 $B$ 点连一条单向边，$B$ 没有任何出边，那么当从某个原图中的点 $u$ 移动到 $B$ 时，就相当于自爆了</li>
+            <li class="fragment">处理一下站着不动的情况，我们对每个原图中的点 $u$，都连出一条从自己指向自己的连边，那么站着不动可以视为是走了一条 $u\rightarrow u$ 的边</li>
+        </ul>
+        <p class="fragment">问题可以转化为，给定一张有向图，一个机器人每个单位时刻在图上走一条边，求 $t$ 个时刻后的行为方案总数</p>
     </section>
     <section>
         <h2>可乐</h2>

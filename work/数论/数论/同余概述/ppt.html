@@ -38,10 +38,11 @@
         <h2>同余</h2>
         <p>给定正整数 $m$，若用 $m$ 去除两个整数 $a$ 和 $b$ 所得的余数相同，则称 $a$ 和 $b$ 在模 $m$ 意义下<b>同余</b>，记作 $a\equiv b(mod\ m)$</p>
         <p class="fragment quote">对于一个负数 $a$，其模 $m$ 所得的余数可以被认为是 <code>(a % m + m) % m</code></p>
-        <p class="fragment">如果 $a\equiv b(mod\ m)$，则可以得到下面两个比较显然的结论</p>
-        <ul>
-            <li class="fragment">$m|(a-b)$</li>
-            <li class="fragment">存在某个整数 $k$，使得 $a=b+km$</li>
-        </ul>
+        <p class="fragment">如果 $a\equiv b(mod\ m)$，则 $a$ 和 $b$ 之间相差若干个 $m$</p>
+        <p class="fragment">
+            $$
+            a-b=km
+            $$
+        </p>
     </section>
 </section>

@@ -29,7 +29,7 @@
     </section>
     <section>
         <h2>辗转相减法</h2>
-        <p>早在西汉时期的《九章算术》中就提出可以用辗转相减法来求解：</p>
+        <p>早在西汉时期的《九章算术》中就提出可以用辗转相减法来求解</p>
         <ol>
             <li class="fragment">假设我们要求解 $a$ 和 $b$ 的最大公约数</li>
             <li class="fragment">我们不妨让 $a\ge b$，如果不满足 $a\ge b$，我们可以先交换 $a$ 和 $b$</li>
@@ -37,39 +37,25 @@
             <li class="fragment">重复(1)(2)(3)，递归求解 $a'$ 和 $b$ 的最大公约数</li>
             <li class="fragment">如果发现要求解最大公约数的 $a$ 或 $b$ 变成 $0$ 了，停止算法，此时不为 $0$ 的那个数字即为最大公约数</li>
         </ol>
-        <pre class="fragment"><code data-trim data-line-numbers class="cpp"><script type="text/template">
-            int gcd(int a, int b) {
-                if (a < b) return gcd(b, a);
-                if (!b) return a;
-                return gcd(a - b, b);
-            }
-        </script></code></pre>
-    </section>
-    <section>
-        <h2>辗转相减法正确性证明</h2>
-        <p>假设 $a$ 和 $b$ 的最大公约数为 $G$，那么：</p>
-        <ul>
-            <li>$a=k_aG$</li>
-            <li>$b=k_bG$</li>
-        </ul>
-        <p class="fragment">由于 $a$ 和 $b$ 都是 $G$ 的整数倍，所以无论它们如何作差，得到的结果也一定是 $G$ 的整数倍</p>
-        <p class="fragment">所以按照上述算法得到的答案，一定也是 $G$ 的整数倍，接下来我们来证明一下答案一定是 $G$ 的 $1$ 倍</p>
-        <ul>
-            <li class="fragment">首先答案不可能是 $G$ 的负数倍或者 $0$ 倍，因为每次我们都是选择用大数减小数，不可能减出负数来</li>
-            <li class="fragment">其次答案不可能是 $G$ 的 $k(k\ge 2)$ 倍，如果我们倒推一下的话：
-                <ul>
-                    <li class="fragment">最后一步是 $(kG,0)$</li>
-                    <li class="fragment">倒数第二步是 $(kG,kG)$</li>
-                    <li class="fragment">诶那 $a$ 和 $b$ 的最大公约数在这个情况下应该是 $kG(k\ge 2)$ 呀，与假设矛盾，所以这种情况不应该出现</li>
-                </ul>
-            </li>
-        </ul>
+        <div style="display: flex; align-items: center;">
+            <iframe data-animation="./辗转相减法.js" class="fragment"
+                style="width: 1000px; height: 200px;"></iframe>
+            <codeblock class="fragment">
+                <script type="text/template">
+                    int gcd(int a, int b) {
+                        if (a < b) return gcd(b, a);
+                        if (!b) return a;
+                        return gcd(a - b, b);
+                    }
+                </script>
+            </codeblock>
+        </div>
     </section>
     <section>
         <h2>辗转相除法</h2>
         <p>辗转相除法是对辗转相减法的一种优化</p>
         <p class="fragment">
-            假设我们希望计算 $gcd(50000,6)$，我们观察一下辗转相减法的过程：
+            假设我们希望计算 $gcd(50000,6)$，我们观察一下辗转相减法的过程
         </p>
         <p class="fragment">
             $$
@@ -99,7 +85,7 @@
     <section>
         <h2>辗转相除法</h2>
         <p>基于取模加速减法这个思想，辗转相除法诞生了</p>
-        <p>以下是基于辗转相除法的gcd函数的递归定义：</p>
+        <p>以下是基于辗转相除法的gcd函数的递归定义</p>
         <p class="fragment">
             $$
             gcd(a,b)=
@@ -111,12 +97,18 @@
             \right.
             $$
         </p>
-        <pre class="fragment"><code data-trim data-line-numbers class="cpp"><script type="text/template">
-            int gcd(int a, int b) {
-                if (!b) return a;
-                return gcd(b, a % b);
-            }
-        </script></code></pre>
+        <div style="display: flex; align-items: center;">
+            <iframe data-animation="./辗转相除法.js" class="fragment"
+                style="width: 1000px; height: 200px"></iframe>
+            <codeblock class="fragment">
+                <script type="text/template">
+                    int gcd(int a, int b) {
+                        if (!b) return a;
+                        return gcd(b, a % b);
+                    }
+                </script>
+            </codeblock>
+        </div>
     </section>
     <section>
         <h2>最大公约数</h2>
