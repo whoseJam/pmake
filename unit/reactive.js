@@ -2,19 +2,94 @@ import * as sd from "@/sd";
 
 const svg = sd.svg();
 
-sd.main(async () => {
-    await TestDAGUpdate();
-    // await TestCreateEffectInEffect();
-    // await TestVarsNoChange();
-    // await TestRepeatDependency();
-    // await TestNestedRepeatDependency();
-    // await TestCircleDependency();
-    // await TestChainImpact();
-    // await TestGlobalFreeze();
-    // await TestEffectFreeze();
-    // await TestObjectFreeze();
-    // await TestInitWithGlobalFreeze();
-});
+sd.main(TestLongChainUpdateFreezingVars);
+
+async function TestLongChainUpdateFreezingVars() {
+    const o1 = new sd.SDNode(svg);
+    const o2 = new sd.SDNode(svg);
+    const o3 = new sd.SDNode(svg);
+    o1.vars.merge({
+        a: 1,
+    });
+    o2.vars.merge({
+        b: 2,
+    });
+    o3.vars.merge({
+        c: 3,
+    });
+    o1.effect("test", () => {
+        console.log("test1 triggered!");
+        o2.vars.b = o1.vars.a * 10;
+    });
+    o2.effect("test", () => {
+        console.log("test2 triggered!");
+        o3.vars.c = o2.vars.b * 10;
+    });
+    o2.vars.freeze();
+    await sd.pause();
+    o1.vars.a = 10;
+    await sd.pause();
+    o2.vars.unfreeze();
+}
+
+async function TestTriggerFreezingVars() {
+    const o1 = new sd.SDNode(svg);
+    const o2 = new sd.SDNode(svg);
+    o1.vars.merge({
+        a: 1,
+    });
+    o2.vars.merge({
+        b: 2,
+    });
+    o1.effect("test", () => {
+        console.log("test triggered!");
+        o2.vars.b = o1.vars.a * 10;
+    });
+    await sd.pause();
+    console.log("Freezing o1.vars...");
+    o1.vars.freeze();
+    o1.vars.a = 10;
+    console.log("There shouldn't be any output.");
+    await sd.pause();
+    console.log("Test can be triggered!");
+    o1.vars.unfreeze();
+}
+
+async function TestNestedVarsFreeze() {
+    const o1 = new sd.SDNode(svg);
+    const o2 = new sd.SDNode(svg);
+    o1.vars.merge({
+        a: {
+            b: 1,
+            c: 2,
+        },
+    });
+    o1.vars.watch("a.b", nb => console.log("new b=", nb));
+    o1.vars.watch("a.c", nc => console.log("new c=", nc));
+    o1.vars.freeze();
+    o1.vars.a.b = 100;
+    console.log("We changed b, but freezing, so there shouldn't be any output.");
+    await sd.pause();
+    console.log("Now unfreeze.");
+    o1.vars.unfreeze();
+}
+
+async function TestVarsFreeze() {
+    const o1 = new sd.SDNode(svg);
+    const o2 = new sd.SDNode(svg);
+    o1.vars.merge({
+        a: 1,
+        b: 2,
+    });
+    o1.vars.watch("a", na => console.log("new a=", na));
+    o1.vars.watch("b", nb => console.log("new b=", nb));
+    o1.vars.freeze();
+    o1.vars.a = 100;
+    console.log("We changed a, but freezing, so there shouldn't be any output.");
+    await sd.pause();
+    console.log("Now unfreeze.");
+    o1.vars.unfreeze();
+}
 
 async function TestCreateEffectInEffect() {
     const a = new sd.SDNode(svg);

@@ -126,12 +126,14 @@ Object.assign(SDNode.prototype, {
 
     freeze() {
         this._.freezing++;
-        for (const key in this._.updaters) this._.updaters[key].freeze();
+        // for (const key in this._.updaters) this._.updaters[key].freeze();
+        this.vars.freeze();
         return this;
     },
     unfreeze() {
         this._.freezing--;
-        for (const key in this._.updaters) this._.updaters[key].unfreeze();
+        // for (const key in this._.updaters) this._.updaters[key].unfreeze();
+        this.vars.unfreeze();
         return this;
     },
     freezing() {
