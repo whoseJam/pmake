@@ -6,7 +6,7 @@ const data = [
     [2, 1, 4],
     [4, 3, 8],
     [8, 6, 9],
-    [6, 5, 7]
+    [6, 5, 7],
 ];
 const fa = sd.make1d(100);
 const ch = sd.make2d(100, 2);
@@ -28,22 +28,22 @@ sd.init(() => {
         if (rc) link(cur, rc, 1);
     }
     function link(x, y, flg) {
-        fa[y] = x; ch[x][flg] = y;
+        fa[y] = x;
+        ch[x][flg] = y;
         if (flg === 0) tree.leftChild(x, y);
         else tree.rightChild(x, y);
     }
-    
+
     for (let i = 1; i <= n; i++) {
         tree.element(i).onClick(() => {
             sd.inter(async () => {
                 await rotate(i);
             });
-        })
+        });
     }
-})
+});
 
-sd.main(async () => {
-})
+sd.main(async () => {});
 
 async function rotate(x) {
     const y = fa[x];
@@ -52,14 +52,14 @@ async function rotate(x) {
         return;
     }
     const z = fa[y];
-    const L = (ch[y][0] === x) ? 0 : 1;
-    const R = L^1;
+    const L = ch[y][0] === x ? 0 : 1;
+    const R = L ^ 1;
     px.startAnimate().moveTo(x).endAnimate();
     py.startAnimate().moveTo(y).endAnimate();
     if (z) pz.startAnimate().moveTo(z).endAnimate();
-    
+
     await sd.pause();
-    
+
     tree.startAnimate().freeze();
     if (z) tree.cut(z, y);
     tree.cut(y, x);
@@ -89,6 +89,9 @@ async function rotate(x) {
         if (ch[z][0] === y) ch[z][0] = x;
         else ch[z][1] = x;
     }
-    fa[x] = z; fa[y] = x; fa[ch[x][R]] = y;
-    ch[y][L] = ch[x][R]; ch[x][R] = y;
+    fa[x] = z;
+    fa[y] = x;
+    fa[ch[x][R]] = y;
+    ch[y][L] = ch[x][R];
+    ch[x][R] = y;
 }

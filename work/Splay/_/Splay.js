@@ -1,7 +1,7 @@
 import * as sd from "@/sd";
 
 /**
- * @param {sd.BinaryTree} tree
+ * @param {sd.Splay} tree
  * @param {number|string} x
  * @param {Array<number>} fa
  * @param {Array<[number, number]>} ch
@@ -9,10 +9,10 @@ import * as sd from "@/sd";
 export async function rotate(tree, x, fa, ch) {
     const cutAnimations = [];
     const linkAnimations = [];
-    const y = fa[x],
-        z = fa[y],
-        L = ch[y][0] === x ? 0 : 1,
-        R = L ^ 1;
+    const y = fa[x];
+    const z = fa[y];
+    const L = ch[y][0] === x ? 0 : 1;
+    const R = L ^ 1;
     if (ch[z][0] === y) {
         const chz0 = ch[z][0];
         if (chz0) cutAnimations.push(() => tree.cut(z, chz0));
@@ -36,7 +36,6 @@ export async function rotate(tree, x, fa, ch) {
     ch[y][L] = ch[x][R];
     linkAnimations.push(() => tree.link(x, y, R));
     ch[x][R] = y;
-
     await sd.pause();
     tree.startAnimate().freeze();
     cutAnimations.forEach(animation => animation());
@@ -48,7 +47,7 @@ export async function rotate(tree, x, fa, ch) {
 }
 
 /**
- * @param {sd.BinaryTree}
+ * @param {sd.Splay}
  * @param {Array<number>} fa
  * @param {Array<[number, number]>} ch
  */
@@ -72,7 +71,7 @@ export async function findPrev(tree, fa, ch) {
 }
 
 /**
- * @param {sd.BinaryTree} tree
+ * @param {sd.Splay} tree
  * @param {Array<number>} fa
  * @param {Array<[number, number]>} ch
  * @returns {number|string}
@@ -85,7 +84,7 @@ export function findPrevWithoutAnimation(tree, fa, ch) {
 }
 
 /**
- * @param {sd.BinaryTree} tree
+ * @param {sd.Splay} tree
  * @param {Array<number>} fa
  * @param {Array<[number, number]>} ch
  * @returns {number|string}

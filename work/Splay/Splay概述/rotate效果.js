@@ -4,8 +4,8 @@ import { rotate } from "../_/Splay";
 const svg = sd.svg();
 const C = sd.color();
 const tree = new sd.Splay(svg);
-const root = 4,
-    n = 8;
+const root = 4;
+const n = 8;
 const links = [
     [4, 3, 5],
     [3, 1, 0],

@@ -303,9 +303,8 @@ Object.assign(BaseTree.prototype, {
     newLinkFromExistElement() {
         ErrorLauncher.notImplementedYet("newLinkFromExistElement", this.type());
     },
-    cut(x, y) {
-        this.__eraseLink(x, y);
-        return this;
+    cut(sourceId, targetId) {
+        return this.erase(sourceId, targetId);
     },
     erase() {
         if (arguments.length === 1) {
