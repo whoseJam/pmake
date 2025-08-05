@@ -368,7 +368,7 @@ export function reactive(object: { [key: string]: any }) {
             freezing++;
             for (const key in object) {
                 const value = object[key];
-                if (typeof value.freeze === "function") value.freeze();
+                if (value && typeof value.freeze === "function") value.freeze();
             }
         },
         freezing() {
@@ -378,9 +378,12 @@ export function reactive(object: { [key: string]: any }) {
             freezing--;
             for (const key in object) {
                 const value = object[key];
-                if (typeof value.unfreeze === "function") value.unfreeze();
+                if (value && typeof value.unfreeze === "function") value.unfreeze();
             }
-            if (freezing === 0) freezingList.forEach(callback => callback());
+            if (freezing === 0) {
+                freezingList.forEach(callback => callback());
+                freezingList.splice(0);
+            }
         },
     });
     return proxy;
