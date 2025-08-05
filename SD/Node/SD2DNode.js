@@ -129,6 +129,29 @@ Object.assign(SD2DNode.prototype, {
         if (my === undefined) return this.ky(1);
         return this.y(my - this.height());
     },
+    boundingBox(box) {
+        if (arguments.length === 0) {
+            return {
+                x: this.x(),
+                y: this.y(),
+                width: this.width(),
+                height: this.height(),
+            };
+        }
+        if (arguments.length === 4)
+            return this.boundingBox({
+                x: arguments[0],
+                y: arguments[1],
+                width: arguments[2],
+                height: arguments[3],
+            });
+        this.freeze();
+        this.width(box.width);
+        this.height(box.height);
+        this.x(box.x).y(box.y);
+        this.unfreeze();
+        return this;
+    },
 });
 
 SD2DNode.prototype.position = SD2DNode.prototype.pos;

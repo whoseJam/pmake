@@ -39,10 +39,8 @@ export default function MathJax2() {
             const revealOptions = reveal.getConfig().mathjax2 || reveal.getConfig().math || {};
             const options = { ...DEFAULT_OPTIONS, ...revealOptions };
             const script = options.mathjax || "https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js";
-            console.log("script=", script);
             const config = options.config || DEFAULT_CONFIG;
             const url = script + "?config=" + config;
-            // const url = options.mathjax;
 
             options.tex2jax = { ...DEFAULT_OPTIONS.tex2jax, ...revealOptions.tex2jax };
             options.mathjax = options.config = null;

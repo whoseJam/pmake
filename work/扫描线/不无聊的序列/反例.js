@@ -33,10 +33,14 @@ sd.main(async () => {
         arr.startAnimate().color(l, r, C.green).endAnimate();
         await sd.pause();
         coord.startAnimate();
-        const rect = coord
-            .drawRect(l, i, i - l + 1, r - i + 1)
+        new sd.Rect(svg)
+            .boundingBox(coord.globalRect(l, i, i - l + 1, r - i + 1))
+            .opacity(0)
             .fillOpacity(0.5)
-            .fill(C.green);
+            .fill(C.green)
+            .startAnimate()
+            .opacity(1)
+            .endAnimate();
         coord.endAnimate();
         await sd.pause();
         braceL.startAnimate().opacity(0).endAnimate();

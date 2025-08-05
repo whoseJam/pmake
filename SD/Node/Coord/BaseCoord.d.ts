@@ -23,4 +23,5 @@ export class BaseCoord extends SD2DNode {
     globalY(v: number): number;
     globalK(x: number, y: number): number;
     globalK(v: [number, number]): number;
+    globalRect(x: number, y: number, width: number, height: number): { x: number; y: number; width: number; height: number };
 }

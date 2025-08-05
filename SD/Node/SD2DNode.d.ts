@@ -2,6 +2,7 @@ import { SDNode } from "@/Node/SDNode";
 
 type XLocator = "x" | "cx" | "mx";
 type YLocator = "y" | "cy" | "my";
+type BoundingBox = { x: number; y: number; width: number; height: number };
 
 export class SD2DNode extends SDNode {
     /**
@@ -213,4 +214,7 @@ export class SD2DNode extends SDNode {
      * @returns The current component instance for method chaining.
      */
     my(my: number): this;
+    boudningBox(): BoundingBox;
+    boundingBox(box: BoundingBox): this;
+    boundingBox(x: number, y: number, width: number, height: number): this;
 }

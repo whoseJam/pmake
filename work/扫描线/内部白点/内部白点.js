@@ -65,7 +65,6 @@ sd.main(async () => {
         while (r + 1 < data.length && data[r + 1].x === data[l].x) r++;
         if (l < r) {
             sd.Link(data[l].dot, data[r].dot).opacity(0.2).startAnimate().pointStoT().endAnimate();
-            console.log(data[l], data[r]);
             nodes.push({
                 x: data[l].x,
                 y: data[l].y,

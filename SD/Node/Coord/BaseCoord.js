@@ -65,4 +65,12 @@ Object.assign(BaseCoord.prototype, {
         if (arguments.length === 1) return this.globalK(x[0], x[1]);
         return (this.globalY(x, y) - this.globalY(0, 0)) / (this.globalX(x, y) - this.globalX(0, 0));
     },
+    globalRect(x, y, width, height) {
+        return {
+            x: this.globalX(x),
+            y: this.globalY(y + height),
+            width: this.globalX(x + width) - this.globalX(x),
+            height: this.globalY(y) - this.globalY(y + height),
+        };
+    },
 });
