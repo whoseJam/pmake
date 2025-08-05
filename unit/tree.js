@@ -2,16 +2,59 @@ import * as sd from "@/sd";
 
 const svg = sd.svg();
 const C = sd.color();
+const V = sd.vec();
 
-sd.main(TestBasic);
+sd.main(TestChristmasTree);
+
+async function TestChristmasTree() {
+    const pen = new sd.PathPen(svg);
+    const cc = Math.PI * 2;
+    pen.MoveTo(V.makeComplex(15, 0))
+        .LinkTo(V.makeComplex(15, cc / 2))
+        .LinkTo(V.makeComplex(19, cc / 2 / 3))
+        .LinkTo(V.makeComplex(11, -cc / 2 / 2))
+        .LinkTo(V.makeComplex(19, (cc / 2 / 3) * 2))
+        .LinkTo(V.makeComplex(15, 0));
+    function makeStar() {
+        return new sd.Path(svg).d(pen.toString()).color(C.yellow).fillOpacity(1);
+    }
+    const tree = new sd.Tree(svg).x(100).y(100).width(600);
+    function build(x, l, r) {
+        tree.newNode(x, " ");
+        tree.color(x, C.GREEN);
+        if (l === r) return;
+        const mid = (l + r) >> 1;
+        build(x * 2, l, mid);
+        build(x * 2 + 1, mid + 1, r);
+        tree.link(x, x * 2);
+        tree.element(x, x * 2).color(C.orange);
+        tree.link(x, x * 2 + 1);
+        tree.element(x, x * 2 + 1).color(C.orange);
+    }
+    build(1, 1, 8);
+    tree.newNode(16, " ");
+    tree.newNode(17, " ");
+    tree.link(11, 16);
+    tree.link(12, 17);
+    tree.color(16, C.RED);
+    tree.color(17, C.RED);
+    tree.color(11, 16, C.red);
+    tree.color(12, 17, C.red);
+    tree.value(1, makeStar());
+    tree.value(5, makeStar());
+    tree.value(13, makeStar());
+}
 
 async function TestChangeRoot() {
     const tree = new sd.Tree(svg).x(100).y(100);
-    tree.link(1, 2).link(1, 3).link(2, 4);
-    await sd.pause();
-    tree.startAnimate().root(3).endAnimate();
-    await sd.pause();
-    tree.startAnimate().root(2).endAnimate();
+    tree.link(1, 2).link(1, 3).link(2, 4).link(2, 5).link(5, 6);
+    tree.forEachNode((node, i) => {
+        node.onClick(() => {
+            sd.inter(async () => {
+                tree.startAnimate().root(i).endAnimate();
+            });
+        });
+    });
 }
 
 async function TestLayout() {
