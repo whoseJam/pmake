@@ -64,6 +64,15 @@ let globalAllowUpdate = true;
 let globalActiveEffect = undefined;
 let globalFreeze = 0;
 
+function valueHasChanged(object: any, key: string, vn: any, vo: any) {
+    const precise_ = objectsMap.get(object).precise.get(key);
+    if (typeof vn === "number" && typeof vo === "number") {
+        if (typeof precise_ === "function") return precise_(vn, vo);
+        return Math.abs(vn - vo) > 1e-2;
+    }
+    return vn !== vo;
+}
+
 class Effect {
     callback: () => void;
     count: number;
@@ -266,37 +275,39 @@ export function unfreeze() {
     if (globalFreeze === 0) transferMeltingEffect();
 }
 
-export function setPrecise(proxy: ProxyHandler<any>, key: string, type: (v1: number, v2: number) => boolean) {
+export function setPrecise(proxy: ProxyHandler<any>, key: string, type: (vn: number, vo: number) => boolean) {
     const object = proxiesMap.get(proxy);
     const objectManager = objectsMap.get(object);
     objectManager.precise.set(key, type);
 }
 
-export function reactive(object: any) {
+function getPrecise(proxy: ProxyHandler<any>, key: string) {
+    const object = proxiesMap.get(proxy);
+    const objectManager = objectsMap.get(object);
+    return objectManager.precise.get(key);
+}
+
+export function reactive(object: { [key: string]: any }) {
     if (objectsMap.has(object)) return objectsMap.get(object).proxy;
-    let associated = {};
+    let freezing = 0;
+    const freezingList: Array<() => void> = [];
+    const watchingList: { [key: string]: Array<(vn: any, vo: any) => void> } = {};
     const proxy = new Proxy(object, {
         get(object, key: string, receiver) {
             const value = Reflect.get(object, key, receiver);
             traceInput(object, key, value);
             if (value instanceof SDNode) return value;
-            if (typeof value === "object") {
-                return reactive(value);
-            }
+            if (typeof value === "object") return reactive(value);
             return value;
         },
-        set(object, key: string, value, receiver) {
+        set(object, key: string, value: any, receiver) {
             if (proxiesMap.get(object)) object = proxiesMap.get(object);
             if (proxiesMap.get(value)) value = proxiesMap.get(value);
             traceOutput(object, key, value);
-            const newValue = value;
-            const oldValue = Reflect.get(object, key, receiver);
-            if (associated[key]) {
-                if (hasChanged(oldValue, newValue) || (Array.isArray(object) && key === "length")) {
-                    associated[key].forEach(callback => {
-                        callback(newValue, oldValue);
-                    });
-                }
+            const vn = value;
+            const vo = Reflect.get(object, key, receiver);
+            if (watchingList[key] && valueHasChanged(object, key, vo, vn)) {
+                watchingList[key].forEach(callback => callback(vn, vo));
             }
             Reflect.set(object, key, value, receiver);
             __triggerUpdate(object, key);
@@ -305,65 +316,64 @@ export function reactive(object: any) {
     });
     proxiesMap.set(proxy, object);
     objectsMap.set(object, new ObjectManager(object, proxy));
-    object.watch = function (key: string, callback: (vn: any, vo: any) => void) {
-        if (arguments.length === 0) return associated;
-        const keys = key.split(".");
-        for (let i = 0; i < keys.length; i++) {
-            if (i === keys.length - 1) {
-                if (!associated[keys[i]]) associated[keys[i]] = [];
-                associated[keys[i]].push(callback);
+    Object.assign(object, {
+        watch(key: string, callback: (vn: any, vo: any) => void) {
+            if (arguments.length === 0) return watchingList;
+            const keys = key.split(".");
+            if (keys.length === 1) {
+                if (!watchingList[keys[0]]) watchingList[keys[0]] = [];
+                watchingList[keys[0]].push(callback);
             } else {
-                const str = keys.slice(i + 1).join(".");
-                proxy[keys[i]].watch(str, callback);
+                const keys_ = keys.slice(1).join(".");
+                proxy[keys[0]].watch(keys_, callback);
             }
-        }
-    };
-    object.merge = function (otherObject) {
-        for (let key in otherObject) {
-            object[key] = otherObject[key];
-        }
-    };
-    object.setTogether = function (items) {
-        const objects = [];
-        const keys = [];
-        const callbacks = [];
-        for (const key in items) {
-            let value = items[key];
-            if (proxiesMap.get(object)) object = proxiesMap.get(object);
-            if (proxiesMap.get(value)) value = proxiesMap.get(value);
-            traceOutput(object, key, value);
-            const newValue = value;
-            const oldValue = object[key];
-            object[key] = value;
-            if (associated[key]) {
-                if (hasChanged(oldValue, newValue) || (Array.isArray(object) && key === "length")) {
-                    associated[key].forEach(callback => {
-                        callbacks.push(() => {
-                            callback(newValue, oldValue);
-                        });
-                    });
+        },
+        merge(object_: any) {
+            for (const key in object_) object[key] = object_[key];
+        },
+        setTogether(pairs: { [key: string]: any }) {
+            const objects = [];
+            const keys = [];
+            const callbacks = [];
+            for (const key in pairs) {
+                let value = pairs[key];
+                if (proxiesMap.get(object)) object = proxiesMap.get(object);
+                if (proxiesMap.get(value)) value = proxiesMap.get(value);
+                traceOutput(object, key, value);
+                const vn = value;
+                const vo = object[key];
+                object[key] = value;
+                if (watchingList[key] && valueHasChanged(object, key, vn, vo)) {
+                    watchingList[key].forEach(callback => callbacks.push(() => callback(vn, vo)));
                 }
+                objects.push(object);
+                keys.push(key);
             }
-            objects.push(object);
-            keys.push(key);
-        }
-        callbacks.forEach(callback => {
-            callback();
-        });
-        __triggerUpdates(objects, keys);
-    };
-    object.lpset = function (key: string, value: number) {
-        setPrecise(proxy, key, lowPrecise);
-        proxy[key] = value;
-    };
-    object.mpset = function (key: string, value: number) {
-        setPrecise(proxy, key, mediumPrecise);
-        proxy[key] = value;
-    };
-    object.hpset = function (key: string, value: number) {
-        setPrecise(proxy, key, highPrecise);
-        proxy[key] = value;
-    };
+            callbacks.forEach(callback => callback());
+            __triggerUpdates(objects, keys);
+        },
+        lpset(key: string, value: number) {
+            setPrecise(proxy, key, lowPrecise);
+            proxy[key] = value;
+        },
+        mpset(key: string, value: number) {
+            setPrecise(proxy, key, mediumPrecise);
+            proxy[key] = value;
+        },
+        hpset(key: string, value: number) {
+            setPrecise(proxy, key, highPrecise);
+            proxy[key] = value;
+        },
+        freeze() {
+            freezing++;
+        },
+        unfreeze() {
+            freezing--;
+            if (freezing === 0) {
+            }
+        },
+    });
+
     return proxy;
 }
 

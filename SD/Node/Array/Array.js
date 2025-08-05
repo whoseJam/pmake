@@ -14,6 +14,10 @@ export class Array extends BaseArray {
             y: 0,
             elementWidth: 40,
             elementHeight: 40,
+            ob: {
+                x: 1,
+                y: 2,
+            },
         });
 
         this.effect("array", () => {
@@ -25,6 +29,13 @@ export class Array extends BaseArray {
                     element.height(this.elementHeight());
                 });
             });
+        });
+
+        this.vars.watch("ob.x", nx => {
+            console.log("ob.x=", nx);
+        });
+        this.vars.watch("ob.y", ny => {
+            console.log("ob.y=", ny);
         });
     }
 }
