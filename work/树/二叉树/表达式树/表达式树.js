@@ -21,9 +21,10 @@ sd.main(async () => {
 
 async function build(l, r, prt, dir) {
     function link(x, y, dir, v) {
-        t.newNode(y, v);
-        if (dir === 0) t.startAnimate().leftChild(x, y).endAnimate();
-        else t.startAnimate().rightChild(x, y).endAnimate();
+        t.startAnimate().freeze().newNode(y, v);
+        if (dir === 0) t.leftChild(x, y);
+        else t.rightChild(x, y);
+        t.unfreeze().endAnimate();
     }
     if (l === r) {
         await sd.pause();

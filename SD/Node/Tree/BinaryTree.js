@@ -17,6 +17,7 @@ export class BinaryTree extends Tree {
         this.uneffect("tree");
 
         this.effect("tree", () => {
+            console.log("binary tree update");
             const layout = this.layout();
             const [x_, y_] = this.pos("x", "y");
             const gap_ = this.layerGap();

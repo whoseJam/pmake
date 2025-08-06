@@ -60,6 +60,8 @@ const objectsMap: WeakMap<any, ObjectManager> = new WeakMap(); // object -> Obje
 const effectQueue = new Queue("Effect");
 const freezeQueue = new Queue("Freeze");
 const afterEffects: Array<Array<() => void>> = [];
+const globalUpdateKeys = [];
+const globalUpdateObjects = [];
 let globalAllowUpdate = true;
 let globalActiveEffect = undefined;
 let globalFreeze = 0;
@@ -278,17 +280,18 @@ export function setPrecise(proxy: ProxyHandler<any>, key: string, type: (vn: num
     objectManager.precise.set(key, type);
 }
 
-export function reactive(object: { [key: string]: any }) {
+export function reactive(object: { [key: string]: any }, fatherObject?: any) {
     if (objectsMap.has(object)) return objectsMap.get(object).proxy;
-    let freezing = 0;
-    const freezingList: Array<() => void> = [];
+    let freezing = fatherObject ? fatherObject.freezing() : 0;
+    const freezingWatches: Array<() => void> = [];
+    const freezingKeys: Array<string> = [];
     const watchingList: { [key: string]: Array<(vn: any, vo: any) => void> } = {};
     const proxy = new Proxy(object, {
         get(object, key: string, receiver) {
             const value = Reflect.get(object, key, receiver);
             traceInput(object, key, value);
             if (value instanceof SDNode) return value;
-            if (typeof value === "object") return reactive(value);
+            if (typeof value === "object") return reactive(value, object);
             return value;
         },
         set(object, key: string, value: any, receiver) {
@@ -299,11 +302,11 @@ export function reactive(object: { [key: string]: any }) {
             const vo = Reflect.get(object, key, receiver);
             if (watchingList[key] && valueHasChanged(object, key, vo, vn)) {
                 const triggerWatching = () => watchingList[key].forEach(callback => callback(vn, vo));
-                if (object.freezing() > 0) freezingList.push(triggerWatching);
+                if (object.freezing() > 0) freezingWatches.push(triggerWatching);
                 else triggerWatching();
             }
             Reflect.set(object, key, value, receiver);
-            if (object.freezing() > 0) freezingList.push(() => triggerUpdate(object, key));
+            if (object.freezing() > 0) freezingKeys.push(key);
             else triggerUpdate(object, key);
             return true;
         },
@@ -345,8 +348,8 @@ export function reactive(object: { [key: string]: any }) {
             }
             const triggerWatching = () => callbacks.forEach(callback => callback());
             if (object.freezing() > 0) {
-                freezingList.push(triggerWatching);
-                freezingList.push(() => triggerUpdates(objects, keys));
+                freezingWatches.push(triggerWatching);
+                for (const key of keys) freezingKeys.push(key);
             } else {
                 triggerWatching();
                 triggerUpdates(objects, keys);
@@ -381,8 +384,20 @@ export function reactive(object: { [key: string]: any }) {
                 if (value && typeof value.unfreeze === "function") value.unfreeze();
             }
             if (freezing === 0) {
-                freezingList.forEach(callback => callback());
-                freezingList.splice(0);
+                freezingWatches.forEach(callback => callback());
+                freezingWatches.splice(0);
+                if (freezingKeys.length > 0) {
+                    for (const key of freezingKeys) {
+                        globalUpdateObjects.push(object);
+                        globalUpdateKeys.push(key);
+                    }
+                    freezingKeys.splice(0);
+                }
+            }
+            if (!fatherObject && globalUpdateObjects.length > 0) {
+                triggerUpdates(globalUpdateObjects, globalUpdateKeys);
+                globalUpdateObjects.splice(0);
+                globalUpdateKeys.splice(0);
             }
         },
     });
