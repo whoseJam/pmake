@@ -6,27 +6,31 @@ const I = sd.input();
 const R = sd.rule();
 const n = 3;
 const m = 5;
-const data = I.readIntMatrix(`
+const data = I.readIntMatrix(
+    `
 20 21 20 20 21
 19 22 20 60 80
-80 90 80 70 90`, n, m);
+80 90 80 70 90`,
+    n,
+    m
+);
 const grid = new sd.Grid(svg).n(n).m(m).startN(1).startM(1);
 const D = [
     [0, 1],
     [0, -1],
     [1, 0],
-    [-1, 0]
+    [-1, 0],
 ];
 const links = [];
 const fa = sd.make2d(10, 10, 0);
 const focus = [
     [1, 1],
     [3, 1],
-    [3, 5]
+    [3, 5],
 ];
 
 sd.init(() => {
-    sd.Label(grid, "T=5", "tc")
+    sd.Label(grid, "T=5", "tc");
     for (let i = 1; i <= n; i++) {
         for (let j = 1; j <= m; j++) {
             fa[(i - 1) * m + j] = (i - 1) * m + j;
@@ -41,7 +45,7 @@ sd.init(() => {
                         y1: j,
                         x2: ni,
                         y2: nj,
-                        v: d
+                        v: d,
                     });
                 }
             }
@@ -49,8 +53,8 @@ sd.init(() => {
     }
     focus.forEach(f => {
         sd.Focus(grid).focus(f[0], f[1]);
-    })
-})
+    });
+});
 
 sd.main(async () => {
     const sortedLinks = links.sort((a, b) => a.v - b.v);
@@ -63,11 +67,11 @@ sd.main(async () => {
             sd.Link(t1, t2).stroke(C.red).strokeWidth(4).opacity(0).startAnimate().opacity(1).endAnimate();
         }
     }
-})
+});
 
 function getFa(x) {
     if (fa[x] === x) return fa[x];
-    return fa[x] = getFa(fa[x]);
+    return (fa[x] = getFa(fa[x]));
 }
 
 function Merge(x1, y1, x2, y2) {

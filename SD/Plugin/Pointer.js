@@ -161,8 +161,6 @@ export function Pointer(target, text = "", direction = "b", pointerGap = 3, leng
 
     self.value(text);
 
-    console.log("text=", text, "self.value=", self.value());
-
     return self;
 }
 

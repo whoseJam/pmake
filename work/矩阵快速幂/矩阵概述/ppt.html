@@ -102,7 +102,7 @@
                     c.cols = b.cols;
                     for (int i = 0; i < c.rows; i++)
                         for (int j = 0; j < c.cols; j++) 
-                            for (int k = 0; k < c.cols; k++) 
+                            for (int k = 0; k < a.cols; k++) 
                                 c.v[i][j] += a.v[i][k] * b.v[k][j];
                     return c;
                 }

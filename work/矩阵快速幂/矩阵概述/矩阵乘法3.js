@@ -61,7 +61,10 @@ sd.main(async () => {
             math.startAnimate().text(sum).cx(cx).color(C.red).endAnimate();
             await sd.pause();
             matrix3.startAnimate();
-            matrix3.element(i, j).text(sum, [[math, sum]]);
+            matrix3
+                .element(i, j)
+                .text(sum, [[math, sum]])
+                .color(C.black);
             matrix3.endAnimate();
             matrix1.startAnimate();
             matrix2.startAnimate();

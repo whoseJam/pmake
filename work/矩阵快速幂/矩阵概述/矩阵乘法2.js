@@ -51,7 +51,10 @@ sd.main(async () => {
             await sd.pause();
             matrix3.element(i, j).fontSize(15);
             matrix3.startAnimate();
-            matrix3.element(i, j).text(ans, [[math, ans]]);
+            matrix3
+                .element(i, j)
+                .text(ans, [[math, ans]])
+                .color(C.black);
             matrix3.endAnimate();
             matrix1.startAnimate();
             matrix2.startAnimate();
