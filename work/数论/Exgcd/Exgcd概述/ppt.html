@@ -111,29 +111,33 @@
         <p>通解形式为
             $$
             \begin{cases}
-            x&=x_0+s\frac{b}{gcd(a,b)} \\
-            y&=y_0-s\frac{a}{gcd(a,b)}
+            x=x_0+s\frac{b}{gcd(a,b)} \\
+            y=y_0-s\frac{a}{gcd(a,b)}
             \end{cases}
             $$
             其中 $s$ 是任意整数
         </p>
-        <p class="fragment quote" style="font-size: 15px;">
-            $$
-            \begin{aligned}
-            a(x_0+\frac b {gcd(a,b)})+b(y_0-\frac a {gcd(a,b)})&=ax_0+by_0 \\
-            &=c
-            \end{aligned}
-            $$
-        </p>
-        <codeblock class="fragment">
-            <script type="text/template">
-                void Solve(int a, int b, int c) {
-                    // 求解 ax + by = c 的一组特解为 (x, y)
-                    int xs = x + s * (b / d);
-                    int ys = y - s * (a / d);
-                    也是 ax + by = c 的一组特解;
-                }
-            </script>
-        </codeblock>
+        <div style="display: flex; align-items: center;">
+            <p class="fragment quote" style="font-size: 20px; margin-right: 40px;">
+                $$
+                \begin{aligned}
+                answer&=a(x_0+\frac b {gcd(a,b)})+b(y_0-\frac a {gcd(a,b)}) \\
+                &=ax_0+\frac{ab}{gcd(a,b)}+by_0-\frac{ab}{gcd(a,b)} \\
+                &=ax_0+by_0 \\
+                &=c
+                \end{aligned}
+                $$
+            </p>
+            <codeblock class="fragment">
+                <script type="text/template">
+                    void Solve(int a, int b, int c) {
+                        // 求解 ax + by = c 的一组特解为 (x, y)
+                        int xs = x + s * (b / d);
+                        int ys = y - s * (a / d);
+                        也是 ax + by = c 的一组特解;
+                    }
+                </script>
+            </codeblock>
+        </div>
     </section>
 </section>
