@@ -18,6 +18,7 @@ export class Pile extends BaseArray {
 
         this.effect("array", () => {
             this.forEachElement((element, i) => {
+                i = this.__idx(i);
                 this.tryUpdate(element, () => {
                     element.width(this.elementWidth());
                     element.height(this.elementHeight());

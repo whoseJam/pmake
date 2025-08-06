@@ -18,6 +18,7 @@ export class Array extends BaseArray {
 
         this.effect("array", () => {
             this.forEachElement((element, i) => {
+                i = this.__idx(i);
                 this.tryUpdate(element, () => {
                     element.x(this.x() + i * this.elementWidth());
                     element.y(this.y());

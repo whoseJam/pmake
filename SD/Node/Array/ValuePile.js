@@ -18,7 +18,8 @@ export class ValuePile extends Pile {
         this.effect("array", () => {
             const align = this.align();
             const justify = this.justify();
-            this.vars.elements.forEach((element, i) => {
+            this.forEachElement((element, i) => {
+                i = this.__idx(i);
                 this.tryUpdate(element, () => {
                     if (justify === "y") element.y(this.y() + this.elementHeight() * i);
                     else if (justify === "cy") element.cy(this.y() + this.elementHeight() * (i + 0.5));

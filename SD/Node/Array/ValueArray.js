@@ -25,9 +25,10 @@ export class ValueArray extends Array {
             const align = this.align();
             const justify = this.justify();
             this.forEachElement((element, i) => {
+                i = this.__idx(i);
                 this.tryUpdate(element, () => {
-                    if (justify === "y") element.x(this.x() + this.elementWidth() * i);
-                    else if (justify === "cy") element.cx(this.x() + this.elementWidth() * (i + 0.5));
+                    if (justify === "x") element.x(this.x() + this.elementWidth() * i);
+                    else if (justify === "cx") element.cx(this.x() + this.elementWidth() * (i + 0.5));
                     else element.mx(this.x() + this.elementWidth() * (i + 1));
                     element[align](this[align]());
                 });
