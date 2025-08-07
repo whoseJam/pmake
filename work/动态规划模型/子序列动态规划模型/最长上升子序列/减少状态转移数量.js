@@ -3,30 +3,30 @@ import { bucketOptimize } from "../_/BucketOptimize";
 
 const svg = sd.svg();
 const C = sd.color();
-const charset = "cba";
-const str = "accbabbaac";
+const maxValue = 6;
+const data = [2, 1, 4, 3, 2, 5, 6, 4];
 const arr = new sd.Array(svg).x(100).y(200).start(1);
 let firstBucket;
 
 sd.init(() => {
-    arr.pushArray(str);
+    arr.pushArray(data);
 });
 
 sd.main(async () => {
     await sd.pause();
-    sd.Pointer(arr, "i", "t").startAnimate().moveTo(str.length).endAnimate();
+    sd.Pointer(arr, "i", "t").startAnimate().moveTo(data.length).endAnimate();
     await sd.pause();
     const pj = sd.Pointer(arr, "j", "t");
     for (let i = 1; i < arr.length(); i++) {
         arr.startAnimate();
         pj.moveTo(i);
-        arr.color(i, arr.text(i) !== "b" ? C.green : C.red);
+        arr.color(i, arr.intValue(i) < arr.intValue(arr.end()) ? C.green : C.red);
         arr.endAnimate();
     }
     await sd.pause();
     pj.startAnimate().moveTo(null).endAnimate();
     await sd.pause();
-    await bucketOptimize(arr, str.length, {
+    await bucketOptimize(arr, data.length, {
         onCreateFirstBucket,
         onUpdateBucket,
         onUpdateCurrent,
@@ -34,10 +34,10 @@ sd.main(async () => {
 });
 
 async function onCreateFirstBucket(arr, cx) {
-    const stk = new sd.Stack(svg).elementWidth(15).elementHeight(15).resize(charset.length);
+    const stk = new sd.Pile(svg).elementWidth(15).elementHeight(15).resize(maxValue).start(1);
     stk.cx(cx).my(arr.y() - 5);
-    for (let i = 0; i < charset.length; i++) {
-        const lb = sd.Label(stk.element(i), charset[i], "lc", 10, 3);
+    for (let i = 1; i <= maxValue; i++) {
+        sd.Label(stk.element(i), i, "lc", 10, 3);
     }
     stk.opacity(0).startAnimate().opacity(1).endAnimate();
     firstBucket = stk;
@@ -46,8 +46,8 @@ async function onCreateFirstBucket(arr, cx) {
 async function onUpdateBucket(arr, j) {
     await sd.pause();
     const current = arr.element(j);
-    const bucket = firstBucket.element(charIndex(arr.text(j)));
-    const pen = new sd.PathPen(svg).MoveTo(current.pos("cx", "y")).LinkTo(current.cx(), bucket.cy()).LinkTo(bucket.pos("mx", "cy"));
+    const v = arr.intValue(j);
+    const pen = new sd.PathPen(svg).MoveTo(current.pos("cx", "y")).LinkTo(current.cx(), firstBucket.element(v).cy()).LinkTo(firstBucket.element(v).pos("mx", "cy"));
     const link = new sd.Path(svg).d(pen.toString());
     link.startAnimate().pointStoT().endAnimate().arrow();
     await sd.pause();
@@ -57,9 +57,9 @@ async function onUpdateBucket(arr, j) {
 async function onUpdateCurrent(arr, i) {
     await sd.pause();
     const current = arr.element(i);
+    const v = arr.intValue(i);
     const links = [];
-    for (let i = 0; i < charset.length; i++) {
-        if (i === 1) continue;
+    for (let i = 1; i < v; i++) {
         const pen = new sd.PathPen(svg).MoveTo(firstBucket.element(i).pos("mx", "cy")).LinkTo(current.cx(), firstBucket.element(i).cy()).LinkTo(current.pos("cx", "y"));
         const link = new sd.Path(svg).d(pen.toString());
         link.startAnimate().pointStoT().endAnimate().arrow();
@@ -69,10 +69,4 @@ async function onUpdateCurrent(arr, i) {
     links.forEach(link => {
         link.startAnimate().fadeStoT().endAnimate().remove();
     });
-}
-
-function charIndex(a) {
-    if (a === "a") return 2;
-    if (a === "b") return 1;
-    return 0;
 }

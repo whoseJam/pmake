@@ -13,17 +13,7 @@ const hint = new sd.Mathjax(svg, `n=${n},m=${m}`).fontSize(12);
 sd.init(() => {
     hint.cx(arr.cx()).my(arr.y() - 30);
     for (let i = 1; i <= arr.length(); i++) {
-        const idx = i;
-        let cur = 0;
         arr.element(i).childAs("index", new sd.Text(svg, i).fontSize(15), R.aside("tc", 3));
-        arr.element(i).onClick(() => {
-            sd.inter(async () => {
-                cur ^= 1;
-                arr.startAnimate()
-                    .color(idx, cur ? C.orange : C.white)
-                    .endAnimate();
-            });
-        });
     }
 });
 

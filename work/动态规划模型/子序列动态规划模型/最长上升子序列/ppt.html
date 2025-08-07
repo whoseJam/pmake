@@ -14,12 +14,42 @@
     <section>
         <h2>最长上升子序列</h2>
         <p>设 $f(i)$ 表示以 $a_i$ 为结尾的最长上升子序列的长度</p>
+        <iframe data-animation="./状态转移.js"
+            style="width: 1000px; height: 200px;"></iframe>
+        <p>子序列中的最后一个元素为 $a_i$，考虑倒数第二个元素为 $a_j$...</p>
         <p class="fragment">
             $$
-            f(i)=\mathop{max}_{\begin{aligned}j&\le i\\ a_j&\lt a_i\end{aligned}}\{f(j)\}+1
+            f(i)=\mathop{max}_{\begin{aligned}j&\lt i\\ a_j&\lt a_i\end{aligned} }\{f(j)+1\}
             $$
         </p>
-        <iframe data-animation="./最长上升子序列.js" class="fragment"
-            style="width: 1000px; height: 450px;"></iframe>
+    </section>
+    <section>
+        <h2>最长上升子序列</h2>
+        <p>
+            $$
+            f(i)=\mathop{max}_{\begin{aligned}j&\lt i\\ a_j&\lt a_i\end{aligned} }\{f(j)+1\}
+            $$
+        </p>
+        <iframe data-animation="./最长上升子序列.js"
+            style="width: 1000px; height: 500px;"></iframe>
+    </section>
+    <section>
+        <h2>最长上升子序列</h2>
+        <p>
+            $$
+            f(i)=\mathop{max}_{\begin{aligned}j&\lt i\\ a_j&\lt a_i\end{aligned} }\{f(j)+1\}
+            $$
+        </p>
+        <p>考虑倒数第二个位置的转移可能从什么地方转移过来</p>
+        <iframe data-animation="./减少状态转移数量.js"
+            style="width: 1000px; height: 300px;"></iframe>
+        <codeblock class="fragment">
+            <script type="text/template">
+                for (int i = 1; i <= n; i++) {
+                    f[i] = queryMax(1, a[i] - 1) + 1;
+                    insert(a[i], f[i]);
+                }
+            </script>
+        </codeblock>
     </section>
 </section>

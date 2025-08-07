@@ -8,22 +8,23 @@ const slider = new sd.Slider(svg).min(1).max(8).value(4);
 const sliderText = new sd.Text(svg, m);
 sd.Aside(slider, sliderText, "rc");
 sd.Label(slider, "m", "lc");
-slider.onChange((value) => {
+slider.onChange(value => {
     sliderText.text(value);
     m = value;
     UpdateArray();
-})
+});
 
 sd.init(() => {
     arr.resize(n).start(1);
     sd.Brace(arr).brace(1, n, "b").value("n");
-    slider.width(100).cx(arr.cx()).my(arr.y() - 10);
+    slider
+        .width(100)
+        .cx(arr.cx())
+        .my(arr.y() - 10);
     UpdateArray();
-})
+});
 
-sd.main(async () => {
-
-})
+sd.main(async () => {});
 
 function UpdateArray() {
     for (let i = 1; i <= n; i++) {
