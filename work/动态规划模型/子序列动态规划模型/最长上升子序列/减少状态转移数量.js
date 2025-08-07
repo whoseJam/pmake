@@ -34,20 +34,19 @@ sd.main(async () => {
 });
 
 async function onCreateFirstBucket(arr, cx) {
-    const stk = new sd.Pile(svg).elementWidth(15).elementHeight(15).resize(maxValue).start(1);
-    stk.cx(cx).my(arr.y() - 5);
-    for (let i = 1; i <= maxValue; i++) {
-        sd.Label(stk.element(i), i, "lc", 10, 3);
-    }
-    stk.opacity(0).startAnimate().opacity(1).endAnimate();
-    firstBucket = stk;
+    const pile = new sd.Pile(svg).elementWidth(15).elementHeight(15).resize(maxValue).start(1);
+    pile.cx(cx).my(arr.y() - 5);
+    for (let i = 1; i <= maxValue; i++) sd.Label(stk.element(i), i, "lc", 10, 3);
+    pile.opacity(0).startAnimate().opacity(1).endAnimate();
+    firstBucket = pile;
 }
 
 async function onUpdateBucket(arr, j) {
     await sd.pause();
     const current = arr.element(j);
-    const v = arr.intValue(j);
-    const pen = new sd.PathPen(svg).MoveTo(current.pos("cx", "y")).LinkTo(current.cx(), firstBucket.element(v).cy()).LinkTo(firstBucket.element(v).pos("mx", "cy"));
+    const value = arr.intValue(j);
+    const bucket = firstBucket.element(value);
+    const pen = new sd.PathPen(svg).MoveTo(current.pos("cx", "y")).LinkTo(current.cx(), bucket.cy()).LinkTo(bucket.pos("mx", "cy"));
     const link = new sd.Path(svg).d(pen.toString());
     link.startAnimate().pointStoT().endAnimate().arrow();
     await sd.pause();
@@ -57,12 +56,13 @@ async function onUpdateBucket(arr, j) {
 async function onUpdateCurrent(arr, i) {
     await sd.pause();
     const current = arr.element(i);
-    const v = arr.intValue(i);
+    const value = arr.intValue(i);
     const links = [];
     firstBucket.startAnimate();
-    for (let i = 1; i < v; i++) {
+    for (let i = 1; i < value; i++) {
         firstBucket.color(i, C.blue);
-        const pen = new sd.PathPen(svg).MoveTo(firstBucket.element(i).pos("mx", "cy")).LinkTo(current.cx(), firstBucket.element(i).cy()).LinkTo(current.pos("cx", "y"));
+        const bucket = firstBucket.element(i);
+        const pen = new sd.PathPen(svg).MoveTo(bucket.pos("mx", "cy")).LinkTo(current.cx(), bucket.cy()).LinkTo(current.pos("cx", "y"));
         const link = new sd.Path(svg).d(pen.toString());
         link.startAnimate().pointStoT().endAnimate().arrow();
         links.push(link);

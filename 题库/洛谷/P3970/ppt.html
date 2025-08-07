@@ -31,13 +31,13 @@
         <codeblock class="fragment">
             <script type="text/template">
                 for (int i = 1; i <= n; i++) {
+                    f[i] = 1;
                     set< int > S;
                     for (int j = i - 1; j >= 1; j--) {
                         if (S 中存在 a[j] || a[j] >= a[i]) continue;
                         S.insert(a[j]);
                         f[i] += f[j];
                     }
-                    f[i]++;
                 }
             </script>
         </codeblock>

@@ -14,11 +14,13 @@ sd.init(() => {
         arr.element(i).onClick(() => {
             sd.inter(async () => {
                 const value = arr.value(i);
-                value.startAnimate().opacity(tmp = tmp ^ 1).endAnimate();
-            })
-        })
+                value
+                    .startAnimate()
+                    .opacity((tmp = tmp ^ 1))
+                    .endAnimate();
+            });
+        });
     }
-})
+});
 
-sd.main(async () => {
-})
+sd.main(async () => {});

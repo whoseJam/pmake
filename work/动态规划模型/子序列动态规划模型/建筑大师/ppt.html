@@ -13,23 +13,10 @@
     </section>
     <section>
         <h2>建筑大师</h2>
-        <p>设 $f_i$ 表示以 $a_i$ 为结尾的本质不同的子序列数量</p>
-        <p class="fragment">和上一题一样，我们在转移子序列的时候得保证不算重</p>
-        <p class="fragment">记录 $lst_i$ 为 $a_i$ 上一次出现的位置，则 $f_i$ 能由 $[lst_i,i)$ 范围内的 $f_j$ 转移过来<span class="fragment">，由于本题序列的特殊性，所以</span></p>
-        <p class="fragment">
-            $$
-            lst_i=\begin{cases}
-            i-m & i \gt m \\
-            0 & i \le m
-            \end{cases}
-            $$
-        </p>
-        <p class="fragment">再加上前缀和优化，就和上一题一样了，由于本题存在多次询问，时间复杂度 $O(nq)$ 仍然不可接受</p>
-    </section>
-    <section>
-        <h2>建筑大师</h2>
-        <p>继续研究转移的性质</p>
-        <p class="fragment">设 $s_i$ 是我们维护的前缀和，即 $s_i=\sum_{j\le i}f_j$</p>
+        <p>设 $f_i$ 表示以 $a_i$ 为结尾的本质不同的子序列数量，转移与优化和上一题类似，观察到</p>
+        <iframe data-animation="./减少状态转移数量.js"
+            style="width: 1000px; height: 200px;"></iframe>
+        <p class="fragment">所以我们维护 $\{f\}$ 的前缀和，即可实现转移</p>
         <p class="fragment math-fragment">
             $$
             \begin{aligned}
