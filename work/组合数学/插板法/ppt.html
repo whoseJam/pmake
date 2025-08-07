@@ -28,7 +28,7 @@
             <p>我们在 $n+k-1$ 的元素中选 $k-1$ 个当作板子，剩下的当元素，正好就对应题意</p>
             <div class="quote">
                 <span>例如 $n=5$，$k=3$</span>
-                <iframe data-animation="./插板法2.js" class="fragment"
+                <iframe data-animation="./插板法2.js"
                     style="width: 1000px; height: 100px;"></iframe>
             </div>
         </div>
@@ -39,7 +39,7 @@
         <p>假设有 $n$ 个元素，把它们分成 $k$ 组，第 $i$ 组至少要分到 $a_i$ 个元素</p>
         <p class="fragment">问一共有多少种方案</p>
         <p class="fragment">先往第 $i$ 个盒子里面塞 $a_i$ 个元素，问题转化为把 $n-\sum a_i$ 个元素塞进 $k$ 个盒子里面，每个盒子可以为空，求方案数</p>
-        <p class="fragment">那么答案就是：
+        <p class="fragment">那么答案就是
             $$
             C_{n-\sum a_i +k-1}^{k-1}
             $$

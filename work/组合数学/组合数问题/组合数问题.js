@@ -8,9 +8,7 @@ const n = 5;
 const k = 2;
 sd.Label(grid, `k=${2}`, "lc", 25);
 
-sd.init(() => {});
-
-sd.main(async () => {
+sd.init(() => {
     c[0][0] = 1;
     grid.insert(0, 0, 1);
     for (let i = 1; i <= n; i++) {
@@ -20,7 +18,17 @@ sd.main(async () => {
             grid.insert(i, j, c[i][j]);
         }
     }
+    const focus = sd.Focus(grid).clickable(false);
+    grid.forEachElement((element, i, j) => {
+        element.onClick(() => {
+            sd.inter(async () => {
+                focus.startAnimate().focus(0, 0, i, j).endAnimate();
+            });
+        });
+    });
+});
 
+sd.main(async () => {
     await sd.pause();
     grid.startAnimate();
     for (let i = 0; i <= n; i++) {
@@ -31,12 +39,13 @@ sd.main(async () => {
         }
     }
     grid.endAnimate();
-
-    const focus = sd.Focus(grid);
-    while (true) {
-        await sd.pause();
-        const x = sd.rand(0, n);
-        const y = sd.rand(0, n);
-        focus.startAnimate().focus(0, 0, x, y).endAnimate();
+    await sd.pause();
+    grid.startAnimate();
+    for (let i = 0; i <= n; i++) {
+        for (let j = 0; j <= i; j++) {
+            if (c[i][j] % k === 0) grid.text(i, j, 1);
+            else grid.text(i, j, 0);
+        }
     }
+    grid.endAnimate();
 });
