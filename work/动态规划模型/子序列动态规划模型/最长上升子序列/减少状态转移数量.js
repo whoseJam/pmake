@@ -59,12 +59,15 @@ async function onUpdateCurrent(arr, i) {
     const current = arr.element(i);
     const v = arr.intValue(i);
     const links = [];
+    firstBucket.startAnimate();
     for (let i = 1; i < v; i++) {
+        firstBucket.color(i, C.blue);
         const pen = new sd.PathPen(svg).MoveTo(firstBucket.element(i).pos("mx", "cy")).LinkTo(current.cx(), firstBucket.element(i).cy()).LinkTo(current.pos("cx", "y"));
         const link = new sd.Path(svg).d(pen.toString());
         link.startAnimate().pointStoT().endAnimate().arrow();
         links.push(link);
     }
+    firstBucket.endAnimate();
     await sd.pause();
     links.forEach(link => {
         link.startAnimate().fadeStoT().endAnimate().remove();
