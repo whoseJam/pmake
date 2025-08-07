@@ -11,17 +11,18 @@ sd.init(() => {
             grid.insert(i, j);
         }
     }
-    grid.forEachElement((element) => {
+    grid.forEachElement(element => {
         let flg = 0;
         element.onClick(() => {
             sd.inter(async () => {
                 flg ^= 1;
-                element.startAnimate().color(flg ? C.orange : C.white).endAnimate();
+                element
+                    .startAnimate()
+                    .color(flg ? C.orange : C.white)
+                    .endAnimate();
             });
         });
     });
-})
+});
 
-sd.main(async () => {
-
-})
+sd.main(async () => {});

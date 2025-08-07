@@ -8,9 +8,7 @@ const n = 5;
 const k = 2;
 sd.Label(grid, `k=${2}`, "lc", 25);
 
-sd.init(() => {
-
-})
+sd.init(() => {});
 
 sd.main(async () => {
     c[0][0] = 1;
@@ -18,7 +16,7 @@ sd.main(async () => {
     for (let i = 1; i <= n; i++) {
         for (let j = 0; j <= i; j++) {
             if (j === 0) c[i][j] = 1;
-            else c[i][j] = c[i-1][j-1] + c[i-1][j];
+            else c[i][j] = c[i - 1][j - 1] + c[i - 1][j];
             grid.insert(i, j, c[i][j]);
         }
     }
@@ -34,12 +32,12 @@ sd.main(async () => {
     }
     grid.endAnimate();
 
-    // const focus = sd.Focus(grid);
-    
-    // for (let i = 1; i <= 3; i++) {
-    //     await sd.pause();
-    //     const x = sd.rand(0, n);
-    //     const y = sd.rand(0, n);
-    //     focus.startAnimate().focus(0, 0, x, y).endAnimate();
-    // }
-})
+    const focus = sd.Focus(grid);
+
+    for (let i = 1; i <= 1; i++) {
+        await sd.pause();
+        const x = sd.rand(0, n);
+        const y = sd.rand(0, n);
+        focus.startAnimate().focus(0, 0, x, y).endAnimate();
+    }
+});
