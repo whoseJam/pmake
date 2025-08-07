@@ -33,8 +33,7 @@ sd.main(async () => {
     grid.endAnimate();
 
     const focus = sd.Focus(grid);
-
-    for (let i = 1; i <= 1; i++) {
+    while (true) {
         await sd.pause();
         const x = sd.rand(0, n);
         const y = sd.rand(0, n);
