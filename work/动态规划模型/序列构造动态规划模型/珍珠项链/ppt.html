@@ -7,7 +7,7 @@
         <h2>珍珠项链</h2>
         <p>你需要构造一串项链，仅使用给出的 $K$ 种珍珠，使得项链中每种珍珠都出现过</p>
         <iframe data-animation="./状态设置.js"
-            style="width: 1000px; height: 300px;"></iframe>
+            style="width: 1000px; height: 150px;"></iframe>
         <p class="fragment">设 $f_{i,j}$ 表示构造了一串长度为 $i$ 的项链，目前使用过 $j$ 种珍珠，能构造出的项链总数</p>    
         <p class="fragment">
             $$
@@ -17,49 +17,45 @@
             \end{cases}
             $$
         </p>
-        <p class="fragment quote">当然也可以写成这样 $f_{i,j}=f_{i-1,j}\times j +f_{i-1,j-1}\times(K-j+1)$</p>
-    </section>
-    <section>
-        <h2>珍珠项链</h2>
-        <p>对于 $40\%$ 的数据，$1\le N\le 1000$，$0\le K\le 30$</p>
-        <p class="fragment">最后答案就是 $\sum_{1\le i\le n}f_{i,K}$</p>
-        <p class="fragment">时间复杂度 $O(NK)$</p>
+        <p class="fragment">最后答案就是 $$\sum_{1\le i\le n}f_{i,K}$$</p>
     </section>
     <section>
         <h2>珍珠项链</h2>
         <p>
             $$
-            f_{i,j}=f_{i-1,j}\times j +f_{i-1,j-1}\times(K-j+1)
+            \begin{cases}
+            jf_{i,j}\stackrel{+}{\rightarrow} f_{i+1,j} \\
+            (K-j)f_{i,j}\stackrel{+}{\rightarrow} f_{i+1,j+1}
+            \end{cases}
             $$
         </p>
-        <p>直接转移的时间复杂度显然是 $O(NK)$（其中 $N\le 10^9$，$K\le 30$）</p>
-        <p class="fragment">由于 $N$ 很大，$K$ 不大，所以优化肯定是从 $K$ 入手，优化掉 $N$</p>
-        <p class="fragment">矩阵快速幂优化转移，时间复杂度 $O(K^3logN)$</p>
-    </section>
-    <section>
-        <h2>珍珠项链</h2>
-        <p>
-            $$
-            f_{i,j}=f_{i-1,j}\times j +f_{i-1,j-1}\times(K-j+1)
-            $$
-        </p>
-        <p>这里给出转移矩阵</p>
-        <p>
-            $$
-            \begin{pmatrix}
-            1 & 0 & \cdots & 0 & 0 \\
-            K-1 & 2 & \cdots & 0 & 0\\
-            \vdots & \vdots & \ddots & \vdots &\vdots \\
-            0 & 0 & \cdots & 1 & K
-            \end{pmatrix}
-            \begin{pmatrix}
-            f_{i-1,1}\\ f_{i-1,2}\\ \vdots \\ f_{i-1,K}
-            \end{pmatrix}
-            =
-            \begin{pmatrix}
-            f_{i,1}\\ f_{i,2}\\ \vdots \\ f_{i,K}
-            \end{pmatrix}
-            $$
-        </p>
+        <div style="display: flex;">
+            <div style="width: 500px;" class="fragment">
+                <p style="text-align: center; font-size: 20px; margin-bottom: 0px;">以 $K=5$ 为例</p>
+                <iframe data-animation="./转移分析.js"
+                    style="width: 1000px; height: 400px;"></iframe>
+            </div>
+            <div style="width: 500px;">
+                <p>直接转移的时间复杂度显然为 $O(NK)$，由于本题 $N\le 10^9,K\le 30$，所以跑不了</p>
+                <p class="fragment">由于从 $f_{i,?}$ 只能转移到 $f_{i+1,?}$，并且每次转移的权重是相同的，所以可以用转移矩阵来表示一次转移，用矩阵快速幂来加速这 $n$ 次转移<span class="fragment">，时间复杂度 $O(K^3logN)$</span></p>
+                <p class="fragment" style="font-size: 20px;">
+                    $$
+                    \begin{pmatrix}
+                    1 & 0 & \cdots & 0 & 0 \\
+                    K-1 & 2 & \cdots & 0 & 0\\
+                    \vdots & \vdots & \ddots & \vdots &\vdots \\
+                    0 & 0 & \cdots & 1 & K
+                    \end{pmatrix}
+                    \begin{pmatrix}
+                    f_{i-1,1}\\ f_{i-1,2}\\ \vdots \\ f_{i-1,K}
+                    \end{pmatrix}
+                    =
+                    \begin{pmatrix}
+                    f_{i,1}\\ f_{i,2}\\ \vdots \\ f_{i,K}
+                    \end{pmatrix}
+                    $$
+                </p>
+            </div>
+        </div>
     </section>
 </section>

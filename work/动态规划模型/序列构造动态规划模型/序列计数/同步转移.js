@@ -3,6 +3,7 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const R = sd.rule();
 const n = 10;
+const P = 5;
 const arr = new sd.Array(svg).start(1);
 
 sd.init(() => {
@@ -24,10 +25,12 @@ sd.main(async () => {
     arr.lastElement().value(math, R.centerOnly());
     p1.moveTo(n + 1);
     arr.endAnimate();
-    for (let i = 1; i <= 9; i++) {
+    for (let i = 0; i < 9; i++) {
         await sd.pause();
-        math.startAnimate().text(String(i)).endAnimate();
+        math.startAnimate()
+            .text(i * P + 1)
+            .endAnimate();
     }
     await sd.pause();
-    math.startAnimate().text("k").endAnimate();
+    math.startAnimate().text("r").endAnimate();
 });
