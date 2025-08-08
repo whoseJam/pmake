@@ -17,7 +17,7 @@
             \end{cases}
             $$
         </p>
-        <p class="fragment">最后答案就是 $$\sum_{1\le i\le n}f_{i,K}$$</p>
+        <p class="fragment">最后答案就是 $$\sum_{1\le i\le N}f_{i,K}$$</p>
     </section>
     <section>
         <h2>珍珠项链</h2>
@@ -41,21 +41,63 @@
                 <p class="fragment" style="font-size: 20px;">
                     $$
                     \begin{pmatrix}
-                    1 & 0 & \cdots & 0 & 0 \\
-                    K-1 & 2 & \cdots & 0 & 0\\
-                    \vdots & \vdots & \ddots & \vdots &\vdots \\
-                    0 & 0 & \cdots & 1 & K
+                    0 & 0 & 0& \cdots & 0 & 0 \\
+                    K & 1 & 0 & \cdots & 0 & 0\\
+                    0 & K-1 & 2 & \cdots & 0 & 0\\
+                    \vdots & \vdots & \ddots & \vdots &\vdots &\vdots \\
+                    0 & 0 & 0 & \cdots & 1 & K
                     \end{pmatrix}
                     \begin{pmatrix}
-                    f_{i-1,1}\\ f_{i-1,2}\\ \vdots \\ f_{i-1,K}
+                    f_{i-1,0} \\ f_{i-1,1}\\ f_{i-1,2}\\ \vdots \\ f_{i-1,K}
                     \end{pmatrix}
                     =
                     \begin{pmatrix}
-                    f_{i,1}\\ f_{i,2}\\ \vdots \\ f_{i,K}
+                    f_{i,0} \\ f_{i,1}\\ f_{i,2}\\ \vdots \\ f_{i,K}
                     \end{pmatrix}
                     $$
                 </p>
             </div>
         </div>
+    </section>
+    <section>
+        <h2>珍珠的项链</h2>
+        <p>
+            $$
+            \begin{pmatrix}
+            0 & 0 & 0& \cdots & 0 & 0 \\
+            K & 1 & 0 & \cdots & 0 & 0\\
+            0 & K-1 & 2 & \cdots & 0 & 0\\
+            \vdots & \vdots & \ddots & \vdots &\vdots  &\vdots \\
+            0 & 0 & 0 & \cdots & 1 & K
+            \end{pmatrix}
+            \begin{pmatrix}
+            f_{i-1,0} \\ f_{i-1,1}\\ f_{i-1,2}\\ \vdots \\ f_{i-1,K}
+            \end{pmatrix}
+            =
+            \begin{pmatrix}
+            f_{i,0} \\ f_{i,1}\\ f_{i,2}\\ \vdots \\ f_{i,K}
+            \end{pmatrix}
+            $$
+        </p>
+        <p>但我们实际要求 $S_N=f_{1,K}+f_{2,K}+...+f_{N,K}$</p>
+        <p>
+            $$
+            \begin{pmatrix}
+            0 & 0 & 0& \cdots & 0 & 0 & 0 \\
+            K & 1 & 0 & \cdots & 0 & 0 & 0 \\
+            0 & K-1 & 2 & \cdots & 0 & 0 & 0\\
+            \vdots & \vdots & \ddots & \vdots &\vdots &\vdots &\vdots\\
+            0 & 0 & 0 & \cdots & 1 & K & 0 \\
+            0 & 0 & 0 & \cdots & 1 & K & 1
+            \end{pmatrix}
+            \begin{pmatrix}
+            f_{i-1,0} \\ f_{i-1,1}\\ f_{i-1,2}\\ \vdots \\ f_{i-1,K} \\ S_{i-1}
+            \end{pmatrix}
+            =
+            \begin{pmatrix}
+            f_{i,0} \\ f_{i,1}\\ f_{i,2}\\ \vdots \\ f_{i,K} \\ S_i
+            \end{pmatrix}
+            $$
+        </p>
     </section>
 </section>

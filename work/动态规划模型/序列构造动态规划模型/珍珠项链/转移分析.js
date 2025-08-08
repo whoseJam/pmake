@@ -31,7 +31,7 @@ sd.main(async () => {
         }
         {
             const j = k - 1;
-            add(j, K, K - j, "my");
+            add(j, k, K - j, "my");
         }
         await sd.pause();
         links.forEach(link => {
