@@ -20,7 +20,7 @@
         <p class="fragment">那么转移成立与否只和前一个划分的末尾在哪有关</p>
         <p class="fragment">
             $$
-            f_i=\sum_{\begin{aligned}j&\lt i\\a_{j+1}...a_{i}&是m的倍数\end{aligned} }f_j
+            f_i=\sum_{\begin{aligned}j&\lt i\\ \overline{a_{j+1}...a_{i} }&是m的倍数\end{aligned} }f_j
             $$
         </p>
     </section>
@@ -39,7 +39,7 @@
         <p class="math-fragment">
             $$
             \begin{aligned}
-            f_i&=\sum_{\begin{aligned}j&\lt i\\a_{j+1}...a_{i}&是m的倍数\end{aligned} }f_j \\
+            f_i&=\sum_{\begin{aligned}j&\lt i\\ \overline{a_{j+1}...a_{i} } &是m的倍数\end{aligned} }f_j \\
             &=\sum_{\begin{aligned}j\lt i&\\s_{i}-10^{i-j}s_{j}\equiv &0(\mathop{mod} m)\end{aligned} }f_j \\
             &=\sum_{\begin{aligned}j\lt i&\\s_{i}\equiv 10^{i-j}s_{j}&(\mathop{mod} m)\end{aligned} }f_j
             \end{aligned}
@@ -55,8 +55,7 @@
         </p>
         <iframe data-animation="./状态转移.js"
             style="width: 1000px; height: 150px;"></iframe>
-        <p class="fragment quote">当 $m\ne 2,5,10$ 的时候，发现只有 $s_i\equiv 0(\mathop{mod} m)$ 的那些 $i$ 能参与转移<span class="fragment">；而当 $m=2,5,10$ 的时候，所有位置都能参与转移，且所有 $s_i=0$</span></p>
-        <p class="fragment">综合两者，可以认为只有 $s_i\equiv 0(\mathop{mod} m)$ 的那些 $i$ 可以参与转移</p>
+        <p class="fragment">可以认为只有 $s_i\equiv 0(\mathop{mod} m)$ 的那些 $i$ 可以参与转移</p>
         <codeblock class="fragment">
             <script type="text/template">
                 int totalF = 1;

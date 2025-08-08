@@ -6,20 +6,20 @@ const R = sd.rule();
 const C = sd.color();
 const data = [1, 3, 2, 4, 5];
 const arr = new sd.Array(svg).elementWidth(60);
-const startInput = new sd.Slider(div).min(1).max(5).value(1);
-const endInput = new sd.Slider(div).min(1).max(5).value(5);
+const lInput = new sd.Slider(div).min(1).max(5).value(1);
+const rInput = new sd.Slider(div).min(1).max(5).value(5);
 const button = new sd.Button(div).text("查询");
 
 sd.init(() => {
     arr.push(" ").pushArray(data);
-    sd.Label(startInput, "左端点");
-    sd.Label(endInput, "右端点");
-    startInput.x(arr.x()).y(arr.my() + 20);
-    endInput.x(arr.x()).y(startInput.my() + 20);
-    button.x(arr.x()).y(endInput.my() + 20);
+    sd.Label(lInput, "左端点");
+    sd.Label(rInput, "右端点");
+    lInput.x(arr.x()).y(arr.my() + 20);
+    rInput.x(arr.x()).y(lInput.my() + 20);
+    button.x(arr.x()).y(rInput.my() + 20);
     button.onClick(() => {
-        const start = startInput.value();
-        const end = endInput.value();
+        const start = lInput.value();
+        const end = rInput.value();
         const l = Math.min(start, end);
         const r = Math.max(start, end);
         sd.inter(async () => {
