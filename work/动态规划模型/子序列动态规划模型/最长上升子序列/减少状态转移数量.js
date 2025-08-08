@@ -36,7 +36,7 @@ sd.main(async () => {
 async function onCreateFirstBucket(arr, cx) {
     const pile = new sd.Pile(svg).elementWidth(15).elementHeight(15).resize(maxValue).start(1);
     pile.cx(cx).my(arr.y() - 5);
-    for (let i = 1; i <= maxValue; i++) sd.Label(stk.element(i), i, "lc", 10, 3);
+    for (let i = 1; i <= maxValue; i++) sd.Label(pile.element(i), i, "lc", 10, 3);
     pile.opacity(0).startAnimate().opacity(1).endAnimate();
     firstBucket = pile;
 }
