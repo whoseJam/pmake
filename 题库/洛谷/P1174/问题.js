@@ -57,7 +57,9 @@ function initGame() {
                         grid.startAnimate().erase(col, grid.endM(col)).endAnimate();
                         totalScore += removedBrick.intValue();
                         if (removedBrick.fill() === C.yellow) clickCount++;
+                        scoreLabel.after(0).startAnimate();
                         updateScoreDisplay();
+                        scoreLabel.endAnimate();
                     }
                 }
             });
@@ -67,7 +69,10 @@ function initGame() {
 }
 
 function updateScoreDisplay() {
-    scoreLabel.text(`剩余点击次数: ${clickCount}, 总得分: ${totalScore}`);
+    scoreLabel.text(`click:${clickCount} score:${totalScore}`, [
+        ["click:", "click:"],
+        ["score:", "score:"],
+    ]);
 }
 
 sd.init(() => {

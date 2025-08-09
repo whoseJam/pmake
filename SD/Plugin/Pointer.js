@@ -25,10 +25,8 @@ class PointerPlugin {
         return this;
     }
     gap(gap) {
-        if (arguments.length === 0) return this.vars.gap;
-        Check.validateNumber(gap, "PointerPlugin.gap");
-        this.vars.lpset("gap", gap);
-        return this;
+        if (arguments.length === 0) return this.pointerGap();
+        return this.pointerGap(gap);
     }
     valueGap(gap) {
         if (arguments.length === 0) return this.vars.valueGap;
@@ -114,7 +112,7 @@ export function Pointer(target, text = "", direction = "b", pointerGap = 3, leng
         const elementlength = getLength(element, direction);
         const gapLength = getGapLength(pointers);
         function layout(pointer, x, y) {
-            const gap = pointer.gap();
+            const gap = pointer.pointerGap();
             const length = pointer.length();
             if (direction === "t") pointer.source(x, y + gap + length).target(x, y + gap);
             if (direction === "b") pointer.source(x, y - gap - length).target(x, y - gap);

@@ -52,7 +52,7 @@ sd.main(async () => {
 });
 
 function makeTriGrid(svg, n) {
-    let tri = new sd.Grid(svg).startN(1).startM(1);
+    const tri = new sd.Grid(svg).startN(1).startM(1);
     for (let i = 1; i <= n; i++) tri.pushPrimary(i);
     return tri;
 }

@@ -1,11 +1,3 @@
-/*
-帮我实现如下场景：
-有一个打砖块游戏，砖块是从上往下排列的，每一列的砖块数量各不相同
-在每一列的最下方各有一个按钮，点击按钮会消除本列的最下方的方块，如果本列没有方块则无效果
-总共能点击按钮K次，有一些方块是特殊方块，当这样的方块被消除时，能增加一次点击按钮的机会
-每个方块都有自己的得分，且各不相同
-*/
-
 import * as sd from "@/sd";
 
 class Brick {
@@ -66,7 +58,9 @@ function initGame() {
                         grid.startAnimate().erase(col, grid.endM(col)).endAnimate();
                         totalScore += removedBrick.intValue();
                         if (removedBrick.fill() === C.yellow) clickCount++;
+                        scoreLabel.after(0).startAnimate();
                         updateScoreDisplay();
+                        scoreLabel.endAnimate();
                     }
                 }
             });
@@ -76,7 +70,10 @@ function initGame() {
 }
 
 function updateScoreDisplay() {
-    scoreLabel.text(`剩余点击次数: ${clickCount}, 总得分: ${totalScore}`);
+    scoreLabel.text(`click:${clickCount} score:${totalScore}`, [
+        ["click:", "click:"],
+        ["score:", "score:"],
+    ]);
 }
 
 sd.init(() => {

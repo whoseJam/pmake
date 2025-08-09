@@ -19,8 +19,8 @@ sd.init(() => {
 
 sd.main(async () => {
     const cur = sd.Pointer(arr, "i");
-    const mul = sd.Pointer(arr, "p", "t", 30);
-    const kcur = sd.Pointer(arr, "ip", "t", 30);
+    const mul = sd.Pointer(arr, "p", "t").pointerGap(30);
+    const kcur = sd.Pointer(arr, "ip", "t").pointerGap(30);
     for (let i = 2; i <= n; i++) {
         await sd.pause();
         cur.startAnimate().moveTo(i).endAnimate();

@@ -10,7 +10,7 @@
             $$
             \begin{aligned}
             answer&=\sum_{1\le i\le j\le n}f(S[i...j]) \\
-            &=\sum_{1\le k\le n}\sum_{i\le k\le j}[S[k]在S[i...j]中只出现了一次] \\
+            &=\sum_{i\le k\le j}\sum_{1\le k\le n}[S[k]在S[i...j]中只出现了一次] \\
             &=\sum_{1\le k\le n}\sum_{i\le k\le j}[S[k]在S[i...j]中只出现了一次] \\
             &=\sum_{1\le k\le n}[S[k]在多少个包含它的区间内只出现了一次]
             \end{aligned}

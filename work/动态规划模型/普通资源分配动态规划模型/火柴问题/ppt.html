@@ -1,0 +1,18 @@
+<section>
+    <section>
+        <h1>火柴问题</h1>
+    </section>
+    <problem data-source="https://www.luogu.com.cn/problem/U570500"></problem>
+    <section>
+        <h2>火柴问题</h2>
+        <iframe data-animation="./状态转移.js"
+            style="width: 1000px; height: 50px;"></iframe>
+        <p>设 $f_i$ 表示使用 $i$ 根火柴能拼出的最大数字，$A$ 表示可选数字构成的集合</p>
+        <p>
+            $$
+            f_i=\mathop{max}\limits_{k\in A}\{f_{i-u_k}\times 10 + k\}
+            $$
+            其中 $u_k$ 表示 $k$ 这个数字会用掉多少根火柴
+        </p>
+    </section>
+</section>

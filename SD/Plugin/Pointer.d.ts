@@ -1,4 +1,4 @@
-import { Line } from "@/Node/Path/LineSVG";
+import { Line } from "@/Node/Path/Line";
 import { SDNode } from "@/Node/SDNode";
 
 export class PointerPlugin extends Line {
