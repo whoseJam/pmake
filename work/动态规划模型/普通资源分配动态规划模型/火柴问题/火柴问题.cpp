@@ -32,11 +32,6 @@ struct Value{
 		len=0;
 		memset(cnt,0,sizeof(cnt));
 	}
-	Value& operator+(ll v){
-		len++;
-		cnt[v]++;
-		return *this;
-	}
 	bool operator <(const Value& other)const{
 		if(len!=other.len)return len<other.len;
 		for(ll i=9;i>=0;i--)
@@ -53,28 +48,32 @@ struct Value{
 	}
 };
 
+Value Add(const Value& a,int b){
+	Value c;
+	c.len=a.len;
+	memcpy(c.cnt,a.cnt,sizeof(c.cnt));
+	c.len++;
+	c.cnt[b]++;
+	return c;
+}
+
 const ll N=100005;
 Value f[N];
-ll vis[N],A[N],n,m;
+ll A[N],n,m;
 ll u[10]={6,2,5,5,4,5,6,3,7,6};
-
-Value Dfs(ll n){
-	if(n==0)return {};
-	if(vis[n])return f[n];
-	f[n].len=-inf;
-	for(ll v=1,i;v<=m;v++){
-		i=A[v];
-		if(n-u[i]>=0){
-			f[n]=max(f[n],Dfs(n-u[i])+i);
-		}
-	}
-	vis[n]=1;
-	return f[n];
-}
 
 int main(){
 	n=read();m=read();
 	for(ll i=1;i<=m;i++)A[i]=read();
-	Dfs(n).output();
+	for(ll i=1;i<=n;i++){
+		f[i].len=-inf;
+		for(ll v=1,k;v<=m;v++){
+			k=A[v];
+			if(i-u[k]>=0){
+				f[i]=max(f[i],Add(f[i-u[k]],k));
+			}
+		}
+	}
+	f[n].output();
 	return 0;
 }

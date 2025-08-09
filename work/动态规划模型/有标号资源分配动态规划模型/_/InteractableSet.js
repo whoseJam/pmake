@@ -5,8 +5,8 @@ import * as sd from "@/sd";
  * @param {sd.BaseArary} arr
  * @param {{
  *  once: boolean;
- *  onCreateMath: (math: sd.Mathjax) => void;
- *  onChangeStatus: (i: number, selected: 0|1) => void;
+ *  onCreateMath: (math: sd.Mathjax) => void | Promise<any>;
+ *  onChangeStatus: (i: number, selected: 0|1) => void | Promise<any>;
  * }} args
  */
 export async function interactableSet(arr, args) {
@@ -28,7 +28,7 @@ export async function interactableSet(arr, args) {
             sd.inter(async () => {
                 selected ^= 1;
                 label = `${label.slice(0, i)}${selected}${label.slice(i + 1)}`;
-                math.startAnimate().transformMath(label).endAnimate();
+                math.startAnimate().text(label).endAnimate();
                 if (onChangeStatus) await onChangeStatus(idx, selected);
             });
         });

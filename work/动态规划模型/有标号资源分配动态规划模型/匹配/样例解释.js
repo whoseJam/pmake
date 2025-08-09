@@ -34,7 +34,7 @@ sd.init(() => {
             else node2 = node;
             if (node1 && node2 && graph.findLinkById(graph.nodeId(node1), graph.nodeId(node2))) {
                 sd.inter(async () => {
-                    graph.element(node1, node2).startAnimate().stroke(C.red).endAnimate();
+                    graph.element(node1, node2).startAnimate().stroke(C.red).strokeWidth(3).endAnimate();
                     node1.startAnimate().color(C.blue).endAnimate();
                     node2.startAnimate().color(C.blue).endAnimate();
                     node1.onClick(null);

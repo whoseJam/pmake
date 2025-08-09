@@ -2,7 +2,7 @@
     <section>
         <h1>火柴问题</h1>
     </section>
-    <problem data-source="https://www.luogu.com.cn/problem/P11229"></problem>
+    <problem data-source="https://www.luogu.com.cn/problem/U570500"></problem>
     <section>
         <h2>火柴问题</h2>
         <p>使用 $N$ 根火柴，求能拼出的最大整数，要求</p>
@@ -40,7 +40,7 @@
                     Value& operator +(int x) { // 新增一个数位，对应数码为 x
                         len++; cnt[x]++;
                     }
-                    bool operator <(const Value& other) {
+                    bool operator <(const Value& other) const {
                         根据上述内容，判断两个 Value 的大小;
                     }
                     void output() { // 输出用 cnt 内的数码，最大能表示的数字

@@ -4,23 +4,18 @@ const svg = sd.svg();
 const C = sd.color();
 const colors = [C.black, C.red, C.textBlue];
 const seq = "(...)";
-const mathjax = new sd.Mathjax(svg);
+const arr = new sd.Array(svg).pushArray(seq);
 
 sd.init(() => {
-    let ans = "";
-    for (let i = 0; i < seq.length; i++) {
-        ans = ans + "{" + seq[i] + "}";
-    }
-    mathjax.math(ans);
-    for (let i = 1; i <= seq.length; i++) {
+    arr.forEachElement(element => {
         let tmp = 0;
-        mathjax.element(i).onClick(() => {
+        element.onClick(() => {
             tmp = (tmp + 1) % colors.length;
             sd.inter(async () => {
-                mathjax.startAnimate().color(i, colors[tmp]).endAnimate();
+                element.startAnimate().color(colors[tmp]).endAnimate();
             });
         });
-    }
+    });
 });
 
 sd.main(async () => {});

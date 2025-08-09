@@ -13,7 +13,7 @@ export function binaryMath(n) {
     math.set = function (i, f) {
         i -= start;
         label = `${label.slice(0, i)}${f}${label.slice(i + 1)}`;
-        this.transformMath(label);
+        this.text(label);
         return this;
     };
     return math;

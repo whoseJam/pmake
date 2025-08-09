@@ -17,15 +17,16 @@ sd.init(() => {
         arr.push(new sd.Vertex(arr, i));
         str = "0" + str;
     }
-    math.math(`(${str})_2`);
-    math.cx(arr.cx()).y(arr.my() + 30);
+    math.text(`(${str})_2`)
+        .cx(arr.cx())
+        .y(arr.my() + 30);
 });
 
 sd.main(async () => {
     await status(S);
     await sd.pause();
     math.startAnimate()
-        .transformMath(`(${castToBinStr(S)})_2`)
+        .text(`(${castToBinStr(S)})_2`)
         .endAnimate();
     await sd.pause();
     const bin = new sd.Array(svg).resize(n).start(1);
@@ -61,7 +62,7 @@ async function status(S) {
     await sd.pause();
     let str = "";
     for (let i = 0; i < n; i++) str = String((S >> i) & 1) + str;
-    math.startAnimate().transformMath(`(${str})_2`).endAnimate();
+    math.startAnimate().text(`(${str})_2`).endAnimate();
     arr.startAnimate();
     for (let i = 0; i < n; i++) {
         if ((S >> i) & 1) arr.color(i, C.green);

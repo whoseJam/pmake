@@ -7,7 +7,9 @@ const n = 5;
 const arr = new sd.Array(svg).resize(n * 2).start(1);
 
 sd.init(() => {
-    sd.Brace(arr, 1, n * 2, "t").value("2n");
+    sd.Brace(arr, "t")
+        .brace(1, 2 * n)
+        .value("2n");
     for (let i = 1; i <= n; i++) arr.value(i, `R${i}`);
     for (let i = n + 1; i <= 2 * n; i++) arr.value(i, `R${i - n}`);
 });

@@ -15,24 +15,6 @@ const eggs = [
 const circles = [];
 const l = 2;
 const r = 5;
-let gap = 5;
-let triggered = false;
-
-D.onKeyDown("a", () => {
-    if (triggered) return;
-    triggered = true;
-    sd.inter(async () => {
-        await onMove(l, l - 1);
-    });
-});
-
-D.onKeyDown("d", () => {
-    if (triggered) return;
-    triggered = true;
-    sd.inter(async () => {
-        await onMove(l, r + 1);
-    });
-});
 
 sd.init(() => {
     eggs.forEach((egg, id) => {
@@ -55,26 +37,14 @@ sd.init(() => {
         .target(0, -30 * 8)
         .arrow();
     const brace = sd.Brace(svg).brace(circles[l], circles[r], "t").value("已收集");
-    sd.Pointer(svg, "l", "b", 3, 20).opacity(1).my(brace.y()).cx(circles[l].cx());
-    sd.Pointer(svg, "r", "b", 3, 20).opacity(1).my(brace.y()).cx(circles[r].cx());
+    sd.Pointer(svg, "l", "b", 3, 20).opacity(1).source(0, 0).target(0, 20).my(brace.y()).cx(circles[l].cx());
+    sd.Pointer(svg, "r", "b", 3, 20).opacity(1).source(0, 0).target(0, 20).my(brace.y()).cx(circles[r].cx());
 });
 
 sd.main(async () => {
     await sd.pause(sd.CONTINUE_STAGE);
     circles[l].startAnimate().stroke(C.red).strokeWidth(3).endAnimate();
 });
-
-async function onMove(s, t) {
-    const es = circles[s];
-    const et = circles[t];
-    circles[t].startAnimate().color(C.grey).endAnimate();
-    const line = new sd.Line(svg);
-    if (es === undefined) line.source((circles[s - 1].cx() + circles[s + 1].cx()) / 2, 50 - gap);
-    else line.source(es.cx(), 50 - gap);
-    line.target(et.cx(), 50 - gap);
-    line.startAnimate().pointStoT().endAnimate().arrow();
-    gap += 5;
-}
 
 function pos(vec) {
     return [vec[0] * 50, -30 * vec[1]];

@@ -33,7 +33,7 @@ async function onChangeStatus(i) {
     tiny.color(i, colors[current]);
     for (let j = 1; j <= n; j++) {
         if (i === j) continue;
-        if (tiny.color(i).main === tiny.color(j).main) {
+        if (tiny.color(i).fill === tiny.color(j).fill) {
             tiny.element(Math.min(i, j), Math.max(i, j)).stroke(colors[current]);
         }
     }
