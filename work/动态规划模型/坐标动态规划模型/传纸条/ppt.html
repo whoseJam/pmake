@@ -6,16 +6,26 @@
     <problem data-problemset="luogu" data-problemid="P1006"></problem>
     <section>
         <h2>传纸条</h2>
-        <picture data-source="./传纸条反例1.png"></picture>
+        <p>容易想到一个做法</p>
+        <ol>
+            <li>求出一个纸条从 $(1,1)$ 到 $(m,n)$ 的路线最大值</li>
+            <li>删除路径上的点值</li>
+            <li>再求出一个纸条从 $(m,n)$ 到 $(1,1)$ 的路线最大值</li>
+            <li>统计两次传递的和</li>
+        </ol>
+        <iframe data-animation="./反例1.js"
+            style="width: 1000px; height: 200px;"></iframe>
     </section>
     <section>
         <h2>传纸条</h2>
-        <picture data-source="./传纸条反例2.png"></picture>
+        <p>但是这样做是有问题的</p>
+        <iframe data-animation="./反例2.js"
+            style="width: 1000px; height: 400px;"></iframe>
     </section>
     <section>
         <h2>传纸条</h2>
         <p>
-            上述做法错误的原因在于：<b>我们没有考虑两个纸条同时传递时，它们之间的<span style="color: red;">相互影响</span></b>
+            上述做法错误的原因在于，<b>我们没有考虑两个纸条同时传递时，它们之间的<span style="color: red;">相互影响</span></b>
         </p>
         <p class="fragment">
             由于路径可逆，尽管两个纸条的出发点不同，但都可以被视为从 $(1,1)$ 到 $(m,n)$
@@ -23,38 +33,34 @@
     </section>
     <section>
         <h2>传纸条</h2>
-        <picture data-source="./传纸条.png" height="280px"></picture>
-        <p style="margin-top: -30px;">设 $f(x_1,y_1,x_2,y_2)$ 表示纸条 $1$ 到达 $(x_1,y_1)$，纸条 $2$ 到达 $(x_2,y_2)$，所能获得的最大好感度</p>
+        <iframe data-animation="./状态设置.js"
+            style="width: 1000px; height: 250px;"></iframe>
+        <p>设 $f(x_1,y_1,x_2,y_2)$ 表示纸条 $1$ 到达 $(x_1,y_1)$，纸条 $2$ 到达 $(x_2,y_2)$，所能获得的最大好感度</p>
         <p class="fragment" style="font-size: 20px;">
             $$
             f(x_1,y_1,x_2,y_2)=max
-            \left\{
-            \begin{aligned}
+            \begin{cases}
             f(x_1-1,y_1,x_2-1,y_2) \\
             f(x_1,y_1-1,x_2-1,y_2) \\
             f(x_1-1,y_1,x_2,y_2-1) \\
             f(x_1,y_1-1,x_2,y_2-1)
-            \end{aligned}
-            \right.
+            \end{cases}
             +C_{x_1,y_1}+C_{x_2,y_2}
             $$
         </p>
-        <p class="fragment">我们要保证 $(x_1,y_1)\ne (x_2,y_2)$，以防同一个同学的好感度被两张纸条同时吃到</p>
-        <p class="fragment">时间复杂度 $O(n^2m^2)$</p>
+        <p class="fragment">保证 $(x_1,y_1)\ne (x_2,y_2)$，以防同一个同学的好感度被两张纸条同时吃到</p>
     </section>
     <section>
         <h2>传纸条</h2>
         <p>
             $$
             f(x_1,y_1,x_2,y_2)=max
-            \left\{
-            \begin{aligned}
+            \begin{cases}
             f(x_1-1,y_1,x_2-1,y_2) \\
             f(x_1,y_1-1,x_2-1,y_2) \\
             f(x_1-1,y_1,x_2,y_2-1) \\
             f(x_1,y_1-1,x_2,y_2-1)
-            \end{aligned}
-            \right.
+            \end{cases}
             +C_{x_1,y_1}+C_{x_2,y_2}
             $$
         </p>
@@ -81,13 +87,14 @@
 
     <section>
         <h2>传纸条</h2>
-        <p>注意到我们的状态空间是一个 $m\times n\times m\times n$ 的空间，而这个空间<b>存在大量不合法的状态</b></p>
+        <p>注意到我们的状态空间是一个 $m\times n\times m\times n$ 的空间，而这个空间存在大量<b style="color: grey;">不合法的状态</b></p>
         <ul>
             <li class="fragment">比如 $f(3,4,3,4)$：两个纸条走到同一个位置上了</li>
             <li class="fragment">比如 $f(1,5,2,1)$：其中一个纸条走了 $4$ 步，而另一个纸条只走了一步</li>
         </ul>
-        <p class="fragment">这启发我们可以进一步优化：定义一种新的状态空间，让这个状态空间中只包含<b>合法的状态</b></p>
-        <picture class="fragment" data-src="./减小状态空间.png"></picture>
+        <iframe data-animation="./减小状态空间.js" class="fragment"
+            style="width: 1000px; height: 200px;"></iframe>
+        <p class="fragment">这启发我们可以定义一种新的状态空间，让这个状态空间中只包含<b style="color: teal;">合法的状态</b></p>
     </section>
     <section>
         <h2>传纸条</h2>
@@ -99,14 +106,12 @@
         <p class="fragment">
             $$
             f(k,x_1,x_2)=max
-            \left\{
-            \begin{aligned}
-            &f(k-1,x_1,x_2) \\
-            &f(k-1,x_1-1,x_2) \\
-            &f(k-1,x_1,x_2-1) \\
-            &f(k-1,x_1-1,x_2-1)
-            \end{aligned}
-            \right.
+            \begin{cases}
+            f(k-1,x_1,x_2) \\
+            f(k-1,x_1-1,x_2) \\
+            f(k-1,x_1,x_2-1) \\
+            f(k-1,x_1-1,x_2-1)
+            \end{cases}
             +C_{x_1,k-x_1}+C_{x_2,k-x_2}
             $$
         </p>
