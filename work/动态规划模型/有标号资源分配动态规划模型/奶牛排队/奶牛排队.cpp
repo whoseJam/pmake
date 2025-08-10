@@ -22,7 +22,7 @@ namespace FastIO{
 using FastIO::read;
 
 const ll N=17;
-ll n,S[N],k,f[N][1<<16];
+ll n,s[N],k,f[N][1<<16];
 
 bool contain(ll S,ll i){
 	return (S>>i-1)&1;
@@ -36,17 +36,17 @@ void print(ll T){
 
 int main(){
 	n=read();k=read();
-	for(ll i=1;i<=n;i++)S[i]=read();
+	for(ll i=1;i<=n;i++)s[i]=read();
 	for(ll i=1;i<=n;i++)f[i][1<<i-1]=1;
 	ll All=(1<<n)-1;
-	for(ll T=1;T<=All;T++){
+	for(ll S=1;S<=All;S++){
 		for(ll i=1;i<=n;i++){
-			if(!contain(T,i))continue;
-			if(!f[i][T])continue;
+			if(!contain(S,i))continue;
+			if(!f[i][S])continue;
 			for(ll j=1;j<=n;j++){
-				if(contain(T,j))continue;
-				if(abs(S[i]-S[j])<=k)continue;
-				f[j][T|(1<<j-1)]+=f[i][T];
+				if(contain(S,j))continue;
+				if(abs(s[i]-s[j])<=k)continue;
+				f[j][S|(1<<j-1)]+=f[i][S];
 			}
 		}
 	}
