@@ -18,11 +18,11 @@
             style="width: 1000px; height: 200px;"></iframe>
         <p class="fragment">
             $$
-            f(l,r,0)\stackrel{max}{\rightarrow}f(l-1,r,0)+???
+            f(l,r,0)+?\stackrel{max}{\rightarrow}f(l-1,r,0)
             $$
         </p>
         <p class="fragment">我们似乎没有办法知道下一个水滴被蒸发多少了</p>
-        <p class="fragment">我们可以预先假定要取走 $k$ 个水滴，进而可以不算喝了多少个单位的水，而去算损失了多少个单位的水<span class="fragment">，$answer=km-因为蒸发损失的最少水量$</span></p>
+        <p class="fragment">我们可以<b style="color: red;">预先假定要取走 $k$ 个水滴</b>，进而可以不算喝了多少个单位的水，而去算损失了多少个单位的水<span class="fragment">，$answer=km-loss$，其中 $loss$ 表示因为蒸发损失掉的水量</span></p>
         <p class="fragment quote">容斥竟然还能这样用（√</p>
     </section>
     <section>
@@ -33,10 +33,10 @@
         <p class="fragment math-fragment">
             $$
             \begin{cases}
-            f(l,r,0)\stackrel{min}{\rightarrow}f(l-1,r,0)+ (k-(r-l+1))(d_{l}-d_{l-1})\\
-            f(l,r,0)\stackrel{min}{\rightarrow}f(l,r+1,1)+ (k-(r-l+1))(d_{r+1}-d_{l})\\
-            f(l,r,1)\stackrel{min}{\rightarrow}f(l-1,r,0)+ (k-(r-l+1))(d_{r}-d_{l-1})\\
-            f(l,r,1)\stackrel{min}{\rightarrow}f(l,r+1,1)+ (k-(r-l+1))(d_{r+1}-d_{r})
+            f(l,r,0)+ (k-(r-l+1))(d_{l}-d_{l-1})\stackrel{min}{\rightarrow}f(l-1,r,0)\\
+            f(l,r,0)+ (k-(r-l+1))(d_{r+1}-d_{l})\stackrel{min}{\rightarrow}f(l,r+1,1)\\
+            f(l,r,1)+ (k-(r-l+1))(d_{r}-d_{l-1})\stackrel{min}{\rightarrow}f(l-1,r,0)\\
+            f(l,r,1)+ (k-(r-l+1))(d_{r+1}-d_{r})\stackrel{min}{\rightarrow}f(l,r+1,1)
             \end{cases}
             $$
         </p>

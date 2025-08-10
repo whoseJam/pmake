@@ -4,7 +4,7 @@ import * as sd from "@/sd";
  * @param {*} arr
  * @param {number} start
  * @param {{
- *  onMove: (source: number, target: number) => void;
+ *  onMove: (source: number, target: number) => void | Promise<any>;
  * }} args
  */
 export function interactableIntervalMove(arr, start, args) {

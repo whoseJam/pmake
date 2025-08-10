@@ -1,9 +1,10 @@
 import * as sd from "@/sd";
+import { BallCoord } from "./BallCoord";
 
 const svg = sd.svg();
 const C = sd.color();
-const D = sd.device();
-const eggs = [
+const R = sd.rule();
+const balls = [
     [1, 5],
     [2, 4],
     [4, 6],
@@ -12,40 +13,55 @@ const eggs = [
     [8, 3],
     [10, 4],
 ];
-const circles = [];
+const circles = new BallCoord(svg, balls);
+const gap = 5;
 const l = 2;
 const r = 5;
 
 sd.init(() => {
-    eggs.forEach((egg, id) => {
-        if (egg === undefined) circles.push(undefined);
-        else {
-            const circle = new sd.Circle(svg).center(pos(egg)).color(l <= id && id <= r ? C.grey : C.cyan);
-            circle.childAs("arrow", new sd.Line(circle).arrow(), function (parent, child) {
-                child.source(parent.pos("cx", "my"));
-                child.target(parent.pos("cx", "my", 0, 20));
-            });
-            circles.push(circle);
-        }
-    });
-    const x = new sd.Line(svg)
-        .source(0, 50)
-        .target(eggs[eggs.length - 1][0] * 50 + 50, 50)
-        .arrow();
-    const y = new sd.Line(svg)
-        .source(0, 50)
-        .target(0, -30 * 8)
-        .arrow();
-    const brace = sd.Brace(svg).brace(circles[l], circles[r], "t").value("已收集");
-    sd.Pointer(svg, "l", "b", 3, 20).opacity(1).source(0, 0).target(0, 20).my(brace.y()).cx(circles[l].cx());
-    sd.Pointer(svg, "r", "b", 3, 20).opacity(1).source(0, 0).target(0, 20).my(brace.y()).cx(circles[r].cx());
+    const brace = sd.Brace(circles).brace(l, r, "t").value("已收集");
+    console.log(circles.element(l));
+    console.log(circles.element(r));
+    sd.Pointer(circles, "l", "b", 3, 20).opacity(1).source(0, 0).target(0, 20).my(brace.y()).cx(circles.element(l).cx());
+    sd.Pointer(circles, "r", "b", 3, 20).opacity(1).source(0, 0).target(0, 20).my(brace.y()).cx(circles.element(r).cx());
+    for (let i = l; i <= r; i++) circles.element(i).color(C.grey);
 });
 
 sd.main(async () => {
-    await sd.pause(sd.CONTINUE_STAGE);
-    circles[l].startAnimate().stroke(C.red).strokeWidth(3).endAnimate();
+    await trans(l, l - 1, "$d_{l}-d_{l-1}$");
+    await trans(l, r + 1, "$d_{r+1}-d_{l}$");
+    await trans(r, l - 1, "$d_r-d_{l-1}$");
+    await trans(r, r + 1, "$d_{r+1}-d_{r}$");
 });
 
-function pos(vec) {
-    return [vec[0] * 50, -30 * vec[1]];
+async function trans(s, t, label) {
+    const es = circles.element(s);
+    const et = circles.element(t);
+    await sd.pause();
+    es.startAnimate().stroke(C.red).strokeWidth(3).endAnimate();
+    await sd.pause();
+    const line = await move(s, t, label);
+    await sd.pause();
+    et.startAnimate().color(C.grey).endAnimate();
+    await sd.pause();
+    es.startAnimate().stroke(C.black).strokeWidth(1).endAnimate();
+    et.startAnimate().stroke(C.red).strokeWidth(3).endAnimate();
+    await sd.pause();
+    et.startAnimate().color(C.cyan).stroke(C.black).strokeWidth(1).endAnimate();
+    line.startAnimate().opacity(0).endAnimate().remove();
+}
+
+async function move(s, t, label) {
+    const es = circles.element(s);
+    const et = circles.element(t);
+    const line = new sd.Line(svg);
+    if (es === undefined) line.source((circles.element(s - 1).cx() + circles.element(s + 1).cx()) / 2, 50 - gap);
+    else line.source(es.cx(), 50 - gap);
+    line.target(et.cx(), 50 - gap)
+        .startAnimate()
+        .pointStoT()
+        .value(new sd.Mathjax(svg, label).fontSize(15), R.pointAtPathByRate(0.5, "cx", "my", 0, -5))
+        .endAnimate()
+        .arrow();
+    return line;
 }
