@@ -2,8 +2,8 @@
 using namespace std;
 typedef long long ll;
 
-int read(){
-	int s=0,f=1;char t=getchar();
+ll read(){
+	ll s=0,f=1;char t=getchar();
 	while('0'>t||t>'9'){
 		if(t=='-')f=-1;
 		t=getchar();
@@ -15,61 +15,67 @@ int read(){
 	return s*f;
 }
 
-const int Mod=1000000007;
-const int N=705;
-int dp[N][N][3][3];
+const ll Mod=1000000007;
+const ll N=705;
+ll dp[N][N][3][3];
 bool vis[N][N][3][3];
 char s[N];
-int n,match[N];
-int sta[N],top;
+ll n,match[N];
+ll sta[N],top;
 
-bool colorIsSame(int c1,int c2){
-	if(c1==0||c2==0)return false;
-	return c1==c2;
-}
-
-bool colorPairIsValid(int c1,int c2){
+bool colorPairIsValid(ll c1,ll c2){
 	if(c1==0&&c2!=0)return true;
 	if(c2==0&&c1!=0)return true;
 	return false;
 }
 
-int Dfs(int l,int r,int cl,int cr){
+ll Dfs(ll l,ll r,ll cl,ll cr){
 	if(l+1==r)return colorPairIsValid(cl,cr);
 	if(vis[l][r][cl][cr])return dp[l][r][cl][cr];
-	
-	if(match[l]==r){ // (...)  cl ncl ... ncr cr
-		int ans=0;
-		for(int ncl=0;ncl<=2;ncl++)
-			for(int ncr=0;ncr<=2;ncr++){
-				if(colorIsSame(cl,ncl))continue;
-				if(colorIsSame(cr,ncr))continue;
-				if(!colorPairIsValid(cl,cr))continue;
-				ans+=Dfs(l+1,r-1,ncl,ncr);
-				ans%=Mod;
+	ll& f=dp[l][r][cl][cr];
+	if(match[l]==r){
+		if(cl==1&&cr==0){
+			for(ll i=0;i<=2;i++)
+				for(ll j=0;j<=2;j++){
+					if(i==1)continue;
+					f=(f+Dfs(l+1,r-1,i,j))%Mod;
+				}
+		}else if(cl==2&&cr==0){
+			for(ll i=0;i<=2;i++)
+				for(ll j=0;j<=2;j++){
+					if(i==2)continue;
+					f=(f+Dfs(l+1,r-1,i,j))%Mod;
+				}
+		}else if(cl==0&&cr==1){
+			for(ll i=0;i<=2;i++)
+				for(ll j=0;j<=2;j++){
+					if(j==1)continue;
+					f=(f+Dfs(l+1,r-1,i,j))%Mod;
+				}
+		}else if(cl==0&&cr==2){
+			for(ll i=0;i<=2;i++)
+				for(ll j=0;j<=2;j++){
+					if(j==2)continue;
+					f=(f+Dfs(l+1,r-1,i,j))%Mod;
+				}
+		}
+	}else{
+		ll ans=0;
+		ll m=match[l];
+		for(ll i=0;i<=2;i++)
+			for(ll j=0;j<=2;j++){
+				if(!colorPairIsValid(cl,i))continue;
+				if(i==j&&i!=0)continue;
+				f=(f+Dfs(l,m,cl,i)*Dfs(m+1,r,j,cr))%Mod;
 			}
-		dp[l][r][cl][cr]=ans;
-		vis[l][r][cl][cr]=true;
-	}else{	// (...)(...)(...)(...)  Lcl ... Lcr Rcl ... ? ? ... Rcr
-		int Lcl=cl;
-		int Rcr=cr;
-		int ans=0;
-		for(int Lcr=0;Lcr<=2;Lcr++)
-			for(int Rcl=0;Rcl<=2;Rcl++){
-				if(colorIsSame(Rcl,Lcr))continue;
-				if(!colorPairIsValid(Lcl,Lcr))continue;
-				ans+=(ll)Dfs(l,match[l],Lcl,Lcr)*Dfs(match[l]+1,r,Rcl,Rcr)%Mod;
-				ans%=Mod;
-			}
-		dp[l][r][cl][cr]=ans;
-		vis[l][r][cl][cr]=true;
 	}
+	vis[l][r][cl][cr]=true;
 	return dp[l][r][cl][cr];
 }
 
 int main(){
 	scanf("%s",s+1);n=strlen(s+1);
-	for(int i=1;i<=n;i++){
+	for(ll i=1;i<=n;i++){
 		if(s[i]=='(')sta[++top]=i;
 		if(s[i]==')'){
 			match[sta[top]]=i;
@@ -77,9 +83,9 @@ int main(){
 			top--;
 		}
 	}
-	int ans=0;
-	for(int cl=0;cl<=2;cl++)
-		for(int cr=0;cr<=2;cr++){
+	ll ans=0;
+	for(ll cl=0;cl<=2;cl++)
+		for(ll cr=0;cr<=2;cr++){
 			ans+=Dfs(1,n,cl,cr);
 			ans%=Mod;
 		}

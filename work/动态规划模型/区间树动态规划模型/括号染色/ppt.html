@@ -36,8 +36,8 @@
             $$
             \begin{aligned}
             f_{l,r,1,0}&=\sum_{i,j,i\ne 1} f_{l+1,r-1,i,j} \\
-            f_{l,r,0,1}&=\sum_{i,j,j\ne 1} f_{l+1,r-1,i,j} \\
             f_{l,r,2,0}&=\sum_{i,j,i\ne 2} f_{l+1,r-1,i,j} \\
+            f_{l,r,0,1}&=\sum_{i,j,j\ne 1} f_{l+1,r-1,i,j} \\
             f_{l,r,0,2}&=\sum_{i,j,j\ne 2} f_{l+1,r-1,i,j}
             \end{aligned}
             $$
@@ -49,15 +49,11 @@
         <iframe data-animation="./状态转移3.js"
             style="width: 1000px; height: 60px;"></iframe>
         <p>设与 $l$ 端点处的左括号，匹配的右括号的位置为 $m$</p>
-        <span class="fragment math-fragment">
+        <span class="fragment">
             $$
-            \begin{aligned}
-            f_{l,r,1,0}&=\sum_{j} f_{l,m,1,0}f_{m+1,r,j,0} \\
-            f_{l,r,2,0}&=\sum_{j} f_{l,m,2,0}f_{m+1,r,j,0} \\
-            f_{l,r,0,1}&=\sum_{i\ge 1,j,i\ne j} f_{l,m,0,i}f_{m+1,r,j,1} \\
-            f_{l,r,0,2}&=\sum_{i\ge 1,j,i\ne j} f_{l,m,0,i}f_{m+1,r,j,2}
-            \end{aligned}
+            f_{l,r,cl,cr}=\sum_{i,j} f_{l,m,cl,i}f_{m+1,r,j,cr}
             $$
+            需要保证 $cl$ 和 $i$ 恰好有一个颜色，且 $i$ 和 $j$ 不是相同的颜色（可以同时为 $0$，表示都不染色）
         </span>
     </section>
 </section>
