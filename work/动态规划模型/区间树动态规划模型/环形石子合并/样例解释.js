@@ -10,7 +10,7 @@ sd.init(() => {
     new sd.Circle(svg).center(0, 0).r(80);
     for (let i = 0; i < n; i++) {
         const pos = V.makeComplex(80, ((Math.PI * 2) / n) * i);
-        nodes.push(new sd.Circle(svg).center(pos).color(C.blue));
+        nodes.push(new sd.Circle(svg).center(pos).color(C.grey));
     }
     nodes.forEach(node => {
         node.onClick(() => {

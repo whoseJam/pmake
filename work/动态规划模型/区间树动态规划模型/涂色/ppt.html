@@ -20,19 +20,13 @@
             <li class="fragment">设 $f_{l,r}$ 表示把 $[l,r]$ 这段区间染为正确的颜色，至少需要做多少次染色</li>
             <li class="fragment">设 $f_{l,r}$ 表示把 $[l,r]$ 这段区间的区间树构建出来，这个区间树上至少包含多少个节点</li>
         </ul>
-        <div class="fragment">
-            <iframe data-animation="./状态转移1.js"
-                data-viewBoxDelta="0 0 0 40"
-                style="width: 1000px; height: 150px;"></iframe>
-            <iframe data-animation="./状态转移2.js"
-                data-viewBoxDelta="0 0 0 40"
-                style="width: 1000px; height: 150px;"></iframe>
-        </div>
+        <iframe data-animation="./状态转移.js"
+            style="width: 1000px; height: 200px;"></iframe>
         <p class="fragment math-fragment">
             $$
             f_{l,r}=min\begin{cases}
-            min(f_{l+1,r}, f_{l,r-1}) & C_l 与 C_r 相同 \\
-            f_{l,k}+f_{k+1,r} & 无论 C_l 与 C_r 是否相同
+            min(f_{l+1,r}, f_{l,r-1}) & C_l=C_r \\
+            f_{l,k}+f_{k+1,r}
             \end{cases}
             $$
         </p>

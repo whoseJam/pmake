@@ -1,7 +1,6 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-const D = sd.device();
 const n = 10;
 const arr = new sd.Array(svg).resize(n);
 const node = sd.make1d(n);
@@ -9,11 +8,13 @@ const gap = 12;
 const H = 7;
 
 sd.init(() => {
-    sd.Brace(arr).brace(0, n - 1, "b").value("n堆石子");
+    sd.Brace(arr)
+        .brace(0, n - 1, "b")
+        .value("n堆石子");
 });
 
 sd.main(async () => {
-    await sd.pause();
+    await sd.pause(sd.CONTINUE_STAGE);
     arr.forEachElement((element, id) => {
         const rect = new sd.Rect(svg)
             .width(30)
@@ -33,10 +34,10 @@ sd.main(async () => {
             if (i === node.length) return;
             sd.inter(async () => {
                 const i1 = getInterval(id);
-                const left = node[i1[0]];
                 const i2 = getInterval(i);
-                const right = node[i2[0]];
-                const y = Math.min(left.y(), right.y());
+                const lc = node[i1[0]];
+                const rc = node[i2[0]];
+                const y = Math.min(lc.y(), rc.y());
                 const fa = new sd.Rect(svg)
                     .width((i2[1] - i1[0] + 1) * 40 - 10)
                     .height(H)
@@ -46,11 +47,11 @@ sd.main(async () => {
                     .startAnimate()
                     .opacity(1)
                     .endAnimate();
-                fa.left = left;
-                fa.right = right;
-                dfs(fa);
-                sd.Link(fa, left, sd.Line, "cx", "my", "cx", "y").startAnimate().pointStoT().endAnimate();
-                sd.Link(fa, right, sd.Line, "cx", "my", "cx", "y").startAnimate().pointStoT().endAnimate();
+                fa.lc = lc;
+                fa.rc = rc;
+                merge(fa);
+                sd.Link(fa, lc, sd.Line, "cx", "my", "cx", "y").startAnimate().pointStoT().endAnimate();
+                sd.Link(fa, rc, sd.Line, "cx", "my", "cx", "y").startAnimate().pointStoT().endAnimate();
                 for (let k = i1[0]; k <= i2[1]; k++) node[k] = fa;
             });
         });
@@ -65,20 +66,17 @@ function getInterval(x) {
     return [l, r];
 }
 
-function dfs(fa) {
-    const left = fa.left;
-    const right = fa.right;
-    if (left) {
-        left.startAnimate()
-            .y(fa.my() + gap)
-            .endAnimate();
-        dfs(left);
+function merge(u) {
+    if (u.lc) {
+        u.lc.startAnimate();
+        u.lc.y(u.my() + gap);
+        u.lc.endAnimate();
+        merge(u.lc);
     }
-    if (right) {
-        right
-            .startAnimate()
-            .y(fa.my() + gap)
-            .endAnimate();
-        dfs(right);
+    if (u.rc) {
+        u.rc.startAnimate();
+        u.rc.y(u.my() + gap);
+        u.rc.endAnimate();
+        merge(u.rc);
     }
 }

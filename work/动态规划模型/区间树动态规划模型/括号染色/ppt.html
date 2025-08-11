@@ -32,7 +32,7 @@
         <li>如果 $l$ 端点和 $r$ 端点的括号是匹配的，则一定是这样的情况</li>
         <iframe data-animation="./状态转移2.js"
             style="width: 1000px; height: 60px;"></iframe>
-        <span class="fragment">
+        <span class="fragment math-fragment">
             $$
             \begin{aligned}
             f_{l,r,1,0}&=\sum_{i,j,i\ne 1} f_{l+1,r-1,i,j} \\
@@ -49,20 +49,15 @@
         <iframe data-animation="./状态转移3.js"
             style="width: 1000px; height: 60px;"></iframe>
         <p>设与 $l$ 端点处的左括号，匹配的右括号的位置为 $m$</p>
-        <span class="fragment">
+        <span class="fragment math-fragment">
             $$
             \begin{aligned}
-            f_{l,r,1,0}&=\sum_{i,j,i\ne j} f_{l,m,1,i}f_{m+1,r,j,0} \\
-            f_{l,r,0,1}&=\sum_{i,j,i\ne j} f_{l,m,0,i}f_{m+1,r,j,1} \\
-            f_{l,r,2,0}&=\sum_{i,j,i\ne j} f_{l,m,2,i}f_{m+1,r,j,0} \\
-            f_{l,r,0,2}&=\sum_{i,j,i\ne j} f_{l,m,0,i}f_{m+1,r,j,2}
+            f_{l,r,1,0}&=\sum_{j} f_{l,m,1,0}f_{m+1,r,j,0} \\
+            f_{l,r,2,0}&=\sum_{j} f_{l,m,2,0}f_{m+1,r,j,0} \\
+            f_{l,r,0,1}&=\sum_{i\ge 1,j,i\ne j} f_{l,m,0,i}f_{m+1,r,j,1} \\
+            f_{l,r,0,2}&=\sum_{i\ge 1,j,i\ne j} f_{l,m,0,i}f_{m+1,r,j,2}
             \end{aligned}
             $$
         </span>
-        <p class="fragment">在枚举 $i,j$ 的时候，应该保证</p>
-        <ul>
-            <li class="fragment">颜色 $i$ 和 $l$ 处的括号的颜色加起来<b>恰有一个有效颜色</b></li>
-            <li class="fragment">颜色 $i$ 和颜色 $j$ 不相同</li>
-        </ul>
     </section>
 </section>

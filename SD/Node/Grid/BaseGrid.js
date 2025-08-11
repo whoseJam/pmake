@@ -98,7 +98,7 @@ Object.assign(BaseGrid.prototype, {
         const element = this.element(i, j);
         if (!element) ErrorLauncher.gridElementNotFound(i, j);
         if (!element.text) ErrorLauncher.methodNotFound(element, "text");
-        if (arguments.length === 1) {
+        if (arguments.length === 2) {
             return element.text();
         } else {
             element.text(text);

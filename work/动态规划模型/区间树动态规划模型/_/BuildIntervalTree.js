@@ -5,7 +5,7 @@ import * as sd from "@/sd";
  * @param {sd.BaseArary} arr
  * @param {Array<[number, number]>} intervals
  * @param {{
- *  onCreateNode: (l: number, r: number, fa: sd.SDNode, cx: number, y: number) => sd.SDNode;
+ *  onCreateNode: (l: number, r: number, fa: sd.SDNode, cx: number, y: number) => sd.SDNode | Promise<sd.SDNode>;
  *  layerHeight: number;
  *  initalLayerHeight: number;
  * }} args

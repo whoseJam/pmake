@@ -2,15 +2,12 @@ import * as sd from "@/sd";
 import { buildIntervalTree } from "../_/BuildIntervalTree";
 
 const svg = sd.svg();
-const R = sd.rule();
+const R_ = sd.rule();
 const EN = sd.enter();
 const n = 8;
 const arr = new sd.Array(svg).resize(n).start(1);
 const links = [];
 const nodes = [];
-let root;
-let left, leftLink;
-let right, rightLink;
 const intervals = [
     [1, 8],
     [1, 5],
@@ -28,6 +25,9 @@ const intervals = [
     [2, 2],
     [3, 3],
 ];
+let root;
+let L, LLink;
+let R, RLink;
 
 sd.init(() => {});
 
@@ -40,39 +40,30 @@ sd.main(async () => {
     await sd.pause();
     nodes.forEach(node => node.startAnimate().opacity(0).endAnimate().remove());
     links.forEach(link => link.startAnimate().opacity(0).endAnimate().remove());
-    const leftRect = new sd.Rect(left).onEnter(enter);
-    left.startAnimate().childAs(leftRect, (parent, child) => {
+    const LRect = new sd.Rect(L).height(100);
+    L.startAnimate().childAs(LRect, (parent, child) => {
         child.x(parent.x()).y(parent.my()).width(parent.width());
     });
-    const rightRect = new sd.Rect(right).onEnter(enter);
-    right.startAnimate().childAs(rightRect, (parent, child) => {
+    const RRect = new sd.Rect(R).height(100);
+    R.startAnimate().childAs(RRect, (parent, child) => {
         child.x(parent.x()).y(parent.my()).width(parent.width());
     });
     await sd.pause();
-    leftRect.startAnimate().childAs(new sd.Text(leftRect, "?").onEnter(EN.appear()), R.centerOnly()).endAnimate();
-    rightRect.startAnimate().childAs(new sd.Text(rightRect, "?").onEnter(EN.appear()), R.centerOnly()).endAnimate();
+    LRect.startAnimate().childAs(new sd.Text(LRect, "?").onEnter(EN.appear()), R_.centerOnly()).endAnimate();
+    RRect.startAnimate().childAs(new sd.Text(RRect, "?").onEnter(EN.appear()), R_.centerOnly()).endAnimate();
     for (let i = 1; i < n; i++) {
         await sd.pause();
-        left.startAnimate()
+        L.startAnimate()
             .width((i - 1 + 1) * 40 - 10)
             .endAnimate();
-        leftLink.startAnimate().target(left.pos("cx", "y")).endAnimate();
-        right
-            .startAnimate()
+        LLink.startAnimate().target(L.pos("cx", "y")).endAnimate();
+        R.startAnimate()
             .width((n - i) * 40 - 10)
             .mx(arr.mx() - 5)
             .endAnimate();
-        rightLink.startAnimate().target(right.pos("cx", "y")).endAnimate();
+        RLink.startAnimate().target(R.pos("cx", "y")).endAnimate();
     }
 });
-
-function enter(element, move) {
-    element.height(0);
-    element.attachTo(this.layer());
-    move();
-    element.startAnimate(this);
-    element.height(100);
-}
 
 async function onCreateNode(l, r, fa, cx, y) {
     await sd.pause();
@@ -84,14 +75,12 @@ async function onCreateNode(l, r, fa, cx, y) {
         link.target(rect.pos("cx", "y"));
         link.startAnimate().pointStoT().endAnimate().arrow();
         if (fa === root) {
-            if (l === 1) (left = rect), (leftLink = link);
-            if (r === n) (right = rect), (rightLink = link);
+            if (l === 1) (L = rect), (LLink = link);
+            if (r === n) (R = rect), (RLink = link);
         } else {
             links.push(link);
             nodes.push(rect);
         }
-    } else {
-        root = rect;
-    }
+    } else root = rect;
     return rect;
 }
