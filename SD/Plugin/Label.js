@@ -69,6 +69,8 @@ export function MathjaxLabel(target, text, location = "lc", fontSize = 20, gap =
     self.target = LabelPlugin.prototype.target;
     self.location = LabelPlugin.prototype.location;
 
+    self.fontSize(fontSize);
+
     self.effect("label", () => {
         const target = self.vars.target;
         const rule = R.aside(self.location(), self.gap());
