@@ -6,20 +6,14 @@
     <problem data-source="https://www.luogu.com.cn/problem/P1037"></problem>
     <section>
         <h2>产生数</h2>
-        <p>考虑输入的数字是 $n=a_1a_2a_3...a_k$，相当于 $n$ 有 $k$ 个数码，第 $i$ 个数码的值为 $a_i$，其中 $\forall i \in [1,k]$ 都有 $a_i\in [0,9]$</p>
-        <p class="fragment">假设数字 $i$，可以通过一系列规则，转为 $S_i=\{s_1,s_2...s_{|S_i|}\}$ 这个集合中的任意一个数码</p>
-        <div class="fragment">
-            <p>根据乘法原理，总方案数就是</p>
-            <p>
-                $$
-                \prod_{1\le i\le k} |S_{a_i}|
-                $$
-            </p>
-        </div>
-    </section>
-    <section>
-        <h2>产生数</h2>
-        <p>现在的问题就是怎么求解，某个数码 $v$，它到底能变成多少种数码了</p>
-        <p class="fragment">如果我们把 $0\sim 9$ 这 $10$ 个数码当作节点，把变换规则当作连边，那么只需要求解出每个节点的<b>传递闭包</b>，我们就能知道某个数码，具体能变成哪些数码了</p>
+        <p>考虑输入的数字是 $n=\overline{a_1a_2a_3...a_k}$，相当于 $n$ 有 $k$ 个数码，第 $i$ 个数码的值为 $a_i$，其中 $\forall i \in [1,k]$ 都有 $a_i\in [0,9]$</p>
+        <iframe data-animation="./计数方案.js"
+            style="width: 1000px; height: 150px;"></iframe>
+        <p class="fragment">设第 $i$ 个数码最终可以变成 $S_i$ 种不同的数码，根据乘法原理，总方案数就是
+            $$
+            \prod_{1\le i\le k} |S_i|
+            $$
+        </p>
+        <p class="fragment">如果我们把 $0\sim 9$ 这 $10$ 个数码当作节点，把变换规则当作连边，那么只需要求解出每个节点的<b style="color: purple;">传递闭包</b>，我们就能知道某个数码，具体能变成哪些数码了</p>
     </section>
 </section>
