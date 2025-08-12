@@ -11,12 +11,17 @@
         <p>有 $n$ 个试题，第 $i$ 个试题有 $a_i$ 个选项，每个选项成为正确答案的概率是均等的</p>
         <p class="fragment">某同学挑选出了所有题目的正确选项，但在抄写答题卡的时候抄错位了，第 $i$ 题的答案抄到了第 $i+1$ 题上，特别地，第 $n$ 题的答案抄到了第 $1$ 题上</p>
         <p class="fragment">求该同学期望答对多少个题目</p>
-        <p class="fragment">
+        <p class="fragment" style="font-size: 18px;">
             $$
-            E(AC)=E(第一题AC)+E(第二题AC)+...+E(第n题AC)
+            \begin{aligned}
+            E(AC)&=E(第1题AC) \\
+            &+E(第2题AC) \\
+            &+E(...) \\
+            &+E(第n题AC)
+            \end{aligned}
             $$
         </p>
-        <p class="fragment">考虑如何计算 $E(第i题AC)$</p>
+        <p class="fragment">考虑如何计算 $E_i$ 表示第 $i$ 题AC的期望</p>
     </section>
     <section>
         <h2>单选错位</h2>
@@ -40,11 +45,12 @@
                 <p class="fragment">正确率显然是 $\frac{a_{i} }{a_{i-1} }\frac{1}{a_{i} }$</p>
             </div>
         </div>
-        <p class="fragment math-fragment" style="font-size: 20px;">
+        <p class="fragment math-fragment" style="font-size: 20px; margin-top: -20px;">
             $$
             \begin{aligned}
-            E(第i题AC)&=\frac{1}{max(a_{i-1},a_{i})} \\
-            E(AC)&=\sum_{i=1}^n \frac{1}{max(a_{i-1},a_{i})}
+            E_i&=\frac{1}{max(a_{i-1},a_{i})} \\
+            answer&=E_1+E_2+...+E_n \\
+            &=\sum_{i=1}^n \frac{1}{max(a_{i-1},a_{i})}
             \end{aligned}
             $$
         </p>

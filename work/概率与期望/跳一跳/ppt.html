@@ -30,40 +30,40 @@
                 <td>$1-A-B$</td>
             </tr>
         </table>
-        <p class="fragment">求 $E(最终得分)$</p>
+        <p class="fragment">求 $E(score)$</p>
     </section>
     <section>
         <h2>跳一跳</h2>
+        <iframe data-animation="./拆分期望.js"
+            data-viewBoxDelta="0 -10 0 10"
+            style="width: 1000px; height: 200px;"></iframe>
         <p class="math-fragment">
             $$
-            \begin{aligned}
-            E(最终得分)&=E(普通跳跃得分)+E(中心跳跃得分) \\
-            &=E(普通跳跃得分)+E(中心跳跃特殊格得分)+E(中心跳跃cnt得分)
-            \end{aligned}
+            E(score)=E(s_1)+E(s_2)+E(s_3)
             $$
         </p>
     </section>
     <section>
-        <h2>普通跳跃得分</h2>
-        <p>
+        <h2>$E(s_1)$</h2>
+        <iframe data-animation="./E1.js"
+            style="width: 1000px; height: 200px;"></iframe>
+        <p style="font-size: 20px;">
             $$
             \begin{aligned}
-            E(普通跳跃得分)&=E(第一格上普通跳跃得分) \\
-            &+E(第二格上普通跳跃得分) \\
+            E(s_1)&=E(第1格上普通跳跃得分) \\
+            &+E(第2格上普通跳跃得分) \\
             &+E(...) \\
             &+E(第n格上普通跳跃得分)
             \end{aligned}
             $$
         </p>
         <p class="fragment">
-            $$
-            E(第i格上普通跳跃得分)=(A+B)^{i-1}A
-            $$
+            设 $E_i$ 表示第 $i$ 格上普通跳跃得分，则 $E_i=(A+B)^{i-1}A$
         </p>
-        <p class="fragment math-fragment">所以
+        <p class="fragment math-fragment" style="font-size: 20px;">
             $$
             \begin{aligned}
-            E(普通跳跃得分)&=\sum_{i=1}^n(A+B)^{i-1}A \\
+            E(s_1)&=\sum_{i=1}^n(A+B)^{i-1}A \\
             &=\begin{cases}
             A\times n & A+B=1 \\ 
             A\times\frac{1-(A+B)^n}{1-(A+B)} & A+B\ne 1
@@ -73,11 +73,13 @@
         </p>
     </section>
     <section>
-        <h2>中心跳跃特殊格得分</h2>
-        <p>
+        <h2>$E(s_2)$</h2>
+        <iframe data-animation="./E2.js"
+            style="width: 1000px; height: 200px;"></iframe>
+        <p style="font-size: 20px;">
             $$
             \begin{aligned}
-            E(中心跳跃特殊格得分)&=E(第 x_1 格上中心跳跃特殊格得分) \\
+            E(s_2)&=E(第 x_1 格上中心跳跃特殊格得分) \\
             &+E(第 x_2 格上中心跳跃特殊格得分) \\
             &+E(...) \\
             &+E(第 x_m 格上中心跳跃特殊格得分)
@@ -85,38 +87,38 @@
             $$
         </p>
         <p class="fragment">
-            $$
-            E(第x_i格上中心跳跃特殊格得分)=(A+B)^{x_i-1}By_i
-            $$
+            设 $E_i$ 表示第 $x_i$ 格上中心跳跃特殊格得分，则 $E_i=(A+B)^{x_i-1}By_i$
         </p>
-        <p class="fragment">所以
+        <p class="fragment" style="font-size: 20px;">
             $$
-            E(中心跳跃特殊格得分)=\sum_{i=1}^m(A+B)^{x_i-1}By_i
+            E(s_2)=\sum_{i=1}^m(A+B)^{x_i-1}By_i
             $$
         </p>
     </section>
     <section>
-        <h2>中心跳跃 $cnt$ 得分</h2>
-        <p>
+        <h2>$E(s_3)$</h2>
+        <iframe data-animation="./E3.js"
+            style="width: 1000px; height: 200px;"></iframe>
+        <p style="font-size: 20px;">
             $$
             \begin{aligned}
-            E(中心跳跃cnt得分)&=E(第一格上中心跳跃cnt得分) \\
-            &+E(第二格上中心跳跃cnt得分) \\
+            E(s_3)&=E(第1格上中心跳跃cnt得分) \\
+            &+E(第2格上中心跳跃cnt得分) \\
             &+E(...) \\
             &+E(第n格上中心跳跃cnt得分)
             \end{aligned}
             $$
         </p>
-        <p class="fragment quote">如何计算 $E(第i格上中心跳跃cnt得分)$？</p>
+        <p class="fragment quote">设 $E_i$ 表示在第 $i$ 格上计数器产生的得分的期望，如何求 $E_i$？</p>
         <p class="fragment">容易发现第 $i$ 个上产生的得分可能是 $2,4,8,16,32...$，这取决于前面有多少个连续的格子都是<b style="color: red;">中心跳跃</b><span class="fragment">，既然 $cnt$ 也是一个随机变量，我们不妨把这个随机变量一路上的期望推导出来</span></b></p>
-        <p class="fragment">设 $E_i$ 表示来到第 $i$ 个格子上时 $cnt$ 的期望取值
+        <p class="fragment">设 $E^C_{i}$ 表示离开第 $i$ 个格子上时 $cnt$ 的期望取值
             $$
-            E(第i格上中心跳跃cnt得分)=E_{i-1}B
+            E_i=E^C_{i-1}B
             $$
         </p>
     </section>
     <section>
-        <h2>中心跳跃 $cnt$ 得分</h2>
+        <h2>$E(s_3)$</h2>
         <table>
             <thead>
                 <tr>
@@ -134,32 +136,31 @@
                 <tr>
                     <td>中心跳跃</td>
                     <td>$B$</td>
-                    <td>$2E_{i-1}$</td>
+                    <td>$2E^C_{i-1}$</td>
                 </tr>
             </tbody>
         </table>
-        <p class="fragment">
+        <p class="fragment math-fragment">
             $$
-            E_i=2A(A+B)^{i-1}+2E_{i-1}B
-            $$
-        </p>
-        <p class="fragment">
-            $$
-            E(中心跳跃cnt得分)=\sum_{i=1}^nE_{i-1} B
+            \begin{aligned}
+            E^C_i &=2A(A+B)^{i-1}+2E^C_{i-1}B \\
+            E_i &=E_{i-1}^CB \\
+            E(s_3) &=\sum_{i=1}^nE^C_{i-1} B
+            \end{aligned}
             $$
         </p>
         <p class="fragment">
             \begin{cases}
-            S_i=S_{i-1}+E_{i-1}B\\
-            E_i=2A(A+B)^{i-1}+2E_{i-1}B \\
+            S_i=S_{i-1}+E^C_{i-1}B\\
+            E^C_i=2A(A+B)^{i-1}+2E^C_{i-1}B \\
             (A+B)^i=(A+B)^{i-1}(A+B)
             \end{cases}
         </p>
         <p class="fragment">
             $$
             \begin{pmatrix}1&B&0\\0&2B&2A\\0&0&A+B\end{pmatrix}
-            \begin{pmatrix}S_{i-1}\\E_{i-1}\\(A+B)^{i-1}\end{pmatrix}
-            =\begin{pmatrix}S_i\\E_{i}\\(A+B)^{i}\end{pmatrix}
+            \begin{pmatrix}S_{i-1}\\E^C_{i-1}\\(A+B)^{i-1}\end{pmatrix}
+            =\begin{pmatrix}S_i\\E^C_{i}\\(A+B)^{i}\end{pmatrix}
             $$
         </p>
     </section>

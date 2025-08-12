@@ -9,7 +9,7 @@
         <p>总共有 $n$ 个球星需要收集，每一瓶饮料开奖出来每位球星的概率是相同的，求期望需要开多少瓶饮料，才能开出所有球星</p>
         <iframe data-animation="./状态图.js"
             style="width: 1000px; height: 150px;"></iframe>
-        <p class="fragment">设 $f(k)$ 表示已经开奖了 $k$ 位球星，期望还需要开多少瓶饮料，才能开出所有球星</p>
+        <p class="fragment">设 $f_k$ 表示已经开奖了 $k$ 位球星，期望还需要开多少瓶饮料，才能开出所有球星</p>
         <div style="display: flex; align-items: center;">
             <iframe data-animation="./状态转移.js" class="fragment"
                 style="width: 400px; height: 200px;"></iframe>
@@ -23,19 +23,19 @@
                     <tr>
                         <td>新球星</td>
                         <td>$\frac{n-k}{n}$</td>
-                        <td>$f(k+1)+1$</td>
+                        <td>$f_{k+1}+1$</td>
                     </tr>
                     <tr>
                         <td>已有球星</td>
                         <td>$\frac{k}{n}$</td>
-                        <td>$f(k)+1$</td>
+                        <td>$f_k+1$</td>
                     </tr>
                 </tbody>
             </table>
         </div>
         <p class="fragment">
             $$
-            f(k)=\frac{n-k}{n}\big(f(k+1)+1\big)+\frac{k}{n}\big(f(k)+1\big)
+            f_k=\frac{n-k}{n}\big(f_{k+1}+1\big)+\frac{k}{n}\big(f_k+1\big)
             $$
         </p>
     </section>
@@ -43,21 +43,21 @@
         <h2>百事世界杯之旅</h2>
         <p>
             $$
-            f(k)=\frac{n-k}{n}\big(f(k+1)+1\big)+\frac{k}{n}\big(f(k)+1\big)
+            f_k=\frac{n-k}{n}\big(f_{k+1}+1\big)+\frac{k}{n}\big(f_k+1\big)
             $$
         </p>
         <p class="fragment">
             $$
-            f(k)=f(k+1)+\frac{n}{n-k}
+            f_k=f_{k+1}+\frac{n}{n-k}
             $$
         </p>
         <p class="fragment">显然 $f(n)=0$</p>
-        <p class="fragment">
+        <p class="fragment math-fragment">
             $$
             \begin{aligned}
             f(0)&=f(1)+\frac{n}{n} \\
             &=f(2)+\frac{n}{n-1}+\frac{n}{n} \\
-            &=......\\
+            &=...\\
             &=\frac{n}{1}+\frac{n}{2}+...+\frac{n}{n}
             \end{aligned}
             $$
@@ -68,7 +68,7 @@
         <p>另一种做法是，考虑期望的线性性</p>
         <iframe data-animation="./状态图.js"
             style="width: 1000px; height: 150px;"></iframe>
-        <p style="font-size: 20px;">
+        <p style="font-size: 18px;">
             $$
             \begin{aligned}
             E(从0个球星到n个球星的开瓶总次数)&=E(从0个球星到1个球星的开瓶次数) \\
@@ -79,9 +79,9 @@
             $$
         </p>
         <p class="fragment">设 $E_k$ 表示从第 $k$ 个球星到第 $k+1$ 个球星的开瓶总次数</p>
-        <div style="display: flex; align-items: center;">
+        <div style="display: flex; align-items: center; margin-top: -20px;">
             <iframe data-animation="./状态转移.js" class="fragment"
-                style="width: 400px; height: 200px;"></iframe>
+                style="width: 400px; height: 150px;"></iframe>
             <p class="fragment math-fragment" style="font-size: 20px;">
                 $$
                 \begin{aligned}
