@@ -39,32 +39,29 @@
     </section>
     <section>
         <h2>SPFA</h2>
-        <iframe data-animation="./SPFA.js"
-            style="min-width: 1000px; min-height: 500px;"></iframe>
-    </section>
-    <section>
-        <h2>SPFA</h2>
-        <codeblock>
-            <script type="text/template">
-                void SPFA(int S) {
-                    queue < int > q;
-                    for (int i = 1; i <= n; i++) dis[i] = inf;
-                    dis[S] = 0; inq[S] = 1; q.push(S);
-                    while (q.size()) {
-                        int u = q.front(); q.pop(); inq[u] = 0;
-                        for (int i = h[u], v; i; i = l[i].Nxt) {
-                            v = l[i].to;
-                            if (dis[v] > dis[u] + l[i].val) {
-                                dis[v] = dis[u] + l[i].val;
-                                if (!inq[v]) {
-                                    q.push(v);
-                                    inq[v] = 1;
+        <div style="display: flex; align-items: center;">
+            <iframe data-animation="./SPFA.js"
+                style="width: 1000px; height: 500px; margin-right: 20px;"></iframe>
+            <codeblock style="width: 500px; font-size: 15px;">
+                <script type="text/template">
+                    void SPFA(int S) {
+                        queue < int > q;
+                        for (int i = 1; i <= n; i++) dis[i] = inf;
+                        dis[S] = 0; inq[S] = 1; q.push(S);
+                        while (q.size()) {
+                            int u = q.front(); q.pop(); inq[u] = 0;
+                            for (auto& link : G[u]) {
+                                int v = link.to;
+                                int w = link.value;
+                                if (dis[v] > dis[u] + w) {
+                                    dis[v] = dis[u] + w;
+                                    if (!inq[v]) { q.push(v); inq[v] = 1; }
                                 }
                             }
                         }
                     }
-                }
-            </script>
-        </codeblock>
+                </script>
+            </codeblock>
+        </div>
     </section>
 </section>

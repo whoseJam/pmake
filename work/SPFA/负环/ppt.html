@@ -13,7 +13,7 @@
     </section>
     <section>
         <h2>负环</h2>
-        <codeblock style="height: 445px;">
+        <codeblock>
             <script type="text/template">
                 bool SPFA(int S) {
                     queue < int > q;
@@ -21,16 +21,14 @@
                     dis[S] = 0; inq[S] = 1; q.push(S);
                     while (q.size()) {
                         int u = q.front(); q.pop(); inq[u] = 0;
-                        for (int i = h[u], v; i; i = l[i].Nxt) {
-                            v = l[i].to;
-                            if (dis[v] > dis[u] + l[i].val) {
-                                dis[v] = dis[u] + l[i].val; // 更新 S->v 最短路
+                        for (auto& link : G[u]) {
+                            int v = link.to;
+                            int w = link.value;
+                            if (dis[v] > dis[u] + w) {
+                                dis[v] = dis[u] + w; // 更新 S->v 最短路
                                 len[v] = len[u] + 1; // 记录 S->v 最短路经过的边数
                                 if (len[v] >= n) return true; // 存在负环
-                                if (!inq[v]) {
-                                    q.push(v);
-                                    inq[v] = 1;
-                                }
+                                if (!inq[v]) { q.push(v); inq[v] = 1; }
                             }
                         }
                     }
