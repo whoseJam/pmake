@@ -1,7 +1,9 @@
+#include<algorithm>
 #include<iostream>
 #include<cstring>
 #include<cstdio>
 #include<vector>
+#include<map>
 using namespace std;
 
 namespace FastIO{
@@ -22,56 +24,53 @@ namespace FastIO{
 }
 using FastIO::read;
 
-const int N=20005;
-const int M=100005;
-int n,m,rt,dfn[N],low[N],tot,prt[N],mark[N];
-int sonCount;
+const int N=1000005;
+int low[N],dfn[N],prt[N],flg[N],son[N],n,m;
 
-struct line{
-	int Nxt,to;
-}l[M*2];
-int h[N],cnt;
-
+struct Node{
+	int to;
+	int id;
+}; 
+vector<Node> G[N];
+vector<pair<int,int>> ans;
+int cnt,tot;
 void Link(int u,int v){
-	l[++cnt]=(line){h[u],v};h[u]=cnt;
-	l[++cnt]=(line){h[v],u};h[v]=cnt;
+	++cnt;
+	G[u].push_back({v,cnt});
+	G[v].push_back({u,cnt});
 }
-
 void Tarjan(int u){
 	dfn[u]=low[u]=++tot;
-	for(int i=h[u],v;i;i=l[i].Nxt){
-		v=l[i].to;
-		if(prt[u]==v)continue;
-		if(dfn[v]==0){
-			prt[v]=u;
+	for(auto& link:G[u]){
+		int v=link.to;
+		int id=link.id;
+		if(prt[u]==id)continue;
+		if(!dfn[v]){
+			prt[v]=id;
 			Tarjan(v);
 			low[u]=min(low[u],low[v]);
-			if(low[v]>=dfn[u]){
-				mark[u]=1;
-				if(u==rt)sonCount++;
-			}
-		}else low[u]=min(low[u],dfn[v]);
-	}
-}
-
-int main(){
-	n=read();m=read();
-	for(int i=1,x,y;i<=m;i++){
-		x=read();y=read();
-		Link(x,y);
-	}
-	for(int i=1;i<=n;i++){
-		if(!dfn[i]){
-			sonCount=0;rt=i;
-			Tarjan(i);
-			if(sonCount==1)mark[i]=0;
+			if(low[v]>=dfn[u])flg[u]=1;
+			if(!prt[u])son[u]++;
+		}else{
+			low[u]=min(low[u],dfn[v]);
 		}
 	}
-	
-	vector<int>ans;
+}
+int main(){
+	n=read();m=read();
+	for(int i=1;i<=m;i++)Link(read(),read());
 	for(int i=1;i<=n;i++)
-		if(mark[i]==1)ans.push_back(i);
-	cout<<ans.size()<<"\n";
-	for(auto u:ans)cout<<u<<" ";
+		if(!dfn[i])Tarjan(i);
+		
+	vector<int>ans;
+	for(int u=1;u<=n;u++){
+		if(!prt[u]){
+			if(son[u]>=2)ans.push_back(u);
+		}else{
+			if(flg[u])ans.push_back(u);
+		}
+	}
+	cout<<ans.size()<<'\n';
+	for(auto i:ans)cout<<i<<' ';
 	return 0;
 }

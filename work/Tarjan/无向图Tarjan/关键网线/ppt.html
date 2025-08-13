@@ -20,10 +20,13 @@
         <div style="display: flex;">
             <iframe data-animation="./关键网线.js"
                 style="width: 1000px; height: 500px"></iframe>
-            <div>
+            <iframe data-animation="./分析.js" class="fragment"
+                data-fragment-index="2"
+                style="width: 1000px; height: 500px;"></iframe>
+            <div style="width: 1000px;">
                 <p>关键网线显然必须是割边，但割边不一定是关键网线</p>
-                <p class="fragment">一条割边会把图切割为两个连通块，需要快速检验两个连通块内是否同时拥有两种服务</p>
-                <p class="fragment">在DFS树上，统计子树内的 $A$ 类服务数量 $N_A(u)$、$B$ 类服务数量 $N_B(u)$</p>
+                <p class="fragment" data-fragment-index="0">一条割边会把图切割为两个连通块，需要快速检验两个连通块内是否同时拥有两种服务</p>
+                <p class="fragment" data-fragment-index="1">在DFS树上，统计子树内的 $A$ 类服务数量 $N_A(u)$、$B$ 类服务数量 $N_B(u)$</p>
                 <p class="fragment">子树内是否拥有两种服务？<span class="fragment">——$N_A(u)\gt 0$ 且 $N_B(u)\gt 0$</span></p>
                 <p class="fragment">子树外是否拥有两种服务？<span class="fragment">——$N_A(r)-N_A(u)\gt 0$ 且 $N_B(r)-N_B(u)\gt 0$</span></p>
                 <p class="fragment">在检验通过的情况下，$(fa_u,u)$ 就是一条关键网线</p>

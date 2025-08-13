@@ -33,6 +33,8 @@ export class TreeGraph extends sd.SD2DNode {
                 y: String(y),
             });
         });
+
+        this.childAs(tree);
     }
     element(x, y) {
         x = String(x);
