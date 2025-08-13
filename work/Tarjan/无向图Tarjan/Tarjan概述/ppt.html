@@ -25,14 +25,14 @@
     <section>
         <h2>dfn&low</h2>
         <div style="display: flex;">
-            <div>
+            <div style="margin-top: -10px; font-size: 20px;">
                 <iframe data-animation="./low_1.js"
                     style="width: 1000px; height: 150px;"></iframe>
                 $$
                 low(u)=min\{low(u),low(v)\}
                 $$
             </div>
-            <div>
+            <div style="margin-top: -10px; font-size: 20px;">
                 <iframe data-animation="./low_2.js"
                     style="width: 1000px; height: 150px;"></iframe>
                 $$
@@ -44,10 +44,12 @@
             <script type="text/template">
                 void Tarjan(int u) {
                     dfn[u] = low[u] = ++tot; // 把 u 塞入 DFS 序
-                    for (v of G[u]) { // 对于 u 的每条出边
-                        if (prt[u] == v) continue; // 排除 v 是 u 的父节点的情况
+                    for (auto& link : G[u]) { // 对于 u 的每条出边
+                        int v = link.to;
+                        int id = link.id;
+                        if (prt[u] == id) continue; // 排除 v 是 u 的父节点的情况
                         if (!dfn[v]) { // 一定是一条树边
-                            prt[v] = u;
+                            prt[v] = id;
                             Tarjan(v);
                             low[u] = min(low[u], low[v]);
                         } else { // 一定是一条返祖边
