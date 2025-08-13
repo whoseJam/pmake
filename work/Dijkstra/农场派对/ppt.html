@@ -14,7 +14,7 @@
         <h2>农场派对</h2>
         <p>$$dis(X\rightarrow u) + dis(u\rightarrow X)$$</p>
         <p class="fragment">首先以 $X$ 为源点，跑一个Dijkstra，就能求出任意 $u$ 的 $dis(X\rightarrow u)$</p>
-        <p class="fragment">$dis(u\rightarrow X)$ 看上去比较难求，我们总不能对每个点 $u$ 以其为源点跑一个Dijkstra来求 $dis(u\rightarrow X)$ 吧，这么做时间复杂度是 $O(n(n+m)logn)$ 的呀</p>
+        <p class="fragment">$dis(u\rightarrow X)$ 看上去比较难求，我们无法对每个点 $u$ 以其为源点跑一个Dijkstra来求 $dis(u\rightarrow X)$，时间复杂度不可接受</p>
         <p class="fragment">我们对原图建立其对应的反图，在反图上以 $X$ 为源点，跑一个Dijkstra，就能求出任意 $u$ 的 $dis(u\rightarrow X)$ 了</p>
     </section>
 </section>

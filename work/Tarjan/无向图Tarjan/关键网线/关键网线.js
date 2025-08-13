@@ -43,9 +43,13 @@ sd.main(async () => {
     await sd.pause();
     await tarjan(tree, {
         onTreeLink(u, v, link) {
+            if (tree.sourceId(link) !== String(u)) link.reversed = true;
+            else link.reversed = false;
             linkToWithArrow(link, C.textBlue);
         },
         onAncestorLink(u, v, link) {
+            if (tree.sourceId(link) !== String(u)) link.reversed = true;
+            else link.reversed = false;
             linkToWithArrow(link, C.red);
         },
     });

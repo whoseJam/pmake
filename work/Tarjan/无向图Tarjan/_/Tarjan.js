@@ -43,10 +43,10 @@ export async function tarjan(graph, args) {
         const [links, nodes] = graph.outLinksAndNodes(u);
         for (let i = 0; i < links.length; i++) {
             const v = +graph.nodeId(nodes[i]);
-            if (prt[u] === v) continue;
+            if (prt[u] === links[i].id) continue;
             if (!dfn[v]) {
                 if (onTreeLink) await onTreeLink(u, v, links[i]);
-                prt[v] = u;
+                prt[v] = links[i].id;
                 await dfs(v);
                 low[u] = Math.min(low[u], low[v]);
                 if (onUpdateLow) await onUpdateLow(u, low[u]);
@@ -58,7 +58,7 @@ export async function tarjan(graph, args) {
                     if (u === 1) cnt++;
                 }
             } else {
-                if (onAncestorLink) await onAncestorLink(u, v, links[i]);
+                if (onAncestorLink && dfn[v] < dfn[u]) await onAncestorLink(u, v, links[i]);
                 low[u] = Math.min(low[u], dfn[v]);
                 if (onUpdateLow) await onUpdateLow(u, low[u]);
             }
@@ -129,14 +129,14 @@ export async function tarjanForNestedGraph(graph, args) {
         for (let i = 0; i < links.length; i++) {
             const v = ids[i];
             const [g_, v_] = v;
-            if (equal(prt[g][x], v)) continue;
+            if (prt[g][x] === links[i].id) continue;
             if (!dfn[g_][v_]) {
                 if (onTreeLink) await onTreeLink(u, v, links[i]);
-                prt[g_][v_] = u;
+                prt[g_][v_] = links[i].id;
                 await dfs(v);
                 low[g][x] = Math.min(low[g][x], low[g_][v_]);
             } else {
-                if (onAncestorLink) await onAncestorLink(u, v, links[i]);
+                if (onAncestorLink && dfn[v] < dfn[u]) await onAncestorLink(u, v, links[i]);
                 low[g][x] = Math.min(low[g][x], dfn[g_][v_]);
             }
         }

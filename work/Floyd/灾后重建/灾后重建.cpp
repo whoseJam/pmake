@@ -30,7 +30,7 @@ struct city{
 	int u,t;
 }C[N];
 
-void Recover(int u){
+void Floyd(int u){
 	for(int i=0;i<n;i++)
 		for(int j=0;j<n;j++)
 			d[i][j]=min(d[i][j],d[i][u]+d[u][j]);
@@ -55,7 +55,7 @@ int main(){
 		x=read();y=read();t=read();
 		while(C[cur+1].t<=t&&cur+1<=n){
 			cur++;
-			Recover(C[cur].u);
+			Floyd(C[cur].u);
 		}
 		if(x+1<=cur&&y+1<=cur&&d[x][y]!=inf)cout<<d[x][y]<<'\n';
 		else cout<<-1<<'\n';

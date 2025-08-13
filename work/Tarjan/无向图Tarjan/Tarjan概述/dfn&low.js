@@ -55,10 +55,14 @@ sd.main(async () => {
         },
         async onTreeLink(u, v, link) {
             await sd.pause();
+            if (tree.sourceId(link) !== String(u)) link.reversed = true;
+            else link.reversed = false;
             linkToWithArrow(link, C.textBlue);
         },
         async onAncestorLink(u, v, link) {
             await sd.pause();
+            if (tree.sourceId(link) !== String(u)) link.reversed = true;
+            else link.reversed = false;
             linkToWithArrow(link, C.red);
         },
     });

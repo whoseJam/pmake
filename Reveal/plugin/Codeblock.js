@@ -11,15 +11,18 @@ function init(reveal) {
     const element = elements[0];
     const parent = element.parentNode;
     const script = element.querySelector("script");
+    const fontSize = element.style.fontSize;
     let lang = element.getAttribute("lang");
     if (!lang) lang = "cpp";
 
+    console.log("fontSize=", fontSize);
     const pre = document.createElement("pre");
     const code = document.createElement("code");
     pre.className = element.className;
     code.setAttribute("data-trim", "");
     code.setAttribute("data-line-numbers", "");
     code.setAttribute("class", lang);
+    if (fontSize) code.style.fontSize = fontSize;
     pre.append(code);
     code.append(script);
 

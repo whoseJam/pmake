@@ -12,70 +12,51 @@
         <h2>BFS</h2>
         <p>我们先想一想BFS是如何求最短路的</p>
         <p class="fragment">假设我们拿到了一张图，图上每条边的边权都是 $1$，要求起点 $1$ 到终点 $n$ 的最短路</p>
-        <p class="fragment">由于边权均为 $1$......</p>
-    </section>
-    <section>
-        <h2>BFS</h2>
-        <iframe data-animation="./animation/BFS.html"
-            style="width: 1000px; height: 300px;"></iframe>
-        <p class="fragment">我们不断用<b>最短路已知</b>的点，去更新<b>最短路未知</b>的点</p>
-        <ul>
-            <li class="fragment">用于更新别人的点叫做<b>松弛点</b></li>
-            <li class="fragment">被别人更新的点叫做<b>被松弛点</b></li>
-        </ul>
-        <p class="fragment">最短路已知的点，肯定就是目前<b>距离起点最近</b>的点</p>
-        <p class="fragment">由于每条边长度均为 $1$，所以用普通队列来存放松弛点就行了，<b>先入队的点到起点的距离一定小，后入队的点到起点距离一定大</b></p>
-    </section>
-    <section>
-        <h2>BFS</h2>
-        <p>那我们能不能稍微改造一下BFS算法，让它能适用于<b>边权各异</b>的图呢</p>
-        <p class="fragment quote">
-            在边权各异的情况下，如何确保每次取出的松弛点到起点的距离，是所有松弛点中最小的那个呢？
-        </p>
-        <iframe data-animation="./animation/普通队列的不足之处.html" class="fragment"
-            style="width: 1000px; height: 300px;"></iframe>
-    </section>
-    <section>
-        <h2>Dijkstra VS BFS</h2>
-        <p>显然，我们把队列改为<b>以距离值为关键字</b>的优先队列，就可以实现每次取出<b>距离起点最近</b>的松弛点</p>
-        <div class="fragment quote">
-            <h3>正确性证明</h3>
-            <p>我们只需要知道正确性证明依赖于图每条边的<b>边权都是非负数</b>即可</p>
-            <p class="fragment" style="margin-bottom: 0px;">如果你一定要知道证明过程，请访问：<a href="https://oi-wiki.org/graph/shortest-path/#%E6%AD%A3%E7%A1%AE%E6%80%A7%E8%AF%81%E6%98%8E" target="_blank">这个网站</a></p>
+        <div style="display: flex;">
+            <iframe data-animation="./BFS.js" class="fragment"
+                style="width: 1000px; height: 300px;"></iframe>
+            <div style="width: 800px;">
+                <p class="fragment">我们不断用<b style="color: purple;">距离值最小</b>的点，去更新它们的<b style="color: red;">邻接点</b></p>
+                <ul>
+                    <li class="fragment">用于更新别人的点叫做<b style="color: green;">松弛点</b></li>
+                    <li class="fragment">被别人更新的点叫做<b style="color: yellowgreen;">被松弛点</b></li>
+                </ul>
+            </div>
         </div>
+        <p class="fragment">由于边权都是<b style="color: purple;">非负</b>的，所以当前距离值最小的点，<b style="color: teal;">其距离值就是起点到它的最短路</b></p>
+        <p class="fragment">由于边权都是<b style="color: purple;">相同</b>的，所以用队列来维护<b style="color: green;">松弛点</b>，<b style="color: teal;">先入队的一定比后入队的距离值小</b></p>
     </section>
     <section>
         <h2>Dijkstra</h2>
-        <iframe data-animation="./animation/Dijkstra.html"
-            style="width: 1000px; height: 500px;"></iframe>
-    </section>
-    <section>
-        <h2>Dijkstra</h2>
-        <p>以下是Dijkstra的代码实现：</p>
-        <pre><code style="min-height: 490px;" data-trim data-line-numbers class="cpp"><script type="text/template">
-            typedef pair < int, int > pa;
-            // pair 的 first 用于存储起点到某个点的最短路长度
-            // pair 的 second 用于存储节点编号
-            void Dijkstra(int S) {
-                for (int i = 1; i <= n; i++)
-                    dis[i] = inf;
-                dis[S] = 0;
-                priority_queue < pa, vector < pa > , greater < pa >> q;
-                q.push(make_pair(0, S));
-                while (q.size()) {
-                    int u = q.top().second; // 最短路已知且最小
-                    q.pop();
-                    if (vis[u]) continue; // 没有参与过更新
-                    vis[u] = 1;
-                    for (int i = h[u], v; i; i = l[i].Nxt) {
-                        v = l[i].to;
-                        if (dis[v] > dis[u] + l[i].val) {
-                            dis[v] = dis[u] + l[i].val;
-                            q.push(make_pair(dis[v], v));
+        <p>那我们能不能稍微改造一下BFS算法，让它能适用于<b style="color: red;">边权各异</b>的图呢</p>
+        <iframe data-animation="./普通队列的不足之处.js" class="fragment"
+            style="width: 1000px; height: 150px;"></iframe>
+        <p class="fragment">把队列改为<b style="color: red;">以距离值为关键字</b>的<b style="color: brown;">优先队列</b>，就可以实现每次取出<b style="color: purple;">距离值最小</b>的松弛点</p>
+        <div style="display: flex; align-items: center;" class="fragment">
+            <iframe data-animation="./Dijkstra.js"
+                style="width: 1000px; height: 300px; margin-right: 20px;"></iframe>
+            <codeblock style="font-size: 15px;">
+                <script type="text/template">
+                    using pa = pair < int, int >;
+                    void Dijkstra(int S) {
+                        for (int i = 1; i <= n; i++) dis[i] = inf;
+                        priority_queue < pa, vector < pa >, greater < pa >> q;
+                        q.push(make_pair(dis[S] = 0, S));
+                        while (q.size()) {
+                            int u = q.top().second; q.pop();
+                            if (vis[u]) continue; vis[u] = 1;
+                            for (auto& link : G[u]) {
+                                int v = link.to;
+                                int w = link.value;
+                                if (dis[v] > dis[u] + w) {
+                                    dis[v] = dis[u] + w;
+                                    q.push(make_pair(dis[v], v));
+                                }
+                            }
                         }
                     }
-                }
-            }
-        </script></code></pre>
+                </script>
+            </codeblock>
+        </div>
     </section>
 </section>

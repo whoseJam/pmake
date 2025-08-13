@@ -1,49 +1,127 @@
 import * as sd from "@/sd";
 
-export class TreeGraph extends sd.Tree {
-    constructor(target, n, links, externLinks) {
+export class TreeGraph extends sd.SD2DNode {
+    constructor(target, n, links_, extraLinks) {
         super(target);
-        this.width(500);
-        for (let i = 1; i <= n; i++) this.newNode(i);
-        this._.externLinks = [];
-        links.forEach(([x, y]) => {
-            this.newLink(x, y);
-            this.element(x, y);
+
+        const tree = new sd.Tree(this);
+        const links = [];
+
+        this.vars.merge({
+            tree,
+            x: 0,
+            y: 0,
+            width: 500,
+            links,
         });
-        externLinks.forEach(link => {
+
+        this.effect("layout", () => {
+            this.vars.tree.width(this.width());
+        });
+
+        for (let i = 1; i <= n; i++) tree.newNode(i);
+        links_.forEach(([x, y]) => {
+            tree.newLink(x, y);
+            tree.element(x, y);
+        });
+
+        extraLinks.forEach(link => {
             const [x, y, clazz] = [link[0], link[1], link[2]];
-            const line = sd.Link(this.element(x), this.element(y), clazz);
-            line.id0 = x;
-            line.id1 = y;
-            this._.externLinks.push(line);
+            links.push({
+                link: sd.Link(tree.element(x), tree.element(y), clazz),
+                x: String(x),
+                y: String(y),
+            });
         });
     }
+    element(x, y) {
+        x = String(x);
+        y = String(y);
+        if (arguments.length === 1) {
+            return this.vars.tree.element(x);
+        } else {
+            const links = this.vars.links;
+            for (let i = 0; i < links.length; i++) {
+                if (links[i].x === x && links[i].y === y) {
+                    return links[i];
+                }
+            }
+            return this.vars.tree.element(x, y);
+        }
+    }
+    color(x, color) {
+        return this.vars.tree.color(x, color);
+    }
+    sourceId(link) {
+        const tree = this.vars.tree;
+        const links = this.vars.links;
+        for (let i = 0; i < links.length; i++) {
+            if (links[i].link === link) {
+                return links[i].x;
+            }
+        }
+        return tree.sourceId(link);
+    }
+    targetId(link) {
+        const tree = this.vars.tree;
+        const links = this.vars.links;
+        for (let i = 0; i < links.length; i++) {
+            if (links[i].link === link) {
+                return links[i].y;
+            }
+        }
+        return tree.targetId(link);
+    }
     outLinksAndNodes(u) {
+        u = String(u);
+        const tree = this.vars.tree;
         const links = [];
         const nodes = [];
-        this.children(u).forEach(node => {
+        tree.children(u).forEach(node => {
             nodes.push(node);
-            links.push(this.element(u, node));
-            this.element(u, node).reversed = false;
+            links.push(tree.element(u, node));
         });
-        const fa = this.father(u);
-        if (fa) {
-            nodes.push(fa);
-            links.push(this.element(fa, u));
-            this.element(fa, u).reversed = true;
+        if (tree.father(u)) {
+            nodes.push(tree.father(u));
+            links.push(tree.inLink(u));
         }
-        this._.externLinks.forEach(link => {
-            if (String(link.id0) === String(u)) {
-                link.reversed = false;
-                nodes.push(this.element(link.id1));
-                links.push(link);
+        const links_ = this.vars.links;
+        links_.forEach(link => {
+            if (link.x === u) {
+                nodes.push(tree.element(link.y));
+                links.push(link.link);
             }
-            if (String(link.id1) === String(u)) {
-                link.reversed = true;
-                nodes.push(this.element(link.id0));
-                links.push(link);
+            if (link.y === u) {
+                nodes.push(tree.element(link.x));
+                links.push(link.link);
             }
         });
         return [links, nodes];
+    }
+    nodes() {
+        return this.vars.tree.nodes();
+    }
+    nodeId(u) {
+        return this.vars.tree.nodeId(u);
+    }
+    x(x) {
+        if (arguments.length === 0) return this.vars.x;
+        this.vars.lpset("x", x);
+        return this;
+    }
+    y(y) {
+        if (arguments.length === 0) return this.vars.y;
+        this.vars.lpset("y", y);
+        return this;
+    }
+    width(width) {
+        if (arguments.length === 0) return this.vars.width;
+        this.vars.lpset("width", width);
+        return this;
+    }
+    height(height) {
+        if (arguments.length === 0) return this.vars.tree.height();
+        this.vars.tree.height(height);
+        return this;
     }
 }
