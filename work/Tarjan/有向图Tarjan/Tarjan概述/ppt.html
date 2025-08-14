@@ -26,7 +26,7 @@
     <section>
         <h2>dfn&low</h2>
         <iframe data-animation="./dfn&low.js"
-            style="width: 1000px; height: 380px;"></iframe>
+            style="width: 1000px; height: 340px;"></iframe>
         <p>我们在遍历整张图时，把遍历到的每个节点依次记录下来，形成一个序列，并且记点 $u$ 在序列中的位置为 $dfn(u)$<span class="fragment">，由于<b style="color: red;">返祖边</b>和<b style="color: purple;">横叉边</b>的存在，导致某些节点可以逆流而上，来到自己的祖先处，形成一个个环</span><span class="fragment">，为了描述这样的结构，我们对点 $u$ 记录 $low(u)$，表示从 $u$ 能回溯到的<b>最顶端的祖先</b>的 $dfn$ 是多少</span></p>
         <p class="fragment quote">特别地，一个节点总能访问到它自己，所以 $low(u)\le dfn(u)$</p>
     </section>
@@ -34,15 +34,15 @@
         <h2>dfn&low</h2>
         <div style="display: flex;">
             <div>
-                <iframe data-animation="./low_1.js"
-                    style="width: 1000px; height: 200px;"></iframe>
+                <iframe data-animation="./low1.js"
+                    style="width: 1000px; height: 150px;"></iframe>
                 $$
                 low(u)=min\{low(u),low(v)\}
                 $$
             </div>
             <div>
-                <iframe data-animation="./low_2.js"
-                    style="width: 1000px; height: 200px;"></iframe>
+                <iframe data-animation="./low2.js"
+                    style="width: 1000px; height: 150px;"></iframe>
                 $$
                 low(u)=min\{low(u),dfn(v)\}
                 $$
@@ -52,7 +52,7 @@
             <script type="text/template">
                 void Tarjan(int u) {
                     dfn[u] = low[u] = ++tot; // 把 u 塞入 DFS 序
-                    ins[stk[++top] = u] = u; // 把 u 入栈
+                    stk.push(u); ins[u] = true; // 把 u 入栈
                     for (v of G[u]) { // 对于 u 的每条出边
                         if (!dfn[v]) { // 一定是一条树边
                             Tarjan(v);
@@ -91,10 +91,11 @@
                     if (low[u] == dfn[u]) {
                         SCC++;  // 新增一个强连通分量
                         while (true) {
-                            int cur = stk[top--];
-                            bel[u] = SCC;   // u 属于第 SCC 个强连通分量
-                            ins[u] = false; // 弹栈
-                            if (u == cur) break;
+                            int cur = stk.top();
+                            stk.pop();
+                            ins[cur] = false;
+                            bel[cur] = SCC;
+                            if (cur == u) break;
                         }
                     }
                 }

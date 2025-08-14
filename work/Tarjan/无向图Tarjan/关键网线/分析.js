@@ -35,6 +35,13 @@ sd.main(async () => {
     c1.target(v.center());
     sd.trim(c1, null, v);
     c1.startAnimate().pointStoT().endAnimate().arrow();
+    await sd.pause();
+    const text = new sd.Mathjax(svg, "N_A(u),N_B(u)").fontSize(15);
+    v.startAnimate()
+        .childAs(text, (parent, child) => {
+            child.mx(parent.cx()).my(parent.y());
+        })
+        .endAnimate();
 });
 
 function drawSubtree(value, x, y) {
