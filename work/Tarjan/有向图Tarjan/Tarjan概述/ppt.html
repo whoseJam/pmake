@@ -53,7 +53,7 @@
                 void Tarjan(int u) {
                     dfn[u] = low[u] = ++tot; // 把 u 塞入 DFS 序
                     stk.push(u); ins[u] = true; // 把 u 入栈
-                    for (v of G[u]) { // 对于 u 的每条出边
+                    for (int v : G[u]) { // 对于 u 的每条出边
                         if (!dfn[v]) { // 一定是一条树边
                             Tarjan(v);
                             low[u] = min(low[u], low[v]);

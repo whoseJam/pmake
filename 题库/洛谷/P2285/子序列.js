@@ -1,10 +1,9 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-const C = sd.color();
 const R = sd.rule();
-const n = 5;
-const grid = new sd.Grid(svg).n(n).m(n);
+const C = sd.color();
+const arr = new sd.ValueArray(svg);
 const moleAppearances = [
     [2, 1, 2],
     [4, 3, 1],
@@ -19,12 +18,19 @@ const moleAppearances = [
 
 sd.init(() => {
     moleAppearances.forEach(([time, row, col]) => {
-        const molePosition = grid.element(row, col);
-        const mole = new sd.Circle(molePosition);
-        molePosition.value(mole, R.centerOnly());
+        const mole = new sd.Circle(arr);
+        arr.push(mole);
         mole.r(15).color(C.grey);
         mole.childAs(new sd.Text(mole, `T${time}`).fontSize(10), R.centerOnly());
+        mole.time = time;
     });
 });
 
-sd.main(() => {});
+sd.main(async () => {
+    await sd.pause();
+    arr.startAnimate()
+        .sort((a, b) => {
+            return a.time - b.time;
+        })
+        .endAnimate();
+});

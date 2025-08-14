@@ -3,6 +3,7 @@
 #include<cstdio>
 #include<vector>
 #include<stack>
+#include<queue>
 #include<map>
 using namespace std;
 
@@ -24,10 +25,13 @@ namespace FastIO{
 }
 using FastIO::read;
 
-const int N=100005;
-int low[N],dfn[N],bel[N],SCC,tot,n,m,oud[N],siz[N];
+const int N=500005;
+const int inf=0x3f3f3f3f;
+int low[N],dfn[N],bel[N],SCC,tot,n,m,ind[N],val[N],a[N],f[N],S,P;
 vector<pair<int,int>> links;
 vector<int>G[N];
+vector<int>g[N];
+vector<int>bar;
 stack<int>stk;
 bool ins[N];
 
@@ -51,8 +55,25 @@ void Tarjan(int u){
 			stk.pop();
 			ins[cur]=false;
 			bel[cur]=SCC;
-			siz[SCC]++;
+			val[SCC]+=a[cur];
 			if(cur==u)break;
+		}
+	}
+}
+
+void Toposort(){
+	queue<int>q;
+	for(int i=1;i<=SCC;i++){
+		if(ind[i]==0)q.push(i);
+		f[i]=-inf;
+	}
+	f[bel[S]]=val[bel[S]];
+	while(q.size()){
+		int u=q.front();q.pop();
+		for(int v:g[u]){
+			ind[v]--;
+			if(f[u]!=-inf)f[v]=max(f[v],f[u]+val[v]);
+			if(ind[v]==0)q.push(v);
 		}
 	}
 }
@@ -64,21 +85,22 @@ int main(){
 		Link(x,y);
 		links.push_back(make_pair(x,y));
 	}
+	for(int i=1;i<=n;i++)a[i]=read();
+	S=read();P=read();
+	for(int i=1;i<=P;i++)bar.push_back(read());
 	for(int i=1;i<=n;i++)
 		if(!dfn[i])Tarjan(i);
 	for(auto& link:links){
 		int x=link.first;
 		int y=link.second;
 		if(bel[x]==bel[y])continue;
-		oud[bel[x]]++;
+		g[bel[x]].push_back(bel[y]);
+		ind[bel[y]]++;
 	}
-	int pos=0,cnt=0;
-	for(int i=1;i<=SCC;i++)
-		if(oud[i]==0){
-			cnt++;
-			pos=i;
-		}
-	if(cnt==1)cout<<siz[pos];
-	else cout<<0;
+	Toposort();
+	
+	int ans=0;
+	for(int b:bar)ans=max(ans,f[bel[b]]);
+	cout<<ans;
 	return 0;
 }

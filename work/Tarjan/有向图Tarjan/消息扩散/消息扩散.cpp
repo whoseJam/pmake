@@ -25,7 +25,7 @@ namespace FastIO{
 using FastIO::read;
 
 const int N=100005;
-int low[N],dfn[N],bel[N],SCC,tot,n,m,oud[N],siz[N];
+int low[N],dfn[N],bel[N],SCC,tot,n,m,ind[N];
 vector<pair<int,int>> links;
 vector<int>G[N];
 stack<int>stk;
@@ -51,7 +51,6 @@ void Tarjan(int u){
 			stk.pop();
 			ins[cur]=false;
 			bel[cur]=SCC;
-			siz[SCC]++;
 			if(cur==u)break;
 		}
 	}
@@ -70,15 +69,11 @@ int main(){
 		int x=link.first;
 		int y=link.second;
 		if(bel[x]==bel[y])continue;
-		oud[bel[x]]++;
+		ind[bel[y]]++;
 	}
-	int pos=0,cnt=0;
+	int ans=0;
 	for(int i=1;i<=SCC;i++)
-		if(oud[i]==0){
-			cnt++;
-			pos=i;
-		}
-	if(cnt==1)cout<<siz[pos];
-	else cout<<0;
+		if(ind[i]==0)ans++;
+	cout<<ans;
 	return 0;
 }
