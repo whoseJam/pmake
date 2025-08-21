@@ -5,6 +5,8 @@ export class Interp {
     static colorInterp(object: any, key: string): (t: number) => void;
     static normalizedColorInterp(object: any, key: string): (t: number) => void;
     static stringInterp(object: any, key: string): (t: number) => void;
+    static blankStringInterp(object: any, key: string): (t: number) => void;
+    static blankChildInterp(object: any, key: string): (t: number) => void;
     static arrayInterp(object: any, key: string): (t: number) => void;
     static matrixInterp(object: any, key: string): (t: number) => void;
     static translateInterp(object: any, key: string): (t: number) => void;

@@ -59,6 +59,10 @@ export class RenderNode {
     __remove() {
         this.nake().remove();
     }
+    __removeChild(element: RenderNode | Element) {
+        if (element instanceof RenderNode) this.nake().removeChild(element.nake());
+        else this.nake().removeChild(element);
+    }
     append(element: string | RenderNode) {
         if (typeof element === "string") {
             const child = new this.class(this.parent, this, element);
@@ -78,7 +82,6 @@ export class RenderNode {
         }
         const render = this;
         const node = this.parent;
-        const LLLLLL = this.parent.delay() + this.parent.duration();
         function structure(t: number) {
             if (this.target && t === 1) {
                 this.target.__append(render);

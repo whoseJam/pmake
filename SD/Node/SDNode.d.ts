@@ -32,7 +32,6 @@ export class SDNode {
      * @returns Returns true if the aspect ratio is fixed; otherwise, false.
      */
     fixAspect(): boolean;
-
     /**
      * Gets the default render layer for this component.
      * The layer determines the display order and may affect visual stacking (z-index).

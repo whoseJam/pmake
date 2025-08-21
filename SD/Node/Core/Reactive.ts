@@ -1,4 +1,5 @@
 import { SDNode } from "@/Node/SDNode";
+import { RenderNode } from "@/Renderer/RenderNode";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 function hasChanged(v1: any, v2: any, precise?: (v1: number, v2: number) => boolean) {
@@ -290,7 +291,7 @@ export function reactive(object: { [key: string]: any }, fatherObject?: any) {
         get(object, key: string, receiver) {
             const value = Reflect.get(object, key, receiver);
             traceInput(object, key, value);
-            if (value instanceof SDNode) return value;
+            if (value instanceof SDNode || value instanceof RenderNode) return value;
             if (typeof value === "object") return reactive(value, object);
             return value;
         },

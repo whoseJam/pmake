@@ -87,6 +87,28 @@ export class Interp {
             }
         };
     }
+    static blankStringInterp(object, key) {
+        const set = setter(object, key);
+        return function (t) {
+            if (this.reverse) {
+                if (t === 0) set(" ");
+                if (t === 1) set(this.target);
+            } else {
+                if (t === 0) set(" ");
+                if (t === 1) set(this.target);
+            }
+        };
+    }
+    static blankChildInterp(object, key) {
+        return function (t) {
+            if (t === 0) {
+                if (this.source) object.__removeChild(this.source);
+            }
+            if (t === 1) {
+                if (this.target) object.__append(this.target);
+            }
+        };
+    }
     static arrayInterp(object, key) {
         const set = setter(object, key);
         return function (t) {

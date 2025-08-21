@@ -4,7 +4,13 @@ const svg = sd.svg();
 const C = sd.color();
 const T = 500;
 
-sd.main(TestDigitFade);
+sd.main(Test1);
+
+async function TestTwoDigitColorTransform() {
+    const m = new sd.Mathjax(svg, "12").subtextColor("12", C.red);
+    await sd.pause();
+    m.startAnimate().text("a").endAnimate();
+}
 
 async function TestColorTransformThenCover() {
     const m1 = new sd.Mathjax(svg, "1").x(100).y(100);
@@ -231,7 +237,7 @@ async function Test5() {
 async function Test4() {
     const math = new sd.Mathjax(svg, "\\frac a b=c").fontSize(40).x(500).y(100);
     await sd.pause();
-    math.startAnimate(T).text("a=bc", { a: "a", b: "b", c: "c" }).endAnimate();
+    math.startAnimate(T).text("a=bc", { "a": "a", "b": "b", "c": "c", "=": "=" }).endAnimate();
 }
 
 async function Test3() {

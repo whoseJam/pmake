@@ -95,7 +95,6 @@ export class ActionList {
             after.source = before.source;
             if (after.source === after.target) {
                 before.set(Action.hideFlag);
-                before.hideBy = after;
             } else before.set(Action.stopFlag);
             return;
         }
@@ -112,7 +111,6 @@ export class ActionList {
         if (before.l === after.l && before.r === after.r && before.l !== before.r) {
             after.source = before.source;
             before.set(Action.hideFlag);
-            before.hideby = after;
             return;
         }
     }

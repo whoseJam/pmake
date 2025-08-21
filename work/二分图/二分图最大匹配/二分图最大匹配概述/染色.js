@@ -13,8 +13,8 @@ const links = [
     [3, 5],
     [3, 7],
     [5, 6],
-    [6, 7]
-]
+    [6, 7],
+];
 
 sd.init(() => {
     grid.at(0.25, 0).newNode(1);
@@ -25,7 +25,7 @@ sd.init(() => {
     grid.at(1, 0.5).newNode(6);
     grid.at(0.75, 0).newNode(7);
     links.forEach(link => grid.link(link[0], link[1]));
-})
+});
 
 sd.main(async () => {
     await sd.pause();
@@ -33,17 +33,17 @@ sd.main(async () => {
     Dfs(1, C.blue);
     grid.endAnimate();
     await sd.pause();
+    grid.uneffectAll();
     bi.startAnimate().freeze();
-    for (let i = 1; i <= n; i++)
-        bi.newNodeFromExistElement(i, grid.element(i), grid.color(i).main === C.blue ? 0 : 1);
+    for (let i = 1; i <= n; i++) bi.newNodeFromExistElement(i, grid.element(i), grid.color(i).fill === C.blue ? 0 : 1);
     links.forEach(link => {
         bi.newLinkFromExistElement(link[0], link[1], grid.element(link[0], link[1]));
     });
     bi.unfreeze().endAnimate();
-})
+});
 
 function Dfs(u, color) {
-    if (grid.color(u).main !== C.white) return;
+    if (grid.color(u).fill !== C.white) return;
     grid.color(u, color);
     for (let link of grid.outLinks(u)) {
         if (color === C.blue) Dfs(grid.toNodeId(link, u), C.green);

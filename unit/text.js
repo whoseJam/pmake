@@ -5,12 +5,23 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestSelfReplace);
+sd.main(TestColorMigrate);
+
+async function TestColorMigrate() {
+    const text = new sd.Text(svg, "hello").x(100).y(100).subtextColor("ll", C.red);
+    await sd.pause();
+    const text_ = new sd.Text(svg)
+        .x(100)
+        .y(200)
+        .startAnimate()
+        .text("aa", [[text, "ll", "aa"]])
+        .endAnimate();
+}
 
 async function TestSelfReplace() {
     const text = new sd.Text(svg, "1").x(100).y(100).fontSize(50);
     await sd.pause();
-    text.startAnimate().text("1").endAnimate();
+    text.startAnimate(100000).text("1").endAnimate();
 }
 
 async function TestTransformFromOtherSubtext() {

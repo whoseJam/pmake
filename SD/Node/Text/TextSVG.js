@@ -1,7 +1,7 @@
-import { Context } from "@/Animate/Context";
 import { Interp } from "@/Animate/Interp";
 import { BaseSVG } from "@/Node/Text/BaseSVG";
 import { BaseText } from "@/Node/Text/BaseText";
+import { Text } from "@/Node/Text/Text";
 import { TextEngine } from "@/Node/Text/TextEngine";
 import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
@@ -61,7 +61,7 @@ export class TextSVG extends BaseText {
 
         this.vars.watch("x", Factory.action(this, this._.nake, "x", Interp.numberInterp));
         this.vars.watch("y", Factory.action(this, this._.nake, "y", Interp.numberInterp));
-        this.vars.watch("html", Factory.action(this, this._.nake, "innerHTML", Interp.stringInterp));
+        this.vars.watch("html", Factory.action(this, this._.nake, "innerHTML", Interp.blankStringInterp));
         this.vars.watch("fontSize", Factory.action(this, this._.nake, "font-size", Interp.numberInterp));
         this.vars.watch("fontFamily", Factory.action(this, this._.nake, "font-family", Interp.stringInterp));
         this.vars.watch("x", (newX, oldX) => {
@@ -93,11 +93,6 @@ export class TextSVG extends BaseText {
             this.__flushTransformings();
             this.__currentTransforming(() => this.__createTransforming({ size: oldSize }, { size: newSize }));
         });
-        this.vars.watch("fontFamily", (newFamily, oldFamily) => {
-            if (this.duration() === 0) return;
-            this.__flushTransformings();
-            this.__currentTransforming(() => this.__createTransforming({ family: oldFamily }, { family: newFamily }));
-        });
 
         this._.nake.setAttribute("text-anchor", "start");
         this._.nake.setAttribute("alignment-baseline", "text-before-edge");
@@ -110,6 +105,8 @@ export class TextSVG extends BaseText {
     }
 }
 
+TextSVG.extend(Text);
+
 Object.assign(TextSVG.prototype, {
     ...BaseSVG.prototype,
     fontSize(size) {
@@ -117,19 +114,18 @@ Object.assign(TextSVG.prototype, {
         Check.validateNumber(size, `${this.constructor.name}.fontSize`);
         if (this.vars.fontSize > 1e-1) {
             const k = size / this.vars.fontSize;
-            this.vars.width *= k;
-            this.vars.height *= k;
+            this.vars.setTogether({
+                width: this.vars.width * k,
+                height: this.vars.height * k,
+            });
         } else {
             const box = TextEngine.fontSizeToBox(this.vars.text, fontSize);
-            this.vars.width = box.width;
-            this.vars.height = box.height;
+            this.vars.setTogether({
+                width: box.width,
+                height: box.height,
+            });
         }
         this.vars.lpset("fontSize", size);
-        return this;
-    },
-    fontFamily(family) {
-        if (arguments.length === 0) return this.vars.fontFamily;
-        this.vars.fontFamily = family;
         return this;
     },
     width(width) {
@@ -154,7 +150,7 @@ Object.assign(TextSVG.prototype, {
         }
         return this;
     },
-    text(text, mapping = {}, auto = true) {
+    text(text, mapping = [], auto = true) {
         if (arguments.length === 0) return this.vars.text;
         text = String(text);
         const attr = make1d(text.length, {
@@ -162,47 +158,20 @@ Object.assign(TextSVG.prototype, {
             stroke: this.stroke(),
         });
         this._.attr = attr;
-        const box = TextEngine.boundingBox(text, this.fontFamily(), this.fontSize());
+        const box = TextEngine.textBoundingBox(text, this.fontFamily(), this.fontSize());
         if (this.duration() > 0 && TextEngine.fontExists(this.fontFamily())) {
-            const context = new Context(this);
-            context.till(0, 0);
-            this.vars.html = " ";
-            context.till(0, 1);
             this.__createTransforming({ text: this.vars.text }, { text }, mapping, auto);
-            context.till(1, 1);
-            this.vars.html = "";
-            this.vars.text = text;
-            this.vars.html = parseToHTML.call(this);
-            context.recover();
-        } else {
-            this.vars.text = text;
-            this.vars.html = parseToHTML.call(this);
         }
+        this.vars.text = text;
+        this.vars.html = parseToHTML.call(this);
         this.vars.setTogether({
             width: box.width,
             height: box.height,
         });
         return this;
     },
-    fontFamily(family) {
-        if (arguments.length === 0) return this.vars.fontFamily;
-        const box = TextEngine.boundingBox(this.text(), family, this.fontSize());
-        if (this.duration() > 0 && TextEngine.fontExists(family)) {
-            const context = new Context(this);
-            context.till(0, 0);
-            this.vars.html = " ";
-            context.till(0, 1);
-            this.__createTransforming({ family: this.fontFamily() }, { family });
-            context.till(1, 1);
-            this.vars.html = "";
-            this.vars.fontFamily = family;
-            this.vars.html = parseToHTML.call(this);
-            context.recover();
-        } else this.vars.fontFamily = family;
-        this.vars.setTogether({
-            width: box.width,
-            height: box.height,
-        });
+    fontFamily() {
+        if (arguments.length === 0) return "Consolas";
         return this;
     },
     intValue() {
@@ -235,20 +204,10 @@ Object.assign(TextSVG.prototype, {
         else if (operator === "last") update(matched[matched.length - 1]);
         else update(matched[operator]);
         if (this.duration() > 0 && TextEngine.fontExists(this.fontFamily())) {
-            const context = new Context(this);
-            context.till(0, 0);
-            this.vars.html = " ";
-            context.till(0, 1);
             this.__createTransforming({ attr: this._.attr }, { attr });
-            context.till(1, 1);
-            this._.attr = attr;
-            this.vars.html = "";
-            this.vars.html = parseToHTML.call(this);
-            context.recover();
-        } else {
-            this._.attr = attr;
-            this.vars.html = parseToHTML.call(this);
         }
+        this._.attr = attr;
+        this.vars.html = parseToHTML.call(this);
         return this;
     },
     __flushTransformings() {
@@ -267,7 +226,7 @@ Object.assign(TextSVG.prototype, {
             }
         }
     },
-    __createTransforming(source, target, mapping = {}, auto = true) {
+    __createTransforming(source, target, mapping = [], auto = true, color = true) {
         this.__flushTransformings();
         const config = config => {
             return {
@@ -283,10 +242,10 @@ Object.assign(TextSVG.prototype, {
         const r = this.delay() + this.duration();
         for (const transforming of this._.transformings) {
             if (transforming.l === l && transforming.r === r) {
-                transforming.replayByText(config(target), mapping);
+                transforming.replay(config(target), color);
                 return;
             }
         }
-        this._.transformings.push(TextEngine.transformText(this, config(source), config(target), mapping, auto));
+        this._.transformings.push(TextEngine.transformText(this, config(source), config(target), mapping, auto, color));
     },
 });

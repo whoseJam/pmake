@@ -13,9 +13,7 @@ export function createMathjaxRenderNode(parent: SDNode, render: RenderNode, elem
         svg.children[1].removeAttribute(key);
     }
     for (const key of ["fill", "stroke", "x", "y", ["font-size", "fontSize"]]) {
-        // @ts-ignore
         if (typeof key === "string") svg.setAttribute(key, parent.vars[key]);
-        // @ts-ignore
         else svg.setAttribute(key[0], parent.vars[key[1]]);
     }
     return new MathjaxNode(parent, render, svg);
@@ -30,7 +28,7 @@ export class MathjaxNode extends SVGNode {
             TextEngine.adjustMathjax(this);
         } else {
             const element = Dom.deepClone(arg0.element);
-            super(arg0.parent, arg0.render, element);
+            super(arg0.parent, undefined, element);
         }
     }
     clone(): MathjaxNode {
