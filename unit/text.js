@@ -5,12 +5,18 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestColorMigrate);
+sd.main(TestSubtextColor);
+
+async function TestSubtextColor() {
+    const text = new sd.Text(svg, "for(int i=1;i<=n;i++)ans+=i;").x(100).y(100).fontSize(40);
+    await sd.pause();
+    text.startAnimate().subtextColor("i=1", C.red).endAnimate();
+}
 
 async function TestColorMigrate() {
     const text = new sd.Text(svg, "hello").x(100).y(100).subtextColor("ll", C.red);
     await sd.pause();
-    const text_ = new sd.Text(svg)
+    new sd.Text(svg)
         .x(100)
         .y(200)
         .startAnimate()

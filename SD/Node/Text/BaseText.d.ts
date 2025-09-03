@@ -1,6 +1,14 @@
 import { SD2DNode } from "@/Node/SD2DNode";
 import { SDColor } from "@/Utility/Color";
 
+type TextMappingSubtextItem = [string, string];
+type TextMappingObjectSubtextItem<T> = [T, string, string];
+type TextMappingObjectItem<T> = [T, string];
+type TextMappingItem<T> = TextMappingSubtextItem | TextMappingObjectSubtextItem<T> | TextMappingObjectItem<T>;
+type TextMappingDictionary = { [key: string]: string };
+type TextMappingArray<T> = Array<TextMappingItem<T>>;
+type TextMapping<T> = TextMappingDictionary | TextMappingArray<T>;
+
 export class BaseText extends SD2DNode {
     constructor(target: SDNode | RenderNode, text?: number | string);
     /**
@@ -28,7 +36,7 @@ export class BaseText extends SD2DNode {
      * const text = new sd.Text(svg, "1");
      * text.startAnimate().text("2").endAnimate();
      */
-    text(text: number | string): this;
+    text(text: number | string, mapping?: TextMapping<ThisType>, auto?: boolean): this;
     /**
      * Gets the fill color of this text component.
      * @returns The fill color.

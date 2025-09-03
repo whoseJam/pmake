@@ -4,6 +4,7 @@ import { BaseText } from "@/Node/Text/BaseText";
 import { Text } from "@/Node/Text/Text";
 import { TextEngine } from "@/Node/Text/TextEngine";
 import { Check } from "@/Utility/Check";
+import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 import { make1d } from "@/Utility/Util";
 
@@ -159,12 +160,10 @@ Object.assign(TextSVG.prototype, {
         });
         this._.attr = attr;
         const box = TextEngine.textBoundingBox(text, this.fontFamily(), this.fontSize());
-        if (this.duration() > 0 && TextEngine.fontExists(this.fontFamily())) {
-            this.__createTransforming({ text: this.vars.text }, { text }, mapping, auto);
-        }
+        if (this.duration() > 0 && TextEngine.fontExists(this.fontFamily())) this.__createTransforming({ text: this.vars.text }, { text }, mapping, auto);
         this.vars.text = text;
-        this.vars.html = parseToHTML.call(this);
         this.vars.setTogether({
+            html: parseToHTML.call(this),
             width: box.width,
             height: box.height,
         });
@@ -175,7 +174,9 @@ Object.assign(TextSVG.prototype, {
         return this;
     },
     intValue() {
-        return +this.text();
+        const i = Math.floor(+this.text());
+        if (isNaN(i)) ErrorLauncher.failToParseAsIntValue(this.text());
+        return i;
     },
     __subtextAttribute(subtext, attribute, operator) {
         subtext = String(subtext);
@@ -203,9 +204,7 @@ Object.assign(TextSVG.prototype, {
         else if (operator === "first") update(matched[0]);
         else if (operator === "last") update(matched[matched.length - 1]);
         else update(matched[operator]);
-        if (this.duration() > 0 && TextEngine.fontExists(this.fontFamily())) {
-            this.__createTransforming({ attr: this._.attr }, { attr });
-        }
+        if (this.duration() > 0 && TextEngine.fontExists(this.fontFamily())) this.__createTransforming({ attr: this._.attr }, { attr }, [], true, false);
         this._.attr = attr;
         this.vars.html = parseToHTML.call(this);
         return this;
@@ -238,14 +237,16 @@ Object.assign(TextSVG.prototype, {
                 y: config.y || this.y(),
             };
         };
+        [source, target] = [config(source), config(target)];
         const l = this.delay();
         const r = this.delay() + this.duration();
         for (const transforming of this._.transformings) {
             if (transforming.l === l && transforming.r === r) {
-                transforming.replay(config(target), color);
+                transforming.target = target;
+                transforming.play(auto, color);
                 return;
             }
         }
-        this._.transformings.push(TextEngine.transformText(this, config(source), config(target), mapping, auto, color));
+        this._.transformings.push(TextEngine.transformText(this, source, target, mapping, auto, color));
     },
 });

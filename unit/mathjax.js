@@ -4,7 +4,45 @@ const svg = sd.svg();
 const C = sd.color();
 const T = 500;
 
-sd.main(Test1);
+sd.main(TestMatchNestedSum);
+
+async function TestMatchNestedSum() {
+    const text = new sd.Mathjax(svg, "\\sum_{i=1}^3a_i\\sum_{j=1}^3b_j").x(100).y(100);
+    await sd.pause();
+    text.startAnimate().subtextColor("\\sum_{i=1}^3a_i", C.red).endAnimate();
+}
+
+async function TestSetSourceColor() {
+    const a = new sd.Mathjax(svg, "a").x(100).y(100).fontSize(50);
+    await sd.pause();
+    a.startAnimate()
+        .text("ac", [["", "c"]])
+        .subtextColor("c", C.textBlue)
+        .endAnimate();
+}
+
+async function TestMerge() {
+    const a = new sd.Mathjax(svg, "a").x(100).y(100);
+    const b = new sd.Mathjax(svg, "b").x(200).y(100);
+    const c = new sd.Mathjax(svg).x(150).y(200);
+    await sd.pause();
+    c.startAnimate()
+        .text(
+            "c",
+            [
+                { source: a, target: { subtext: "c", i: 0 } },
+                { source: b, target: { subtext: "c", i: 0 } },
+            ],
+            false
+        )
+        .endAnimate();
+}
+
+async function TestSigmaSubtextTransform() {
+    const text = new sd.Mathjax(svg, "\\sum_{\\begin{aligned}2\\le & i\\le n\\\\i\\; is &\\; even \\end{aligned} }i").x(100).y(100);
+    await sd.pause();
+    text.startAnimate().subtextColor("\\begin{aligned}2\\le & i\\le \\end{aligned}", C.red).endAnimate();
+}
 
 async function TestTwoDigitColorTransform() {
     const m = new sd.Mathjax(svg, "12").subtextColor("12", C.red);

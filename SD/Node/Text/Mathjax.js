@@ -40,18 +40,23 @@ export class Mathjax extends BaseText {
         this.vars.watch("stroke", Factory.action(this, math, "stroke", Interp.colorInterp));
         this.vars.watch("fontSize", Factory.action(this, math, "font-size", Interp.numberInterp));
         this.vars.watch("math", (vn, vo) => {
-            console.log("new math=", vn, "old math=", vo);
             new Action(this.delay(), this.delay() + this.duration(), vo, vn, Interp.blankChildInterp(this.layer()), this, "child");
         });
         this.vars.watch("x", x => {
             if (this.duration() === 0) return;
             this.__flushTransformings();
-            this.__currentTransforming(() => this.__createMathjax("x", x));
+            this.__currentTransforming(transforming => {
+                transforming.target.setAttribute("x", x);
+                transforming.play();
+            });
         });
         this.vars.watch("y", y => {
             if (this.duration() === 0) return;
             this.__flushTransformings();
-            this.__currentTransforming(() => this.__createMathjax("y", y));
+            this.__currentTransforming(transforming => {
+                transforming.target.setAttribute("y", y);
+                transforming.play();
+            });
         });
         this.vars.watch("fill", (vn, vo) => {
             if (this.duration() === 0) return;
@@ -68,7 +73,10 @@ export class Mathjax extends BaseText {
         this.vars.watch("fontSize", fontSize => {
             if (this.duration() === 0) return;
             this.__flushTransformings();
-            this.__currentTransforming(() => this.__createMathjax("font-size", fontSize));
+            this.__currentTransforming(transforming => {
+                transforming.target.setAttribute("font-size", fontSize);
+                transforming.play();
+            });
         });
 
         this.text(text);
@@ -232,10 +240,13 @@ Object.assign(Mathjax.prototype, {
         const r = this.delay() + this.duration();
         for (const transforming of this._.transformings) {
             if (transforming.l === l && transforming.r === r) {
-                transforming.replay(target, color);
+                transforming.target = target;
+                transforming.play(auto, color);
                 return;
             }
         }
-        this._.transformings.push(TextEngine.transformMathjax(this, source, target, mapping, auto, color));
+        const transforming = TextEngine.transformMathjax(this, source, target, mapping, auto, color);
+        this._.transformings.push(transforming);
+        new Action(this.delay(), this.delay() + this.duration(), undefined, undefined, transforming.interp(), this, "transforming");
     },
 });

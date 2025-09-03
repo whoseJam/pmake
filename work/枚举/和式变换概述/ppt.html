@@ -13,9 +13,6 @@
             \sum_{k\in K}(a_k+b_k)=\sum_{k\in K}a_k+\sum_{k\in K}b_k
             $$
         </p>
-        <iframe data-animation="./trans1.js"
-            data-viewBoxDelta="0 -10 0 20"
-            style="width: 1000px; height: 100px;"></iframe>
         <div class="fragment quote">
             <span>这是加法交换律和加法结合律带来的必然结果</span>
             $$
@@ -25,69 +22,73 @@
             \end{aligned}
             $$
         </div>
+        <iframe data-animation="./trans1.js" class="fragment"
+            data-viewBoxDelta="0 -10 0 20"
+            style="width: 1000px; height: 100px;"></iframe>
     </section>
     <section>
         <h2>“把常数拿出来”</h2>
         <p>
+            设 $c$ 是一个常数...
             $$
-            \sum_{k\in K}C a_k=C\sum_{k\in K}a_k
+            \sum_{k\in K}c a_k=c\sum_{k\in K}a_k
             $$
         </p>
-        <iframe data-animation="./trans2.js"
-            data-viewBoxDelta="0 -10 0 20"
-            style="width: 1000px; height: 100px;"></iframe>
         <div class="fragment quote">
             <span>这是乘法分配律带来的必然结果</span>
             $$
             \begin{aligned}
-            answer&=(Ca_1+Ca_2+Ca_3+...+Ca_n) \\
-            &=C(a_1+a_2+a_3+...+a_n)
+            answer&=(ca_1+ca_2+ca_3+...+ca_n) \\
+            &=c(a_1+a_2+a_3+...+a_n)
             \end{aligned}
             $$
         </div>
+        <iframe data-animation="./trans2.js" class="fragment"
+            data-viewBoxDelta="0 -10 0 20"
+            style="width: 1000px; height: 100px;"></iframe>
     </section>
     <section>
         <h2>“把独立多重和式拆开”</h2>
+        <p class="quote">如果两个 $\sum$ 的循环变量没有依赖关系，则可以把这两个 $\sum$ 分开计算</p>
         <p>
             $$
             \sum_{i\in I}a_i\sum_{j\in J}b_j=(\sum_{i\in I}a_i)(\sum_{j\in J}b_j)
             $$
         </p>
-        <iframe data-animation="./trans3.js"
+        <iframe data-animation="./trans3.js" class="fragment"
             data-viewBoxDelta="0 -10 0 20"
             style="width: 1000px; height: 100px;"></iframe>
     </section>
     <section>
         <h2>小试一下</h2>
         <div style="display: flex; flex-wrap: wrap;">
-            <div class="fragment" data-fragment-index="0"
-                style="display: flex; flex-grow: 1; justify-content: space-around; align-items: center;">
-                <span style="margin-right: 20px;">$$\sum_{i=1}^{n}kx_i=k\sum_{i=1}^{n}x_i$$</span>
-                <span style="width: 50%;" class="fragment quote" data-fragment-index="1">当然可以，因为 $k$ 与循环变量 $i$ 没有任何关系，那么 $k$ 就是一个常数</span>
+            <div style="display: flex; flex-grow: 1; justify-content: space-around; align-items: center;">
+                <span style="margin-right: 20px; width: 500px;">$$\sum_{i=1}^{n}kx_i=k\sum_{i=1}^{n}x_i$$</span>
+                <span style="width: 50%;" class="fragment quote" data-fragment-index="0">当然可以，因为 $k$ 与循环变量 $i$ 没有任何关系，那么 $k$ 就是一个常数</span>
             </div>
-            <div class="fragment" data-fragment-index="2" 
+            <div class="fragment" data-fragment-index="1" 
                 style="display: flex; flex-grow: 1; justify-content: space-around; align-items: center;">
-                <span style="margin-right: 20px;">$$\sum_{i=1}^niF(i)=F(i)\sum_{i=1}^ni$$</span>
-                <span style="width: 50%;" class="fragment quote">当然不行，$F(i)$ 是和 $i$ 有关的函数，会随着 $i$ 的变化而变化，那么它就不是一个常数</span>
+                <span style="margin-right: 20px; width: 500px;">$$\sum_{i=1}^niF(i)=F(i)\sum_{i=1}^ni$$</span>
+                <span style="width: 50%;" class="fragment quote">当然不行，$F(i)$ 是和 $i$ 有关的函数，会随着循环变量 $i$ 的变化而变化</span>
             </div>
         </div>
         <iframe data-animation="./clarify1.js" class="fragment"
-            data-fragment-index="2"
+            data-fragment-index="1"
             data-viewBoxDelta="0 -10 0 20"
-            style="width: 1000px; height: 200px;"></iframe>
-        <p class="fragment quote">甚至 $F(i)\sum_{i=1}^ni$ 本身就是一个有问题的写法<span class="fragment">——总不能在一个循环的外面使用该循环体定义的循环变量吧</span></p>
+            style="width: 1000px; height: 180px;"></iframe>
+        <p class="fragment quote">甚至后者本身就是一个有问题的写法<span class="fragment">——不应该在一个循环的外部，去使用该循环定义的循环变量</span></p>
     </section>
     <section>
         <h2>小试一下</h2>
         <div style="display: flex; flex-wrap: wrap;">
             <div style="display: flex; flex-grow: 1; justify-content: space-around; align-items: center;">
                 <span style="margin-right: 20px;">$$\sum_{i=1}^n\sum_{j=1}^na_ib_j=\sum_{i=1}^na_i\sum_{j=1}^nb_j$$</span>
-                <span style="width: 50%;" class="fragment quote">我们把 $a_i$ 视作了常数往外提，这是可以的，因为对内层循环来说它的循环变量是 $j$，无论 $j$ 如何变化都无法改变 $a_i$ 的值，所以 $a_i$ 对内层循环而言是常数，可以提</span>
+                <span style="width: 50%;" class="fragment quote">我们把 $a_i$ 视作了常数往外<b style="color: purple;">提了一层</b><span class="fragment">，这是可以的，因为对内层循环来说其循环变量是 $j$，无论 $j$ 如何变化都无法改变 $a_i$ 的值，所以 $a_i$ 对内层循环而言是常数，可以提</span></span>
             </div>
         </div>
         <iframe data-animation="./clarify2.js"
             data-viewBoxDelta="0 -10 0 20"
-            style="width: 1000px; height: 100px;"></iframe>
+            style="width: 1000px; height: 100px; margin-top: 30px;"></iframe>
     </section>
     <section>
         <h2>小试一下</h2>
@@ -133,16 +134,15 @@
     </section>
     <section>
         <h2>“交换枚举顺序”</h2>
+        <div class="quote">
+            <span>当有多个循环嵌套起来的时候，我们可以在保证<b style="color: red;">枚举集合不变</b>的情况下，<b style="color: purple;">改变枚举顺序</b>，把外层枚举放到里面去，把内层枚举放到外面来</span>
+        </div>
         <p>
             $$
             \sum_{i\in I}\sum_{j\in J(i)} a_{i,j}=\sum_{j\in J'}\sum_{i\in I'(j)}a_{i,j}
             $$
             只要 $\{(i,j)|i\in I,j\in J(i)\}=\{(i,j)|j\in J',i\in I'(j)\}$
         </p>
-        <div class="fragment quote">
-            <h3>人话</h3>
-            <span>当有多个循环嵌套起来的时候，我们可以在保证<b style="color: red;">枚举集合不变</b>的情况下，<b style="color: purple;">改变枚举顺序</b>，把外层枚举放到里面去，把内层枚举放到外面来</span>
-        </div>
     </section>
     <section>
         <h2>小试一下</h2>
