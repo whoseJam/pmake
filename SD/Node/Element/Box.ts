@@ -1,15 +1,15 @@
 import { BaseElement } from "@/Node/Element/BaseElement";
 import { Rect } from "@/Node/Shape/Rect";
+import { RenderNode } from "@/Renderer/RenderNode";
 import { Rule as R } from "@/Rule/Rule";
 
 export class Box extends BaseElement {
-    constructor(target, value) {
+    constructor(target: SDNode | RenderNode, value?: any) {
         super(target);
 
-        this.type("Box");
+        this.childAs("background", new Rect(this), R.background());
 
-        const background = new Rect(this);
-        this.childAs("background", background, R.background());
+        this.type("Box");
 
         this.value(value);
     }

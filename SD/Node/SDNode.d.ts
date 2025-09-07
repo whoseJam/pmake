@@ -287,3 +287,8 @@ export class SDNode {
     boundingBox(box: Box): this;
     boundingBox(x: number, y: number, width: number, height: number): this;
 }
+
+type AnyFunction = (...args: any[]) => any;
+
+export type SDNodeWithText = SDNode & { text: AnyFunction };
+export type SDNodeWithColor = SDNode & { color: AnyFunction };

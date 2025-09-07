@@ -1,7 +1,6 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-const div = sd.div();
 const C = sd.color();
 const R = sd.rule();
 const EN = sd.enter();
