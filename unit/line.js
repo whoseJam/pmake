@@ -47,7 +47,7 @@ async function TestMarker() {
 }
 
 async function TestLine() {
-    const line = new sd.Line(svg).x(100).y(100);
+    const line = new sd.Line(svg, new sd.Rect(svg).scale(0.2).color(C.blue)).x(100).y(100);
     await sd.pause();
     line.startAnimate().width(100).endAnimate();
     await sd.pause();

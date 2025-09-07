@@ -93,6 +93,11 @@ export class SDSVGNode extends SDNode {
         const attributeMap = {
             x: ["x", Interp.numberInterp],
             y: ["y", Interp.numberInterp],
+            x1: ["x1", Interp.numberInterp],
+            y1: ["y1", Interp.numberInterp],
+            x2: ["x2", Interp.numberInterp],
+            y2: ["y2", Interp.numberInterp],
+            d: ["d", Interp.pathInterp],
             cx: ["cx", Interp.numberInterp],
             cy: ["cy", Interp.numberInterp],
             r: ["r", Interp.numberInterp],

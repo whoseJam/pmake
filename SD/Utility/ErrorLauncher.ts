@@ -1,7 +1,7 @@
 import { SDNode } from "@/Node/SDNode";
 
 export class ErrorLauncher {
-    static unknownKeyError(key) {
+    static unknownKeyError(key: string) {
         throw new Error(`Unknown key ${key}.`);
     }
     static invalidCastError(key) {

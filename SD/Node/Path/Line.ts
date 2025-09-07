@@ -1,35 +1,21 @@
-import { Interp } from "@/Animate/Interp";
 import { Vector as V } from "@/Math/Vector";
 import { BasePath } from "@/Node/Path/BasePath";
 import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
-import { Factory } from "@/Utility/Factory";
 
 export class Line extends BasePath {
     constructor(target: SDNode | RenderNode, value?: any) {
         super(target);
 
-        this._.nake = this.__createSVGNode("line");
-
-        this.type("Line");
-
-        this.vars.merge({
+        this.__createSVGNode("line", {
             x1: 0,
             y1: 0,
             x2: 40,
             y2: 40,
         });
 
-        this._.nake.setAttribute("x1", this.vars.x1);
-        this._.nake.setAttribute("y1", this.vars.y1);
-        this._.nake.setAttribute("x2", this.vars.x2);
-        this._.nake.setAttribute("y2", this.vars.y2);
-
-        this.vars.watch("x1", Factory.action(this, this._.nake, "x1", Interp.numberInterp));
-        this.vars.watch("y1", Factory.action(this, this._.nake, "y1", Interp.numberInterp));
-        this.vars.watch("x2", Factory.action(this, this._.nake, "x2", Interp.numberInterp));
-        this.vars.watch("y2", Factory.action(this, this._.nake, "y2", Interp.numberInterp));
+        this.type("Line");
 
         this.value(value);
     }
@@ -39,7 +25,7 @@ export class Line extends BasePath {
         const x1 = this.x1();
         const x2 = this.x2();
         const ox = Math.min(x1, x2);
-        if (x === undefined) return ox;
+        if (arguments.length === 0) return ox;
         const dx = x - ox;
         this.freeze();
         this.x1(x1 + dx);
@@ -53,7 +39,7 @@ export class Line extends BasePath {
         const y1 = this.y1();
         const y2 = this.y2();
         const oy = Math.min(y1, y2);
-        if (y === undefined) return oy;
+        if (arguments.length === 0) return oy;
         const dy = y - oy;
         this.freeze();
         this.y1(y1 + dy);
@@ -66,7 +52,7 @@ export class Line extends BasePath {
     width(width?: number) {
         const x1 = this.x1();
         const x2 = this.x2();
-        if (width === undefined) return Math.abs(x1 - x2);
+        if (arguments.length === 0) return Math.abs(x1 - x2);
         if (x1 < x2) this.x2(x1 + width);
         else this.x1(x2 + width);
         return this;
@@ -76,7 +62,7 @@ export class Line extends BasePath {
     height(height?: number) {
         const y1 = this.y1();
         const y2 = this.y2();
-        if (height === undefined) return Math.abs(y1 - y2);
+        if (arguments.length === 0) return Math.abs(y1 - y2);
         if (y1 < y2) this.y2(y1 + height);
         else this.y1(y2 + height);
         return this;
@@ -85,6 +71,8 @@ export class Line extends BasePath {
         const v1 = this.source();
         const v2 = this.target();
         const d = V.sub(v2, v1);
+        console.log("this.vars=", this.vars);
+        console.log("v1=", v1, "v2=", v2, "d=", d, "at=", V.add(v1, V.numberMul(d, k)));
         return V.add(v1, V.numberMul(d, k));
     }
     getPointAtLength(length: number) {

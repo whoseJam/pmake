@@ -8,7 +8,13 @@ export class PolygonEngine {
         this.polygonSVG.setAttribute("opacity", 0);
     }
     static pointsToBox(points: Array<[number, number]>) {
-        if (points.length < 3) return undefined;
+        if (points.length < 3)
+            return {
+                x: 0,
+                y: 0,
+                width: 0,
+                height: 0,
+            };
         let x = points[0][0];
         let y = points[0][1];
         let mx = x;

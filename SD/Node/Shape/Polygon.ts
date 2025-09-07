@@ -7,20 +7,10 @@ export class Polygon extends BaseShape {
     constructor(target: SDNode | RenderNode, points = []) {
         super(target);
 
-        if (points.length >= 3) {
-            this.__createSVGNode("polygon", {
-                ...PolygonEngine.pointsToBox(points),
-                points,
-            });
-        } else {
-            this.__createSVGNode("polygon", {
-                x: 0,
-                y: 0,
-                width: 0,
-                height: 0,
-                points: [],
-            });
-        }
+        this.__createSVGNode("polygon", {
+            points: points.length >= 3 ? points : [],
+        });
+        this.vars.merge(PolygonEngine.pointsToBox(points));
 
         this.type("Polygon");
     }

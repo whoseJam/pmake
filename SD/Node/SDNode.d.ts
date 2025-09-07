@@ -1,6 +1,15 @@
 import { RenderNode } from "@/Renderer/RenderNode";
 import { SDRule } from "@/Rule/Rule";
 
+type XLocator = "x" | "cx" | "mx";
+type YLocator = "y" | "cy" | "my";
+type Box = {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+};
+
 export class SDNode {
     _: Record<string, any>;
     vars: any;
@@ -242,4 +251,39 @@ export class SDNode {
     onExitDefault(exit: (element: SDNode) => void): this;
     triggerExit(): this;
     tryUpdate(element: SDNode, update: () => void): void;
+
+    opacity(): number;
+    opacity(opacity: number): this;
+    inRange(point: [number, number]): boolean;
+    x(): number;
+    x(x: number): this;
+    y(): number;
+    y(y: number): this;
+    cx(): number;
+    cx(cx: number): this;
+    cy(): number;
+    cy(cy: number): this;
+    mx(): number;
+    mx(mx: number): this;
+    my(): number;
+    my(my: number): this;
+    width(): number;
+    width(width: number): this;
+    height(): number;
+    height(height: number): this;
+    scale(scale: number): this;
+    pos(x: number, y: number): this;
+    pos(x: XLocator, y: YLocator, dx?: number, dy?: number): this;
+    position(x: number, y: number): this;
+    position(x: XLocator, y: YLocator, dx?: number, dy?: number): this;
+    center(): [number, number];
+    center(cx: number, cy: number): this;
+    center(center: [number, number]): this;
+    kx(k: number): number;
+    ky(k: number): number;
+    dx(dx: number): this;
+    dy(dy: number): this;
+    boundingBox(): Box;
+    boundingBox(box: Box): this;
+    boundingBox(x: number, y: number, width: number, height: number): this;
 }
