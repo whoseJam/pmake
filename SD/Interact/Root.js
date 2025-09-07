@@ -1,6 +1,4 @@
-import { HTMLNode } from "@/Renderer/HTML/HTMLNode";
 import { RenderNode } from "@/Renderer/RenderNode";
-import { SVGNode } from "@/Renderer/SVG/SVGNode";
 import { Check } from "@/Utility/Check";
 
 const markerHardcode = [
@@ -10,7 +8,7 @@ const markerHardcode = [
 ];
 
 function defineMarkers() {
-    const nake = svg().nake();
+    const nake = svg().element();
     Snap(nake);
     const defs = Snap(nake.children[1]);
     markerHardcode.forEach(code => {
@@ -18,51 +16,15 @@ function defineMarkers() {
     });
 }
 
-function updateDivViewBox(box) {
-    const view = div();
-    const width = window.innerWidth;
-    const height = window.innerHeight;
-    const scaleX = width / box.width;
-    const scaleY = height / box.height;
-    const scale = Math.min(scaleX, scaleY);
-    const translateX = (width - box.width) / 2 - box.x * scale;
-    const translateY = (height - box.height) / 2 - box.y * scale;
-    view.setAttribute("transform", `translate(${translateX}px, ${translateY}px) scale(${scale})`);
-    view.setAttribute("width", `${box.width}px`);
-    view.setAttribute("height", `${box.height}px`);
-}
-
 function updateSVGViewBox(box) {
     const view = svg();
     view.setAttribute("viewBox", `${box.x} ${box.y} ${box.width} ${box.height}`);
 }
 
-function updateThreeViewBox(box) {
-    const view = three().nake();
-    const aspect = window.innerWidth / window.innerHeight;
-    const scaleX = window.innerWidth / box.width;
-    const scaleY = window.innerHeight / box.height;
-    const midPoint = box.width / box.height;
-    if (scaleX > scaleY) {
-        view.camera.left = -view.frustumSize * aspect;
-        view.camera.right = view.frustumSize * aspect;
-        view.camera.top = view.frustumSize;
-        view.camera.bottom = -view.frustumSize;
-    } else {
-        view.camera.left = -midPoint * view.frustumSize;
-        view.camera.right = midPoint * view.frustumSize;
-        view.camera.top = (midPoint * view.frustumSize) / aspect;
-        view.camera.bottom = (-midPoint * view.frustumSize) / aspect;
-    }
-    view.renderer.setSize(window.innerWidth, window.innerHeight);
-    view.renderer.setPixelRatio(window.devicePixelRatio);
-    view.camera.updateProjectionMatrix();
-}
-
 function updateWindowRate(box) {
     const view = svg();
-    const width = view.nake().getBoundingClientRect().width;
-    const height = view.nake().getBoundingClientRect().height;
+    const width = view.element().getBoundingClientRect().width;
+    const height = view.element().getBoundingClientRect().height;
     if (width / box.width > height / box.height) window.RATE = height / box.height;
     else window.RATE = width / box.width;
 }
@@ -76,38 +38,23 @@ export class Root {
         window.RATE = 1;
 
         if (true) {
-            this.svg = new HTMLNode(undefined, new RenderNode(document.body), "div");
+            this.svg = RenderNode.getDocumentBodyRenderNode();
             this.svg.setAttribute("width", "100%");
             this.svg.setAttribute("height", "100%");
             this.svg.setAttribute("position", "absolute");
-            this.svg = new SVGNode(undefined, this.svg, "svg");
+            this.svg = RenderNode.createRenderNodeWithoutAction(undefined, this.svg, "svg");
             this.svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
             this.svg.setAttribute("width", "100%");
             this.svg.setAttribute("height", "100%");
             defineMarkers();
         }
 
-        if (true) {
-            this.div = new HTMLNode(undefined, new RenderNode(document.body), "div");
-            this.div.setAttribute("width", "100vw");
-            this.div.setAttribute("height", "100vh");
-            this.div.setAttribute("overflow", "hidden");
-            this.div.setAttribute("position", "absolute");
-            this.div.setAttribute("pointer-events", "none");
-            this.div = this.div.append("div");
-            this.div.setAttribute("width", `${this.viewBox.width}px`);
-            this.div.setAttribute("height", `${this.viewBox.height}px`);
-            window.addEventListener("resize", () => {
-                updateDivViewBox(this.viewBox);
-            });
-        }
         if (window.self === window.top) {
             updateSVGViewBox(this.viewBox);
-            updateDivViewBox(this.viewBox);
             updateWindowRate(this.viewBox);
+            this.svg.setAttribute("opacity", 1);
         } else {
             this.svg.setAttribute("opacity", 0);
-            this.div.setAttribute("opacity", 0);
         }
     }
 
@@ -151,8 +98,4 @@ export class Root {
 
 export function svg() {
     return Root.svg;
-}
-
-export function div() {
-    return Root.div;
 }

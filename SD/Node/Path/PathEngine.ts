@@ -1,13 +1,13 @@
 import { svg } from "@/Interact/Root";
-import { SD2DNode } from "../SD2DNode";
+import { RenderNode } from "@/Renderer/RenderNode";
 
 export class PathEngine {
     static pathSVG = undefined;
     static polylineSVG = undefined;
     static init() {
-        this.pathSVG = svg().append("path");
+        this.pathSVG = RenderNode.createRenderNodeWithoutAction(undefined, svg(), "path");
         this.pathSVG.setAttribute("opacity", 0);
-        this.polylineSVG = svg().append("polyline");
+        this.polylineSVG = RenderNode.createRenderNodeWithoutAction(undefined, svg(), "polyline");
         this.polylineSVG.setAttribute("opacity", 0);
     }
     static getPathPointAtLength(d: string, length: number) {

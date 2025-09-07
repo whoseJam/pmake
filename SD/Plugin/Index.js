@@ -1,7 +1,7 @@
 import { Enter as EN } from "@/Node/Core/Enter";
 import { Exit as EX } from "@/Node/Core/Exit";
 import { BaseGrid } from "@/Node/Grid/BaseGrid";
-import { SD2DNode } from "@/Node/SD2DNode";
+import { SDNode } from "@/Node/SDNode";
 import { Text } from "@/Node/Text/Text";
 import { Rule as R } from "@/Rule/Rule";
 import { Check } from "@/Utility/Check";
@@ -44,7 +44,7 @@ export function Index(target, location = "t", fontSize = 15, gap = 3) {
     Check.validateNumber(fontSize, "Index", 3);
     Check.validateNumber(gap, "Index", 4);
 
-    const self = new SD2DNode(target);
+    const self = new SDNode(target);
 
     self.type("Index");
 

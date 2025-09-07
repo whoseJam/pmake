@@ -1,9 +1,9 @@
 import { Exit as EX } from "@/Node/Core/Exit";
-import { SD2DNode } from "@/Node/SD2DNode";
+import { SDNode } from "@/Node/SDNode";
 import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
-export class BaseArray extends SD2DNode {
+export class BaseArray extends SDNode {
     constructor(target) {
         super(target);
 

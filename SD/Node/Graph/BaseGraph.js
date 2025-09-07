@@ -1,12 +1,12 @@
 import { Vertex } from "@/Node/Element/Vertex";
 import { Line } from "@/Node/Path/Line";
-import { SD2DNode } from "@/Node/SD2DNode";
+import { SDNode } from "@/Node/SDNode";
 import { BaseTree } from "@/Node/Tree/BaseTree";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 import { trim } from "@/Utility/Trim";
 
-export class BaseGraph extends SD2DNode {
+export class BaseGraph extends SDNode {
     constructor(target) {
         super(target);
 

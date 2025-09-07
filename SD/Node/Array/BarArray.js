@@ -1,14 +1,14 @@
 import { Array } from "@/Node/Array/Array";
 import { BaseArray } from "@/Node/Array/BaseArray";
 import { Enter as EN } from "@/Node/Core/Enter";
-import { SD2DNode } from "@/Node/SD2DNode";
+import { SDNode } from "@/Node/SDNode";
 import { Rect } from "@/Node/Shape/Rect";
 import { Rule as R } from "@/Rule/Rule";
 import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { BaseElement } from "../Element/BaseElement";
 
-class BarElement extends SD2DNode {
+class BarElement extends SDNode {
     constructor(target, value) {
         super(target);
 

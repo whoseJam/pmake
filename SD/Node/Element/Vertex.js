@@ -1,6 +1,5 @@
 import { BaseElement } from "@/Node/Element/BaseElement";
 import { Circle } from "@/Node/Shape/Circle";
-import { CircleSVG } from "@/Node/Shape/CircleSVG";
 import { Rule as R } from "@/Rule/Rule";
 import { Factory } from "@/Utility/Factory";
 
@@ -23,7 +22,7 @@ export class Vertex extends BaseElement {
 
 Object.assign(Vertex.prototype, {
     r: Factory.handlerLowPrecise("r"),
-    width: CircleSVG.prototype.width,
-    height: CircleSVG.prototype.height,
-    inRange: CircleSVG.prototype.inRange,
+    // width: CircleSVG.prototype.width,
+    // height: CircleSVG.prototype.height,
+    // inRange: CircleSVG.prototype.inRange,
 });

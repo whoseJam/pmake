@@ -1,138 +1,180 @@
 import { Action } from "@/Animate/Action";
-import { div, svg } from "@/Interact/Root";
+import { Dom } from "@/Dom/Dom";
 import { SDNode } from "@/Node/SDNode";
-import { HTMLNode } from "@/Renderer/HTML/HTMLNode";
-import { SVGNode } from "@/Renderer/SVG/SVGNode";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 export const SVGLabel = new Set(["circle", "ellipse", "image", "line", "path", "polygon", "rect", "text", "svg", "g", "marker", "defs"]);
 export const HTMLLabel = new Set(["div", "input", "button", "textarea", "img"]);
 
-export function createRenderNode(parent: SDNode, render: RenderNode, element: string | Element) {
-    const { HTMLNode } = require("@/Renderer/HTML/HTMLNode");
-    const { SVGNode } = require("@/Renderer/SVG/SVGNode");
-    if (typeof element !== "string") return new SVGNode(parent, render, element);
-    if (SVGLabel.has(element)) {
-        if (SVGLabel.has(render.label)) {
-            return new SVGNode(parent, render, element);
-        } else {
-            return new SVGNode(parent, svg(), element);
-        }
-    } else if (HTMLLabel.has(element)) {
-        if (HTMLLabel.has(render.label)) {
-            return new HTMLNode(parent, render, element);
-        } else {
-            return new HTMLNode(parent, div(), element);
-        }
-    } else return new SVGNode(parent, render, element);
+const INNER_HTML_KEY = new Set(["innerHTML", "text"]);
+const STYLE_KEY = new Set(["pointer-events", "min-width", "min-height", "display"]);
+const SHAPE_KEY = new Set([
+    // shape key
+    "circle",
+    "ellipse",
+    "foreignObject",
+    "fragment",
+    "image",
+    "line",
+    "path",
+    "rect",
+    "svg",
+    "text",
+    "polygon",
+    "polyline",
+]);
+
+function parseText(text: string) {
+    let ans = "";
+    text = String(text);
+    for (let i = 0; i < text.length; i++) {
+        if (text[i] === " ") ans += "&emsp;";
+        else if (text[i] === "<") ans += "&lt;";
+        else if (text[i] === ">") ans += "&gt;";
+        else ans += text[i];
+    }
+    return ans;
 }
 
-export function createHtmlNodeOnForeignObject(parent: SDNode, render: RenderNode, label: string) {
-    return new HTMLNode(parent, render, label);
+interface RenderNodeParams {
+    targetNode?: SDNode;
+    targetLayer?: RenderNode;
+    label?: string;
+    element?: Element;
+    append?: boolean;
+    action?: boolean;
 }
 
 export class RenderNode {
-    parent: SDNode;
-    render: RenderNode;
+    targetNode: SDNode;
+    targetLayer: RenderNode;
     label: string;
-    element: Element;
-    class: typeof HTMLNode | typeof SVGNode;
-    constructor(container: Element);
-    constructor(parent: SDNode | undefined, render: RenderNode | undefined, label: string);
-    constructor(arg0: Element | SDNode | undefined, arg1?: RenderNode | undefined, arg2?: string) {
-        if (arg0 instanceof Element) {
-            this.element = arg0;
-        } else {
-            this.parent = arg0;
-            this.render = arg1;
-            this.label = arg2;
-            this.element = undefined;
-        }
+    backingElement: Element;
+    constructor(args: RenderNodeParams) {
+        if (args.action === undefined) args.action = true;
+        if (args.append === undefined) args.append = true;
+        if (!args.element) {
+            if (!args.label) ErrorLauncher.whatHappened();
+            args.element = Dom.createSVGElement(args.label);
+        } else args.label = Dom.tagName(args.element);
+        this.targetNode = args.targetNode;
+        this.label = args.label;
+        this.backingElement = args.element;
+        if (!args.append) return;
+        if (!args.targetLayer) ErrorLauncher.whatHappened();
+        if (!args.action) {
+            this.targetLayer = args.targetLayer;
+            args.targetLayer.__append(this);
+        } else args.targetLayer.append(this);
     }
-    nake() {
-        return this.element;
+    delay() {
+        return this.targetNode.delay();
     }
-    __append(element: RenderNode | Element) {
-        if (element instanceof RenderNode) this.nake().append(element.nake());
-        else this.nake().append(element);
+    duration() {
+        return this.targetNode.duration();
+    }
+    element() {
+        return this.backingElement;
+    }
+    __append(element_: Element | RenderNode) {
+        const element = element_ instanceof RenderNode ? element_.element() : element_;
+        this.element().append(element);
+        return this;
     }
     __remove() {
-        this.nake().remove();
+        this.element().remove();
+        return this;
     }
-    __removeChild(element: RenderNode | Element) {
-        if (element instanceof RenderNode) this.nake().removeChild(element.nake());
-        else this.nake().removeChild(element);
+    __removeChild(element_: Element | RenderNode) {
+        const element = element_ instanceof RenderNode ? element_.element() : element_;
+        this.element().removeChild(element);
+        return this;
     }
-    append(element: string | RenderNode) {
-        if (typeof element === "string") {
-            const child = new this.class(this.parent, this, element);
-            this.__append(child);
-            return child;
-        }
-        element.moveTo(this);
-        return element;
+    append(element: string | RenderNode): RenderNode {
+        if (element instanceof RenderNode) return element.moveTo(this);
+        return new RenderNode({
+            targetNode: this.targetNode,
+            targetLayer: this,
+            label: element,
+        });
     }
-    moveTo(render: RenderNode) {
-        ErrorLauncher.notImplementedYet("moveTo");
-    }
-    appear() {
-        if (this.parent === undefined) {
-            this.render.__append(this);
-            return;
-        }
-        const render = this;
-        const node = this.parent;
+    moveTo(targetLayer: RenderNode) {
+        console.log("MoveTo=", targetLayer);
+        if (this.targetLayer === targetLayer) return;
+        const l = this.delay();
+        const r = this.delay() + this.duration();
+        const this_ = this;
         function structure(t: number) {
-            if (this.target && t === 1) {
-                this.target.__append(render);
-                node._.created = true;
-                requestAnimationFrame(() => {
-                    node._.ready = true;
-                });
-            }
-            if (!this.target && t === 0) {
-                render.__remove();
-                node._.created = false;
-                requestAnimationFrame(() => {
-                    node._.ready = false;
-                });
+            console.log("this.source=", this.source, "this.target=", this.target);
+            if (this.source && this.target) {
+                if (!this.reverse && t === 1) this.target.__append(this_); // moveTo
+                if (this.reverse && t === 0) this.target.__append(this_); // moveTo reverse
+            } else if (this.source && !this.target) {
+                if (!this.reverse && t === 1) this_.__remove(); // remove
+                if (this.reverse && t === 0) this_.__remove(); // appear reverse
+            } else if (!this.source && this.target) {
+                if (!this.reverse && t === 1) this.target.__append(this_); // appear
+                if (this.reverse && t === 0) this.target.__append(this_); // remove reverse
             }
         }
-        const l = this.parent.delay();
-        const r = this.parent.delay() + this.parent.duration();
-        new Action(l, r, undefined, this.render, structure, this, "appear");
-        new Action(l, r, 0, 1, undefined, this.parent, "opacity");
+        new Action(l, r, this.targetLayer, targetLayer, structure, this, "moveTo");
+        this.targetLayer = targetLayer;
+        return this;
     }
     remove() {
-        const render = this;
-        const node = this.parent;
-        function structure(t: number) {
-            if (this.target && t === 0) {
-                this.target.__append(render);
-                node._.created = true;
-                requestAnimationFrame(() => {
-                    node._.ready = true;
-                });
-            }
-            if (!this.target && t === 1) {
-                render.__remove();
-                node._.created = false;
-                requestAnimationFrame(() => {
-                    node._.ready = false;
-                });
-            }
-        }
-        const l = this.parent.delay();
-        const r = this.parent.delay() + this.parent.duration();
-        new Action(l, r, this.render, undefined, structure, this, "remove");
+        return this.moveTo(undefined);
     }
-    getAttribute(key: string): any {
-        ErrorLauncher.notImplementedYet("getAttribute");
+    getAttribute(key: string) {
+        const element = this.element() as SVGElement;
+        if (INNER_HTML_KEY.has(key)) {
+            return element.innerHTML;
+        } else if (STYLE_KEY.has(key)) {
+            return element.style[key];
+        }
+        return element.getAttribute(key);
     }
     setAttribute(key: string, value: any) {
-        ErrorLauncher.notImplementedYet("setAttribute");
+        if (key === "points") {
+            console.log("points=", value);
+        }
+        const element = this.element() as SVGElement;
+        if (typeof value.r === "number" && typeof value.g === "number" && typeof value.b === "number") value = `rgb(${value.r}, ${value.g}, ${value.b})`;
+        if (INNER_HTML_KEY.has(key)) {
+            if (key === "text") value = parseText(value);
+            element.innerHTML = value;
+        } else if (STYLE_KEY.has(key)) {
+            element.style[key] = value;
+        } else if (key === "viewBox" && typeof value === "object") {
+            element.setAttribute(key, `${value.x} ${value.y} ${value.width} ${value.height}`);
+        } else {
+            element.setAttribute(key, value);
+        }
     }
     hasShape() {
-        return true;
+        return SHAPE_KEY.has(this.label);
+    }
+    static getDocumentBodyRenderNode() {
+        return new RenderNode({
+            targetNode: null,
+            targetLayer: null,
+            element: document.body,
+            append: false,
+            action: false,
+        });
+    }
+    static createRenderNodeWithoutAction(targetNode: SDNode, targetLayer: RenderNode, label: string) {
+        return new RenderNode({
+            targetNode,
+            targetLayer,
+            label,
+            action: false,
+        });
+    }
+    static createRenderNode(targetNode: SDNode, targetLayer: RenderNode, label: string) {
+        return new RenderNode({
+            targetNode,
+            targetLayer,
+            label,
+        });
     }
 }

@@ -4,8 +4,8 @@ import { Axis } from "@/Node/Axis/Axis";
 import { BaseCoord } from "@/Node/Coord/BaseCoord";
 import { Enter as EN } from "@/Node/Core/Enter";
 import { Path } from "@/Node/Path/Path";
-import { CircleSVG } from "@/Node/Shape/CircleSVG";
-import { RectSVG } from "@/Node/Shape/RectSVG";
+import { Circle } from "@/Node/Shape/Circle";
+import { Rect } from "@/Node/Shape/Rect";
 import { Check } from "@/Utility/Check";
 import { Factory } from "@/Utility/Factory";
 import { PathPen } from "@/Utility/PathPen";
@@ -68,7 +68,7 @@ Object.assign(Coord.prototype, {
     },
     origin: Factory.handler("origin"),
     drawRect(x, y, width, height) {
-        const rect = new RectSVG(this).opacity(0).onEnter(EN.appear());
+        const rect = new Rect(this).opacity(0).onEnter(EN.appear());
         this.vars.elements.push({
             element: rect,
             x,
@@ -82,7 +82,7 @@ Object.assign(Coord.prototype, {
     rectWidth: elementProp1("width"),
     rectHeight: elementProp1("height"),
     drawCircle(x, y, r) {
-        const circle = new CircleSVG(this).opacity(0).onEnter(EN.appear());
+        const circle = new Circle(this).opacity(0).onEnter(EN.appear());
         if (r !== undefined) circle.r(r);
         this.vars.elements.push({
             element: circle,

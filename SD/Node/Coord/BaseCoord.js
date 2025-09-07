@@ -1,8 +1,8 @@
-import { SD2DNode } from "@/Node/SD2DNode";
+import { SDNode } from "@/Node/SDNode";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 
-export class BaseCoord extends SD2DNode {
+export class BaseCoord extends SDNode {
     constructor(target) {
         super(target);
 

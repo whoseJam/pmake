@@ -1,23 +1,16 @@
 import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
 import { svg } from "@/Interact/Root";
-import { Path } from "@/Node/Path/Path";
-import { RenderNode } from "@/Renderer/RenderNode";
-import { BasePath } from "./BasePath";
-import { BaseSVG } from "./BaseSVG";
+import { BasePath } from "@/Node/Path/BasePath";
 
 let globalPath = undefined;
 
-/**
- * @param {Path} node
- * @param {RenderNode} path
- * @returns
- */
-function pathInterp(node, path) {
-    return function (newValue, oldValue) {
+function pathInterp(node: Path) {
+    const path = node._.nake.nake();
+    return function (vn: string, vo: string) {
         const l = node.delay();
         const r = node.delay() + node.duration();
-        new Action(l, r, oldValue, newValue, Interp.pathInterp(path.nake()), node, "d");
+        new Action(l, r, vo, vn, Interp.pathInterp(path), node, "d");
     };
 }
 
@@ -29,7 +22,7 @@ function createPath() {
     }
 }
 
-function pathToBox(d) {
+function pathToBox(d: string) {
     createPath();
     globalPath.setAttribute("d", d);
     return globalPath.nake().getBBox();
@@ -65,11 +58,11 @@ function getTotalLength(d) {
     }
 }
 
-export class PathSVG extends BasePath {
+export class Path extends BasePath {
     constructor(target) {
         super(target);
 
-        BaseSVG.call(this, "path");
+        this._.nake = this.__createSVGNode("path");
 
         this.type("PathSVG");
 
@@ -85,48 +78,41 @@ export class PathSVG extends BasePath {
 
         this._.nake.setAttribute("d", this.vars.d);
     }
-}
-
-PathSVG.extend(Path);
-
-Object.assign(PathSVG.prototype, {
-    ...Path.prototype,
-    ...BaseSVG.prototype,
     x(x) {
         if (arguments.length === 0) return this.vars.x;
         const [x0, y0, dx, dy, sx, sy] = [this.x(), this.y(), x - this.vars.x, 0, 1, 1];
         this.d(update(this.vars.d, x0, y0, dx, dy, sx, sy));
         return this;
-    },
+    }
     y(y) {
         if (arguments.length === 0) return this.vars.y;
         const [x0, y0, dx, dy, sx, sy] = [this.x(), this.y(), 0, y - this.vars.y, 1, 1];
         this.d(update(this.vars.d, x0, y0, dx, dy, sx, sy));
         return this;
-    },
+    }
     width(width) {
         if (arguments.length === 0) return this.vars.width;
         if (this.width() === 0) return this;
         const [x0, y0, dx, dy, sx, sy] = [this.x(), this.y(), 0, 0, width / this.width(), 1];
         this.d(update(this.vars.d, x0, y0, dx, dy, sx, sy));
         return this;
-    },
+    }
     height(height) {
         if (arguments.length === 0) return this.vars.height;
         if (this.height() === 0) return this;
         const [x0, y0, dx, dy, sx, sy] = [this.x(), this.y(), 0, 0, 1, height / this.height()];
         this.d(update(this.vars.d, x0, y0, dx, dy, sx, sy));
         return this;
-    },
+    }
     at(k) {
         return getPointByRate(this.d(), k);
-    },
+    }
     getPointAtLength(length) {
         return getPointAtLength(this.d(), length);
-    },
+    }
     totalLength() {
         return getTotalLength(this.d());
-    },
+    }
     d(d) {
         if (arguments.length === 0) return this.vars.d;
         this.vars.d = d;
@@ -136,8 +122,8 @@ Object.assign(PathSVG.prototype, {
         this.vars.width = box.width;
         this.vars.height = box.height;
         return this;
-    },
-});
+    }
+}
 
 function update(d, x0, y0, dx, dy, sx, sy) {
     let i = 0;

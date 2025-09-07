@@ -162,7 +162,7 @@ export class Interp {
         };
     }
     static pathInterp(object, key) {
-        const _object = Snap(object.nake ? object.nake() : object);
+        const _object = Snap(object.element ? object.element() : object);
         let animateHandler = undefined;
         return function (t) {
             if (t === 0) {
@@ -177,7 +177,7 @@ export class Interp {
         };
     }
     static pointsInterp(object, key) {
-        const _object = Snap(object.nake ? object.nake() : object);
+        const _object = Snap(object.element ? object.element() : object);
         let animateHandler = undefined;
         return function (t) {
             if (t === 0) {

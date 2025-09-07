@@ -1,7 +1,7 @@
-import { SD2DNode } from "@/Node/SD2DNode";
+import { SDNode } from "@/Node/SDNode";
 import { Check } from "@/Utility/Check";
 
-export class BaseText extends SD2DNode {}
+export class BaseText extends SDNode {}
 
 Object.assign(BaseText.prototype, {
     x(x) {

@@ -1,9 +1,9 @@
 import { Vector as V } from "@/Math/Vector";
-import { SD2DNode } from "@/Node/SD2DNode";
+import { SDNode } from "@/Node/SDNode";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 
-export class BaseAxis extends SD2DNode {
+export class BaseAxis extends SDNode {
     constructor(target) {
         super(target);
 

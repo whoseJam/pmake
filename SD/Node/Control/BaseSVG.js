@@ -1,5 +1,5 @@
 import { Interp } from "@/Animate/Interp";
-import { createHtmlNodeOnForeignObject, createRenderNode } from "@/Renderer/RenderNode";
+import { createRenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
 import { Color as C } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
@@ -20,7 +20,7 @@ export function BaseSVG(label) {
     this._.for.setAttribute("y", this.vars.y);
     this._.for.setAttribute("width", this.vars.width);
     this._.for.setAttribute("height", this.vars.height);
-    this._.nake = createHtmlNodeOnForeignObject(this, this._.for, label);
+    // this._.nake = createHtmlNodeOnForeignObject(this, this._.for, label);
     this._.nake.setAttribute("width", "100%");
     this._.nake.setAttribute("height", "100%");
     this._.nake.setAttribute("border-style", "solid");

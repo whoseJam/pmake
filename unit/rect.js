@@ -1,23 +1,11 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-const div = sd.div();
 const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestRectHTMLAndSVG);
-
-async function TestRectHTMLAndSVG() {
-    const r1 = new sd.Rect(div);
-    const r2 = new sd.Rect(svg);
-    r1.cx(600).cy(300);
-    r2.cx(700).cy(300);
-    r2.fill(C.RED);
-    await sd.pause();
-    r1.startAnimate().x(100).y(100).endAnimate();
-    r2.startAnimate().x(200).y(100).endAnimate();
-}
+sd.main(TestBasic);
 
 async function TestBasic() {
     const rect = new sd.Rect(svg);

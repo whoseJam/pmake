@@ -1,6 +1,5 @@
 import { Vertex } from "@/Node/Element/Vertex";
 import { Line } from "@/Node/Path/Line";
-import { SD2DNode } from "@/Node/SD2DNode";
 import { SDNode } from "@/Node/SDNode";
 import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
@@ -9,7 +8,7 @@ function castToId(tree, object) {
     return object instanceof SDNode ? tree.nodeId(object) : object;
 }
 
-export class BaseTree extends SD2DNode {
+export class BaseTree extends SDNode {
     constructor(target) {
         super(target);
 
@@ -329,11 +328,11 @@ Object.assign(BaseTree.prototype, {
     },
     opacity() {
         if (arguments.length === 0) {
-            return SD2DNode.prototype.opacity.call(this);
+            return SDNode.prototype.opacity.call(this);
         } else if (arguments.length === 1) {
             if (Check.isOpacity(arguments[0])) {
                 const [opacity] = arguments;
-                return SD2DNode.prototype.opacity.call(this, opacity);
+                return SDNode.prototype.opacity.call(this, opacity);
             } else {
                 const [node] = arguments;
                 return this.nodeOpacity(node);

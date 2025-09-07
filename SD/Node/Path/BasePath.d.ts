@@ -1,4 +1,4 @@
-import { SD2DNode } from "@/Node/SD2DNode";
+import { SDSVGNode } from "@/Node/SDSVGNode";
 import { SDRule } from "@/Rule/Rule";
 import { SDColor } from "@/Utility/Color";
 
@@ -9,7 +9,7 @@ import { SDColor } from "@/Utility/Color";
  * When referring to path component properties (e.g. fill, stroke, color), these typically affect the path component,
  * not the value component.
  */
-export class BasePath extends SD2DNode {
+export class BasePath extends SDSVGNode {
     /**
      * Gets the fill color of this path component.
      * @returns The fill color.
@@ -103,18 +103,6 @@ export class BasePath extends SD2DNode {
     markerMid(marker: string): this;
     markerEnd(): string;
     markerEnd(marker: string): this;
-    /**
-     * Sets an arrow to the end of this path component.
-     * @param arrow
-     * @returns The current component instance for method chaining.
-     */
-    arrow(arrow?: true): this;
-    /**
-     * Removes the arrow at the end of this path component.
-     * @param arrow
-     * @returns The current component instance for method chaining.
-     */
-    arrow(arrow: null | undefined | false): this;
     /**
      * Sets an arrow to the start of this path component.
      * @param arrow
@@ -254,3 +242,16 @@ export class BasePath extends SD2DNode {
      */
     drop(): any;
 }
+
+export const BASE_PATH_ATTRIBUTES = {
+    fill: C.white,
+    fillOpacity: 0,
+    stroke: C.black,
+    strokeOpacity: 1,
+    strokeWidth: 1,
+    strokeDashOffset: 0,
+    strokeDashArray: [1, 0],
+    markerStart: "",
+    markerMid: "",
+    markerEnd: "",
+};

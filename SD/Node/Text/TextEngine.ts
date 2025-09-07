@@ -5,7 +5,7 @@ import { svg } from "@/Interact/Root";
 import { BaseText, TextMapping, TextMappingObjectItem, TextMappingObjectSubtextItem, TextMappingSubtextItem } from "@/Node/Text/BaseText";
 import { Mathjax } from "@/Node/Text/Mathjax";
 import { Text } from "@/Node/Text/Text";
-import { createRenderNode } from "@/Renderer/RenderNode";
+import { RenderNode } from "@/Renderer/RenderNode";
 import { MathjaxNode } from "@/Renderer/SVG/MathjaxNode";
 import { SVGNode } from "@/Renderer/SVG/SVGNode";
 import { Check } from "@/Utility/Check";
@@ -579,11 +579,11 @@ export class TextEngine {
     static fonts = {};
     static init() {
         this.load("Consolas");
-        this.textSVG = svg().append("text");
+        this.textSVG = RenderNode.createRenderNodeWithoutAction(undefined, svg(), "text");
         this.textSVG.setAttribute("fill-opacity", 0);
         this.textSVG.setAttribute("stroke-opacity", 0);
         this.textSVG.setAttribute("font-family", "consolas");
-        this.mathjaxSVG = svg().append("g");
+        this.mathjaxSVG = RenderNode.createRenderNodeWithoutAction(undefined, svg(), "g");
         this.mathjaxSVG.setAttribute("opacity", 0);
         this.mathjaxSVG.setAttribute("font-size", 20);
     }

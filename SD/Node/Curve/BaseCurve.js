@@ -1,8 +1,8 @@
 import { Vector as V } from "@/Math/Vector";
-import { PathSVG } from "@/Node/Path/PathSVG";
+import { Path } from "@/Node/Path/Path";
 import { Check } from "@/Utility/Check";
 
-export class BaseCurve extends PathSVG {
+export class BaseCurve extends Path {
     constructor(target) {
         super(target);
 

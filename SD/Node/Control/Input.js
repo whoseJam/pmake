@@ -1,6 +1,5 @@
 import { BaseControl } from "@/Node/Control/BaseControl";
 import { getTargetLayer } from "@/Node/SDNode";
-import { HTMLNode } from "@/Renderer/HTML/HTMLNode";
 
 export class Input extends BaseControl {
     constructor(target) {

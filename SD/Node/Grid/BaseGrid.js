@@ -1,10 +1,10 @@
 import { Exit as EX } from "@/Node/Core/Exit";
-import { SD2DNode } from "@/Node/SD2DNode";
+import { SDNode } from "@/Node/SDNode";
 import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
 
-export class BaseGrid extends SD2DNode {
+export class BaseGrid extends SDNode {
     constructor(target) {
         super(target);
 
