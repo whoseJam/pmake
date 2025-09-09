@@ -10,7 +10,7 @@ export class ErrorLauncher {
     static invalidInvoke(method) {
         throw new Error(`Function ${method} cannot be invoked in current environment.`);
     }
-    static outOfRangeError(i, j) {
+    static outOfRangeError(i: number, j?: number) {
         if (arguments.length === 1) throw new Error(`Index ${i} out of range.`);
         else throw new Error(`Index (${i}, ${j}) out of range.`);
     }
