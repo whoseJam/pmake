@@ -40,7 +40,7 @@ export class Mathjax extends BaseText {
         this.vars.watch("stroke", Factory.action(this, math, "stroke", Interp.colorInterp));
         this.vars.watch("fontSize", Factory.action(this, math, "font-size", Interp.numberInterp));
         this.vars.watch("math", (vn, vo) => {
-            new Action(this.delay(), this.delay() + this.duration(), vo, vn, Interp.blankChildInterp(this.layer()), this, "child");
+            new Action(this.delay(), this.delay() + this.duration(), vo, vn, Interp.blankNodeInterp(this.layer()), this, "child");
         });
         this.vars.watch("x", x => {
             if (this.duration() === 0) return;

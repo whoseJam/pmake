@@ -1,5 +1,10 @@
 import { rand } from "@/Utility/Random";
 
+export type SDColor = {
+    fill: string;
+    stroke: string;
+};
+
 export class Color {
     static red = "#f14c4c";
     static blue = "#bbe0e3";
@@ -53,13 +58,11 @@ export class Color {
         const randHex = () => hexCharacters[rand(0, hexCharacters.length - 1)];
         return "#" + randHex() + randHex() + randHex() + randHex() + randHex() + randHex();
     }
-
     static equal(a, b) {
         if (a.fill && b.fill) return a.fill === b.fill && a.stroke === b.stroke;
         if (!a.fill && !b.fill) return a === b;
         return false;
     }
-
     static gradient(start, end, l, r) {
         [start, end] = [HexToRGB(start), HexToRGB(end)];
         return function (at) {
@@ -79,6 +82,13 @@ export class Color {
             if (at <= m) return g1(at);
             return g2(at);
         };
+    }
+    static toRGB(color: string) {
+        color = color.replace("#", "");
+        const r = parseInt(color.substring(0, 2), 16);
+        const g = parseInt(color.substring(2, 4), 16);
+        const b = parseInt(color.substring(4, 6), 16);
+        return { r: r, g: g, b: b };
     }
 }
 

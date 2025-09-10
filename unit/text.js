@@ -5,7 +5,7 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestSubtextColorWithTransform);
+sd.main(TestHugeStrokeWidth);
 
 // async function TestSubtextColor() {
 //     const text = new sd.Text(svg, "for(int i=1;i<=n;i++)ans+=i;").x(100).y(100).fontSize(40);
@@ -218,36 +218,12 @@ async function TestTransformWithPosition() {
     text3.startAnimate().x(200).text("hello").endAnimate();
 }
 
-async function TestBasic() {
-    const board = new sd.Text(svg);
-    const r = new sd.Rect(svg).fillOpacity(0);
-    const obj = new sd.Text(svg, "Hello").x(100).y(100).fontSize(30);
-    r.x(obj.x()).y(obj.y()).width(obj.width()).height(obj.height());
+async function TestHugeStrokeWidth() {
+    const text = new sd.Text(svg, "Hello").x(100).y(100).fill(C.red).stroke(C.textBlue).fontSize(50);
     await sd.pause();
-    obj.startAnimate().text("world").endAnimate();
-    function test(code) {
-        board.text(code);
-        eval(code);
-        r.x(obj.x()).y(obj.y());
-        r.width(obj.width());
-        r.height(obj.height());
-    }
+    text.startAnimate().strokeWidth(3).endAnimate();
     await sd.pause();
-    test(`obj.startAnimate().x(200).y(200).endAnimate();`);
+    text.startAnimate().strokeWidth(6).endAnimate();
     await sd.pause();
-    test(`obj.startAnimate().color(C.BLUE).endAnimate();`);
-    await sd.pause();
-    test(`obj.startAnimate().opacity(0.5).endAnimate();`);
-    await sd.pause();
-    test(`obj.startAnimate().opacity(1).endAnimate();`);
-    await sd.pause();
-    test(`obj.startAnimate().strokeOpacity(1).endAnimate();`);
-    await sd.pause();
-    test(`obj.startAnimate().strokeWidth(3).endAnimate();`);
-    await sd.pause();
-    test(`obj.startAnimate().strokeWidth(1).endAnimate();`);
-    await sd.pause();
-    test(`obj.startAnimate().strokeDashArray([5, 5]).endAnimate();`);
-    await sd.pause();
-    test(`obj.startAnimate().strokeDashArray([5, 0]).endAnimate();`);
+    text.startAnimate().strokeWidth(9).endAnimate();
 }
