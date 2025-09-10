@@ -30,7 +30,7 @@ export class BaseElement extends SDNode {
     }
     y(): number;
     y(y: number): this;
-    y(y) {
+    y(y?: number) {
         if (arguments.length === 0) return Rect.prototype.y.call(this);
         return Rect.prototype.y.call(this, y);
     }

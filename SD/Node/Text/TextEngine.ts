@@ -2,31 +2,22 @@ import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
 import { Dom } from "@/Dom/Dom";
 import { svg } from "@/Interact/Root";
-import { BaseText, TextMapping, TextMappingObjectItem, TextMappingObjectSubtextItem, TextMappingSubtextItem } from "@/Node/Text/BaseText";
+import { BaseText, TextMapping } from "@/Node/Text/BaseText";
 import { Mathjax } from "@/Node/Text/Mathjax";
-import { Text } from "@/Node/Text/Text";
+import { Text, TextConfiguration } from "@/Node/Text/Text";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { MathjaxNode } from "@/Renderer/SVG/MathjaxNode";
-import { SVGNode } from "@/Renderer/SVG/SVGNode";
 import { Check } from "@/Utility/Check";
-import { Color as C } from "@/Utility/Color";
+import { SDColor } from "@/Utility/Color";
 import { PathPen } from "@/Utility/PathPen";
 import { make1d } from "@/Utility/Util";
 import opentype from "opentype.js";
 
 type TextType = Text | Mathjax;
-type TextStatus = TextTransformConfig | MathjaxNode;
+type TextStatus = TextConfiguration | MathjaxNode;
 type Matrix = { a: number; b: number; c: number; d: number; e: number; f: number };
 type MatchingMachineStatus = "source" | "target";
 type TransformingPathStatus = "normal" | "opacity:0->1" | "opacity:1->0";
-type TextTransformConfig = {
-    text: string;
-    x: number;
-    y: number;
-    size: number;
-    family: string;
-    attr: Array<{ fill: string; stroke: string }>;
-};
 type MappingStringLocation = { i: number; subtext: string };
 type MappingOtherLocation = { object: any; subtext: string };
 type MappingLocation = MappingStringLocation | MappingOtherLocation | string | TextType;
@@ -51,10 +42,10 @@ class Match {
         this.all = all;
     }
     fill(): string {
-        return sameAttribute(this.paths, "fill");
+        return sameAttribute(this.paths, "lastFill");
     }
     stroke(): string {
-        return sameAttribute(this.paths, "stroke");
+        return sameAttribute(this.paths, "lastStroke");
     }
 }
 class TextMatch extends Match {}
@@ -85,15 +76,19 @@ class TransformingPath {
     character: string;
     fill: string;
     stroke: string;
+    lastFill: string;
+    lastStroke: string;
     status: TransformingPathStatus;
     path: SVGPathElement;
     ref: any;
-    constructor(d: string, transform: Matrix, character = undefined, fill = C.black, stroke = C.black, ref = undefined) {
+    constructor(d: string, transform: Matrix, character?: string, fill?: string, stroke?: string, lastFill?: string, lastStroke?: string, ref?: any) {
         this.d = d;
         this.transform = transform;
         this.character = character;
         this.fill = fill;
         this.stroke = stroke;
+        this.lastFill = lastFill;
+        this.lastStroke = lastStroke;
         this.status = "normal";
         this.ref = ref;
     }
@@ -101,36 +96,43 @@ class TransformingPath {
         this.character = path.character;
         this.fill = path.fill;
         this.stroke = path.stroke;
+        this.lastFill = path.lastFill;
+        this.lastStroke = path.lastStroke;
         return this;
     }
     clone() {
-        return new TransformingPath(this.d, this.transform, this.character, this.fill, this.stroke, this.ref);
+        return new TransformingPath(this.d, this.transform, this.character, this.fill, this.stroke, this.lastFill, this.lastStroke, this.ref);
     }
-    init(group: SVGNode) {
+    init(group: RenderNode, config: any) {
         if (!this.path) this.path = Dom.createSVGElement("path") as SVGPathElement;
         const transform = this.transform;
         this.path.setAttribute("d", this.d);
         this.path.setAttribute("transform", `matrix(${transform.a},${transform.b},${transform.c},${transform.d},${transform.e},${transform.f})`);
-        this.path.setAttribute("fill", this.fill);
-        this.path.setAttribute("stroke", this.stroke);
+        this.path.setAttribute("fill", this.fill === "default" ? config.fill : this.fill);
+        this.path.setAttribute("stroke", this.stroke === "default" ? config.stroke : this.stroke);
         this.path.setAttribute("stroke-width", "0");
         group.__append(this.path);
     }
 }
 
 class TransformingPathGroup {
+    transforming: Transforming;
     parent: BaseText;
     source: Array<TransformingPath>;
     target: Array<TransformingPath>;
-    group: SVGNode;
+    sourceConfig: SDColor;
+    targetConfig: SDColor;
+    group: RenderNode;
     l: number;
     r: number;
-    constructor(parent: BaseText, source: Array<TransformingPath>, target: Array<TransformingPath>) {
+    constructor(parent: BaseText, source: Array<TransformingPath>, target: Array<TransformingPath>, sourceConfig: SDColor, targetConfig: SDColor) {
         this.parent = parent;
         this.source = source;
         this.target = target;
         this.l = parent.delay();
         this.r = parent.delay() + parent.duration();
+        this.sourceConfig = sourceConfig;
+        this.targetConfig = targetConfig;
     }
     sourceInit() {
         if (this.source.length < this.target.length) {
@@ -205,12 +207,12 @@ class TransformingPathGroup {
     play() {
         if (this.group) return;
         this.parent.startAnimate(this.l, this.l);
-        this.group = createRenderNode(this.parent, this.parent.layer(), "g");
+        this.group = RenderNode.createRenderNode(this.parent, this.parent.layer(), "g");
         this.source = this.source.filter(source => source !== undefined);
         this.target = this.target.filter(target => target !== undefined);
         this.sourceInit();
         this.targetInit();
-        for (const source of this.source) source.init(this.group);
+        for (const source of this.source) source.init(this.group, this.sourceConfig);
         const matrixEqual = (a: Matrix, b: Matrix) => {
             for (const key of ["a", "b", "c", "d", "e", "f"]) if (a[key] !== b[key]) return false;
             return true;
@@ -231,12 +233,12 @@ class TransformingPathGroup {
                 const sm = source.transform;
                 const tm = target.transform;
                 if (!matrixEqual(sm, tm)) new Action(this.l, this.r, sm, tm, Interp.matrixInterp(path, "transform"), path, "transform");
-                const sf = source.fill;
-                const tf = target.fill;
+                const sf = source.fill === "default" ? this.sourceConfig.fill : source.fill;
+                const tf = target.fill === "default" ? this.targetConfig.fill : target.fill;
                 if (sf !== tf) new Action(this.l, this.r, sf, tf, Interp.colorInterp(path, "fill"), path, "fill");
                 source.fill = target.fill;
-                const ss = source.stroke;
-                const ts = target.stroke;
+                const ss = source.stroke === "default" ? this.sourceConfig.stroke : source.stroke;
+                const ts = target.stroke === "default" ? this.targetConfig.stroke : target.stroke;
                 if (ss !== ts) new Action(this.l, this.r, ss, ts, Interp.colorInterp(path, "stroke"), path, "stroke");
                 source.stroke = target.stroke;
             }
@@ -281,7 +283,7 @@ class MatchingMachine {
 class TextMatchingMachine extends MatchingMachine {
     pattern: string;
     textDeleted: Array<boolean>;
-    constructor(text: TextTransformConfig, status: MatchingMachineStatus) {
+    constructor(text: TextConfiguration, status: MatchingMachineStatus) {
         super(text, status);
         this.pattern = text.text;
         this.textDeleted = make1d(this.pattern.length, false);
@@ -387,7 +389,7 @@ class MathjaxMatchingMachine extends MatchingMachine {
             const text = subtext.vars.math;
             if (!text) return undefined;
             const matching = new MathjaxMatchingMachine(text, this.status);
-            const root = text.nake().children[1] as EXSVGElement;
+            const root = text.element().children[1] as EXSVGElement;
             return new MathjaxMatch(root, 0, root.children.length - 1, matching, text, true);
         }
         const subtext__ = subtext as MappingOtherLocation;
@@ -454,30 +456,42 @@ function createMatchingMachine(text: TextStatus, status: MatchingMachineStatus):
     return new TextMatchingMachine(text, status);
 }
 
-class Transforming {
+export class Transforming {
     text: TextType;
     groups: Array<TransformingPathGroup>;
     groupKeys: Array<MappingItem>;
     l: number;
     r: number;
+    auto: boolean;
+    color: boolean;
     mapping: Mapping;
     source: TextStatus;
-    source_: TextStatus;
     target: TextStatus;
-    target_: TextStatus;
     sourceMatching: MatchingMachine;
     targetMatching: MatchingMachine;
-    constructor(text: TextType, mapping: Mapping, source: TextStatus, target: TextStatus) {
+    constructor(text: TextType, mapping: Mapping, source: TextStatus, target: TextStatus, auto: boolean, color: boolean) {
         this.text = text;
         this.mapping = mapping;
         this.source = source;
         this.target = target;
         this.groups = [];
         this.groupKeys = [];
+        this.auto = auto;
+        this.color = color;
         this.l = text.delay();
         this.r = text.delay() + text.duration();
     }
-    play(auto = true, color = true) {
+    sourceConfiguration(sourceMatched: TextMatch) {
+        if (sourceMatched.text === this.source) return this.source;
+        return {
+            fill: sourceMatched.text.fill(),
+            stroke: sourceMatched.text.stroke(),
+        };
+    }
+    targetConfiguration(targetMatched: TextMatch) {
+        return this.target;
+    }
+    play() {
         this.groups = [];
         this.groupKeys = [];
         const sourceMatching = createMatchingMachine(this.source, "source");
@@ -485,31 +499,30 @@ class Transforming {
         for (const [i, mappingItem] of this.mapping.entries()) {
             const sourceMatched = sourceMatching.match(mappingItem.source);
             const targetMatched = targetMatching.match(mappingItem.target);
-            console.log("mapping=", mappingItem, "source=", sourceMatched, "target=", targetMatched);
             if (!sourceMatched || !targetMatched) {
                 if (!sourceMatched) console.warn("Source Subtext", mappingItem.source, "Not Found");
                 if (!targetMatched) console.warn("Target Subtext", mappingItem.target, "Not Found");
                 continue;
             }
-            if (sourceMatched.all && auto) {
+            if (sourceMatched.all && this.auto) {
                 if (sourceMatched instanceof TextMatch) (sourceMatched.text as Text).remove();
                 if (sourceMatched instanceof MathjaxMatch) (sourceMatched.text as MathjaxNode).parent.remove();
             }
-            if (color) {
+            if (this.color) {
                 targetMatching.fill(targetMatched, sourceMatched.fill());
                 targetMatching.stroke(targetMatched, sourceMatched.stroke());
             }
             sourceMatching.remove(sourceMatched);
             targetMatching.remove(targetMatched);
-            const transformingGroup = new TransformingPathGroup(this.text, sourceMatched.paths, targetMatched.paths);
+            const transformingGroup = new TransformingPathGroup(this.text, sourceMatched.paths, targetMatched.paths, this.sourceConfiguration(sourceMatched), this.targetConfiguration(targetMatched));
             this.groupKeys.push(mappingItem);
             this.groups.push(transformingGroup);
         }
-        if (color) {
+        if (this.color) {
             targetMatching.fillRemain(sourceMatching.fillRemain());
             targetMatching.strokeRemain(sourceMatching.strokeRemain());
         }
-        const transformingGroup = new TransformingPathGroup(this.text, sourceMatching.remain(), targetMatching.remain());
+        const transformingGroup = new TransformingPathGroup(this.text, sourceMatching.remain(), targetMatching.remain(), this.source, this.target);
         this.groupKeys.push(undefined);
         this.groups.push(transformingGroup);
     }
@@ -570,6 +583,7 @@ function processMapping(mapping: TextMapping<TextType>): Mapping {
             });
         }
     }
+    console.log("after process, result=", result, "origin=", mapping);
     return result;
 }
 
@@ -602,17 +616,15 @@ export class TextEngine {
         if (text instanceof Mathjax) return this.mathjaxBoundingBox(text._.math);
         return this.textBoundingBox(text);
     }
-    static getPaths(text: Text | MathjaxNode | TextTransformConfig, status?: MatchingMachineStatus): Array<TransformingPath> {
+    static getPaths(text: Text | MathjaxNode | TextConfiguration, status?: MatchingMachineStatus): Array<TransformingPath> {
         if (text instanceof MathjaxNode) return TextEngine.getMathjaxPaths(text, status);
         if (text instanceof Text) return TextEngine.getTextPaths(text as Text);
-        return TextEngine.getTextPaths(text as TextTransformConfig);
+        return TextEngine.getTextPaths(text as TextConfiguration);
     }
-    static textBoundingBox(text: Text | string, family?: string, size?: number) {
-        if (text instanceof Text) {
-            family = text.fontFamily();
-            size = text.fontSize();
-            text = text.text();
-        }
+    static textBoundingBox(text_: Text | string, family_?: string, size_?: number) {
+        const text = typeof text_ === "string" ? text_ : text_.text();
+        const family = typeof text_ === "string" ? family_ : text_.fontFamily();
+        const size = typeof text_ === "string" ? size_ : text_.fontSize();
         function hasChinese(str: string) {
             const regex = /[\u4e00-\u9fa5]/;
             return regex.test(str);
@@ -621,7 +633,7 @@ export class TextEngine {
             this.textSVG.setAttribute("text", text);
             this.textSVG.setAttribute("font-size", size);
             this.textSVG.setAttribute("font-family", family);
-            const bbox = this.textSVG.nake().getBBox();
+            const bbox = this.textSVG.element().getBBox();
             return bbox;
         } else {
             const font = this.fonts[family];
@@ -635,19 +647,19 @@ export class TextEngine {
         }
     }
     static mathjaxBoundingBox(math: MathjaxNode) {
-        const parentNode = math.nake().parentNode;
+        const parentNode = math.element().parentNode;
         this.mathjaxSVG.__append(math);
-        const bbox = this.mathjaxSVG.nake().getBBox();
-        if (parentNode) parentNode.appendChild(math.nake());
+        const bbox = this.mathjaxSVG.element().getBBox();
+        if (parentNode) parentNode.appendChild(math.element());
         else math.__remove();
         return bbox;
     }
     static mathjaxBoundingBoxAndInnerBoundingBox(math: MathjaxNode) {
-        const parentNode = math.nake().parentNode;
+        const parentNode = math.element().parentNode;
         this.mathjaxSVG.__append(math);
-        const bbox = this.mathjaxSVG.nake().getBBox();
-        const ibbox = (math.nake().children[1] as SVGGElement).getBBox();
-        if (parentNode) parentNode.appendChild(math.nake());
+        const bbox = this.mathjaxSVG.element().getBBox();
+        const ibbox = (math.element().children[1] as SVGGElement).getBBox();
+        if (parentNode) parentNode.appendChild(math.element());
         else math.__remove();
         return [bbox, ibbox];
     }
@@ -670,7 +682,7 @@ export class TextEngine {
         const offset = -descender * scale;
         return font.getPaths(text, x, y + height + offset, size);
     }
-    static getTextPaths(text: Text | TextTransformConfig): Array<TransformingPath> {
+    static getTextPaths(text: Text | TextConfiguration): Array<TransformingPath> {
         const paths = [];
         const config = {
             text: text instanceof Text ? text.text() : text.text,
@@ -678,11 +690,14 @@ export class TextEngine {
             size: text instanceof Text ? text.fontSize() : text.size,
             x: text instanceof Text ? text.x() : text.x,
             y: text instanceof Text ? text.y() : text.y,
+            fill: text instanceof Text ? text.fill() : text.fill,
+            stroke: text instanceof Text ? text.stroke() : text.stroke,
             attr: text instanceof Text ? text._.attr : text.attr,
+            lastAttr: text.lastAttr,
         };
         const targetPaths = TextEngine.getTextPathsFromOpenType(config.text, config.family, config.size, config.x, config.y);
         const getAttribute = (attr: any, i: number, key: string) => {
-            if (!attr || !attr[i] || !attr[i][key]) return text instanceof Text ? text[key]() : C.black;
+            if (!attr || !attr[i] || !attr[i][key]) return "default";
             return attr[i][key];
         };
         for (const [i, path] of targetPaths.entries()) {
@@ -691,18 +706,20 @@ export class TextEngine {
             else {
                 const fill = getAttribute(config.attr, i, "fill");
                 const stroke = getAttribute(config.attr, i, "stroke");
-                paths.push(new TransformingPath(d, { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 }, config.text[i], fill, stroke, config.attr));
+                const lastFill = getAttribute(config.lastAttr, i, "fill");
+                const lastStroke = getAttribute(config.lastAttr, i, "stroke");
+                paths.push(new TransformingPath(d, { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 }, config.text[i], fill, stroke, lastFill, lastStroke, config.attr));
             }
         }
         return paths;
     }
     static getMathjaxPaths(element: MathjaxNode, status: MatchingMachineStatus): Array<TransformingPath> {
         const parent = element.parent as Mathjax;
-        const defs = element.nake().children[0];
-        const root = element.nake().children[1] as EXSVGElement;
+        const defs = element.element().children[0];
+        const root = element.element().children[1] as EXSVGElement;
         const paths = [];
         const initialMatrix = () => {
-            const svg = element.nake();
+            const svg = element.element();
             const [bbox, ibbox] = TextEngine.mathjaxBoundingBoxAndInnerBoundingBox(element);
             const view = svg.getAttribute("viewBox").split(" ");
             const [vx, vy, vw, vh] = [+view[0], +view[1], +view[2], +view[3]];
@@ -764,21 +781,24 @@ export class TextEngine {
         dfs(root, initialMatrix(), parent[`__${status}Fill`](), parent[`__${status}Stroke`]());
         return paths;
     }
-    static transformText(text: Text, source: TextTransformConfig, target: TextTransformConfig, mapping = [], auto = true, color = true) {
+    static processMapping(mapping: any) {
+        return processMapping(mapping);
+    }
+    static transformText(text: Text, source: TextConfiguration, target: TextConfiguration, mapping = [], auto = true, color = true) {
         mapping = processMapping(mapping);
-        const transforming = new Transforming(text, mapping, source, target);
-        transforming.play(auto, color);
+        const transforming = new Transforming(text, mapping, source, target, auto, color);
+        transforming.play();
         return transforming;
     }
     static transformMathjax(text: Mathjax, source: MathjaxNode, target: MathjaxNode, mapping = [], auto = true, color = true) {
         mapping = processMapping(mapping);
-        const transforming = new Transforming(text, mapping, source, target);
-        transforming.play(auto, color);
+        const transforming = new Transforming(text, mapping, source, target, auto, color);
+        transforming.play();
         return transforming;
     }
     static adjustMathjax(math: MathjaxNode) {
         this.mathjaxSVG.__append(math);
-        const root = math.nake().children[1] as SVGGElement;
+        const root = math.element().children[1] as SVGGElement;
         const ibbox = root.getBBox();
         const transform = `${root.getAttribute("transform")} translate(${-ibbox.x},0)`;
         root.setAttribute("transform", transform);
@@ -898,7 +918,7 @@ export class TextEngine {
                 if (matched.length >= limit) return;
             }
         }
-        walk(math.nake().children[1] as SVGElement, mml);
+        walk(math.element().children[1] as SVGElement, mml);
         return matched.map(match => {
             return new MathjaxMatch(match.element, match.start, match.start + match.length - 1, matching, math, false);
         });

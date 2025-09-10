@@ -99,13 +99,11 @@ export class RenderNode {
         });
     }
     moveTo(targetLayer: RenderNode) {
-        console.log("MoveTo=", targetLayer);
         if (this.targetLayer === targetLayer) return;
         const l = this.delay();
         const r = this.delay() + this.duration();
         const this_ = this;
         function structure(t: number) {
-            console.log("this.source=", this.source, "this.target=", this.target);
             if (this.source && this.target) {
                 if (!this.reverse && t === 1) this.target.__append(this_); // moveTo
                 if (this.reverse && t === 0) this.target.__append(this_); // moveTo reverse
@@ -134,11 +132,8 @@ export class RenderNode {
         return element.getAttribute(key);
     }
     setAttribute(key: string, value: any) {
-        if (key === "points") {
-            console.log("points=", value);
-        }
         const element = this.element() as SVGElement;
-        if (typeof value.r === "number" && typeof value.g === "number" && typeof value.b === "number") value = `rgb(${value.r}, ${value.g}, ${value.b})`;
+        if (value && typeof value.r === "number" && typeof value.g === "number" && typeof value.b === "number") value = `rgb(${value.r}, ${value.g}, ${value.b})`;
         if (INNER_HTML_KEY.has(key)) {
             if (key === "text") value = parseText(value);
             element.innerHTML = value;

@@ -105,6 +105,7 @@ export class SDSVGNode extends SDNode {
             ry: ["ry", Interp.numberInterp],
             width: ["width", Interp.numberInterp],
             height: ["height", Interp.numberInterp],
+            fontSize: ["font-size", Interp.numberInterp],
             points: ["points", Interp.pointsInterp],
             fill: ["fill", Interp.colorInterp],
             stroke: ["stroke", Interp.colorInterp],
