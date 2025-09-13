@@ -1,6 +1,6 @@
 import { createWaterMark } from "@/Animate/Animate";
+import { Window } from "@/Animate/Window";
 import { Device } from "@/Interact/Device";
-import { Message } from "@/Interact/Message";
 import { Root } from "@/Interact/Root";
 import { Status } from "@/Interact/Status";
 import { PathEngine } from "@/Node/Path/PathEngine";
@@ -18,7 +18,7 @@ setupButtonStyles();
 
 export function init() {
     Root.init();
-    Message.init();
+    Window.init();
     Device.init();
     Status.init();
     TextEngine.init();

@@ -11,7 +11,7 @@ export class Polyline extends BasePath {
         this.__createSVGNode("polyline", {
             points,
         });
-        this.vars.merge(PolylineEngine.pointsToBox(points));
+        this.vars.merge(PolylineEngine.toBox(points));
 
         this.type("Polyline");
 
@@ -55,7 +55,7 @@ export class Polyline extends BasePath {
     points(points?: Array<[number, number]>) {
         if (arguments.length === 0) return this.vars.points;
         this.__points(points);
-        this.vars.setTogether(PolylineEngine.pointsToBox(points));
+        this.vars.setTogether(PolylineEngine.toBox(points));
         return this;
     }
     __points(points: Array<[number, number]>) {

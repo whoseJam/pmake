@@ -7,7 +7,7 @@ export class PolylineEngine {
         this.polylineSVG = RenderNode.createRenderNodeWithoutAction(undefined, svg(), "polyline");
         this.polylineSVG.setAttribute("opacity", 0);
     }
-    static pointsToBox(points: Array<[number, number]>) {
+    static toBox(points: Array<[number, number]>) {
         if (points.length === 0) return { x: 0, y: 0, width: 0, height: 0 };
         let x = points[0][0];
         let y = points[0][1];

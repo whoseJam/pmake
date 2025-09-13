@@ -1,6 +1,6 @@
 import { Animate } from "@/Animate/Animate";
+import { GroupInterpObject, InterpFunction, InterpObject } from "@/Animate/Interp";
 import { SDNode } from "@/Node/SDNode";
-import { InterpFunction, InterpObject } from "@/Animate/Interp";
 
 global.ACTION_TICK = 0;
 
@@ -13,6 +13,7 @@ export class Action {
     static hideFlag = 1 << 1;
     static firstCallFlag = 1 << 2;
     skipping: number;
+    t: number;
     l: number;
     r: number;
     frame: number;
@@ -29,15 +30,18 @@ export class Action {
     flag: number;
     constructor(action: Action);
     constructor(l: number, r: number, source: any, target: any, interp: InterpObject | InterpFunction, owner: any, channel: string);
-    constructor() {
+    constructor(l: number | Action, r?: number, source?: any, target?: any, interp?: InterpObject | InterpFunction, owner?: any, channel?: string) {
+        this.t = 0;
         this.reverse = false;
         this.skipping = 0;
-        if (arguments.length === 1) {
+        if (l instanceof Action) {
             const other = arguments[0];
             this.l = other.l;
             this.r = other.r;
             this.source = other.source;
             this.target = other.target;
+            this._source = other._source;
+            this._target = other._target;
             this.interp = other.interp;
             this.owner = other.owner;
             this.channel = other.channel;
@@ -45,7 +49,6 @@ export class Action {
             this.next = undefined;
             this.flag = Action.firstCallFlag | (other.flag & Action.hideFlag);
         } else {
-            const [l, r, source, target, interp, owner, channel] = arguments;
             this.l = l;
             this.r = r;
             this.source = source;
@@ -60,23 +63,35 @@ export class Action {
             Animate.push(this);
         }
     }
+    triggerGroupInterp() {
+        if (this.interp instanceof GroupInterpObject) {
+            const interp_ = this.interp as GroupInterpObject;
+            interp_.onCreateGroup(this);
+        }
+    }
     tick(t: number) {
         if (t < this.l) return false;
         global.ACTION_TICK++;
         if (this.l < this.r - 1) {
             const k0 = easeInOut((t - this.l) / (this.r - this.l));
             const k1 = this.is(Action.firstCallFlag) ? 0 : t > this.r ? 1 : k0;
-            if (k1 === 0) this.interp.beforeInterp(this);
+            if (k1 === 0) {
+                this.interp.onInit(this);
+                this.interp.onBeforeInterp(this);
+            }
             if (this.interp) this.interp.call(this, k1);
             if (k1 === 1) this.set(Action.stopFlag);
-            if (k1 === 1) this.interp.afterInterp(this);
+            if (k1 === 1) this.interp.onAfterInterp(this);
             this.unset(Action.firstCallFlag);
         } else {
             const k1 = this.is(Action.firstCallFlag) ? 0 : 1;
-            if (k1 === 0) this.interp.beforeInterp(this);
+            if (k1 === 0) {
+                this.interp.onInit(this);
+                this.interp.onBeforeInterp(this);
+            }
             if (this.interp) this.interp.call(this, k1);
             if (k1 === 1) this.set(Action.stopFlag);
-            if (k1 === 1) this.interp.afterInterp(this);
+            if (k1 === 1) this.interp.onAfterInterp(this);
             this.unset(Action.firstCallFlag);
             if (k1 === 0) this.tick(t);
         }

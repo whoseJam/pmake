@@ -308,7 +308,7 @@ export class Text extends BaseText {
         transforming.auto = args.auto === undefined ? transforming.auto : args.auto;
         transforming.color = args.color === undefined ? transforming.color : args.color;
         transforming.play();
-        new Action(this.delay(), this.delay() + this.duration(), transforming.source, transforming.target, transforming.interp(), this, "transforming");
+        new Action(this.delay(), this.delay() + this.duration(), transforming.source, transforming.target, Interp.groupInterp(transforming.onCreateGroup()), this, "transforming");
     }
     __createOrUpdateTransforming(args: any) {
         if (this.__getTransforming()) {
@@ -319,7 +319,8 @@ export class Text extends BaseText {
             args.color = args.color === undefined ? true : args.color;
             const transforming = TextEngine.transformText(this, args.source, args.target, args.mapping, args.auto, args.color);
             this._.transformings.push(transforming);
-            new Action(this.delay(), this.delay() + this.duration(), transforming.source, transforming.target, transforming.interp(), this, "transforming");
+            console.log("l=", this.delay(), "r=", this.delay() + this.duration());
+            new Action(this.delay(), this.delay() + this.duration(), transforming.source, transforming.target, Interp.groupInterp(transforming.onCreateGroup()), this, "transforming");
         }
     }
 }

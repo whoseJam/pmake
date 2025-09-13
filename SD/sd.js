@@ -88,3 +88,5 @@ export { rand } from "./Utility/Random";
 export { input } from "./Utility/Reader";
 export { trim } from "./Utility/Trim";
 export { irreversible, make1d, make2d, reversible } from "./Utility/Util";
+
+export { PathEngine } from "./Node/Path/PathEngine";

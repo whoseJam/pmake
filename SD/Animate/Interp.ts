@@ -1,8 +1,11 @@
+import { PathEngine, PathOper, PathOpers } from "@/Node/Path/PathEngine";
+import { Color } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Action } from "./Action";
-import { Color } from "@/Utility/Color";
 
 export type InterpFunction = (this: Action, t: number) => void;
+type InitGroupFunction = (action: Action) => void;
+type InitFunction = (this: Action) => void;
 type BeforeInterpFunction = (this: Action) => void;
 type AfterInterpFunction = (this: Action) => void;
 type Setter = (value: any) => void;
@@ -21,28 +24,55 @@ function setter(object: any, key: string): Setter {
 }
 
 export class InterpObject {
-    onBeforeInterp: BeforeInterpFunction;
-    onAfterInterp: AfterInterpFunction;
-    callback: InterpFunction;
+    inited: boolean;
+    onInit_: InitFunction;
+    onBeforeInterp_: BeforeInterpFunction;
+    onAfterInterp_: AfterInterpFunction;
+    callback_: InterpFunction;
     constructor(callback: InterpFunction) {
-        this.callback = callback;
-        this.onBeforeInterp = () => {};
-        this.onAfterInterp = () => {};
+        this.callback_ = callback;
+        this.inited = false;
+        this.onInit_ = () => {};
+        this.onBeforeInterp_ = () => {};
+        this.onAfterInterp_ = () => {};
     }
     call(action: Action, t: number): void {
-        this.callback.call(action, t);
+        this.callback_.call(action, t);
     }
-    beforeInterp(call: BeforeInterpFunction | Action) {
-        if (call instanceof Action) return this.onBeforeInterp.call(call);
-        this.onBeforeInterp = call;
+    onInit(call: InitFunction | Action) {
+        if (call instanceof Action) {
+            if (this.inited) return;
+            this.inited = true;
+            return this.onInit_.call(call);
+        }
+        this.onInit_ = call;
         return this;
     }
-    afterInterp(call: AfterInterpFunction | Action) {
-        if (call instanceof Action) return this.onAfterInterp.call(call);
-        this.onAfterInterp = call;
+    onBeforeInterp(call: BeforeInterpFunction | Action) {
+        if (call instanceof Action) return this.onBeforeInterp_.call(call);
+        this.onBeforeInterp_ = call;
+        return this;
+    }
+    onAfterInterp(call: AfterInterpFunction | Action) {
+        if (call instanceof Action) return this.onAfterInterp_.call(call);
+        this.onAfterInterp_ = call;
         return this;
     }
 }
+
+export class GroupInterpObject extends InterpObject {
+    onCreateGroup_: InitGroupFunction;
+    constructor(callback: InitGroupFunction) {
+        super(() => {});
+        this.onCreateGroup_ = callback;
+    }
+    onCreateGroup(call: InitGroupFunction | Action) {
+        if (call instanceof Action) return this.onCreateGroup_(call);
+        this.onCreateGroup_ = call;
+        return this;
+    }
+}
+
 export class Interp {
     static exLengthInterp(object: any, key: string) {
         const set = setter(object, key);
@@ -52,7 +82,7 @@ export class Interp {
             const B = this._target;
             const current = A * (1 - t) + B * t;
             set(current + "ex");
-        }).beforeInterp(function () {
+        }).onInit(function () {
             this._source = f(this.source);
             this._target = f(this.target);
         });
@@ -84,7 +114,7 @@ export class Interp {
             const g = fRGB.g * (1 - t) + tRGB.g * t;
             const b = fRGB.b * (1 - t) + tRGB.b * t;
             set(`rgb(${r},${g},${b})`);
-        }).beforeInterp(function () {
+        }).onInit(function () {
             this._source = Color.toRGB(this.source);
             this._target = Color.toRGB(this.target);
         });
@@ -127,7 +157,7 @@ export class Interp {
                 ans.push(v);
             }
             set(ans);
-        }).beforeInterp(function () {
+        }).onInit(function () {
             this._source = f(this.source);
             this._target = f(this.target);
         });
@@ -168,20 +198,25 @@ export class Interp {
             set(`translate(${tx},${ty})`);
         });
     }
-    static pathInterp(object, key) {
-        const _object = Snap(object.element ? object.element() : object);
-        let animateHandler = undefined;
-        return function (t) {
-            if (t === 0) {
-                if (this.l === this.r) _object.attr({ d: this.target });
-                else animateHandler = _object.animate({ d: this.target }, this.r - this.l, mina.easeinout);
-            } else if (t === 1 && this.r > this.l) {
-                setTimeout(() => {
-                    animateHandler.stop();
-                    _object.attr({ d: this.target });
-                }, 50);
+    static pathInterp(object: any, key: string) {
+        const set = setter(object, key);
+        return new InterpObject(function (t) {
+            const A = this._source;
+            const B = this._target;
+            const operators: PathOpers = [];
+            for (let i = 0; i < A.length; i++) {
+                const operator: PathOper = [A[i][0]];
+                for (let j = 1; j < A[i].length; j++) operator.push(A[i][j] * (1 - t) + B[i][j] * t);
+                operators.push(operator);
             }
-        };
+            set(PathEngine.toString(operators));
+        })
+            .onInit(function () {
+                [this._source, this._target] = PathEngine.toCubics(this.source, this.target);
+            })
+            .onAfterInterp(function () {
+                set(this.target);
+            });
     }
     static pointsInterp(object: any, key?: string) {
         const set = setter(object, key);
@@ -195,10 +230,13 @@ export class Interp {
             const ans = [];
             for (let i = 0; i < A.length; i++) ans.push([A[i][0] * (1 - t) + B[i][0] * t, A[i][1] * (1 - t) + B[i][1] * t]);
             set(ans);
-        }).beforeInterp(function () {
+        }).onInit(function () {
             const length = Math.max(this.source.length, this.target.length);
             this._source = f(this.source, length);
             this._target = f(this.target, length);
         });
+    }
+    static groupInterp(onCreateGroup: InitGroupFunction) {
+        return new GroupInterpObject(onCreateGroup);
     }
 }

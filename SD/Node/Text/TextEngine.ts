@@ -72,7 +72,7 @@ class MathjaxMatch extends Match {
 
 class TransformingPath {
     d: string;
-    transform: Matrix;
+    transform: SVGMatrix;
     character: string;
     fill: string;
     stroke: string;
@@ -81,7 +81,7 @@ class TransformingPath {
     status: TransformingPathStatus;
     path: SVGPathElement;
     ref: any;
-    constructor(d: string, transform: Matrix, character?: string, fill?: string, stroke?: string, lastFill?: string, lastStroke?: string, ref?: any) {
+    constructor(d: string, transform: SVGMatrix, character?: string, fill?: string, stroke?: string, lastFill?: string, lastStroke?: string, ref?: any) {
         this.d = d;
         this.transform = transform;
         this.character = character;
@@ -204,8 +204,12 @@ class TransformingPathGroup {
             this.target = target.reverse();
         }
     }
-    play() {
+    play(l: number, r: number) {
         if (this.group) return;
+        function createAction(path, source, target, interp, channel) {
+            new Action(l, r, source, target, interp(path, channel), path, channel);
+        }
+        const actions = [];
         this.parent.startAnimate(this.l, this.l);
         this.group = RenderNode.createRenderNode(this.parent, this.parent.layer(), "g");
         this.source = this.source.filter(source => source !== undefined);
@@ -213,10 +217,6 @@ class TransformingPathGroup {
         this.sourceInit();
         this.targetInit();
         for (const source of this.source) source.init(this.group, this.sourceConfig);
-        const matrixEqual = (a: Matrix, b: Matrix) => {
-            for (const key of ["a", "b", "c", "d", "e", "f"]) if (a[key] !== b[key]) return false;
-            return true;
-        };
         for (let i = 0; i < this.source.length; i++) {
             const source = this.source[i];
             const target = this.target[i];
@@ -224,27 +224,28 @@ class TransformingPathGroup {
             if (source.status !== "normal") {
                 const so = +source.status.slice(8, 9);
                 const to = +source.status.slice(11);
-                new Action(this.l, this.r, so, to, Interp.numberInterp(path, "opacity"), path, "opacity");
+                createAction(path, so, to, Interp.numberInterp, "opacity");
             }
             if (target) {
                 const sd = source.d;
                 const td = target.d;
-                new Action(this.l, this.r, sd, td, Interp.pathInterp(path, "d"), path, "d");
+                createAction(path, sd, td, Interp.pathInterp, "d");
                 const sm = source.transform;
                 const tm = target.transform;
-                if (!matrixEqual(sm, tm)) new Action(this.l, this.r, sm, tm, Interp.matrixInterp(path, "transform"), path, "transform");
+                createAction(path, sm, tm, Interp.matrixInterp, "transform");
                 const sf = source.fill === "default" ? this.sourceConfig.fill : source.fill;
                 const tf = target.fill === "default" ? this.targetConfig.fill : target.fill;
-                if (sf !== tf) new Action(this.l, this.r, sf, tf, Interp.colorInterp(path, "fill"), path, "fill");
+                createAction(path, sf, tf, Interp.colorInterp, "fill");
                 source.fill = target.fill;
                 const ss = source.stroke === "default" ? this.sourceConfig.stroke : source.stroke;
                 const ts = target.stroke === "default" ? this.targetConfig.stroke : target.stroke;
-                if (ss !== ts) new Action(this.l, this.r, ss, ts, Interp.colorInterp(path, "stroke"), path, "stroke");
+                createAction(path, ss, ts, Interp.colorInterp, "stroke");
                 source.stroke = target.stroke;
             }
         }
         this.parent.startAnimate(this.r, this.r);
         this.group.remove();
+        return actions;
     }
 }
 
@@ -526,11 +527,12 @@ export class Transforming {
         this.groupKeys.push(undefined);
         this.groups.push(transformingGroup);
     }
-    interp() {
+    onCreateGroup() {
         const transforming = this;
-        return function (t: number) {
+        return function (action: Action) {
+            console.log("action=", action);
             transforming.groups.forEach(group => {
-                group.play();
+                group.play(action.l, action.r);
             });
         };
     }

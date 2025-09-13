@@ -69,7 +69,7 @@ export class Path extends BasePath {
     d(d?: string) {
         if (arguments.length === 0) return this.vars.d;
         this.vars.d = d;
-        this.vars.setTogether(PathEngine.pathStrToBox(d));
+        this.vars.setTogether(PathEngine.toBox(d));
         return this;
     }
 }

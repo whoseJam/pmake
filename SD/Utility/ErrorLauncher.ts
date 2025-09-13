@@ -1,6 +1,9 @@
 import { SDNode } from "@/Node/SDNode";
 
 export class ErrorLauncher {
+    static reloadMyself() {
+        throw new Error("Reload Myself (Not an Error)");
+    }
     static unknownKeyError(key: string) {
         throw new Error(`Unknown key ${key}.`);
     }

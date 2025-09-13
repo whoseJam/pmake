@@ -3,7 +3,7 @@ import { SDRule } from "@/Rule/Rule";
 
 type XLocator = "x" | "cx" | "mx";
 type YLocator = "y" | "cy" | "my";
-type Box = {
+type SDBox = {
     x: number;
     y: number;
     width: number;
@@ -283,8 +283,8 @@ export class SDNode {
     ky(k: number): number;
     dx(dx: number): this;
     dy(dy: number): this;
-    boundingBox(): Box;
-    boundingBox(box: Box): this;
+    boundingBox(): SDBox;
+    boundingBox(box: SDBox): this;
     boundingBox(x: number, y: number, width: number, height: number): this;
 }
 
