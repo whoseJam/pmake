@@ -1,8 +1,12 @@
 import { svg } from "@/Interact/Root";
 import { afterEffect } from "@/Node/Core/Reactive";
+import { BasePath } from "@/Node/Path/BasePath";
+import { SDNode } from "@/Node/SDNode";
+
+export type EnterCallback = (element: SDNode, move: () => void) => void;
 
 export class Enter {
-    static nothing(layer) {
+    static nothing(): EnterCallback {
         return function (element, move) {
             move();
             afterEffect(() => {
@@ -10,7 +14,9 @@ export class Enter {
             });
         };
     }
-    static appear(layer) {
+    static appear(): EnterCallback;
+    static appear(layer: string): EnterCallback;
+    static appear(layer?: string): EnterCallback {
         return function (element, move) {
             element.after(this.delay());
             element.opacity(0);
@@ -22,8 +28,11 @@ export class Enter {
             });
         };
     }
-    static pointStoT(layer) {
-        return function (element, move) {
+    static pointStoT(): EnterCallback;
+    static pointStoT(layer: string): EnterCallback;
+    static pointStoT(layer?: string): EnterCallback {
+        return function (element_, move) {
+            const element = element_ as BasePath;
             element.after(this.delay());
             element.opacity(0);
             element.attachTo(this.layer(layer));
@@ -36,7 +45,9 @@ export class Enter {
             });
         };
     }
-    static moveTo(layer) {
+    static moveTo(): EnterCallback;
+    static moveTo(layer: string): EnterCallback;
+    static moveTo(layer?: string): EnterCallback {
         return function (element, move) {
             element.after(this.delay());
             element.attachTo(svg());

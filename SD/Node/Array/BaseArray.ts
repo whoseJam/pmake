@@ -1,8 +1,8 @@
-import { SDNode, SDNodeWithColor, SDNodeWithDrop, SDNodeWithIntValue, SDNodeWithOpacity, SDNodeWithText, SDNodeWithValue } from "@/Node/SDNode";
 import { Exit as EX } from "@/Node/Core/Exit";
+import { SDNode, SDNodeWithColor, SDNodeWithDrop, SDNodeWithIntValue, SDNodeWithOpacity, SDNodeWithText, SDNodeWithValue } from "@/Node/SDNode";
 import { Rect } from "@/Node/Shape/Rect";
-import { SDColor } from "@/Utility/Color";
 import { Check } from "@/Utility/Check";
+import { SDColor } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 export class BaseArray<E, V> extends SDNode {

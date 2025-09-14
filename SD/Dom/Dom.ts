@@ -23,21 +23,18 @@ export class Dom {
     static parent(element: Element): Element {
         return element.parentElement;
     }
-    static addEventListener(element: Element, event: string, callback: any): void {
+    static addEventListener(element: Element, event: string, callback: EventListenerOrEventListenerObject): void {
         element.addEventListener(event, callback);
-        // if (element.click) element.click();
     }
-    static removeEventListener(element: Element, event: string, callback: any): void {
+    static removeEventListener(element: Element, event: string, callback: EventListenerOrEventListenerObject): void {
         element.removeEventListener(event, callback);
     }
-    static clone(element) {
-        return element.cloneNode();
+    static clone(element: Element): Element {
+        return element.cloneNode() as Element;
     }
-    static deepClone(element) {
+    static deepClone(element: Element) {
         const ans = this.clone(element);
-        for (let child of element.children) {
-            ans.append(this.deepClone(child));
-        }
+        for (let child of element.children) ans.append(this.deepClone(child));
         return ans;
     }
     static matrixEqual(a: SVGMatrix, b: SVGMatrix): boolean {

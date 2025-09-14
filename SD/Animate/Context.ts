@@ -1,4 +1,4 @@
-import { SDNode } from "@/Node/SDNode";
+import { SDNode } from "@/Node/SDNode_dep_";
 
 export class Context {
     target: SDNode;

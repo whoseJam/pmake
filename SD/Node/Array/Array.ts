@@ -1,6 +1,6 @@
-import { SDNode } from "@/Node/SDNode";
 import { BaseArray } from "@/Node/Array/BaseArray";
 import { Box } from "@/Node/Element/Box";
+import { SDNode } from "@/Node/SDNode";
 import { Check } from "@/Utility/Check";
 
 /**
