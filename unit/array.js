@@ -6,7 +6,7 @@ const EN = sd.enter();
 
 sd.init(() => {});
 
-sd.main(TestIndexOf);
+sd.main(TestBasic);
 
 async function TestIndexOf() {
     const arr = new sd.Array(svg).x(100).y(100).resize(10);

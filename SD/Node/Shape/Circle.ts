@@ -7,7 +7,7 @@ export class Circle extends BaseShape {
     constructor(target: SDNode | RenderNode) {
         super(target);
 
-        this._.nake = this.__createSVGNode("circle", {
+        this.__createSVGNode("circle", {
             cx: 20,
             cy: 20,
             r: 20,
@@ -50,5 +50,17 @@ export class Circle extends BaseShape {
     y(y?: number) {
         if (y === undefined) return this.cy() - this.r();
         return this.cy(y - this.y() + this.cy());
+    }
+    width(): number;
+    width(width: number): this;
+    width(width?: number) {
+        if (arguments.length === 0) return this.r() * 2;
+        return this.r(width / 2);
+    }
+    height(): number;
+    height(height: number): this;
+    height(height?: number) {
+        if (arguments.length === 0) return this.r() * 2;
+        return this.r(height / 2);
     }
 }

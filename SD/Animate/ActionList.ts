@@ -188,7 +188,11 @@ export class ActionList {
         });
     }
     finished() {
-        return this.stopCount === this.validCount;
+        let stopCount = 0;
+        this.actionsList.forEach(action => {
+            if (action.is(Action.stopFlag)) stopCount++;
+        });
+        return stopCount === this.validCount;
     }
     rollback() {
         const list = new ActionList();

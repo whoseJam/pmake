@@ -24,27 +24,23 @@ export class BaseElement extends SDNode {
     }
     x(): number;
     x(x: number): this;
-    x(x?: number) {
-        if (arguments.length === 0) return Rect.prototype.x.call(this);
-        return Rect.prototype.x.call(this, x);
+    x() {
+        return Rect.prototype.x.apply(this, arguments);
     }
     y(): number;
     y(y: number): this;
-    y(y?: number) {
-        if (arguments.length === 0) return Rect.prototype.y.call(this);
-        return Rect.prototype.y.call(this, y);
+    y() {
+        return Rect.prototype.y.apply(this, arguments);
     }
     width(): number;
     width(width: number): this;
-    width(width?: number) {
-        if (arguments.length === 0) return Rect.prototype.width.call(this);
-        return Rect.prototype.width.call(this, width);
+    width() {
+        return Rect.prototype.width.apply(this, arguments);
     }
     height(): number;
     height(height: number): this;
-    height(height?: number) {
-        if (arguments.length === 0) return Rect.prototype.height.call(this);
-        return Rect.prototype.height.call(this, height);
+    height() {
+        return Rect.prototype.height.apply(this, arguments);
     }
     /**
      * Gets the visual representation scaling factor of this element component.

@@ -1,5 +1,6 @@
 import { Animate } from "@/Animate/Animate";
 import { GroupInterpObject, InterpFunction, InterpObject } from "@/Animate/Interp";
+import { Window } from "@/Animate/Window";
 import { SDNode } from "@/Node/SDNode";
 
 global.ACTION_TICK = 0;
@@ -57,7 +58,7 @@ export class Action {
             this.owner = owner;
             this.channel = channel;
             // @ts-ignore
-            this.frame = window.CURRENT_FRAME;
+            this.frame = Window.CURRENT_FRAME;
             this.next = undefined;
             this.flag = Action.firstCallFlag;
             Animate.push(this);

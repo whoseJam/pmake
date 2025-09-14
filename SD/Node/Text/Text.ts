@@ -1,5 +1,6 @@
 import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
+import { Window } from "@/Animate/Window";
 import { SDNode } from "@/Node/SDNode";
 import { BaseText, TextMapping } from "@/Node/Text/BaseText";
 import { TextEngine } from "@/Node/Text/TextEngine";
@@ -90,7 +91,6 @@ export class Text extends BaseText {
             if (this.duration() > 0) this.__updateSourceTextConfiguration({ size: vo });
         });
         this.vars.watch("fill", (fill: string, vo: string) => {
-            console.log("change the fill, the transforming is=", this.__getTransforming());
             this.__updateTransforming({ target: { fill } });
             if (this.duration() > 0) this.__updateSourceTextConfiguration({ fill: vo });
         });
@@ -234,10 +234,8 @@ export class Text extends BaseText {
         return this;
     }
     __flushAll() {
-        // @ts-ignore
-        if (this._.frame !== window.CURRENT_FRAME) {
-            // @ts-ignore
-            this._.frame = window.CURRENT_FRAME;
+        if (this._.frame !== Window.CURRENT_FRAME) {
+            this._.frame = Window.CURRENT_FRAME;
             this._.transformings = [];
             this._.configurations = {};
         }
@@ -319,7 +317,6 @@ export class Text extends BaseText {
             args.color = args.color === undefined ? true : args.color;
             const transforming = TextEngine.transformText(this, args.source, args.target, args.mapping, args.auto, args.color);
             this._.transformings.push(transforming);
-            console.log("l=", this.delay(), "r=", this.delay() + this.duration());
             new Action(this.delay(), this.delay() + this.duration(), transforming.source, transforming.target, Interp.groupInterp(transforming.onCreateGroup()), this, "transforming");
         }
     }

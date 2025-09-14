@@ -193,7 +193,7 @@ function promiseOfLastMainFrame(): Promise<void> {
  * await sd.pause(); // Wait for another user interaction.
  * // Operations to execute in the next animation stage.
  */
-export async function pause(frameType?: 0 | 1 | 2 | 3 | 4);
+export async function pause(frameType?: 0 | 1 | 2 | 3 | 4): Promise<void>;
 export async function pause(frameType = 0): Promise<void> {
     if (Window.SHOULD_FLUSH) {
         A.currentActionList.updateWindowSize();

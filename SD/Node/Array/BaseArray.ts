@@ -1,12 +1,13 @@
 import { Exit as EX } from "@/Node/Core/Exit";
-import { SDNode, SDNodeWithColor, SDNodeWithDrop, SDNodeWithIntValue, SDNodeWithOpacity, SDNodeWithText, SDNodeWithValue } from "@/Node/SDNode";
+import { SDNode, SDNodeWithColor, SDNodeWithDrop, SDNodeWithIntValue, SDNodeWithText, SDNodeWithValue } from "@/Node/SDNode";
 import { Rect } from "@/Node/Shape/Rect";
+import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
 import { SDColor } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 export class BaseArray<E, V> extends SDNode {
-    constructor(target: SDNode) {
+    constructor(target: SDNode | RenderNode) {
         super(target);
 
         this.newLayer("elements");
@@ -18,15 +19,11 @@ export class BaseArray<E, V> extends SDNode {
     }
     x(): number;
     x(x: number): this;
-    x(x?: number) {
-        if (arguments.length === 0) return Rect.prototype.x.call(this);
-        return Rect.prototype.x.call(this, x);
+    x() {
+        return Rect.prototype.x.apply(this, arguments);
     }
-    y(): number;
-    y(y: number): this;
-    y(y?: number) {
-        if (arguments.length === 0) return Rect.prototype.y.call(this);
-        return Rect.prototype.y.call(this, y);
+    y() {
+        return Rect.prototype.y.apply(this, arguments);
     }
     /**
      * Gets the index of the first element in this array component.
@@ -174,12 +171,12 @@ export class BaseArray<E, V> extends SDNode {
                 return super.opacity(opacity);
             } else {
                 const [id] = arguments;
-                const element = this.__getElementWithMethod(id, "opacity") as SDNodeWithOpacity;
+                const element = this.__getElementWithMethod(id, "opacity") as SDNode;
                 return element.opacity();
             }
         } else {
             const [id, opacity] = arguments;
-            const element = this.__getElementWithMethod(id, "opacity") as SDNodeWithOpacity;
+            const element = this.__getElementWithMethod(id, "opacity") as SDNode;
             element.opacity(opacity);
             return this;
         }

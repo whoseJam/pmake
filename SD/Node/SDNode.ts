@@ -189,15 +189,16 @@ export class SDNode {
      * @returns The current component instance for method chaining.
      */
     startAnimate(start: number, end: number): this;
-    startAnimate(): this {
+    startAnimate() {
         this.__animationCheck();
         if (arguments.length === 0) return this.startAnimate(this._.start, this._.start + 300);
         if (arguments.length === 1) {
-            const [object] = arguments[0];
+            const object = arguments[0];
             if (typeof object === "number") return this.startAnimate(this._.start, this._.start + object);
             return this.startAnimate(object.delay(), object.delay() + object.duration());
         }
         [this._.start, this._.end] = arguments;
+        console.log("start animate this=", this, "l=", this._.start, "r=", this._.end);
         this.__forEachChild(child => child.startAnimate(this._.start, this._.end));
         return this;
     }
@@ -283,9 +284,9 @@ export class SDNode {
     __forEachChild(callback: (child: SDNode, id: string) => void) {
         for (const id in this._.children) callback(this._.children[id], id);
     }
-    __pushChild<T extends this & SDNode>(this: T, name_: string, child: SDNode, rule?: SDRule) {
+    __pushChild(name_: string, child: SDNode, rule?: SDRule) {
         const name = typeof name_ === "string" ? name_ : String(++SDNode.CHILD_ID);
-        child._.parent = this._.parent;
+        child._.parent = this;
         this._.children[name] = child;
         child.rule(rule);
         return name;
@@ -684,5 +685,11 @@ export class SDNode {
             .y(y)
             .unfreeze();
     }
-    static extend() {}
 }
+
+type AnyFunction = (...args: any[]) => any;
+export type SDNodeWithColor = SDNode & { color: AnyFunction };
+export type SDNodeWithDrop = SDNode & { drop: AnyFunction };
+export type SDNodeWithIntValue = SDNode & { intValue: AnyFunction };
+export type SDNodeWithText = SDNode & { text: AnyFunction };
+export type SDNodeWithValue = SDNode & { value: AnyFunction };
