@@ -125,8 +125,8 @@ export class SDSVGNode extends SDNode {
                 continue;
             }
             const [aliasKey, interp] = attributeMap[key];
-            const watchFunc = Factory.action(this, object, aliasKey, interp);
-            this.vars.watch(key, watchFunc);
+            const watchCallback = Factory.action(this, object, aliasKey, interp);
+            this.vars.watch(key, watchCallback);
             object.setAttribute(aliasKey, attributes[key]);
         }
         return object;

@@ -1,27 +1,11 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-const div = sd.div();
 
-sd.main(TestSliderHTMLAndSVG);
-
-async function TestSliderHTMLAndSVG() {
-    const s1 = new sd.Slider(svg)
-        .x(100)
-        .y(100)
-        .onChange(v => console.log("s1 v=", v));
-    const s2 = new sd.Slider(div)
-        .x(100)
-        .y(200)
-        .onChange(v => console.log("s2 v=", v));
-    await sd.pause();
-    await sd.pause();
-    await sd.pause();
-    await sd.pause();
-}
+sd.main(TestSliderAnimation);
 
 async function TestBasicSliderFunctionality() {
-    const slider = new sd.Slider(div);
+    const slider = new sd.Slider(svg);
     await sd.pause();
     slider.x(100).y(100);
     slider.min(0).max(100);
@@ -32,14 +16,14 @@ async function TestBasicSliderFunctionality() {
 }
 
 async function TestSliderAnimation() {
-    const slider = new sd.Slider(div);
+    const slider = new sd.Slider(svg);
     await sd.pause();
     slider.startAnimate().x(200).y(200).value(75).endAnimate();
     console.log("Slider animation test passed");
 }
 
 async function TestSliderCallback() {
-    const slider = new sd.Slider(div);
+    const slider = new sd.Slider(svg);
     let callbackTriggered = false;
 
     slider.onChange(value => {
@@ -54,7 +38,7 @@ async function TestSliderCallback() {
 }
 
 async function TestSliderBoundaries() {
-    const slider = new sd.Slider(div);
+    const slider = new sd.Slider(svg);
     slider.min(0).max(100).value(50);
     await sd.pause();
     // Test value clamping

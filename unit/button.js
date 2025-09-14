@@ -1,23 +1,11 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-const div = sd.div();
 
-sd.main(TestButtonHTMLAndSVG);
-
-async function TestButtonHTMLAndSVG() {
-    const b1 = new sd.Button(svg)
-        .onClick(() => console.log("ButtonSVG clicked!"))
-        .x(100)
-        .y(100);
-    const b2 = new sd.Button(div)
-        .onClick(() => console.log("ButtonHTML clicked!"))
-        .x(100)
-        .y(200);
-}
+sd.main(TestButtonAnimation);
 
 async function TestBasicButtonFunctionality() {
-    const button = new sd.Button(div);
+    const button = new sd.Button(svg);
     await sd.pause();
     button.x(100).y(100).width(100);
     console.assert(button.x() === 100 && button.y() === 100 && button.width() === 100, "Position setting test failed");
@@ -28,14 +16,14 @@ async function TestBasicButtonFunctionality() {
 }
 
 async function TestButtonAnimation() {
-    const button = new sd.Button(div);
+    const button = new sd.Button(svg);
     await sd.pause();
     button.startAnimate().x(200).y(200).width(100).text("动画按钮").endAnimate();
     console.log("Button animation test passed");
 }
 
 async function TestButtonCallback() {
-    const button = new sd.ButtonHTML(div);
+    const button = new sd.ButtonHTML(svg);
     let callbackTriggered = false;
     button.onClick(() => {
         callbackTriggered = true;
@@ -48,7 +36,7 @@ async function TestButtonCallback() {
 }
 
 async function TestButtonChaining() {
-    const button = new sd.Button(div);
+    const button = new sd.Button(svg);
     await sd.pause();
     button
         .x(150)

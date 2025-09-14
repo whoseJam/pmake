@@ -3,9 +3,6 @@ import { Dom } from "@/Dom/Dom";
 import { SDNode } from "@/Node/SDNode";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
-export const SVGLabel = new Set(["circle", "ellipse", "image", "line", "path", "polygon", "rect", "text", "svg", "g", "marker", "defs"]);
-export const HTMLLabel = new Set(["div", "input", "button", "textarea", "img"]);
-
 const INNER_HTML_KEY = new Set(["innerHTML", "text"]);
 const STYLE_KEY = new Set(["pointer-events", "min-width", "min-height", "display"]);
 const SHAPE_KEY = new Set([
@@ -22,6 +19,13 @@ const SHAPE_KEY = new Set([
     "text",
     "polygon",
     "polyline",
+]);
+const HTML_KEY = new Set([
+    // html key
+    "div",
+    "input",
+    "button",
+    "textarea",
 ]);
 
 function parseText(text: string) {
@@ -55,7 +59,8 @@ export class RenderNode {
         if (args.append === undefined) args.append = true;
         if (!args.element) {
             if (!args.label) ErrorLauncher.whatHappened();
-            args.element = Dom.createSVGElement(args.label);
+            if (HTML_KEY.has(args.label)) args.element = Dom.createElement(args.label);
+            else args.element = Dom.createSVGElement(args.label);
         } else args.label = Dom.tagName(args.element);
         this.targetNode = args.targetNode;
         this.label = args.label;
