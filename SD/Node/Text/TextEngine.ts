@@ -3,7 +3,7 @@ import { Interp } from "@/Animate/Interp";
 import { Dom } from "@/Dom/Dom";
 import { svg } from "@/Interact/Root";
 import { BaseText } from "@/Node/Text/BaseText";
-import { Math, MathConfiguration } from "@/Node/Text/Math";
+import { Math as Math_, MathConfiguration } from "@/Node/Text/Math";
 import { Text, TextConfiguration } from "@/Node/Text/Text";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
@@ -20,9 +20,8 @@ type TextMappingDictionary = { [key: string]: string };
 type TextMappingArray<T> = Array<TextMappingItem<T>>;
 export type TextMapping<T> = TextMappingDictionary | TextMappingArray<T>;
 
-type TextType = Text | Math;
+type TextType = Text | Math_;
 type Configuration = TextConfiguration | MathConfiguration;
-type Matrix = { a: number; b: number; c: number; d: number; e: number; f: number };
 type MatchingMachineStatus = "source" | "target";
 type TransformingPathStatus = "normal" | "opacity:0->1" | "opacity:1->0";
 type MappingStringLocation = { i: number; subtext: string };
@@ -289,6 +288,7 @@ class MatchingMachine {
 }
 
 class TextMatchingMachine extends MatchingMachine {
+    text: TextConfiguration;
     pattern: string;
     textDeleted: Array<boolean>;
     constructor(text: TextConfiguration, status: MatchingMachineStatus) {
@@ -316,8 +316,8 @@ class TextMatchingMachine extends MatchingMachine {
         if (typeof subtext === "string") return this.stringMatch(subtext);
         const subtext_ = subtext as MappingStringLocation;
         if (subtext_.i !== undefined) return this.stringMatch(subtext_.subtext, subtext_.i);
-        if (subtext instanceof Text) return new TextMatch(0, subtext.text().length, TextEngine.getPaths(subtext), subtext, true);
-        if (subtext instanceof Math) return undefined;
+        if (subtext instanceof Text) return new TextMatch(0, subtext.text().length, TextEngine.getPaths(subtext.__getConfiguration()), subtext, true);
+        if (subtext instanceof Math_) return undefined;
         const subtext__ = subtext as MappingOtherLocation;
         const tempMatching = new TextMatchingMachine(subtext__.object, this.status);
         return tempMatching.match(subtext__.subtext);
@@ -369,22 +369,22 @@ class TextMatchingMachine extends MatchingMachine {
 }
 
 class MathMatchingMachine extends MatchingMachine {
+    text: MathConfiguration;
     status: MatchingMachineStatus;
     pattern: RenderNode;
     pathDeleted: Array<boolean>;
     elementDeleted: WeakSet<Element>;
-    constructor(text: Math | RenderNode, status: MatchingMachineStatus) {
-        const text_ = text instanceof Math ? (text.vars.math as RenderNode) : text;
-        super(text_, status);
+    constructor(text: MathConfiguration, status: MatchingMachineStatus) {
+        super(text, status);
         this.status = status;
-        this.pattern = text_;
+        this.pattern = text.attr;
         this.pathDeleted = make1d(this.paths.length, false);
         this.elementDeleted = new WeakSet();
     }
     stringMatch(subtext: string, idx: number = 0): MathMatch {
-        if (subtext.trim() === "") return new MathMatch(undefined, 0, -1, this, this.text as RenderNode, false);
-        if (arguments.length === 1) return TextEngine.findFirstSubtextInMath(this.pattern, subtext, this);
-        const matches = TextEngine.findSubtextInMath(this.pattern, subtext, idx + 1, this, false);
+        if (subtext.trim() === "") return new MathMatch(undefined, 0, -1, this, this.text.attr, false);
+        if (arguments.length === 1) return TextEngine.findFirstSubtextInMath(this.text, subtext, this);
+        const matches = TextEngine.findSubtextInMath(this.text, subtext, idx + 1, this, false);
         if (matches.length <= idx) return undefined;
         return matches[idx];
     }
@@ -393,7 +393,7 @@ class MathMatchingMachine extends MatchingMachine {
         const subtext_ = subtext as MappingStringLocation;
         if (subtext_.i !== undefined) return this.stringMatch(subtext_.subtext, subtext_.i);
         if (subtext instanceof Text) return undefined;
-        if (subtext instanceof Math) {
+        if (subtext instanceof Math_) {
             const text = subtext.vars.math;
             if (!text) return undefined;
             const matching = new MathMatchingMachine(text, this.status);
@@ -460,7 +460,7 @@ class MathMatchingMachine extends MatchingMachine {
 }
 
 function createMatchingMachine(text: Configuration, status: MatchingMachineStatus): MatchingMachine {
-    if (text instanceof RenderNode) return new MathMatchingMachine(text, status);
+    if (text instanceof MathConfiguration) return new MathMatchingMachine(text, status);
     return new TextMatchingMachine(text, status);
 }
 
@@ -621,14 +621,13 @@ export class TextEngine {
                 this.fonts[family] = opentype.parse(buffer);
             });
     }
-    static boundingBox(text: Text | Math) {
-        if (text instanceof Math) return this.mathjaxBoundingBox(text._.math);
+    static boundingBox(text: Text | Math_) {
+        if (text instanceof Math_) return this.mathjaxBoundingBox(text._.math);
         return this.textBoundingBox(text);
     }
     static getPaths(config: Configuration, status?: MatchingMachineStatus): Array<TransformingPath> {
-        if (config instanceof MathConfiguration) return TextEngine.getMathPaths(text, status);
-        if (config instanceof TextConfiguration) return TextEngine.getTextPaths(text as Text);
-        return TextEngine.getTextPaths(text as TextConfiguration);
+        if (config instanceof MathConfiguration) return TextEngine.getMathPaths(config, status);
+        if (config instanceof TextConfiguration) return TextEngine.getTextPaths(config);
     }
     static textBoundingBox(text_: Text | string, family_?: string, size_?: number) {
         const text = typeof text_ === "string" ? text_ : text_.text();
@@ -691,20 +690,9 @@ export class TextEngine {
         const offset = -descender * scale;
         return font.getPaths(text, x, y + height + offset, size);
     }
-    static getTextPaths(text: Text | TextConfiguration): Array<TransformingPath> {
+    static getTextPaths(text: TextConfiguration): Array<TransformingPath> {
         const paths = [];
-        const config = {
-            text: text instanceof Text ? text.text() : text.text,
-            family: text instanceof Text ? text.fontFamily() : text.family,
-            size: text instanceof Text ? text.fontSize() : text.size,
-            x: text instanceof Text ? text.x() : text.x,
-            y: text instanceof Text ? text.y() : text.y,
-            fill: text instanceof Text ? text.fill() : text.fill,
-            stroke: text instanceof Text ? text.stroke() : text.stroke,
-            attr: text instanceof Text ? text._.attr : text.attr,
-            lastAttr: text.lastAttr,
-        };
-        const targetPaths = TextEngine.getTextPathsFromOpenType(config.text, config.family, config.size, config.x, config.y);
+        const targetPaths = TextEngine.getTextPathsFromOpenType(text.text, text.family, text.size, text.x, text.y);
         const getAttribute = (attr: any, i: number, key: string) => {
             if (!attr || !attr[i] || !attr[i][key]) return "default";
             return attr[i][key];
@@ -713,19 +701,19 @@ export class TextEngine {
             const d = path.toPathData(4);
             if (!d) paths.push(undefined);
             else {
-                const fill = getAttribute(config.attr, i, "fill");
-                const stroke = getAttribute(config.attr, i, "stroke");
-                const lastFill = getAttribute(config.lastAttr, i, "fill");
-                const lastStroke = getAttribute(config.lastAttr, i, "stroke");
-                paths.push(new TransformingPath(d, { a: 1, b: 0, c: 0, d: 1, e: 0, f: 0 }, config.text[i], fill, stroke, lastFill, lastStroke, config.attr));
+                const fill = getAttribute(text.attr, i, "fill");
+                const stroke = getAttribute(text.attr, i, "stroke");
+                const lastFill = getAttribute(text.lastAttr, i, "fill");
+                const lastStroke = getAttribute(text.lastAttr, i, "stroke");
+                paths.push(new TransformingPath(d, new DOMMatrix(), text.text[i], fill, stroke, lastFill, lastStroke, text.attr));
             }
         }
         return paths;
     }
-    static getMathPaths(element: RenderNode, status: MatchingMachineStatus): Array<TransformingPath> {
-        const parent = element.parent as Math;
-        const defs = element.element().children[0];
-        const root = element.element().children[1] as EXSVGElement;
+    static getMathPaths(text: MathConfiguration, status: MatchingMachineStatus): Array<TransformingPath> {
+        const element = text.attr;
+        const defs: SVGDefsElement = element.element().children[0] as SVGDefsElement;
+        const root: EXSVGElement = element.element().children[1] as EXSVGElement;
         const paths = [];
         const initialMatrix = () => {
             const svg = element.element();
@@ -736,26 +724,9 @@ export class TextEngine {
             const y = +svg.getAttribute("y");
             const w = bbox.width * (vw / ibbox.width);
             const h = bbox.height * (vh / ibbox.height);
-            return {
-                a: w / vw,
-                b: 0,
-                c: 0,
-                d: h / vh,
-                e: x - (w / vw) * vx,
-                f: y - (h / vh) * vy,
-            };
+            return new DOMMatrix([w / vw, 0, 0, h / vh, x - (w / vw) * vx, y - (h / vh) * vy]);
         };
-        const multiply = (matrix1: Matrix, matrix2: Matrix) => {
-            return {
-                a: matrix1.a * matrix2.a + matrix1.c * matrix2.b,
-                b: matrix1.b * matrix2.a + matrix1.d * matrix2.b,
-                c: matrix1.a * matrix2.c + matrix1.c * matrix2.d,
-                d: matrix1.b * matrix2.c + matrix1.d * matrix2.d,
-                e: matrix1.a * matrix2.e + matrix1.c * matrix2.f + matrix1.e,
-                f: matrix1.b * matrix2.e + matrix1.d * matrix2.f + matrix1.f,
-            };
-        };
-        const extract = (current, defs): [string, string] => {
+        const extract = (current: EXSVGElement, defs: SVGDefsElement): [string, string] => {
             if (Dom.tagName(current) === "rect") {
                 const x = +current.getAttribute("x");
                 const y = +current.getAttribute("y");
@@ -770,9 +741,9 @@ export class TextEngine {
                 return [ssrc.getAttribute("d"), data];
             }
         };
-        const dfs = (current: EXSVGElement, matrix: Matrix, fill: string, stroke: string) => {
+        const dfs = (current: EXSVGElement, matrix: DOMMatrix, fill: string, stroke: string) => {
             const l = paths.length;
-            for (let i = 0; i < current.transform.baseVal.length; i++) matrix = multiply(matrix, current.transform.baseVal[i].matrix);
+            for (let i = 0; i < current.transform.baseVal.length; i++) matrix = matrix.multiply(current.transform.baseVal[i].matrix);
             fill = current.getAttribute("fill") || fill;
             stroke = current.getAttribute("stroke") || stroke;
             if (!Dom.tagName(current)) return;
@@ -780,14 +751,14 @@ export class TextEngine {
             if (Dom.tagName(current) === "path") return;
             if (Dom.tagName(current) === "rect" || Dom.tagName(current) === "use") {
                 const [d, character] = extract(current, defs);
-                const p = new TransformingPath(d, matrix, character, stroke, fill, current);
+                const p = new TransformingPath(d, matrix, character, fill, stroke, fill, stroke, current);
                 paths.push(p);
             }
             for (const child of current.children) dfs(child, matrix, fill, stroke);
             const r = paths.length;
             current.range = [l, r];
         };
-        dfs(root, initialMatrix(), parent[`__${status}Fill`](), parent[`__${status}Stroke`]());
+        dfs(root, initialMatrix(), text.fill, text.stroke);
         return paths;
     }
     static processMapping(mapping: any) {
@@ -799,7 +770,7 @@ export class TextEngine {
         transforming.play();
         return transforming;
     }
-    static transformMath(text: Math, source: MathConfiguration, target: MathConfiguration, mapping = [], auto = true, color = true) {
+    static transformMath(text: Math_, source: MathConfiguration, target: MathConfiguration, mapping = [], auto = true, color = true) {
         mapping = processMapping(mapping);
         const transforming = new Transforming(text, mapping, source, target, auto, color);
         transforming.play();
@@ -813,7 +784,7 @@ export class TextEngine {
         root.setAttribute("transform", transform);
         math.__remove();
     }
-    static findSubtextInMath(math: RenderNode, subtext: string, limit = Infinity, matching?: MathMatchingMachine, skip: boolean = true): Array<MathMatch> {
+    static findSubtextInMath(math: MathConfiguration, subtext: string, limit = Infinity, matching?: MathMatchingMachine, skip: boolean = true): Array<MathMatch> {
         if (!matching) matching = new MathMatchingMachine(math, "source");
         // @ts-ignore
         const mml = new DOMParser().parseFromString(MathJax.tex2mml(String(subtext)), "text/xml").documentElement;
@@ -927,22 +898,17 @@ export class TextEngine {
                 if (matched.length >= limit) return;
             }
         }
-        walk(math.element().children[1] as SVGElement, mml);
+        walk(math.attr.element().children[1] as SVGElement, mml);
         return matched.map(match => {
-            return new MathMatch(match.element, match.start, match.start + match.length - 1, matching, math, false);
+            return new MathMatch(match.element, match.start, match.start + match.length - 1, matching, math.attr, false);
         });
     }
-    static findFirstSubtextInMath(math: RenderNode, subtext: string, matching?: MathMatchingMachine) {
+    static findFirstSubtextInMath(math: MathConfiguration, subtext: string, matching?: MathMatchingMachine) {
         return this.findSubtextInMath(math, subtext, 1, matching)[0];
     }
     static setAttributeInSubtree(root: Element, key: string, value: string) {
         setAttributeInSubtree(root, key, value);
     }
-}
-
-function removeAttributeInSubtree(root: Element, key: string) {
-    root.removeAttribute(key);
-    for (let i = 0; i < root.children.length; i++) removeAttributeInSubtree(root.children[i], key);
 }
 
 function setAttributeInSubtree(root: Element, key: string, value: string) {

@@ -4,7 +4,7 @@ const svg = sd.svg();
 const C = sd.color();
 const T = 500;
 
-sd.main(TestMatchNestedSum);
+sd.main(TestTrasnformWithPosition);
 
 async function TestMatchNestedSum() {
     const text = new sd.Math(svg, "\\sum_{i=1}^3a_i\\sum_{j=1}^3b_j").x(100).y(100);
@@ -304,16 +304,20 @@ async function Test1() {
     math.startAnimate().text("3q").fontSize(180).endAnimate();
 }
 
-async function Test0() {
-    const math = new sd.Math(svg, "").x(100).y(100);
+async function TestTrasnformWithPosition() {
+    const math1 = new sd.Math(svg).text("hello").x(100).y(100).fontSize(50);
+    const math2 = new sd.Math(svg).text("world").x(100).y(200).fontSize(50);
+    const math3 = new sd.Math(svg).text("world").x(100).y(300).fontSize(50);
     await sd.pause();
-    math.startAnimate().text("1234").fontSize(40).endAnimate();
+    math1.startAnimate().text("world").x(200).endAnimate();
+    math2.startAnimate().x(200).endAnimate();
+    math3.startAnimate().x(200).text("hello").endAnimate();
+}
+
+async function TestTransform() {
+    const math = new sd.Math(svg, "hello").x(100).y(100).fontSize(30);
     await sd.pause();
-    math.startAnimate().text("5678").fontSize(20).endAnimate();
-    await sd.pause();
-    math.startAnimate().text("1234").color(C.textBlue).fontSize(40).endAnimate();
-    await sd.pause();
-    math.startAnimate().color(C.purple).endAnimate();
+    math.startAnimate().text("world").endAnimate();
 }
 
 function getGCD(a, b) {

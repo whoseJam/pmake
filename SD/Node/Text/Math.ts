@@ -2,29 +2,49 @@ import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
 import { Window } from "@/Animate/Window";
 import { Dom } from "@/Dom/Dom";
-import { SDNode } from "@/Node/SDNode";
-import { BaseText, TextMapping } from "@/Node/Text/BaseText";
-import { TextEngine } from "@/Node/Text/TextEngine";
+import { SDNode, SDNodePrivateParams } from "@/Node/SDNode";
+import { BaseText, BaseTextConfiguration, ConfigDictionary } from "@/Node/Text/BaseText";
+import { TextEngine, TextMapping, Transforming } from "@/Node/Text/TextEngine";
 import { RenderNode } from "@/Renderer/RenderNode";
+import { inter } from "@/sd";
 import { Check } from "@/Utility/Check";
-import { Color as C } from "@/Utility/Color";
+import { Color as C, SDColor } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
 
-export type MathConfiguration = {
-    text: string;
-    size: number;
-    fill: string;
-    stroke: string;
-    x: number;
-    y: number;
+export class MathConfiguration extends BaseTextConfiguration {
     attr: RenderNode;
-};
+    lastAttr?: RenderNode;
+    constructor(args: { [key: string]: any }) {
+        super(args);
+        this.attr = args.attr;
+    }
+    merge(args: { [key: string]: any }) {
+        if (!args) return this;
+        super.merge(args);
+        this.attr = args.attr || this.attr;
+        return this;
+    }
+}
+
+export interface MathPrivateParams extends SDNodePrivateParams {
+    attr: RenderNode;
+    mathFrame: number;
+    transformings: Array<Transforming>;
+    configurations: ConfigDictionary;
+}
 
 export class Math extends BaseText {
     constructor(target: SDNode | RenderNode, text = "") {
         super(target);
 
         this.type("Math");
+
+        Object.assign(this._, {
+            attr: undefined,
+            mathFrame: 0,
+            transformings: [],
+            configurations: {},
+        });
 
         this.vars.merge({
             x: 0,
@@ -38,6 +58,7 @@ export class Math extends BaseText {
             fill: C.black,
             math: null,
         });
+
         const object = () => this.vars.math;
 
         this.vars.watch("math", Factory.action(this, this.layer(), "node", Interp.blankNodeInterp));
@@ -51,7 +72,7 @@ export class Math extends BaseText {
             this.__updateTransforming({ target: { y } });
             if (this.duration() > 0) this.__updateSourceMathConfiguration({ y: vo });
         });
-        this.vars.watch("fontSize", Factory.action(this, object, "fontSize", Interp.numberInterp));
+        this.vars.watch("fontSize", Factory.action(this, object, "font-size", Interp.numberInterp));
         this.vars.watch("fontSize", (size: number, vo: number) => {
             this.__updateTransforming({ target: { size } });
             if (this.duration() > 0) this.__updateSourceMathConfiguration({ size: vo });
@@ -66,11 +87,6 @@ export class Math extends BaseText {
             this.__updateTransforming({ target: { stroke } });
             if (this.duration() > 0) this.__updateSourceMathConfiguration({ stroke: vo });
         });
-
-        this._.attr = undefined;
-        this._.mathFrame = 0;
-        this._.transformings = [];
-        this._.configurations = {};
 
         this.text(text);
     }
@@ -157,16 +173,16 @@ export class Math extends BaseText {
         math.setAttribute("stroke", this.vars.stroke);
         return math;
     }
-    __subtextAttribute(subtext, attribute, operator) {
-        subtext = String(subtext);
+    __subtextAttribute(subtext_: string | number, color: SDColor, operator: number | "all" | "first" | "last") {
+        const subtext = String(subtext_);
         const math = cloneMathRenderNode(this.vars.math);
-        const matched = TextEngine.findSubtextInMath(math, subtext);
+        const matched = TextEngine.findSubtextInMath(new MathConfiguration({ attr: math }), subtext);
         const update = match => {
             if (!match) return;
             const { element, first, last } = match;
             for (let i = first; i <= last; i++) {
-                for (const key in attribute) {
-                    TextEngine.setAttributeInSubtree(element.children[i], key, attribute[key]);
+                for (const key in color) {
+                    TextEngine.setAttributeInSubtree(element.children[i], key, color[key]);
                 }
             }
         };
@@ -198,7 +214,7 @@ export class Math extends BaseText {
         }
     }
     __getConfiguration(): MathConfiguration {
-        return {
+        return new MathConfiguration({
             text: this.text(),
             size: this.fontSize(),
             fill: this.fill(),
@@ -206,23 +222,17 @@ export class Math extends BaseText {
             x: this.x(),
             y: this.y(),
             attr: this._.math,
-        };
+        });
     }
     __getSourceConfiguration(): MathConfiguration {
         this.__flushAll();
         const l = this.delay();
-        return {
-            ...this.__getConfiguration(),
-            ...(this._.configurations[l] || {}),
-        };
+        return this.__getConfiguration().merge(this._.configurations[l]);
     }
     __getTargetConfiguration(): MathConfiguration {
         this.__flushAll();
         const r = this.delay() + this.duration();
-        return {
-            ...this.__getConfiguration(),
-            ...(this._.configurations[r] || {}),
-        };
+        return this.__getConfiguration().merge(this._.configurations[r]);
     }
     __getTransforming() {
         this.__flushAll();
@@ -290,10 +300,10 @@ function createMathRenderNode(targetNode: Math, text: string) {
     element.setAttribute("x", String(targetNode.x()));
     element.setAttribute("y", String(targetNode.y()));
     element.setAttribute("font-size", String(targetNode.fontSize()));
-    return RenderNode.createMathRenderNode(targetNode, undefined, element);
+    return RenderNode.createMathRenderNode(targetNode, targetNode.layer(), element);
 }
 
 function cloneMathRenderNode(math: RenderNode) {
     const element = Dom.deepClone(math.element());
-    return RenderNode.createMathRenderNode(this.targetNode, undefined, element);
+    return RenderNode.createMathRenderNode(math.targetNode, math.targetNode.layer(), element);
 }

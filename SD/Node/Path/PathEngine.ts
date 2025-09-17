@@ -1,5 +1,5 @@
 import { svg } from "@/Interact/Root";
-import { Box, SDNode } from "@/Node/SDNode";
+import { SDBox, SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 
 export type PathCode = "M" | "m" | "L" | "l" | "H" | "h" | "V" | "v" | "C" | "c" | "S" | "s" | "Q" | "q" | "T" | "t" | "A" | "a" | "Z" | "z";
@@ -12,7 +12,7 @@ export class PathEngine {
         this.pathSVG = RenderNode.createRenderNodeWithoutAction(undefined, svg(), "path");
         this.pathSVG.setAttribute("opacity", 0);
     }
-    static toBox(d: string): Box {
+    static toBox(d: string): SDBox {
         this.pathSVG.setAttribute("d", d);
         return this.pathSVG.element().getBBox();
     }

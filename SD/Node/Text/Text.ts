@@ -1,72 +1,57 @@
 import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
 import { Window } from "@/Animate/Window";
-import { SDNode } from "@/Node/SDNode";
-import { BaseText, BaseTextConfiguration, TextMapping } from "@/Node/Text/BaseText";
-import { TextEngine } from "@/Node/Text/TextEngine";
+import { SDNode, SDNodePrivateParams } from "@/Node/SDNode";
+import { BaseText, BaseTextConfiguration, ConfigDictionary } from "@/Node/Text/BaseText";
+import { TextEngine, TextMapping } from "@/Node/Text/TextEngine";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
 import { SDColor } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
+import { Transforming } from "@/Node/Text/TextEngine";
 import { make1d } from "@/Utility/Util";
 
 export class TextConfiguration extends BaseTextConfiguration {
     family: string;
     attr: Array<SDColor>;
     lastAttr?: Array<SDColor>;
-    constructor(args: { [key: string]: any }) {
+    constructor(args: ConfigDictionary) {
         super(args);
         this.family = args.family;
         this.attr = args.attr;
         this.lastAttr = args.lastAttr;
     }
-    merge(args: { [key: string]: any }) {
+    merge(args: ConfigDictionary) {
+        if (!args) return this;
         super.merge(args);
         this.family = args.family || this.family;
         this.attr = args.attr || this.attr;
         this.lastAttr = args.lastAttr || this.lastAttr;
+        return this;
     }
 }
 
-function parseToHTML() {
-    const attr = this._.attr;
-    const text = this.text();
-    const equal = (i: number, j: number) => {
-        if (attr[i].fill !== attr[j].fill) return false;
-        if (attr[i].stroke !== attr[j].stroke) return false;
-        return true;
-    };
-    const parseText = (text_: string | number) => {
-        let ans = "";
-        const text = String(text_);
-        for (let i = 0; i < text.length; i++) {
-            if (text[i] === " ") ans += "&emsp;";
-            else if (text[i] === "<") ans += "&lt;";
-            else if (text[i] === ">") ans += "&gt;";
-            else ans += text[i];
-        }
-        return ans;
-    };
-    let html = "";
-    for (let l = 0, r = 0; l < text.length; l = r + 1) {
-        r = l;
-        while (r + 1 < text.length && equal(l, r + 1)) r++;
-        let attribute = "";
-        if (attr[l].fill !== "default") attribute = attribute + ` fill='${attr[l].fill}'`;
-        if (attr[l].stroke !== "default") attribute = attribute + ` stroke='${attr[l].stroke}'`;
-        html = html + `<tspan ${attribute} alignment-baseline='text-before-edge'>`;
-        html = html + parseText(text.slice(l, r + 1));
-        html = html + "</tspan>";
-    }
-    return html;
+export interface TextPrivateParams extends SDNodePrivateParams {
+    attr: Array<SDColor>;
+    textFrame: number;
+    transformings: Array<Transforming>;
+    configurations: { [key: number]: ConfigDictionary };
 }
 
 export class Text extends BaseText {
+    _: TextPrivateParams;
     constructor(target: SDNode | RenderNode, text = "") {
         super(target);
 
         this.type("Text");
+
+        Object.assign(this._, {
+            attr: undefined,
+            textFrame: 0,
+            transformings: [],
+            configurations: {},
+        });
 
         const object = this.__createSVGNode("text", {
             "x": 0,
@@ -105,11 +90,6 @@ export class Text extends BaseText {
             this.__updateTransforming({ target: { stroke } });
             if (this.duration() > 0) this.__updateSourceTextConfiguration({ stroke: vo });
         });
-
-        this._.attr = undefined;
-        this._.textFrame = 0;
-        this._.transformings = [];
-        this._.configurations = {};
 
         this.text(text);
     }
@@ -246,7 +226,7 @@ export class Text extends BaseText {
         }
     }
     __getConfiguration(): TextConfiguration {
-        return {
+        return new TextConfiguration({
             text: this.text(),
             size: this.fontSize(),
             family: this.fontFamily(),
@@ -255,23 +235,17 @@ export class Text extends BaseText {
             x: this.x(),
             y: this.y(),
             attr: this._.attr,
-        };
+        });
     }
     __getSourceConfiguration(): TextConfiguration {
         this.__flushAll();
         const l = this.delay();
-        return {
-            ...this.__getConfiguration(),
-            ...(this._.configurations[l] || {}),
-        };
+        return this.__getConfiguration().merge(this._.configurations[l]);
     }
     __getTargetConfiguration(): TextConfiguration {
         this.__flushAll();
         const r = this.delay() + this.duration();
-        return {
-            ...this.__getConfiguration(),
-            ...(this._.configurations[r] || {}),
-        };
+        return this.__getConfiguration().merge(this._.configurations[r]);
     }
     __getTransforming() {
         this.__flushAll();
@@ -280,7 +254,7 @@ export class Text extends BaseText {
         for (const transforming of this._.transformings) if (transforming.l === l && transforming.r === r) return transforming;
         return undefined;
     }
-    __updateSourceTextConfiguration(args: any) {
+    __updateSourceTextConfiguration(args: ConfigDictionary) {
         this.__flushAll();
         const l = this.delay();
         this._.configurations[l] = {
@@ -288,7 +262,7 @@ export class Text extends BaseText {
             ...this._.configurations[l],
         };
     }
-    __updateTargetTextConfiguration(args: any) {
+    __updateTargetTextConfiguration(args: ConfigDictionary) {
         this.__flushAll();
         const r = this.delay() + this.duration();
         this._.configurations[r] = {
@@ -296,17 +270,11 @@ export class Text extends BaseText {
             ...(args || {}),
         };
     }
-    __updateTransforming(args: any) {
+    __updateTransforming(args: ConfigDictionary) {
         const transforming = this.__getTransforming();
         if (!transforming) return;
-        transforming.source = {
-            ...transforming.source,
-            ...(args.source || {}),
-        };
-        transforming.target = {
-            ...transforming.target,
-            ...(args.target || {}),
-        };
+        transforming.source.merge(args.source);
+        transforming.target.merge(args.target);
         transforming.mapping = args.mapping === undefined ? transforming.mapping : TextEngine.processMapping(args.mapping);
         transforming.auto = args.auto === undefined ? transforming.auto : args.auto;
         transforming.color = args.color === undefined ? transforming.color : args.color;
@@ -327,4 +295,37 @@ export class Text extends BaseText {
             new Action(this.delay(), this.delay() + this.duration(), transforming.source, transforming.target, Interp.groupInterp(transforming.onCreateGroup()), this, "transforming");
         }
     }
+}
+
+function parseToHTML() {
+    const attr = this._.attr;
+    const text = this.text();
+    const equal = (i: number, j: number) => {
+        if (attr[i].fill !== attr[j].fill) return false;
+        if (attr[i].stroke !== attr[j].stroke) return false;
+        return true;
+    };
+    const parseText = (text_: string | number) => {
+        let ans = "";
+        const text = String(text_);
+        for (let i = 0; i < text.length; i++) {
+            if (text[i] === " ") ans += "&emsp;";
+            else if (text[i] === "<") ans += "&lt;";
+            else if (text[i] === ">") ans += "&gt;";
+            else ans += text[i];
+        }
+        return ans;
+    };
+    let html = "";
+    for (let l = 0, r = 0; l < text.length; l = r + 1) {
+        r = l;
+        while (r + 1 < text.length && equal(l, r + 1)) r++;
+        let attribute = "";
+        if (attr[l].fill !== "default") attribute = attribute + ` fill='${attr[l].fill}'`;
+        if (attr[l].stroke !== "default") attribute = attribute + ` stroke='${attr[l].stroke}'`;
+        html = html + `<tspan ${attribute} alignment-baseline='text-before-edge'>`;
+        html = html + parseText(text.slice(l, r + 1));
+        html = html + "</tspan>";
+    }
+    return html;
 }

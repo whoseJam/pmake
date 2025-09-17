@@ -1,4 +1,6 @@
+console.log("Import BaseText SDNode----");
 import { SDNode } from "@/Node/SDNode";
+console.log("Import BaseText SDSVGNode----");
 import { SDSVGNode } from "@/Node/SDSVGNode";
 import { TextMapping } from "@/Node/Text/TextEngine";
 import { RenderNode } from "@/Renderer/RenderNode";
@@ -15,6 +17,8 @@ const BASE_TEXT_ATTRIBUTES = {
     strokeDashArray: [1, 0],
 };
 
+export type ConfigDictionary = { [key: string]: any };
+
 export class BaseTextConfiguration {
     text: string;
     size: number;
@@ -22,13 +26,23 @@ export class BaseTextConfiguration {
     stroke: string;
     x: number;
     y: number;
-    constructor(args: { [key: string]: any }) {
+    constructor(args: ConfigDictionary) {
         this.text = args.text;
         this.size = args.size;
         this.fill = args.fill;
         this.stroke = args.stroke;
         this.x = args.x;
         this.y = args.y;
+    }
+    merge(args: ConfigDictionary) {
+        if (!args) return this;
+        this.text = args.text || this.text;
+        this.size = args.size || this.size;
+        this.fill = args.fill || this.fill;
+        this.stroke = args.stroke || this.stroke;
+        this.x = args.x || this.x;
+        this.y = args.y || this.y;
+        return this;
     }
 }
 
