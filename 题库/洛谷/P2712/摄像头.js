@@ -10,7 +10,7 @@ const data = [
 
 sd.init(() => {
     data.forEach((camera, idx) => {
-        camera.vertex = new sd.Vertex(arr).value(new sd.Mathjax(svg, `$C_${idx}$`).fontSize(15), R.centerOnly());
+        camera.vertex = new sd.Vertex(arr).value(new sd.Math(svg, `$C_${idx}$`).fontSize(15), R.centerOnly());
         arr.element(camera.pos).childAs("camera", camera.vertex, R.aside("bc", 40));
     });
 });

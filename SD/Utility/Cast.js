@@ -10,9 +10,9 @@ export class Cast {
         if (typeof object === "function") return object(target).opacity(0);
         if (Check.isNumberOrString(object)) {
             const { Text } = require("@/Node/Text/Text");
-            const { Mathjax } = require("@/Node/Text/Mathjax");
+            const { Math } = require("@/Node/Text/Math");
             object = String(object);
-            if (object.startsWith("$") && object.endsWith("$")) return new Mathjax(target, object).opacity(0);
+            if (object.startsWith("$") && object.endsWith("$")) return new Math(target, object).opacity(0);
             return new Text(target, object).opacity(0);
         }
         return object;

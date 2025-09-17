@@ -9,7 +9,7 @@ const S = 0b10110;
 const r = 3;
 const arr = new sd.ValueArray(svg).elementWidth(60);
 const pointer = sd.Pointer(arr, "i", "b", 3, 20);
-const math = new sd.Mathjax(svg);
+const math = new sd.Math(svg);
 
 sd.init(() => {
     let str = "";

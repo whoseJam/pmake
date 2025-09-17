@@ -57,7 +57,7 @@ export async function flowWithRegret(graph, path, args) {
             reversedLink = graph.element(segment.to, segment.from);
             reversedLink.stroke(C.deepSkyBlue).opacity(0).after(timestamp).opacity(1);
             reversedLink.startAnimate();
-            reversedLink.value(new sd.Mathjax(reversedLink, bottleNeck), rule);
+            reversedLink.value(new sd.Math(reversedLink, bottleNeck), rule);
             reversedLink.pointStoT();
             reversedLink.endAnimate();
             reversedLink.arrow();

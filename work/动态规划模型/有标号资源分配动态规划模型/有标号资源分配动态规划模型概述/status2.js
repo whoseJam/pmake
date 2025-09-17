@@ -8,7 +8,7 @@ const n = 5;
 const S = 0b10110;
 const r = 1;
 const arr = new sd.ValueArray(svg).elementWidth(60);
-const math = new sd.Mathjax(svg);
+const math = new sd.Math(svg);
 
 sd.init(() => {
     let str = "";

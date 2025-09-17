@@ -4,15 +4,15 @@ const svg = sd.svg();
 const C = sd.color();
 const R = sd.rule();
 const arr = new sd.Array(svg);
-const ans = new sd.Mathjax(svg, "ans = 1");
-const p = makeMathjaxPointer();
+const ans = new sd.Math(svg, "ans = 1");
+const p = makeMathPointer();
 const b = 142;
 
 sd.init(() => {
     arr.pushArray(getBinaryExpression(b));
     ans.y(arr.my() + 80);
     sd.Label(arr, b);
-})
+});
 
 sd.main(async () => {
     await sd.pause();
@@ -35,13 +35,13 @@ sd.main(async () => {
         } else {
             p.startAnimate().moveTo(null).endAnimate();
         }
-        const color = (arr.text(cur) === "0") ? C.grey : C.green;
+        const color = arr.text(cur) === "0" ? C.grey : C.green;
         arr.startAnimate().color(cur, color).endAnimate();
         cur--;
 
         tmp = tmp >> 1;
     }
-})
+});
 
 function getBinaryExpression(a) {
     let result = "";
@@ -52,12 +52,12 @@ function getBinaryExpression(a) {
     return result;
 }
 
-function makeMathjaxPointer() {
+function makeMathPointer() {
     const pointer = sd.Pointer(arr, " ", "t", 10, 30);
-    pointer.childAs("math", new sd.Mathjax(pointer, "a^1"), R.aside("bc"));
-    pointer.changeMath = function(math) {
+    pointer.childAs("math", new sd.Math(pointer, "a^1"), R.aside("bc"));
+    pointer.changeMath = function (math) {
         this.child("math").math(math);
         return this;
-    }
+    };
     return pointer;
 }

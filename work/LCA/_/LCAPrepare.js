@@ -29,7 +29,7 @@ export async function LCAPrepare(tree, args) {
         table.element(i, 0).childAs(new sd.Text(svg, i), R.aside("bc", 3));
     }
     for (let i = 0; i < m; i++) {
-        table.element(1, i).childAs(new sd.Mathjax(svg, `2^${i}`), R.aside("lc", 5));
+        table.element(1, i).childAs(new sd.Math(svg, `2^${i}`), R.aside("lc", 5));
     }
     if (onCreateTable) await onCreateTable(table);
     for (let u = 1; u <= n; u++) {

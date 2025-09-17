@@ -18,9 +18,11 @@ sd.main(async () => {
     const b1 = new sd.BraceCurve(svg);
     const b2 = new sd.BraceCurve(svg);
     function brace(b, arr, text) {
-        b.source(arr.mx(), arr.my() + 5).target(arr.x(), arr.my() + 5).value(text, R.pointAtPathByRate(0.5, "cx", "y"))
+        b.source(arr.mx(), arr.my() + 5)
+            .target(arr.x(), arr.my() + 5)
+            .value(text, R.pointAtPathByRate(0.5, "cx", "y"));
         b.opacity(0).startAnimate().opacity(1).endAnimate();
     }
-    brace(b1, arr1, new sd.Mathjax(b1, "Dfs(1-5),O(2^5)"))
-    brace(b2, arr2, new sd.Mathjax(b2, "Dfs(6-10),O(2^5)"))
+    brace(b1, arr1, new sd.Math(b1, "Dfs(1-5),O(2^5)"));
+    brace(b2, arr2, new sd.Math(b2, "Dfs(6-10),O(2^5)"));
 });

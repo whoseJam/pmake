@@ -28,7 +28,7 @@ sd.init(() => {
         if (f[i] === 1) graph.link("S", IN(i)).element("S", IN(i)).arrow();
         if (f[i] === maxLength) graph.link(OUT(i), "T").element(OUT(i), "T").arrow();
         graph.link(IN(i), OUT(i));
-        graph.element(IN(i), OUT(i)).arrow().value(new sd.Mathjax(svg, "1"), R.pointAtPathByRate(0.5, "mx", "cy", -3));
+        graph.element(IN(i), OUT(i)).arrow().value(new sd.Math(svg, "1"), R.pointAtPathByRate(0.5, "mx", "cy", -3));
         for (let j = 0; j < i; j++) {
             if (f[j] + 1 === f[i] && data[j] <= data[i]) {
                 graph.link(OUT(j), IN(i));

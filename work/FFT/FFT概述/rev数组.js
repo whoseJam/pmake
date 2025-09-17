@@ -12,7 +12,7 @@ let cnt = 0;
 
 sd.init(() => {
     for (let i = 0; i < n; i++) {
-        arr.element(i).value(new sd.Mathjax(arr, `a_{${i}}`), R.centerOnly());
+        arr.element(i).value(new sd.Math(arr, `a_{${i}}`), R.centerOnly());
         arr.value(i).rank = i;
     }
 });
@@ -63,7 +63,7 @@ async function Solve(arr, gap) {
     f0.startAnimate().resize(n / 2);
     f1.startAnimate().resize(n / 2);
     for (let i = 0; i < n; i++) {
-        const math = new sd.Mathjax(svg, arr.value(i).math()).center(arr.value(i).center());
+        const math = new sd.Math(svg, arr.value(i).math()).center(arr.value(i).center());
         math.rank = arr.value(i).rank;
         if (!(i & 1)) {
             f0.element(i / 2).value(math.onEnter(EN.moveTo()), R.centerOnly());

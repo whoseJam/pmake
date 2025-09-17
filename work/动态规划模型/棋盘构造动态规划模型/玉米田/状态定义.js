@@ -12,7 +12,7 @@ const m = 9;
 const grid = new sd.Grid(svg).n(n).m(m);
 const data = I.readIntMatrix(strData, n, m, false);
 const plant = sd.make2d(n, m, 0);
-const label = sd.MathjaxLabel(grid, plant[0].join(""), "tc");
+const label = sd.MathLabel(grid, plant[0].join(""), "tc");
 
 sd.init(() => {
     const dx = [1, 0, -1, 0];

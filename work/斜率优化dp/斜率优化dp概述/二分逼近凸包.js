@@ -58,7 +58,7 @@ function createNode(i) {
         .color(C.black)
         .center(coord.global(x, y))
         .strokeWidth(0)
-        .childAs(new sd.Mathjax(coord, `(x_{${i + 1}},y_{${i + 1}})`).fontSize(17), R.aside("tc", 2));
+        .childAs(new sd.Math(coord, `(x_{${i + 1}},y_{${i + 1}})`).fontSize(17), R.aside("tc", 2));
 }
 
 sd.init(() => {

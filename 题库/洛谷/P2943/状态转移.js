@@ -18,6 +18,6 @@ sd.main(async () => {
         .brace(J + 1, I)
         .startAnimate()
         .pointTtoS()
-        .value(new sd.Mathjax(svg, "$V_{j+1,i}^2$").fontSize(15))
+        .value(new sd.Math(svg, "$V_{j+1,i}^2$").fontSize(15))
         .endAnimate();
 });

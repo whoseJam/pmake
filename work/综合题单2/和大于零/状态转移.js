@@ -20,7 +20,7 @@ sd.main(async () => {
     sd.Brace(array)
         .brace(j + 1, i, "b")
         .opacity(0)
-        .value(new sd.Mathjax(svg, "s_i-s_j"))
+        .value(new sd.Math(svg, "s_i-s_j"))
         .startAnimate()
         .opacity(1)
         .endAnimate();

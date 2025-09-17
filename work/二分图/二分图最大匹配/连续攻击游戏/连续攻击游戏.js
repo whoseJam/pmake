@@ -10,24 +10,21 @@ const edges = [
     ["2", "1'"],
     ["3", "2'"],
     ["4", "3'"],
-    ["5", "3'"]
+    ["5", "3'"],
 ];
 
 sd.init(() => {
     for (let i = 1; i <= 5; i++) {
-        graph.newNode(`${i}`, new sd.Mathjax(graph, `${i}`), 0);
+        graph.newNode(`${i}`, new sd.Math(graph, `${i}`), 0);
         graph.element(`${i}`).rate(2);
     }
     for (let i = 1; i <= 3; i++) {
-        graph.newNode(`${i}'`, new sd.Mathjax(graph, `${i}'`), 1);
+        graph.newNode(`${i}'`, new sd.Math(graph, `${i}'`), 1);
         graph.element(`${i}'`).rate(2);
     }
-    for (let i = 0; i < edges.length; i++)
-        graph.newLink(edges[i][0], edges[i][1]);
+    for (let i = 0; i < edges.length; i++) graph.newLink(edges[i][0], edges[i][1]);
     sd.Label(graph, "属性点", "tc");
     sd.Label(graph, "武器点", "bc");
-})
+});
 
-sd.main(async () => {
-
-})
+sd.main(async () => {});

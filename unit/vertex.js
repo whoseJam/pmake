@@ -15,7 +15,7 @@ async function TestLayout() {
     function addFocus(node) {
         sd.Focus(node).focus(node).strokeWidth(1).strokeDashArray([5, 5]);
     }
-    const values = [new sd.Circle(svg), new sd.Mathjax(svg, "A^2"), new sd.Rect(svg), new sd.Text(svg, "A")];
+    const values = [new sd.Circle(svg), new sd.Math(svg, "A^2"), new sd.Rect(svg), new sd.Text(svg, "A")];
     const vertices = [];
     values.forEach((value, i) => {
         addFocus(value);

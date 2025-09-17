@@ -27,7 +27,7 @@ sd.main(async () => {
             const x = sd.rand(0, 100) <= 50 ? 0 : 1;
             ans = ans + String(x);
         }
-        const math = new sd.Mathjax(svg, ans)
+        const math = new sd.Math(svg, ans)
             .cx(grid.cx())
             .y(grid.my() + 20)
             .opacity(0)

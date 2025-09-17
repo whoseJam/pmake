@@ -14,9 +14,9 @@ sd.init(() => {
     link("u", "a");
     link("u", "b");
     link("u", "c");
-    graph.element("u", "a").value(new sd.Mathjax(svg, `w_{u,a}`).fontSize(15), R.pointAtPathByRate(0.5, "mx", "my"));
-    graph.element("u", "b").value(new sd.Mathjax(svg, `w_{u,b}`).fontSize(15), R.pointAtPathByRate(0.5, "cx", "my"));
-    graph.element("u", "c").value(new sd.Mathjax(svg, `w_{u,c}`).fontSize(15), R.pointAtPathByRate(0.5, "mx", "y"));
+    graph.element("u", "a").value(new sd.Math(svg, `w_{u,a}`).fontSize(15), R.pointAtPathByRate(0.5, "mx", "my"));
+    graph.element("u", "b").value(new sd.Math(svg, `w_{u,b}`).fontSize(15), R.pointAtPathByRate(0.5, "cx", "my"));
+    graph.element("u", "c").value(new sd.Math(svg, `w_{u,c}`).fontSize(15), R.pointAtPathByRate(0.5, "mx", "y"));
     for (let i = 0; i < nodes.length; i++) {
         sd.Label(graph.element(nodes[i]), `$dis(${nodes[i]})$`, "rc", 15);
     }

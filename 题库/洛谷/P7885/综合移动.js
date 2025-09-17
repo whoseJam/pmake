@@ -8,8 +8,8 @@ const target = [4, 7];
 const grid = new sd.Grid(svg).n(n).m(m).startN(1).startM(1);
 
 sd.init(() => {
-    grid.value(start[0], start[1], new sd.Mathjax(svg, "(a,b)"));
-    grid.value(target[0], target[1], new sd.Mathjax(svg, "(c,d)"));
+    grid.value(start[0], start[1], new sd.Math(svg, "(a,b)"));
+    grid.value(target[0], target[1], new sd.Math(svg, "(c,d)"));
 });
 
 sd.main(async () => {});

@@ -9,7 +9,7 @@ sd.init(() => {});
 
 sd.main(async () => {
     let ans = 0;
-    const math = new sd.Mathjax(svg, "0".repeat(n)).cx(set.cx()).my(set.y() - 20);
+    const math = new sd.Math(svg, "0".repeat(n)).cx(set.cx()).my(set.y() - 20);
     const pointer = sd.Pointer(svg, "cur", "r", 40);
     for (let i = set.dim() - 1; i >= 0; i--) {
         await sd.pause();

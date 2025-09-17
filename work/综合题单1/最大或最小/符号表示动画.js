@@ -9,13 +9,13 @@ const x = 3;
 sd.init(() => {
     arr.resize(data.length);
     data.forEach((item, i) => {
-        arr.element(i).value(new sd.Mathjax(svg, item), R.centerOnly());
+        arr.element(i).value(new sd.Math(svg, item), R.centerOnly());
     });
 });
 
 sd.main(async () => {
     await sd.pause();
-    const text = new sd.Mathjax(svg, `x=${x}`)
+    const text = new sd.Math(svg, `x=${x}`)
         .opacity(0)
         .cx(arr.cx())
         .my(arr.y() - 20)

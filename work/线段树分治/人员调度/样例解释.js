@@ -3,7 +3,7 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const R = sd.rule();
 const tree = new sd.Tree(svg);
-const valueBoard = new sd.Mathjax(svg);
+const valueBoard = new sd.Math(svg);
 const focus = sd.Focus(svg);
 const n = 6;
 const people = [

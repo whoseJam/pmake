@@ -14,11 +14,11 @@ sd.main(async () => {
     const p = sd.Pointer(arr, "i", "b", 3, 20);
     p.startAnimate().moveTo(n).endAnimate();
     const b = sd.Brace(arr);
-    b.startAnimate().brace(1, n, "b", 3).value(new sd.Mathjax(b, "a_1+a_2+...+a_i\\equiv j").fontSize(15)).endAnimate();
+    b.startAnimate().brace(1, n, "b", 3).value(new sd.Math(b, "a_1+a_2+...+a_i\\equiv j").fontSize(15)).endAnimate();
 
     await sd.pause();
     const p1 = sd.Pointer(arr, "i+1", "b", 3, 20);
-    const math = new sd.Mathjax(svg, "?");
+    const math = new sd.Math(svg, "?");
     arr.startAnimate();
     arr.push();
     arr.lastElement().value(math, R.centerOnly());

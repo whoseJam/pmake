@@ -10,7 +10,7 @@ sd.init(() => {
     arr.resize(str.length);
     for (let i = 0; i < str.length; i++) {
         const char = str[i];
-        arr.element(i).value(new sd.Mathjax(svg, char), R.centerOnly());
+        arr.element(i).value(new sd.Math(svg, char), R.centerOnly());
     }
 });
 

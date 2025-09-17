@@ -4,7 +4,7 @@ import { interactableGrid } from "../_/InteractableGrid";
 const svg = sd.svg();
 const n = 1;
 const m = 5;
-const math = new sd.Mathjax(svg, "0".repeat(m));
+const math = new sd.Math(svg, "0".repeat(m));
 const grid = interactableGrid(n, m, {
     onChangeStatus,
     totalStatus: 2,

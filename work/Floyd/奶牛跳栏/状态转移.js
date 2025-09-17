@@ -13,10 +13,10 @@ sd.main(async () => {
     sd.Link(vi, vj)
         .startAnimate()
         .pointStoT()
-        .value(new sd.Mathjax(svg, "d_{i,j}").fontSize(15), R.pointAtPathByRate(0.5, "cx", "y", 0, 0 + 2))
+        .value(new sd.Math(svg, "d_{i,j}").fontSize(15), R.pointAtPathByRate(0.5, "cx", "y", 0, 0 + 2))
         .endAnimate()
         .arrow();
     await sd.pause();
-    sd.Link(vi, vk).startAnimate().pointStoT().value(new sd.Mathjax(svg, "d_{i,k}").fontSize(15), R.pointAtPathByRate(0.5, "mx", "my")).endAnimate().arrow();
-    sd.Link(vk, vj).startAnimate().pointStoT().value(new sd.Mathjax(svg, "d_{k,j}").fontSize(15), R.pointAtPathByRate(0.5, "x", "my")).endAnimate().arrow();
+    sd.Link(vi, vk).startAnimate().pointStoT().value(new sd.Math(svg, "d_{i,k}").fontSize(15), R.pointAtPathByRate(0.5, "mx", "my")).endAnimate().arrow();
+    sd.Link(vk, vj).startAnimate().pointStoT().value(new sd.Math(svg, "d_{k,j}").fontSize(15), R.pointAtPathByRate(0.5, "x", "my")).endAnimate().arrow();
 });

@@ -4,7 +4,7 @@ const svg = sd.svg();
 const C = sd.color();
 const R = sd.rule();
 const stk = new sd.ValueStack(svg).elementWidth(80);
-const func = new sd.Box(svg).value(new sd.Mathjax(svg, "$if\\enspace\\overline{abc}=a^3+b^3+c^3$").fontSize(18), R.centerOnly()).width(240).height(40);
+const func = new sd.Box(svg).value(new sd.Math(svg, "$if\\enspace\\overline{abc}=a^3+b^3+c^3$").fontSize(18), R.centerOnly()).width(240).height(40);
 const answer = box("答案");
 
 sd.init(() => {

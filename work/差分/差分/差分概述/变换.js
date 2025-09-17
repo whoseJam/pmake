@@ -1,7 +1,7 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-const math = new sd.Mathjax(svg, "\\{a\\}=\\{c_1\\}+\\{c_2\\}+...+\\{c_m\\}");
+const math = new sd.Math(svg, "\\{a\\}=\\{c_1\\}+\\{c_2\\}+...+\\{c_m\\}");
 
 sd.init(() => {});
 

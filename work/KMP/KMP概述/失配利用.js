@@ -12,8 +12,8 @@ const rs = new sd.Rect(svg).width(300).color(C.blue).x(200).y(100);
 const rt = new sd.Rect(svg).width(300).color(C.blue).x(200).y(180);
 
 sd.init(() => {
-    new sd.Mathjax(svg, "s").cy(120).x(100);
-    new sd.Mathjax(svg, "t").cy(200).x(100);
+    new sd.Math(svg, "s").cy(120).x(100);
+    new sd.Math(svg, "t").cy(200).x(100);
     const pointer = sd.Pointer(rt, "j", "t", 3, 20).opacity(1);
     rt.childAs(pointer, function (parent, child) {
         child.source(V.add(parent.pos("mx", "my"), [-20, 23]));
@@ -63,5 +63,5 @@ sd.main(async () => {
         .endAnimate();
 
     await sd.pause();
-    new sd.BraceCurve(svg).target(rt.pos("x", "my")).source(a1.mx(), rt.my()).value(new sd.Mathjax(svg, "len_j"), R.pointAtPathByRate(0.5, "cx", "y")).opacity(0).startAnimate().opacity(1).endAnimate();
+    new sd.BraceCurve(svg).target(rt.pos("x", "my")).source(a1.mx(), rt.my()).value(new sd.Math(svg, "len_j"), R.pointAtPathByRate(0.5, "cx", "y")).opacity(0).startAnimate().opacity(1).endAnimate();
 });

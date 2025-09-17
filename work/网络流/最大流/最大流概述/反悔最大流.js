@@ -26,7 +26,7 @@ sd.init(() => {
     graph.at(1, 0.5).newNode(6, "F");
     links.forEach(link => {
         const rule = R.pointAtPathByRate(0.5, link[3], link[4]);
-        const math = new sd.Mathjax(svg, link[2]).fontSize(20);
+        const math = new sd.Math(svg, link[2]).fontSize(20);
         graph.newLink(link[0], link[1]);
         const element = graph.element(link[0], link[1]).arrow().value(math, rule);
         element.xlocator = link[3];

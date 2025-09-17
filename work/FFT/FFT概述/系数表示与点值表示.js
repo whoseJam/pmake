@@ -23,7 +23,7 @@ sd.main(async () => {
     coord.startAnimate();
     const A = coord.draw(1, x => x ** 3 + x ** 2 - 2 * x - 3);
     coord.endAnimate();
-    A.childAs("label", new sd.Mathjax(A, "A(x)=x^3+x^2-2x-3"), R.pointAtPathByRate(1, "x", "cy", 10, 0));
+    A.childAs("label", new sd.Math(A, "A(x)=x^3+x^2-2x-3"), R.pointAtPathByRate(1, "x", "cy", 10, 0));
 
     await sd.pause();
     arr.startAnimate().push(-3).endAnimate();

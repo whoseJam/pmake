@@ -67,7 +67,7 @@ function cover(link) {
 }
 
 function math(v) {
-    return new sd.Mathjax(svg, numberToString(v));
+    return new sd.Math(svg, numberToString(v));
 }
 
 function numberToString(v) {

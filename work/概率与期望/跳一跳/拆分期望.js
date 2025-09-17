@@ -21,16 +21,16 @@ sd.main(async () => {
             .stroke(color)
             .arrow();
         if (data[i - 2] === 1) {
-            appear(sd.Aside(boxes.element(i), new sd.Mathjax(svg, "+1"), "bc", 10));
+            appear(sd.Aside(boxes.element(i), new sd.Math(svg, "+1"), "bc", 10));
             cnt = 2;
         }
         if (data[i - 2] === 2) {
-            appear(sd.Aside(boxes.element(i), new sd.Mathjax(svg, `+cnt(${cnt})`), "bc", 30));
+            appear(sd.Aside(boxes.element(i), new sd.Math(svg, `+cnt(${cnt})`), "bc", 30));
             cnt *= 2;
         }
         if (data[i - 2] === 3) {
-            appear(sd.Aside(boxes.element(i), new sd.Mathjax(svg, `+cnt(${cnt})`), "bc", 30));
-            appear(sd.Aside(boxes.element(i), new sd.Mathjax(svg, "+y_i"), "bc", 50));
+            appear(sd.Aside(boxes.element(i), new sd.Math(svg, `+cnt(${cnt})`), "bc", 30));
+            appear(sd.Aside(boxes.element(i), new sd.Math(svg, "+y_i"), "bc", 50));
             cnt *= 2;
         }
     }

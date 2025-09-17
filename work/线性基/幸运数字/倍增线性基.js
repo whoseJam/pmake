@@ -23,6 +23,6 @@ sd.main(async () => {
             .focus(tree.element(n), tree.element(n - i + 1))
             .endAnimate();
         focus.after(0);
-        sd.Aside(focus, new sd.Box(svg, new sd.Mathjax(svg, `L_{${k}}`)).width(30).height(15), "tl", 1);
+        sd.Aside(focus, new sd.Box(svg, new sd.Math(svg, `L_{${k}}`)).width(30).height(15), "tl", 1);
     }
 });

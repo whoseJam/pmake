@@ -1,7 +1,7 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-const math = new sd.Mathjax(svg, "\\sum_{i=1}^3a_i\\sum_{j=1}^3b_j");
+const math = new sd.Math(svg, "\\sum_{i=1}^3a_i\\sum_{j=1}^3b_j");
 const center = math.center();
 
 sd.init(() => {});

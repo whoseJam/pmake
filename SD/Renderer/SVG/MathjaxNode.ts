@@ -4,7 +4,7 @@ import { TextEngine } from "@/Node/Text/TextEngine";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { SVGNode } from "@/Renderer/SVG/SVGNode";
 
-export function createMathjaxRenderNode(parent: SDNode, render: RenderNode, element: number | string | SVGElement) {
+export function createMathRenderNode(parent: SDNode, render: RenderNode, element: number | string | SVGElement) {
     // @ts-ignore
     if (typeof element === "number" || typeof element === "string") element = MathJax.tex2svg(element).children[0];
     const svg = element as SVGSVGElement;
@@ -16,22 +16,22 @@ export function createMathjaxRenderNode(parent: SDNode, render: RenderNode, elem
         if (typeof key === "string") svg.setAttribute(key, parent.vars[key]);
         else svg.setAttribute(key[0], parent.vars[key[1]]);
     }
-    return new MathjaxNode(parent, render, svg);
+    return new MathNode(parent, render, svg);
 }
 
-export class MathjaxNode extends SVGNode {
-    constructor(other: MathjaxNode);
+export class MathNode extends SVGNode {
+    constructor(other: MathNode);
     constructor(parent: SDNode, render: RenderNode, element: SVGElement);
-    constructor(arg0: MathjaxNode | SDNode, arg1?: RenderNode, arg2?: SVGElement) {
+    constructor(arg0: MathNode | SDNode, arg1?: RenderNode, arg2?: SVGElement) {
         if (arg0 instanceof SDNode) {
             super(arg0, arg1, arg2);
-            TextEngine.adjustMathjax(this);
+            TextEngine.adjustMath(this);
         } else {
             const element = Dom.deepClone(arg0.element);
             super(arg0.parent, undefined, element);
         }
     }
-    clone(): MathjaxNode {
-        return new MathjaxNode(this);
+    clone(): MathNode {
+        return new MathNode(this);
     }
 }

@@ -1,5 +1,5 @@
 import { Exit as EX } from "@/Node/Core/Exit";
-import { Mathjax } from "@/Node/Text/Mathjax";
+import { Math } from "@/Node/Text/Math";
 import { Text } from "@/Node/Text/Text";
 import { Rule as R } from "@/Rule/Rule";
 import { Check } from "@/Utility/Check";
@@ -35,7 +35,7 @@ export function Label(target, text, location = "lc", fontSize = 20, gap = 10) {
     Check.validateNumber(fontSize, "Label", 4);
     Check.validateNumber(gap, "Label", 5);
 
-    const self = new (isMathjax(text) ? Mathjax : Text)(target, text);
+    const self = new (isMath(text) ? Math : Text)(target, text);
 
     self.vars.merge({ target, location, gap });
 
@@ -56,12 +56,12 @@ export function Label(target, text, location = "lc", fontSize = 20, gap = 10) {
     return self;
 }
 
-export function MathjaxLabel(target, text, location = "lc", fontSize = 20, gap = 10) {
+export function MathLabel(target, text, location = "lc", fontSize = 20, gap = 10) {
     Check.validateLocation(location, LOCATION_KEY, "Label", 3, LOCATION_KEY_SUGGESTION);
     Check.validateNumber(fontSize, "Label", 4);
     Check.validateNumber(gap, "Label", 5);
 
-    const self = new Mathjax(target, text);
+    const self = new Math(target, text);
 
     self.vars.merge({ target, location, gap });
 
@@ -82,7 +82,7 @@ export function MathjaxLabel(target, text, location = "lc", fontSize = 20, gap =
     return self;
 }
 
-function isMathjax(str) {
+function isMath(str) {
     const label = String(str).trim();
     return label.startsWith("$") && label.endsWith("$") && label.length >= 2;
 }

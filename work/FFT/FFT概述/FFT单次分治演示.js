@@ -9,7 +9,7 @@ const arr = new sd.Array(svg).resize(n);
 
 sd.init(() => {
     for (let i = 0; i < n; i++) {
-        arr.element(i).value(new sd.Mathjax(arr, `a_{${i}}`), R.centerOnly());
+        arr.element(i).value(new sd.Math(arr, `a_{${i}}`), R.centerOnly());
     }
 });
 
@@ -21,7 +21,7 @@ sd.main(async () => {
     f1.x(arr.cx() + 20).y(arr.my() + 40);
 
     for (let i = 0; i < n; i++) {
-        const math = new sd.Mathjax(svg, arr.value(i).math()).center(arr.value(i).center());
+        const math = new sd.Math(svg, arr.value(i).math()).center(arr.value(i).center());
         if (!(i & 1)) {
             f0.startAnimate();
             f0.push();

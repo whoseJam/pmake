@@ -2,7 +2,7 @@ import * as sd from "@/sd";
 
 const svg = sd.svg();
 const C = sd.color();
-const sum = new sd.Mathjax(svg, "\\sum_{i=1}^ni").fontSize(40);
+const sum = new sd.Math(svg, "\\sum_{i=1}^ni").fontSize(40);
 const text = new sd.Text(svg, "for(int i=1;i<=n;i++)ans+=i;").fontSize(40).dx(300).cy(sum.cy());
 
 sd.init(() => {});

@@ -6,7 +6,7 @@ const n = 4;
 const set = new XorLinearSet(svg, n);
 const tree = new sd.BinaryTree(svg).width(500).x(set.mx()).y(set.y());
 const data = [1, 5, 9, 13, 4];
-const counter = new sd.Mathjax(svg, `count={0}`);
+const counter = new sd.Math(svg, `count={0}`);
 let currentCounter = 0;
 
 sd.init(() => {
@@ -63,7 +63,7 @@ sd.main(async () => {
 });
 
 function math(v) {
-    return new sd.Mathjax(svg, castBinToStr(v));
+    return new sd.Math(svg, castBinToStr(v));
 }
 
 function castBinToStr(v) {

@@ -10,9 +10,9 @@ const arrR = new sd.ValueArray(svg).elementWidth(60).start(1).y(120);
 
 sd.init(() => {
     for (let i = 1; i <= n; i++) {
-        arrF.push(new sd.Mathjax(arrF, `f(${i})`));
-        arrC.push(new sd.Mathjax(arrC, `\\lfloor\\frac{${n}}{${i}}\\rfloor`));
-        arrR.push(new sd.Mathjax(arrR, `${Math.floor(n / i)}`));
+        arrF.push(new sd.Math(arrF, `f(${i})`));
+        arrC.push(new sd.Math(arrC, `\\lfloor\\frac{${n}}{${i}}\\rfloor`));
+        arrR.push(new sd.Math(arrR, `${Math.floor(n / i)}`));
     }
     arrR.opacity(0);
 });

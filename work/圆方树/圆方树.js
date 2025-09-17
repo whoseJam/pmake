@@ -26,7 +26,7 @@ main();
 function init() {
     rs.root(1);
     squares.forEach(nodeId => {
-        rs.newSquareNode(nodeId, new sd.Mathjax(svg, `R_${nodeId - 100}`));
+        rs.newSquareNode(nodeId, new sd.Math(svg, `R_${nodeId - 100}`));
         rs.element(nodeId).rate(1.5);
     });
     for (let i = 2; i <= 12; i++) rs.newRoundNode(i);

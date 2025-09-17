@@ -13,7 +13,7 @@ async function TestValueAndBrace() {
     brace.value("hello").startAnimate().brace(1, 3).endAnimate();
 }
 
-async function TestMathjaxValue() {
+async function TestMathValue() {
     const arr = new sd.Array(svg).resize(10).x(100).y(100);
     const brace = sd.Brace(arr, "t");
     await sd.pause();

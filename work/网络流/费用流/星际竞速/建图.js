@@ -33,7 +33,7 @@ sd.init(() => {
         graph
             .link(IN(link[0] - 1), OUT(link[1] - 1))
             .element(IN(link[0] - 1), OUT(link[1] - 1))
-            .value(new sd.Mathjax(svg, `w_{${link[0]},${link[1]}}`), R.pointAtPathByRate(0.5, link[2], link[3]))
+            .value(new sd.Math(svg, `w_{${link[0]},${link[1]}}`), R.pointAtPathByRate(0.5, link[2], link[3]))
             .arrow();
     });
 });
@@ -58,7 +58,7 @@ function coverLink(line) {
 
 function tinyLink(vertex, u) {
     const line = new sd.Line(svg)
-        .value(new sd.Mathjax(svg, `A_${u}`).fontSize(10), R.pointAtPathByRate(0, "mx", "cy", -2))
+        .value(new sd.Math(svg, `A_${u}`).fontSize(10), R.pointAtPathByRate(0, "mx", "cy", -2))
         .arrow()
         .source(0, 0)
         .target(15, 0);

@@ -42,7 +42,7 @@ sd.main(async () => {
             matrix1.endAnimate();
             matrix2.endAnimate();
             await sd.pause();
-            const math = new sd.Mathjax(svg)
+            const math = new sd.Math(svg)
                 .x(120)
                 .y(matrix1.my() + 40)
                 .startAnimate()

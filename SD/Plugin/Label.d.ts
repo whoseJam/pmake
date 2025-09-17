@@ -68,4 +68,4 @@ export function Label(target: SDNode, text: string, location?: string, fontSize?
  * @param gap - Defaults to `10`.
  * @returns A new plugin instance.
  */
-export function MathjaxLabel(target: SDNode, text: string, location?: string, fontSize?: number, gap?: number): LabelPlugin & BaseText;
+export function MathLabel(target: SDNode, text: string, location?: string, fontSize?: number, gap?: number): LabelPlugin & BaseText;

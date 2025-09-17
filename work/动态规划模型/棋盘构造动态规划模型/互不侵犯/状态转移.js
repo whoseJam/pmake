@@ -4,8 +4,8 @@ import { interactableGrid } from "../_/InteractableGrid";
 const svg = sd.svg();
 const n = 2;
 const m = 5;
-const math1 = new sd.Mathjax(svg, "0".repeat(m));
-const math2 = new sd.Mathjax(svg, "0".repeat(m));
+const math1 = new sd.Math(svg, "0".repeat(m));
+const math2 = new sd.Math(svg, "0".repeat(m));
 const grid = interactableGrid(n, m, {
     onChangeStatus,
     totalStatus: 2,

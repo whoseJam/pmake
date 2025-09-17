@@ -3,7 +3,7 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const input = new sd.Slider(svg).width(100).min(1).max(8);
 const value = new sd.Text(svg, input.value()).x(input.mx() + 20).cy(input.cy());
-const tri = new sd.Mathjax(svg, `x^3=?`).cx(input.kx(0.4)).y(input.my() + 20);
+const tri = new sd.Math(svg, `x^3=?`).cx(input.kx(0.4)).y(input.my() + 20);
 sd.Label(input, "x", "lc");
 
 function getTriple(x) {

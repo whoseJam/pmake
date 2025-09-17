@@ -27,5 +27,5 @@ function makeTree() {
 }
 
 function math(str) {
-    return new sd.Mathjax(svg, str).fontSize(20);
+    return new sd.Math(svg, str).fontSize(20);
 }

@@ -14,12 +14,12 @@ function init() {
         arr.push(item);
         const e = arr.lastElement();
         e.childAs("segment", makeSegmentTree(), R.aside("tc"));
-        e.childAs("math", new sd.Mathjax(svg, `insert(a_${idx})`).width(40), R.aside("bc"));
-    })
+        e.childAs("math", new sd.Math(svg, `insert(a_${idx})`).width(40), R.aside("bc"));
+    });
 }
 
 async function main() {
-    await query(1, 3);    
+    await query(1, 3);
 }
 
 async function query(l, r) {
@@ -42,12 +42,18 @@ function makeSegmentTree() {
     }
     tree.freeze();
     tree.root(1, makeArray(4));
-    tree.newNode(2, makeArray(2)); tree.link(1, 2);
-    tree.newNode(3, makeArray(2)); tree.link(1, 3);
-    tree.newNode(4, makeArray(1)); tree.link(2, 4);
-    tree.newNode(5, makeArray(1)); tree.link(2, 5);
-    tree.newNode(6, makeArray(1)); tree.link(3, 6);
-    tree.newNode(7, makeArray(1)); tree.link(3, 7);
+    tree.newNode(2, makeArray(2));
+    tree.link(1, 2);
+    tree.newNode(3, makeArray(2));
+    tree.link(1, 3);
+    tree.newNode(4, makeArray(1));
+    tree.link(2, 4);
+    tree.newNode(5, makeArray(1));
+    tree.link(2, 5);
+    tree.newNode(6, makeArray(1));
+    tree.link(3, 6);
+    tree.newNode(7, makeArray(1));
+    tree.link(3, 7);
     tree.unfreeze();
     return tree;
 }

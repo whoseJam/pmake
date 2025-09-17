@@ -34,7 +34,7 @@ sd.main(async () => {
         link.target(arr.element(checkpoints[i][0]).pos("cx", "my"));
         link.startAnimate()
             .pointStoT()
-            .value(new sd.Mathjax(svg, `$V=${i + 1}$`).fontSize(12), R.pointAtPathByRate(0.5, "cx", "my", 0, -3))
+            .value(new sd.Math(svg, `$V=${i + 1}$`).fontSize(12), R.pointAtPathByRate(0.5, "cx", "my", 0, -3))
             .endAnimate()
             .arrow();
     }

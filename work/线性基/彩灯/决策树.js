@@ -40,7 +40,7 @@ sd.main(async () => {
 });
 
 function math(v) {
-    return new sd.Mathjax(svg, castBinToStr(v));
+    return new sd.Math(svg, castBinToStr(v));
 }
 
 function castBinToStr(v) {

@@ -3,7 +3,7 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const C = sd.color();
 const n = 10;
-const text = new sd.Mathjax(svg, "{0}p+{0}q");
+const text = new sd.Math(svg, "{0}p+{0}q");
 const arr = new sd.ValueArray(svg).start(1).elementWidth(60);
 let lastClicked = undefined;
 let pCount = 0;

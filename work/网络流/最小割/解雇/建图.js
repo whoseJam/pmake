@@ -23,7 +23,7 @@ sd.init(() => {
     links.forEach(link => {
         graph.link(link[0], link[1]);
         const e = graph.element(link[0], link[1]).arrow();
-        e.value(new sd.Mathjax(e, link[2]), R.pointAtPathByRate(0.5, link[3] || "cx", link[4] || "cy"));
+        e.value(new sd.Math(e, link[2]), R.pointAtPathByRate(0.5, link[3] || "cx", link[4] || "cy"));
     });
 });
 

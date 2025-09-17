@@ -10,8 +10,8 @@ const pL = sd.Pointer(arr, "l", "b");
 const pR = sd.Pointer(arr, "r", "b");
 const M = 6;
 
-new sd.Mathjax(svg, `sum(F_i)\\ge${M}`).mx(arr.cx() - 10).my(arr.y() - 60);
-const sumLabel = new sd.Mathjax(svg, "sum(F_i)=0").x(arr.cx() + 10).my(arr.y() - 60);
+new sd.Math(svg, `sum(F_i)\\ge${M}`).mx(arr.cx() - 10).my(arr.y() - 60);
+const sumLabel = new sd.Math(svg, "sum(F_i)=0").x(arr.cx() + 10).my(arr.y() - 60);
 sd.Label(arr, "S", "lc");
 sd.Label(spy, "F", "lc");
 

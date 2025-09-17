@@ -20,15 +20,15 @@ export function vennDiagram3(parent = sd.svg()) {
     const A = new sd.Circle(venn).fillOpacity(0);
     const B = new sd.Circle(venn).fillOpacity(0);
     const C = new sd.Circle(venn).fillOpacity(0);
-    A.childAs("label", new sd.Mathjax(A, "A"), (parent, child) => {
+    A.childAs("label", new sd.Math(A, "A"), (parent, child) => {
         const point = MoveDelta(parent.center(), parent.r(), 0);
         child.cx(point[0]).y(point[1] + 5);
     });
-    B.childAs("label", new sd.Mathjax(B, "B"), (parent, child) => {
+    B.childAs("label", new sd.Math(B, "B"), (parent, child) => {
         const point = MoveDelta(parent.center(), parent.r(), 1);
         child.x(point[0]).my(point[1]);
     });
-    C.childAs("label", new sd.Mathjax(C, "C"), (parent, child) => {
+    C.childAs("label", new sd.Math(C, "C"), (parent, child) => {
         const point = MoveDelta(parent.center(), parent.r(), 2);
         child.mx(point[0]).my(point[1]);
     });
@@ -41,7 +41,7 @@ export function vennDiagram3(parent = sd.svg()) {
     venn.childAs("C", C, (parent, child) => {
         child.r((parent.width() * R1) / 2).center(MoveDelta(GetBoxCenter(parent), parent.width() * 0.2, 2));
     });
-    venn.childAs(new sd.Mathjax(venn, "U"), (parent, child) => {
+    venn.childAs(new sd.Math(venn, "U"), (parent, child) => {
         child.mx(parent.mx() - 5);
         child.my(parent.my() - 5);
     });

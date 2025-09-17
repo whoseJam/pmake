@@ -1,8 +1,8 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-const math1 = new sd.Mathjax(svg, "\\sum_{i=1}^3iF(i)");
-const math2 = new sd.Mathjax(svg, "F(i)\\sum_{i=1}^3i").dy(80);
+const math1 = new sd.Math(svg, "\\sum_{i=1}^3iF(i)");
+const math2 = new sd.Math(svg, "F(i)\\sum_{i=1}^3i").dy(80);
 const center1 = math1.center();
 const center2 = math2.center();
 

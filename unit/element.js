@@ -9,7 +9,7 @@ sd.init(() => {});
 sd.main(TestValueCoveredByBackgroundError);
 
 async function TestValueCoveredByBackgroundError() {
-    const vertex = new sd.Vertex(svg, new sd.Mathjax(svg, "wtf"));
+    const vertex = new sd.Vertex(svg, new sd.Math(svg, "wtf"));
 }
 
 async function TestSvgElementWithDiv() {

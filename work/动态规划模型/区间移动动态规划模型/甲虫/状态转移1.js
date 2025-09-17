@@ -46,7 +46,7 @@ async function move(s, t, label) {
         .target(et.cx(), et.my() + gap)
         .startAnimate()
         .pointStoT()
-        .value(new sd.Mathjax(svg, label).fontSize(10), R.pointAtPathByRate(0.5, "cx", "y", 0, 5))
+        .value(new sd.Math(svg, label).fontSize(10), R.pointAtPathByRate(0.5, "cx", "y", 0, 5))
         .endAnimate()
         .arrow();
 }

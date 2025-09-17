@@ -10,23 +10,22 @@ const H = 70;
 const slider = new sd.Slider(svg).min(5).max(20).value(20).width(300).cx(100).my(-10);
 sd.Label(slider, "n", "lc");
 const label = sd.Label(slider, "20", "rc");
-slider.onChange(value => label.text(n = value));
+slider.onChange(value => label.text((n = value)));
 
-sd.init(() => {
-})
+sd.init(() => {});
 
 sd.main(async () => {
     await sd.pause();
-    const math = new sd.Mathjax(svg, `${n}=${Divide(n)}`).cx(100).opacity(0).startAnimate().opacity(1).endAnimate();
+    const math = new sd.Math(svg, `${n}=${Divide(n)}`).cx(100).opacity(0).startAnimate().opacity(1).endAnimate();
     const m = dividers.length;
     for (let i = 0; i <= m; i++) {
-        for (let S = 0; S < (1<<m); S++) {
+        for (let S = 0; S < 1 << m; S++) {
             if (BitCount(S) === i) {
-                await Combination()
+                await Combination();
             }
         }
     }
-})
+});
 
 function Divide(n) {
     let ans = "";
@@ -43,7 +42,10 @@ function Divide(n) {
 
 function BitCount(S) {
     let ans = 0;
-    while (S) { if (S&1) ans++; S >>= 1; }
+    while (S) {
+        if (S & 1) ans++;
+        S >>= 1;
+    }
     return ans;
 }
 

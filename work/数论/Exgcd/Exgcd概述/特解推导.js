@@ -1,7 +1,7 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-const math = new sd.Mathjax(svg, "bx+(a\\%b)y=gcd(a,b)");
+const math = new sd.Math(svg, "bx+(a\\%b)y=gcd(a,b)");
 const center = math.center();
 
 sd.init(() => {});

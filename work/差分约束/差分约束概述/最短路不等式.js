@@ -16,7 +16,7 @@ function init() {
         return graph.element(u, v).arrow();
     }
     function math(math) {
-        return new sd.Mathjax(svg, math);
+        return new sd.Math(svg, math);
     }
     link("S", "v").strokeDashArray([5, 5]).value(math("dis(v)"), R.pointAtPathByRate(0.5, "cx", "my"));
     link("S", "u").strokeDashArray([5, 5]).value(math("dis(u)"), R.pointAtPathByRate(0.5, "mx", "y"));
@@ -26,4 +26,3 @@ function init() {
 async function main() {
     await sd.pause();
 }
-

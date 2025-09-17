@@ -40,5 +40,5 @@ sd.init(() => {
 sd.main(async () => {});
 
 function math(str) {
-    return new sd.Mathjax(svg, str).fontSize(str.length === 1 ? 16 : 13);
+    return new sd.Math(svg, str).fontSize(str.length === 1 ? 16 : 13);
 }

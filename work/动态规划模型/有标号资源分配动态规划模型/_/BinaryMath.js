@@ -5,7 +5,7 @@ export function binaryMath(n) {
 
     let label = "0".repeat(n);
     let start = 1;
-    const math = new sd.Mathjax(svg, label);
+    const math = new sd.Math(svg, label);
     math.start = function (s) {
         start = s;
         return this;

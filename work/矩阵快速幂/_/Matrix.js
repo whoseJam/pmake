@@ -6,7 +6,7 @@ export class Matrix extends sd.ValueGrid {
 
         for (let i = 0; i < data.length; i++) {
             for (let j = 0; j < data[i].length; j++) {
-                this.insert(i, j, new sd.Mathjax(this, data[i][j]));
+                this.insert(i, j, new sd.Math(this, data[i][j]));
             }
         }
         this.childAs(new sd.ZZLine(this).location("l").bending(5), (parent, child) => {

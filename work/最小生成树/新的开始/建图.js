@@ -27,7 +27,7 @@ sd.main(async () => {
     for (let i = 1; i <= n; i++) {
         sd.Link(S, nodes.element(i)).startAnimate().pointStoT().endAnimate();
     }
-    new sd.Mathjax(svg, "v_i")
+    new sd.Math(svg, "v_i")
         .x(nodes.x() + 120)
         .my((nodes.y() + S.my()) / 2)
         .opacity(0)

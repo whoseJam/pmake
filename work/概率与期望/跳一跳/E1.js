@@ -18,16 +18,16 @@ sd.init(() => {
             .stroke(color)
             .arrow();
         if (data[i - 2] === 1) {
-            sd.Aside(boxes.element(i), new sd.Mathjax(svg, "+1").fontSize(10), "bc", 10);
+            sd.Aside(boxes.element(i), new sd.Math(svg, "+1").fontSize(10), "bc", 10);
             cnt = 2;
         }
         if (data[i - 2] === 2) {
-            sd.Aside(boxes.element(i), new sd.Mathjax(svg, `+cnt(${cnt})`).fontSize(10).color(C.grey), "bc", 30);
+            sd.Aside(boxes.element(i), new sd.Math(svg, `+cnt(${cnt})`).fontSize(10).color(C.grey), "bc", 30);
             cnt *= 2;
         }
         if (data[i - 2] === 3) {
-            sd.Aside(boxes.element(i), new sd.Mathjax(svg, `+cnt(${cnt})`).fontSize(10).color(C.grey), "bc", 30);
-            sd.Aside(boxes.element(i), new sd.Mathjax(svg, "+y_i").fontSize(10).color(C.grey), "bc", 50);
+            sd.Aside(boxes.element(i), new sd.Math(svg, `+cnt(${cnt})`).fontSize(10).color(C.grey), "bc", 30);
+            sd.Aside(boxes.element(i), new sd.Math(svg, "+y_i").fontSize(10).color(C.grey), "bc", 50);
             cnt *= 2;
         }
     }

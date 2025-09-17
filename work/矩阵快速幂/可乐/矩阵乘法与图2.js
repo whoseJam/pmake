@@ -82,7 +82,7 @@ async function multiply(data1, data2, data3, matrix1, matrix2, matrix3) {
             matrix2.endAnimate();
             await sd.pause();
             const cx = (matrix1.x() + matrix3.mx()) / 2;
-            const math = new sd.Mathjax(svg)
+            const math = new sd.Math(svg)
                 .x(-10)
                 .y(matrix1.my() + 40)
                 .startAnimate()

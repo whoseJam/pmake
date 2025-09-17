@@ -47,7 +47,7 @@ sd.init(() => {
     });
     tree.forEachNode(node => {
         node.childAs("stk", new sd.ValueStack(node).elementWidth(10).elementHeight(10), R.aside("lt", 1));
-        node.childAs("val", new sd.Mathjax(node, "").fontSize(10), R.aside("bc", 1));
+        node.childAs("val", new sd.Math(node, "").fontSize(10), R.aside("bc", 1));
         node.val = 0;
     });
 });

@@ -52,7 +52,7 @@ sd.main(async () => {
         .opacity(1)
         .endAnimate();
     await sd.pause();
-    new sd.Mathjax(svg, "h_l")
+    new sd.Math(svg, "h_l")
         .fontSize(15)
         .x(arr.element(1).x() - 3)
         .my(arr.y() - 3)
@@ -60,7 +60,7 @@ sd.main(async () => {
         .startAnimate()
         .opacity(1)
         .endAnimate();
-    new sd.Mathjax(svg, "t_k")
+    new sd.Math(svg, "t_k")
         .fontSize(15)
         .mx(arr.element(K).mx() + 3)
         .my(arr.y() - 3)
@@ -68,7 +68,7 @@ sd.main(async () => {
         .startAnimate()
         .opacity(1)
         .endAnimate();
-    new sd.Mathjax(svg, "t_r")
+    new sd.Math(svg, "t_r")
         .fontSize(15)
         .mx(arr.element(n).mx() + 3)
         .my(arr.y() - 3)

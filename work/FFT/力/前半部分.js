@@ -9,18 +9,20 @@ const fontSize = 18;
 
 sd.init(() => {
     for (let i = 1; i <= n; i++) {
-        arrA.push(new sd.Mathjax(arrA, `\\frac{1}{${i}^2}`));
-        arrB.element(i).value(new sd.Mathjax(arrB, `q_{${i}}`).fontSize(fontSize), R.centerOnly());
+        arrA.push(new sd.Math(arrA, `\\frac{1}{${i}^2}`));
+        arrB.element(i).value(new sd.Math(arrB, `q_{${i}}`).fontSize(fontSize), R.centerOnly());
     }
     arrA.push("...");
-    arrA.push(new sd.Mathjax(arrA, "\\frac{1}{(j-1)^2}"))
-    arrA.push(new sd.Mathjax(arrA, "\\frac{1}{j^2}"))
+    arrA.push(new sd.Math(arrA, "\\frac{1}{(j-1)^2}"));
+    arrA.push(new sd.Math(arrA, "\\frac{1}{j^2}"));
 
     arrB.push("...");
-    arrB.push(); arrB.lastElement().value(new sd.Mathjax(arrB, "q_{j-1}").fontSize(fontSize), R.centerOnly());
-    arrB.push(); arrB.lastElement().value(new sd.Mathjax(arrB, "q_{j}").fontSize(fontSize), R.centerOnly());
-})
+    arrB.push();
+    arrB.lastElement().value(new sd.Math(arrB, "q_{j-1}").fontSize(fontSize), R.centerOnly());
+    arrB.push();
+    arrB.lastElement().value(new sd.Math(arrB, "q_{j}").fontSize(fontSize), R.centerOnly());
+});
 
 sd.main(async () => {
     await sd.pause();
-})
+});

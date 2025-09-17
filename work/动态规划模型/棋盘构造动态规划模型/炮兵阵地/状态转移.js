@@ -5,9 +5,9 @@ const svg = sd.svg();
 const C = sd.color();
 const n = 3;
 const m = 8;
-const math1 = new sd.Mathjax(svg, "0".repeat(m));
-const math2 = new sd.Mathjax(svg, "0".repeat(m));
-const math3 = new sd.Mathjax(svg, "0".repeat(m));
+const math1 = new sd.Math(svg, "0".repeat(m));
+const math2 = new sd.Math(svg, "0".repeat(m));
+const math3 = new sd.Math(svg, "0".repeat(m));
 const grid = interactableGrid(n, m, {
     onChangeStatus,
     totalStatus: 2,

@@ -31,7 +31,7 @@ sd.init(() => {
         graph
             .element(IN(i), OUT(i))
             .arrow()
-            .value(new sd.Mathjax(svg, i === 0 || i === data.length - 1 ? "\\infty" : "1"), R.pointAtPathByRate(0.5, "mx", "cy", -3));
+            .value(new sd.Math(svg, i === 0 || i === data.length - 1 ? "\\infty" : "1"), R.pointAtPathByRate(0.5, "mx", "cy", -3));
         for (let j = 0; j < i; j++) {
             if (f[j] + 1 === f[i] && data[j] <= data[i]) {
                 graph.link(OUT(j), IN(i));

@@ -22,7 +22,7 @@ sd.main(async () => {
         .stroke(C.red)
         .startAnimate()
         .pointStoT()
-        .value(new sd.Mathjax(svg, "a_i\\le x"), R.pointAtPathByRate(0.5, "cx", "my"))
+        .value(new sd.Math(svg, "a_i\\le x"), R.pointAtPathByRate(0.5, "cx", "my"))
         .endAnimate();
     new sd.BraceCurve(svg)
         .source(axis.global(at + 1))
@@ -32,7 +32,7 @@ sd.main(async () => {
         .stroke(C.green)
         .startAnimate()
         .pointStoT()
-        .value(new sd.Mathjax(svg, "a_i\\gt x"), R.pointAtPathByRate(0.5, "cx", "my"))
+        .value(new sd.Math(svg, "a_i\\gt x"), R.pointAtPathByRate(0.5, "cx", "my"))
         .endAnimate();
     await sd.pause();
     const l = sd.Pointer(svg, "l", "t");

@@ -10,10 +10,10 @@ async function gcd(a, b, oa, ob) {
     if (a < b) [a, b] = [b, a];
     const math = stk.lastElement();
     if (!math) {
-        stk.push(new sd.Mathjax(stk, `gcd(${a},${b})`));
+        stk.push(new sd.Math(stk, `gcd(${a},${b})`));
     } else {
         await sd.pause();
-        stk.push(new sd.Mathjax(stk));
+        stk.push(new sd.Math(stk));
         const lastMath = stk.lastElement();
         const mapping = [
             [math, "gcd(", "gcd("],

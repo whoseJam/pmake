@@ -24,7 +24,7 @@ sd.init(() => {
 sd.main(async () => {
     await sd.pause();
     const m = str.map(v => `{${v}}`).join("");
-    const text = new sd.Mathjax(svg, m)
+    const text = new sd.Math(svg, m)
         .fontSize(25)
         .cx(tree.cx())
         .my(tree.y() - 40)
@@ -80,7 +80,7 @@ function id(x, y) {
 }
 
 function math(x, y) {
-    return new sd.Mathjax(svg, id(x, y));
+    return new sd.Math(svg, id(x, y));
 }
 
 function numberToString(v) {

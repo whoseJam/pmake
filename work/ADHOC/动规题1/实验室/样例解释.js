@@ -6,7 +6,7 @@ const n = 6;
 const m = 10;
 const grid = new sd.Grid(svg).n(n).m(m);
 let k = 7;
-const counter = new sd.Mathjax(svg, k);
+const counter = new sd.Math(svg, k);
 
 sd.init(() => {
     counter.cx(grid.cx()).my(grid.y() - 20);

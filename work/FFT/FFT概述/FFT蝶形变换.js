@@ -13,7 +13,7 @@ let id = 0;
 sd.init(() => {
     for (let i = 0; i < n; i++) {
         rev[i] = (rev[i >> 1] >> 1) | ((i & 1) << (logN - 1));
-        const box = new sd.Box(arr).value(new sd.Mathjax(arr, `a_{${i}}`), R.centerOnly());
+        const box = new sd.Box(arr).value(new sd.Math(arr, `a_{${i}}`), R.centerOnly());
         arr.push(box);
         box.position = i;
         box.rank = rev[i];

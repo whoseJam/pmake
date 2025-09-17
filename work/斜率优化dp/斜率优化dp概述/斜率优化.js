@@ -6,7 +6,7 @@ const div = sd.div();
 const C = sd.color();
 const R = sd.rule();
 const V = sd.vec();
-const math = new sd.Mathjax(svg, "f_i=\\mathop{min}\\limits_{j\\lt i}\\{f_{j}+A_iB_{j}\\}");
+const math = new sd.Math(svg, "f_i=\\mathop{min}\\limits_{j\\lt i}\\{f_{j}+A_iB_{j}\\}");
 const coord = new sd.FixGapCoord(svg).cx(math.cx()).y(70).opacity(0).ticks("x", [-4, 6, 1]).ticks("y", [-1, 6, 1]);
 let sliderLabel;
 const line = new sd.Line(svg).opacity(0);
@@ -82,13 +82,13 @@ sd.main(async () => {
             .after(0)
             .color(C.black)
             .strokeWidth(0)
-            .childAs(new sd.Mathjax(coord, `(B_{${idx + 1}},f_{${idx + 1}})`).fontSize(8), R.aside("tc", 2));
+            .childAs(new sd.Math(coord, `(B_{${idx + 1}},f_{${idx + 1}})`).fontSize(8), R.aside("tc", 2));
         circles.push(circle);
     });
     coord.endAnimate();
     await sd.pause();
     updateLine([-3, -1], [1, 0.2]);
-    line.startAnimate().opacity(1).childAs(new sd.Mathjax(line, "k=-A_i").fontSize(8), R.pointAtPathByRate(1, "x", "cy", 3)).endAnimate();
+    line.startAnimate().opacity(1).childAs(new sd.Math(line, "k=-A_i").fontSize(8), R.pointAtPathByRate(1, "x", "cy", 3)).endAnimate();
     for (let i = 0; i < data.length; i++) {
         await sd.pause();
         updateLineByPosition(data[i]);

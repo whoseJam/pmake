@@ -5,7 +5,7 @@ const C = sd.color();
 const n = 8;
 const m = 3;
 const arr = new sd.Array(svg).start(1);
-const hint = new sd.Mathjax(svg, `n=${n},m=${m}`).fontSize(12);
+const hint = new sd.Math(svg, `n=${n},m=${m}`).fontSize(12);
 
 sd.init(() => {
     sd.Index(arr, "t");

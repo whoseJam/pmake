@@ -10,7 +10,7 @@ let id = 0;
 
 sd.init(() => {
     for (let i = 0; i < n; i++) {
-        arr.element(i).value(new sd.Mathjax(arr, `a_{${i}}`), R.centerOnly());
+        arr.element(i).value(new sd.Math(arr, `a_{${i}}`), R.centerOnly());
         arr.value(i).rank = i;
     }
 });
@@ -37,7 +37,7 @@ async function Solve(arr, gap) {
     f1.x(arr.cx() + gap).y(arr.my() + 40);
 
     for (let i = 0; i < n; i++) {
-        const math = new sd.Mathjax(svg, arr.value(i).math()).center(arr.value(i).center());
+        const math = new sd.Math(svg, arr.value(i).math()).center(arr.value(i).center());
         math.rank = arr.value(i).rank;
         if (!(i & 1)) {
             f0.startAnimate();

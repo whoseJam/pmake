@@ -23,7 +23,7 @@ sd.main(async () => {
 async function insert(v) {
     await sd.pause();
     let last = undefined;
-    const math = new sd.Mathjax(svg, castBinToStr(v))
+    const math = new sd.Math(svg, castBinToStr(v))
         .cx(grid.cx())
         .my(grid.y() - 20)
         .opacity(0)

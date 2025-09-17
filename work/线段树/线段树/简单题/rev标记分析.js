@@ -9,13 +9,13 @@ const lc = x => x * 2;
 const rc = x => x * 2 + 1;
 
 sd.init(() => {
-    analyzer.element(2).childAs("tag", new sd.Mathjax(svg, "r_l"), R.aside("rc"));
-    analyzer.element(3).childAs("tag", new sd.Mathjax(svg, "r_r"), R.aside("rc"));
+    analyzer.element(2).childAs("tag", new sd.Math(svg, "r_l"), R.aside("rc"));
+    analyzer.element(3).childAs("tag", new sd.Math(svg, "r_r"), R.aside("rc"));
 });
 
 sd.main(async () => {
     await sd.pause();
-    const tag = new sd.Mathjax(svg, "1")
+    const tag = new sd.Math(svg, "1")
         .mx(analyzer.element(1).x() - 10)
         .cy(analyzer.element(1).cy())
         .opacity(0)

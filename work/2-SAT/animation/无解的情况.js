@@ -7,8 +7,8 @@ init();
 main();
 
 function init() {
-    graph.at(0.5, 0).newNode(1, new sd.Mathjax(graph, "Y_i"));
-    graph.at(0.5, 1).newNode(2, new sd.Mathjax(graph, "N_i"));
+    graph.at(0.5, 0).newNode(1, new sd.Math(graph, "Y_i"));
+    graph.at(0.5, 1).newNode(2, new sd.Math(graph, "N_i"));
     graph.element(1).rate(2);
     graph.element(2).rate(2);
     graph.at(0, 0.5).newNode(3, "...");
@@ -19,8 +19,10 @@ function init() {
         graph.link(a, b);
         graph.element(a, b).arrow();
     }
-    link(1, 3); link(3, 2);
-    link(2, 4); link(4, 1);
+    link(1, 3);
+    link(3, 2);
+    link(2, 4);
+    link(4, 1);
 }
 
 async function main() {

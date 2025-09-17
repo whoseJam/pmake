@@ -4,7 +4,7 @@ const svg = sd.svg();
 const C = sd.color();
 const n = 5;
 const arr = new sd.ValueArray(svg).elementWidth(60);
-const math = new sd.Mathjax(svg, "");
+const math = new sd.Math(svg, "");
 
 sd.init(() => {
     let str = "";

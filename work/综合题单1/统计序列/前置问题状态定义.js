@@ -24,5 +24,5 @@ sd.main(async () => {
 });
 
 function math(str) {
-    return new sd.Mathjax(svg, str);
+    return new sd.Math(svg, str);
 }

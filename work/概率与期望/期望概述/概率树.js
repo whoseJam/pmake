@@ -5,7 +5,7 @@ const R = sd.rule();
 const C = sd.color();
 const tree = new sd.Tree(svg);
 const nodes = [2, 1, 3, 2, 1];
-const E1 = new sd.Mathjax(svg, "E(X)=").fontSize(15).x(300);
+const E1 = new sd.Math(svg, "E(X)=").fontSize(15).x(300);
 const c1 = E1.cy();
 const n = nodes.length;
 const locations = [
@@ -32,7 +32,7 @@ sd.init(() => {
     for (let i = 1; i <= n; i++) tree.newNode(i, nodes[i - 1]);
     links.forEach(link => {
         tree.link(link[0], link[1]);
-        tree.element(link[0], link[1]).value(new sd.Mathjax(svg, link[2]).fontSize(10), R.pointAtPathByRate(0.5, link[3], "my")).arrow();
+        tree.element(link[0], link[1]).value(new sd.Math(svg, link[2]).fontSize(10), R.pointAtPathByRate(0.5, link[3], "my")).arrow();
     });
 });
 
@@ -77,7 +77,7 @@ async function dfs(u) {
         tree.element(u)
             .startAnimate()
             .color(C.blue)
-            .childAs("math", new sd.Mathjax(tree, tree.intValue(u)).fontSize(15), locations[u - 1])
+            .childAs("math", new sd.Math(tree, tree.intValue(u)).fontSize(15), locations[u - 1])
             .endAnimate();
     }
     const children = tree.children(u);
@@ -90,7 +90,7 @@ async function dfs(u) {
     tree.element(u)
         .startAnimate()
         .color(C.blue)
-        .childAs("math", new sd.Mathjax(tree, sum).fontSize(15), locations[u - 1])
+        .childAs("math", new sd.Math(tree, sum).fontSize(15), locations[u - 1])
         .endAnimate();
     if (computed[u]) {
         await sd.pause();

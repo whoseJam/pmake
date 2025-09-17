@@ -51,7 +51,7 @@ export class XorLinearSet extends sd.SD2DNode {
     }
     async insertAsync(v) {
         await sd.pause();
-        const math = new sd.Mathjax(this, castBinToStr(v, this._.dim))
+        const math = new sd.Math(this, castBinToStr(v, this._.dim))
             .cx(this.cx())
             .my(this.y() - 20)
             .opacity(0)

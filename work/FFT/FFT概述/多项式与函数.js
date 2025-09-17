@@ -10,9 +10,9 @@ sd.init(() => {
 
 sd.main(async () => {
     const focus = sd.Focus(svg);
-    const mtA = new sd.Mathjax(svg, "A(x)=x^2+3x+2").x(coord.mx() + 20).y(coord.y());
-    const mtB = new sd.Mathjax(svg, "B(x)=-\\frac{1}{2}x^2+1").x(coord.mx() + 20).cy(coord.cy());
-    const mtC = new sd.Mathjax(svg, "C(x)=-x-3").x(coord.mx() + 20).my(coord.my());
+    const mtA = new sd.Math(svg, "A(x)=x^2+3x+2").x(coord.mx() + 20).y(coord.y());
+    const mtB = new sd.Math(svg, "B(x)=-\\frac{1}{2}x^2+1").x(coord.mx() + 20).cy(coord.cy());
+    const mtC = new sd.Math(svg, "C(x)=-x-3").x(coord.mx() + 20).my(coord.my());
 
     await sd.pause();
     focus.startAnimate().focus(mtA).endAnimate();

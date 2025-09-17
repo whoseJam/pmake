@@ -9,7 +9,7 @@ const grid = new sd.Grid(svg).n(n).m(n).startN(1).startM(1);
 sd.init(() => {
     for (let i = 1; i <= n; i++) {
         for (let d = 1; d <= i; d++) {
-            if (i % d === 0) grid.element(i, d).value(new sd.Mathjax(grid, `${d}`), R.centerOnly());
+            if (i % d === 0) grid.element(i, d).value(new sd.Math(grid, `${d}`), R.centerOnly());
         }
     }
 });

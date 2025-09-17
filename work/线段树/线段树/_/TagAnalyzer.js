@@ -4,7 +4,7 @@ const R = sd.rule();
 
 function convertTag(target, tag) {
     if (typeof tag === "number" || typeof tag === "string") {
-        if (tag.startsWith("$")) tag = new sd.Mathjax(target, tag);
+        if (tag.startsWith("$")) tag = new sd.Math(target, tag);
         else tag = new sd.Text(target, tag);
     }
     return tag;

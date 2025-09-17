@@ -20,7 +20,7 @@ sd.init(() => {
     links.forEach(link => {
         graph.link(link.from, link.to);
         const e = graph.element(link.from, link.to).arrow();
-        const math = new sd.Mathjax(e, link.cap);
+        const math = new sd.Math(e, link.cap);
         e.value(math, R.pointAtPathByRate(0.5, link.xloc, link.yloc));
     });
 });

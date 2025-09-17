@@ -18,7 +18,7 @@ sd.init(() => {
 sd.main(async () => {
     await sd.pause();
     const pointer = sd.Pointer(arr, "target", "t");
-    const math = new sd.Mathjax(svg, "a_{even}")
+    const math = new sd.Math(svg, "a_{even}")
         .opacity(0)
         .cy(arr.cy())
         .x(arr.mx() + 40)

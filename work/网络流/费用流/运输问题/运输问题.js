@@ -25,7 +25,7 @@ sd.init(() => {
             link(`C${i}`, `S${j}`, null, "cx", "cy", C.red);
         }
     }
-    sd.MathjaxLabel(graph, "+\\infty/c_{i,j}", "rc", 20);
+    sd.MathLabel(graph, "+\\infty/c_{i,j}", "rc", 20);
 });
 
 sd.main(async () => {});

@@ -43,7 +43,7 @@ export function interactiveVenn(venn) {
         }
         dfs(0, 0);
         const array = new sd.ValueArray(svg).elementWidth(60);
-        const math = new sd.Mathjax(array, "+0").fontSize(10);
+        const math = new sd.Math(array, "+0").fontSize(10);
 
         let layerAdd = 0;
         async function updateVenn(delta) {

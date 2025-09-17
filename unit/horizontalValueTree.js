@@ -12,6 +12,6 @@ sd.main(async () => {
     t.endAnimate();
     await sd.pause();
     t.startAnimate();
-    t.newNode(3, new sd.Mathjax(svg, `A^2+B^2=C^2`));
+    t.newNode(3, new sd.Math(svg, `A^2+B^2=C^2`));
     t.newLink(1, 3);
-})
+});

@@ -12,5 +12,5 @@ async function TestBasic() {
     await sd.pause();
     t.startAnimate().freeze().newNode(2, new sd.Grid(svg).n(3).m(3)).newLink(1, 2).unfreeze().endAnimate();
     await sd.pause();
-    t.startAnimate().freeze().newNode(3, new sd.Mathjax(svg, `A^2+B^2=C^2`)).newLink(1, 3).unfreeze().endAnimate();
+    t.startAnimate().freeze().newNode(3, new sd.Math(svg, `A^2+B^2=C^2`)).newLink(1, 3).unfreeze().endAnimate();
 }

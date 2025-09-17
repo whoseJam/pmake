@@ -10,7 +10,7 @@ sd.init(() => {
     a.forEach(count => {
         grid.pushPrimary(count);
     });
-    for (let i = 1; i <= n; i++) sd.MathjaxLabel(grid.element(i, a[i - 1]), `a_{${i}}`, "bc");
+    for (let i = 1; i <= n; i++) sd.MathLabel(grid.element(i, a[i - 1]), `a_{${i}}`, "bc");
     for (let i = 1; i <= grid.endM(); i++) {
         new sd.Text(grid, String.fromCharCode([64 + i])).x(grid.mx() + 5).cy(grid.my() - 20 - (i - 1) * grid.elementHeight());
     }

@@ -5,7 +5,7 @@ import * as sd from "@/sd";
  * @param {sd.BaseArary} arr
  * @param {{
  *  once: boolean;
- *  onCreateMath: (math: sd.Mathjax) => void | Promise<any>;
+ *  onCreateMath: (math: sd.Math) => void | Promise<any>;
  *  onChangeStatus: (i: number, selected: 0|1) => void | Promise<any>;
  * }} args
  */
@@ -14,7 +14,7 @@ export async function interactableSet(arr, args) {
     const onCreateMath = args.onCreateMath;
     const onChangeStatus = args.onChangeStatus;
 
-    const math = new sd.Mathjax(arr, "0".repeat(arr.length()));
+    const math = new sd.Math(arr, "0".repeat(arr.length()));
     if (onCreateMath) await onCreateMath(math);
     else math.cx(arr.cx()).y(arr.my() + 20);
 

@@ -36,7 +36,7 @@ sd.main(async () => {
 function onCreateTable(table) {
     table.cx(tree.cx()).y(tree.my() + 70);
     sd.Index(table, "t");
-    sd.MathjaxLabel(table, "fa[u][i]：表示 u 的第 2^i 级祖先", "bc", 25);
+    sd.MathLabel(table, "fa[u][i]：表示 u 的第 2^i 级祖先", "bc", 25);
     global.table = table;
 }
 

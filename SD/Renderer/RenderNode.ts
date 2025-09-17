@@ -1,6 +1,7 @@
 import { Action } from "@/Animate/Action";
 import { Dom } from "@/Dom/Dom";
 import { SDNode } from "@/Node/SDNode";
+import { TextEngine } from "@/Node/Text/TextEngine";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 const INNER_HTML_KEY = new Set(["innerHTML", "text"]);
@@ -169,6 +170,16 @@ export class RenderNode {
             label,
             action: false,
         });
+    }
+    static createMathRenderNode(targetNode: SDNode, targetLayer: RenderNode, element: Element) {
+        const math = new RenderNode({
+            targetNode,
+            targetLayer,
+            element,
+            action: false,
+        });
+        TextEngine.adjustMath(math);
+        return math;
     }
     static createRenderNode(targetNode: SDNode, targetLayer: RenderNode, label: string) {
         return new RenderNode({

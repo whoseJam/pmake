@@ -4,7 +4,7 @@ const svg = sd.svg();
 const C = sd.color();
 const n = 5;
 const m = 3;
-const matrix = new sd.Mathjax(
+const matrix = new sd.Math(
     svg,
     `
 \\begin{pmatrix}

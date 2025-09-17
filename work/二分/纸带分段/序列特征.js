@@ -20,7 +20,7 @@ sd.main(async () => {
         .stroke(C.grey)
         .startAnimate()
         .pointStoT()
-        .value(new sd.Mathjax(svg, "段数\\gt k"), R.pointAtPathByRate(0.5, "cx", "my"))
+        .value(new sd.Math(svg, "段数\\gt k"), R.pointAtPathByRate(0.5, "cx", "my"))
         .endAnimate();
     new sd.BraceCurve(svg)
         .source(axis.global(at + 1))
@@ -30,6 +30,6 @@ sd.main(async () => {
         .stroke(C.green)
         .startAnimate()
         .pointStoT()
-        .value(new sd.Mathjax(svg, "段数\\le k"), R.pointAtPathByRate(0.5, "cx", "my"))
+        .value(new sd.Math(svg, "段数\\le k"), R.pointAtPathByRate(0.5, "cx", "my"))
         .endAnimate();
 });

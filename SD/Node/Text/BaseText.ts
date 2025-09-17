@@ -1,16 +1,9 @@
 import { SDNode } from "@/Node/SDNode";
 import { SDSVGNode } from "@/Node/SDSVGNode";
+import { TextMapping } from "@/Node/Text/TextEngine";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
 import { Color as C, SDColor } from "@/Utility/Color";
-
-type TextMappingSubtextItem = [string, string];
-type TextMappingObjectSubtextItem<T> = [T, string, string];
-type TextMappingObjectItem<T> = [T, string];
-type TextMappingItem<T> = TextMappingSubtextItem | TextMappingObjectSubtextItem<T> | TextMappingObjectItem<T>;
-type TextMappingDictionary = { [key: string]: string };
-type TextMappingArray<T> = Array<TextMappingItem<T>>;
-export type TextMapping<T> = TextMappingDictionary | TextMappingArray<T>;
 
 const BASE_TEXT_ATTRIBUTES = {
     fill: C.black,
@@ -21,6 +14,23 @@ const BASE_TEXT_ATTRIBUTES = {
     strokeOffset: 0,
     strokeDashArray: [1, 0],
 };
+
+export class BaseTextConfiguration {
+    text: string;
+    size: number;
+    fill: string;
+    stroke: string;
+    x: number;
+    y: number;
+    constructor(args: { [key: string]: any }) {
+        this.text = args.text;
+        this.size = args.size;
+        this.fill = args.fill;
+        this.stroke = args.stroke;
+        this.x = args.x;
+        this.y = args.y;
+    }
+}
 
 export abstract class BaseText extends SDSVGNode {
     constructor(target: SDNode | RenderNode) {

@@ -46,7 +46,7 @@ async function TestLayout() {
         sd.Focus(node).focus(node).strokeWidth(1).strokeDashArray([5, 5]);
     }
     const svg = sd.svg();
-    const values = [new sd.Circle(svg), new sd.Mathjax(svg, "A^2"), new sd.Rect(svg), new sd.Text(svg, "A")];
+    const values = [new sd.Circle(svg), new sd.Math(svg, "A^2"), new sd.Rect(svg), new sd.Text(svg, "A")];
     const boxes = [];
     values.forEach((value, i) => {
         addFocus(value);

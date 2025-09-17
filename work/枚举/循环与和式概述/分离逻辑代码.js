@@ -1,7 +1,7 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
-const math = new sd.Mathjax(svg, "\\sum_{1\\le i\\le n}i[i是质数]").fontSize(30);
+const math = new sd.Math(svg, "\\sum_{1\\le i\\le n}i[i是质数]").fontSize(30);
 const block1 = new sd.Code(
     svg,
     `
@@ -29,6 +29,6 @@ sd.main(async () => {
     const l1 = sd.Link(math, block1, sd.Line, "cx", "my", "cx", "y").startAnimate().pointStoT().endAnimate().arrow();
     const l2 = sd.Link(math, block2, sd.Line, "cx", "my", "cx", "y").startAnimate().pointStoT().endAnimate().arrow();
     await sd.pause();
-    l1.startAnimate().value(new sd.Mathjax(l1, "O(n)")).endAnimate();
-    l2.startAnimate().value(new sd.Mathjax(l2, "O(n\\sqrt{n})")).endAnimate();
+    l1.startAnimate().value(new sd.Math(l1, "O(n)")).endAnimate();
+    l2.startAnimate().value(new sd.Math(l2, "O(n\\sqrt{n})")).endAnimate();
 });

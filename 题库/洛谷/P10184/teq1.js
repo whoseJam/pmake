@@ -5,7 +5,8 @@ const C = sd.color();
 const A = [0, 3, 2, 5, 1, 1];
 const n = 5;
 const T = 1;
-let cur = 0, ccur = 0;
+let cur = 0,
+    ccur = 0;
 const colorList = [];
 for (let i = 1; i <= 20; i++) colorList.push(C.rand());
 
@@ -29,16 +30,16 @@ sd.init(() => {
                     for (let k = 0; k < A[i]; k++) {
                         if (stk.color(k).main == nextColor()) return;
                     }
-                    if (++cur > T) ccur++, cur = 1;
-                    stk.startAnimate().color(j - 1, colorList[ccur]).endAnimate();
-                })
-            })
+                    if (++cur > T) ccur++, (cur = 1);
+                    stk.startAnimate()
+                        .color(j - 1, colorList[ccur])
+                        .endAnimate();
+                });
+            });
         }
         arr.push(stk);
-        sd.MathjaxLabel(stk, `a_{${i}}`, "tc", 14);
+        sd.MathLabel(stk, `a_{${i}}`, "tc", 14);
     }
-})
+});
 
-sd.main(async () => {
-
-})
+sd.main(async () => {});

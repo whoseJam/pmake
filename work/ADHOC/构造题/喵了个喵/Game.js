@@ -59,7 +59,7 @@ export class Game extends sd.SD2DNode {
                 .Aside(stack, new sd.Box(stack).width(15).height(15), "bc")
                 .fillOpacity(0)
                 .strokeOpacity(0)
-                .value(new sd.Mathjax(stack, `$s_${i + 1}$`), R.centerOnly());
+                .value(new sd.Math(stack, `$s_${i + 1}$`), R.centerOnly());
             label.onClick(() => {
                 const focus = this._.focus;
                 if (this._.focusAt === undefined) {

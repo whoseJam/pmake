@@ -26,7 +26,7 @@ export async function floyd(graph) {
     for (let i = 1; i <= n; i++)
         for (let j = 1; j <= n; j++) {
             const element = map.element(i, j);
-            const value = new sd.Mathjax(graph, data[i][j] === Infinity ? "$\\infty$" : data[i][j]);
+            const value = new sd.Math(graph, data[i][j] === Infinity ? "$\\infty$" : data[i][j]);
             element.value(value.fontSize(15), R.centerOnly());
         }
 

@@ -21,7 +21,7 @@ sd.init(() => {
         const rule = R.pointAtPathByRate(0.5, link[3], link[4]);
         graph.newLink(link[0], link[1]);
         const element = graph.element(link[0], link[1]).arrow();
-        element.value(new sd.Mathjax(element, link[2]).fontSize(20), rule);
+        element.value(new sd.Math(element, link[2]).fontSize(20), rule);
         element.xlocator = link[3];
         element.ylocator = link[4];
     });

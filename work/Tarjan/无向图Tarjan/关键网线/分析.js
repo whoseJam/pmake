@@ -36,7 +36,7 @@ sd.main(async () => {
     sd.trim(c1, null, v);
     c1.startAnimate().pointStoT().endAnimate().arrow();
     await sd.pause();
-    const text = new sd.Mathjax(svg, "N_A(u),N_B(u)").fontSize(15);
+    const text = new sd.Math(svg, "N_A(u),N_B(u)").fontSize(15);
     v.startAnimate()
         .childAs(text, (parent, child) => {
             child.mx(parent.cx()).my(parent.y());

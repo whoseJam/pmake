@@ -7,21 +7,21 @@ const R = sd.rule();
 const arr = new sd.Array(svg).resize(10).start(1);
 
 sd.init(() => {
-    brace(new sd.BraceCurve(svg), arr, 5, 10, false).value(new sd.Mathjax(svg, "第k条线段(l_k,r_k,绿,w_k)"), R.pointAtPathByRate(0.5, "cx", "y"));
-})
+    brace(new sd.BraceCurve(svg), arr, 5, 10, false).value(new sd.Math(svg, "第k条线段(l_k,r_k,绿,w_k)"), R.pointAtPathByRate(0.5, "cx", "y"));
+});
 
 sd.main(async () => {
     await sd.pause();
     arr.startAnimate().color(5, 10, C.green).endAnimate();
     await sd.pause();
     const b = brace(new sd.BraceCurve(svg), arr, 1, 6);
-    b.value(new sd.Mathjax(svg, "f(j,绿)"), R.pointAtPathByRate(0.5, "cx", "my"));
+    b.value(new sd.Math(svg, "f(j,绿)"), R.pointAtPathByRate(0.5, "cx", "my"));
     b.opacity(0).startAnimate().opacity(1).endAnimate();
     await sd.pause();
     b.startAnimate();
     brace(b, arr, 1, 4);
     b.endAnimate();
-})
+});
 
 function brace(b, arr, l, r, flag = true) {
     if (flag) {

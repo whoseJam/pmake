@@ -7,8 +7,7 @@ const l = 2;
 const r = 6;
 const arr = new sd.Array(svg).start(1).resize(n);
 
-sd.init(() => {
-})
+sd.init(() => {});
 
 sd.main(async () => {
     function brace(arr, l, r, b, rev = false) {
@@ -23,12 +22,14 @@ sd.main(async () => {
 
     const b1 = new sd.BraceCurve(svg).opacity(0);
     const b2 = new sd.BraceCurve(svg).opacity(0);
-    
+
     await sd.pause();
-    brace(arr, 1, n, b2, true); b2.value(new sd.Mathjax(b2, "tot_2,tot_5"), R.pointAtPathByRate(0.5, "cx", "y"));
+    brace(arr, 1, n, b2, true);
+    b2.value(new sd.Math(b2, "tot_2,tot_5"), R.pointAtPathByRate(0.5, "cx", "y"));
     b2.startAnimate().opacity(1).endAnimate();
 
     await sd.pause();
-    brace(arr, l, r, b1); b1.value(new sd.Mathjax(b1, "cnt_2,cnt_5"), R.pointAtPathByRate(0.5, "cx", "my"));
+    brace(arr, l, r, b1);
+    b1.value(new sd.Math(b1, "cnt_2,cnt_5"), R.pointAtPathByRate(0.5, "cx", "my"));
     b1.startAnimate().opacity(1).endAnimate();
-})
+});

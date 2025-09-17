@@ -8,7 +8,7 @@ const tree = sd.make1d(n + 5);
 const focuses = [];
 
 function lowbit(x) {
-    return x & (-x);
+    return x & -x;
 }
 
 sd.init(() => {
@@ -19,22 +19,31 @@ sd.init(() => {
         element.onClick(() => {
             sd.inter(async () => {
                 await Lowbit(index);
-            })
-        })
+            });
+        });
     }
     Prepare();
     BuildTree();
-})
+});
 
-sd.main(async () => {
-})
+sd.main(async () => {});
 
 async function Lowbit(x) {
     const str = CastBinToStr(x);
-    const t1 = new sd.Mathjax(svg, `${x}=(${str})_2`);
-    const t2 = new sd.Mathjax(svg, `lowbit(${x})=lowbit((${str})_2)=${lowbit(x)}`);
-    t1.cx(arr.cx()).y(arr.my() + 20).opacity(0).startAnimate().opacity(1).endAnimate();
-    t2.cx(arr.cx()).y(t1.my() + 5).opacity(0).startAnimate().opacity(1).endAnimate();
+    const t1 = new sd.Math(svg, `${x}=(${str})_2`);
+    const t2 = new sd.Math(svg, `lowbit(${x})=lowbit((${str})_2)=${lowbit(x)}`);
+    t1.cx(arr.cx())
+        .y(arr.my() + 20)
+        .opacity(0)
+        .startAnimate()
+        .opacity(1)
+        .endAnimate();
+    t2.cx(arr.cx())
+        .y(t1.my() + 5)
+        .opacity(0)
+        .startAnimate()
+        .opacity(1)
+        .endAnimate();
     arr.startAnimate().color(x, C.blue).endAnimate();
     await sd.pause();
     const result = BinarySplit(x);
@@ -55,7 +64,7 @@ async function Lowbit(x) {
 function CastBinToStr(x) {
     let str = "";
     while (x) {
-        str = String(x&1) + str;
+        str = String(x & 1) + str;
         x >>= 1;
     }
     return str;
@@ -80,11 +89,11 @@ function Prepare() {
 function MakeTree(result) {
     for (let i = 0; i < result.length; i++) {
         const range = result[i];
-        const len = (range[1] - range[0] + 1);
+        const len = range[1] - range[0] + 1;
         if (!tree[range[1]]) {
             const arr = new sd.Array(svg).resize(len).start(range[0]);
             arr.dx((range[0] - 1) * 40);
-            arr.dy(Math.log2(len) * (-60) - 80);
+            arr.dy(Math.log2(len) * -60 - 80);
             tree[range[1]] = arr;
         }
     }
@@ -94,9 +103,9 @@ function BinarySplit(x) {
     const result = [];
     let curPos = 1;
     for (let i = 10; i >= 0; i--) {
-        if (x & (1<<i)) {
-            result.push([curPos, curPos + (1<<i) - 1]);
-            curPos += (1<<i);
+        if (x & (1 << i)) {
+            result.push([curPos, curPos + (1 << i) - 1]);
+            curPos += 1 << i;
         }
     }
     return result;

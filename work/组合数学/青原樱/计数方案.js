@@ -8,7 +8,7 @@ const n = 8;
 const m = 3;
 const arr = new sd.Array(svg).start(1).resize(n);
 const tree = new sd.Array(svg).dy(80).x(arr.cx() - (40 * m) / 2);
-const hint = new sd.Mathjax(svg, `n=${n},m=${m}`).fontSize(12);
+const hint = new sd.Math(svg, `n=${n},m=${m}`).fontSize(12);
 
 sd.init(() => {
     hint.cx(arr.cx()).my(arr.y() - 30);

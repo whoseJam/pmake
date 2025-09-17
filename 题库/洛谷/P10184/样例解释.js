@@ -5,7 +5,8 @@ const C = sd.color();
 const A = [0, 3, 2, 5, 1, 1];
 const n = 5;
 const T = 3;
-let cur = 0, ccur = 0;
+let cur = 0,
+    ccur = 0;
 const colorList = [C.blue, C.green, C.red, C.orange, C.purple];
 
 const arr = new sd.ValueArray(svg).elementWidth(60).align("y");
@@ -28,16 +29,16 @@ sd.init(() => {
                     for (let k = 0; k < A[i]; k++) {
                         if (stk.color(k).main == nextColor()) return;
                     }
-                    if (++cur > T) ccur++, cur = 1;
-                    stk.startAnimate().color(j - 1, colorList[ccur]).endAnimate();
-                })
-            })
+                    if (++cur > T) ccur++, (cur = 1);
+                    stk.startAnimate()
+                        .color(j - 1, colorList[ccur])
+                        .endAnimate();
+                });
+            });
         }
         arr.push(stk);
-        sd.MathjaxLabel(stk, `a_{${i}}`, "tc", 14);
+        sd.MathLabel(stk, `a_{${i}}`, "tc", 14);
     }
-})
+});
 
-sd.main(async () => {
-
-})
+sd.main(async () => {});

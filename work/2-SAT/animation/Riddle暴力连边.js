@@ -7,20 +7,20 @@ main();
 
 function init() {
     const link = (a, b) => {
-        graph.link(a, b)
+        graph.link(a, b);
         graph.element(a, b).arrow();
-    }
-    const Y = (a) => {
-        return a*2-1;
-    }
-    const N = (a) => {
-        return a*2;
-    }
+    };
+    const Y = a => {
+        return a * 2 - 1;
+    };
+    const N = a => {
+        return a * 2;
+    };
     for (let i = 1; i <= n; i++) {
-        graph.newNode(i*2-1, new sd.Mathjax(graph, `T_${i}`), 0);
-        graph.newNode(i*2, new sd.Mathjax(graph, `F_${i}`), 1);
-        graph.element(i*2-1).rate(2.0);
-        graph.element(i*2).rate(2.0);
+        graph.newNode(i * 2 - 1, new sd.Math(graph, `T_${i}`), 0);
+        graph.newNode(i * 2, new sd.Math(graph, `F_${i}`), 1);
+        graph.element(i * 2 - 1).rate(2.0);
+        graph.element(i * 2).rate(2.0);
     }
     for (let i = 1; i <= n; i++) {
         for (let j = 1; j <= n; j++) {

@@ -30,24 +30,24 @@ sd.main(async () => {
         .target(arrRoot.cx(), arrRoot.y())
         .arrow()
         .opacity(0)
-        .value(new sd.Mathjax(svg, "E_l+E_r").fontSize(fontSize), R.pointAtPathByRate(0.5, "x", "cy"))
+        .value(new sd.Math(svg, "E_l+E_r").fontSize(fontSize), R.pointAtPathByRate(0.5, "x", "cy"))
         .startAnimate()
         .opacity(1)
         .endAnimate();
 
     await sd.pause();
-    L12.startAnimate().value(new sd.Mathjax(L12, "P_l").fontSize(fontSize).color(C.textBlue), R.pointAtPathByRate(0.5, "mx", "cy", -10)).endAnimate();
+    L12.startAnimate().value(new sd.Math(L12, "P_l").fontSize(fontSize).color(C.textBlue), R.pointAtPathByRate(0.5, "mx", "cy", -10)).endAnimate();
     arrPl.startAnimate().opacity(1).endAnimate();
     await sd.pause();
     arrPl.startAnimate().color(0, at, C.grey).endAnimate();
     await sd.pause();
-    L12.childAs("add", new sd.Mathjax(L12, "+1").fontSize(fontSize), R.pointAtPathByRate(0.5, "x", "cy", 10));
+    L12.childAs("add", new sd.Math(L12, "+1").fontSize(fontSize), R.pointAtPathByRate(0.5, "x", "cy", 10));
     L12.child("add").opacity(0).startAnimate().opacity(1).endAnimate();
     await sd.pause();
-    sd.Aside(arrPl, new sd.Mathjax(svg, "E_i-E_r").fontSize(fontSize), "bc").opacity(0).startAnimate().opacity(1).endAnimate();
+    sd.Aside(arrPl, new sd.Math(svg, "E_i-E_r").fontSize(fontSize), "bc").opacity(0).startAnimate().opacity(1).endAnimate();
 
     await sd.pause();
-    L13.startAnimate().value(new sd.Mathjax(L13, "P_r").fontSize(fontSize).color(C.textBlue), R.pointAtPathByRate(0.5, "mx", "cy", -5)).endAnimate();
+    L13.startAnimate().value(new sd.Math(L13, "P_r").fontSize(fontSize).color(C.textBlue), R.pointAtPathByRate(0.5, "mx", "cy", -5)).endAnimate();
     arrPr.startAnimate().opacity(1).endAnimate();
     await sd.pause();
     arrPr
@@ -55,16 +55,16 @@ sd.main(async () => {
         .color(at, n - 1, C.grey)
         .endAnimate();
     await sd.pause();
-    L13.childAs("add", new sd.Mathjax(L13, "+1").fontSize(fontSize), R.pointAtPathByRate(0.5, "x", "cy", 5));
+    L13.childAs("add", new sd.Math(L13, "+1").fontSize(fontSize), R.pointAtPathByRate(0.5, "x", "cy", 5));
     L13.child("add").opacity(0).startAnimate().opacity(1).endAnimate();
     await sd.pause();
-    sd.Aside(arrPr, new sd.Mathjax(svg, "E_i-E_l").fontSize(fontSize), "bc").opacity(0).startAnimate().opacity(1).endAnimate();
+    sd.Aside(arrPr, new sd.Math(svg, "E_i-E_l").fontSize(fontSize), "bc").opacity(0).startAnimate().opacity(1).endAnimate();
 
     await sd.pause();
-    L14.startAnimate().value(new sd.Mathjax(L14, "1-P_l-P_r").fontSize(fontSize).color(C.textBlue), R.pointAtPathByRate(0.5, "x", "cy", 15)).endAnimate();
+    L14.startAnimate().value(new sd.Math(L14, "1-P_l-P_r").fontSize(fontSize).color(C.textBlue), R.pointAtPathByRate(0.5, "x", "cy", 15)).endAnimate();
     arrRes.startAnimate().opacity(1).endAnimate();
     await sd.pause();
-    L14.childAs("add", new sd.Mathjax(L14, "+1").fontSize(fontSize), R.pointAtPathByRate(0.5, "mx", "cy", -10));
+    L14.childAs("add", new sd.Math(L14, "+1").fontSize(fontSize), R.pointAtPathByRate(0.5, "mx", "cy", -10));
     L14.child("add").opacity(0).startAnimate().opacity(1).endAnimate();
 });
 

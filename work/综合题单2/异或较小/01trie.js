@@ -21,7 +21,7 @@ sd.init(() => {
 
 sd.main(async () => {
     await sd.pause();
-    const math = new sd.Mathjax(svg, "{0}{1}{0}").fontSize(25).x(tree.mx()).cy(tree.y()).opacity(0).startAnimate().opacity(1).endAnimate();
+    const math = new sd.Math(svg, "{0}{1}{0}").fontSize(25).x(tree.mx()).cy(tree.y()).opacity(0).startAnimate().opacity(1).endAnimate();
     await sd.pause();
     math.element(1).startAnimate().color(C.red).endAnimate();
     await sd.pause();

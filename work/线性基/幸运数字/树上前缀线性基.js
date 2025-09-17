@@ -30,7 +30,7 @@ sd.init(() => {
         sets.push(set);
     }
     tree.forEachNode((node, i) => {
-        const box = sd.Aside(node, new sd.Box(svg, new sd.Mathjax(svg, `L_{${+i + 1}}`)).width(30).height(15), "tc", 10);
+        const box = sd.Aside(node, new sd.Box(svg, new sd.Math(svg, `L_{${+i + 1}}`)).width(30).height(15), "tc", 10);
         box.onClick(() => {
             sd.inter(async () => {
                 const links = [];
@@ -53,7 +53,7 @@ sd.init(() => {
 sd.main(async () => {});
 
 function math(v) {
-    return new sd.Mathjax(svg, castBinToStr(v));
+    return new sd.Math(svg, castBinToStr(v));
 }
 
 function castBinToStr(v) {

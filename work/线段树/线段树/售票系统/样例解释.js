@@ -7,7 +7,7 @@ const C = sd.color();
 sd.init(() => {
     const t = new sd.HorizontalValueTree(svg).x(100).y(100).layerWidth(100);
     function makeVertex(i) {
-        return new sd.Vertex(svg).rate(1.6).value(new sd.Mathjax(svg, `C_{${i}}`));
+        return new sd.Vertex(svg).rate(1.6).value(new sd.Math(svg, `C_{${i}}`));
     }
     t.root(1, makeVertex(1));
     for (let i = 2; i <= 8; i++) {

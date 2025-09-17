@@ -8,7 +8,7 @@ export async function Gauss(grid, A, n, m) {
     const X = sd.make1d(n + 5, { u: 0, d: 1 });
     for (let i = 1; i <= m; i++) {
         for (let j = 1; j <= n + 1; j++) {
-            grid.element(i, j).value(new sd.Mathjax(svg).math(String(A[i][j])), R.centerOnly());
+            grid.element(i, j).value(new sd.Math(svg).math(String(A[i][j])), R.centerOnly());
             A[i][j] = { u: A[i][j], d: 1 };
         }
     }

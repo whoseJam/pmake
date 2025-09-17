@@ -5,7 +5,7 @@ const C = sd.color();
 const R = sd.rule();
 const arr = new sd.Array(svg);
 const kDepth = sd.rand(33, 80);
-const ans = new sd.Mathjax(svg, `${kDepth}=`);
+const ans = new sd.Math(svg, `${kDepth}=`);
 const p = sd.Pointer(arr, " ", "t", 10, 30);
 
 sd.init(() => {
