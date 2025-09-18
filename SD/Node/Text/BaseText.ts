@@ -1,6 +1,4 @@
-console.log("Import BaseText SDNode----");
 import { SDNode } from "@/Node/SDNode";
-console.log("Import BaseText SDSVGNode----");
 import { SDSVGNode } from "@/Node/SDSVGNode";
 import { TextMapping } from "@/Node/Text/TextEngine";
 import { RenderNode } from "@/Renderer/RenderNode";

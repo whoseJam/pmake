@@ -207,7 +207,7 @@ export async function pause(frameType = 0): Promise<void> {
         }
     }
     A.firstTick();
-    // A.debug();
+    A.debug();
     A.trigger();
     switch (frameType) {
         case FIRST_INTER_STAGE:

@@ -1,12 +1,10 @@
 import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
 import { Window } from "@/Animate/Window";
-import { Dom } from "@/Dom/Dom";
 import { SDNode, SDNodePrivateParams } from "@/Node/SDNode";
 import { BaseText, BaseTextConfiguration, ConfigDictionary } from "@/Node/Text/BaseText";
 import { TextEngine, TextMapping, Transforming } from "@/Node/Text/TextEngine";
 import { RenderNode } from "@/Renderer/RenderNode";
-import { inter } from "@/sd";
 import { Check } from "@/Utility/Check";
 import { Color as C, SDColor } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
@@ -164,18 +162,11 @@ export class Math extends BaseText {
         });
         return this;
     }
-    __cloneMath() {
-        const math = this.vars.math.clone();
-        math.setAttribute("x", this.vars.x);
-        math.setAttribute("y", this.vars.y);
-        math.setAttribute("font-size", this.vars.fontSize);
-        math.setAttribute("fill", this.vars.fill);
-        math.setAttribute("stroke", this.vars.stroke);
-        return math;
-    }
     __subtextAttribute(subtext_: string | number, color: SDColor, operator: number | "all" | "first" | "last") {
         const subtext = String(subtext_);
-        const math = cloneMathRenderNode(this.vars.math);
+        const math = this.__cloneMathRenderNode();
+        console.log("math=", math);
+
         const matched = TextEngine.findSubtextInMath(new MathConfiguration({ attr: math }), subtext);
         const update = match => {
             if (!match) return;
@@ -205,6 +196,13 @@ export class Math extends BaseText {
         this._.attr = math;
         this.vars.math = math;
         return this;
+    }
+    __cloneMathRenderNode() {
+        const math = RenderNode.cloneMathRenderNode(this.vars.math);
+        math.setAttribute("x", this.x());
+        math.setAttribute("y", this.y());
+        math.setAttribute("font-size", this.fontSize());
+        return math;
     }
     __flushAll() {
         if (this._.textFrame !== Window.CURRENT_FRAME) {
@@ -241,6 +239,13 @@ export class Math extends BaseText {
         for (const transforming of this._.transformings) if (transforming.l === l && transforming.r === r) return transforming;
         return undefined;
     }
+    __updateMathRenderNode(math: RenderNode, args: any) {
+        if ("x" in args) math.setAttribute("x", args.x);
+        if ("y" in args) math.setAttribute("y", args.y);
+        if ("size" in args) math.setAttribute("font-size", args.size);
+        if ("fill" in args) math.setAttribute("fill", args.fill);
+        if ("stroke" in args) math.setAttribute("stroke", args.stroke);
+    }
     __updateSourceMathConfiguration(args: any) {
         this.__flushAll();
         const l = this.delay();
@@ -248,6 +253,8 @@ export class Math extends BaseText {
             ...(args || {}),
             ...this._.configurations[l],
         };
+        const attr = this._.configurations[l]?.attr;
+        if (attr) this.__updateMathRenderNode(attr, args);
     }
     __updateTargetMathConfiguration(args: any) {
         this.__flushAll();
@@ -256,18 +263,14 @@ export class Math extends BaseText {
             ...this._.configurations[r],
             ...(args || {}),
         };
+        const attr = this._.configurations[r]?.attr;
+        if (attr) this.__updateMathRenderNode(attr, args);
     }
     __updateTransforming(args: any) {
         const transforming = this.__getTransforming();
         if (!transforming) return;
-        transforming.source = {
-            ...transforming.source,
-            ...(args.source || {}),
-        };
-        transforming.target = {
-            ...transforming.target,
-            ...(args.target || {}),
-        };
+        transforming.source.merge(args.source);
+        transforming.target.merge(args.target);
         transforming.mapping = args.mapping === undefined ? transforming.mapping : TextEngine.processMapping(args.mapping);
         transforming.auto = args.auto === undefined ? transforming.auto : args.auto;
         transforming.color = args.color === undefined ? transforming.color : args.color;
@@ -301,9 +304,4 @@ function createMathRenderNode(targetNode: Math, text: string) {
     element.setAttribute("y", String(targetNode.y()));
     element.setAttribute("font-size", String(targetNode.fontSize()));
     return RenderNode.createMathRenderNode(targetNode, targetNode.layer(), element);
-}
-
-function cloneMathRenderNode(math: RenderNode) {
-    const element = Dom.deepClone(math.element());
-    return RenderNode.createMathRenderNode(math.targetNode, math.targetNode.layer(), element);
 }

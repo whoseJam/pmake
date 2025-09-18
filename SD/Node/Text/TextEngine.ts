@@ -25,7 +25,7 @@ type Configuration = TextConfiguration | MathConfiguration;
 type MatchingMachineStatus = "source" | "target";
 type TransformingPathStatus = "normal" | "opacity:0->1" | "opacity:1->0";
 type MappingStringLocation = { i: number; subtext: string };
-type MappingOtherLocation = { object: any; subtext: string };
+type MappingOtherLocation = { object: Math_ | Text; subtext: string };
 type MappingLocation = MappingStringLocation | MappingOtherLocation | string | TextType;
 type MappingItem = {
     source: MappingLocation;
@@ -60,13 +60,13 @@ class MathMatch extends Match {
     element: EXSVGElement;
     first: number;
     last: number;
-    constructor(element: EXSVGElement, first: number, last: number, matching: MathMatchingMachine, text: RenderNode, all: boolean) {
+    constructor(element: EXSVGElement, first: number, last: number, matching: MatchingMachine, text: RenderNode, all: boolean) {
         if (element) {
             const start = element.children[first].range[0];
             const length = element.children[last].range[1] - start;
             const paths = [];
             for (let i = start; i < start + length; i++)
-                if (matching.pathDeleted[i]) paths.push(matching.paths[i].clone());
+                if (matching.deleted(i)) paths.push(matching.paths[i].clone());
                 else paths.push(matching.paths[i]);
             super(start, length, paths, text, all);
         } else super(0, -1, [], text, all);
@@ -79,18 +79,16 @@ class MathMatch extends Match {
 class TransformingPath {
     d: string;
     transform: SVGMatrix;
-    character: string;
     fill: string;
     stroke: string;
     lastFill: string;
     lastStroke: string;
     status: TransformingPathStatus;
     path: SVGPathElement;
-    ref: any;
-    constructor(d: string, transform: SVGMatrix, character?: string, fill?: string, stroke?: string, lastFill?: string, lastStroke?: string, ref?: any) {
+    ref: EXSVGElement | SDColor;
+    constructor(d: string, transform: SVGMatrix, fill?: string, stroke?: string, lastFill?: string, lastStroke?: string, ref: EXSVGElement | SDColor) {
         this.d = d;
         this.transform = transform;
-        this.character = character;
         this.fill = fill;
         this.stroke = stroke;
         this.lastFill = lastFill;
@@ -98,16 +96,18 @@ class TransformingPath {
         this.status = "normal";
         this.ref = ref;
     }
-    cloneVisionPropertyFrom(path: TransformingPath) {
-        this.character = path.character;
-        this.fill = path.fill;
-        this.stroke = path.stroke;
-        this.lastFill = path.lastFill;
-        this.lastStroke = path.lastStroke;
-        return this;
+    setFill(fill: string) {
+        this.fill = fill;
+        if (this.ref instanceof SVGElement) this.ref.setAttribute("fill", fill);
+        else this.ref.fill = fill;
+    }
+    setStroke(stroke: string) {
+        this.stroke = stroke;
+        if (this.ref instanceof SVGElement) this.ref.setAttribute("stroke", stroke);
+        else this.ref.stroke = stroke;
     }
     clone() {
-        return new TransformingPath(this.d, this.transform, this.character, this.fill, this.stroke, this.lastFill, this.lastStroke, this.ref);
+        return new TransformingPath(this.d, this.transform, this.fill, this.stroke, this.lastFill, this.lastStroke, this.ref);
     }
     init(group: RenderNode, config: any) {
         if (!this.path) this.path = Dom.createSVGElement("path") as SVGPathElement;
@@ -147,7 +147,7 @@ class TransformingPathGroup {
             const gap = Math.floor(this.source.length / count);
             if (this.source.length === 0) {
                 for (let i = this.target.length - 1; i >= 0; i--) {
-                    const path = new TransformingPath(this.target[i].d, this.target[i].transform).cloneVisionPropertyFrom(this.target[i]);
+                    const path = this.target[i].clone();
                     path.status = "opacity:0->1";
                     source.push(path);
                 }
@@ -155,7 +155,7 @@ class TransformingPathGroup {
                 let current = 0;
                 for (let i = this.source.length - 1; i >= 0; i--) {
                     if ((this.source.length - 1 - i) % gap === 0 && current < count) {
-                        const path = new TransformingPath(this.source[i].d, this.source[i].transform).cloneVisionPropertyFrom(this.source[i]);
+                        const path = this.source[i].clone();
                         source.push(path);
                         current++;
                     }
@@ -166,7 +166,7 @@ class TransformingPathGroup {
                 const copy = Math.ceil(count / this.source.length);
                 for (let i = this.source.length - 1; i >= 0; i--) {
                     for (let j = 1; j <= copy && current < count; j++) {
-                        const path = new TransformingPath(this.source[i].d, this.source[i].transform).cloneVisionPropertyFrom(this.source[i]);
+                        const path = this.source[i].clone();
                         source.push(path);
                         current++;
                     }
@@ -189,7 +189,7 @@ class TransformingPathGroup {
                 let current = 0;
                 for (let i = this.target.length - 1; i >= 0; i--) {
                     if ((this.target.length - 1 - i) % gap === 0 && current < count) {
-                        const path = new TransformingPath(this.target[i].d, this.target[i].transform).cloneVisionPropertyFrom(this.target[i]);
+                        const path = this.target[i].clone();
                         target.push(path);
                         current++;
                     }
@@ -200,7 +200,7 @@ class TransformingPathGroup {
                 const copy = Math.ceil(count / this.target.length);
                 for (let i = this.target.length - 1; i >= 0; i--) {
                     for (let j = 1; j <= copy && current < count; j++) {
-                        const path = new TransformingPath(this.target[i].d, this.target[i].transform).cloneVisionPropertyFrom(this.target[i]);
+                        const path = this.target[i].clone();
                         target.push(path);
                         current++;
                     }
@@ -259,36 +259,62 @@ class MatchingMachine {
     text: Configuration;
     paths: Array<TransformingPath>;
     status: MatchingMachineStatus;
+    pathDeleted: Array<boolean>;
     constructor(text: Configuration, status: MatchingMachineStatus) {
         this.text = text;
         this.paths = TextEngine.getPaths(text, status);
         this.status = status;
+        this.pathDeleted = make1d(this.paths.length, false);
     }
-    match(subtext: MappingLocation): TextMatch | MathMatch {
-        return undefined;
-    }
-    remove(matched: Match): void {
+    match(subtext: MappingLocation): Match {
         return undefined;
     }
     deleted(i: number): boolean {
-        return false;
+        return this.pathDeleted[i];
     }
     remain(): Array<TransformingPath> {
         return this.paths.filter((_, i) => !this.deleted(i));
     }
-    fill(matched: Match, fill: string | undefined) {}
-    stroke(matched: Match, stroke: string | undefined) {}
+    fill(matched: Match, fill: string | undefined) {
+        if (!fill) return;
+        for (let i = matched.start; i < matched.start + matched.length; i++) {
+            if (!this.paths[i]) continue;
+            this.paths[i].setFill(fill);
+        }
+    }
+    stroke(matched: Match, stroke: string | undefined) {
+        if (!stroke) return;
+        for (let i = matched.start; i < matched.start + matched.length; i++) {
+            if (!this.paths[i]) continue;
+            this.paths[i].setStroke(stroke);
+        }
+    }
     fillRemain(fill?: string | undefined): string {
-        return undefined;
+        if (arguments.length === 0) return sameAttribute(this.remain(), "fill");
+        if (!fill) return;
+        this.pathDeleted.forEach((deleted, i) => {
+            if (deleted || !this.paths[i]) return;
+            this.paths[i].setFill(fill);
+        });
     }
     strokeRemain(stroke?: string | undefined): string {
-        return undefined;
+        if (arguments.length === 0) return sameAttribute(this.remain(), "stroke");
+        if (!stroke) return;
+        this.pathDeleted.forEach((deleted, i) => {
+            if (deleted || !this.paths[i]) return;
+            this.paths[i].setFill(stroke);
+        });
     }
-    clear() {}
+    clear() {
+        this.pathDeleted = make1d(this.paths.length, false);
+    }
+    remove(matched: Match): void {
+        if (matched.text !== this.text) return;
+        for (let i = matched.start; i < matched.start + matched.length; i++) this.pathDeleted[i] = true;
+    }
 }
 
 class TextMatchingMachine extends MatchingMachine {
-    text: TextConfiguration;
     pattern: string;
     textDeleted: Array<boolean>;
     constructor(text: TextConfiguration, status: MatchingMachineStatus) {
@@ -316,74 +342,34 @@ class TextMatchingMachine extends MatchingMachine {
         if (typeof subtext === "string") return this.stringMatch(subtext);
         const subtext_ = subtext as MappingStringLocation;
         if (subtext_.i !== undefined) return this.stringMatch(subtext_.subtext, subtext_.i);
-        if (subtext instanceof Text) return new TextMatch(0, subtext.text().length, TextEngine.getPaths(subtext.__getConfiguration()), subtext, true);
         if (subtext instanceof Math_) return undefined;
+        if (subtext instanceof Text) return new TextMatch(0, subtext.text().length, TextEngine.getPaths(subtext.__getConfiguration()), subtext, true);
         const subtext__ = subtext as MappingOtherLocation;
-        const tempMatching = new TextMatchingMachine(subtext__.object, this.status);
+        const text = subtext__.object;
+        if (text instanceof Math_) return undefined;
+        const tempMatching = new TextMatchingMachine(text.__getConfiguration(), this.status);
         return tempMatching.match(subtext__.subtext);
-    }
-    remove(matched_: Match): void {
-        const matched = matched_ as TextMatch;
-        if (matched.text !== this.text) return;
-        for (let i = matched.start; i < matched.start + matched.length; i++) this.textDeleted[i] = true;
-    }
-    deleted(i: number): boolean {
-        return this.textDeleted[i];
-    }
-    fill(matched_: Match, fill: string | undefined) {
-        if (!fill) return;
-        const matched = matched_ as TextMatch;
-        for (let i = matched.start; i < matched.start + matched.length; i++) {
-            if (!this.paths[i]) continue;
-            this.paths[i].fill = fill;
-            this.paths[i].ref[i].fill = fill;
-        }
-    }
-    stroke(matched_: Match, stroke: string | undefined) {
-        if (!stroke) return;
-        const matched = matched_ as MathMatch;
-        for (let i = matched.start; i < matched.start + matched.length; i++) {
-            if (!this.paths[i]) continue;
-            this.paths[i].stroke = stroke;
-            this.paths[i].ref[i].stroke = stroke;
-        }
-    }
-    fillRemain(fill?: string | undefined) {
-        if (arguments.length === 0) return sameAttribute(this.remain(), "fill");
-        if (!fill) return;
-        this.textDeleted.forEach((deleted, i) => {
-            if (deleted || !this.paths[i]) return;
-            this.paths[i].fill = fill;
-            this.paths[i].ref[i].fill = fill;
-        });
-    }
-    strokeRemain(stroke?: string | undefined) {
-        if (arguments.length === 0) return sameAttribute(this.remain(), "stroke");
-        if (!stroke) return;
-        this.textDeleted.forEach((deleted, i) => {
-            if (deleted || !this.paths[i]) return;
-            this.paths[i].stroke = stroke;
-            this.paths[i].ref[i].stroke = stroke;
-        });
     }
 }
 
 class MathMatchingMachine extends MatchingMachine {
-    text: MathConfiguration;
     status: MatchingMachineStatus;
     pattern: RenderNode;
     pathDeleted: Array<boolean>;
     elementDeleted: WeakSet<Element>;
     constructor(text: MathConfiguration, status: MatchingMachineStatus) {
+        console.log("Create Math Matching Machine, text=", text);
         super(text, status);
         this.status = status;
         this.pattern = text.attr;
-        this.pathDeleted = make1d(this.paths.length, false);
         this.elementDeleted = new WeakSet();
     }
     stringMatch(subtext: string, idx: number = 0): MathMatch {
-        if (subtext.trim() === "") return new MathMatch(undefined, 0, -1, this, this.text.attr, false);
-        if (arguments.length === 1) return TextEngine.findFirstSubtextInMath(this.text, subtext, this);
+        if (subtext.trim() === "") return new MathMatch(undefined, 0, -1, this, this.text.attr as RenderNode, false);
+        if (arguments.length === 1) {
+            console.log("this.text=", this.text);
+            return TextEngine.findFirstSubtextInMath(this.text, subtext, this);
+        }
         const matches = TextEngine.findSubtextInMath(this.text, subtext, idx + 1, this, false);
         if (matches.length <= idx) return undefined;
         return matches[idx];
@@ -404,57 +390,20 @@ class MathMatchingMachine extends MatchingMachine {
         const tempMatching = new MathMatchingMachine(subtext__.object, this.status);
         return tempMatching.match(subtext__.subtext);
     }
-    remove(matched_: Match): void {
-        const matched = matched_ as MathMatch;
+    remove(matched: Match): void {
+        super.remove(matched);
         if (matched.text !== this.text) return;
-        const element = matched.element;
+        const matched_ = matched as MathMatch;
+        const element = matched_.element;
         const dfs = (current: EXSVGElement) => {
             if (this.elementDeleted.has(current)) return;
             this.elementDeleted.add(current);
             for (let i = 0; i < current.children.length; i++) dfs(current.children[i]);
         };
-        for (let i = matched.first; i <= matched.last; i++) dfs(element.children[i]);
-        for (let i = matched.start; i < matched.start + matched.length; i++) this.pathDeleted[i] = true;
-    }
-    deleted(i: number): boolean {
-        return this.pathDeleted[i];
-    }
-    fill(matched_: Match, fill: string | undefined) {
-        if (!fill) return;
-        const matched = matched_ as MathMatch;
-        for (let i = matched.start; i < matched.start + matched.length; i++) {
-            this.paths[i].fill = fill;
-            this.paths[i].ref.setAttribute("fill", fill);
-        }
-    }
-    stroke(matched_: Match, stroke: string | undefined) {
-        if (!stroke) return;
-        const matched = matched_ as MathMatch;
-        for (let i = matched.start; i < matched.start + matched.length; i++) {
-            this.paths[i].stroke = stroke;
-            this.paths[i].ref.setAttribute("stroke", stroke);
-        }
-    }
-    fillRemain(fill?: string | undefined) {
-        if (arguments.length === 0) return sameAttribute(this.remain(), "fill");
-        if (!fill) return;
-        this.pathDeleted.forEach((deleted, i) => {
-            if (deleted) return;
-            this.paths[i].fill = fill;
-            this.paths[i].ref.setAttribute("fill", fill);
-        });
-    }
-    strokeRemain(stroke?: string | undefined) {
-        if (arguments.length === 0) return sameAttribute(this.remain(), "stroke");
-        if (!stroke) return;
-        this.pathDeleted.forEach((deleted, i) => {
-            if (deleted) return;
-            this.paths[i].stroke = stroke;
-            this.paths[i].ref.setAttribute("stroke", stroke);
-        });
+        for (let i = matched_.first; i <= matched_.last; i++) dfs(element.children[i]);
     }
     clear() {
-        this.pathDeleted = make1d(this.paths.length, false);
+        super.clear();
         this.elementDeleted = new WeakSet();
     }
 }
@@ -502,6 +451,8 @@ export class Transforming {
     play() {
         this.groups = [];
         this.groupKeys = [];
+        console.log("this.source=", this.source);
+        console.log("this.target=", this.target);
         const sourceMatching = createMatchingMachine(this.source, "source");
         const targetMatching = createMatchingMachine(this.target, "target");
         for (const [i, mappingItem] of this.mapping.entries()) {
@@ -537,7 +488,6 @@ export class Transforming {
     onCreateGroup() {
         const transforming = this;
         return function (action: Action) {
-            console.log("action=", action);
             transforming.groups.forEach(group => {
                 group.play(action.l, action.r);
             });
@@ -592,7 +542,6 @@ function processMapping(mapping: TextMapping<TextType>): Mapping {
             });
         }
     }
-    console.log("after process, result=", result, "origin=", mapping);
     return result;
 }
 
@@ -710,7 +659,7 @@ export class TextEngine {
         }
         return paths;
     }
-    static getMathPaths(text: MathConfiguration, status: MatchingMachineStatus): Array<TransformingPath> {
+    static getMathPaths(text: MathConfiguration): Array<TransformingPath> {
         const element = text.attr;
         const defs: SVGDefsElement = element.element().children[0] as SVGDefsElement;
         const root: EXSVGElement = element.element().children[1] as EXSVGElement;
@@ -726,19 +675,18 @@ export class TextEngine {
             const h = bbox.height * (vh / ibbox.height);
             return new DOMMatrix([w / vw, 0, 0, h / vh, x - (w / vw) * vx, y - (h / vh) * vy]);
         };
-        const extract = (current: EXSVGElement, defs: SVGDefsElement): [string, string] => {
+        const extract = (current: EXSVGElement): string => {
             if (Dom.tagName(current) === "rect") {
                 const x = +current.getAttribute("x");
                 const y = +current.getAttribute("y");
                 const mx = +current.getAttribute("width") + x;
                 const my = +current.getAttribute("height") + y;
-                const d = new PathPen().MoveTo(x, y).LinkTo(mx, y).LinkTo(mx, my).LinkTo(x, my).LinkTo(x, y).toString();
-                return [d, undefined];
+                return new PathPen().MoveTo(x, y).LinkTo(mx, y).LinkTo(mx, my).LinkTo(x, my).LinkTo(x, y).toString();
             } else {
                 const href = current.getAttribute("xlink:href");
                 const data = current.getAttribute("data-c");
                 const ssrc = defs.querySelector(href);
-                return [ssrc.getAttribute("d"), data];
+                return ssrc.getAttribute("d");
             }
         };
         const dfs = (current: EXSVGElement, matrix: DOMMatrix, fill: string, stroke: string) => {
@@ -750,15 +698,16 @@ export class TextEngine {
             if (Dom.tagName(current) === "defs") return;
             if (Dom.tagName(current) === "path") return;
             if (Dom.tagName(current) === "rect" || Dom.tagName(current) === "use") {
-                const [d, character] = extract(current, defs);
-                const p = new TransformingPath(d, matrix, character, fill, stroke, fill, stroke, current);
+                const d = extract(current);
+                const p = new TransformingPath(d, matrix, fill, stroke, fill, stroke, current);
                 paths.push(p);
             }
             for (const child of current.children) dfs(child, matrix, fill, stroke);
             const r = paths.length;
             current.range = [l, r];
         };
-        dfs(root, initialMatrix(), text.fill, text.stroke);
+        dfs(root, initialMatrix(), "default", "default");
+        console.log("math=", text.text, "pathes=", paths);
         return paths;
     }
     static processMapping(mapping: any) {
@@ -784,8 +733,8 @@ export class TextEngine {
         root.setAttribute("transform", transform);
         math.__remove();
     }
-    static findSubtextInMath(math: MathConfiguration, subtext: string, limit = Infinity, matching?: MathMatchingMachine, skip: boolean = true): Array<MathMatch> {
-        if (!matching) matching = new MathMatchingMachine(math, "source");
+    static findSubtextInMath(math: RenderNode, subtext: string, limit = Infinity, matching?: MathMatchingMachine, skip: boolean = true): Array<MathMatch> {
+        if (!matching) matching = new MathMatchingMachine(new MathConfiguration({ attr: math }), "source");
         // @ts-ignore
         const mml = new DOMParser().parseFromString(MathJax.tex2mml(String(subtext)), "text/xml").documentElement;
         function nodeContentSVG(s: SVGElement, start: number, length: number) {
@@ -898,12 +847,12 @@ export class TextEngine {
                 if (matched.length >= limit) return;
             }
         }
-        walk(math.attr.element().children[1] as SVGElement, mml);
+        walk(math.element().children[1] as SVGElement, mml);
         return matched.map(match => {
-            return new MathMatch(match.element, match.start, match.start + match.length - 1, matching, math.attr, false);
+            return new MathMatch(match.element, match.start, match.start + match.length - 1, matching, math, false);
         });
     }
-    static findFirstSubtextInMath(math: MathConfiguration, subtext: string, matching?: MathMatchingMachine) {
+    static findFirstSubtextInMath(math: RenderNode, subtext: string, matching?: MathMatchingMachine) {
         return this.findSubtextInMath(math, subtext, 1, matching)[0];
     }
     static setAttributeInSubtree(root: Element, key: string, value: string) {
@@ -912,7 +861,7 @@ export class TextEngine {
 }
 
 function setAttributeInSubtree(root: Element, key: string, value: string) {
-    root.setAttribute(key, value);
+    if (root.children.length === 0) root.setAttribute(key, value);
     for (let i = 0; i < root.children.length; i++) setAttributeInSubtree(root.children[i], key, value);
 }
 

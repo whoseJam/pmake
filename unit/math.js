@@ -4,7 +4,7 @@ const svg = sd.svg();
 const C = sd.color();
 const T = 500;
 
-sd.main(TestTrasnformWithPosition);
+sd.main(TestSubtextColorWithTransform);
 
 async function TestMatchNestedSum() {
     const text = new sd.Math(svg, "\\sum_{i=1}^3a_i\\sum_{j=1}^3b_j").x(100).y(100);
@@ -302,6 +302,85 @@ async function Test1() {
     math.startAnimate().text("2a").color(C.textBlue).endAnimate();
     await sd.pause();
     math.startAnimate().text("3q").fontSize(180).endAnimate();
+}
+
+async function TestSubtextColorWithTransform() {
+    const text1 = new sd.Math(svg, "hello").x(100).y(100).fontSize(50);
+    const text2 = new sd.Math(svg, "hello").x(100).y(200).fontSize(50);
+    const text3 = new sd.Math(svg, "hello").x(100).y(300).fontSize(50).color(C.textBlue);
+    const text4 = new sd.Math(svg, "hello").x(100).y(400).fontSize(50).subtextColor("ll", C.textBlue);
+    const text5 = new sd.Math(svg, "hello").x(100).y(500).fontSize(50);
+    await sd.pause();
+    text1.startAnimate().text("world", { ll: "rl" }).subtextColor("rl", C.textBlue).endAnimate();
+    text2
+        .startAnimate()
+        .text("world", [[text3, "d"]])
+        .subtextColor("d", C.textBlue)
+        .endAnimate();
+    text4.startAnimate().text("world", { ll: "l" }).endAnimate();
+    text5.startAnimate().subtextColor("ll", C.textBlue).text("world", { ll: "l" }).endAnimate();
+}
+
+async function TestTransformWithSubtextColor() {
+    const text1 = new sd.Math(svg, "hello").x(100).y(100).fontSize(50);
+    const text2 = new sd.Math(svg, "hello").x(100).y(200).fontSize(50);
+    const text3 = new sd.Math(svg, "hello").x(100).y(300).fontSize(50);
+    await sd.pause();
+    text1.startAnimate().text("world").endAnimate();
+    text2.startAnimate().text("world").subtextColor("orl", C.red).endAnimate();
+    text3.startAnimate().subtextColor("ll", C.red).endAnimate();
+}
+
+async function TestSubtextColorWithFontSize() {
+    const text1 = new sd.Math(svg, "hello").x(100).y(100).fontSize(50);
+    const text2 = new sd.Math(svg, "hello").x(100).y(200).fontSize(50);
+    const text3 = new sd.Math(svg, "hello").x(100).y(300).fontSize(50);
+    await sd.pause();
+    text1.startAnimate().fontSize(80).endAnimate();
+    text2.startAnimate().subtextColor("ll", C.red).fontSize(80).endAnimate();
+    text3.startAnimate().fontSize(80).subtextColor("ll", C.red).endAnimate();
+}
+
+async function TestSubtextColorWithPosition() {
+    const text1 = new sd.Math(svg, "hello").x(100).y(100).fontSize(50);
+    const text2 = new sd.Math(svg, "hello").x(100).y(200).fontSize(50);
+    const text3 = new sd.Math(svg, "hello").x(100).y(300).fontSize(50);
+    await sd.pause();
+    text1.startAnimate().x(200).endAnimate();
+    text2.startAnimate().subtextColor("ll", C.red).x(200).endAnimate();
+    text3.startAnimate().x(200).subtextColor("ll", C.red).endAnimate();
+}
+
+async function TestSubtextColor() {
+    const text = new sd.Math(svg).fontSize(100).text("abcabcabc");
+    await sd.pause();
+    text.startAnimate().subtextColorAll("bc", C.red).endAnimate();
+    await sd.pause();
+    text.startAnimate().subtextColorAll("c", C.textBlue).endAnimate();
+    await sd.pause();
+    text.startAnimate().fill(C.purple).endAnimate();
+    await sd.pause();
+    text.startAnimate().fill(C.grey).endAnimate();
+}
+
+async function TestTransformWithFontSize() {
+    const text1 = new sd.Math(svg).text("hello").x(100).y(100).fontSize(50);
+    const text2 = new sd.Math(svg).text("world").x(100).y(200).fontSize(50);
+    const text3 = new sd.Math(svg).text("world").x(100).y(300).fontSize(50);
+    await sd.pause();
+    text1.startAnimate().fontSize(80).endAnimate();
+    text2.startAnimate().fontSize(80).text("hello").endAnimate();
+    text3.startAnimate().text("hello").fontSize(80).endAnimate();
+}
+
+async function TestTransformWithColor() {
+    const math1 = new sd.Math(svg).text("hello").x(100).y(100).fontSize(50);
+    const math2 = new sd.Math(svg).text("world").x(100).y(200).fontSize(50);
+    const math3 = new sd.Math(svg).text("world").x(100).y(300).fontSize(50);
+    await sd.pause();
+    math1.startAnimate().fill(C.red).endAnimate();
+    math2.startAnimate().fill(C.red).text("hello").endAnimate();
+    math3.startAnimate().text("hello").fill(C.red).endAnimate();
 }
 
 async function TestTrasnformWithPosition() {

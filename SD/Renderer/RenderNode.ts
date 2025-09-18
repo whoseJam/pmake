@@ -66,7 +66,7 @@ export class RenderNode {
         this.label = args.label;
         this.backingElement = args.element;
         if (!args.append) return;
-        if (!args.targetLayer) ErrorLauncher.whatHappened();
+        if (!args.targetLayer) return;
         if (!args.action) {
             this.targetLayer = args.targetLayer;
             args.targetLayer.__append(this);
@@ -180,6 +180,24 @@ export class RenderNode {
         });
         TextEngine.adjustMath(math);
         return math;
+    }
+    /**
+     * The method will clone a math render node. The result math render node will not be appended to
+     * the layer instantly. It will be appended by the blank node interpolation defined on 'math'.
+     * @param math - The math render node to be cloned.
+     */
+    static cloneMathRenderNode(math: RenderNode) {
+        console.log("clone element=", math.element());
+        const element = Dom.deepClone(math.element());
+        console.log("after clone element=", element);
+        const math_ = new RenderNode({
+            targetNode: math.targetNode,
+            targetLayer: math.targetLayer,
+            element,
+            append: false,
+            action: false,
+        });
+        return math_;
     }
     static createRenderNode(targetNode: SDNode, targetLayer: RenderNode, label: string) {
         return new RenderNode({

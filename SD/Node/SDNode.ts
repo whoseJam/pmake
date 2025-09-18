@@ -75,8 +75,6 @@ export class SDNode {
         const targetLayer = target instanceof SDNode ? target.layer() : target;
         this._.layer = RenderNode.createRenderNode(this, targetLayer, "g");
 
-        console.log("this._.layer=", this._.layer, "this=", this);
-
         this.vars = reactive({
             opacity: 1,
         });
@@ -197,7 +195,6 @@ export class SDNode {
             return this.startAnimate(object.delay(), object.delay() + object.duration());
         }
         [this._.start, this._.end] = arguments;
-        console.log("start animate this=", this, "l=", this._.start, "r=", this._.end);
         this.__forEachChild(child => child.startAnimate(this._.start, this._.end));
         return this;
     }
