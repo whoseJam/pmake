@@ -3,13 +3,12 @@ import { Interp } from "@/Animate/Interp";
 import { Window } from "@/Animate/Window";
 import { SDNode, SDNodePrivateParams } from "@/Node/SDNode";
 import { BaseText, BaseTextConfiguration, ConfigDictionary } from "@/Node/Text/BaseText";
-import { TextEngine, TextMapping } from "@/Node/Text/TextEngine";
+import { TextEngine, TextMapping, Transforming } from "@/Node/Text/TextEngine";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
 import { SDColor } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Factory } from "@/Utility/Factory";
-import { Transforming } from "@/Node/Text/TextEngine";
 import { make1d } from "@/Utility/Util";
 
 export class TextConfiguration extends BaseTextConfiguration {
@@ -40,7 +39,6 @@ export interface TextPrivateParams extends SDNodePrivateParams {
 }
 
 export class Text extends BaseText {
-    _: TextPrivateParams;
     constructor(target: SDNode | RenderNode, text = "") {
         super(target);
 
@@ -227,6 +225,7 @@ export class Text extends BaseText {
     }
     __getConfiguration(): TextConfiguration {
         return new TextConfiguration({
+            node: this,
             text: this.text(),
             size: this.fontSize(),
             family: this.fontFamily(),

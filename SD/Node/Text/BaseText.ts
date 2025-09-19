@@ -18,6 +18,7 @@ const BASE_TEXT_ATTRIBUTES = {
 export type ConfigDictionary = { [key: string]: any };
 
 export class BaseTextConfiguration {
+    node: BaseText;
     text: string;
     size: number;
     fill: string;
@@ -25,6 +26,7 @@ export class BaseTextConfiguration {
     x: number;
     y: number;
     constructor(args: ConfigDictionary) {
+        this.node = args.node;
         this.text = args.text;
         this.size = args.size;
         this.fill = args.fill;
@@ -34,6 +36,7 @@ export class BaseTextConfiguration {
     }
     merge(args: ConfigDictionary) {
         if (!args) return this;
+        this.node = args.node || this.node;
         this.text = args.text || this.text;
         this.size = args.size || this.size;
         this.fill = args.fill || this.fill;

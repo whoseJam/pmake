@@ -3,7 +3,7 @@ import { Interp } from "@/Animate/Interp";
 import { Window } from "@/Animate/Window";
 import { SDNode, SDNodePrivateParams } from "@/Node/SDNode";
 import { BaseText, BaseTextConfiguration, ConfigDictionary } from "@/Node/Text/BaseText";
-import { TextEngine, TextMapping, Transforming } from "@/Node/Text/TextEngine";
+import { MathMatchingMachine, TextEngine, TextMapping, Transforming } from "@/Node/Text/TextEngine";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
 import { Color as C, SDColor } from "@/Utility/Color";
@@ -132,7 +132,7 @@ export class Math extends BaseText {
         return this;
     }
     text(): string;
-    text(text: string | number, mapping?: TextMapping<Math>, auto?: boolean);
+    text(text: string | number, mapping?: TextMapping<Math>, auto?: boolean): this;
     text(text?: string | number, mapping = [], auto = true) {
         if (arguments.length === 0) return this.vars.text;
         const text_ = String(text);
@@ -165,9 +165,8 @@ export class Math extends BaseText {
     __subtextAttribute(subtext_: string | number, color: SDColor, operator: number | "all" | "first" | "last") {
         const subtext = String(subtext_);
         const math = this.__cloneMathRenderNode();
-        console.log("math=", math);
-
-        const matched = TextEngine.findSubtextInMath(new MathConfiguration({ attr: math }), subtext);
+        const configuration = this.__getConfiguration().merge({ attr: math });
+        const matched = TextEngine.findSubtextInMath(configuration, subtext, Infinity, new MathMatchingMachine(configuration));
         const update = match => {
             if (!match) return;
             const { element, first, last } = match;
@@ -213,13 +212,14 @@ export class Math extends BaseText {
     }
     __getConfiguration(): MathConfiguration {
         return new MathConfiguration({
+            node: this,
             text: this.text(),
             size: this.fontSize(),
             fill: this.fill(),
             stroke: this.stroke(),
             x: this.x(),
             y: this.y(),
-            attr: this._.math,
+            attr: this.vars.math,
         });
     }
     __getSourceConfiguration(): MathConfiguration {
