@@ -24,30 +24,28 @@ export type SDBox = {
     height: number;
 };
 
-export interface SDNodePrivateParams {
-    frame: number;
-    start: number;
-    end: number;
-    layer: RenderNode;
-    layers: { [key: string]: RenderNode };
-    parent: SDNode;
-    children: { [key: string]: SDNode };
-    onClick: EventListener;
-    onDblClick: EventListener;
-    onChange: EventListener;
-    onInput: EventListener;
-    clickTimeout: NodeJS.Timeout;
-    updaters: { [key: string]: any };
-    freezing: number;
-    enter: EnterCallback;
-    exit: ExitCallback;
-    [key: string]: any;
-}
-
 export class SDNode {
     id: number;
     vars: any;
-    _: SDNodePrivateParams;
+    _: {
+        frame: number;
+        start: number;
+        end: number;
+        layer: RenderNode;
+        layers: { [key: string]: RenderNode };
+        parent: SDNode;
+        children: { [key: string]: SDNode };
+        onClick: EventListener;
+        onDblClick: EventListener;
+        onChange: EventListener;
+        onInput: EventListener;
+        clickTimeout: NodeJS.Timeout;
+        updaters: { [key: string]: any };
+        freezing: number;
+        enter: EnterCallback;
+        exit: ExitCallback;
+        [key: string]: any;
+    };
     static NODE_ID = 0;
     static CHILD_ID = 0;
     constructor(target: SDNode | RenderNode) {
@@ -683,16 +681,9 @@ export class SDNode {
     }
 }
 
-function getTargetLayer(target: SDNode | RenderNode) {
-    if (target instanceof SDNode) return target.layer();
-    return target;
-}
-
 type AnyFunction = (...args: any[]) => any;
 export type SDNodeWithColor = SDNode & { color: AnyFunction };
 export type SDNodeWithDrop = SDNode & { drop: AnyFunction };
 export type SDNodeWithIntValue = SDNode & { intValue: AnyFunction };
 export type SDNodeWithText = SDNode & { text: AnyFunction };
 export type SDNodeWithValue = SDNode & { value: AnyFunction };
-
-console.log("SDNode__=", SDNode);

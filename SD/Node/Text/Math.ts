@@ -1,9 +1,7 @@
-import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
-import { Window } from "@/Animate/Window";
-import { SDNode, SDNodePrivateParams } from "@/Node/SDNode";
-import { BaseText, BaseTextConfiguration, ConfigDictionary } from "@/Node/Text/BaseText";
-import { MathMatchingMachine, TextEngine, TextMapping, Transforming } from "@/Node/Text/TextEngine";
+import { SDNode } from "@/Node/SDNode";
+import { BaseText, BaseTextConfiguration, TextConfigDictionary } from "@/Node/Text/BaseText";
+import { MathMatchingMachine, TextEngine, TextMapping } from "@/Node/Text/TextEngine";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
 import { Color as C, SDColor } from "@/Utility/Color";
@@ -24,14 +22,10 @@ export class MathConfiguration extends BaseTextConfiguration {
     }
 }
 
-export interface MathPrivateParams extends SDNodePrivateParams {
-    attr: RenderNode;
-    mathFrame: number;
-    transformings: Array<Transforming>;
-    configurations: ConfigDictionary;
-}
-
 export class Math extends BaseText {
+    _: BaseText["_"] & {
+        attr: RenderNode;
+    };
     constructor(target: SDNode | RenderNode, text = "") {
         super(target);
 
@@ -62,28 +56,43 @@ export class Math extends BaseText {
         this.vars.watch("math", Factory.action(this, this.layer(), "node", Interp.blankNodeInterp));
         this.vars.watch("x", Factory.action(this, object, "x", Interp.numberInterp));
         this.vars.watch("x", (x: number, vo: number) => {
-            this.__updateTransforming({ target: { x } });
-            if (this.duration() > 0) this.__updateSourceMathConfiguration({ x: vo });
+            if (this.duration() > 0) {
+                this.__updateSourceMathConfiguration({ x: vo });
+                this.__updateTargetMathConfiguration({ x });
+            }
+            this.__updateTransforming();
         });
         this.vars.watch("y", Factory.action(this, object, "y", Interp.numberInterp));
         this.vars.watch("y", (y: number, vo: number) => {
-            this.__updateTransforming({ target: { y } });
-            if (this.duration() > 0) this.__updateSourceMathConfiguration({ y: vo });
+            if (this.duration() > 0) {
+                this.__updateSourceMathConfiguration({ y: vo });
+                this.__updateTargetMathConfiguration({ y });
+            }
+            this.__updateTransforming();
         });
         this.vars.watch("fontSize", Factory.action(this, object, "font-size", Interp.numberInterp));
         this.vars.watch("fontSize", (size: number, vo: number) => {
-            this.__updateTransforming({ target: { size } });
-            if (this.duration() > 0) this.__updateSourceMathConfiguration({ size: vo });
+            if (this.duration() > 0) {
+                this.__updateSourceMathConfiguration({ size: vo });
+                this.__updateTargetMathConfiguration({ size });
+            }
+            this.__updateTransforming();
         });
         this.vars.watch("fill", Factory.action(this, object, "fill", Interp.colorInterp));
         this.vars.watch("fill", (fill: string, vo: string) => {
-            this.__updateTransforming({ target: { fill } });
-            if (this.duration() > 0) this.__updateSourceMathConfiguration({ fill: vo });
+            if (this.duration() > 0) {
+                this.__updateSourceMathConfiguration({ fill: vo });
+                this.__updateTargetMathConfiguration({ fill });
+            }
+            this.__updateTransforming();
         });
         this.vars.watch("stroke", Factory.action(this, object, "stroke", Interp.colorInterp));
         this.vars.watch("stroke", (stroke: string, vo: string) => {
-            this.__updateTransforming({ target: { stroke } });
-            if (this.duration() > 0) this.__updateSourceMathConfiguration({ stroke: vo });
+            if (this.duration() > 0) {
+                this.__updateSourceMathConfiguration({ stroke: vo });
+                this.__updateTargetMathConfiguration({ stroke });
+            }
+            this.__updateTransforming();
         });
 
         this.text(text);
@@ -144,7 +153,6 @@ export class Math extends BaseText {
             this.__updateTargetMathConfiguration({ text: text__, attr: math });
             const source = this.__getSourceConfiguration();
             const target = this.__getTargetConfiguration();
-            source.lastAttr = this._.attr;
             this.__createOrUpdateTransforming({
                 source,
                 target,
@@ -185,7 +193,6 @@ export class Math extends BaseText {
             this.__updateTargetMathConfiguration({ attr: math });
             const source = this.__getSourceConfiguration();
             const target = this.__getTargetConfiguration();
-            source.lastAttr = this._.attr;
             this.__createOrUpdateTransforming({
                 source,
                 target,
@@ -195,20 +202,6 @@ export class Math extends BaseText {
         this._.attr = math;
         this.vars.math = math;
         return this;
-    }
-    __cloneMathRenderNode() {
-        const math = RenderNode.cloneMathRenderNode(this.vars.math);
-        math.setAttribute("x", this.x());
-        math.setAttribute("y", this.y());
-        math.setAttribute("font-size", this.fontSize());
-        return math;
-    }
-    __flushAll() {
-        if (this._.textFrame !== Window.CURRENT_FRAME) {
-            this._.textFrame = Window.CURRENT_FRAME;
-            this._.transformings = [];
-            this._.configurations = {};
-        }
     }
     __getConfiguration(): MathConfiguration {
         return new MathConfiguration({
@@ -223,71 +216,37 @@ export class Math extends BaseText {
         });
     }
     __getSourceConfiguration(): MathConfiguration {
-        this.__flushAll();
-        const l = this.delay();
-        return this.__getConfiguration().merge(this._.configurations[l]);
-    }
-    __getTargetConfiguration(): MathConfiguration {
-        this.__flushAll();
-        const r = this.delay() + this.duration();
-        return this.__getConfiguration().merge(this._.configurations[r]);
-    }
-    __getTransforming() {
-        this.__flushAll();
-        const l = this.delay();
-        const r = this.delay() + this.duration();
-        for (const transforming of this._.transformings) if (transforming.l === l && transforming.r === r) return transforming;
-        return undefined;
+        const config = super.__getSourceConfiguration() as MathConfiguration;
+        config.lastAttr = this._.attr;
+        return config;
     }
     __updateMathRenderNode(math: RenderNode, args: any) {
         if ("x" in args) math.setAttribute("x", args.x);
         if ("y" in args) math.setAttribute("y", args.y);
-        if ("size" in args) math.setAttribute("font-size", args.size);
         if ("fill" in args) math.setAttribute("fill", args.fill);
         if ("stroke" in args) math.setAttribute("stroke", args.stroke);
+        if ("size" in args) math.setAttribute("font-size", args.size);
     }
-    __updateSourceMathConfiguration(args: any) {
-        this.__flushAll();
-        const l = this.delay();
-        this._.configurations[l] = {
-            ...(args || {}),
-            ...this._.configurations[l],
-        };
-        const attr = this._.configurations[l]?.attr;
+    __updateSourceMathConfiguration(args: TextConfigDictionary) {
+        super.__updateSourceConfiguration(args);
+        const key = this.delay();
+        const attr = this._.configurations[key]?.attr;
         if (attr) this.__updateMathRenderNode(attr, args);
     }
-    __updateTargetMathConfiguration(args: any) {
-        this.__flushAll();
-        const r = this.delay() + this.duration();
-        this._.configurations[r] = {
-            ...this._.configurations[r],
-            ...(args || {}),
-        };
-        const attr = this._.configurations[r]?.attr;
+    __updateTargetMathConfiguration(args: TextConfigDictionary) {
+        super.__updateTargetConfiguration(args);
+        const key = this.delay() + this.duration();
+        const attr = this._.configurations[key]?.attr;
         if (attr) this.__updateMathRenderNode(attr, args);
     }
-    __updateTransforming(args: any) {
-        const transforming = this.__getTransforming();
-        if (!transforming) return;
-        transforming.source.merge(args.source);
-        transforming.target.merge(args.target);
-        transforming.mapping = args.mapping === undefined ? transforming.mapping : TextEngine.processMapping(args.mapping);
-        transforming.auto = args.auto === undefined ? transforming.auto : args.auto;
-        transforming.color = args.color === undefined ? transforming.color : args.color;
-        transforming.play();
-        new Action(this.delay(), this.delay() + this.duration(), transforming.source, transforming.target, Interp.groupInterp(transforming.onCreateGroup()), this, "transforming");
-    }
-    __createOrUpdateTransforming(args: any) {
-        if (this.__getTransforming()) {
-            this.__updateTransforming(args);
-        } else {
-            args.mapping = args.mapping || [];
-            args.auto = args.auto === undefined ? true : args.auto;
-            args.color = args.color === undefined ? true : args.color;
-            const transforming = TextEngine.transformMath(this, args.source, args.target, args.mapping, args.auto, args.color);
-            this._.transformings.push(transforming);
-            new Action(this.delay(), this.delay() + this.duration(), transforming.source, transforming.target, Interp.groupInterp(transforming.onCreateGroup()), this, "transforming");
-        }
+    __cloneMathRenderNode() {
+        const math = RenderNode.cloneMathRenderNode(this.vars.math);
+        math.setAttribute("x", this.x());
+        math.setAttribute("y", this.y());
+        math.setAttribute("fill", this.fill());
+        math.setAttribute("stroke", this.stroke());
+        math.setAttribute("font-size", this.fontSize());
+        return math;
     }
 }
 

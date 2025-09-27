@@ -1,6 +1,7 @@
+import { Window } from "@/Animate/Window";
 import { SDNode } from "@/Node/SDNode";
 import { SDSVGNode } from "@/Node/SDSVGNode";
-import { TextMapping } from "@/Node/Text/TextEngine";
+import { TextEngine, TextMapping, Transforming } from "@/Node/Text/TextEngine";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
 import { Color as C, SDColor } from "@/Utility/Color";
@@ -15,7 +16,7 @@ const BASE_TEXT_ATTRIBUTES = {
     strokeDashArray: [1, 0],
 };
 
-export type ConfigDictionary = { [key: string]: any };
+export type TextConfigDictionary = { [key: string]: any };
 
 export class BaseTextConfiguration {
     node: BaseText;
@@ -25,7 +26,7 @@ export class BaseTextConfiguration {
     stroke: string;
     x: number;
     y: number;
-    constructor(args: ConfigDictionary) {
+    constructor(args: TextConfigDictionary) {
         this.node = args.node;
         this.text = args.text;
         this.size = args.size;
@@ -34,7 +35,7 @@ export class BaseTextConfiguration {
         this.x = args.x;
         this.y = args.y;
     }
-    merge(args: ConfigDictionary) {
+    merge(args: TextConfigDictionary) {
         if (!args) return this;
         this.node = args.node || this.node;
         this.text = args.text || this.text;
@@ -48,6 +49,11 @@ export class BaseTextConfiguration {
 }
 
 export abstract class BaseText extends SDSVGNode {
+    _: SDSVGNode["_"] & {
+        textFrame: number;
+        transformings: Array<Transforming>;
+        configurations: { [key: number]: TextConfigDictionary };
+    };
     constructor(target: SDNode | RenderNode) {
         super(target);
 
@@ -145,5 +151,70 @@ export abstract class BaseText extends SDSVGNode {
             ...BASE_TEXT_ATTRIBUTES,
             ...(attributes || {}),
         });
+    }
+    __flushAll() {
+        if (this._.textFrame !== Window.CURRENT_FRAME) {
+            this._.textFrame = Window.CURRENT_FRAME;
+            this._.transformings = [];
+            this._.configurations = {};
+        }
+    }
+    __updateSourceConfiguration(args: TextConfigDictionary) {
+        this.__flushAll();
+        const key = this.delay();
+        const config = this._.configurations;
+        config[key] = {
+            ...(args || {}),
+            ...config[key],
+        };
+    }
+    __updateTargetConfiguration(args: TextConfigDictionary) {
+        this.__flushAll();
+        const key = this.delay() + this.duration();
+        const config = this._.configurations;
+        config[key] = {
+            ...config[key],
+            ...(args || {}),
+        };
+    }
+    abstract __getConfiguration(): BaseTextConfiguration;
+    __getSourceConfiguration(): BaseTextConfiguration {
+        this.__flushAll();
+        const key = this.delay();
+        return this.__getConfiguration().merge(this._.configurations[key]);
+    }
+    __getTargetConfiguration(): BaseTextConfiguration {
+        this.__flushAll();
+        const key = this.delay() + this.duration();
+        return this.__getConfiguration().merge(this._.configurations[key]);
+    }
+    __getTransforming() {
+        this.__flushAll();
+        const l = this.delay();
+        const r = this.delay() + this.duration();
+        for (const transforming of this._.transformings) if (transforming.l === l && transforming.r === r) return transforming;
+        return undefined;
+    }
+    __updateTransforming(args?: TextConfigDictionary) {
+        const transforming = this.__getTransforming();
+        if (!transforming) return false;
+        args = args || {};
+        transforming.mapping = args.mapping || transforming.mapping;
+        transforming.auto = args.auto === undefined ? transforming.auto : args.auto;
+        transforming.color = args.color === undefined ? transforming.color : args.color;
+        transforming.source = this.__getSourceConfiguration();
+        transforming.target = this.__getTargetConfiguration();
+        transforming.build();
+        transforming.createAction();
+        return true;
+    }
+    __createOrUpdateTransforming(args: TextConfigDictionary) {
+        if (this.__updateTransforming(args)) return;
+        args.mapping = args.mapping || [];
+        args.auto = args.auto === undefined ? true : args.auto;
+        args.color = args.color === undefined ? true : args.color;
+        const transforming = TextEngine.transform(this, args.source, args.target, args.mapping, args.auto, args.color);
+        transforming.build();
+        transforming.createAction();
     }
 }

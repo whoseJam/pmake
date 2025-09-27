@@ -4,7 +4,7 @@ const svg = sd.svg();
 const C = sd.color();
 const T = 500;
 
-sd.main(TestConsecutiveTransform);
+sd.main(Test1);
 
 async function TestMatchNestedSum() {
     const text = new sd.Math(svg, "\\sum_{i=1}^3a_i\\sum_{j=1}^3b_j").x(100).y(100);
@@ -302,6 +302,12 @@ async function Test1() {
     math.startAnimate().text("2a").color(C.textBlue).endAnimate();
     await sd.pause();
     math.startAnimate().text("3q").fontSize(180).endAnimate();
+}
+
+async function TestConsecutiveSubtextColor() {
+    const math = new sd.Math(svg, "a^2b^2c^2d^2").x(100).y(100).fontSize(100);
+    await sd.pause();
+    math.startAnimate().subtextColorAll("b^2", C.red).color(C.textBlue).subtextColorAll("a^2", C.orange).subtextColorLast("2", C.pureBlue).endAnimate();
 }
 
 async function TestConsecutiveTransform() {

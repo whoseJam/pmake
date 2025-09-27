@@ -38,8 +38,8 @@ module.exports = function (targetFolder) {
     const config = getConfiguration();
     return (
         gulp
-            // webpack stream
-            .src("./SD/sd.js")
+            // 调整入口以支持TypeScript文件
+            .src(["./SD/sd.js"])
             .pipe(webpack(config))
             .pipe(gulp.dest(targetFolder))
     );
@@ -78,18 +78,24 @@ function getConfiguration() {
                     test: /\.(ts|tsx|js|jsx)$/,
                     exclude: /node_modules/,
                     use: {
-                        loader: "babel-loader",
+                        loader: "ts-loader",
                         options: {
-                            presets: [
-                                "@babel/preset-react",
-                                "@babel/preset-env",
-                                [
-                                    "@babel/preset-typescript",
-                                    {
-                                        allowDeclareFields: true,
-                                    },
-                                ],
-                            ],
+                            compilerOptions: {
+                                allowJs: true, // 允许处理JS文件
+                                jsx: "react", // 支持JSX语法
+                                esModuleInterop: true, // 兼容ES模块
+                                allowSyntheticDefaultImports: true,
+                                target: "ES5", // 目标输出ES版本
+                                module: "ESNext", // 模块系统
+                                moduleResolution: "Node", // 模块解析方式
+                                resolveJsonModule: true, // 允许导入JSON
+                                sourceMap: mode === "development", // 开发环境生成sourcemap
+                                strict: false, // 关闭严格模式检查
+                                skipLibCheck: true, // 跳过库文件检查
+                                allowDeclareFields: true, // 允许声明字段
+                            },
+                            transpileOnly: global["d"], // 开发环境关闭类型检查提高速度
+                            experimentalFileCaching: true, // 启用缓存提升性能
                         },
                     },
                 },
@@ -114,7 +120,7 @@ function getConfiguration() {
             alias: {
                 "@": path.resolve(global["projectRoot"], "SD"),
             },
-            extensions: [".tsx", ".ts", ".js"],
+            extensions: [".tsx", ".ts", ".jsx", ".js"], // 包含所有需要解析的扩展名
         },
         externals: {
             dagre: "dagre",

@@ -2,7 +2,7 @@ import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
 import { Dom } from "@/Dom/Dom";
 import { svg } from "@/Interact/Root";
-import { BaseText } from "@/Node/Text/BaseText";
+import { BaseText, BaseTextConfiguration } from "@/Node/Text/BaseText";
 import { Math as Math_, MathConfiguration } from "@/Node/Text/Math";
 import { Text, TextConfiguration } from "@/Node/Text/Text";
 import { RenderNode } from "@/Renderer/RenderNode";
@@ -13,6 +13,14 @@ import { PathPen } from "@/Utility/PathPen";
 import { make1d } from "@/Utility/Util";
 import opentype from "opentype.js";
 
+function getCodePointCount(str: string): number {
+    let count = 0;
+    for (let i = 0; i < str.length; i++) {
+        if (str.codePointAt(i) > 0xffff) i++;
+        count++;
+    }
+    return count;
+}
 type TextMappingSubtextItem = [string, string];
 type TextMappingObjectSubtextItem<T> = [T, string, string];
 type TextMappingObjectItem<T> = [T, string];
@@ -211,7 +219,7 @@ class TransformingPathGroup {
             this.target = target.reverse();
         }
     }
-    play(l: number, r: number) {
+    build(l: number, r: number) {
         if (this.group) return;
         function createAction(path, source, target, interp, channel) {
             new Action(l, r, source, target, interp(path, channel), path, channel);
@@ -402,9 +410,10 @@ export class MathMatchingMachine extends MatchingMachine {
     }
 }
 
-function createMatchingMachine(text: Configuration): MatchingMachine {
+function createMatchingMachine(text: BaseTextConfiguration): MatchingMachine {
     if (text instanceof MathConfiguration) return new MathMatchingMachine(text);
-    return new TextMatchingMachine(text);
+    if (text instanceof TextConfiguration) return new TextMatchingMachine(text);
+    ErrorLauncher.whatHappened();
 }
 
 export class Transforming {
@@ -416,11 +425,11 @@ export class Transforming {
     auto: boolean;
     color: boolean;
     mapping: Mapping;
-    source: Configuration;
-    target: Configuration;
+    source: BaseTextConfiguration;
+    target: BaseTextConfiguration;
     sourceMatching: MatchingMachine;
     targetMatching: MatchingMachine;
-    constructor(text: BaseText, mapping: Mapping, source: Configuration, target: Configuration, auto: boolean, color: boolean) {
+    constructor(text: BaseText, mapping: Mapping, source: BaseTextConfiguration, target: BaseTextConfiguration, auto: boolean, color: boolean) {
         this.text = text;
         this.mapping = mapping;
         this.source = source;
@@ -433,13 +442,12 @@ export class Transforming {
         this.r = text.delay() + text.duration();
     }
     sourceConfiguration(sourceMatched: Match) {
-        console.log("sourceMatched =", sourceMatched, "!!!!!!!!!!!!!!!!!!!11");
         return sourceMatched.text;
     }
     targetConfiguration(targetMatched: Match) {
         return this.target;
     }
-    play() {
+    build() {
         this.groups = [];
         this.groupKeys = [];
         const sourceMatching = createMatchingMachine(this.source);
@@ -471,13 +479,20 @@ export class Transforming {
         this.groupKeys.push(undefined);
         this.groups.push(transformingGroup);
     }
-    onCreateGroup() {
-        const transforming = this;
-        return function (action: Action) {
-            transforming.groups.forEach(group => {
-                group.play(action.l, action.r);
-            });
-        };
+    createAction() {
+        new Action(
+            this.text.delay(),
+            this.text.delay() + this.text.duration(),
+            this.source,
+            this.target,
+            Interp.groupInterp((action: Action) => {
+                this.groups.forEach(group => {
+                    group.build(action.l, action.r);
+                });
+            }),
+            this.text,
+            "transforming"
+        );
     }
 }
 
@@ -534,7 +549,7 @@ function processMapping(mapping: TextMapping<TextType>): Mapping {
 
 export class TextEngine {
     static textSVG = undefined;
-    static mathjaxSVG = undefined;
+    static mathjaxSVG: RenderNode;
     static fonts = {};
     static init() {
         this.load("Consolas");
@@ -564,7 +579,6 @@ export class TextEngine {
     static getPaths(config: Configuration): Array<TransformingPath> {
         if (config instanceof MathConfiguration) return TextEngine.getMathPaths(config);
         if (config instanceof TextConfiguration) return TextEngine.getTextPaths(config);
-        console.log("config=", config);
         ErrorLauncher.whatHappened();
     }
     static textBoundingBox(text_: Text | string, family_?: string, size_?: number) {
@@ -595,7 +609,7 @@ export class TextEngine {
     static mathjaxBoundingBox(math: RenderNode) {
         const parentNode = math.element().parentNode;
         this.mathjaxSVG.__append(math);
-        const bbox = this.mathjaxSVG.element().getBBox();
+        const bbox = (this.mathjaxSVG.element() as SVGGElement).getBBox();
         if (parentNode) parentNode.appendChild(math.element());
         else math.__remove();
         return bbox;
@@ -603,7 +617,7 @@ export class TextEngine {
     static mathjaxBoundingBoxAndInnerBoundingBox(math: RenderNode) {
         const parentNode = math.element().parentNode;
         this.mathjaxSVG.__append(math);
-        const bbox = this.mathjaxSVG.element().getBBox();
+        const bbox = (this.mathjaxSVG.element() as SVGGElement).getBBox();
         const ibbox = (math.element().children[1] as SVGGElement).getBBox();
         if (parentNode) parentNode.appendChild(math.element());
         else math.__remove();
@@ -702,16 +716,9 @@ export class TextEngine {
     static processMapping(mapping: any) {
         return processMapping(mapping);
     }
-    static transformText(text: Text, source: TextConfiguration, target: TextConfiguration, mapping = [], auto = true, color = true) {
+    static transform(text: BaseText, source: BaseTextConfiguration, target: BaseTextConfiguration, mapping, auto, color) {
         mapping = processMapping(mapping);
         const transforming = new Transforming(text, mapping, source, target, auto, color);
-        transforming.play();
-        return transforming;
-    }
-    static transformMath(text: Math_, source: MathConfiguration, target: MathConfiguration, mapping = [], auto = true, color = true) {
-        mapping = processMapping(mapping);
-        const transforming = new Transforming(text, mapping, source, target, auto, color);
-        transforming.play();
         return transforming;
     }
     static adjustMath(math: RenderNode) {
@@ -778,7 +785,7 @@ export class TextEngine {
             if (nodeTagSVG(s) !== nodeTagHTML(m)) return false;
             if (m.childElementCount === 0) {
                 const mcharacter = nodeContentHTML(m);
-                const length = [...mcharacter].length;
+                const length = getCodePointCount(mcharacter);
                 if (s.children.length !== length) return false;
                 if (matching) for (let i = 0; i < length; i++) if (matching.elementDeleted.has(s.children[i]) && skip) return false;
                 const scharacter = nodeContentSVG(s, 0, length);
@@ -796,7 +803,7 @@ export class TextEngine {
             if (start + m.children.length > s.children.length) return false;
             if (m.childElementCount === 0) {
                 const mcharacter = nodeContentHTML(m);
-                const length = [...mcharacter].length;
+                const length = getCodePointCount(mcharacter);
                 if (matching) for (let i = 0; i < length; i++) if (matching.elementDeleted.has(s.children[i + start]) && skip) return false;
                 const scharacter = nodeContentSVG(s, start, length);
                 return scharacter === mcharacter;
@@ -816,7 +823,7 @@ export class TextEngine {
                         matched.push({
                             element: s,
                             start,
-                            length: m_.children.length || [...nodeContentHTML(m_)].length,
+                            length: m_.children.length || getCodePointCount(nodeContentHTML(m_)),
                         });
                         if (matched.length >= limit) return;
                     }
@@ -825,7 +832,7 @@ export class TextEngine {
                         matched.push({
                             element: s,
                             start,
-                            length: m.children.length || [...nodeContentHTML(m)].length,
+                            length: m.children.length || getCodePointCount(nodeContentHTML(m)),
                         });
                         if (matched.length >= limit) return;
                     }

@@ -24,12 +24,12 @@ export class Vector {
         if (a.length === 2) return [a[0] * b, a[1] * b];
         return [a[0] * b, a[1] * b, a[2] * b];
     }
-    static length(a) {
+    static norm(a) {
         if (a.length === 2) return Math.sqrt(a[0] * a[0] + a[1] * a[1]);
         return Math.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
     }
     static identity(a) {
-        const length = this.length(a);
+        const length = this.norm(a);
         if (a.length === 2) return ddcmp(length) > 0 ? [a[0] / length, a[1] / length] : [0, 0];
         return ddcmp(length) > 0 ? [a[0] / length, a[1] / length, a[2] / length] : [0, 0, 0];
     }
@@ -43,9 +43,6 @@ export class Vector {
         const direction = this.makeComplex(1, arc);
         return this.complexMul(a, direction);
     }
-    static norm(a) {
-        return this.identity(a);
-    }
     static cross(a, b) {
         return a[0] * b[1] - a[1] * b[0];
     }
@@ -56,10 +53,10 @@ export class Vector {
         return this.cross(a, b) <= 0;
     }
     static cos(a) {
-        return a[0] / this.length(a);
+        return a[0] / this.norm(a);
     }
     static sin(a) {
-        return a[1] / this.length(a);
+        return a[1] / this.norm(a);
     }
     static tan(a) {
         return a[1] / a[0];

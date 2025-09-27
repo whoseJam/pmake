@@ -1,9 +1,7 @@
-import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
-import { Window } from "@/Animate/Window";
-import { SDNode, SDNodePrivateParams } from "@/Node/SDNode";
-import { BaseText, BaseTextConfiguration, ConfigDictionary } from "@/Node/Text/BaseText";
-import { TextEngine, TextMapping, Transforming } from "@/Node/Text/TextEngine";
+import { SDNode } from "@/Node/SDNode";
+import { BaseText, BaseTextConfiguration, TextConfigDictionary } from "@/Node/Text/BaseText";
+import { TextEngine, TextMapping } from "@/Node/Text/TextEngine";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
 import { SDColor } from "@/Utility/Color";
@@ -15,13 +13,13 @@ export class TextConfiguration extends BaseTextConfiguration {
     family: string;
     attr: Array<SDColor>;
     lastAttr?: Array<SDColor>;
-    constructor(args: ConfigDictionary) {
+    constructor(args: TextConfigDictionary) {
         super(args);
         this.family = args.family;
         this.attr = args.attr;
         this.lastAttr = args.lastAttr;
     }
-    merge(args: ConfigDictionary) {
+    merge(args: TextConfigDictionary) {
         if (!args) return this;
         super.merge(args);
         this.family = args.family || this.family;
@@ -31,14 +29,10 @@ export class TextConfiguration extends BaseTextConfiguration {
     }
 }
 
-export interface TextPrivateParams extends SDNodePrivateParams {
-    attr: Array<SDColor>;
-    textFrame: number;
-    transformings: Array<Transforming>;
-    configurations: { [key: number]: ConfigDictionary };
-}
-
 export class Text extends BaseText {
+    _: BaseText["_"] & {
+        attr: Array<SDColor>;
+    };
     constructor(target: SDNode | RenderNode, text = "") {
         super(target);
 
@@ -69,24 +63,39 @@ export class Text extends BaseText {
 
         this.vars.watch("html", Factory.action(this, object, "innerHTML", Interp.blankStringInterp));
         this.vars.watch("x", (x: number, vo: number) => {
-            this.__updateTransforming({ target: { x } });
-            if (this.duration() > 0) this.__updateSourceTextConfiguration({ x: vo });
+            if (this.duration() > 0) {
+                this.__updateSourceConfiguration({ x: vo });
+                this.__updateTargetConfiguration({ x });
+            }
+            this.__updateTransforming();
         });
         this.vars.watch("y", (y: number, vo: number) => {
-            this.__updateTransforming({ target: { y } });
-            if (this.duration() > 0) this.__updateSourceTextConfiguration({ y: vo });
+            if (this.duration() > 0) {
+                this.__updateSourceConfiguration({ y: vo });
+                this.__updateTargetConfiguration({ y });
+            }
+            this.__updateTransforming();
         });
         this.vars.watch("fontSize", (size: number, vo: number) => {
-            this.__updateTransforming({ target: { size } });
-            if (this.duration() > 0) this.__updateSourceTextConfiguration({ size: vo });
+            if (this.duration() > 0) {
+                this.__updateSourceConfiguration({ size: vo });
+                this.__updateTargetConfiguration({ size });
+            }
+            this.__updateTransforming();
         });
         this.vars.watch("fill", (fill: string, vo: string) => {
-            this.__updateTransforming({ target: { fill } });
-            if (this.duration() > 0) this.__updateSourceTextConfiguration({ fill: vo });
+            if (this.duration() > 0) {
+                this.__updateSourceConfiguration({ fill: vo });
+                this.__updateTargetConfiguration({ fill });
+            }
+            this.__updateTransforming();
         });
         this.vars.watch("stroke", (stroke: string, vo: string) => {
-            this.__updateTransforming({ target: { stroke } });
-            if (this.duration() > 0) this.__updateSourceTextConfiguration({ stroke: vo });
+            if (this.duration() > 0) {
+                this.__updateSourceConfiguration({ stroke: vo });
+                this.__updateTargetConfiguration({ stroke });
+            }
+            this.__updateTransforming();
         });
 
         this.text(text);
@@ -150,11 +159,10 @@ export class Text extends BaseText {
         if (this.vars.text === text) return this;
         const box = TextEngine.textBoundingBox(text, this.fontFamily(), this.fontSize());
         if (this.duration() > 0 && TextEngine.fontExists(this.fontFamily())) {
-            this.__updateSourceTextConfiguration({ text: this.vars.text, attr: this._.attr });
-            this.__updateTargetTextConfiguration({ text, attr });
+            this.__updateSourceConfiguration({ text: this.vars.text, attr: this._.attr });
+            this.__updateTargetConfiguration({ text, attr });
             const source = this.__getSourceConfiguration();
             const target = this.__getTargetConfiguration();
-            source.lastAttr = this._.attr;
             this.__createOrUpdateTransforming({
                 source,
                 target,
@@ -201,11 +209,10 @@ export class Text extends BaseText {
         else if (operator === "last") update(matched[matched.length - 1]);
         else update(matched[operator]);
         if (this.duration() > 0 && TextEngine.fontExists(this.fontFamily())) {
-            this.__updateSourceTextConfiguration({ attr: this._.attr });
-            this.__updateTargetTextConfiguration({ attr });
+            this.__updateSourceConfiguration({ attr: this._.attr });
+            this.__updateTargetConfiguration({ attr });
             const source = this.__getSourceConfiguration();
             const target = this.__getTargetConfiguration();
-            source.lastAttr = this._.attr;
             this.__createOrUpdateTransforming({
                 source,
                 target,
@@ -215,13 +222,6 @@ export class Text extends BaseText {
         this._.attr = attr;
         this.vars.html = parseToHTML.call(this);
         return this;
-    }
-    __flushAll() {
-        if (this._.textFrame !== Window.CURRENT_FRAME) {
-            this._.textFrame = Window.CURRENT_FRAME;
-            this._.transformings = [];
-            this._.configurations = {};
-        }
     }
     __getConfiguration(): TextConfiguration {
         return new TextConfiguration({
@@ -237,62 +237,9 @@ export class Text extends BaseText {
         });
     }
     __getSourceConfiguration(): TextConfiguration {
-        this.__flushAll();
-        const l = this.delay();
-        return this.__getConfiguration().merge(this._.configurations[l]);
-    }
-    __getTargetConfiguration(): TextConfiguration {
-        this.__flushAll();
-        const r = this.delay() + this.duration();
-        return this.__getConfiguration().merge(this._.configurations[r]);
-    }
-    __getTransforming() {
-        this.__flushAll();
-        const l = this.delay();
-        const r = this.delay() + this.duration();
-        for (const transforming of this._.transformings) if (transforming.l === l && transforming.r === r) return transforming;
-        return undefined;
-    }
-    __updateSourceTextConfiguration(args: ConfigDictionary) {
-        this.__flushAll();
-        const l = this.delay();
-        this._.configurations[l] = {
-            ...(args || {}),
-            ...this._.configurations[l],
-        };
-    }
-    __updateTargetTextConfiguration(args: ConfigDictionary) {
-        this.__flushAll();
-        const r = this.delay() + this.duration();
-        this._.configurations[r] = {
-            ...this._.configurations[r],
-            ...(args || {}),
-        };
-    }
-    __updateTransforming(args: ConfigDictionary) {
-        const transforming = this.__getTransforming();
-        if (!transforming) return;
-        transforming.source.merge(args.source);
-        transforming.target.merge(args.target);
-        transforming.mapping = args.mapping === undefined ? transforming.mapping : TextEngine.processMapping(args.mapping);
-        transforming.auto = args.auto === undefined ? transforming.auto : args.auto;
-        transforming.color = args.color === undefined ? transforming.color : args.color;
-        transforming.play();
-        new Action(this.delay(), this.delay() + this.duration(), transforming.source, transforming.target, Interp.groupInterp(transforming.onCreateGroup()), this, "transforming");
-    }
-    __createOrUpdateTransforming(args: any) {
-        if (this.__getTransforming()) {
-            this.__updateTransforming(args);
-        } else {
-            args.mapping = args.mapping || [];
-            args.auto = args.auto === undefined ? true : args.auto;
-            args.color = args.color === undefined ? true : args.color;
-            const source = new TextConfiguration(args.source);
-            const target = new TextConfiguration(args.target);
-            const transforming = TextEngine.transformText(this, source, target, args.mapping, args.auto, args.color);
-            this._.transformings.push(transforming);
-            new Action(this.delay(), this.delay() + this.duration(), transforming.source, transforming.target, Interp.groupInterp(transforming.onCreateGroup()), this, "transforming");
-        }
+        const config = super.__getSourceConfiguration() as TextConfiguration;
+        config.lastAttr = this._.attr;
+        return config;
     }
 }
 
