@@ -679,6 +679,21 @@ export class SDNode {
             .y(y)
             .unfreeze();
     }
+    static __asNode(target: SDNode | RenderNode, object: any, id?: number): SDNode {
+        if (object === null || object === undefined) {
+            const { Text } = require("@/Node/Text/Text");
+            if (id !== undefined) return new Text(target, id).opacity(0);
+            return null;
+        }
+        if (typeof object === "function") return object(target).opacity(0);
+        if (typeof object === "number" || typeof object === "string") {
+            const { Text } = require("@/Node/Text/Text");
+            const { Math } = require("@/Node/Text/Math");
+            if (String(object).startsWith("$")) return new Math(target, id).opacity(0);
+            return new Text(target, object).opacity(0);
+        }
+        return object;
+    }
 }
 
 type AnyFunction = (...args: any[]) => any;

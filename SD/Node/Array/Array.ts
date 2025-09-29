@@ -52,8 +52,7 @@ export class Array<E = Box, V = SDNode> extends BaseArray<E, V> {
     insert(i: number, value: any) {
         const element = new Box(this.layer("elements"), value).opacity(0);
         element.onEnter(EN.appear("elements"));
-        this.__insert(i, element as E);
-        return this;
+        return this.__insert(i, element as E);
     }
     insertFromExistValue(i: number, value: V) {
         const element = new Box(this.layer("elements")).opacity(0);
@@ -65,8 +64,7 @@ export class Array<E = Box, V = SDNode> extends BaseArray<E, V> {
     insertFromExistElement(i: number, element: E) {
         const element_ = element as SDNode;
         element_.onEnter(EN.moveTo("elements"));
-        this.__insert(i, element_ as E);
-        return this;
+        return this.__insert(i, element_ as E);
     }
     /**
      * Gets the element width of this array component.

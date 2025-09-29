@@ -22,6 +22,8 @@ export class BaseArray<E, V> extends SDNode {
     x() {
         return Rect.prototype.x.apply(this, arguments);
     }
+    y(): number;
+    y(y: number): this;
     y() {
         return Rect.prototype.y.apply(this, arguments);
     }
@@ -146,34 +148,21 @@ export class BaseArray<E, V> extends SDNode {
         this.vars.elements.forEach((element, id) => callback(element, id + this.start()));
         return this;
     }
-    /**
-     * Gets the opacity of a specific element.
-     * @param i - The index of the specific element.
-     * @returns The opacity of the element.
-     */
-    // @ts-ignore
-    opacity(i: number): number;
+    opacity(): number;
+    opacity(opacity: number): this;
     /**
      * Sets the opacity of a specific element.
      * @param i - The index of the specific element.
      * @param opacity The opacity to apply
      * @returns The current component instance for method chaining.
      */
-    // @ts-ignore
     opacity(i: number, opacity: number): this;
-    // @ts-ignore
     opacity() {
         if (arguments.length === 0) {
             return super.opacity();
         } else if (arguments.length === 1) {
-            if (Check.isOpacity(arguments[0])) {
-                const [opacity] = arguments;
-                return super.opacity(opacity);
-            } else {
-                const [id] = arguments;
-                const element = this.__getElementWithMethod(id, "opacity") as SDNode;
-                return element.opacity();
-            }
+            const [opacity] = arguments;
+            return super.opacity(opacity);
         } else {
             const [id, opacity] = arguments;
             const element = this.__getElementWithMethod(id, "opacity") as SDNode;

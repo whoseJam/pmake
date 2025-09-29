@@ -1,7 +1,7 @@
 import { Window } from "@/Animate/Window";
 import { SDNode } from "@/Node/SDNode";
 import { SDSVGNode } from "@/Node/SDSVGNode";
-import { TextEngine, TextMapping, Transforming } from "@/Node/Text/TextEngine";
+import { TextEngine, Transforming } from "@/Node/Text/TextEngine";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
 import { Color as C, SDColor } from "@/Utility/Color";
@@ -15,6 +15,50 @@ const BASE_TEXT_ATTRIBUTES = {
     strokeOffset: 0,
     strokeDashArray: [1, 0],
 };
+
+type TextMappingSubtextItem = [string, string];
+type TextMappingObjectSubtextItem = [BaseText, string, string];
+type TextMappingObjectItem = [BaseText, string];
+type TextMappingItem = TextMappingSubtextItem | TextMappingObjectSubtextItem | TextMappingObjectItem;
+export type TextMappingLocation = { i: number; subtext: string } | { object: BaseText; subtext: string } | string | BaseText;
+export type TextMappingObject = {
+    source: TextMappingLocation;
+    target: TextMappingLocation;
+};
+type TextMappingDictionary = { [key: string]: string };
+export type TextMapping = TextMappingDictionary | Array<TextMappingItem>;
+export type TextMappingArray = Array<TextMappingObject>;
+
+function processMapping(mapping: TextMapping): TextMappingArray {
+    const result = [] as TextMappingArray;
+    function processArraySubtextItem(item: TextMappingSubtextItem): TextMappingObject {
+        return { source: String(item[0]), target: String(item[1]) };
+    }
+    function processArrayObjectSubtextItem(item: TextMappingObjectSubtextItem): TextMappingObject {
+        return { source: { object: item[0], subtext: String(item[1]) }, target: String(item[2]) };
+    }
+    function processArrayObjectItem(item: TextMappingObjectItem): TextMappingObject {
+        return { source: item[0], target: String(item[1]) };
+    }
+    function processArrayItem(item: Array<any>): TextMappingObject {
+        if (item.length === 3) return processArrayObjectSubtextItem(item as TextMappingObjectSubtextItem);
+        if (typeof item[0] === "number" || typeof item[0] === "string") return processArraySubtextItem(item as TextMappingSubtextItem);
+        return processArrayObjectItem(item as TextMappingObjectItem);
+    }
+    if (Array.isArray(mapping))
+        return mapping.map(item => {
+            if (Array.isArray(item)) return processArrayItem(item);
+            return item;
+        });
+    for (const key in mapping) {
+        const value = mapping[key];
+        result.push({
+            source: String(key),
+            target: String(value),
+        });
+    }
+    return result;
+}
 
 export type TextConfigDictionary = { [key: string]: any };
 
@@ -103,7 +147,7 @@ export abstract class BaseText extends SDSVGNode {
      * const text = new sd.Text(svg, "1");
      * text.startAnimate().text("2").endAnimate();
      */
-    abstract text(text: string | number, mapping?: TextMapping<this>, auto?: boolean): this;
+    abstract text(text: string | number, mapping?: TextMapping, auto?: boolean): this;
     /**
      * Sets the color of a matched subtext in this text component.
      * @param subtext - The subtext to match.
@@ -199,7 +243,7 @@ export abstract class BaseText extends SDSVGNode {
         const transforming = this.__getTransforming();
         if (!transforming) return false;
         args = args || {};
-        transforming.mapping = args.mapping || transforming.mapping;
+        transforming.mapping = args.mapping ? processMapping(args.mapping) : transforming.mapping;
         transforming.auto = args.auto === undefined ? transforming.auto : args.auto;
         transforming.color = args.color === undefined ? transforming.color : args.color;
         transforming.source = this.__getSourceConfiguration();
@@ -210,7 +254,7 @@ export abstract class BaseText extends SDSVGNode {
     }
     __createOrUpdateTransforming(args: TextConfigDictionary) {
         if (this.__updateTransforming(args)) return;
-        args.mapping = args.mapping || [];
+        args.mapping = processMapping(args.mapping || []);
         args.auto = args.auto === undefined ? true : args.auto;
         args.color = args.color === undefined ? true : args.color;
         const transforming = TextEngine.transform(this, args.source, args.target, args.mapping, args.auto, args.color);
