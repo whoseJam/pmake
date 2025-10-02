@@ -143,9 +143,9 @@ export class BaseArray<E, V> extends SDNode {
      * @param callback - A function to execute for each element.
      * @returns The current component instance for method chaining.
      */
-    forEachElement(callback: (element: E, id: number) => void) {
+    forEachElement(callback: (element: E, i: number) => void) {
         Check.validateSyncFunction(callback, `${this.constructor.name}.forEachElement`);
-        this.vars.elements.forEach((element, id) => callback(element, id + this.start()));
+        this.vars.elements.forEach((element: E, i: number) => callback(element, i + this.start()));
         return this;
     }
     opacity(): number;
@@ -204,7 +204,7 @@ export class BaseArray<E, V> extends SDNode {
                 return this.forEachElement(element => (element as SDNodeWithColor).color(color));
             } else {
                 const [id] = arguments;
-                const element: SDNodeWithColor = this.__getElementWithMethod(id, "color") as SDNodeWithColor;
+                const element = this.__getElementWithMethod(id, "color") as SDNodeWithColor;
                 return element.color();
             }
         } else if (arguments.length === 2) {
@@ -280,7 +280,7 @@ export class BaseArray<E, V> extends SDNode {
      */
     value(i: number, value: any): this;
     value(i: number, value?: any) {
-        Check.validateNumber(i, `${this.type()}.value`);
+        Check.validateNumber(i, `${this.constructor.name}.value`);
         const element = this.__getElementWithMethod(i, "value") as SDNodeWithValue;
         if (arguments.length === 1) return element.value();
         element.value(value);
