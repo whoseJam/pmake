@@ -1,7 +1,6 @@
 import { Enter as EN } from "@/Node/Core/Enter";
 import { Exit as EX } from "@/Node/Core/Exit";
 import { SDNode, SDNodeWithText } from "@/Node/SDNode";
-import { Rect } from "@/Node/Shape/Rect";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Rule as R, SDRule } from "@/Rule/Rule";
 import { Cast } from "@/Utility/Cast";
@@ -9,38 +8,42 @@ import { Check } from "@/Utility/Check";
 import { SDColor } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
-export class BaseElement extends SDNode {
+export class BaseElement<B extends SDNode> extends SDNode {
     constructor(target: SDNode | RenderNode) {
         super(target);
 
         this.vars.merge({
-            x: 0,
-            y: 0,
-            width: 40,
-            height: 40,
             rate: 1.3,
             value: null,
         });
     }
     x(): number;
     x(x: number): this;
-    x() {
-        return Rect.prototype.x.apply(this, arguments);
+    x(x?: number) {
+        if (arguments.length === 0) return this.background().x();
+        this.background().x(x);
+        return this;
     }
     y(): number;
     y(y: number): this;
-    y() {
-        return Rect.prototype.y.apply(this, arguments);
+    y(y?: number) {
+        if (arguments.length === 0) return this.background().y();
+        this.background().y(y);
+        return this;
     }
     width(): number;
     width(width: number): this;
-    width() {
-        return Rect.prototype.width.apply(this, arguments);
+    width(width?: number) {
+        if (arguments.length === 0) return this.background().width();
+        this.background().width(width);
+        return this;
     }
     height(): number;
     height(height: number): this;
-    height() {
-        return Rect.prototype.height.apply(this, arguments);
+    height(height?: number) {
+        if (arguments.length === 0) return this.background().height();
+        this.background().height(height);
+        return this;
     }
     /**
      * Gets the visual representation scaling factor of this element component.
@@ -170,8 +173,8 @@ export class BaseElement extends SDNode {
      * Gets the background component of this element component.
      * @returns The background component instance.
      */
-    background() {
-        return this.child("background");
+    background(): B {
+        return this.child("background") as B;
     }
     /**
      * Casts the value component to its string representation.
@@ -232,7 +235,10 @@ export class BaseElement extends SDNode {
     value(value: any, rule?: SDRule): this;
     value(value?: any, rule?: SDRule) {
         if (arguments.length === 0) return this.child("value");
-        if (this.hasChild("value")) this.eraseChild("value");
+        if (this.hasChild("value")) {
+            console.log("erase value Child!");
+            this.eraseChild("value");
+        }
         if (Check.isEmpty(value)) return this;
         value = Cast.castToSDNode(this, value);
         return this.childAs("value", value, rule || valueRule);
@@ -266,6 +272,9 @@ export class BaseElement extends SDNode {
         this.eraseChild(value);
         return value;
     }
+    inRange(point: [number, number]) {
+        return this.background().inRange(point);
+    }
 }
 
 function backgroundCall(key: string, value?: any) {
@@ -275,7 +284,7 @@ function backgroundCall(key: string, value?: any) {
     return this;
 }
 
-function valueRule(parent: BaseElement, child: SDNode) {
+function valueRule<B extends SDNode>(parent: BaseElement<B>, child: SDNode) {
     const rate = parent.rate();
     R.centerFixAspect(rate)(parent, child);
 }

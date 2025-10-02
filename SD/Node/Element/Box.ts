@@ -4,7 +4,7 @@ import { Rect } from "@/Node/Shape/Rect";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Rule as R } from "@/Rule/Rule";
 
-export class Box extends BaseElement {
+export class Box extends BaseElement<Rect> {
     constructor(target: SDNode | RenderNode, value?: any) {
         super(target);
 

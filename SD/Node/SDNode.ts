@@ -8,7 +8,6 @@ import { effect, reactive, uneffect } from "@/Node/Core/Reactive";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { SDRule } from "@/Rule/Rule";
 import { Check } from "@/Utility/Check";
-import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 type ClickCallback = () => void;
 type ValueCallback = (value: string) => void;
@@ -24,7 +23,7 @@ export type SDBox = {
     height: number;
 };
 
-export class SDNode {
+export abstract class SDNode {
     id: number;
     vars: any;
     _: {
@@ -78,7 +77,15 @@ export class SDNode {
         });
 
         this.vars.watch("opacity", (vn: number, vo: number) => {
-            new Action(this.delay(), this.delay() + this.duration(), vo, vn, Interp.opacityInterp(this.layer(), "opacity"), this, "opacity");
+            new Action(
+                this.delay(),
+                this.delay() + this.duration(),
+                vo,
+                vn,
+                Interp.opacityInterp(this.layer(), "opacity"),
+                this,
+                "opacity"
+            );
         });
     }
     /**
@@ -256,7 +263,8 @@ export class SDNode {
     childAs(child: SDNode, rule?: SDRule): this;
     childAs(name: string, child: SDNode, rule?: SDRule): this;
     childAs(name: string | SDNode, child?: SDNode | SDRule, rule?: SDRule) {
-        const name_ = typeof name === "string" || typeof name === "number" ? String(name) : "child__" + String(++SDNode.CHILD_ID);
+        const name_ =
+            typeof name === "string" || typeof name === "number" ? String(name) : "child__" + String(++SDNode.CHILD_ID);
         const child_ = name instanceof SDNode ? name : (child as SDNode);
         const rule_ = typeof child === "function" ? child : rule;
         if (!child_.onEnter()) child_.onEnter(EN.appear());
@@ -292,7 +300,7 @@ export class SDNode {
      */
     eraseChild(child: string | SDNode) {
         const child_ = typeof child === "string" ? this._.children[child] : child;
-        const name = Object.keys(this._.children).find(key => this._.children[key] === child);
+        const name = Object.keys(this._.children).find(key => this._.children[key] === child_);
         if (name === undefined) return undefined;
         if (!child_.onExit()) child_.onExit(EX.fade());
         child_.triggerExit();
@@ -567,30 +575,14 @@ export class SDNode {
     inRange(point: [number, number]) {
         return this.x() <= point[0] && point[0] <= this.mx() && this.y() <= point[1] && point[1] <= this.my();
     }
-    x(): number;
-    x(x: number): this;
-    x(x?: number): number | this {
-        ErrorLauncher.notImplementedYet(`${this.constructor.name}.x`);
-        return;
-    }
-    y(): number;
-    y(y: number): this;
-    y(y?: number): number | this {
-        ErrorLauncher.notImplementedYet(`${this.constructor.name}.y`);
-        return;
-    }
-    width(): number;
-    width(width: number): this;
-    width(width?: number): number | this {
-        ErrorLauncher.notImplementedYet(`${this.constructor.name}.width`);
-        return;
-    }
-    height(): number;
-    height(height: number): this;
-    height(height?: number): number | this {
-        ErrorLauncher.notImplementedYet(`${this.constructor.name}.height`);
-        return;
-    }
+    abstract x(): number;
+    abstract x(x: number): this;
+    abstract y(): number;
+    abstract y(y: number): this;
+    abstract width(): number;
+    abstract width(width: number): this;
+    abstract height(): number;
+    abstract height(height: number): this;
     scale(scale: number) {
         if (this.fixAspect()) return this.width(this.width() * scale);
         return this.freeze()

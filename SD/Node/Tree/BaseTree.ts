@@ -1,15 +1,23 @@
 import { Vertex } from "@/Node/Element/Vertex";
 import { Line } from "@/Node/Path/Line";
-import { SDNode } from "@/Node/SDNode";
+import { SDNode, SDNodeWithColor, SDNodeWithText, SDNodeWithValue } from "@/Node/SDNode";
+import { RenderNode } from "@/Renderer/RenderNode";
+import { Rect } from "@/sd";
 import { Check } from "@/Utility/Check";
+import { SDColor } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 function castToId(tree, object) {
     return object instanceof SDNode ? tree.nodeId(object) : object;
 }
 
-export class BaseTree extends SDNode {
-    constructor(target) {
+export abstract class BaseTree<
+    NE extends SDNode,
+    NV extends SDNode,
+    LE extends SDNode,
+    LV extends SDNode
+> extends SDNode {
+    constructor(target: SDNode | RenderNode) {
         super(target);
 
         this.newLayer("links");
@@ -29,25 +37,25 @@ export class BaseTree extends SDNode {
         this._.nodeType = Vertex;
         this._.linkType = Line;
     }
-}
-
-Object.assign(BaseTree.prototype, {
-    x(x) {
-        if (arguments.length === 0) return this.vars.x;
-        Check.validateNumber(x, `${this.constructor.name}.x`);
-        this.vars.lpset("x", x);
-        return this;
-    },
-    y(y) {
-        if (arguments.length === 0) return this.vars.y;
-        Check.validateNumber(y, `${this.constructor.name}.y`);
-        this.vars.lpset("y", y);
-        return this;
-    },
+    x(x?: number) {
+        return Rect.prototype.x.apply(this, arguments);
+    }
+    y(y?: number) {
+        return Rect.prototype.y.apply(this, arguments);
+    }
+    /**
+     * Gets the index of the root node.
+     * @returns The index of the root node, or undefined if not found.
+     */
     rootId() {
         return this.nodeId(this.root());
-    },
-    nodeId(node) {
+    }
+    /**
+     * Gets the index of the node.
+     * @param node - The node.
+     * @returns The index of the node, or undefined if not found.
+     */
+    nodeId(node: number | string | NE): string {
         if (node === undefined) return undefined;
         if (node instanceof SDNode) {
             if (!this._.sdnodesMap[node.id]) return undefined;
@@ -56,111 +64,193 @@ Object.assign(BaseTree.prototype, {
             if (!this._.nodesMap[String(node)]) return undefined;
             return String(node);
         }
-    },
+    }
+    /**
+     * Gets the indexes of all nodes contained within this tree component.
+     * @returns An array containing all valid nodes in this component;
+     */
     nodesId() {
-        return this.vars.nodes.map(node => this.nodeId(node));
-    },
-    sourceId(link) {
+        return this.vars.nodes.map((node: NE) => this.nodeId(node));
+    }
+    /**
+     * Gets the index of the source node of the link.
+     * @param link - The link.
+     * @returns The index of the source node of the link.
+     */
+    sourceId(link: LE) {
         return this.nodeId(this.source(link));
-    },
-    targetId(link) {
+    }
+    /**
+     * Gets the index of the target node of the link.
+     * @param link - The link.
+     * @returns The index of the target node of the link.
+     */
+    targetId(link: LE) {
         return this.nodeId(this.target(link));
-    },
-    source(link) {
+    }
+    /**
+     * Gets the source node of the link.
+     * @param link - The link.
+     * @returns The source node of the link.
+     */
+    source(link: LE) {
         if (link === undefined) return undefined;
         if (!this._.sdnodesMap[link.id]) return undefined;
         return this.element(this._.sdnodesMap[link.id].sourceId);
-    },
-    target(link) {
+    }
+    /**
+     * Gets the target node of the link.
+     * @param link - The link.
+     * @returns The target node of the link.
+     */
+    target(link: LE) {
         if (link === undefined) return undefined;
         if (!this._.sdnodesMap[link.id]) return undefined;
         return this.element(this._.sdnodesMap[link.id].targetId);
-    },
+    }
+    /**
+     * Gets all nodes contained within this tree component.
+     * @returns An array containing all valid nodes in this component.
+     */
     nodes() {
         return [...this.vars.nodes];
-    },
+    }
+    /**
+     * Gets all links contained within this tree component.
+     * @returns An array containing all valid links in this component.
+     */
     links() {
         return [...this.vars.links];
-    },
+    }
+    /**
+     * Gets the node that matches the specified condition
+     * @param condition - The predicate function to test each node.
+     * @returns The first matching node, or undefined if no match is found.
+     */
     findNode(condition) {
         for (const node of this.vars.nodes) if (condition(node, this.nodeId(node))) return node;
         return undefined;
-    },
+    }
+    /**
+     * Gets the nodes that match the specified condition.
+     * @param condition - The predicate function to test each node.
+     * @returns All the matching nodes.
+     */
     findNodes(condition) {
         const nodes = [];
         for (const node of this.vars.nodes) if (condition(node, this.nodeId(node))) nodes.push(node);
         return nodes;
-    },
+    }
+    /**
+     * Gets the link that matches the specified condition.
+     * @param condition - The predicate function to test each node.
+     * @returns The first matching node, or undefined if no match is found.
+     */
     findLink(condition) {
         for (const link of this.vars.links) if (condition(link, this.sourceId(link), this.targetId(link))) return link;
         return undefined;
-    },
+    }
+    /**
+     * Gets the links that match the specified condition.
+     * @param condition - The predicate function to test each node.
+     * @returns All the matching links.
+     */
     findLinks(condition) {
         const links = [];
-        for (const link of this.vars.links) if (condition(link, this.sourceId(link), this.targetId(link))) links.push(link);
+        for (const link of this.vars.links)
+            if (condition(link, this.sourceId(link), this.targetId(link))) links.push(link);
         return links;
-    },
+    }
+    /**
+     * Gets the node at the specified index.
+     * @param node - The index of the specified node.
+     * @returns The node at the specified index, or undefined if not found.
+     */
     findNodeById(id) {
         const _id = String(id);
         return this.findNode((_, id) => id === _id);
-    },
-    findLinkById(sourceId, targetId) {
+    }
+    /**
+     * Gets the link at the specified index.
+     * @param source - The index of the father node.
+     * @param target - The index of the child node.
+     * @returns The link at the specified index, or undefined if not found.
+     */
+    findLinkById(sourceId: string | number, targetId: string | number) {
         const [_sourceId, _targetId] = [String(sourceId), String(targetId)];
         return this.findLink((_, sourceId, targetId) => sourceId === _sourceId && targetId === _targetId);
-    },
-    inLink(node) {
+    }
+    inLink(node: string | number | NE): LE {
         const id = this.nodeId(node);
         if (id === undefined) ErrorLauncher.nodeNotFound(node);
         return this.findLink((_1, _2, targetId) => targetId === id);
-    },
-    outLinks(node) {
+    }
+    outLinks(node: string | number | NE): Array<LE> {
         const id = this.nodeId(node);
         if (id === undefined) ErrorLauncher.nodeNotFound(node);
         return this.findLinks((_1, sourceId, _2) => sourceId === id);
-    },
-    father(node) {
+    }
+    father(node: string | number | NE): NE {
         return this.source(this.inLink(node));
-    },
-    fatherId(node) {
+    }
+    fatherId(node: string | number | NE): string {
         return this.sourceId(this.inLink(node));
-    },
-    ancestor(node, kth) {
+    }
+    ancestor(node: string | number | NE, kth: number): NE {
         node = this.element(node);
         while (kth > 0 && node !== undefined) (node = this.father(node)), kth--;
         return node;
-    },
-    ancestorId(node, kth) {
+    }
+    ancestorId(node: string | number | NE, kth: number): string {
         return this.nodeId(this.ancestor(node, kth));
-    },
-    depth(x) {
+    }
+    depth(): number;
+    depth(node: string | number | NE): number;
+    depth(node?: string | number | NE) {
         if (arguments.length === 0) {
             let depth = 0;
             this.forEachNode(node => (depth = Math.max(depth, this.depth(node))));
             return depth;
-        } else {
-            let depth = 1;
-            while (this.father(x)) (x = this.father(x)), depth++;
-            return depth;
         }
-    },
-    lca(x, y) {
-        let [_x, _y, dx, dy] = [this.nodeId(x), this.nodeId(y), this.depth(x), this.depth(y)];
-        if (_x === undefined) ErrorLauncher.nodeNotFound(x);
-        if (_y === undefined) ErrorLauncher.nodeNotFound(y);
+        let depth = 1;
+        while (this.father(node)) (node = this.father(node)), depth++;
+        return depth;
+    }
+    /**
+     * Gets the LCA of two nodes in this tree component.
+     * @param source - The first node.
+     * @param target - The second node.
+     * @returns The current component instance for method chaining.
+     */
+    lca(source: number | string | NE, target: number | string | NE): NE {
+        let [_x, _y, dx, dy] = [this.nodeId(source), this.nodeId(target), this.depth(source), this.depth(target)];
+        if (_x === undefined) ErrorLauncher.nodeNotFound(source);
+        if (_y === undefined) ErrorLauncher.nodeNotFound(target);
         for (let i = 1; i <= 100 && _x !== _y; i++) {
             if (dx > dy) (_x = this.fatherId(_x)), dx--;
             else (_y = this.fatherId(_y)), dy--;
         }
         if (_x !== _y) ErrorLauncher.lcaNotFound();
         return this.findNodeById(_x);
-    },
-    lcaId(x, y) {
+    }
+    /**
+     * Gets the index of the LCA of two nodes in this tree component.
+     * @param source - The first node.
+     * @param target - The second node.
+     * @returns The current component instance for method chaining.
+     */
+    lcaId(x: number | string | NE, y: number | string | NE): string {
         return this.nodeId(this.lca(x, y));
-    },
-    children(node) {
+    }
+    children(node: number | string | NE): Array<NE> {
         return this.outLinks(node).map(link => this.target(link));
-    },
-    nodesInSubtree(node) {
+    }
+    /**
+     * Gets all nodes in the subtree rooted at the specified node.
+     * @param node - The root node of the subtree.
+     * @returns All nodes in the subtree.
+     */
+    nodesInSubtree(node: number | string | NE): Array<NE> {
         node = this.element(node);
         const nodeList = [];
         const dfs = node => {
@@ -172,8 +262,13 @@ Object.assign(BaseTree.prototype, {
         };
         dfs(node);
         return nodeList;
-    },
-    linksInSubtree(node) {
+    }
+    /**
+     * Gets all nodes in the subtree rooted at the specified node.
+     * @param node - The root node of the subtree.
+     * @returns All links in the subtree.
+     */
+    linksInSubtree(node: string | number | NE): Array<LE> {
         node = this.element(node);
         const linkList = [];
         const dfs = node => {
@@ -185,22 +280,40 @@ Object.assign(BaseTree.prototype, {
         };
         dfs(node);
         return linkList;
-    },
-    forEachNodeInSubtree(node, callback) {
-        Check.validateSyncFunction(callback, `${this.type()}.forEachNodeInSubtree`);
+    }
+    /**
+     * Iterates over each node in the subtree.
+     * @param node - The root node of the subtree.
+     * @param callback - A function to execute for each node.
+     * @returns The current component instance for method chaining.
+     */
+    forEachNodeInSubtree(node: string | number | NE, callback: (node: NE, id: string) => void) {
+        Check.validateSyncFunction(callback, `${this.constructor.name}.forEachNodeInSubtree`);
         this.nodesInSubtree(node).forEach(node => {
             callback(node, this.nodeId(node));
         });
         return this;
-    },
-    forEachLinkInSubtree(node, callback) {
-        Check.validateSyncFunction(callback, `${this.type()}.forEachLinkInSubtree`);
+    }
+    /**
+     * Iterates over each link in the subtree.
+     * @param node - The root node of the subtree.
+     * @param callback - A function to execute for each link.
+     * @returns The current component instance for method chaining.
+     */
+    forEachLinkInSubtree(node: string | number | NE, callback: (link: LE, sourceId: string, targetId: string) => void) {
+        Check.validateSyncFunction(callback, `${this.constructor.name}.forEachLinkInSubtree`);
         this.linksInSubtree(node).forEach(link => {
             callback(link, this.sourceId(link), this.targetId(link));
         });
         return this;
-    },
-    nodesOnPath(source, target) {
+    }
+    /**
+     * Gets all nodes in the path.
+     * @param source - The starting node of the path.
+     * @param target - The ending node of the path.
+     * @returns All nodes in the path.
+     */
+    nodesOnPath(source: string | number | NE, target: string | number | NE): Array<NE> {
         source = this.element(source);
         const sourceList = [];
         target = this.element(target);
@@ -219,8 +332,14 @@ Object.assign(BaseTree.prototype, {
             }
         }
         return [...sourceList, source, ...targetList.reverse()];
-    },
-    linksOnPath(source, target) {
+    }
+    /**
+     * Gets all links in the path.
+     * @param source - The starting node of the path.
+     * @param target - The ending node of the path.
+     * @returns All links in the path.
+     */
+    linksOnPath(source: string | number | NE, target: string | number | NE): Array<LE> {
         source = this.element(source);
         const sourceList = [];
         target = this.element(target);
@@ -239,32 +358,66 @@ Object.assign(BaseTree.prototype, {
             }
         }
         return [...sourceList, ...targetList.reverse()];
-    },
-    forEachNodeOnPath(source, target, callback) {
-        Check.validateSyncFunction(callback, `${this.type()}.forEachNodeOnPath`);
+    }
+    /**
+     * Iterates over each node in the path.
+     * @param source - The starting node of the path.
+     * @param target - The ending node of the path.
+     * @param callback - A function to execute for each node.
+     * @returns The current component instance for method chaining.
+     */
+    forEachNodeOnPath(
+        source: string | number | NE,
+        target: string | number | NE,
+        callback: (node: NE, id: string) => void
+    ): this {
+        Check.validateSyncFunction(callback, `${this.constructor.name}.forEachNodeOnPath`);
         this.nodesOnPath(source, target).forEach(node => callback(node, this.nodeId(node)));
         return this;
-    },
-    forEachLinkOnPath(source, target, callback) {
-        Check.validateSyncFunction(callback, `${this.type()}.forEachLinkOnPath`);
+    }
+    /**
+     * Iterates over each node in the path.
+     * @param source - The starting node of the path.
+     * @param target - The ending node of the path.
+     * @param callback - A function to execute for each link.
+     * @returns The current component instance for method chaining.
+     */
+    forEachLinkOnPath(
+        source: string | number | NE,
+        target: string | number | NE,
+        callback: (link: LE, sourceId: string, targetId: string) => void
+    ) {
+        Check.validateSyncFunction(callback, `${this.constructor.name}.forEachLinkOnPath`);
         this.linksOnPath(source, target).forEach(link => callback(link, this.sourceId(link), this.targetId(link)));
         return this;
-    },
-    forEachNode(callback) {
-        Check.validateSyncFunction(callback, `${this.type()}.forEachNode`);
+    }
+    /**
+     * Iterates over each node.
+     * @param callback - A function to execute for each node.
+     * @returns The current component instance for method chaining.
+     */
+    forEachNode(callback: (node: NE, id: string) => void) {
+        Check.validateSyncFunction(callback, `${this.constructor.name}.forEachNode`);
         this.vars.nodes.forEach(node => callback(node, this.nodeId(node)));
         return this;
-    },
-    forEachLink(callback) {
-        Check.validateSyncFunction(callback, `${this.type()}.forEachLink`);
+    }
+    /**
+     * Iterates over each link.
+     * @param callback - A function to execute for each link.
+     * @returns The current component instance for method chaining.
+     */
+    forEachLink(callback: (link: LE, sourceId: string, targetId: string) => void) {
+        Check.validateSyncFunction(callback, `${this.constructor.name}.forEachLink`);
         this.vars.links.forEach(link => callback(link, this.sourceId(link), this.targetId(link)));
         return this;
-    },
-    root(id, value) {
+    }
+    root(): NE;
+    root(id: string | number, value?: any): this;
+    root(id?: string | number, value?: any) {
         if (arguments.length === 0) return this.findNode(node => this.father(node) === undefined);
         else if (!this.element(id)) return this.newNode(id, value);
         return this.rootAs(id);
-    },
+    }
     rootAs(id) {
         const dfs = x => {
             const father = this.father(x);
@@ -275,7 +428,7 @@ Object.assign(BaseTree.prototype, {
         dfs(this.element(id));
         this.vars.structure = true;
         return this;
-    },
+    }
     link(sourceId, targetId, value) {
         this.freeze();
         if (!this.findNodeById(targetId)) this.newNode(targetId);
@@ -283,28 +436,18 @@ Object.assign(BaseTree.prototype, {
         this.newLink(sourceId, targetId, value);
         this.unfreeze();
         return this;
-    },
-    newNode() {
-        ErrorLauncher.notImplementedYet("newNode", this.type());
-    },
-    newNodeFromExistValue() {
-        ErrorLauncher.notImplementedYet("newNodeFromExistValue", this.type());
-    },
-    newNodeFromExistElement() {
-        ErrorLauncher.notImplementedYet("newNodeFromExistElement", this.type());
-    },
-    newLink() {
-        ErrorLauncher.notImplementedYet("newLink", this.type());
-    },
-    newLinkFromExistValue() {
-        ErrorLauncher.notImplementedYet("newLinkFromExistValue", this.type());
-    },
-    newLinkFromExistElement() {
-        ErrorLauncher.notImplementedYet("newLinkFromExistElement", this.type());
-    },
-    cut(sourceId, targetId) {
+    }
+    abstract newNode(id: number | string, value?: any): this;
+    abstract newNodeFromExistValue(id: number | string, value: NV): this;
+    abstract newNodeFromExistElement(id: number | string, element: NE): this;
+    abstract newLink(sourceId: number | string, targetId: number | string, value?: any): this;
+    abstract newLinkFromExistValue(sourceId: number | string, targetId: number | string, value: LV): this;
+    abstract newLinkFromExistElement(sourceId: number | string, targetId: number | string, element: LE): this;
+    cut(sourceId: number | string, targetId: number | string) {
         return this.erase(sourceId, targetId);
-    },
+    }
+    erase(node: number | string | NE): this;
+    erase(source: number | string | NE, target: number | string | NE): this;
     erase() {
         if (arguments.length === 1) {
             const [node] = arguments;
@@ -313,7 +456,20 @@ Object.assign(BaseTree.prototype, {
             const [source, target] = arguments;
             return this.__eraseLink(this.nodeId(source), this.nodeId(target));
         }
-    },
+    }
+    /**
+     * Gets the node at the specified index.
+     * @param node - The index of the specified node.
+     * @returns The node at the specified index, or undefined if not found.
+     */
+    element(node: number | string | NE): NE;
+    /**
+     * Gets the link at the specified index.
+     * @param source - The index of the father node.
+     * @param target - The index of the child node.
+     * @returns The link at the specified index, or undefined if not found.
+     */
+    element(source: number | string | NE, target: number | string | NE): LE;
     element() {
         if (arguments.length === 1) {
             const [node] = arguments;
@@ -325,7 +481,7 @@ Object.assign(BaseTree.prototype, {
             const [sourceId, targetId] = [castToId(this, source), castToId(this, target)];
             return this.findLinkById(sourceId, targetId);
         }
-    },
+    }
     opacity() {
         if (arguments.length === 0) {
             return SDNode.prototype.opacity.call(this);
@@ -349,47 +505,60 @@ Object.assign(BaseTree.prototype, {
             const [source, target, opacity] = arguments;
             return this.linkOpacity(source, target, opacity);
         }
-    },
-    nodeOpacity(node, opacity) {
-        const element = this.__getNodeWithMethod(node, "opacity");
+    }
+    nodeOpacity(node: number | string | NE): number;
+    nodeOpacity(node: number | string | NE, opacity: number): this;
+    nodeOpacity(node: number | string | NE, opacity?: number) {
+        const element = this.__getNodeWithMethod(node, "opacity") as SDNode;
         if (arguments.length === 1) return element.opacity();
         element.opacity(opacity);
         return this;
-    },
-    linkOpacity(source, target, opacity) {
-        const element = this.__getLinkWithMethod(source, target, "opacity");
+    }
+    linkOpacity(source: number | string | NE, target: number | string | NE): number;
+    linkOpacity(source: number | string | NE, target: number | string | NE, opacity: number): this;
+    linkOpacity(source: number | string | NE, target: number | string | NE, opacity?: number) {
+        const element = this.__getLinkWithMethod(source, target, "opacity") as SDNode;
         if (arguments.length === 2) return element.opacity();
         element.opacity(opacity);
         return this;
-    },
+    }
+    color(color: string | SDColor): this;
+    color(node: number | string | NE): SDColor;
+    color(node: number | string | NE, color: string | SDColor): this;
+    color(source: number | string | NE, target: number | string | NE): SDColor;
+    color(source: number | string | NE, target: number | string | NE, color: string | SDColor): this;
     color() {
         if (arguments.length === 1) {
             if (Check.isColor(arguments[0])) {
                 const [color] = arguments;
-                return this.forEachNode(node => node.color(color));
+                return this.forEachNode((node: unknown) => (node as SDNodeWithColor).color(color));
             } else {
                 const [node] = arguments;
-                const _node = this.__getNodeWithMethod(node, "color");
+                const _node = this.__getNodeWithMethod(node, "color") as SDNodeWithColor;
                 return _node.color();
             }
         } else if (arguments.length === 2) {
             if (Check.isColor(arguments[1])) {
                 const [node, color] = arguments;
-                const _node = this.__getNodeWithMethod(node, "color");
+                const _node = this.__getNodeWithMethod(node, "color") as SDNodeWithColor;
                 _node.color(color);
                 return this;
             } else {
                 const [source, target] = arguments;
-                const link = this.__getLinkWithMethod(source, target, "color");
+                const link = this.__getLinkWithMethod(source, target, "color") as SDNodeWithColor;
                 return link.color();
             }
         } else {
             const [source, target, color] = arguments;
-            const link = this.__getLinkWithMethod(source, target, "color");
+            const link = this.__getLinkWithMethod(source, target, "color") as SDNodeWithColor;
             link.color(color);
             return this;
         }
-    },
+    }
+    text(node: number | string | NE): string;
+    text(node: number | string | NE, text: string): this;
+    text(source: number | string | NE, target: number | string | NE): string;
+    text(source: number | string | NE, target: number | string | NE, text: string): this;
     text() {
         if (arguments.length === 1) {
             const [node] = arguments;
@@ -406,19 +575,25 @@ Object.assign(BaseTree.prototype, {
             const [source, target, text] = arguments;
             return this.linkText(source, target, text);
         }
-    },
-    nodeText(node, text) {
-        const element = this.__getNodeWithMethod(node, "text");
+    }
+    nodeText(node: number | string | NE): string;
+    nodeText(node: number | string | NE, text: string): this;
+    nodeText(node: number | string | NE, text?: string) {
+        const element = this.__getNodeWithMethod(node, "text") as SDNodeWithText;
         if (arguments.length === 1) return element.text();
         element.text(text);
         return this;
-    },
-    linkText(source, target, text) {
-        const element = this.__getLinkWithMethod(source, target, "text");
+    }
+    linkText(source: number | string | NE, target: number | string | NE): string;
+    linkText(source: number | string | NE, target: number | string | NE, text: string): this;
+    linkText(source: number | string | NE, target: number | string | NE, text?: string) {
+        const element = this.__getLinkWithMethod(source, target, "text") as SDNodeWithText;
         if (arguments.length === 2) return element.text();
         element.text(text);
         return this;
-    },
+    }
+    intValue(node: number | string | NE): number;
+    intValue(source: number | string | NE, target: number | string | NE): number;
     intValue() {
         let element = undefined;
         if (arguments.length === 1) {
@@ -439,7 +614,11 @@ Object.assign(BaseTree.prototype, {
             return i;
         }
         return element.intValue();
-    },
+    }
+    value(node: number | string | NE): NV;
+    value(node: number | string | NE, value: any): this;
+    value(source: number | string | NE, target: number | string | NE): LV;
+    value(source: number | string | NE, target: number | string | NE, value: any): this;
     value() {
         if (arguments.length === 1) {
             const [node] = arguments;
@@ -456,20 +635,23 @@ Object.assign(BaseTree.prototype, {
             const [source, target, value] = arguments;
             return this.linkValue(source, target, value);
         }
-    },
-    nodeValue(node, value) {
-        const element = this.__getNodeWithMethod(node, "value");
+    }
+    nodeValue(node: number | string | NE): NV;
+    nodeValue(node: number | string | NE, value?: any): this;
+    nodeValue(node: number | string | NE, value?: any) {
+        const element = this.__getNodeWithMethod(node, "value") as SDNodeWithValue;
         if (arguments.length === 1) return element.value();
         element.value(value);
         return this;
-    },
-    linkValue(source, target, value) {
-        const element = this.__getLinkWithMethod(source, target, "value");
+    }
+    linkValue(source: number | string | NE, target: number | string | NE): LV;
+    linkValue(source: number | string | NE, target: number | string | NE, value: any): this;
+    linkValue(source: number | string | NE, target: number | string | NE, value?: any) {
+        const element = this.__getLinkWithMethod(source, target, "value") as SDNodeWithValue;
         if (arguments.length === 2) return element.value();
         element.value(value);
         return this;
-    },
-
+    }
     stratify() {
         const result = {};
         const root = this.root();
@@ -493,71 +675,68 @@ Object.assign(BaseTree.prototype, {
         };
         dfs(root, 1);
         return result[this.nodeId(root)];
-    },
+    }
     linkType(type) {
         if (arguments.length === 0) return this._.linkType;
         this._.linkType = type;
         return this;
-    },
+    }
     nodeType(type) {
-        console.log("this=", this);
-        console.log("type=", type, "current=", this._.nodeType);
         if (arguments.length === 0) return this._.nodeType;
         this._.nodeType = type;
         return this;
-    },
-    __insertNode(id, node) {
-        id = String(id);
+    }
+    protected __insertNode(id: string, node: NE) {
         this._.sdnodesMap[node.id] = { node, id };
         this._.nodesMap[id] = node;
         this.childAs(node);
         this.vars.nodes.push(node);
         return this;
-    },
-    __insertLink(sourceId, targetId, link) {
-        [sourceId, targetId] = [String(sourceId), String(targetId)];
+    }
+    protected __insertLink(sourceId: string, targetId: string, link: LE) {
         this._.sdnodesMap[link.id] = { link, sourceId, targetId };
         this._.linksMap.set([sourceId, targetId], link);
         this.childAs(link);
         this.vars.links.push(link);
         return this;
-    },
-    __reverseLink(sourceId, targetId) {
-        [sourceId, targetId] = [String(sourceId), String(targetId)];
+    }
+    protected __reverseLink(sourceId: string, targetId: string) {
         const link = this.element(sourceId, targetId);
-        this._.sdnodesMap[link.id] = { link, sourceId: targetId, targetId: sourceId };
+        this._.sdnodesMap[link.id] = {
+            link,
+            sourceId: targetId,
+            targetId: sourceId,
+        };
         this._.linksMap.delete([sourceId, targetId]);
         this._.linksMap.set([targetId, sourceId], link);
         return this;
-    },
-    __eraseNode(id) {
-        id = String(id);
+    }
+    protected __eraseNode(id: string) {
         this._.nodesMap.delete(id);
         const node = this.element(id);
         const nodes = this.vars.nodes;
         nodes.splice(nodes.indexOf(node), 1);
         this.eraseChild(node);
         return this;
-    },
-    __eraseLink(sourceId, targetId) {
-        [sourceId, targetId] = [String(sourceId), String(targetId)];
+    }
+    protected __eraseLink(sourceId: string, targetId: string) {
         this._.linksMap.delete([sourceId, targetId]);
         const link = this.findLinkById(sourceId, targetId);
         const links = this.vars.links;
         links.splice(links.indexOf(link), 1);
         this.eraseChild(link);
         return this;
-    },
-    __getNodeWithMethod(node, method) {
+    }
+    protected __getNodeWithMethod(node: number | string | NE, method: string): unknown {
         const element = this.element(node);
         if (!element) ErrorLauncher.nodeNotFound(node);
         if (typeof element[method] !== "function") ErrorLauncher.methodNotFound(element, method);
         return element;
-    },
-    __getLinkWithMethod(source, target, method) {
+    }
+    protected __getLinkWithMethod(source: number | string | NE, target: number | string | NE, method: string): unknown {
         const element = this.element(source, target);
         if (!element) ErrorLauncher.linkNotFound(source, target);
         if (typeof element[method] !== "function") ErrorLauncher.methodNotFound(element, method);
         return element;
-    },
-});
+    }
+}

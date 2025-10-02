@@ -4,7 +4,7 @@ import { Circle } from "@/Node/Shape/Circle";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Rule as R } from "@/Rule/Rule";
 
-export class Vertex extends BaseElement {
+export class Vertex extends BaseElement<Circle> {
     constructor(target: SDNode | RenderNode, value?: any) {
         super(target);
 
@@ -17,22 +17,8 @@ export class Vertex extends BaseElement {
     r(): number;
     r(r: number): this;
     r(r?: number) {
-        if (arguments.length === 0) return Circle.prototype.r.call(this);
-        return Circle.prototype.r.call(this, r);
-    }
-    width(): number;
-    width(width: number): this;
-    width(width?: number) {
-        if (arguments.length === 0) return Circle.prototype.width.call(this);
-        return Circle.prototype.width.call(this, width);
-    }
-    height(): number;
-    height(height: number): this;
-    height(height?: number) {
-        if (arguments.length === 0) return Circle.prototype.height.call(this);
-        return Circle.prototype.height.call(this, height);
-    }
-    inRange(point) {
-        return Circle.prototype.inRange.call(this, point);
+        if (arguments.length === 0) return this.background().r();
+        this.background().r(r);
+        return this;
     }
 }

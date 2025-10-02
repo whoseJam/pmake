@@ -3,7 +3,7 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const C = sd.color();
 
-sd.main(TestText);
+sd.main(TestValue);
 
 async function TestText() {
     const vertex = new sd.Vertex(svg).x(100).y(100);
@@ -26,7 +26,7 @@ async function TestLayout() {
     vertices.forEach(vertex => vertex.startAnimate().width(40).endAnimate());
 }
 
-async function TestBasic(params) {
+async function TestBasic() {
     const vertex = new sd.Vertex(svg).x(100).y(100);
     await sd.pause();
     vertex.value(1);
@@ -38,4 +38,22 @@ async function TestBasic(params) {
     await sd.pause();
     vertex.startAnimate().r(40).endAnimate();
     console.log(vertex.r(), vertex.x(), vertex.y());
+}
+
+async function TestValue() {
+    const v1 = new sd.Vertex(svg, "A").x(100).y(100);
+    const v2 = new sd.Vertex(svg, "B").x(100).y(200);
+    const v3 = new sd.Vertex(svg, "C").x(100).y(300);
+    await sd.pause();
+    v1.startAnimate().value("B").endAnimate();
+    v2.startAnimate().value(null).endAnimate();
+    v3.startAnimate().value(undefined).endAnimate();
+}
+
+async function TestPositionAndSize() {
+    const vertex = new sd.Vertex(svg, "H").x(100).y(100);
+    await sd.pause();
+    vertex.startAnimate().x(200).y(200).endAnimate();
+    await sd.pause();
+    vertex.startAnimate().width(80).height(80).endAnimate();
 }

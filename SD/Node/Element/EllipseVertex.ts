@@ -4,7 +4,7 @@ import { Ellipse } from "@/Node/Shape/Ellipse";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Rule as R } from "@/Rule/Rule";
 
-export class EllipseVertex extends BaseElement {
+export class EllipseVertex extends BaseElement<Ellipse> {
     constructor(target: SDNode | RenderNode, value?: any) {
         super(target);
 

@@ -4,7 +4,7 @@ const svg = sd.svg();
 const C = sd.color();
 const V = sd.vec();
 
-sd.main(TestChristmasTree);
+sd.main(TestLink);
 
 async function TestChristmasTree() {
     const pen = new sd.PathPen(svg);
@@ -125,16 +125,12 @@ async function TestFatherId() {
     console.assert(tree.fatherId(5) === "2");
 }
 
-async function TestBasic() {
-    const t = new sd.Tree(svg);
-    t.root(1).cx(600).y(100);
+async function TestLink() {
+    const tree = new sd.Tree(svg).root(1).cx(600).y(100);
     await sd.pause();
-    t.startAnimate();
-    t.link(1, 2);
-    t.link(1, 3);
-    t.endAnimate();
+    tree.startAnimate().link(1, 2).link(1, 3).endAnimate();
     await sd.pause();
-    t.startAnimate().freeze().link(3, 4).link(3, 5).unfreeze().endAnimate();
+    tree.startAnimate().freeze().link(3, 4).link(3, 5).unfreeze().endAnimate();
     await sd.pause();
-    t.startAnimate().width(100).endAnimate();
+    tree.startAnimate().width(100).endAnimate();
 }
