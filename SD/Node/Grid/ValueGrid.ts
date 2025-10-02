@@ -1,5 +1,3 @@
-import { Enter as EN } from "@/Node/Core/Enter";
-import { Exit as EX } from "@/Node/Core/Exit";
 import { Grid } from "@/Node/Grid/Grid";
 import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
@@ -54,9 +52,7 @@ export class ValueGrid<E = SDNode, V = SDNode> extends Grid<E, V> {
         });
     }
     insert(i: number, j: number, value: any) {
-        const element = value as SDNode;
-        element.onEnterDefault(EN.appear("elements"));
-        element.onExitDefault(EX.fade());
+        const element = value instanceof SDNode ? (value as SDNode) : SDNode.__asNode(this.layer("elements"), value);
         this.__insert(i, j, element as E);
         return this;
     }
