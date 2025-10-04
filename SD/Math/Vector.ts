@@ -8,57 +8,51 @@ function ddcmp(x) {
 }
 
 export class Vector {
-    static add(a, b) {
-        if (a.length === 2) return [a[0] + b[0], a[1] + b[1]];
-        return [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+    static add(a: [number, number], b: [number, number]): [number, number] {
+        return [a[0] + b[0], a[1] + b[1]];
     }
-    static sub(a, b) {
-        if (a.length === 2) return [a[0] - b[0], a[1] - b[1]];
-        return [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+    static sub(a: [number, number], b: [number, number]): [number, number] {
+        return [a[0] - b[0], a[1] - b[1]];
     }
-    static dotMul(a, b) {
-        if (a.length === 2) return a[0] * b[0] + a[1] * b[1];
-        return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+    static dotMul(a: [number, number], b: [number, number]): number {
+        return a[0] * b[0] + a[1] * b[1];
     }
-    static numberMul(a, b) {
-        if (a.length === 2) return [a[0] * b, a[1] * b];
-        return [a[0] * b, a[1] * b, a[2] * b];
+    static numberMul(a: [number, number], b: number): [number, number] {
+        return [a[0] * b, a[1] * b];
     }
-    static norm(a) {
-        if (a.length === 2) return Math.sqrt(a[0] * a[0] + a[1] * a[1]);
-        return Math.sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
+    static norm(a: [number, number]): number {
+        return Math.sqrt(a[0] * a[0] + a[1] * a[1]);
     }
-    static identity(a) {
+    static identity(a: [number, number]): [number, number] {
         const length = this.norm(a);
-        if (a.length === 2) return ddcmp(length) > 0 ? [a[0] / length, a[1] / length] : [0, 0];
-        return ddcmp(length) > 0 ? [a[0] / length, a[1] / length, a[2] / length] : [0, 0, 0];
+        return ddcmp(length) > 0 ? [a[0] / length, a[1] / length] : [0, 0];
     }
-    static complexMul(a, b) {
+    static complexMul(a: [number, number], b: [number, number]): [number, number] {
         return [a[0] * b[0] - a[1] * b[1], a[0] * b[1] - a[1] * b[0]];
     }
-    static makeComplex(r, arc) {
+    static makeComplex(r: number, arc: number): [number, number] {
         return [r * Math.cos(arc), r * Math.sin(arc)];
     }
-    static rotate(a, arc) {
+    static rotate(a: [number, number], arc: number): [number, number] {
         const direction = this.makeComplex(1, arc);
         return this.complexMul(a, direction);
     }
-    static cross(a, b) {
+    static cross(a: [number, number], b: [number, number]): number {
         return a[0] * b[1] - a[1] * b[0];
     }
-    static onLeft(a, b) {
+    static onLeft(a: [number, number], b: [number, number]): boolean {
         return this.cross(a, b) >= 0;
     }
-    static onRight(a, b) {
+    static onRight(a: [number, number], b: [number, number]): boolean {
         return this.cross(a, b) <= 0;
     }
-    static cos(a) {
+    static cos(a: [number, number]): number {
         return a[0] / this.norm(a);
     }
-    static sin(a) {
+    static sin(a: [number, number]): number {
         return a[1] / this.norm(a);
     }
-    static tan(a) {
+    static tan(a: [number, number]): number {
         return a[1] / a[0];
     }
     static cohenSutherland(a, b, x, y, width, height) {

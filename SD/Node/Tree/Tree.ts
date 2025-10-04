@@ -1,11 +1,16 @@
 import { Enter as EN } from "@/Node/Core/Enter";
+import { Vertex } from "@/Node/Element/Vertex";
+import { Line } from "@/Node/Path/Line";
+import { SDNode } from "@/Node/SDNode";
 import { BaseTree } from "@/Node/Tree/BaseTree";
 import { TreeEngine } from "@/Node/Tree/TreeEngine";
-import { Cast } from "@/Utility/Cast";
+import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
 
-export class Tree extends BaseTree {
-    constructor(target) {
+type Layout = "vertical" | "horizontal";
+
+export class Tree extends BaseTree<Vertex, SDNode, Line, SDNode> {
+    constructor(target: SDNode | RenderNode) {
         super(target);
 
         this.type("Tree");
@@ -42,71 +47,72 @@ export class Tree extends BaseTree {
             }
         });
     }
-}
-
-Object.assign(Tree.prototype, {
-    width(width) {
+    width(): number;
+    width(width: number): this;
+    width(width?: number) {
         if (arguments.length === 0) return this.vars.width;
         if (this.layout() === "horizontal") {
             const depth = this.depth() - 1;
             if (!depth) return this.layerWidth(width);
             return this.layerWidth(width / depth);
-        } else {
-            this.vars.width = width;
-            return this;
         }
-    },
-    height(height) {
+        this.vars.width = width;
+        return this;
+    }
+    height(): number;
+    height(height: number): this;
+    height(height?: number) {
         if (arguments.length === 0) return this.vars.height;
         if (this.layout() === "vertical") {
             const depth = this.depth() - 1;
             if (!depth) return this.layerHeight(height);
             return this.layerHeight(height / depth);
-        } else {
-            this.vars.height = height;
-            return this;
         }
-    },
-    newNode(id, value) {
-        const element = new this._.nodeType(this.layer("nodes"));
-        element.value(Cast.castToSDNode(element, value, id));
+        this.vars.height = height;
+        return this;
+    }
+    newNode(id: string | number, value?: any) {
+        const element = new Vertex(this.layer("nodes")).opacity(0);
+        element.value(SDNode.__asNode(this.layer("nodes"), value, String(id)));
         element.onEnter(EN.appear("nodes"));
-        this.__insertNode(id, element);
+        this.__insertNode(String(id), element);
         return this;
-    },
-    newNodeFromExistValue(id, value) {
-        const element = new this._.nodeType(this.layer("nodes"));
+    }
+    newNodeFromExistValue(id: string | number, value: SDNode) {
+        const element = new Vertex(this.layer("nodes")).opacity(0);
         element.onEnter(EN.appear("nodes"));
-        this.__insertNode(id, element);
-        element.value(value.onEnter(EN.moveTo()));
+        this.__insertNode(String(id), element);
+        element.valueFromExist(value);
         return this;
-    },
-    newNodeFromExistElement(id, value) {
-        const element = value;
-        element.onEnter(EN.moveTo("nodes"));
-        this.__insertNode(id, element);
+    }
+    newNodeFromExistElement(id: string | number, element: Vertex) {
+        const element_ = element as SDNode;
+        element_.onEnter(EN.moveTo("nodes"));
+        this.__insertNode(String(id), element);
         return this;
-    },
-    newLink(sourceId, targetId, value) {
-        const element = new this._.linkType(this.layer("links"));
+    }
+    newLink(sourceId: string | number, targetId: string | number, value?: any) {
+        const element = new Line(this.layer("links")).opacity(0);
         element.value(value);
         element.onEnter(EN.appear("links"));
-        this.__insertLink(sourceId, targetId, element);
+        this.__insertLink(String(sourceId), String(targetId), element);
         return this;
-    },
-    newLinkFromExistValue(sourceId, targetId, value) {
-        const element = new this._.linkType(this.layer("links"));
+    }
+    newLinkFromExistValue(sourceId: string | number, targetId: string | number, value?: any) {
+        const element = new Line(this.layer("links")).opacity(0);
         element.onEnter(EN.appear("links"));
-        this.__insertLink(sourceId, targetId, element);
+        this.__insertLink(String(sourceId), String(targetId), element);
         element.value(value.onEnter(EN.moveTo()));
         return this;
-    },
-    newLinkFromExistElement(sourceId, targetId, element) {
+    }
+    newLinkFromExistElement(sourceId: string | number, targetId: string | number, element: Line) {
         element.onEnter(EN.moveTo("links"));
-        this.__insertLink(sourceId, targetId, element);
+        this.__insertLink(String(sourceId), String(targetId), element);
         return this;
-    },
-    layout(layout) {
+    }
+    layout(): Layout;
+    layout(layout: Layout): this;
+    layout(layout?: Layout) {
         if (arguments.length === 0) return this.vars.layout;
         if (this.vars.layout !== layout) {
             this.vars.setTogether({
@@ -117,14 +123,23 @@ Object.assign(Tree.prototype, {
             return this;
         }
         return this;
-    },
-    layerGap(gap) {
+    }
+    layerGap(): number;
+    layerGap(gap: number): this;
+    layerGap(gap?: number) {
         if (arguments.length === 0) return this.vars.layerGap;
         Check.validateNumber(gap, `${this.constructor.name}.layerGap`);
         this.vars.lpset("layerGap", gap);
         return this;
-    },
-});
-
-Tree.prototype.layerWidth = Tree.prototype.layerGap;
-Tree.prototype.layerHeight = Tree.prototype.layerGap;
+    }
+    layerWidth(): number;
+    layerWidth(width: number): this;
+    layerWidth() {
+        return this.layerGap.apply(this, arguments);
+    }
+    layerHeight(): number;
+    layerHeight(height: number): this;
+    layerHeight() {
+        return this.layerGap.apply(this, arguments);
+    }
+}

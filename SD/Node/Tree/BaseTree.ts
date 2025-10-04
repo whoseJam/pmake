@@ -7,10 +7,6 @@ import { Check } from "@/Utility/Check";
 import { SDColor } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
-function castToId(tree, object) {
-    return object instanceof SDNode ? tree.nodeId(object) : object;
-}
-
 export abstract class BaseTree<
     NE extends SDNode,
     NV extends SDNode,
@@ -55,7 +51,7 @@ export abstract class BaseTree<
      * @param node - The node.
      * @returns The index of the node, or undefined if not found.
      */
-    nodeId(node: number | string | NE): string {
+    nodeId(node: string | number | NE): string {
         if (node === undefined) return undefined;
         if (node instanceof SDNode) {
             if (!this._.sdnodesMap[node.id]) return undefined;
@@ -222,7 +218,7 @@ export abstract class BaseTree<
      * @param target - The second node.
      * @returns The current component instance for method chaining.
      */
-    lca(source: number | string | NE, target: number | string | NE): NE {
+    lca(source: string | number | NE, target: string | number | NE): NE {
         let [_x, _y, dx, dy] = [this.nodeId(source), this.nodeId(target), this.depth(source), this.depth(target)];
         if (_x === undefined) ErrorLauncher.nodeNotFound(source);
         if (_y === undefined) ErrorLauncher.nodeNotFound(target);
@@ -239,10 +235,10 @@ export abstract class BaseTree<
      * @param target - The second node.
      * @returns The current component instance for method chaining.
      */
-    lcaId(x: number | string | NE, y: number | string | NE): string {
+    lcaId(x: string | number | NE, y: string | number | NE): string {
         return this.nodeId(this.lca(x, y));
     }
-    children(node: number | string | NE): Array<NE> {
+    children(node: string | number | NE): Array<NE> {
         return this.outLinks(node).map(link => this.target(link));
     }
     /**
@@ -250,7 +246,7 @@ export abstract class BaseTree<
      * @param node - The root node of the subtree.
      * @returns All nodes in the subtree.
      */
-    nodesInSubtree(node: number | string | NE): Array<NE> {
+    nodesInSubtree(node: string | number | NE): Array<NE> {
         node = this.element(node);
         const nodeList = [];
         const dfs = node => {
@@ -437,17 +433,17 @@ export abstract class BaseTree<
         this.unfreeze();
         return this;
     }
-    abstract newNode(id: number | string, value?: any): this;
-    abstract newNodeFromExistValue(id: number | string, value: NV): this;
-    abstract newNodeFromExistElement(id: number | string, element: NE): this;
-    abstract newLink(sourceId: number | string, targetId: number | string, value?: any): this;
-    abstract newLinkFromExistValue(sourceId: number | string, targetId: number | string, value: LV): this;
-    abstract newLinkFromExistElement(sourceId: number | string, targetId: number | string, element: LE): this;
-    cut(sourceId: number | string, targetId: number | string) {
+    abstract newNode(id: string | number, value?: any): this;
+    abstract newNodeFromExistValue(id: string | number, value: NV): this;
+    abstract newNodeFromExistElement(id: string | number, element: NE): this;
+    abstract newLink(sourceId: string | number, targetId: string | number, value?: any): this;
+    abstract newLinkFromExistValue(sourceId: string | number, targetId: string | number, value: LV): this;
+    abstract newLinkFromExistElement(sourceId: string | number, targetId: string | number, element: LE): this;
+    cut(sourceId: string | number, targetId: string | number) {
         return this.erase(sourceId, targetId);
     }
-    erase(node: number | string | NE): this;
-    erase(source: number | string | NE, target: number | string | NE): this;
+    erase(node: string | number | NE): this;
+    erase(source: string | number | NE, target: string | number | NE): this;
     erase() {
         if (arguments.length === 1) {
             const [node] = arguments;
@@ -462,14 +458,14 @@ export abstract class BaseTree<
      * @param node - The index of the specified node.
      * @returns The node at the specified index, or undefined if not found.
      */
-    element(node: number | string | NE): NE;
+    element(node: string | number | NE): NE;
     /**
      * Gets the link at the specified index.
      * @param source - The index of the father node.
      * @param target - The index of the child node.
      * @returns The link at the specified index, or undefined if not found.
      */
-    element(source: number | string | NE, target: number | string | NE): LE;
+    element(source: string | number | NE, target: string | number | NE): LE;
     element() {
         if (arguments.length === 1) {
             const [node] = arguments;
@@ -478,7 +474,8 @@ export abstract class BaseTree<
             return this.findNodeById(id);
         } else {
             const [source, target] = arguments;
-            const [sourceId, targetId] = [castToId(this, source), castToId(this, target)];
+            const sourceId = source instanceof SDNode ? this.nodeId(source as NE) : source;
+            const targetId = target instanceof SDNode ? this.nodeId(target as NE) : target;
             return this.findLinkById(sourceId, targetId);
         }
     }
@@ -506,27 +503,27 @@ export abstract class BaseTree<
             return this.linkOpacity(source, target, opacity);
         }
     }
-    nodeOpacity(node: number | string | NE): number;
-    nodeOpacity(node: number | string | NE, opacity: number): this;
-    nodeOpacity(node: number | string | NE, opacity?: number) {
+    nodeOpacity(node: string | number | NE): number;
+    nodeOpacity(node: string | number | NE, opacity: number): this;
+    nodeOpacity(node: string | number | NE, opacity?: number) {
         const element = this.__getNodeWithMethod(node, "opacity") as SDNode;
         if (arguments.length === 1) return element.opacity();
         element.opacity(opacity);
         return this;
     }
-    linkOpacity(source: number | string | NE, target: number | string | NE): number;
-    linkOpacity(source: number | string | NE, target: number | string | NE, opacity: number): this;
-    linkOpacity(source: number | string | NE, target: number | string | NE, opacity?: number) {
+    linkOpacity(source: string | number | NE, target: string | number | NE): number;
+    linkOpacity(source: string | number | NE, target: string | number | NE, opacity: number): this;
+    linkOpacity(source: string | number | NE, target: string | number | NE, opacity?: number) {
         const element = this.__getLinkWithMethod(source, target, "opacity") as SDNode;
         if (arguments.length === 2) return element.opacity();
         element.opacity(opacity);
         return this;
     }
     color(color: string | SDColor): this;
-    color(node: number | string | NE): SDColor;
-    color(node: number | string | NE, color: string | SDColor): this;
-    color(source: number | string | NE, target: number | string | NE): SDColor;
-    color(source: number | string | NE, target: number | string | NE, color: string | SDColor): this;
+    color(node: string | number | NE): SDColor;
+    color(node: string | number | NE, color: string | SDColor): this;
+    color(source: string | number | NE, target: string | number | NE): SDColor;
+    color(source: string | number | NE, target: string | number | NE, color: string | SDColor): this;
     color() {
         if (arguments.length === 1) {
             if (Check.isColor(arguments[0])) {
@@ -555,10 +552,10 @@ export abstract class BaseTree<
             return this;
         }
     }
-    text(node: number | string | NE): string;
-    text(node: number | string | NE, text: string): this;
-    text(source: number | string | NE, target: number | string | NE): string;
-    text(source: number | string | NE, target: number | string | NE, text: string): this;
+    text(node: string | number | NE): string;
+    text(node: string | number | NE, text: string): this;
+    text(source: string | number | NE, target: string | number | NE): string;
+    text(source: string | number | NE, target: string | number | NE, text: string): this;
     text() {
         if (arguments.length === 1) {
             const [node] = arguments;
@@ -576,24 +573,24 @@ export abstract class BaseTree<
             return this.linkText(source, target, text);
         }
     }
-    nodeText(node: number | string | NE): string;
-    nodeText(node: number | string | NE, text: string): this;
-    nodeText(node: number | string | NE, text?: string) {
+    nodeText(node: string | number | NE): string;
+    nodeText(node: string | number | NE, text: string): this;
+    nodeText(node: string | number | NE, text?: string) {
         const element = this.__getNodeWithMethod(node, "text") as SDNodeWithText;
         if (arguments.length === 1) return element.text();
         element.text(text);
         return this;
     }
-    linkText(source: number | string | NE, target: number | string | NE): string;
-    linkText(source: number | string | NE, target: number | string | NE, text: string): this;
-    linkText(source: number | string | NE, target: number | string | NE, text?: string) {
+    linkText(source: string | number | NE, target: string | number | NE): string;
+    linkText(source: string | number | NE, target: string | number | NE, text: string): this;
+    linkText(source: string | number | NE, target: string | number | NE, text?: string) {
         const element = this.__getLinkWithMethod(source, target, "text") as SDNodeWithText;
         if (arguments.length === 2) return element.text();
         element.text(text);
         return this;
     }
-    intValue(node: number | string | NE): number;
-    intValue(source: number | string | NE, target: number | string | NE): number;
+    intValue(node: string | number | NE): number;
+    intValue(source: string | number | NE, target: string | number | NE): number;
     intValue() {
         let element = undefined;
         if (arguments.length === 1) {
@@ -615,10 +612,10 @@ export abstract class BaseTree<
         }
         return element.intValue();
     }
-    value(node: number | string | NE): NV;
-    value(node: number | string | NE, value: any): this;
-    value(source: number | string | NE, target: number | string | NE): LV;
-    value(source: number | string | NE, target: number | string | NE, value: any): this;
+    value(node: string | number | NE): NV;
+    value(node: string | number | NE, value: any): this;
+    value(source: string | number | NE, target: string | number | NE): LV;
+    value(source: string | number | NE, target: string | number | NE, value: any): this;
     value() {
         if (arguments.length === 1) {
             const [node] = arguments;
@@ -636,17 +633,17 @@ export abstract class BaseTree<
             return this.linkValue(source, target, value);
         }
     }
-    nodeValue(node: number | string | NE): NV;
-    nodeValue(node: number | string | NE, value?: any): this;
-    nodeValue(node: number | string | NE, value?: any) {
+    nodeValue(node: string | number | NE): NV;
+    nodeValue(node: string | number | NE, value?: any): this;
+    nodeValue(node: string | number | NE, value?: any) {
         const element = this.__getNodeWithMethod(node, "value") as SDNodeWithValue;
         if (arguments.length === 1) return element.value();
         element.value(value);
         return this;
     }
-    linkValue(source: number | string | NE, target: number | string | NE): LV;
-    linkValue(source: number | string | NE, target: number | string | NE, value: any): this;
-    linkValue(source: number | string | NE, target: number | string | NE, value?: any) {
+    linkValue(source: string | number | NE, target: string | number | NE): LV;
+    linkValue(source: string | number | NE, target: string | number | NE, value: any): this;
+    linkValue(source: string | number | NE, target: string | number | NE, value?: any) {
         const element = this.__getLinkWithMethod(source, target, "value") as SDNodeWithValue;
         if (arguments.length === 2) return element.value();
         element.value(value);
@@ -727,13 +724,13 @@ export abstract class BaseTree<
         this.eraseChild(link);
         return this;
     }
-    protected __getNodeWithMethod(node: number | string | NE, method: string): unknown {
+    protected __getNodeWithMethod(node: string | number | NE, method: string): unknown {
         const element = this.element(node);
         if (!element) ErrorLauncher.nodeNotFound(node);
         if (typeof element[method] !== "function") ErrorLauncher.methodNotFound(element, method);
         return element;
     }
-    protected __getLinkWithMethod(source: number | string | NE, target: number | string | NE, method: string): unknown {
+    protected __getLinkWithMethod(source: string | number | NE, target: string | number | NE, method: string): unknown {
         const element = this.element(source, target);
         if (!element) ErrorLauncher.linkNotFound(source, target);
         if (typeof element[method] !== "function") ErrorLauncher.methodNotFound(element, method);

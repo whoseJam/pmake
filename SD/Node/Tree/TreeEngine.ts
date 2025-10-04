@@ -8,7 +8,12 @@ import { trim } from "@/Utility/Trim";
 import { hierarchy, stratify, tree as tree_ } from "d3";
 
 export class TreeEngine {
-    static layout<NodeElement extends SD2DNode, NodeValue extends SD2DNode, LinkElement extends BasePath, LinkValue extends SD2DNode>(
+    static layout<
+        NodeElement extends SD2DNode,
+        NodeValue extends SD2DNode,
+        LinkElement extends BasePath,
+        LinkValue extends SD2DNode
+    >(
         tree: BaseTree<NodeElement, NodeValue, LinkElement, LinkValue>,
         params: {
             width: number;
@@ -76,8 +81,8 @@ export class TreeEngine {
             });
         }
     }
-    static binaryLayout(
-        tree: BinaryTree,
+    static binaryLayout<NE, NV, LE, LV>(
+        tree: BinaryTree<NE, NV, LE, LV>,
         params: {
             width: number;
             location: (layout: any) => [number, number];

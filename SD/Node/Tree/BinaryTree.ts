@@ -1,13 +1,15 @@
 import { Enter } from "@/Node/Core/Enter";
+import { Vertex } from "@/Node/Element/Vertex";
+import { Line } from "@/Node/Path/Line";
+import { SDNode } from "@/Node/SDNode";
 import { BaseTree } from "@/Node/Tree/BaseTree";
 import { Tree } from "@/Node/Tree/Tree";
-import { TreeEngine } from "@/Node/Tree/TreeEngine";
-import { Cast } from "@/Utility/Cast";
-import { ErrorLauncher } from "@/Utility/ErrorLauncher";
+import { RenderNode } from "@/Renderer/RenderNode";
 import { trim } from "@/Utility/Trim";
+import { TreeEngine } from "./TreeEngine";
 
-export class BinaryTree extends Tree {
-    constructor(target) {
+export class BinaryTree<NE = Vertex, NV = SDNode, LE = Line, LV = SDNode> extends Tree<NE, NV, LE, NV> {
+    constructor(target: SDNode | RenderNode) {
         super(target);
 
         this.type("BinaryTree");
@@ -40,13 +42,7 @@ export class BinaryTree extends Tree {
             }
         });
     }
-}
-
-Object.assign(BinaryTree.prototype, {
-    rootAs() {
-        ErrorLauncher.notImplementedYet(`${this.constructor.name}.rootAs`);
-    },
-    link(sourceId, targetId, direction, value = null) {
+    link(sourceId: string, targetId: string, direction?: 0 | 1, value = null) {
         if (direction === undefined) {
             if (!this.leftChild(sourceId)) return this.leftChild(sourceId, targetId, value);
             return this.rightChild(sourceId, targetId, value);
@@ -54,15 +50,15 @@ Object.assign(BinaryTree.prototype, {
             if (direction === 0) return this.leftChild(sourceId, targetId, value);
             return this.rightChild(sourceId, targetId, value);
         }
-    },
-    newNode(id, value) {
+    }
+    newNode(id: string, value?: any) {
         const element = new this._.nodeType(this.layer("nodes")).opacity(0);
         this._.childrenMap[element.id] = [undefined, undefined];
-        element.value(Cast.castToSDNode(element, value, id));
+        element.value(SDNode.__asNode(this.layer("nodes"), value, id));
         element.onEnter(Enter.appear("nodes"));
         this.__insertNode(id, element);
         return this;
-    },
+    }
     newLink(sourceId, targetId, type, value) {
         [sourceId, targetId] = [String(sourceId), String(targetId)];
         const element = new this._.linkType(this.layer("links")).opacity(0);
@@ -70,13 +66,15 @@ Object.assign(BinaryTree.prototype, {
         element.onEnter(Enter.appear("links"));
         this.__insertLink(sourceId, targetId, element, type);
         return this;
-    },
-    leftChild(sourceId, targetId, value = null) {
+    }
+    leftChild(node: number | string | NE): NE;
+    leftChild(sourceId: number | string, targetId: number | string, value?: any): this;
+    leftChild(sourceId: number | string | NE, targetId: number | string, value: any) {
         if (arguments.length === 1) {
             const [node] = arguments;
-            const _node = this.element(node);
-            if (!_node) return undefined;
-            return this.findNodeById(this._.childrenMap[_node.id][0]);
+            const node_ = this.element(node) as SDNode;
+            if (!node_) return undefined;
+            return this.findNodeById(this._.childrenMap[node_.id][0]);
         }
         this.freeze();
         if (!this.findNodeById(sourceId)) this.newNode(sourceId);
@@ -84,7 +82,7 @@ Object.assign(BinaryTree.prototype, {
         this.newLink(sourceId, targetId, 0, value);
         this.unfreeze();
         return this;
-    },
+    }
     rightChild(sourceId, targetId, value = null) {
         if (arguments.length === 1) {
             const [node] = arguments;
@@ -98,20 +96,20 @@ Object.assign(BinaryTree.prototype, {
         this.newLink(sourceId, targetId, 1, value);
         this.unfreeze();
         return this;
-    },
+    }
     leftChildId(node) {
         return this.nodeId(this.leftChild(node));
-    },
+    }
     rightChildId(node) {
         return this.nodeId(this.rightChild(node));
-    },
+    }
     swapChildren(node) {
         const id = this.nodeId(node);
         const children = this._.childrenMap[this.element(id).id];
         [children[0], children[1]] = [children[1], children[0]];
         this.vars.nodes = this.vars.nodes;
         return this;
-    },
+    }
     nodesOnPreorderTraversal(node) {
         const nodes = [];
         const traversal = node => {
@@ -122,7 +120,7 @@ Object.assign(BinaryTree.prototype, {
         if (arguments.length === 0) traversal(this.root());
         else traversal(this.element(node));
         return nodes;
-    },
+    }
     nodesOnInorderTraversal(node) {
         const nodes = [];
         const traversal = node => {
@@ -133,7 +131,7 @@ Object.assign(BinaryTree.prototype, {
         if (arguments.length === 0) traversal(this.root());
         else traversal(this.element(node));
         return nodes;
-    },
+    }
     nodesOnPostorderTraversal(node) {
         const nodes = [];
         const traversal = node => {
@@ -144,35 +142,35 @@ Object.assign(BinaryTree.prototype, {
         if (arguments.length === 0) traversal(this.root());
         else traversal(this.element(node));
         return nodes;
-    },
+    }
     forEachNodeOnPreorderTraversal(node, callback) {
         if (arguments.length === 1) return this.forEachNodeOnPreorderTraversal(this.root(), arguments[0]);
         this.nodesOnPreorderTraversal(node).forEach(node => callback(node, this.nodeId(node)));
         return this;
-    },
+    }
     forEachNodeOnInorderTraversal(node, callback) {
         if (arguments.length === 1) return this.forEachNodeOnInorderTraversal(this.root(), arguments[0]);
         this.nodesOnInorderTraversal(node).forEach(node => callback(node, this.nodeId(node)));
         return this;
-    },
+    }
     forEachNodeOnPostorderTraversal(node, callback) {
         if (arguments.length === 1) return this.forEachNodeOnPostorderTraversal(this.root(), arguments[0]);
         this.nodesOnPostorderTraversal(node).forEach(node => callback(node, this.nodeId(node)));
         return this;
-    },
+    }
     __insertLink(sourceId, targetId, link, type) {
         const parent = this.element(sourceId);
         if (type === undefined) type = !this._.childrenMap[parent.id][0] ? 0 : 1;
         this._.childrenMap[parent.id][type] = targetId;
         BaseTree.prototype.__insertLink.call(this, sourceId, targetId, link);
-    },
+    }
     __eraseLink(sourceId, targetId) {
         const node = this.element(sourceId);
         const type = this._.childrenMap[node.id][0] === targetId ? 0 : 1;
         this._.childrenMap[node.id][type] = undefined;
         BaseTree.prototype.__eraseLink.call(this, sourceId, targetId);
-    },
-});
+    }
+}
 
 export function BinaryTreeLayout(mode) {
     const childrenMap = this._.childrenMap;
@@ -181,8 +179,14 @@ export function BinaryTreeLayout(mode) {
     const root = roots[0];
     if (!root) return;
     let maxDepth = 0;
-    const convertX = mode === "vertical" ? (rank, gap, depth) => this.x() + (rank * 2 + 1) * gap : (rank, gap, depth) => this.x() + this.layerWidth() * depth;
-    const convertY = mode === "horizontal" ? (rank, gap, depth) => this.y() + (rank * 2 + 1) * gap : (rank, gap, depth) => this.y() + this.layerHeight() * depth;
+    const convertX =
+        mode === "vertical"
+            ? (rank, gap, depth) => this.x() + (rank * 2 + 1) * gap
+            : (rank, gap, depth) => this.x() + this.layerWidth() * depth;
+    const convertY =
+        mode === "horizontal"
+            ? (rank, gap, depth) => this.y() + (rank * 2 + 1) * gap
+            : (rank, gap, depth) => this.y() + this.layerHeight() * depth;
     const convert = (rank, gap, depth) => [convertX(rank, gap, depth), convertY(rank, gap, depth)];
     const dfs = (current, rank, gap, depth) => {
         maxDepth = Math.max(maxDepth, depth);

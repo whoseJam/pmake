@@ -71,8 +71,6 @@ export class Line extends BasePath {
         const v1 = this.source();
         const v2 = this.target();
         const d = V.sub(v2, v1);
-        console.log("this.vars=", this.vars);
-        console.log("v1=", v1, "v2=", v2, "d=", d, "at=", V.add(v1, V.numberMul(d, k)));
         return V.add(v1, V.numberMul(d, k));
     }
     getPointAtLength(length: number) {
@@ -83,7 +81,7 @@ export class Line extends BasePath {
     totalLength() {
         const v1 = this.source();
         const v2 = this.target();
-        return V.length(V.sub(v1, v2));
+        return V.norm(V.sub(v1, v2));
     }
     x1(): number;
     x1(x1: number): this;

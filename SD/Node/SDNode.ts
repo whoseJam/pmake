@@ -671,7 +671,7 @@ export abstract class SDNode {
             .y(y)
             .unfreeze();
     }
-    static __asNode(target: SDNode | RenderNode, object: any, id?: number): SDNode {
+    static __asNode(target: SDNode | RenderNode, object: any, id?: string): SDNode {
         if (object === null || object === undefined) {
             const { Text } = require("@/Node/Text/Text");
             if (id !== undefined) return new Text(target, id).opacity(0);
