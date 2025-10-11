@@ -1,23 +1,18 @@
 import * as sd from "@/sd";
 
-let svg = sd.svg();
-let t = new sd.HorizontalTree(svg);
+const svg = sd.svg();
 
-main();
+sd.init(() => {});
 
-async function main() {
-    t.cx(600).y(100).root(1);
+sd.main(TestLink);
+
+async function TestLink() {
+    const tree = new sd.HorizontalTree(svg).root(1).cx(600).y(100);
     await sd.pause();
-    t.startAnimate()
-    t.link(1, 2);
-    t.link(1, 3);
-    t.endAnimate();
-    // t.startAnimate().link(2, 3).endAnimate();
+    tree.startAnimate().freeze().link(1, 2).link(1, 3).unfreeze().endAnimate();
     await sd.pause();
-    t.startAnimate().link(3, 4).link(3, 5).endAnimate();
+    tree.startAnimate().freeze().link(3, 4).link(3, 5).unfreeze().endAnimate();
     await sd.pause();
-    t.startAnimate().r(30).endAnimate();
-    await sd.pause();
-    t.startAnimate().height(50).endAnimate();
-    await sd.pause();
+    tree.startAnimate().link(5, 6).endAnimate();
+    tree.startAnimate().link(3, 7).endAnimate();
 }
