@@ -1,43 +1,19 @@
 import * as sd from "@/sd";
 
 const svg = sd.svg();
+const V = sd.vec();
 const C = sd.color();
 
-sd.main(TestValue);
+sd.main(TestInRange);
 
-async function TestText() {
-    const vertex = new sd.Vertex(svg).x(100).y(100);
-    await sd.pause();
-    vertex.startAnimate().value("123").endAnimate();
-}
-
-async function TestLayout() {
-    function addFocus(node) {
-        sd.Focus(node).focus(node).strokeWidth(1).strokeDashArray([5, 5]);
+async function TestInRange() {
+    const vertex = new sd.Vertex(svg).cx(300).cy(300).r(50);
+    for (let i = 0; i < 10; i++) {
+        const pos = V.add(vertex.center(), V.numberMul([10, 10], i));
+        const circle = new sd.Circle(svg).r(3).center(pos);
+        if (vertex.inRange(pos)) circle.color(C.red);
+        else circle.color(C.green);
     }
-    const values = [new sd.Circle(svg), new sd.Math(svg, "A^2"), new sd.Rect(svg), new sd.Text(svg, "A")];
-    const vertices = [];
-    values.forEach((value, i) => {
-        addFocus(value);
-        const vertex = new sd.Vertex(svg, value).width(80).x(100 * i);
-        vertices.push(vertex);
-    });
-    await sd.pause();
-    vertices.forEach(vertex => vertex.startAnimate().width(40).endAnimate());
-}
-
-async function TestBasic() {
-    const vertex = new sd.Vertex(svg).x(100).y(100);
-    await sd.pause();
-    vertex.value(1);
-    await sd.pause();
-    vertex.startAnimate().value(2).endAnimate();
-    let txt = new sd.Text(svg, "Hello").x(300).y(300);
-    await sd.pause();
-    vertex.startAnimate().valueFromExist(txt).endAnimate();
-    await sd.pause();
-    vertex.startAnimate().r(40).endAnimate();
-    console.log(vertex.r(), vertex.x(), vertex.y());
 }
 
 async function TestValue() {

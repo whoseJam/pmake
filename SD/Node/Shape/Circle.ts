@@ -1,3 +1,4 @@
+import { Vector as V } from "@/Math/Vector";
 import { SDNode } from "@/Node/SDNode";
 import { BaseShape } from "@/Node/Shape/BaseShape";
 import { RenderNode } from "@/Renderer/RenderNode";
@@ -62,5 +63,8 @@ export class Circle extends BaseShape {
     height(height?: number) {
         if (arguments.length === 0) return this.r() * 2;
         return this.r(height / 2);
+    }
+    inRange(point: [number, number]) {
+        return V.norm(V.sub(point, this.center())) <= this.r();
     }
 }
