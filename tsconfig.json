@@ -28,5 +28,5 @@
         "resolveJsonModule": true,
         "incremental": true
     },
-    "exclude": ["node_modules", "dist", "**/*.spec.ts"]
+    "exclude": ["node_modules", "dist", "**/*.spec.ts", "work", "题库"]
 }

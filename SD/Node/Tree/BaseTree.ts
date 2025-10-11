@@ -1,8 +1,8 @@
 import { Vertex } from "@/Node/Element/Vertex";
 import { Line } from "@/Node/Path/Line";
 import { SDNode, SDNodeWithColor, SDNodeWithText, SDNodeWithValue } from "@/Node/SDNode";
+import { Rect } from "@/Node/Shape/Rect";
 import { RenderNode } from "@/Renderer/RenderNode";
-import { Rect } from "@/sd";
 import { Check } from "@/Utility/Check";
 import { SDColor } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
@@ -33,9 +33,13 @@ export abstract class BaseTree<
         this._.nodeType = Vertex;
         this._.linkType = Line;
     }
+    x(): number;
+    x(x: number): this;
     x(x?: number) {
         return Rect.prototype.x.apply(this, arguments);
     }
+    y(): number;
+    y(y: number): this;
     y(y?: number) {
         return Rect.prototype.y.apply(this, arguments);
     }
