@@ -80,15 +80,13 @@ export class Tree<
         const element = this.__createNodeInstance<NodeElement & SDNodeWithValue>();
         element.value(SDNode.__asNode(this.layer("nodes"), value, String(id)));
         element.onEnter(EN.appear("nodes"));
-        this.__insertNode(String(id), element);
-        return this;
+        return this.__insertNode(String(id), element);
     }
     newNodeFromExistValue(id: string | number, value: NodeValue) {
         const element = this.__createNodeInstance<NodeElement & SDNodeWithValueFromExist>();
         element.onEnter(EN.appear("nodes"));
-        this.__insertNode(String(id), element);
         element.valueFromExist(value);
-        return this;
+        return this.__insertNode(String(id), element);
     }
     newNodeFromExistElement(id: string | number, element: NodeElement) {
         element.onEnter(EN.moveTo("nodes"));
@@ -98,20 +96,17 @@ export class Tree<
         const element = this.__createLinkInstance<LinkElement & SDNodeWithValue>();
         element.value(value);
         element.onEnter(EN.appear("links"));
-        this.__insertLink(String(sourceId), String(targetId), element);
-        return this;
+        return this.__insertLink(String(sourceId), String(targetId), element);
     }
     newLinkFromExistValue(sourceId: string | number, targetId: string | number, value?: any) {
         const element = this.__createLinkInstance<LinkElement & SDNodeWithValueFromExist>();
         element.onEnter(EN.appear("links"));
-        this.__insertLink(String(sourceId), String(targetId), element);
         element.valueFromExist(value.onEnter(EN.moveTo()));
-        return this;
+        return this.__insertLink(String(sourceId), String(targetId), element);
     }
     newLinkFromExistElement(sourceId: string | number, targetId: string | number, element: LinkElement) {
         element.onEnter(EN.moveTo("links"));
-        this.__insertLink(String(sourceId), String(targetId), element);
-        return this;
+        return this.__insertLink(String(sourceId), String(targetId), element);
     }
     layout(): Layout;
     layout(layout: Layout): this;

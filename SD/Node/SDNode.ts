@@ -379,6 +379,7 @@ export abstract class SDNode {
         this._.rule = undefined;
         return this;
     }
+    effect(name: string): any;
     /**
      * Defines a responsive effect on this component.
      *
@@ -388,7 +389,8 @@ export abstract class SDNode {
      * @param callback - The effect.
      * @returns The current component instance for method chaining.
      */
-    effect(name: string, callback: EffectCallback) {
+    effect(name: string, callback: EffectCallback): this;
+    effect(name: string, callback?: EffectCallback) {
         if (arguments.length === 1) return this._.updaters[name];
         this._.updaters[name] = effect(callback);
         return this;
