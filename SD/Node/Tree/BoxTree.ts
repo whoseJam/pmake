@@ -6,7 +6,12 @@ import { Tree } from "@/Node/Tree/Tree";
 import { TreeEngine } from "@/Node/Tree/TreeEngine";
 import { RenderNode } from "@/Renderer/RenderNode";
 
-export class BoxTree extends Tree<Box, SDNode, Line, SDNode> {
+export class BoxTree<
+    NodeElement extends SDNode = Box,
+    NodeValue extends SDNode = SDNode,
+    LinkElement extends SDNode = Line,
+    LinkValue extends SDNode = SDNode
+> extends Tree<NodeElement, NodeValue, LinkElement, LinkValue> {
     constructor(target: SDNode | RenderNode) {
         super(target);
 

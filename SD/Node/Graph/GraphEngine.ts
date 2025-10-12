@@ -53,6 +53,7 @@ export class GraphEngine {
         }
     ) {
         DAGLayout(params.graph);
+        const size = params.size;
         const box = toBox(params.graph);
         const mapperX = mapTo(box.x, box.width, params.x, params.width);
         const mapperY = mapTo(box.y, box.height, params.y, params.height);
@@ -62,6 +63,7 @@ export class GraphEngine {
         graph.forEachNode((node, id) => {
             const layout = params.graph.node(id);
             graph.tryUpdate(node, () => {
+                if (size) size(node);
                 node.center(position(layout));
             });
         });
