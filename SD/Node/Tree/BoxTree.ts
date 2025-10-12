@@ -25,8 +25,8 @@ export class BoxTree extends Tree<Box, SDNode, Line, SDNode> {
             const [x_, y_] = this.pos("x", "y");
             const [width, height] = [this.elementWidth(), this.elementHeight()];
             if (layout === "vertical") {
-                this.vars.height = (this.depth() - 1) * this.layerGap();
-                TreeEngine.layout(this, {
+                this.vars.height = Math.max(0, (this.depth() - 1) * this.layerGap());
+                TreeEngine.layout(this as any, {
                     width: this.width(),
                     height: this.height(),
                     location(node) {
@@ -38,8 +38,8 @@ export class BoxTree extends Tree<Box, SDNode, Line, SDNode> {
                     },
                 });
             } else {
-                this.vars.width = (this.depth() - 1) * this.layerGap();
-                TreeEngine.layout(this, {
+                this.vars.width = Math.max(0, (this.depth() - 1) * this.layerGap());
+                TreeEngine.layout(this as any, {
                     width: this.height(),
                     height: this.width(),
                     location(node) {

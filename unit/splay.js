@@ -9,6 +9,7 @@ sd.main(TestLink);
 
 async function TestLink() {
     const tree = new sd.Splay(svg).root(1).cx(600).y(100);
+    sd.Focus(tree).focus();
     await sd.pause();
     tree.startAnimate().freeze().link(1, 2).link(1, 3).unfreeze().endAnimate();
     await sd.pause();

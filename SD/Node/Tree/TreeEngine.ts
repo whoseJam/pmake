@@ -136,17 +136,11 @@ export class TreeEngine {
             };
             dfs(roots[0], 1);
             const gap = params.width / (sequence.length + 1);
-            for (const [i, pack] of sequence.entries()) {
-                const node = pack[0];
+            for (let i = 0; i < sequence.length; i++) {
+                const [node, depth] = sequence[i];
                 tree.tryUpdate(node, () => {
                     if (size) size(node);
-                    node.center(
-                        location({
-                            i,
-                            gap,
-                            depth: pack[1],
-                        })
-                    );
+                    node.center(location({ i, gap, depth }));
                 });
             }
             tree.forEachLink((link, sourceId, targetId) => {

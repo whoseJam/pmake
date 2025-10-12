@@ -32,7 +32,7 @@ export class Tree<
             const layout = this.layout();
             const [x_, y_] = this.pos("x", "y");
             if (layout === "vertical") {
-                this.vars.height = (this.depth() - 1) * this.layerGap();
+                this.vars.height = Math.max(0, (this.depth() - 1) * this.layerGap());
                 TreeEngine.layout(this as any, {
                     width: this.width(),
                     height: this.height(),
@@ -41,7 +41,7 @@ export class Tree<
                     },
                 });
             } else {
-                this.vars.width = (this.depth() - 1) * this.layerGap();
+                this.vars.width = Math.max(0, (this.depth() - 1) * this.layerGap());
                 TreeEngine.layout(this as any, {
                     width: this.height(),
                     height: this.width(),

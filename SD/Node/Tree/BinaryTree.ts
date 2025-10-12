@@ -38,7 +38,7 @@ export class BinaryTree<
             const [x_, y_] = this.pos("x", "y");
             const gap_ = this.layerGap();
             if (layout === "vertical") {
-                this.vars.height = (this.depth() - 1) * gap_;
+                this.vars.height = Math.max(0, (this.depth() - 1) * gap_);
                 TreeEngine.binaryLayout(this as any, {
                     width: this.width(),
                     location(node) {
@@ -46,7 +46,7 @@ export class BinaryTree<
                     },
                 });
             } else {
-                this.vars.width = (this.depth() - 1) * gap_;
+                this.vars.width = Math.max(0, (this.depth() - 1) * gap_);
                 TreeEngine.binaryLayout(this as any, {
                     width: this.height(),
                     location(node) {
