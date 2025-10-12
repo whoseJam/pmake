@@ -7,6 +7,7 @@ import { Line } from "@/Node/Path/Line";
 import { SDNode } from "@/Node/SDNode";
 import { trim } from "@/Utility/Trim";
 import { layout as DAGLayout, graphlib as DAGLib } from "dagre";
+import { BipartiteGraph } from "./BipartiteGraph";
 
 export class GraphEngine {
     static gridLayout(
@@ -67,6 +68,43 @@ export class GraphEngine {
                 node.center(position(layout));
             });
         });
+        this.linksUpdate(graph);
+    }
+    static bipartiteLayout(
+        graph: BipartiteGraph,
+        params: {
+            x: number;
+            y: number;
+            width: number;
+            height: number;
+            no: { [key: number]: 0 | 1 };
+        }
+    ) {
+        const no = params.no;
+        const orderedNodes = [];
+        const count = [0, 0];
+        const currentIndex = [1, 1];
+        graph.forEachNode(node => {
+            orderedNodes.push(node);
+            count[no[node.id]]++;
+        });
+        const x = params.x;
+        const y = params.y;
+        const mx = params.x + params.width;
+        const my = params.y + params.height;
+        const gap = [(mx - x) / (count[0] + 1), (mx - x) / (count[1] + 1)];
+        const position = node => {
+            return x + gap[no[node.id]] * currentIndex[no[node.id]];
+        };
+        for (const node of orderedNodes) {
+            const x = position(node);
+            const yLocator = ["y", "my"][no[node.id]];
+            graph.tryUpdate(node, () => {
+                node.cx(x);
+                node[yLocator](graph[yLocator]());
+                currentIndex[no[node.id]]++;
+            });
+        }
         this.linksUpdate(graph);
     }
     static linksUpdate<

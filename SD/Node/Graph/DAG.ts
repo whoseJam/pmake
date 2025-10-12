@@ -71,7 +71,7 @@ export class DAG<
     newNodeFromExistValue(id: string | number, value: NodeValue) {
         const element = this.__createNodeInstance<NodeElement & SDNodeWithValueFromExist>();
         this._.graph.setNode(String(id), {});
-        element.valueFromExist(SDNode.__asNode(element, value, String(id)));
+        element.valueFromExist(value);
         element.onEnter(EN.appear("nodes"));
         return this.__insertNode(String(id), element);
     }
