@@ -1,8 +1,10 @@
+import { SDNode } from "@/Node/SDNode";
 import { BinaryTree } from "@/Node/Tree/BinaryTree";
-import { TreeEngine } from "./TreeEngine";
+import { TreeEngine } from "@/Node/Tree/TreeEngine";
+import { RenderNode } from "@/Renderer/RenderNode";
 
 export class Splay extends BinaryTree {
-    constructor(target) {
+    constructor(target: SDNode | RenderNode) {
         super(target);
 
         this.type("Splay");

@@ -5,7 +5,7 @@ const t = new sd.BoxTree(svg);
 
 sd.init(() => {});
 
-sd.main(TestLayout);
+sd.main(TestLink);
 
 async function TestBoxTreeBasic() {
     t.cx(600).y(100).root(1);

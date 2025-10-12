@@ -1,37 +1,30 @@
 import { Vertex } from "@/Node/Element/Vertex";
 import { BasePath } from "@/Node/Path/BasePath";
-import { SD2DNode } from "@/Node/SD2DNode";
-import { BaseTree } from "@/Node/Tree/BaseTree";
 import { BinaryTree } from "@/Node/Tree/BinaryTree";
 import { Splay } from "@/Node/Tree/Splay";
+import { Tree } from "@/Node/Tree/Tree";
 import { trim } from "@/Utility/Trim";
 import { hierarchy, stratify, tree as tree_ } from "d3";
 
 export class TreeEngine {
-    static layout<
-        NodeElement extends SD2DNode,
-        NodeValue extends SD2DNode,
-        LinkElement extends BasePath,
-        LinkValue extends SD2DNode
-    >(
-        tree: BaseTree<NodeElement, NodeValue, LinkElement, LinkValue>,
+    static layout(
+        tree: Tree,
         params: {
             width: number;
             height: number;
             location: (layout: any) => [number, number];
-            size?: (node: NodeElement) => void;
+            size?: (node: any) => void;
         }
     ) {
         try {
             const size = params.size;
             const location = params.location;
             const template = stratify();
-            template.id(node => tree.nodeId(node as NodeElement));
-            template.parentId(node => tree.fatherId(node as NodeElement));
+            template.id(node => tree.nodeId(node as any));
+            template.parentId(node => tree.fatherId(node as any));
             const data = template(tree.nodes());
             const root = hierarchy(data);
             const layout = tree_().size([params.width, params.height]);
-            // @ts-ignore
             const result = layout(root);
             const nodes = result.descendants();
             const nodesMap = new Map();
@@ -41,23 +34,18 @@ export class TreeEngine {
             });
             tree.forEachNode(node => {
                 const layout = nodesMap.get(node);
-                // @ts-ignore
                 tree.tryUpdate(node, () => {
                     if (size) size(node);
-                    // @ts-ignore
                     node.center(location(layout));
                 });
             });
             tree.forEachLink((link, sourceId, targetId) => {
                 const source = tree.findNodeById(sourceId);
                 const target = tree.findNodeById(targetId);
-                // @ts-ignore
                 tree.tryUpdate(link, () => {
-                    // @ts-ignore
                     link.source(source.center());
-                    // @ts-ignore
                     link.target(target.center());
-                    trim(link, source, target);
+                    trim(link as unknown as BasePath, source, target);
                 });
             });
         } catch (err) {
@@ -70,19 +58,16 @@ export class TreeEngine {
             tree.forEachLink((link, sourceId, targetId) => {
                 const source = tree.findNodeById(sourceId);
                 const target = tree.findNodeById(targetId);
-                // @ts-ignore
                 tree.tryUpdate(link, () => {
-                    // @ts-ignore
                     link.source(source.center());
-                    // @ts-ignore
                     link.target(target.center());
                     trim(link, source, target);
                 });
             });
         }
     }
-    static binaryLayout<NE, NV, LE, LV>(
-        tree: BinaryTree<NE, NV, LE, LV>,
+    static binaryLayout(
+        tree: BinaryTree,
         params: {
             width: number;
             location: (layout: any) => [number, number];
@@ -113,6 +98,7 @@ export class TreeEngine {
                 });
             });
         } catch (err) {
+            console.log("err=", err);
             tree.forEachNode(node => {
                 if (tree.inRange(node.center())) return;
                 tree.tryUpdate(node, () => {

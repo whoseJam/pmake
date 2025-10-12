@@ -2,13 +2,14 @@ import { Enter } from "@/Node/Core/Enter";
 import { Vertex } from "@/Node/Element/Vertex";
 import { Line } from "@/Node/Path/Line";
 import { SDNode } from "@/Node/SDNode";
-import { BaseTree } from "@/Node/Tree/BaseTree";
 import { Tree } from "@/Node/Tree/Tree";
+import { TreeEngine } from "@/Node/Tree/TreeEngine";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { trim } from "@/Utility/Trim";
-import { TreeEngine } from "./TreeEngine";
 
-export class BinaryTree<NE = Vertex, NV = SDNode, LE = Line, LV = SDNode> extends Tree<NE, NV, LE, NV> {
+type NodeCallback = (node: Vertex, id: string) => void;
+
+export class BinaryTree extends Tree {
     constructor(target: SDNode | RenderNode) {
         super(target);
 
@@ -42,7 +43,7 @@ export class BinaryTree<NE = Vertex, NV = SDNode, LE = Line, LV = SDNode> extend
             }
         });
     }
-    link(sourceId: string, targetId: string, direction?: 0 | 1, value = null) {
+    link(sourceId: string | number, targetId: string | number, direction?: 0 | 1, value?: any) {
         if (direction === undefined) {
             if (!this.leftChild(sourceId)) return this.leftChild(sourceId, targetId, value);
             return this.rightChild(sourceId, targetId, value);
@@ -59,7 +60,7 @@ export class BinaryTree<NE = Vertex, NV = SDNode, LE = Line, LV = SDNode> extend
         this.__insertNode(id, element);
         return this;
     }
-    newLink(sourceId, targetId, type, value) {
+    newLink(sourceId, targetId, type?, value?) {
         [sourceId, targetId] = [String(sourceId), String(targetId)];
         const element = new this._.linkType(this.layer("links")).opacity(0);
         element.value(value);
@@ -67,9 +68,9 @@ export class BinaryTree<NE = Vertex, NV = SDNode, LE = Line, LV = SDNode> extend
         this.__insertLink(sourceId, targetId, element, type);
         return this;
     }
-    leftChild(node: number | string | NE): NE;
-    leftChild(sourceId: number | string, targetId: number | string, value?: any): this;
-    leftChild(sourceId: number | string | NE, targetId: number | string, value: any) {
+    leftChild(node: string | number | Vertex): Vertex;
+    leftChild(sourceId: string | number, targetId: string | number, value?: any): this;
+    leftChild(sourceId: string | number | Vertex, targetId?: string | number, value?: any) {
         if (arguments.length === 1) {
             const [node] = arguments;
             const node_ = this.element(node) as SDNode;
@@ -77,13 +78,15 @@ export class BinaryTree<NE = Vertex, NV = SDNode, LE = Line, LV = SDNode> extend
             return this.findNodeById(this._.childrenMap[node_.id][0]);
         }
         this.freeze();
-        if (!this.findNodeById(sourceId)) this.newNode(sourceId);
-        if (!this.findNodeById(targetId)) this.newNode(targetId);
+        if (!this.findNodeById(sourceId)) this.newNode(String(sourceId));
+        if (!this.findNodeById(targetId)) this.newNode(String(targetId));
         this.newLink(sourceId, targetId, 0, value);
         this.unfreeze();
         return this;
     }
-    rightChild(sourceId, targetId, value = null) {
+    rightChild(node: string | number | Vertex): Vertex;
+    rightChild(sourceId: string | number, targetId: string | number, value?: any): this;
+    rightChild(sourceId: string | number | Vertex, targetId?: string | number, value?: any) {
         if (arguments.length === 1) {
             const [node] = arguments;
             const _node = this.element(node);
@@ -91,28 +94,30 @@ export class BinaryTree<NE = Vertex, NV = SDNode, LE = Line, LV = SDNode> extend
             return this.findNodeById(this._.childrenMap[_node.id][1]);
         }
         this.freeze();
-        if (!this.findNodeById(sourceId)) this.newNode(sourceId);
-        if (!this.findNodeById(targetId)) this.newNode(targetId);
+        if (!this.findNodeById(sourceId)) this.newNode(String(sourceId));
+        if (!this.findNodeById(targetId)) this.newNode(String(targetId));
         this.newLink(sourceId, targetId, 1, value);
         this.unfreeze();
         return this;
     }
-    leftChildId(node) {
+    leftChildId(node: string | number | Vertex) {
         return this.nodeId(this.leftChild(node));
     }
-    rightChildId(node) {
+    rightChildId(node: string | number | Vertex) {
         return this.nodeId(this.rightChild(node));
     }
-    swapChildren(node) {
+    swapChildren(node: string | number | Vertex) {
         const id = this.nodeId(node);
         const children = this._.childrenMap[this.element(id).id];
         [children[0], children[1]] = [children[1], children[0]];
         this.vars.nodes = this.vars.nodes;
         return this;
     }
-    nodesOnPreorderTraversal(node) {
+    nodesOnPreorderTraversal(): Array<Vertex>;
+    nodesOnPreorderTraversal(node: string | number | Vertex): Array<Vertex>;
+    nodesOnPreorderTraversal(node?: string | number | Vertex) {
         const nodes = [];
-        const traversal = node => {
+        const traversal = (node: Vertex) => {
             nodes.push(node);
             if (this.leftChild(node)) traversal(this.leftChild(node));
             if (this.rightChild(node)) traversal(this.rightChild(node));
@@ -121,9 +126,11 @@ export class BinaryTree<NE = Vertex, NV = SDNode, LE = Line, LV = SDNode> extend
         else traversal(this.element(node));
         return nodes;
     }
-    nodesOnInorderTraversal(node) {
+    nodesOnInorderTraversal(): Array<Vertex>;
+    nodesOnInorderTraversal(node: string | number | Vertex): Array<Vertex>;
+    nodesOnInorderTraversal(node?: string | number | Vertex) {
         const nodes = [];
-        const traversal = node => {
+        const traversal = (node: Vertex) => {
             if (this.leftChild(node)) traversal(this.leftChild(node));
             nodes.push(node);
             if (this.rightChild(node)) traversal(this.rightChild(node));
@@ -132,9 +139,11 @@ export class BinaryTree<NE = Vertex, NV = SDNode, LE = Line, LV = SDNode> extend
         else traversal(this.element(node));
         return nodes;
     }
-    nodesOnPostorderTraversal(node) {
+    nodesOnPostorderTraversal(): Array<Vertex>;
+    nodesOnPostorderTraversal(node: string | number | Vertex): Array<Vertex>;
+    nodesOnPostorderTraversal(node?: string | number | Vertex) {
         const nodes = [];
-        const traversal = node => {
+        const traversal = (node: Vertex) => {
             if (this.leftChild(node)) traversal(this.leftChild(node));
             if (this.rightChild(node)) traversal(this.rightChild(node));
             nodes.push(node);
@@ -143,32 +152,38 @@ export class BinaryTree<NE = Vertex, NV = SDNode, LE = Line, LV = SDNode> extend
         else traversal(this.element(node));
         return nodes;
     }
-    forEachNodeOnPreorderTraversal(node, callback) {
-        if (arguments.length === 1) return this.forEachNodeOnPreorderTraversal(this.root(), arguments[0]);
+    forEachNodeOnPreorderTraversal(callback: NodeCallback): this;
+    forEachNodeOnPreorderTraversal(node: string | number | Vertex, callback: NodeCallback): this;
+    forEachNodeOnPreorderTraversal(node: string | number | Vertex | NodeCallback, callback?: NodeCallback) {
+        if (typeof node === "function") return this.forEachNodeOnPreorderTraversal(this.root(), arguments[0]);
         this.nodesOnPreorderTraversal(node).forEach(node => callback(node, this.nodeId(node)));
         return this;
     }
-    forEachNodeOnInorderTraversal(node, callback) {
-        if (arguments.length === 1) return this.forEachNodeOnInorderTraversal(this.root(), arguments[0]);
+    forEachNodeOnInorderTraversal(callback: NodeCallback): this;
+    forEachNodeOnInorderTraversal(node: string | number | Vertex, callback: NodeCallback): this;
+    forEachNodeOnInorderTraversal(node: string | number | Vertex | NodeCallback, callback?: NodeCallback) {
+        if (typeof node === "function") return this.forEachNodeOnInorderTraversal(this.root(), arguments[0]);
         this.nodesOnInorderTraversal(node).forEach(node => callback(node, this.nodeId(node)));
         return this;
     }
-    forEachNodeOnPostorderTraversal(node, callback) {
-        if (arguments.length === 1) return this.forEachNodeOnPostorderTraversal(this.root(), arguments[0]);
+    forEachNodeOnPostorderTraversal(callback: NodeCallback): this;
+    forEachNodeOnPostorderTraversal(node: string | number | Vertex, callback: NodeCallback): this;
+    forEachNodeOnPostorderTraversal(node: string | number | Vertex | NodeCallback, callback?: NodeCallback) {
+        if (typeof node === "function") return this.forEachNodeOnPostorderTraversal(this.root(), arguments[0]);
         this.nodesOnPostorderTraversal(node).forEach(node => callback(node, this.nodeId(node)));
         return this;
     }
-    __insertLink(sourceId, targetId, link, type) {
+    __insertLink(sourceId: string, targetId: string, link: Line, type?: 0 | 1) {
         const parent = this.element(sourceId);
         if (type === undefined) type = !this._.childrenMap[parent.id][0] ? 0 : 1;
         this._.childrenMap[parent.id][type] = targetId;
-        BaseTree.prototype.__insertLink.call(this, sourceId, targetId, link);
+        return super.__insertLink(sourceId, targetId, link);
     }
-    __eraseLink(sourceId, targetId) {
+    __eraseLink(sourceId: string, targetId: string) {
         const node = this.element(sourceId);
         const type = this._.childrenMap[node.id][0] === targetId ? 0 : 1;
         this._.childrenMap[node.id][type] = undefined;
-        BaseTree.prototype.__eraseLink.call(this, sourceId, targetId);
+        return super.__eraseLink(sourceId, targetId);
     }
 }
 

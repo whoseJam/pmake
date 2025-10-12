@@ -694,3 +694,4 @@ export type SDNodeWithDrop = SDNode & { drop: AnyFunction };
 export type SDNodeWithIntValue = SDNode & { intValue: AnyFunction };
 export type SDNodeWithText = SDNode & { text: AnyFunction };
 export type SDNodeWithValue = SDNode & { value: AnyFunction };
+export type SDNodeWithValueFromExist = SDNode & { valueFromExist: AnyFunction };
