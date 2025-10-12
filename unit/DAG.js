@@ -4,7 +4,8 @@ const svg = sd.svg();
 const C = sd.color();
 const g = new sd.DAG(svg).cx(800).cy(300);
 global.g = g;
-const n = 9, m = 10;
+const n = 9,
+    m = 10;
 const e = [
     ["V1", "V3"],
     ["V1", "V4"],
@@ -15,7 +16,7 @@ const e = [
     ["V5", "V8"],
     ["V6", "V8"],
     ["V7", "V9"],
-    ["V8", "V9"]
+    ["V8", "V9"],
 ];
 
 sd.main(async () => {
@@ -28,7 +29,7 @@ sd.main(async () => {
         g.endAnimate();
     }
     await sd.pause();
-    g.startAnimate().rankDir("RL").endAnimate();
+    g.startAnimate().direction("RL").endAnimate();
     await sd.pause();
     g.startAnimate().align("DL").endAnimate();
-})
+});

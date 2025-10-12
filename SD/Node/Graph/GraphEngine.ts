@@ -1,9 +1,12 @@
+import { mapTo } from "@/Math/Math";
+import { Vertex } from "@/Node/Element/Vertex";
 import { BaseGraph } from "@/Node/Graph/BaseGraph";
+import { DAG } from "@/Node/Graph/DAG";
 import { GridGraph } from "@/Node/Graph/GridGraph";
 import { Line } from "@/Node/Path/Line";
 import { SDNode } from "@/Node/SDNode";
-import { Vertex } from "@/sd";
 import { trim } from "@/Utility/Trim";
+import { layout as DAGLayout, graphlib as DAGLib } from "dagre";
 
 export class GraphEngine {
     static gridLayout(
@@ -38,6 +41,32 @@ export class GraphEngine {
         }
         this.linksUpdate(graph);
     }
+    static dagLayout(
+        graph: DAG,
+        params: {
+            x: number;
+            y: number;
+            width: number;
+            height: number;
+            graph: DAGLib.Graph;
+            size?: (node: any) => void;
+        }
+    ) {
+        DAGLayout(params.graph);
+        const box = toBox(params.graph);
+        const mapperX = mapTo(box.x, box.width, params.x, params.width);
+        const mapperY = mapTo(box.y, box.height, params.y, params.height);
+        const position = (node: any): [number, number] => {
+            return [mapperX(node.x), mapperY(node.y)];
+        };
+        graph.forEachNode((node, id) => {
+            const layout = params.graph.node(id);
+            graph.tryUpdate(node, () => {
+                node.center(position(layout));
+            });
+        });
+        this.linksUpdate(graph);
+    }
     static linksUpdate<
         NodeElement extends SDNode = Vertex,
         NodeValue extends SDNode = SDNode,
@@ -57,4 +86,22 @@ export class GraphEngine {
             });
         });
     }
+}
+
+function toBox(graph: DAGLib.Graph) {
+    let x: number, mx: number, y: number, my: number;
+    graph.nodes().forEach(function (info) {
+        const layout = graph.node(info);
+        if (x === undefined) {
+            x = mx = layout.x;
+            y = my = layout.y;
+        } else {
+            x = Math.min(x, layout.x);
+            mx = Math.max(mx, layout.x);
+            y = Math.min(y, layout.y);
+            my = Math.max(my, layout.y);
+        }
+    });
+    if (x === undefined) x = mx = y = my = 0;
+    return { x, y, width: mx - x, height: my - y };
 }

@@ -181,8 +181,8 @@ export abstract class BaseGraph<
     erase() {
         return BaseTree.prototype.erase.apply(this, arguments);
     }
-    element(node: number | string | SDNode): SDNode | undefined;
-    element(source: number | string | SDNode, target: number | string | SDNode): SDNode | undefined;
+    element(node: string | number | SDNode): NodeElement;
+    element(source: string | number | SDNode, target: string | number | SDNode): LinkElement;
     element() {
         return BaseTree.prototype.element.apply(this, arguments);
     }

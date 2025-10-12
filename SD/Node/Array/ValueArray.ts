@@ -1,13 +1,16 @@
 import { Array } from "@/Node/Array/Array";
 import { Enter as EN } from "@/Node/Core/Enter";
+import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
-import { SDNode } from "../SDNode";
 
 const ALIGN_KEY = new Set(["y", "cy", "my"]);
 const ALIGN_KEY_SUGGESTION = [() => true, "For this component, here are 3 types of aligns which are 'y', 'cy', 'my'."];
 const JUSTIFY_KEY = new Set(["x", "cx", "mx"]);
-const JUSTIFY_KEY_SUGGESTION = [() => true, "For this component, here are 3 types of justifies which are 'x', 'cx', 'mx'."];
+const JUSTIFY_KEY_SUGGESTION = [
+    () => true,
+    "For this component, here are 3 types of justifies which are 'x', 'cx', 'mx'.",
+];
 
 type Align = "y" | "cy" | "my";
 type Justify = "x" | "cx" | "mx";
