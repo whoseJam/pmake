@@ -83,7 +83,7 @@ export class Tree<
         this.__insertNode(String(id), element);
         return this;
     }
-    newNodeFromExistValue(id: string | number, value: SDNode) {
+    newNodeFromExistValue(id: string | number, value: NodeValue) {
         const element = this.__createNodeInstance<NodeElement & SDNodeWithValueFromExist>();
         element.onEnter(EN.appear("nodes"));
         this.__insertNode(String(id), element);
@@ -91,10 +91,8 @@ export class Tree<
         return this;
     }
     newNodeFromExistElement(id: string | number, element: NodeElement) {
-        const element_ = element as SDNode;
-        element_.onEnter(EN.moveTo("nodes"));
-        this.__insertNode(String(id), element);
-        return this;
+        element.onEnter(EN.moveTo("nodes"));
+        return this.__insertNode(String(id), element);
     }
     newLink(sourceId: string | number, targetId: string | number, value?: any) {
         const element = this.__createLinkInstance<LinkElement & SDNodeWithValue>();

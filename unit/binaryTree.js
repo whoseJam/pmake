@@ -44,5 +44,5 @@ async function TestLink() {
     tree.startAnimate().freeze().link(3, 4).link(3, 5).unfreeze().endAnimate();
     await sd.pause();
     tree.startAnimate().link(5, 6).endAnimate();
-    tree.startAnimate().link(3, 7).endAnimate();
+    tree.startAnimate().link(6, 7, null, 1).endAnimate();
 }

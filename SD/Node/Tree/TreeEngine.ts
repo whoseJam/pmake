@@ -98,7 +98,6 @@ export class TreeEngine {
                 });
             });
         } catch (err) {
-            console.log("err=", err);
             tree.forEachNode(node => {
                 if (tree.inRange(node.center())) return;
                 tree.tryUpdate(node, () => {

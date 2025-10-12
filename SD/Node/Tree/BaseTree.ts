@@ -8,6 +8,8 @@ type NodeCondition<NodeElement> = (node: NodeElement, id: string) => boolean;
 type NodeCallback<NodeElement> = (node: NodeElement, id: string) => void;
 type LinkCondition<LinkElement> = (link: LinkElement, sourceId: string, targetId: string) => boolean;
 type LinkCallback<LinkElement> = (link: LinkElement, sourceId: string, targetId: string) => void;
+type NodeItem = { node: SDNode; id: string };
+type LinkItem = { link: SDNode; sourceId: string; targetId: string };
 
 export abstract class BaseTree<
     NodeElement extends SDNode,
@@ -15,6 +17,11 @@ export abstract class BaseTree<
     LinkElement extends SDNode,
     LinkValue extends SDNode
 > extends SDNode {
+    _: SDNode["_"] & {
+        sdMap: { [key: number]: NodeItem | LinkItem };
+        nodesMap: Map<string, SDNode>;
+        linksMap: Map<[string, string], SDNode>;
+    };
     constructor(target: SDNode | RenderNode) {
         super(target);
 
@@ -29,9 +36,9 @@ export abstract class BaseTree<
             structure: false,
         });
 
-        this._.sdnodesMap = {}; // SDNode id -> { node: SDNode, id: TreeID } | { link: SDNode, sourceId: TreeID, targetId: TreeID }
-        this._.nodesMap = new Map(); // TreeID -> SDNode
-        this._.linksMap = new Map(); // TreeID -> SDNode
+        this._.sdMap = {};
+        this._.nodesMap = new Map();
+        this._.linksMap = new Map();
     }
     x(): number;
     x(x: number): this;
@@ -63,10 +70,7 @@ export abstract class BaseTree<
      */
     nodeId(node: string | number | NodeElement): string {
         if (node === undefined) return undefined;
-        if (node instanceof SDNode) {
-            if (!this._.sdnodesMap[node.id]) return undefined;
-            return this._.sdnodesMap[node.id].id;
-        }
+        if (node instanceof SDNode) return (this._.sdMap[node.id] as NodeItem)?.id;
         const id = String(node);
         return this._.nodesMap[id] ? id : undefined;
     }
@@ -100,8 +104,7 @@ export abstract class BaseTree<
      */
     source(link: LinkElement) {
         if (link === undefined) return undefined;
-        if (!this._.sdnodesMap[link.id]) return undefined;
-        return this.element(this._.sdnodesMap[link.id].sourceId);
+        return this.element((this._.sdMap[link.id] as LinkItem).sourceId);
     }
     /**
      * Gets the target node of the link.
@@ -110,8 +113,7 @@ export abstract class BaseTree<
      */
     target(link: LinkElement) {
         if (link === undefined) return undefined;
-        if (!this._.sdnodesMap[link.id]) return undefined;
-        return this.element(this._.sdnodesMap[link.id].targetId);
+        return this.element((this._.sdMap[link.id] as LinkItem).targetId);
     }
     /**
      * Gets all nodes contained within this tree component.
@@ -228,15 +230,15 @@ export abstract class BaseTree<
      * @returns The current component instance for method chaining.
      */
     lca(source: string | number | NodeElement, target: string | number | NodeElement): NodeElement {
-        let [_x, _y, dx, dy] = [this.nodeId(source), this.nodeId(target), this.depth(source), this.depth(target)];
-        if (_x === undefined) ErrorLauncher.nodeNotFound(source);
-        if (_y === undefined) ErrorLauncher.nodeNotFound(target);
-        for (let i = 1; i <= 100 && _x !== _y; i++) {
-            if (dx > dy) (_x = this.fatherId(_x)), dx--;
-            else (_y = this.fatherId(_y)), dy--;
+        let [x, y, dx, dy] = [this.nodeId(source), this.nodeId(target), this.depth(source), this.depth(target)];
+        if (x === undefined) ErrorLauncher.nodeNotFound(source);
+        if (y === undefined) ErrorLauncher.nodeNotFound(target);
+        for (let i = 1; i <= 100 && x !== y; i++) {
+            if (dx > dy) (x = this.fatherId(x)), dx--;
+            else (y = this.fatherId(y)), dy--;
         }
-        if (_x !== _y) ErrorLauncher.lcaNotFound();
-        return this.findNodeById(_x);
+        if (x !== y) ErrorLauncher.lcaNotFound();
+        return this.findNodeById(x);
     }
     /**
      * Gets the index of the LCA of two nodes in this tree component.
@@ -292,11 +294,9 @@ export abstract class BaseTree<
      * @param callback - A function to execute for each node.
      * @returns The current component instance for method chaining.
      */
-    forEachNodeInSubtree(node: string | number | NodeElement, callback: (node: NodeElement, id: string) => void) {
+    forEachNodeInSubtree(node: string | number | NodeElement, callback: NodeCallback<NodeElement>) {
         Check.validateSyncFunction(callback, `${this.constructor.name}.forEachNodeInSubtree`);
-        this.nodesInSubtree(node).forEach(node => {
-            callback(node, this.nodeId(node));
-        });
+        this.nodesInSubtree(node).forEach(node => callback(node, this.nodeId(node)));
         return this;
     }
     /**
@@ -305,14 +305,9 @@ export abstract class BaseTree<
      * @param callback - A function to execute for each link.
      * @returns The current component instance for method chaining.
      */
-    forEachLinkInSubtree(
-        node: string | number | NodeElement,
-        callback: (link: LinkElement, sourceId: string, targetId: string) => void
-    ) {
+    forEachLinkInSubtree(node: string | number | NodeElement, callback: LinkCallback<LinkElement>) {
         Check.validateSyncFunction(callback, `${this.constructor.name}.forEachLinkInSubtree`);
-        this.linksInSubtree(node).forEach(link => {
-            callback(link, this.sourceId(link), this.targetId(link));
-        });
+        this.linksInSubtree(node).forEach(link => callback(link, this.sourceId(link), this.targetId(link)));
         return this;
     }
     /**
@@ -323,8 +318,8 @@ export abstract class BaseTree<
      */
     nodesOnPath(source: string | number | NodeElement, target: string | number | NodeElement): Array<NodeElement> {
         source = this.element(source);
-        const sourceList = [];
         target = this.element(target);
+        const sourceList = [];
         const targetList = [];
         let sourceDepth = this.depth(source);
         let targetDepth = this.depth(target);
@@ -349,8 +344,8 @@ export abstract class BaseTree<
      */
     linksOnPath(source: string | number | NodeElement, target: string | number | NodeElement): Array<LinkElement> {
         source = this.element(source);
-        const sourceList = [];
         target = this.element(target);
+        const sourceList = [];
         const targetList = [];
         let sourceDepth = this.depth(source);
         let targetDepth = this.depth(target);
@@ -377,7 +372,7 @@ export abstract class BaseTree<
     forEachNodeOnPath(
         source: string | number | NodeElement,
         target: string | number | NodeElement,
-        callback: (node: NodeElement, id: string) => void
+        callback: NodeCallback<NodeElement>
     ): this {
         Check.validateSyncFunction(callback, `${this.constructor.name}.forEachNodeOnPath`);
         this.nodesOnPath(source, target).forEach(node => callback(node, this.nodeId(node)));
@@ -393,7 +388,7 @@ export abstract class BaseTree<
     forEachLinkOnPath(
         source: string | number | NodeElement,
         target: string | number | NodeElement,
-        callback: (link: LinkElement, sourceId: string, targetId: string) => void
+        callback: LinkCallback<LinkElement>
     ) {
         Check.validateSyncFunction(callback, `${this.constructor.name}.forEachLinkOnPath`);
         this.linksOnPath(source, target).forEach(link => callback(link, this.sourceId(link), this.targetId(link)));
@@ -404,9 +399,9 @@ export abstract class BaseTree<
      * @param callback - A function to execute for each node.
      * @returns The current component instance for method chaining.
      */
-    forEachNode(callback: (node: NodeElement, id: string) => void) {
+    forEachNode(callback: NodeCallback<NodeElement>) {
         Check.validateSyncFunction(callback, `${this.constructor.name}.forEachNode`);
-        this.vars.nodes.forEach(node => callback(node, this.nodeId(node)));
+        this.vars.nodes.forEach((node: NodeElement) => callback(node, this.nodeId(node)));
         return this;
     }
     /**
@@ -414,9 +409,9 @@ export abstract class BaseTree<
      * @param callback - A function to execute for each link.
      * @returns The current component instance for method chaining.
      */
-    forEachLink(callback: (link: LinkElement, sourceId: string, targetId: string) => void) {
+    forEachLink(callback: LinkCallback<LinkElement>) {
         Check.validateSyncFunction(callback, `${this.constructor.name}.forEachLink`);
-        this.vars.links.forEach(link => callback(link, this.sourceId(link), this.targetId(link)));
+        this.vars.links.forEach((link: LinkElement) => callback(link, this.sourceId(link), this.targetId(link)));
         return this;
     }
     root(): NodeElement;
@@ -426,14 +421,14 @@ export abstract class BaseTree<
         else if (!this.element(id)) return this.newNode(id, value);
         return this.rootAs(id);
     }
-    rootAs(id) {
-        const dfs = x => {
+    rootAs(node: string | number | NodeElement) {
+        const dfs = (x: NodeElement) => {
             const father = this.father(x);
             if (!father) return;
             dfs(father);
             this.__reverseLink(this.nodeId(father), this.nodeId(x));
         };
-        dfs(this.element(id));
+        dfs(this.element(node));
         this.vars.structure = true;
         return this;
     }
@@ -518,7 +513,7 @@ export abstract class BaseTree<
     nodeOpacity(node: string | number | NodeElement): number;
     nodeOpacity(node: string | number | NodeElement, opacity: number): this;
     nodeOpacity(node: string | number | NodeElement, opacity?: number) {
-        const element = this.__getNodeWithMethod(node, "opacity") as SDNode;
+        const element = this.__getNodeWithMethod<NodeElement>(node, "opacity");
         if (arguments.length === 1) return element.opacity();
         element.opacity(opacity);
         return this;
@@ -526,7 +521,7 @@ export abstract class BaseTree<
     linkOpacity(source: string | number | NodeElement, target: string | number | NodeElement): number;
     linkOpacity(source: string | number | NodeElement, target: string | number | NodeElement, opacity: number): this;
     linkOpacity(source: string | number | NodeElement, target: string | number | NodeElement, opacity?: number) {
-        const element = this.__getLinkWithMethod(source, target, "opacity") as SDNode;
+        const element = this.__getLinkWithMethod<LinkElement>(source, target, "opacity");
         if (arguments.length === 2) return element.opacity();
         element.opacity(opacity);
         return this;
@@ -543,23 +538,23 @@ export abstract class BaseTree<
                 return this.forEachNode((node: unknown) => (node as SDNodeWithColor).color(color));
             } else {
                 const [node] = arguments;
-                const _node = this.__getNodeWithMethod(node, "color") as SDNodeWithColor;
+                const _node = this.__getNodeWithMethod<SDNodeWithColor>(node, "color");
                 return _node.color();
             }
         } else if (arguments.length === 2) {
             if (Check.isColor(arguments[1])) {
                 const [node, color] = arguments;
-                const _node = this.__getNodeWithMethod(node, "color") as SDNodeWithColor;
+                const _node = this.__getNodeWithMethod<SDNodeWithColor>(node, "color");
                 _node.color(color);
                 return this;
             } else {
                 const [source, target] = arguments;
-                const link = this.__getLinkWithMethod(source, target, "color") as SDNodeWithColor;
+                const link = this.__getLinkWithMethod<SDNodeWithColor>(source, target, "color");
                 return link.color();
             }
         } else {
             const [source, target, color] = arguments;
-            const link = this.__getLinkWithMethod(source, target, "color") as SDNodeWithColor;
+            const link = this.__getLinkWithMethod<SDNodeWithColor>(source, target, "color");
             link.color(color);
             return this;
         }
@@ -648,7 +643,7 @@ export abstract class BaseTree<
     nodeValue(node: string | number | NodeElement): NodeValue;
     nodeValue(node: string | number | NodeElement, value?: any): this;
     nodeValue(node: string | number | NodeElement, value?: any) {
-        const element = this.__getNodeWithMethod(node, "value") as SDNodeWithValue;
+        const element = this.__getNodeWithMethod<SDNodeWithValue>(node, "value");
         if (arguments.length === 1) return element.value();
         element.value(value);
         return this;
@@ -656,20 +651,26 @@ export abstract class BaseTree<
     linkValue(source: string | number | NodeElement, target: string | number | NodeElement): LinkValue;
     linkValue(source: string | number | NodeElement, target: string | number | NodeElement, value: any): this;
     linkValue(source: string | number | NodeElement, target: string | number | NodeElement, value?: any) {
-        const element = this.__getLinkWithMethod(source, target, "value") as SDNodeWithValue;
+        const element = this.__getLinkWithMethod<SDNodeWithValue>(source, target, "value");
         if (arguments.length === 2) return element.value();
         element.value(value);
         return this;
     }
+    hasNode(node: string | number | NodeElement) {
+        return this.element(node) !== undefined;
+    }
+    hasLink(source: string | number | NodeElement, target: string | number | NodeElement) {
+        return this.element(source, target) !== undefined;
+    }
     protected __insertNode(id: string, node: NodeElement) {
-        this._.sdnodesMap[node.id] = { node, id };
+        this._.sdMap[node.id] = { node, id };
         this._.nodesMap[id] = node;
         this.childAs(node);
         this.vars.nodes.push(node);
         return this;
     }
     protected __insertLink(sourceId: string, targetId: string, link: LinkElement) {
-        this._.sdnodesMap[link.id] = { link, sourceId, targetId };
+        this._.sdMap[link.id] = { link, sourceId, targetId };
         this._.linksMap.set([sourceId, targetId], link);
         this.childAs(link);
         this.vars.links.push(link);
@@ -677,7 +678,7 @@ export abstract class BaseTree<
     }
     protected __reverseLink(sourceId: string, targetId: string) {
         const link = this.element(sourceId, targetId);
-        this._.sdnodesMap[link.id] = {
+        this._.sdMap[link.id] = {
             link,
             sourceId: targetId,
             targetId: sourceId,
@@ -702,20 +703,20 @@ export abstract class BaseTree<
         this.eraseChild(link);
         return this;
     }
-    protected __getNodeWithMethod(node: string | number | NodeElement, method: string): unknown {
+    protected __getNodeWithMethod<T>(node: string | number | NodeElement, method: string): T {
         const element = this.element(node);
         if (!element) ErrorLauncher.nodeNotFound(node);
         if (typeof element[method] !== "function") ErrorLauncher.methodNotFound(element, method);
-        return element;
+        return element as unknown as T;
     }
-    protected __getLinkWithMethod(
+    protected __getLinkWithMethod<T>(
         source: string | number | NodeElement,
         target: string | number | NodeElement,
         method: string
-    ): unknown {
+    ): T {
         const element = this.element(source, target);
         if (!element) ErrorLauncher.linkNotFound(source, target);
         if (typeof element[method] !== "function") ErrorLauncher.methodNotFound(element, method);
-        return element;
+        return element as unknown as T;
     }
 }
