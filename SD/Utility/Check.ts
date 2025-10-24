@@ -82,11 +82,15 @@ export class Check {
     static validateJustify(object: any, justifies: ReadonlySet<string>, method: string, i = 1, suggestions = []) {
         if (!justifies.has(object)) ErrorLauncher.invalidJustify(object, method, i, suggestions);
     }
+    static validateOrigin(object: any, origins: ReadonlySet<string>, method: string, i = 1, suggestions = []) {
+        if (!origins.has(object)) ErrorLauncher.invalidOrigin(object, method, i, suggestions);
+    }
     static validateSDNode(object: any, method: string, i = 1, suggestions = []) {
         const { SDNode } = require("@/Node/SDNode");
         if (!(object instanceof SDNode)) ErrorLauncher.invalidSDNode(object, method, i, suggestions);
     }
     static validateArgumentsCountEqualTo(args: Array<any>, count: number, method: string) {
-        if (args.length !== count) throw new Error(`The ${method} expect ${count} arguments, but got ${args.length} arguments.`);
+        if (args.length !== count)
+            throw new Error(`The ${method} expect ${count} arguments, but got ${args.length} arguments.`);
     }
 }

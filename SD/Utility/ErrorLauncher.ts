@@ -67,40 +67,124 @@ export class ErrorLauncher {
         throw new Error(`Grid element[${rowId}, ${colId}] not found.`);
     }
     static invalidOpacity(object: any, method: string, i = 1, suggestions = []) {
-        throw new Error(`We expect an opacity for the ${generateLocation(i)} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
+        throw new Error(
+            `We expect an opacity for the ${generateLocation(
+                i
+            )} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(
+                object,
+                suggestions
+            )}`
+        );
     }
     static invalidNumber(object: any, method: string, i = 1, suggestions = []) {
-        throw new Error(`We expect a number for the ${generateLocation(i)} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
+        throw new Error(
+            `We expect a number for the ${generateLocation(
+                i
+            )} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(
+                object,
+                suggestions
+            )}`
+        );
     }
     static invalidNumberOrString(object: any, method: string, i = 1, suggestions = []) {
-        throw new Error(`We expect a number or a string for the ${generateLocation(i)} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
+        throw new Error(
+            `We expect a number or a string for the ${generateLocation(
+                i
+            )} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(
+                object,
+                suggestions
+            )}`
+        );
     }
     static invalidColor(object: any, method: string, i = 1, suggestions = []) {
-        throw new Error(`We expect a hex-color or a { fill: hex-color, stroke: hex-color } for the ${generateLocation(i)} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
+        throw new Error(
+            `We expect a hex-color or a { fill: hex-color, stroke: hex-color } for the ${generateLocation(
+                i
+            )} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(
+                object,
+                suggestions
+            )}`
+        );
     }
     static invalidSDColor(object: any, method: string, i = 1, suggestions = []) {
-        throw new Error(`We expect a { fill: hex-color, stroke: hex-color } for the ${generateLocation(i)} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
+        throw new Error(
+            `We expect a { fill: hex-color, stroke: hex-color } for the ${generateLocation(
+                i
+            )} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(
+                object,
+                suggestions
+            )}`
+        );
     }
     static invalidHexColor(object: any, method: string, i = 1, suggestions = []) {
-        throw new Error(`We expect a hex-color for the ${generateLocation(i)} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
+        throw new Error(
+            `We expect a hex-color for the ${generateLocation(
+                i
+            )} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(
+                object,
+                suggestions
+            )}`
+        );
     }
     static invalidSyncFunction(object: any, method: string, i = 1, suggestions = []) {
-        throw new Error(`We expect a synchronized function for the ${generateLocation(i)} argument when calling the ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
+        throw new Error(
+            `We expect a synchronized function for the ${generateLocation(
+                i
+            )} argument when calling the ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(
+                object,
+                suggestions
+            )}`
+        );
     }
     static invalidLocation(object: any, method: string, i = 1, suggestions = []) {
-        throw new Error(`We expect a location-string for the ${generateLocation(i)} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
+        throw new Error(
+            `We expect a location-string for the ${generateLocation(
+                i
+            )} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(
+                object,
+                suggestions
+            )}`
+        );
     }
     static invalidDirection(object: any, method: string, i = 1, suggestions = []) {
-        throw new Error(`We expect a direction-string for the ${generateLocation(i)} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
+        throw new Error(
+            `We expect a direction-string for the ${generateLocation(
+                i
+            )} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(
+                object,
+                suggestions
+            )}`
+        );
     }
     static invalidAlign(object: any, method: string, i = 1, suggestions = []) {
-        throw new Error(`We expect a align-string for the ${generateLocation(i)} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
+        throw new Error(
+            `We expect a align-string for the ${generateLocation(
+                i
+            )} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(
+                object,
+                suggestions
+            )}`
+        );
     }
     static invalidJustify(object: any, method: string, i = 1, suggestions = []) {
-        throw new Error(`We expect a justify-string for the ${generateLocation(i)} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
+        throw new Error(
+            `We expect a justify-string for the ${generateLocation(
+                i
+            )} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(
+                object,
+                suggestions
+            )}`
+        );
     }
     static invalidSDNode(object: any, method: string, i = 1, suggestions = []) {
-        throw new Error(`We expect a SDNode for the ${generateLocation(i)} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(object, suggestions)}`);
+        throw new Error(
+            `We expect a SDNode for the ${generateLocation(
+                i
+            )} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(
+                object,
+                suggestions
+            )}`
+        );
     }
     static warnNotImplementedYet(method: string) {
         console.warn(`Function ${method} not implemented yet.`);

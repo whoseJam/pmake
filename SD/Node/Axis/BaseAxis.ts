@@ -36,6 +36,10 @@ export abstract class BaseAxis extends SDNode {
     abstract source(): [number, number];
     abstract direction(): [number, number];
     abstract length(): number;
+    abstract withTick(): boolean;
+    abstract withTick(withTick: boolean): this;
+    abstract withTickLabel(): boolean;
+    abstract withTickLabel(withTickLabel: boolean): this;
     percent(x: number): number | undefined {
         const ticks = this.ticks();
         if (typeof ticks === "number") {
