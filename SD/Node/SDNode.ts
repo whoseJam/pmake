@@ -1,4 +1,5 @@
 import { Action } from "@/Animate/Action";
+import { Context } from "@/Animate/Context";
 import { Interp } from "@/Animate/Interp";
 import { Window } from "@/Animate/Window";
 import { Dom } from "@/Dom/Dom";
@@ -23,7 +24,7 @@ export type SDBox = {
     height: number;
 };
 
-export abstract class SDNode {
+export class SDNode {
     id: number;
     vars: any;
     _: {
@@ -73,6 +74,10 @@ export abstract class SDNode {
         this._.layer = RenderNode.createRenderNode(this, targetLayer, "g");
 
         this.vars = reactive({
+            x: 0,
+            y: 0,
+            width: 40,
+            height: 40,
             opacity: 1,
         });
 
@@ -577,14 +582,34 @@ export abstract class SDNode {
     inRange(point: [number, number]) {
         return this.x() <= point[0] && point[0] <= this.mx() && this.y() <= point[1] && point[1] <= this.my();
     }
-    abstract x(): number;
-    abstract x(x: number): this;
-    abstract y(): number;
-    abstract y(y: number): this;
-    abstract width(): number;
-    abstract width(width: number): this;
-    abstract height(): number;
-    abstract height(height: number): this;
+    x(): number;
+    x(x: number): this;
+    x(x?: number) {
+        if (arguments.length === 0) return this.vars.x;
+        this.vars.lpset("x", x);
+        return this;
+    }
+    y(): number;
+    y(y: number): this;
+    y(y?: number) {
+        if (arguments.length === 0) return this.vars.y;
+        this.vars.lpset("y", y);
+        return this;
+    }
+    width(): number;
+    width(width: number): this;
+    width(width?: number) {
+        if (arguments.length === 0) return this.vars.width;
+        this.vars.lpset("width", width);
+        return this;
+    }
+    height(): number;
+    height(height: number): this;
+    height(height?: number) {
+        if (arguments.length === 0) return this.vars.height;
+        this.vars.lpset("height", height);
+        return this;
+    }
     scale(scale: number) {
         if (this.fixAspect()) return this.width(this.width() * scale);
         return this.freeze()
@@ -672,6 +697,23 @@ export abstract class SDNode {
             .x(x as number)
             .y(y)
             .unfreeze();
+    }
+    /**
+     * Makes this component appear.
+     *
+     * This component must be animated currently.
+     * @returns The current component instance for method chaining.
+     * @example
+     * // Makes a component appear.
+     * node.startAnimate().appear().endAnimate();
+     */
+    appear() {
+        const context = new Context(this);
+        context.till(0, 0);
+        this.opacity(0);
+        context.till(0, 1);
+        this.opacity(1);
+        return this;
     }
     static __asNode(target: SDNode | RenderNode, object: any, id?: string): SDNode {
         if (object === null || object === undefined) {

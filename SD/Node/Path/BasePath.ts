@@ -85,7 +85,7 @@ export class BasePath extends SDSVGNode {
         return this.arrow(arrow).revArrow(arrow);
     }
     /**
-     * Makes a path component gradually appear from the starting point to the ending point.
+     * Makes this component gradually appear from the starting point to the ending point.
      *
      * This component must be animated currently.
      * @returns The current component instance for method chaining.
@@ -103,7 +103,7 @@ export class BasePath extends SDSVGNode {
         return this;
     }
     /**
-     * Makes a path component gradually appear from the ending point to the starting point.
+     * Makes this component gradually appear from the ending point to the starting point.
      *
      * This component must be animated currently.
      * @returns The current component instance for method chaining.
@@ -123,7 +123,7 @@ export class BasePath extends SDSVGNode {
         return this;
     }
     /**
-     * Makes a path component gradually fade from the starting point to the ending point.
+     * Makes this component gradually fade from the starting point to the ending point.
      *
      * This component must be animated currently.
      * @returns The current component instance for method chaining.
@@ -143,7 +143,7 @@ export class BasePath extends SDSVGNode {
         return this;
     }
     /**
-     * Makes a path component gradually fade from the ending point to the starting point.
+     * Makes this component gradually fade from the ending point to the starting point.
      *
      * This component must be animated currently.
      * @returns The current component instance for method chaining.

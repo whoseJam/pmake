@@ -198,7 +198,8 @@ export class Text extends BaseText {
         });
         const text = this.vars.text;
         const matched = [];
-        for (let i = 0; i + subtext.length <= text.length; i++) if (text.slice(i, i + subtext.length) === subtext) matched.push([i, i + subtext.length]);
+        for (let i = 0; i + subtext.length <= text.length; i++)
+            if (text.slice(i, i + subtext.length) === subtext) matched.push([i, i + subtext.length]);
         const update = (match: [number, number]) => {
             if (!match) return;
             const [l, r] = match;

@@ -5,97 +5,93 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestLogTicks);
+sd.main(TestTickLabelTransform);
 
-async function TestLogTicks() {
-    const start = 1;
-    const end = 16;
-    const axis = new sd.Axis(svg).x(100).y(100).ticks(2);
+async function TestSourceAndLength() {
+    const axis = new sd.Axis(svg).source(100, 100).length(200).ticks(5);
     await sd.pause();
-    axis.withTickLabel(true); //.ticks(sd.BaseAxis.log2(start, end)).withTickLabel(true);
-    // for (let i = start; i <= end; i++) {
-    //     new sd.Circle(svg).r(3).color(C.black).center(axis.global(i));
-    // }
+    axis.startAnimate().source(200, 150).endAnimate();
+    await sd.pause();
+    axis.startAnimate().length(400).endAnimate();
+    await sd.pause();
+    axis.startAnimate().source(300, 300).length(300).endAnimate();
+    await sd.pause();
+    axis.startAnimate().sx(150).sy(200).endAnimate();
+    await sd.pause();
+    new sd.Circle(svg).r(5).center(axis.source()).color(C.green).startAnimate().appear().endAnimate();
+    new sd.Circle(svg).r(5).center(axis.target()).color(C.red).startAnimate().appear().endAnimate();
 }
 
-async function TestLocal() {
-    const axis = new sd.Axis(svg).x(100).y(100).direction([0.4, 0.2]);
+async function TestDirection() {
+    const axis = new sd.Axis(svg).x(300).y(300).length(200).ticks(5);
     await sd.pause();
-    new sd.Circle(svg).r(6).center(axis.source()).color(C.green);
-    new sd.Circle(svg).r(6).center(400, 300).color(C.blue);
-    new sd.Circle(svg)
-        .r(6)
-        .center(axis.global(axis.local(400, 300)))
-        .color(C.red);
+    axis.startAnimate().direction("vertical").endAnimate();
+    await sd.pause();
+    axis.startAnimate().direction("horizontal").endAnimate();
+    await sd.pause();
+    axis.startAnimate().direction([1, -1]).endAnimate();
+    await sd.pause();
+    axis.startAnimate().direction([-1, 1]).endAnimate();
+    await sd.pause();
+    axis.startAnimate().direction([0.6, 0.8]).endAnimate();
+    await sd.pause();
+    axis.startAnimate().direction([-0.8, -0.6]).endAnimate();
+    await sd.pause();
+    new sd.Circle(svg).r(5).center(axis.source()).color(C.blue).startAnimate().appear().endAnimate();
 }
 
-async function TestWithTickAndWithTickLabel() {
-    const axis = new sd.Axis(svg).x(100).y(100).width(600).tickLength(20).withTickLabel(true);
+async function TestTick() {
+    const axis = new sd.Axis(svg).x(100).y(200).length(400).ticks(10).withTick(true);
     await sd.pause();
-    axis.startAnimate().withTick(false).endAnimate();
+    axis.startAnimate().tickLength(15).endAnimate();
     await sd.pause();
-    axis.startAnimate().withTick(true).endAnimate();
-    await sd.pause();
-    axis.startAnimate().withTickLabel(false).endAnimate();
-}
-
-async function TestTickLabelFormat() {
-    const axis = new sd.Axis(svg).x(100).y(100).width(600);
-    await sd.pause();
-    axis.startAnimate()
-        .tickLabelFormat(i => `${i}$`)
-        .endAnimate();
-}
-
-async function TestTickAttrs() {
-    const axis = new sd.Axis(svg).x(100).y(100).width(300).withTickLabel(true);
-    await sd.pause();
-    axis.startAnimate().tickLength(20).endAnimate();
+    axis.startAnimate().tickLength(30).endAnimate();
     await sd.pause();
     axis.startAnimate().tickAlign("source").endAnimate();
     await sd.pause();
     axis.startAnimate().tickAlign("target").endAnimate();
     await sd.pause();
-    axis.startAnimate().tickLabelAlign("target").endAnimate();
+    axis.startAnimate().tickAlign("center").endAnimate();
+    await sd.pause();
+    axis.startAnimate().withTick(false).endAnimate();
+    await sd.pause();
+    axis.startAnimate().withTick(true).endAnimate();
+}
+
+async function TestTickLabel() {
+    const axis = new sd.Axis(svg).x(100).y(200).length(400).ticks(10).withTick(true).withTickLabel(true);
+    await sd.pause();
+    axis.startAnimate().fontSize(12).endAnimate();
+    await sd.pause();
+    axis.startAnimate().fontSize(24).endAnimate();
+    await sd.pause();
+    axis.startAnimate().fontSize(32).endAnimate();
     await sd.pause();
     axis.startAnimate().fontSize(10).endAnimate();
+    await sd.pause();
+    axis.startAnimate().tickLabelAlign("target").endAnimate();
+    await sd.pause();
+    axis.startAnimate().tickLabelAlign("source").endAnimate();
 }
 
-async function TestForEachTick() {
-    const axis = new sd.Axis(svg).x(100).y(100).width(300);
+async function TestTickLabelTransform() {
+    const axis = new sd.Axis(svg).x(100).y(200).length(500).ticks(5).withTick(true).withTickLabel(true).fontSize(16);
     await sd.pause();
-    axis.forEachTick(tick => {
-        tick.startAnimate().stroke(C.red).endAnimate();
-    });
-}
-
-async function TestFixStepTick() {
-    const axis = new sd.Axis(svg).x(100).y(100).width(300);
+    axis.startAnimate().ticks(10).endAnimate();
     await sd.pause();
-    axis.startAnimate().ticks([2, 10, 4]).endAnimate();
-}
-
-async function TestDirection() {
-    const axis = new sd.Axis(svg).x(300).y(300).length(200);
+    axis.startAnimate().ticks(20).endAnimate();
     await sd.pause();
-    axis.startAnimate().direction("vertical").endAnimate();
+    axis.startAnimate().ticks(3).endAnimate();
     await sd.pause();
-    axis.startAnimate().direction([-1, -1]).endAnimate();
+    axis.startAnimate().ticks([0, 100, 10]).endAnimate();
     await sd.pause();
-    axis.startAnimate().width(200).endAnimate();
+    axis.startAnimate().ticks([0, 100, 25]).endAnimate();
     await sd.pause();
-    new sd.Circle(svg).center(axis.pos("x", "y")).fillOpacity(0);
-}
-
-async function TestBasic() {
-    const axis = new sd.Axis(svg).x(100).y(100);
+    axis.startAnimate().ticks(sd.BaseAxis.log2(1, 16)).endAnimate();
     await sd.pause();
-    axis.startAnimate().ticks(5).endAnimate();
+    axis.startAnimate().ticks(8).endAnimate();
     await sd.pause();
-    axis.startAnimate().width(200).endAnimate();
-    await sd.pause();
-    axis.startAnimate().ticks(15).endAnimate();
-    await sd.pause();
-    const c1 = new sd.Circle(svg).r(3).center(axis.global(14)).color(C.blue);
-    const c2 = new sd.Circle(svg).r(3).center(axis.global(5)).color(C.red);
+    axis.startAnimate()
+        .tickLabelFormat(i => `${i}px`)
+        .endAnimate();
 }

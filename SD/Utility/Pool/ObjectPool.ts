@@ -1,12 +1,29 @@
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Pool } from "@/Utility/Pool/Pool";
 
-export class ObjectPool extends Pool {
-    constructor(args) {
+type PoolStatus = "idle" | "used" | "using";
+
+interface PoolResource {
+    __pool_status: PoolStatus;
+    [key: string]: any;
+}
+
+interface ObjectPoolParams<T = any> {
+    onIdle: (resource: T) => void;
+    getIdle: (resource: T) => T;
+    getUsed: (resource: T) => T;
+    onCreate: (key: number | string) => T;
+}
+
+export class ObjectPool<T extends PoolResource = any> extends Pool<T> {
+    protected resources: Record<string | number, T>;
+
+    constructor(args: ObjectPoolParams<T>) {
         super(args);
         this.resources = {};
     }
-    beforeAllocate() {
+
+    beforeAllocate(): void {
         for (const key in this.resources) {
             const resource = this.resources[key];
             if (resource.__pool_status === "using") {
@@ -14,7 +31,8 @@ export class ObjectPool extends Pool {
             }
         }
     }
-    allocate(key) {
+
+    allocate(key: number | string): T {
         const resource = this.resources[key];
         if (!resource) {
             const resource = this.onCreate(key);
@@ -31,7 +49,8 @@ export class ObjectPool extends Pool {
             return this.getIdle(resource);
         }
     }
-    afterAllocate() {
+
+    afterAllocate(): void {
         for (const key in this.resources) {
             const resource = this.resources[key];
             if (resource.__pool_status === "used") {
@@ -40,11 +59,13 @@ export class ObjectPool extends Pool {
             }
         }
     }
-    isUsing(key) {
+
+    isUsing(key: number | string): boolean {
         const resource = this.resources[key];
         return resource && resource.__pool_status === "using";
     }
-    get(key) {
+
+    get(key: number | string): T | undefined {
         const resource = this.resources[key];
         return resource;
     }
