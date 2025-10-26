@@ -2,7 +2,6 @@ import { Context } from "@/Animate/Context";
 import { BaseArray } from "@/Node/Array/BaseArray";
 import { Enter as EN } from "@/Node/Core/Enter";
 import { Rect } from "@/Node/Shape/Rect";
-import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
 import { Color } from "@/Utility/Color";
 import { Factory } from "@/Utility/Factory";
@@ -75,7 +74,7 @@ Object.assign(Code.prototype, {
         return this;
     },
     insert(id, value = "") {
-        const element = Cast.castToSDNode(this.layer("elements"), value);
+        const element = SDNode.__asNode(this.layer("elements"), value);
         element.onEnter(EN.appear("elements"));
         this.__insert(id, element);
         return this;

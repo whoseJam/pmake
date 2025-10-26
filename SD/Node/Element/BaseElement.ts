@@ -3,7 +3,6 @@ import { Exit as EX } from "@/Node/Core/Exit";
 import { SDNode, SDNodeWithText } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Rule as R, SDRule } from "@/Rule/Rule";
-import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
 import { SDColor } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
@@ -240,7 +239,7 @@ export class BaseElement<B extends SDNode> extends SDNode {
             this.eraseChild("value");
         }
         if (Check.isEmpty(value)) return this;
-        value = Cast.castToSDNode(this, value);
+        value = SDNode.__asNode(this, value);
         return this.childAs("value", value, rule || valueRule);
     }
     /**

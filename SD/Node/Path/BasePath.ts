@@ -2,7 +2,6 @@ import { Context } from "@/Animate/Context";
 import { Enter as EN } from "@/Node/Core/Enter";
 import { SDSVGNode } from "@/Node/SDSVGNode";
 import { Rule as R, SDRule } from "@/Rule/Rule";
-import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
 import { Color as C } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
@@ -230,7 +229,7 @@ export class BasePath extends SDSVGNode {
         if (this.hasChild("value")) this.eraseChild("value");
         if (Check.isEmpty(value)) return this;
         rule = rule || R.pointAtPathByRate(0.5, "cx", "cy");
-        value = Cast.castToSDNode(this, value);
+        value = SDNode.__asNode(this, value);
         return this.childAs("value", value, rule);
     }
     /**

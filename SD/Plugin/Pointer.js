@@ -2,11 +2,13 @@ import { Context } from "@/Animate/Context";
 import { Enter as EN } from "@/Node/Core/Enter";
 import { Line } from "@/Node/Path/Line";
 import { SDNode } from "@/Node/SDNode";
-import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
 
 const DIRECTION_KEY = new Set(["l", "r", "t", "b"]);
-const DIRECTION_KEY_SUGGESTION = [() => true, "For pointer component, here are 4 types of directions which are 'l', 'r', 't', 'b'."];
+const DIRECTION_KEY_SUGGESTION = [
+    () => true,
+    "For pointer component, here are 4 types of directions which are 'l', 'r', 't', 'b'.",
+];
 const pointerMap = {};
 
 class PointerPlugin {
@@ -14,7 +16,7 @@ class PointerPlugin {
         if (arguments.length === 0) return this.child("value");
         if (this.hasChild("value")) this.eraseChild("value");
         if (Check.isEmpty(value)) return this;
-        value = Cast.castToSDNode(this, value);
+        value = SDNode.__asNode(this, value);
         this.childAs("value", value, rule || labelRule);
         return this;
     }
@@ -107,7 +109,9 @@ export function Pointer(target, text = "", direction = "b", pointerGap = 3, leng
         const element = self.vars.element;
         if (!element) return;
         const direction = self.direction();
-        const pointers = pointerMap[element.id].filter(p => p.direction() === direction && (p.opacity() !== 0 || p === self));
+        const pointers = pointerMap[element.id].filter(
+            p => p.direction() === direction && (p.opacity() !== 0 || p === self)
+        );
         pointers.sort((a, b) => a.id - b.id);
         const elementlength = getLength(element, direction);
         const gapLength = getGapLength(pointers);

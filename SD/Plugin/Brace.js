@@ -3,18 +3,20 @@ import { Enter as EN } from "@/Node/Core/Enter";
 import { BraceCurve } from "@/Node/Curve/BraceCurve";
 import { SDNode } from "@/Node/SDNode";
 import { Rule as R } from "@/Rule/Rule";
-import { Cast } from "@/Utility/Cast";
 import { Check } from "@/Utility/Check";
 
 const LOCATION_KEY = new Set(["l", "r", "t", "b"]);
-const LOCATION_KEY_SUGGESTION = [() => true, "For brace component, here are 4 types of locations which are 'l', 'r', 't', 'b'."];
+const LOCATION_KEY_SUGGESTION = [
+    () => true,
+    "For brace component, here are 4 types of locations which are 'l', 'r', 't', 'b'.",
+];
 
 class BracePlugin {
     value(value, rule) {
         if (arguments.length === 0) return this.child("value");
         if (this.hasChild("value")) this.eraseChild("value");
         if (Check.isEmpty(value)) return this;
-        value = Cast.castToSDNode(this, value);
+        value = SDNode.__asNode(this, value);
         this.childAs("value", value, rule || labelRule);
         return this;
     }
