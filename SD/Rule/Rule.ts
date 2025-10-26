@@ -1,7 +1,7 @@
 import { SDNode } from "@/Node/SDNode";
 import { aside } from "@/Rule/Aside";
 import { background, circleBackground } from "@/Rule/Background";
-import { centerFixAspect, centerOnly, triangleCenterFixAspect } from "@/Rule/Center";
+import { center, centerFixAspect, centerOnly, triangleCenterFixAspect } from "@/Rule/Center";
 import { pointAtPathByLength, pointAtPathByRate } from "@/Rule/Path";
 
 export type SDRule = (parent: SDNode, child: SDNode) => void;
@@ -10,6 +10,7 @@ export class Rule {
     static aside = aside;
     static background = background;
     static circleBackground = circleBackground;
+    static center = center;
     static centerOnly = centerOnly;
     static centerFixAspect = centerFixAspect;
     static triangleCenterFixAspect = triangleCenterFixAspect;
@@ -17,4 +18,6 @@ export class Rule {
     static pointAtPathByLength = pointAtPathByLength;
 }
 
-export function rule(): typeof Rule;
+export function rule(): typeof Rule {
+    return Rule;
+}

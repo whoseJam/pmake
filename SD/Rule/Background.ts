@@ -1,5 +1,8 @@
-export function background() {
-    return function (parent, child) {
+import { SDNode } from "@/Node/SDNode";
+import { SDRule } from "@/Rule/Rule";
+
+export function background(): SDRule {
+    return function (parent: SDNode, child: SDNode) {
         const x = parent.x();
         const y = parent.y();
         const width = parent.width();
@@ -10,8 +13,8 @@ export function background() {
     };
 }
 
-export function circleBackground() {
-    return function (parent, child) {
+export function circleBackground(): SDRule {
+    return function (parent: SDNode, child: SDNode) {
         const x = parent.x();
         const y = parent.y();
         const r = parent.r();

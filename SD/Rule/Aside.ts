@@ -1,5 +1,10 @@
-export function aside(align = "tc", gap = 5) {
-    return function (parent, child) {
+import { SDNode } from "@/Node/SDNode";
+import { SDRule } from "@/Rule/Rule";
+
+type Align = "tl" | "tc" | "tr" | "lt" | "lc" | "lb" | "bl" | "bc" | "br" | "rt" | "rc" | "rb";
+
+export function aside(align: Align = "tc", gap: number = 5): SDRule {
+    return function (parent: SDNode, child: SDNode) {
         if (align === "tl") child.x(parent.x()).my(parent.y() - gap);
         else if (align === "tc") child.cx(parent.cx()).my(parent.y() - gap);
         else if (align === "tr") child.mx(parent.mx()).my(parent.y() - gap);

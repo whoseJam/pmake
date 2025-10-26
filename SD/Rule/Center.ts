@@ -1,13 +1,16 @@
-export function centerOnly() {
-    return function (parent, child) {
+import { SDNode } from "@/Node/SDNode";
+import { SDRule } from "@/Rule/Rule";
+
+export function centerOnly(): SDRule {
+    return function (parent: SDNode, child: SDNode) {
         const cx = parent.cx();
         const cy = parent.cy();
         child.cx(cx).cy(cy);
     };
 }
 
-export function centerFixAspect(rate = 1.2) {
-    return function (parent, child) {
+export function centerFixAspect(rate: number = 1.2): SDRule {
+    return function (parent: SDNode, child: SDNode) {
         const cx = parent.cx();
         const cy = parent.cy();
         if (typeof parent.r === "function") {
@@ -35,8 +38,8 @@ export function centerFixAspect(rate = 1.2) {
     };
 }
 
-export function center(rate = 1.2) {
-    return function (parent, child) {
+export function center(rate: number = 1.2): SDRule {
+    return function (parent: SDNode, child: SDNode) {
         const cx = parent.cx();
         const cy = parent.cy();
         const w = parent.width();
@@ -48,8 +51,8 @@ export function center(rate = 1.2) {
     };
 }
 
-export function triangleCenterFixAspect(rate = 1.2) {
-    return function (parent, child) {
+export function triangleCenterFixAspect(rate: number = 1.2): SDRule {
+    return function (parent: SDNode, child: SDNode) {
         let width = parent.width();
         let height = parent.height();
         let cwidth = child.width();
