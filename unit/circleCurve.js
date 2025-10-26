@@ -1,13 +1,23 @@
 import * as sd from "@/sd";
 
-let svg = sd.svg();
-let c = new sd.CircleCurve(svg);
-c.target(100, 100).source(120, 100);
-let b = new sd.BraceCurve(svg);
-b.target(100, 200).source(120, 200);
+const svg = sd.svg();
+const C = sd.color();
 
-main();
+sd.init(() => {});
 
-async function main() {
+sd.main(TestSourceAndTarget);
+
+async function TestSourceAndTarget() {
+    const curve = new sd.CircleCurve(svg);
+    curve.source(100, 100).target(300, 200).strokeWidth(2);
     await sd.pause();
+    curve.startAnimate().source(150, 150).endAnimate();
+    await sd.pause();
+    curve.startAnimate().target(400, 300).endAnimate();
+    await sd.pause();
+    curve.startAnimate().source(50, 50).target(350, 150).endAnimate();
+    await sd.pause();
+    curve.startAnimate().source(100, 300).target(400, 100).endAnimate();
+    await sd.pause();
+    curve.startAnimate().source(400, 100).endAnimate();
 }

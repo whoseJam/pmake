@@ -26,7 +26,7 @@ export class FixGapCoord extends CartesianCoord<FixGapAxis> {
     gap(by: "x" | "y", gap: number): this;
     gap(by: "x" | "y", gap?: number) {
         if (arguments.length === 1) return this.axis(by).gap();
-        this.axis(by).gap(gap!);
+        this.axis(by).gap(gap);
         return this;
     }
     width(): number;

@@ -1,14 +1,16 @@
 import { Vector as V } from "@/Math/Vector";
 import { BaseCurve } from "@/Node/Curve/BaseCurve";
+import { SDNode } from "@/Node/SDNode";
+import { RenderNode } from "@/Renderer/RenderNode";
 import { PathPen } from "@/Utility/PathPen";
 
 export class Bezier extends BaseCurve {
-    constructor(target) {
+    constructor(target: SDNode | RenderNode) {
         super(target);
 
         this.type("Bezier");
 
-        this._.curve = (source, target) => {
+        this._.curve = (source: [number, number], target: [number, number]): string => {
             const v1 = source;
             const v2 = target;
             const d = V.sub(v2, v1);
