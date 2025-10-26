@@ -25,6 +25,8 @@ export class Window {
     static IFRAME_URL = undefined;
     static IFRAME_RATE = undefined;
     static IFRAME_MAX_FRAME = Infinity;
+    static IFRAME_INITED = true;
+    static IFRAME_ARGS = {};
     static attributes = {};
     static init() {
         window.addEventListener("message", event => {
@@ -93,11 +95,11 @@ function lastMainFrame() {
     }
 }
 
-export const NORMAL_FRAME = 0;
-export const LAST_MAIN_STAGE = 1;
-export const LAST_INTER_STAGE = 2;
-export const FIRST_INTER_STAGE = 3;
-export const CONTINUE_STAGE = 4;
+export const NORMAL_FRAME = -1;
+export const LAST_MAIN_STAGE = -2;
+export const LAST_INTER_STAGE = -3;
+export const FIRST_INTER_STAGE = -4;
+export const CONTINUE_STAGE = -5;
 
 function promiseOfFirstInterFrame(): Promise<void> {
     if (Window.IS_CONTINUING) throw new Error();
@@ -179,13 +181,6 @@ function promiseOfLastMainFrame(): Promise<void> {
 /**
  * Pauses execution flow until the user triggers the next stage.
  * Acts as an interactive breakpoint between two animation stage.
- * @param frameType - Optional pause behavior (0-4). Defaults to 0 (NORMAL_STAGE).
- *                  - 0: NORMAL_STAGE - A standard interactive pause.
- *                  - 1: LAST_MAIN_STAGE - Last stage of the main animation (internal use only).
- *                  - 2: LAST_INTER_STAGE - Last stage of an interstitial animation (internal use only).
- *                  - 3: FIRST_INTER_STAGE - First stage of an interstitial animation (internal use only).
- *                  - 4: CONTINUE_STAGE - Unbreakable stage. No extra animation process can be insert after this stage
- *                                     so that the next stage must also be a stage from the same animation process.
  * @returns A promise that resolves when the pause condition is met.
  * @example
  * await sd.pause(); // Wait for user to click 'N'('N' for next) button.
@@ -193,8 +188,7 @@ function promiseOfLastMainFrame(): Promise<void> {
  * await sd.pause(); // Wait for another user interaction.
  * // Operations to execute in the next animation stage.
  */
-export async function pause(frameType?: 0 | 1 | 2 | 3 | 4): Promise<void>;
-export async function pause(frameType = 0): Promise<void> {
+export async function pause(frameType: number = NORMAL_FRAME): Promise<void> {
     if (Window.SHOULD_FLUSH) {
         A.currentActionList.updateWindowSize();
         // limit frame count, to handle the infinite animation

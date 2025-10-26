@@ -1,3 +1,7 @@
+import { FIRST_INTER_STAGE, LAST_INTER_STAGE, LAST_MAIN_STAGE, pause, Window } from "@/Animate/Window";
+
+let initFinished: boolean = true;
+
 /**
  * Initializes the framework environment.
  *
@@ -8,15 +12,19 @@
  *                   This can be used to set up application-specific configurations
  *                   or perform asynchronous operations before the main application starts.
  *                   If no custom logic is needed, this parameter can be omitted.
- *
- * @example
- * const svg = sd.svg();
- * const rect = new sd.Rect(svg);
- * sd.init(() => {
- *     rect.x(100).y(100);
- * });
  */
-export function init(callback: () => void): void;
+export async function init(callback: (args?: Record<string, any>) => void | Promise<void>): Promise<void> {
+    initFinished = false;
+    const fn = async (): Promise<void> => {
+        if (window.self === window.top || (window.self !== window.top && Window.IFRAME_INITED)) {
+            await callback(Window.IFRAME_ARGS ?? {});
+            initFinished = true;
+        } else {
+            setTimeout(fn, 20);
+        }
+    };
+    setTimeout(fn, 20);
+}
 
 /**
  * Starts the main animation process of the framework.
@@ -27,16 +35,18 @@ export function init(callback: () => void): void;
  * @param callback - The main animation logic to execute.
  *                   Place all code that depends on the animation lifecycle here.
  *                   Use `sd.pause()` within this callback to segment the animation into stages.
- *
- * @example
- * sd.main(async () => {
- *     await sd.pause();
- *     rect.startAnimate().x(100).endAnimate();
- *     await sd.pause();
- *     rect.startAnimate().y(100).endAnimate();
- * });
  */
-export function main(callback: () => void): void;
+export async function main(callback: () => void | Promise<void>): Promise<void> {
+    const fn = async (): Promise<void> => {
+        if (initFinished) {
+            await callback();
+            await pause(LAST_MAIN_STAGE);
+        } else {
+            setTimeout(fn, 20);
+        }
+    };
+    setTimeout(fn, 20);
+}
 
 /**
  * Inserts an extra animation process into the main animation process.
@@ -46,12 +56,9 @@ export function main(callback: () => void): void;
  * executed immediately.
  *
  * @param callback - The extra animation logic to execute.
- *
- * @example
- * button.onClick(() => {
- *     sd.inter(async () => {
- *         await rect.startAnimate().x(100).y(100).endAnimate();
- *     });
- * });
  */
-export function inter(callback: () => void): void;
+export async function inter(callback: () => void | Promise<void>): Promise<void> {
+    await pause(FIRST_INTER_STAGE);
+    await callback();
+    await pause(LAST_INTER_STAGE);
+}
