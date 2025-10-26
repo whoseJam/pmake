@@ -1,4 +1,8 @@
+import { Exit as EX } from "@/Node/Core/Exit";
+import { Line } from "@/Node/Path/Line";
+import { PathEngine } from "@/Node/Path/PathEngine";
 import { SDNode } from "@/Node/SDNode";
+import { trim } from "@/Utility/Trim";
 
 type XLocation = "x" | "cx" | "mx";
 type YLocation = "y" | "cy" | "my";
@@ -15,6 +19,13 @@ class LinkPlugin {
      * @returns The current component instance for method chaining.
      */
     sourceElement(source: SDNode): this;
+    sourceElement(source?: SDNode): any | this {
+        if (arguments.length === 0) return (this as any).vars.element1;
+        (this as any).vars.element1.eraseChild((this as any).onExit(EX.nothing()));
+        (this as any).vars.element1 = source;
+        (this as any).vars.element1.childAs(this);
+        return this;
+    }
     /**
      * Gets the target component of this link component.
      * @returns The target component.
@@ -26,6 +37,13 @@ class LinkPlugin {
      * @returns The current component instance for method chaining.
      */
     targetElement(target: SDNode): this;
+    targetElement(target?: SDNode): any | this {
+        if (arguments.length === 0) return (this as any).vars.element2;
+        (this as any).vars.element2.eraseChild((this as any).onExit(EX.nothing()));
+        (this as any).vars.element2 = target;
+        (this as any).vars.element2.childAs(this);
+        return this;
+    }
     /**
      * Gets the x coordinate property of the source component location for this link component.
      * @returns The x coordinate property of the source component location.
@@ -39,6 +57,11 @@ class LinkPlugin {
      * @returns The current component instance for method chaining.
      */
     sourceLocationX(location: string): this;
+    sourceLocationX(location?: string): string | this {
+        if (arguments.length === 0) return (this as any).vars.sx;
+        (this as any).vars.sx = location;
+        return this;
+    }
     /**
      * Gets the y coordinate property of the source component location for this link component.
      * @returns The y coordinate property of the source component location.
@@ -52,6 +75,11 @@ class LinkPlugin {
      * @returns The current component instance for method chaining.
      */
     sourceLocationY(location: string): this;
+    sourceLocationY(location?: string): string | this {
+        if (arguments.length === 0) return (this as any).vars.sy;
+        (this as any).vars.sy = location;
+        return this;
+    }
     /**
      * Gets the x coordinate property of the target component location for this link component.
      * @returns The x coordinate property of the target component location.
@@ -65,6 +93,11 @@ class LinkPlugin {
      * @returns The current component instance for method chaining.
      */
     targetLocationX(location: string): this;
+    targetLocationX(location?: string): string | this {
+        if (arguments.length === 0) return (this as any).vars.tx;
+        (this as any).vars.tx = location;
+        return this;
+    }
     /**
      * Gets the y coordinate property of the target component location for this link component.
      * @returns The y coordinate property of the target component location.
@@ -78,6 +111,37 @@ class LinkPlugin {
      * @returns The current component instance for method chaining.
      */
     targetLocationY(location: string): this;
+    targetLocationY(location?: string): string | this {
+        if (arguments.length === 0) return (this as any).vars.ty;
+        (this as any).vars.ty = location;
+        return this;
+    }
+}
+
+function trimSource(link: any, source: any): number {
+    if (!source) return 0;
+    let l = 0,
+        r = 1;
+    while (r - l > 1e-3) {
+        const mid = (l + r) / 2.0;
+        if (source.inRange(link.at(mid))) l = mid;
+        else r = mid;
+    }
+    if (link.totalLength() * l <= 1) return 0;
+    return l;
+}
+
+function trimTarget(link: any, target: any): number {
+    if (!target) return 1;
+    let l = 0,
+        r = 1;
+    while (r - l > 1e-3) {
+        const mid = (l + r) / 2.0;
+        if (target.inRange(link.at(mid))) r = mid;
+        else l = mid;
+    }
+    if (link.totalLength() * (1 - l) <= 1) return 1;
+    return l;
 }
 
 /**
@@ -91,4 +155,52 @@ class LinkPlugin {
  * @param ty
  * @returns A new plugin instance.
  */
-export function Link<T>(source: SDNode, target: SDNode, clazz: new (...args: any[]) => T, sx: string, sy: string, tx: string, ty: string): LinkPlugin & T;
+export function Link<T>(
+    source: SDNode,
+    target: SDNode,
+    clazz: new (...args: any[]) => T = Line as any,
+    sx: string = "cx",
+    sy: string = "cy",
+    tx: string = "cx",
+    ty: string = "cy"
+): LinkPlugin & T {
+    const self = new clazz(target) as any;
+    self.vars.merge({
+        element1: source,
+        element2: target,
+        sx,
+        sy,
+        tx,
+        ty,
+    });
+
+    self.sourceElement = LinkPlugin.prototype.sourceElement;
+    self.targetElement = LinkPlugin.prototype.targetElement;
+    self.sourceLocationX = LinkPlugin.prototype.sourceLocationX;
+    self.sourceLocationY = LinkPlugin.prototype.sourceLocationY;
+    self.targetLocationX = LinkPlugin.prototype.targetLocationX;
+    self.targetLocationY = LinkPlugin.prototype.targetLocationY;
+
+    const curve = self._.curve;
+    if (curve) self.uneffect("curve");
+
+    self.effect("link", () => {
+        const element1 = self.vars.element1;
+        const element2 = self.vars.element2;
+        const source = [element1[self.sourceLocationX()](), element1[self.sourceLocationY()]()];
+        const target = [element2[self.targetLocationX()](), element2[self.targetLocationY()]()];
+        if (curve) {
+            const d = curve(source, target);
+            const [ps, pt] = PathEngine.trimPath(d, element1, element2);
+            self.source(ps).target(pt).d(curve(ps, pt));
+        } else {
+            self.source(source).target(target);
+            trim(self, element1, element2);
+        }
+    });
+
+    source.childAs(self);
+    target.childAs(self);
+
+    return self as LinkPlugin & T;
+}
