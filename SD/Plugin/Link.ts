@@ -118,32 +118,6 @@ class LinkPlugin {
     }
 }
 
-function trimSource(link: any, source: any): number {
-    if (!source) return 0;
-    let l = 0,
-        r = 1;
-    while (r - l > 1e-3) {
-        const mid = (l + r) / 2.0;
-        if (source.inRange(link.at(mid))) l = mid;
-        else r = mid;
-    }
-    if (link.totalLength() * l <= 1) return 0;
-    return l;
-}
-
-function trimTarget(link: any, target: any): number {
-    if (!target) return 1;
-    let l = 0,
-        r = 1;
-    while (r - l > 1e-3) {
-        const mid = (l + r) / 2.0;
-        if (target.inRange(link.at(mid))) r = mid;
-        else l = mid;
-    }
-    if (link.totalLength() * (1 - l) <= 1) return 1;
-    return l;
-}
-
 /**
  * Creates a **`sd.LinkPlugin`** instance.
  * @param source

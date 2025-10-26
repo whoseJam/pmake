@@ -2,14 +2,20 @@ import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
 import { Dom } from "@/Dom/Dom";
 import { svg } from "@/Interact/Root";
-import { BaseText, BaseTextConfiguration, TextMappingArray, TextMappingLocation, TextMappingObject } from "@/Node/Text/BaseText";
+import {
+    BaseText,
+    BaseTextConfiguration,
+    TextMappingArray,
+    TextMappingLocation,
+    TextMappingObject,
+} from "@/Node/Text/BaseText";
 import { Math as Math_, MathConfiguration } from "@/Node/Text/Math";
 import { Text, Text as Text_, TextConfiguration } from "@/Node/Text/Text";
 import { RenderNode } from "@/Renderer/RenderNode";
+import { make1d } from "@/Utility/Base";
 import { SDColor } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { PathPen } from "@/Utility/PathPen";
-import { make1d } from "@/Utility/Util";
 import opentype from "opentype.js";
 
 function getCodePointCount(str: string): number {
@@ -32,7 +38,14 @@ class Match {
     paths: Array<TransformingPath>;
     text: Configuration;
     all: boolean;
-    constructor(node: BaseText, start: number, length: number, paths: Array<TransformingPath>, text: Configuration, all: boolean) {
+    constructor(
+        node: BaseText,
+        start: number,
+        length: number,
+        paths: Array<TransformingPath>,
+        text: Configuration,
+        all: boolean
+    ) {
         this.node = node;
         this.start = start;
         this.length = length;
@@ -53,7 +66,15 @@ class MathMatch extends Match {
     element: EXSVGElement;
     first: number;
     last: number;
-    constructor(node: Math_, element: EXSVGElement, first: number, last: number, matching: MatchingMachine, text: MathConfiguration, all: boolean) {
+    constructor(
+        node: Math_,
+        element: EXSVGElement,
+        first: number,
+        last: number,
+        matching: MatchingMachine,
+        text: MathConfiguration,
+        all: boolean
+    ) {
         if (element) {
             const start = element.children[first].range[0];
             const length = element.children[last].range[1] - start;
@@ -79,7 +100,15 @@ class TransformingPath {
     status: TransformingPathStatus;
     path: SVGPathElement;
     ref: EXSVGElement | SDColor;
-    constructor(d: string, transform: SVGMatrix, fill: string, stroke: string, lastFill: string, lastStroke: string, ref: EXSVGElement | SDColor) {
+    constructor(
+        d: string,
+        transform: SVGMatrix,
+        fill: string,
+        stroke: string,
+        lastFill: string,
+        lastStroke: string,
+        ref: EXSVGElement | SDColor
+    ) {
         this.d = d;
         this.transform = transform;
         this.fill = fill;
@@ -100,13 +129,24 @@ class TransformingPath {
         else this.ref.stroke = stroke;
     }
     clone() {
-        return new TransformingPath(this.d, this.transform, this.fill, this.stroke, this.lastFill, this.lastStroke, this.ref);
+        return new TransformingPath(
+            this.d,
+            this.transform,
+            this.fill,
+            this.stroke,
+            this.lastFill,
+            this.lastStroke,
+            this.ref
+        );
     }
     init(group: RenderNode, config: any) {
         if (!this.path) this.path = Dom.createSVGElement("path") as SVGPathElement;
         const transform = this.transform;
         this.path.setAttribute("d", this.d);
-        this.path.setAttribute("transform", `matrix(${transform.a},${transform.b},${transform.c},${transform.d},${transform.e},${transform.f})`);
+        this.path.setAttribute(
+            "transform",
+            `matrix(${transform.a},${transform.b},${transform.c},${transform.d},${transform.e},${transform.f})`
+        );
         this.path.setAttribute("fill", this.fill === "default" ? config.fill : this.fill);
         this.path.setAttribute("stroke", this.stroke === "default" ? config.stroke : this.stroke);
         this.path.setAttribute("stroke-width", "0");
@@ -124,7 +164,13 @@ class TransformingPathGroup {
     group: RenderNode;
     l: number;
     r: number;
-    constructor(parent: BaseText, source: Array<TransformingPath>, target: Array<TransformingPath>, sourceConfig: SDColor, targetConfig: SDColor) {
+    constructor(
+        parent: BaseText,
+        source: Array<TransformingPath>,
+        target: Array<TransformingPath>,
+        sourceConfig: SDColor,
+        targetConfig: SDColor
+    ) {
         this.parent = parent;
         this.source = source;
         this.target = target;
@@ -315,11 +361,13 @@ class TextMatchingMachine extends MatchingMachine {
         const pattern = this.text.text;
         for (let i = 0; i < pattern.length; i++) {
             let matched = true;
-            for (let j = 0; j < subtext.length && matched; j++) if (pattern[i + j] !== subtext[j] || this.deleted(i + j)) matched = false;
+            for (let j = 0; j < subtext.length && matched; j++)
+                if (pattern[i + j] !== subtext[j] || this.deleted(i + j)) matched = false;
             if (matched) {
                 if (current === idx) {
                     const paths = [];
-                    for (let j = 0; j < subtext.length; j++) paths.push(this.deleted(i + j) ? this.paths[i + j].clone() : this.paths[i + j]);
+                    for (let j = 0; j < subtext.length; j++)
+                        paths.push(this.deleted(i + j) ? this.paths[i + j].clone() : this.paths[i + j]);
                     return new TextMatch(this.text.node, i, subtext.length, paths, this.text, false);
                 }
                 current++;
@@ -402,7 +450,14 @@ export class Transforming {
     target: BaseTextConfiguration;
     sourceMatching: MatchingMachine;
     targetMatching: MatchingMachine;
-    constructor(text: BaseText, mapping: Mapping, source: BaseTextConfiguration, target: BaseTextConfiguration, auto: boolean, color: boolean) {
+    constructor(
+        text: BaseText,
+        mapping: TextMappingArray,
+        source: BaseTextConfiguration,
+        target: BaseTextConfiguration,
+        auto: boolean,
+        color: boolean
+    ) {
         this.text = text;
         this.mapping = mapping;
         this.source = source;
@@ -440,7 +495,13 @@ export class Transforming {
             }
             sourceMatching.remove(sourceMatched);
             targetMatching.remove(targetMatched);
-            const transformingGroup = new TransformingPathGroup(this.text, sourceMatched.paths, targetMatched.paths, this.sourceConfiguration(sourceMatched), this.targetConfiguration(targetMatched));
+            const transformingGroup = new TransformingPathGroup(
+                this.text,
+                sourceMatched.paths,
+                targetMatched.paths,
+                this.sourceConfiguration(sourceMatched),
+                this.targetConfiguration(targetMatched)
+            );
             this.groupKeys.push(mappingItem);
             this.groups.push(transformingGroup);
         }
@@ -448,7 +509,13 @@ export class Transforming {
             targetMatching.fillRemain(sourceMatching.fillRemain());
             targetMatching.strokeRemain(sourceMatching.strokeRemain());
         }
-        const transformingGroup = new TransformingPathGroup(this.text, sourceMatching.remain(), targetMatching.remain(), this.source, this.target);
+        const transformingGroup = new TransformingPathGroup(
+            this.text,
+            sourceMatching.remain(),
+            targetMatching.remain(),
+            this.source,
+            this.target
+        );
         this.groupKeys.push(undefined);
         this.groups.push(transformingGroup);
     }
@@ -630,7 +697,8 @@ export class TextEngine {
         };
         const dfs = (current: EXSVGElement, matrix: DOMMatrix, fill: string, stroke: string) => {
             const l = paths.length;
-            for (let i = 0; i < current.transform.baseVal.length; i++) matrix = matrix.multiply(current.transform.baseVal[i].matrix);
+            for (let i = 0; i < current.transform.baseVal.length; i++)
+                matrix = matrix.multiply(current.transform.baseVal[i].matrix);
             fill = current.getAttribute("fill") || fill;
             stroke = current.getAttribute("stroke") || stroke;
             if (!Dom.tagName(current)) return;
@@ -649,7 +717,14 @@ export class TextEngine {
         console.log("math=", text.text, "pathes=", paths);
         return paths;
     }
-    static transform(text: BaseText, source: BaseTextConfiguration, target: BaseTextConfiguration, mapping, auto, color) {
+    static transform(
+        text: BaseText,
+        source: BaseTextConfiguration,
+        target: BaseTextConfiguration,
+        mapping,
+        auto,
+        color
+    ) {
         const transforming = new Transforming(text, mapping, source, target, auto, color);
         return transforming;
     }
@@ -661,7 +736,13 @@ export class TextEngine {
         root.setAttribute("transform", transform);
         math.__remove();
     }
-    static findSubtextInMath(text: MathConfiguration, subtext: string, limit = Infinity, matching: MathMatchingMachine, skip: boolean = true): Array<MathMatch> {
+    static findSubtextInMath(
+        text: MathConfiguration,
+        subtext: string,
+        limit = Infinity,
+        matching: MathMatchingMachine,
+        skip: boolean = true
+    ): Array<MathMatch> {
         const math = text.attr;
         // @ts-ignore
         const mml = new DOMParser().parseFromString(MathJax.tex2mml(String(subtext)), "text/xml").documentElement;
@@ -719,7 +800,9 @@ export class TextEngine {
                 const mcharacter = nodeContentHTML(m);
                 const length = getCodePointCount(mcharacter);
                 if (s.children.length !== length) return false;
-                if (matching) for (let i = 0; i < length; i++) if (matching.elementDeleted.has(s.children[i]) && skip) return false;
+                if (matching)
+                    for (let i = 0; i < length; i++)
+                        if (matching.elementDeleted.has(s.children[i]) && skip) return false;
                 const scharacter = nodeContentSVG(s, 0, length);
                 return scharacter === mcharacter;
             }
@@ -736,7 +819,9 @@ export class TextEngine {
             if (m.childElementCount === 0) {
                 const mcharacter = nodeContentHTML(m);
                 const length = getCodePointCount(mcharacter);
-                if (matching) for (let i = 0; i < length; i++) if (matching.elementDeleted.has(s.children[i + start]) && skip) return false;
+                if (matching)
+                    for (let i = 0; i < length; i++)
+                        if (matching.elementDeleted.has(s.children[i + start]) && skip) return false;
                 const scharacter = nodeContentSVG(s, start, length);
                 return scharacter === mcharacter;
             }
@@ -777,7 +862,15 @@ export class TextEngine {
         }
         walk(math.element().children[1] as SVGElement, mml);
         return matched.map(match => {
-            return new MathMatch(undefined, match.element, match.start, match.start + match.length - 1, matching, text, false);
+            return new MathMatch(
+                undefined,
+                match.element,
+                match.start,
+                match.start + match.length - 1,
+                matching,
+                text,
+                false
+            );
         });
     }
     static findFirstSubtextInMath(math: MathConfiguration, subtext: string, matching?: MathMatchingMachine) {

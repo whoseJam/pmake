@@ -1,6 +1,6 @@
+import { Exit as EX } from "@/Node/Core/Exit";
 import { SDNode } from "@/Node/SDNode";
 import { BaseText } from "@/Node/Text/BaseText";
-import { Exit as EX } from "@/Node/Core/Exit";
 import { Math } from "@/Node/Text/Math";
 import { Text } from "@/Node/Text/Text";
 import { Rule as R } from "@/Rule/Rule";
@@ -9,7 +9,10 @@ import { Check } from "@/Utility/Check";
 type Location = "tl" | "tc" | "tr" | "lt" | "lc" | "lb" | "bl" | "bc" | "br" | "rt" | "rc" | "rb";
 
 const LOCATION_KEY = new Set(["tl", "tc", "tr", "lt", "lc", "lb", "bl", "bc", "br", "rt", "rc", "rb"]);
-const LOCATION_KEY_SUGGESTION = [() => true, "For label component, here are 12 types of locations which are 'tl', 'tc', 'tr', 'lt', 'lc', 'lb', 'bl', 'bc', 'br', 'rt', 'rc', 'rb'."];
+const LOCATION_KEY_SUGGESTION = [
+    () => true,
+    "For label component, here are 12 types of locations which are 'tl', 'tc', 'tr', 'lt', 'lc', 'lb', 'bl', 'bc', 'br', 'rt', 'rc', 'rb'.",
+];
 
 class LabelPlugin {
     /**
@@ -77,7 +80,6 @@ class LabelPlugin {
         (this as any).vars.location = location;
         return this;
     }
-
 }
 
 /**
@@ -88,7 +90,13 @@ class LabelPlugin {
  * @param fontSize - Defaults to `20`.
  * @param gap - Defaults to `10`.
  */
-export function Label(target: SDNode, text: string, location: string = "lc", fontSize: number = 20, gap: number = 10): LabelPlugin & BaseText {
+export function Label(
+    target: SDNode,
+    text: string,
+    location: string = "lc",
+    fontSize: number = 20,
+    gap: number = 10
+): LabelPlugin & BaseText {
     Check.validateLocation(location, LOCATION_KEY, "Label", 3, LOCATION_KEY_SUGGESTION);
     Check.validateNumber(fontSize, "Label", 4);
     Check.validateNumber(gap, "Label", 5);
@@ -123,7 +131,13 @@ export function Label(target: SDNode, text: string, location: string = "lc", fon
  * @param gap - Defaults to `10`.
  * @returns A new plugin instance.
  */
-export function MathLabel(target: SDNode, text: string, location: string = "lc", fontSize: number = 20, gap: number = 10): LabelPlugin & BaseText {
+export function MathLabel(
+    target: SDNode,
+    text: string,
+    location: string = "lc",
+    fontSize: number = 20,
+    gap: number = 10
+): LabelPlugin & BaseText {
     Check.validateLocation(location, LOCATION_KEY, "Label", 3, LOCATION_KEY_SUGGESTION);
     Check.validateNumber(fontSize, "Label", 4);
     Check.validateNumber(gap, "Label", 5);
@@ -151,9 +165,5 @@ export function MathLabel(target: SDNode, text: string, location: string = "lc",
 
 function isMath(str: string): boolean {
     const label = String(str).trim();
-    return label.startsWith("$") && label.endsWith("$") && label.length >= 2;
-}
-
-
     return label.startsWith("$") && label.endsWith("$") && label.length >= 2;
 }

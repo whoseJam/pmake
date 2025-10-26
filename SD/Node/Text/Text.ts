@@ -1,12 +1,12 @@
 import { Interp } from "@/Animate/Interp";
 import { SDNode } from "@/Node/SDNode";
-import { BaseText, BaseTextConfiguration, TextConfigDictionary } from "@/Node/Text/BaseText";
-import { TextEngine, TextMapping } from "@/Node/Text/TextEngine";
+import { BaseText, BaseTextConfiguration, TextConfigDictionary, TextMapping } from "@/Node/Text/BaseText";
+import { TextEngine } from "@/Node/Text/TextEngine";
 import { RenderNode } from "@/Renderer/RenderNode";
+import { make1d } from "@/Utility/Base";
 import { Check } from "@/Utility/Check";
 import { SDColor } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
-import { make1d } from "@/Utility/Util";
 
 export class TextConfiguration extends BaseTextConfiguration {
     family: string;
@@ -147,7 +147,7 @@ export class Text extends BaseText {
         return this;
     }
     text(): string;
-    text(text: string | number, mapping?: TextMapping<Text>, auto?: boolean): this;
+    text(text: string | number, mapping?: TextMapping, auto?: boolean): this;
     text(text_?: string | number, mapping = [], auto = true) {
         if (arguments.length === 0) return this.vars.text;
         const text = String(text_);

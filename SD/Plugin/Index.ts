@@ -2,7 +2,6 @@ import { Enter as EN } from "@/Node/Core/Enter";
 import { Exit as EX } from "@/Node/Core/Exit";
 import { BaseGrid } from "@/Node/Grid/BaseGrid";
 import { SDNode } from "@/Node/SDNode";
-import { SD2DNode } from "@/Node/SD2DNode";
 import { Text } from "@/Node/Text/Text";
 import { Rule as R } from "@/Rule/Rule";
 import { Check } from "@/Utility/Check";
@@ -11,7 +10,10 @@ import { ObjectPool } from "@/Utility/Pool/ObjectPool";
 type Location = "l" | "r" | "t" | "b";
 
 const LOCATION_KEY = new Set(["l", "r", "t", "b"]);
-const LOCATION_KEY_SUGGESTION = [() => true, "For self plugin, here are 4 types of locations which are 'l', 'r', 't', 'b'."];
+const LOCATION_KEY_SUGGESTION = [
+    () => true,
+    "For self plugin, here are 4 types of locations which are 'l', 'r', 't', 'b'.",
+];
 
 class IndexPlugin {
     /**
@@ -88,7 +90,6 @@ class IndexPlugin {
         (this as any).vars.fontSize = size;
         return this;
     }
-
 }
 
 /**
@@ -98,7 +99,12 @@ class IndexPlugin {
  * @param fontSize
  * @param gap
  */
-export function Index(target: SDNode, location: string = "t", fontSize: number = 15, gap: number = 3): SD2DNode & IndexPlugin {
+export function Index(
+    target: SDNode,
+    location: string = "t",
+    fontSize: number = 15,
+    gap: number = 3
+): SDNode & IndexPlugin {
     Check.validateLocation(location, LOCATION_KEY, "Index", 2, LOCATION_KEY_SUGGESTION);
     Check.validateNumber(fontSize, "Index", 3);
     Check.validateNumber(gap, "Index", 4);
@@ -121,11 +127,10 @@ export function Index(target: SDNode, location: string = "t", fontSize: number =
 
     const indexPool = createIndexPool(self);
 
-
     self.effect("index", () => {
         const target = self.vars.target;
         const location = self.location();
-        const gap = self.gap() + (location === "l" || location === "r") * 3;
+        const gap = self.gap() + +(location === "l" || location === "r") * 3;
         const start = getStart(target, location);
         const length = getLength(target, location);
         indexPool.beforeAllocate();
@@ -140,12 +145,12 @@ export function Index(target: SDNode, location: string = "t", fontSize: number =
 
     target.childAs(self);
 
-    return self as SD2DNode & IndexPlugin;
+    return self as SDNode & IndexPlugin;
 }
 
-function createIndexPool(index: any): ObjectPool<Text> {
+function createIndexPool(index: any): ObjectPool<any> {
     return new ObjectPool({
-        onIdle(text: Text) {
+        onIdle(text: any) {
             text.opacity(0);
         },
         getIdle(text: Text) {
@@ -155,15 +160,16 @@ function createIndexPool(index: any): ObjectPool<Text> {
             return text.onEnter(EN.moveTo());
         },
         onCreate(i: number) {
-            const text = new Text(index, i);
+            const text = new Text(index, String(i));
             index.childAs(text);
             return text;
         },
     });
 }
 
-function asideRule(element: SDNode, self: SDNode, location: string, gap: number): void {
-    R.aside(location + "c", gap)(element, self);
+function asideRule(element: SDNode, self: SDNode, location: "l" | "r" | "t" | "b", gap: number): void {
+    const location_ = (location + "c") as "lc" | "rc" | "tc" | "bc";
+    R.aside(location_, gap)(element, self);
 }
 
 function getStart(target: any, location: string): number {
@@ -183,23 +189,19 @@ function getLength(target: any, location: string): number {
 }
 
 function getElement(target: any, location: string, i: number): SDNode {
-
     if (target instanceof BaseGrid) {
         if (target.axis() === "row") {
-            if (location === "t") for (let rowId = target.startN(); rowId <= target.endN(); rowId++) if (target.endM(rowId) >= i) return target.element(rowId, i);
-            if (location === "b") for (let rowId = target.endN(); rowId >= target.startN(); rowId--) if (target.endM(rowId) >= i) return target.element(rowId, i);
+            if (location === "t")
+                for (let rowId = target.startN(); rowId <= target.endN(); rowId++)
+                    if (target.endM(rowId) >= i) return target.element(rowId, i);
+            if (location === "b")
+                for (let rowId = target.endN(); rowId >= target.startN(); rowId--)
+                    if (target.endM(rowId) >= i) return target.element(rowId, i);
             if (location === "l") return target.element(i, target.startM());
             if (location === "r") return target.element(i, target.endM(i));
         } else {
             if (location === "t") return target.element(i, target.startM());
             if (location === "b") return target.element(i, target.endM(i));
-            if (location === "l") for (let rowId = target.startN(); rowId <= target.endN(); rowId++) if (target.endM(rowId) >= i) return target.element(rowId, i);
-            if (location === "r") for (let rowId = target.endN(); rowId >= target.startN(); rowId--) if (target.endM(rowId) >= i) return target.element(rowId, i);
-        }
-    }
-    return target.element(i);
-}
-
             if (location === "l")
                 for (let rowId = target.startN(); rowId <= target.endN(); rowId++)
                     if (target.endM(rowId) >= i) return target.element(rowId, i);

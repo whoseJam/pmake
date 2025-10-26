@@ -1,7 +1,7 @@
 import { Interp } from "@/Animate/Interp";
 import { SDNode } from "@/Node/SDNode";
-import { BaseText, BaseTextConfiguration, TextConfigDictionary } from "@/Node/Text/BaseText";
-import { MathMatchingMachine, TextEngine, TextMapping } from "@/Node/Text/TextEngine";
+import { BaseText, BaseTextConfiguration, TextConfigDictionary, TextMapping } from "@/Node/Text/BaseText";
+import { MathMatchingMachine, TextEngine } from "@/Node/Text/TextEngine";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
 import { Color as C, SDColor } from "@/Utility/Color";
@@ -140,7 +140,7 @@ export class Math extends BaseText {
         return this;
     }
     text(): string;
-    text(text: string | number, mapping?: TextMapping<Math>, auto?: boolean): this;
+    text(text: string | number, mapping?: TextMapping, auto?: boolean): this;
     text(text?: string | number, mapping = [], auto = true) {
         if (arguments.length === 0) return this.vars.text;
         const text_ = String(text);
