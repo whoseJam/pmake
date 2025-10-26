@@ -4,7 +4,7 @@ const svg = sd.svg();
 const C = sd.color();
 const V = sd.vec();
 
-sd.main(TestLayout);
+sd.main(TestChangeRoot);
 
 async function TestChangeRoot() {
     const tree = new sd.Tree(svg).x(100).y(100);

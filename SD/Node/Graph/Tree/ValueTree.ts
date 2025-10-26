@@ -1,7 +1,7 @@
 import { Enter as EN } from "@/Node/Core/Enter";
+import { Tree } from "@/Node/Graph/Tree/Tree";
 import { Line } from "@/Node/Path/Line";
 import { SDNode } from "@/Node/SDNode";
-import { Tree } from "@/Node/Tree/Tree";
 import { RenderNode } from "@/Renderer/RenderNode";
 
 export class ValueTree<

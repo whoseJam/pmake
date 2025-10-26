@@ -1,8 +1,8 @@
 import { Vertex } from "@/Node/Element/Vertex";
+import { BinaryTree } from "@/Node/Graph/Tree/BinaryTree";
+import { TreeEngine } from "@/Node/Graph/Tree/TreeEngine";
 import { Line } from "@/Node/Path/Line";
 import { SDNode } from "@/Node/SDNode";
-import { BinaryTree } from "@/Node/Tree/BinaryTree";
-import { TreeEngine } from "@/Node/Tree/TreeEngine";
 import { RenderNode } from "@/Renderer/RenderNode";
 
 export class Splay<

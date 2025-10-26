@@ -1,9 +1,9 @@
 import { Enter as EN } from "@/Node/Core/Enter";
 import { Vertex } from "@/Node/Element/Vertex";
-import { BaseGraph } from "@/Node/Graph/BaseGraph";
+import { Graph } from "@/Node/Graph/Graph";
+import { Tree } from "@/Node/Graph/Tree/Tree";
 import { Line } from "@/Node/Path/Line";
 import { SDNode, SDNodeWithValue, SDNodeWithValueFromExist } from "@/Node/SDNode";
-import { Tree } from "@/Node/Tree/Tree";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { GraphEngine } from "./GraphEngine";
 
@@ -12,7 +12,7 @@ export class TinyGraph<
     NodeValue extends SDNode = SDNode,
     LinkElement extends SDNode = Line,
     LinkValue extends SDNode = SDNode
-> extends BaseGraph<NodeElement, NodeValue, LinkElement, LinkValue> {
+> extends Graph<NodeElement, NodeValue, LinkElement, LinkValue> {
     constructor(target: SDNode | RenderNode) {
         super(target);
 

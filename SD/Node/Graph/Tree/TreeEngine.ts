@@ -1,8 +1,8 @@
 import { Vertex } from "@/Node/Element/Vertex";
+import { BinaryTree } from "@/Node/Graph/Tree/BinaryTree";
+import { Splay } from "@/Node/Graph/Tree/Splay";
+import { Tree } from "@/Node/Graph/Tree/Tree";
 import { BasePath } from "@/Node/Path/BasePath";
-import { BinaryTree } from "@/Node/Tree/BinaryTree";
-import { Splay } from "@/Node/Tree/Splay";
-import { Tree } from "@/Node/Tree/Tree";
 import { trim } from "@/Utility/Trim";
 import { hierarchy, stratify, tree as tree_ } from "d3";
 

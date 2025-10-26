@@ -1,9 +1,9 @@
 import { Array } from "@/Node/Array/Array";
 import { Box } from "@/Node/Element/Box";
+import { Tree } from "@/Node/Graph/Tree/Tree";
+import { TreeEngine } from "@/Node/Graph/Tree/TreeEngine";
 import { Line } from "@/Node/Path/Line";
 import { SDNode } from "@/Node/SDNode";
-import { Tree } from "@/Node/Tree/Tree";
-import { TreeEngine } from "@/Node/Tree/TreeEngine";
 import { RenderNode } from "@/Renderer/RenderNode";
 
 export class BoxTree<

@@ -1,10 +1,10 @@
 import { Enter as EN } from "@/Node/Core/Enter";
 import { Vertex } from "@/Node/Element/Vertex";
-import { BaseGraph } from "@/Node/Graph/BaseGraph";
+import { Graph } from "@/Node/Graph/Graph";
 import { GraphEngine } from "@/Node/Graph/GraphEngine";
+import { Tree } from "@/Node/Graph/Tree/Tree";
 import { Line } from "@/Node/Path/Line";
 import { SDNode, SDNodeWithValue, SDNodeWithValueFromExist } from "@/Node/SDNode";
-import { Tree } from "@/Node/Tree/Tree";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
 
@@ -13,8 +13,8 @@ export class GridGraph<
     NodeValue extends SDNode = SDNode,
     LinkElement extends SDNode = Line,
     LinkValue extends SDNode = SDNode
-> extends BaseGraph<NodeElement, NodeValue, LinkElement, LinkValue> {
-    _: BaseGraph<NodeElement, NodeValue, LinkElement, LinkValue>["_"] & {
+> extends Graph<NodeElement, NodeValue, LinkElement, LinkValue> {
+    _: Graph<NodeElement, NodeValue, LinkElement, LinkValue>["_"] & {
         curN: number;
         curM: number;
         pos: { [key: number]: { x: number; y: number } };
