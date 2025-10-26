@@ -33,11 +33,9 @@ export class CartesianCoord<AxisType extends BaseAxis = BaseAxis> extends BaseCo
             origin: "bl",
         });
     }
-
     axis(by: "x" | "y"): AxisType {
         return this.child(by) as AxisType;
     }
-
     local(v: [number, number]): [number, number];
     local(x: number, y: number): [number, number];
     local(x: number | [number, number], y?: number): [number, number] {
@@ -47,7 +45,6 @@ export class CartesianCoord<AxisType extends BaseAxis = BaseAxis> extends BaseCo
         }
         return [this.axis("x").local(x as number, y!), this.axis("y").local(x as number, y!)];
     }
-
     global(v: [number, number]): [number, number];
     global(x: number, y: number): [number, number];
     global(x: number | [number, number], y?: number): [number, number] {
@@ -57,7 +54,6 @@ export class CartesianCoord<AxisType extends BaseAxis = BaseAxis> extends BaseCo
         }
         return [this.axis("x").globalX(x as number), this.axis("y").globalY(y!)];
     }
-
     origin(): Origin;
     origin(origin: Origin): this;
     origin(origin?: Origin) {
@@ -65,14 +61,12 @@ export class CartesianCoord<AxisType extends BaseAxis = BaseAxis> extends BaseCo
         this.vars.origin = origin;
         return this;
     }
-
     drawRect(x: number, y: number): Rect {
         const rect = new Rect(this).opacity(0).onEnter(EN.appear());
         this.vars.elements.push({ element: rect, x, y });
         this.childAs(rect, rectRule);
         return rect;
     }
-
     rectX(rect: Rect): number | undefined;
     rectX(rect: Rect, x: number): this;
     rectX(rect: Rect, x?: number) {
@@ -81,7 +75,6 @@ export class CartesianCoord<AxisType extends BaseAxis = BaseAxis> extends BaseCo
         if (element) element.x = x;
         return this;
     }
-
     rectY(rect: Rect): number | undefined;
     rectY(rect: Rect, y: number): this;
     rectY(rect: Rect, y?: number) {
@@ -90,32 +83,12 @@ export class CartesianCoord<AxisType extends BaseAxis = BaseAxis> extends BaseCo
         if (element) element.y = y;
         return this;
     }
-
-    rectWidth(rect: Rect): number | undefined;
-    rectWidth(rect: Rect, width: number): this;
-    rectWidth(rect: Rect, width?: number) {
-        const element = this.__getElement(rect);
-        if (arguments.length === 1) return element?.width;
-        if (element) element.width = width;
-        return this;
-    }
-
-    rectHeight(rect: Rect): number | undefined;
-    rectHeight(rect: Rect, height: number): this;
-    rectHeight(rect: Rect, height?: number) {
-        const element = this.__getElement(rect);
-        if (arguments.length === 1) return element?.height;
-        if (element) element.height = height;
-        return this;
-    }
-
     drawCircle(x: number, y: number): Circle {
         const circle = new Circle(this).opacity(0).onEnter(EN.appear());
         this.vars.elements.push({ element: circle, x, y });
         this.childAs(circle, circleRule);
         return circle;
     }
-
     circleX(circle: Circle): number | undefined;
     circleX(circle: Circle, x: number): this;
     circleX(circle: Circle, x?: number) {
@@ -124,7 +97,6 @@ export class CartesianCoord<AxisType extends BaseAxis = BaseAxis> extends BaseCo
         if (element) element.x = x;
         return this;
     }
-
     circleY(circle: Circle): number | undefined;
     circleY(circle: Circle, y: number): this;
     circleY(circle: Circle, y?: number) {
@@ -133,14 +105,12 @@ export class CartesianCoord<AxisType extends BaseAxis = BaseAxis> extends BaseCo
         if (element) element.y = y;
         return this;
     }
-
     drawFunction(func: (x: number) => number): Path {
         const path = new Path(this).opacity(0).onEnter(EN.pointStoT());
         this.vars.elements.push({ element: path, func, sampleCount: 20 });
         this.childAs(path, functionRule);
         return path;
     }
-
     function(path: Path): (x: number) => number;
     function(path: Path, func: (x: number) => number): this;
     function(path: Path, func?: (x: number) => number) {
@@ -149,7 +119,6 @@ export class CartesianCoord<AxisType extends BaseAxis = BaseAxis> extends BaseCo
         if (element) element.func = func;
         return this;
     }
-
     functionSampleCount(path: Path): number;
     functionSampleCount(path: Path, count: number): this;
     functionSampleCount(path: Path, count?: number) {
@@ -158,7 +127,6 @@ export class CartesianCoord<AxisType extends BaseAxis = BaseAxis> extends BaseCo
         if (element) element.sampleCount = count;
         return this;
     }
-
     drawLine(v: [number, number], d: [number, number]): Path;
     drawLine(v: [number, number], dx: number, dy: number): Path;
     drawLine(x: number, y: number, d: [number, number]): Path;
@@ -184,7 +152,6 @@ export class CartesianCoord<AxisType extends BaseAxis = BaseAxis> extends BaseCo
         this.childAs(path, lineRule);
         return path;
     }
-
     lineDirection(line: Path): [number, number];
     lineDirection(line: Path, d: [number, number]): this;
     lineDirection(line: Path, dx: number, dy: number): this;
@@ -199,7 +166,6 @@ export class CartesianCoord<AxisType extends BaseAxis = BaseAxis> extends BaseCo
         }
         return this;
     }
-
     linePosition(line: Path): [number, number];
     linePosition(line: Path, v: [number, number]): this;
     linePosition(line: Path, x: number, y: number): this;
@@ -214,7 +180,6 @@ export class CartesianCoord<AxisType extends BaseAxis = BaseAxis> extends BaseCo
         }
         return this;
     }
-
     lineSampleCount(line: Path): number;
     lineSampleCount(line: Path, count: number): this;
     lineSampleCount(line: Path, count?: number) {
@@ -223,7 +188,6 @@ export class CartesianCoord<AxisType extends BaseAxis = BaseAxis> extends BaseCo
         if (element) element.sampleCount = count;
         return this;
     }
-
     drawRay(v: [number, number], d: [number, number]): Path;
     drawRay(v: [number, number], dx: number, dy: number): Path;
     drawRay(x: number, y: number, d: [number, number]): Path;
@@ -249,7 +213,6 @@ export class CartesianCoord<AxisType extends BaseAxis = BaseAxis> extends BaseCo
         this.childAs(ray, rayRule);
         return ray;
     }
-
     rayDirection(ray: Path): [number, number];
     rayDirection(ray: Path, d: [number, number]): this;
     rayDirection(ray: Path, dx: number, dy: number): this;
@@ -264,7 +227,6 @@ export class CartesianCoord<AxisType extends BaseAxis = BaseAxis> extends BaseCo
         }
         return this;
     }
-
     rayPosition(ray: Path): [number, number];
     rayPosition(ray: Path, v: [number, number]): this;
     rayPosition(ray: Path, x: number, y: number): this;
@@ -279,7 +241,6 @@ export class CartesianCoord<AxisType extends BaseAxis = BaseAxis> extends BaseCo
         }
         return this;
     }
-
     raySampleCount(ray: Path): number;
     raySampleCount(ray: Path, count: number): this;
     raySampleCount(ray: Path, count?: number) {
@@ -288,7 +249,6 @@ export class CartesianCoord<AxisType extends BaseAxis = BaseAxis> extends BaseCo
         if (element) element.sampleCount = count;
         return this;
     }
-
     __getElement(element: SDNode | RenderNode): CoordElement | undefined {
         for (const _element of this.vars.elements) {
             if (_element.element === element) return _element;
@@ -297,7 +257,6 @@ export class CartesianCoord<AxisType extends BaseAxis = BaseAxis> extends BaseCo
     }
 }
 
-// Helper functions
 function valid(v: [number, number]): boolean {
     return Check.isNumber(v[0]) && Check.isNumber(v[1]);
 }
