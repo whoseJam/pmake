@@ -1,6 +1,6 @@
 import { Action } from "@/Animate/Action";
 import { Context } from "@/Animate/Context";
-import { Interp } from "@/Animate/Interp";
+import { Interp, InterpCreator } from "@/Animate/Interp";
 import { Window } from "@/Animate/Window";
 import { Dom } from "@/Dom/Dom";
 import { Enter as EN, EnterCallback } from "@/Node/Core/Enter";
@@ -9,6 +9,7 @@ import { effect, reactive, uneffect } from "@/Node/Core/Reactive";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { SDRule } from "@/Rule/Rule";
 import { Check } from "@/Utility/Check";
+import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 type ClickCallback = () => void;
 type ValueCallback = (value: string) => void;
@@ -729,6 +730,21 @@ export class SDNode {
             return new Text(target, object).opacity(0);
         }
         return object;
+    }
+    static __action(node: SDNode, _object: any, key: string, interp: InterpCreator) {
+        let object = () => _object;
+        if (typeof _object === "string") object = () => node._[_object];
+        else if (typeof _object === "function") object = _object;
+        return function (vn: any, vo: any) {
+            if (global.ACTION_TICK !== 0) {
+                const obj = object();
+                if (obj.setAttribute) obj.setAttribute(key, vn);
+                else if (obj[key]) obj[key] = vn;
+                else ErrorLauncher.whatHappened();
+                return;
+            }
+            new Action(node.delay(), node.delay() + node.duration(), vo, vn, interp(object(), key), node, key);
+        };
     }
 }
 

@@ -4,7 +4,6 @@ import { SDSVGNode } from "@/Node/SDSVGNode";
 import { Rect } from "@/Node/Shape/Rect";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Color as C } from "@/Utility/Color";
-import { Factory } from "@/Utility/Factory";
 
 const BASE_CONTROL_ATTRIBUTES = {
     "fill": C.white,
@@ -59,7 +58,7 @@ export class BaseControl extends SDSVGNode {
                 continue;
             }
             const [aliasKey, interp] = attributeMap[key];
-            const watchCallback = Factory.action(this, object, aliasKey, interp);
+            const watchCallback = SDNode.__action(this, object, aliasKey, interp);
             this.vars.watch(key, watchCallback);
             object.setAttribute(aliasKey, attributes_[key]);
         }

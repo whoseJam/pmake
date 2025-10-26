@@ -1,9 +1,5 @@
 import { Check } from "@/Utility/Check";
 
-function checkNumberIsValid(label: string, x: number): void {
-    if (!Check.isNumber(x)) throw new Error(`Number ${label} = ${x} Is Not Valid`);
-}
-
 export class PathPen {
     private result: string;
     constructor() {

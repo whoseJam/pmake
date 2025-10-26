@@ -3,7 +3,6 @@ import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
 import { SDColor } from "@/Utility/Color";
-import { Factory } from "@/Utility/Factory";
 
 export class SDSVGNode extends SDNode {
     /**
@@ -125,7 +124,7 @@ export class SDSVGNode extends SDNode {
                 continue;
             }
             const [aliasKey, interp] = attributeMap[key];
-            const watchCallback = Factory.action(this, object, aliasKey, interp);
+            const watchCallback = SDNode.__action(this, object, aliasKey, interp);
             this.vars.watch(key, watchCallback);
             object.setAttribute(aliasKey, attributes[key]);
         }

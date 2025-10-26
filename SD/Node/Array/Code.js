@@ -4,7 +4,6 @@ import { Enter as EN } from "@/Node/Core/Enter";
 import { Rect } from "@/Node/Shape/Rect";
 import { Check } from "@/Utility/Check";
 import { Color } from "@/Utility/Color";
-import { Factory } from "@/Utility/Factory";
 
 function focusRule(parent, child) {
     if (typeof parent.l() !== "number") return;
@@ -60,7 +59,6 @@ export class Code extends BaseArray {
 }
 
 Object.assign(Code.prototype, {
-    fontSize: Factory.handler("fontSize"),
     width(width) {
         if (width === undefined) return this.vars.width;
         const k = width / this.vars.width;

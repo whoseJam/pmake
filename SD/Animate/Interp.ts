@@ -4,6 +4,7 @@ import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { Action } from "./Action";
 
 export type InterpFunction = (this: Action, t: number) => void;
+export type InterpCreator = (object: any, key: string) => InterpObject;
 type InitGroupFunction = (action: Action) => void;
 type InitFunction = (this: Action) => void;
 type BeforeInterpFunction = (this: Action) => void;
@@ -103,7 +104,8 @@ export class Interp {
             const B = this.target;
             const current = A * (1 - t) + B * t;
             set(current);
-            if (t === 1 && !this.owner._.clickableCalled) object.setAttribute("pointer-events", current === 0 ? "none" : "auto");
+            if (t === 1 && !this.owner._.clickableCalled)
+                object.setAttribute("pointer-events", current === 0 ? "none" : "auto");
         });
     }
     static pixelInterp(object: any, key: string) {
@@ -238,7 +240,8 @@ export class Interp {
             const A = this._source;
             const B = this._target;
             const ans = [];
-            for (let i = 0; i < A.length; i++) ans.push([A[i][0] * (1 - t) + B[i][0] * t, A[i][1] * (1 - t) + B[i][1] * t]);
+            for (let i = 0; i < A.length; i++)
+                ans.push([A[i][0] * (1 - t) + B[i][0] * t, A[i][1] * (1 - t) + B[i][1] * t]);
             set(ans);
         }).onInit(function () {
             const length = Math.max(this.source.length, this.target.length);

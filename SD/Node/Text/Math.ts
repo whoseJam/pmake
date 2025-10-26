@@ -5,7 +5,6 @@ import { MathMatchingMachine, TextEngine, TextMapping } from "@/Node/Text/TextEn
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
 import { Color as C, SDColor } from "@/Utility/Color";
-import { Factory } from "@/Utility/Factory";
 
 export class MathConfiguration extends BaseTextConfiguration {
     attr: RenderNode;
@@ -53,8 +52,8 @@ export class Math extends BaseText {
 
         const object = () => this.vars.math;
 
-        this.vars.watch("math", Factory.action(this, this.layer(), "node", Interp.blankNodeInterp));
-        this.vars.watch("x", Factory.action(this, object, "x", Interp.numberInterp));
+        this.vars.watch("math", SDNode.__action(this, this.layer(), "node", Interp.blankNodeInterp));
+        this.vars.watch("x", SDNode.__action(this, object, "x", Interp.numberInterp));
         this.vars.watch("x", (x: number, vo: number) => {
             if (this.duration() > 0) {
                 this.__updateSourceMathConfiguration({ x: vo });
@@ -62,7 +61,7 @@ export class Math extends BaseText {
             }
             this.__updateTransforming();
         });
-        this.vars.watch("y", Factory.action(this, object, "y", Interp.numberInterp));
+        this.vars.watch("y", SDNode.__action(this, object, "y", Interp.numberInterp));
         this.vars.watch("y", (y: number, vo: number) => {
             if (this.duration() > 0) {
                 this.__updateSourceMathConfiguration({ y: vo });
@@ -70,7 +69,7 @@ export class Math extends BaseText {
             }
             this.__updateTransforming();
         });
-        this.vars.watch("fontSize", Factory.action(this, object, "font-size", Interp.numberInterp));
+        this.vars.watch("fontSize", SDNode.__action(this, object, "font-size", Interp.numberInterp));
         this.vars.watch("fontSize", (size: number, vo: number) => {
             if (this.duration() > 0) {
                 this.__updateSourceMathConfiguration({ size: vo });
@@ -78,7 +77,7 @@ export class Math extends BaseText {
             }
             this.__updateTransforming();
         });
-        this.vars.watch("fill", Factory.action(this, object, "fill", Interp.colorInterp));
+        this.vars.watch("fill", SDNode.__action(this, object, "fill", Interp.colorInterp));
         this.vars.watch("fill", (fill: string, vo: string) => {
             if (this.duration() > 0) {
                 this.__updateSourceMathConfiguration({ fill: vo });
@@ -86,7 +85,7 @@ export class Math extends BaseText {
             }
             this.__updateTransforming();
         });
-        this.vars.watch("stroke", Factory.action(this, object, "stroke", Interp.colorInterp));
+        this.vars.watch("stroke", SDNode.__action(this, object, "stroke", Interp.colorInterp));
         this.vars.watch("stroke", (stroke: string, vo: string) => {
             if (this.duration() > 0) {
                 this.__updateSourceMathConfiguration({ stroke: vo });
@@ -174,7 +173,12 @@ export class Math extends BaseText {
         const subtext = String(subtext_);
         const math = this.__cloneMathRenderNode();
         const configuration = this.__getConfiguration().merge({ attr: math });
-        const matched = TextEngine.findSubtextInMath(configuration, subtext, Infinity, new MathMatchingMachine(configuration));
+        const matched = TextEngine.findSubtextInMath(
+            configuration,
+            subtext,
+            Infinity,
+            new MathMatchingMachine(configuration)
+        );
         const update = match => {
             if (!match) return;
             const { element, first, last } = match;

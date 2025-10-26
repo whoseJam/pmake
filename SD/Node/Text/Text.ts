@@ -6,7 +6,6 @@ import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
 import { SDColor } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
-import { Factory } from "@/Utility/Factory";
 import { make1d } from "@/Utility/Util";
 
 export class TextConfiguration extends BaseTextConfiguration {
@@ -61,7 +60,7 @@ export class Text extends BaseText {
             height: 0,
         });
 
-        this.vars.watch("html", Factory.action(this, object, "innerHTML", Interp.blankStringInterp));
+        this.vars.watch("html", SDNode.__action(this, object, "innerHTML", Interp.blankStringInterp));
         this.vars.watch("x", (x: number, vo: number) => {
             if (this.duration() > 0) {
                 this.__updateSourceConfiguration({ x: vo });
