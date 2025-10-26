@@ -62,3 +62,58 @@ export async function inter(callback: () => void | Promise<void>): Promise<void>
     await callback();
     await pause(LAST_INTER_STAGE);
 }
+
+/**
+ * Creates a one-dimensional array with the specified length and default value.
+ *
+ * @param length - The length of the array to create.
+ * @param defaultValue - The default value for each element. If it's an object, a shallow copy will be created for each element.
+ * @returns A new array with the specified length and default values.
+ */
+export function make1d(length: number): Array<number>;
+export function make1d(length: number, defaultValue: any): Array<any>;
+export function make1d(length: number, defaultValue: any = 0): Array<any> {
+    const result: any[] = [];
+    for (let i = 0; i < length; i++) {
+        if (typeof defaultValue === "object") {
+            result.push(Object.assign({}, defaultValue));
+        } else {
+            result.push(defaultValue);
+        }
+    }
+    return result;
+}
+
+/**
+ * Creates a two-dimensional array (matrix) with the specified dimensions and default value.
+ *
+ * @param rows - The number of rows in the matrix.
+ * @param columns - The number of columns in the matrix.
+ * @param defaultValue - The default value for each element.
+ * @returns A new 2D array with the specified dimensions and default values.
+ */
+export function make2d(rows: number, columns: number): Array<Array<number>>;
+export function make2d(rows: number, columns: number, defaultValue: any): Array<any>;
+export function make2d(rows: number, columns: number, defaultValue: any = 0): Array<any> {
+    const result: any[] = [];
+    for (let i = 0; i < rows; i++) {
+        result.push(make1d(columns, defaultValue));
+    }
+    return result;
+}
+
+/**
+ * Marks the current action as reversible by incrementing the global ACTION_TICK.
+ * This allows the action to be undone in the animation system.
+ */
+export function reversible(): void {
+    (global as any).ACTION_TICK++;
+}
+
+/**
+ * Marks the current action as irreversible by decrementing the global ACTION_TICK.
+ * This prevents the action from being undone in the animation system.
+ */
+export function irreversible(): void {
+    (global as any).ACTION_TICK--;
+}

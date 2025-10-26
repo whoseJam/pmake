@@ -72,7 +72,7 @@ export { Link } from "./Plugin/Link";
 export { Pointer } from "./Plugin/Pointer";
 export { Stress } from "./Plugin/Stress";
 export { rule } from "./Rule/Rule";
-export { init, inter, main } from "./Utility/Base";
+export { init, inter, irreversible, main, make1d, make2d, reversible } from "./Utility/Base";
 export { color } from "./Utility/Color";
 export { PathPen } from "./Utility/PathPen";
 export { ArrayPool } from "./Utility/Pool/ArrayPool";
@@ -80,6 +80,3 @@ export { ObjectPool } from "./Utility/Pool/ObjectPool";
 export { rand } from "./Utility/Random";
 export { input } from "./Utility/Reader";
 export { trim } from "./Utility/Trim";
-export { irreversible, make1d, make2d, reversible } from "./Utility/Util";
-
-export { PathEngine } from "./Node/Path/PathEngine";
