@@ -42,7 +42,6 @@ export { DAG } from "./Node/Graph/DAG";
 export { Graph } from "./Node/Graph/Graph";
 export { GridGraph } from "./Node/Graph/GridGraph";
 export { TinyGraph } from "./Node/Graph/TinyGraph";
-
 export { BinaryTree } from "./Node/Graph/Tree/BinaryTree";
 export { BoxTree } from "./Node/Graph/Tree/BoxTree";
 export { HorizontalTree } from "./Node/Graph/Tree/HorizontalTree";
@@ -65,6 +64,7 @@ export { Triangle } from "./Node/Shape/Polygon/Triangle";
 export { Rect } from "./Node/Shape/Rect";
 export { Math } from "./Node/Text/Math";
 export { Text } from "./Node/Text/Text";
+export { Caption } from "./Node/Other/Caption";
 export { Aside } from "./Plugin/Aside";
 export { Brace } from "./Plugin/Brace";
 export { Focus } from "./Plugin/Focus";

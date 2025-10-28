@@ -81,20 +81,6 @@ export class RenderNode {
     element() {
         return this.backingElement;
     }
-    __append(element_: Element | RenderNode) {
-        const element = element_ instanceof RenderNode ? element_.element() : element_;
-        this.element().append(element);
-        return this;
-    }
-    __remove() {
-        this.element().remove();
-        return this;
-    }
-    __removeChild(element_: Element | RenderNode) {
-        const element = element_ instanceof RenderNode ? element_.element() : element_;
-        this.element().removeChild(element);
-        return this;
-    }
     append(element: string | RenderNode): RenderNode {
         if (element instanceof RenderNode) return element.moveTo(this);
         return new RenderNode({
@@ -138,7 +124,8 @@ export class RenderNode {
     }
     setAttribute(key: string, value: any) {
         const element = this.element() as SVGElement;
-        if (value && typeof value.r === "number" && typeof value.g === "number" && typeof value.b === "number") value = `rgb(${value.r}, ${value.g}, ${value.b})`;
+        if (value && typeof value.r === "number" && typeof value.g === "number" && typeof value.b === "number")
+            value = `rgb(${value.r}, ${value.g}, ${value.b})`;
         if (INNER_HTML_KEY.has(key)) {
             if (key === "text") value = parseText(value);
             element.innerHTML = value;
@@ -152,6 +139,25 @@ export class RenderNode {
     }
     hasShape() {
         return SHAPE_KEY.has(this.label);
+    }
+    __append(element_: Element | RenderNode) {
+        const element = element_ instanceof RenderNode ? element_.element() : element_;
+        this.element().append(element);
+        return this;
+    }
+    __remove() {
+        this.element().remove();
+        return this;
+    }
+    __removeChild(element_: Element | RenderNode) {
+        const element = element_ instanceof RenderNode ? element_.element() : element_;
+        this.element().removeChild(element);
+        return this;
+    }
+    __injectCSS(css: { [key: string]: string }) {
+        Object.keys(css).forEach(key => {
+            (this.element() as HTMLElement).style[key] = css[key];
+        });
     }
     static getDocumentBodyRenderNode() {
         return new RenderNode({
