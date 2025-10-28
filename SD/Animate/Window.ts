@@ -118,9 +118,10 @@ function promiseOfFirstInterFrame(): Promise<void> {
     });
 }
 
-function promiseOfLastInterFrame() {
+function promiseOfLastInterFrame(): Promise<void> {
     Window.IS_INTERACTING = false;
     S.updateFrameStatus();
+    return Promise.resolve();
 }
 
 function promiseOfNormalFrame(): Promise<void> {
@@ -178,21 +179,35 @@ function promiseOfLastMainFrame(): Promise<void> {
     });
 }
 
+function promiseForMilliseconds(ms: number): Promise<void> {
+    return new Promise(function (resolve) {
+        setTimeout(() => {
+            if (!A.finished()) A.forceToFinish();
+            A.startNewFrame();
+            resolve();
+        }, ms);
+    });
+}
+
 /**
  * Pauses execution flow until the user triggers the next stage.
  * Acts as an interactive breakpoint between two animation stage.
+ * @param frameType - The type of frame pause. Can be a predefined constant or a positive number representing milliseconds to pause.
  * @returns A promise that resolves when the pause condition is met.
  * @example
  * await sd.pause(); // Wait for user to click 'N'('N' for next) button.
  * // Operations to execute in the next animation stage.
+ * await sd.pause(1000); // Wait for 1000 milliseconds (1 second).
+ * // Operations to execute in the next animation stage.
  * await sd.pause(); // Wait for another user interaction.
  * // Operations to execute in the next animation stage.
  */
-export async function pause(frameType: number = NORMAL_FRAME): Promise<void> {
+export function pause(ms?: number): Promise<void> {
+    const pauseBehavior = ms || NORMAL_FRAME;
     if (Window.SHOULD_FLUSH) {
         A.currentActionList.updateWindowSize();
         // limit frame count, to handle the infinite animation
-        if (Window.CURRENT_FRAME <= Window.IFRAME_MAX_FRAME && frameType !== LAST_MAIN_STAGE) {
+        if (Window.CURRENT_FRAME <= Window.IFRAME_MAX_FRAME && pauseBehavior !== LAST_MAIN_STAGE) {
             Window.CURRENT_FRAME++;
             return; // no block
         } else {
@@ -201,9 +216,9 @@ export async function pause(frameType: number = NORMAL_FRAME): Promise<void> {
         }
     }
     A.firstTick();
-    // A.debug();
     A.trigger();
-    switch (frameType) {
+    if (ms > 0) return promiseForMilliseconds(ms);
+    switch (pauseBehavior) {
         case FIRST_INTER_STAGE:
             return promiseOfFirstInterFrame();
         case LAST_INTER_STAGE:
