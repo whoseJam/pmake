@@ -1,13 +1,11 @@
-import { Enter as EN } from "@/Node/Core/Enter";
-import { Exit as EX } from "@/Node/Core/Exit";
 import { SDNode, SDNodeWithText } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Rule as R, SDRule } from "@/Rule/Rule";
 import { Check } from "@/Utility/Check";
 import { SDColor } from "@/Utility/Color";
-import { ErrorLauncher } from "@/Utility/ErrorLauncher";
+import { ValueManageMixin } from "@/Node/Mixin/ValueManageMixin";
 
-export class BaseElement<B extends SDNode> extends SDNode {
+export class BaseElement<B extends SDNode> extends ValueManageMixin(SDNode) {
     constructor(target: SDNode | RenderNode) {
         super(target);
 
@@ -16,6 +14,15 @@ export class BaseElement<B extends SDNode> extends SDNode {
             value: null,
         });
     }
+
+    __defaultValueRule(): SDRule {
+        return function (parent: BaseElement<B>, child: SDNode) {
+            const rate = parent.rate();
+            const rule = R.centerFixAspect(rate);
+            rule(parent, child);
+        };
+    }
+
     x(): number;
     x(x: number): this;
     x(x?: number) {
@@ -175,102 +182,7 @@ export class BaseElement<B extends SDNode> extends SDNode {
     background(): B {
         return this.child("background") as B;
     }
-    /**
-     * Casts the value component to its string representation.
-     * - If the value component does not exist, returns an empty string ("").
-     * - If the value component cannot be casted to a string, throws an Error.
-     * @returns The string representation of the value component.
-     */
-    text(): string;
-    /**
-     * Sets the text content of the value component.
-     * - If the value component does not exist, creates a new **`sd.Text`** instance to hold the text.
-     * - If the value component value does not support text formatting, throws an Error.
-     * @param text - The text content to apply.
-     * @returns The current component instance for method chaining.
-     */
-    text(text: string | number): this;
-    text(text?: string | number) {
-        const value = this.value() as SDNodeWithText;
-        if (arguments.length === 0) {
-            if (!value) return "";
-            if (!value.text) ErrorLauncher.methodNotFound(value, "text");
-            return value.text();
-        } else {
-            if (!value) return this.value(text);
-            if (!value.text) ErrorLauncher.methodNotFound(value, "text");
-            value.text(text);
-            return this;
-        }
-    }
-    /**
-     * Casts the value component to its integer representation.
-     * - If the value component does not exists, returns zero.
-     * - If the value component cannot be casted to an integer, throws an Error.
-     * @returns The integer representation of the value component.
-     */
-    intValue() {
-        const value = this.value() as SDNodeWithText;
-        if (!value) return 0;
-        if (!value.text) ErrorLauncher.methodNotFound(value, "text");
-        const i = Math.floor(+value.text());
-        if (isNaN(i)) ErrorLauncher.failToParseAsIntValue(value.text());
-        return i;
-    }
-    /**
-     * Gets the value component of this element component.
-     * @returns The value component instance, or undefined if no value component has been set.
-     */
-    value(): SDNode;
-    /**
-     * Sets the value component of this element component.
-     * - Replaces any existing value component with the provided value.
-     * - Removes the current value without replacement if provided value is null or undefined.
-     * - Converts to **`sd.Text`** instance if provided value is number or string.
-     * @param value - The provided value.
-     * @param rule - Optional responsive rule.
-     * @returns The current component instance for method chaining.
-     */
-    value(value: any, rule?: SDRule): this;
-    value(value?: any, rule?: SDRule) {
-        if (arguments.length === 0) return this.child("value");
-        if (this.hasChild("value")) {
-            console.log("erase value Child!");
-            this.eraseChild("value");
-        }
-        if (Check.isEmpty(value)) return this;
-        value = SDNode.__asNode(this, value);
-        return this.childAs("value", value, rule || valueRule);
-    }
-    /**
-     * Sets the value component of this element component with an animated transition from its current position.
-     *
-     * Unlike standard value assignment, this method animates the movement of value component
-     * from its original position to the new target position within the element component.
-     * @param value - The provided value component.
-     * @param rule - Optional responsive rule.
-     * @returns The current component instance for method chaining.
-     */
-    valueFromExist(value: SDNode, rule?: SDRule) {
-        if (this.hasChild("value")) this.eraseChild("value");
-        value.onEnter(EN.moveTo());
-        this.childAs("value", value, rule || valueRule);
-        return this;
-    }
-    /**
-     * Detaches the value component from this element component while preserving it in the scene.
-     * - Removes association between the value component and this element component.
-     * - Leaves the value component present in the scene.
-     * - Returns the detached component for potential reuse.
-     * @returns The detached value component instance, or undefined if no value component was present.
-     */
-    drop() {
-        const value = this.value();
-        if (!value) return undefined;
-        value.onExit(EX.drop());
-        this.eraseChild(value);
-        return value;
-    }
+
     inRange(point: [number, number]) {
         return this.background().inRange(point);
     }
@@ -281,9 +193,4 @@ function backgroundCall(key: string, value?: any) {
     if (arguments.length === 1) return background[key]();
     background[key](value);
     return this;
-}
-
-function valueRule<B extends SDNode>(parent: BaseElement<B>, child: SDNode) {
-    const rate = parent.rate();
-    R.centerFixAspect(rate)(parent, child);
 }

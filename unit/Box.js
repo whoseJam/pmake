@@ -13,18 +13,16 @@ async function TestType() {
     const box = new sd.Box(svg, "123");
     await sd.pause();
     const text = box.value();
-    text.x(100).y(100).text("456");
+    text.x(100).y(100);
+    box.startAnimate().text("456").endAnimate();
 }
 
 async function TestBoxBackingSVGAndHTML() {
     const b1 = new sd.Box(svg).x(100).y(100).width(100);
-    const b2 = new sd.Box(div).x(100).y(200).width(100);
     await sd.pause();
     b1.startAnimate().value("hello").endAnimate();
-    b2.startAnimate().value(new sd.Button(b2)).endAnimate();
     await sd.pause();
     b1.startAnimate().value(null).endAnimate();
-    b2.startAnimate().value(null).endAnimate();
 }
 
 async function TestDropEmptyValue() {

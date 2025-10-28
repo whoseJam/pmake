@@ -1,12 +1,10 @@
 import { Context } from "@/Animate/Context";
-import { Enter as EN } from "@/Node/Core/Enter";
 import { SDSVGNode } from "@/Node/SDSVGNode";
 import { Rule as R, SDRule } from "@/Rule/Rule";
-import { Check } from "@/Utility/Check";
 import { Color as C } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
-import { BaseElement } from "../Element/BaseElement";
-import { SDNode } from "../SDNode";
+import { ValueManageMixin } from "@/Node/Mixin/ValueManageMixin";
+import { SDNode } from "@/Node/SDNode";
 
 const BASE_PATH_ATTRIBUTES = {
     fill: C.white,
@@ -22,7 +20,7 @@ const BASE_PATH_ATTRIBUTES = {
     markerEnd: "",
 };
 
-export class BasePath extends SDSVGNode {
+export class BasePath extends ValueManageMixin(SDSVGNode) {
     markerStart(): string;
     markerStart(marker: string): this;
     markerStart(marker?: string) {
@@ -187,76 +185,11 @@ export class BasePath extends SDSVGNode {
         ErrorLauncher.notImplementedYet(`${this.constructor.name}.totalLength`);
         return 0;
     }
-    /**
-     * Casts the value component to its string representation.
-     * - If the value component does not exist, returns an empty string ("").
-     * - If the value component cannot be casted to a string, throws an Error.
-     * @returns The string representation of the value component.
-     */
-    text(): string;
-    /**
-     * Sets the text content of the value component.
-     * - If the value component does not exists, creates a new **`sd.Text`** instance to hold the text.
-     * - If the value component value does not support text formatting, throws an Error.
-     * @param text - The text content to apply.
-     * @returns The current component instance for method chaining.
-     */
-    text(text: string): this;
-    text(text?: string) {
-        if (arguments.length === 0) return BaseElement.prototype.text.call(this);
-        return BaseElement.prototype.text.call(this, text);
+
+    __defaultValueRule(): SDRule {
+        return R.pointAtPathByRate(0.5, "cx", "cy");
     }
-    /**
-     * Casts the value component to its integer representation.
-     * - If the value component does not exists, returns zero.
-     * - If the value component cannot be casted to an integer, throws an Error.
-     * @returns The integer representation of the value component.
-     */
-    intValue(): number {
-        return BaseElement.prototype.intValue.call(this);
-    }
-    /**
-     * Sets the value component of this path component.
-     * - Replaces any existing value component with the provided value.
-     * - Removes the current value without replacement if provided value is null or undefined.
-     * - Converts to **`sd.Text`** instance if provided value is number or string.
-     * @param value - The provided value.
-     * @param rule - Optional responsive rule.
-     * @returns The current component instance for method chaining.
-     */
-    value(value: any, rule?: SDRule) {
-        if (arguments.length === 0) return this.child("value");
-        if (this.hasChild("value")) this.eraseChild("value");
-        if (Check.isEmpty(value)) return this;
-        rule = rule || R.pointAtPathByRate(0.5, "cx", "cy");
-        value = SDNode.__asNode(this, value);
-        return this.childAs("value", value, rule);
-    }
-    /**
-     * Sets the value component of this path component with an animated transition from its current position.
-     *
-     * Unlike standard value assignment, this method animates the movement of value component
-     * from its original position to the new target position within the path component.
-     * @param value - The provided value component.
-     * @param rule - Optional responsive rule.
-     * @returns The current component instance for method chaining.
-     */
-    valueFromExist(value: SDNode, rule?: SDRule) {
-        if (this.hasChild("value")) this.eraseChild("value");
-        rule = rule || R.pointAtPathByRate(0.5, "cx", "cy");
-        value.onEnter(EN.moveTo());
-        return this.childAs("value", value, rule);
-    }
-    /**
-     * Detachs the value component from this path component while preserving it in the scene.
-     * - Removes association between the value component and this path component.
-     * - Leaves the value component present in the scene.
-     * - Returns the detached component for potential reuse.
-     * @returns The detached value component instance, or undefined if no value component was present.
-     */
-    drop() {
-        return BaseElement.prototype.drop.call(this);
-    }
+
     __createSVGNode(label: string, attributes?: { [key: string]: any }) {
         return super.__createSVGNode(label, {
             ...BASE_PATH_ATTRIBUTES,

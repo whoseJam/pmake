@@ -198,7 +198,7 @@ export class SDNode {
      */
     startAnimate(start: number, end: number): this;
     startAnimate() {
-        this.__animationCheck();
+        this.#__animationCheck();
         if (arguments.length === 0) return this.startAnimate(this._.start, this._.start + 300);
         if (arguments.length === 1) {
             const object = arguments[0];
@@ -215,7 +215,7 @@ export class SDNode {
      * @returns The current component instance for method chaining.
      */
     endAnimate(): this {
-        this.__animationCheck();
+        this.#__animationCheck();
         this._.start = this._.end;
         this.__forEachChild(child => child.endAnimate());
         return this;
@@ -236,7 +236,7 @@ export class SDNode {
      * @returns This instance for method chaining.
      */
     after(delay_: number | SDNode): this {
-        this.__animationCheck();
+        this.#__animationCheck();
         const delay = typeof delay_ === "number" ? delay_ : delay_.delay();
         this._.start = delay;
         this._.end = delay;
@@ -249,17 +249,17 @@ export class SDNode {
      * @returns The delay duration in milliseconds.
      */
     delay() {
-        this.__animationCheck();
+        this.#__animationCheck();
         return this._.start;
     }
     /**
      * Gets the duration of current animation sequence.
      */
     duration() {
-        this.__animationCheck();
+        this.#__animationCheck();
         return this._.end - this._.start;
     }
-    private __animationCheck() {
+    #__animationCheck() {
         if (this._.frame === Window.CURRENT_FRAME) return;
         this._.frame = Window.CURRENT_FRAME;
         this._.start = 0;
