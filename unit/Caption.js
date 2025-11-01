@@ -2,20 +2,22 @@ import * as sd from "@/sd";
 
 const svg = sd.svg();
 
-sd.main(TestCaptionBasic);
+sd.main(TestCaption);
 
-async function TestCaptionBasic() {
-    const caption = new sd.Caption(svg);
-    caption.cx(600).y(100);
-
+async function TestTextOpacity() {
+    const caption = new sd.Caption(svg).cx(600).y(100).caption("你好世界", "Hello World");
     await sd.pause();
-    caption.caption("你好，世界", "Hello, World");
+    caption.startAnimate().textOpacity(0.3).endAnimate();
+}
 
+async function TestCaption() {
+    const caption = new sd.Caption(svg).cx(600).y(100);
     await sd.pause();
-    caption.caption("数据结构", "Data Structure");
-
+    caption.startAnimate().caption("你好，世界", "Hello, World").endAnimate();
     await sd.pause();
-    caption.caption("算法可视化", "Algorithm Visualization");
+    caption.startAnimate().caption("数据结构", "Data Structure").endAnimate();
+    await sd.pause();
+    caption.startAnimate().caption("算法可视化", "Algorithm Visualization").endAnimate();
 }
 
 async function TestCaptionAnimation() {

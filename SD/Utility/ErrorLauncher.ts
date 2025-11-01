@@ -86,6 +86,16 @@ export class ErrorLauncher {
             )}`
         );
     }
+    static invalidString(object: any, method: string, i = 1, suggestions = []) {
+        throw new Error(
+            `We expect a string for the ${generateLocation(
+                i
+            )} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(
+                object,
+                suggestions
+            )}`
+        );
+    }
     static invalidNumberOrString(object: any, method: string, i = 1, suggestions = []) {
         throw new Error(
             `We expect a number or a string for the ${generateLocation(
@@ -159,6 +169,16 @@ export class ErrorLauncher {
     static invalidAlign(object: any, method: string, i = 1, suggestions = []) {
         throw new Error(
             `We expect a align-string for the ${generateLocation(
+                i
+            )} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(
+                object,
+                suggestions
+            )}`
+        );
+    }
+    static invalidOrigin(object: any, method: string, i = 1, suggestions = []) {
+        throw new Error(
+            `We expect a origin-string for the ${generateLocation(
                 i
             )} argument when calling ${method} but got <${object}>[type is ${typeof object}]. ${generateSuggestion(
                 object,

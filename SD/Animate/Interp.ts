@@ -16,6 +16,10 @@ function setter(object: any, key: string): Setter {
         return function (value: any) {
             object.setAttribute(key, value);
         };
+    } else if (typeof object[key] === "function") {
+        return function (value: any) {
+            object[key](value);
+        };
     } else if (object[key] !== undefined) {
         return function (value: any) {
             object[key] = value;

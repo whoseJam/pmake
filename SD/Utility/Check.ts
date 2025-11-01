@@ -55,6 +55,9 @@ export class Check {
     static validateNumber(object: any, method: string, i = 1, suggestions = []) {
         if (!this.isNumber(object)) ErrorLauncher.invalidNumber(object, method, i, suggestions);
     }
+    static validateString(object: any, method: string, i = 1, suggestions = []) {
+        if (!this.isString(object)) ErrorLauncher.invalidString(object, method, i, suggestions);
+    }
     static validateNumberOrString(object: any, method: string, i = 1, suggestions = []) {
         if (!this.isNumberOrString(object)) ErrorLauncher.invalidNumberOrString(object, method, i, suggestions);
     }

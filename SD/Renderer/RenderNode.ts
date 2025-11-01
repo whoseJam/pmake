@@ -1,32 +1,9 @@
 import { Action } from "@/Animate/Action";
 import { Dom } from "@/Dom/Dom";
 import { SDNode } from "@/Node/SDNode";
+import { HTML, HTML_INNERHTML_SET, HTML_STYLE_SET } from "@/Renderer/HTML";
+import { SVG } from "@/Renderer/SVG";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
-
-const INNER_HTML_KEY = new Set(["innerHTML", "text"]);
-const STYLE_KEY = new Set(["pointer-events", "min-width", "min-height", "display"]);
-const SHAPE_KEY = new Set([
-    // shape key
-    "circle",
-    "ellipse",
-    "foreignObject",
-    "fragment",
-    "image",
-    "line",
-    "path",
-    "rect",
-    "svg",
-    "text",
-    "polygon",
-    "polyline",
-]);
-const HTML_KEY = new Set([
-    // html key
-    "div",
-    "input",
-    "button",
-    "textarea",
-]);
 
 function parseText(text: string) {
     let ans = "";
@@ -59,7 +36,7 @@ export class RenderNode {
         if (args.append === undefined) args.append = true;
         if (!args.element) {
             if (!args.label) ErrorLauncher.whatHappened();
-            if (HTML_KEY.has(args.label)) args.element = Dom.createElement(args.label);
+            if (HTML[args.label]) args.element = Dom.createElement(args.label);
             else args.element = Dom.createSVGElement(args.label);
         } else args.label = Dom.tagName(args.element);
         this.targetNode = args.targetNode;
@@ -114,31 +91,28 @@ export class RenderNode {
         return this.moveTo(undefined);
     }
     getAttribute(key: string) {
-        const element = this.element() as SVGElement;
-        if (INNER_HTML_KEY.has(key)) {
-            return element.innerHTML;
-        } else if (STYLE_KEY.has(key)) {
-            return element.style[key];
-        }
+        const element = this.element() as SVGElement | HTMLElement;
+        if (HTML_INNERHTML_SET.has(key)) return element.innerHTML;
+        else if (this.isHTML() && HTML_STYLE_SET.has(key)) return element.style[key];
         return element.getAttribute(key);
     }
     setAttribute(key: string, value: any) {
-        const element = this.element() as SVGElement;
-        if (value && typeof value.r === "number" && typeof value.g === "number" && typeof value.b === "number")
-            value = `rgb(${value.r}, ${value.g}, ${value.b})`;
-        if (INNER_HTML_KEY.has(key)) {
+        value = RenderNode.__asValue(value);
+        const element = this.element() as SVGElement | HTMLElement;
+        if (HTML_INNERHTML_SET.has(key)) {
             if (key === "text") value = parseText(value);
             element.innerHTML = value;
-        } else if (STYLE_KEY.has(key)) {
-            element.style[key] = value;
-        } else if (key === "viewBox" && typeof value === "object") {
-            element.setAttribute(key, `${value.x} ${value.y} ${value.width} ${value.height}`);
-        } else {
-            element.setAttribute(key, value);
-        }
+        } else if (this.isHTML() && HTML_STYLE_SET.has(key)) element.style[key] = value;
+        else element.setAttribute(key, value);
     }
     hasShape() {
-        return SHAPE_KEY.has(this.label);
+        return SVG[this.label]?.hasShape;
+    }
+    isSVG() {
+        return SVG[this.label] !== undefined;
+    }
+    isHTML() {
+        return !this.isSVG();
     }
     __append(element_: Element | RenderNode) {
         const element = element_ instanceof RenderNode ? element_.element() : element_;
@@ -158,6 +132,19 @@ export class RenderNode {
         Object.keys(css).forEach(key => {
             (this.element() as HTMLElement).style[key] = css[key];
         });
+    }
+    static __asValue(value: any) {
+        if (value && typeof value.r === "number" && typeof value.g === "number" && typeof value.b === "number")
+            return `rgb(${value.r}, ${value.g}, ${value.b})`;
+        if (
+            value &&
+            typeof value.x === "number" &&
+            typeof value.y === "number" &&
+            typeof value.width === "number" &&
+            typeof value.height === "number"
+        )
+            return `${value.x} ${value.y} ${value.width} ${value.height}`;
+        return value;
     }
     static getDocumentBodyRenderNode() {
         return new RenderNode({
