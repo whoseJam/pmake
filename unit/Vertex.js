@@ -4,7 +4,19 @@ const svg = sd.svg();
 const V = sd.vec();
 const C = sd.color();
 
-sd.main(TestInRange);
+sd.main(TestEmptyStringAsValue);
+
+async function TestEmptyStringAsValue() {
+    const vertex = new sd.Vertex(svg).cx(300).cy(100);
+    await sd.pause();
+    vertex.startAnimate().value("").endAnimate();
+    await sd.pause();
+    vertex.startAnimate().text("A").endAnimate();
+    await sd.pause();
+    vertex.startAnimate().text("B").endAnimate();
+    await sd.pause();
+    vertex.startAnimate().text("").endAnimate();
+}
 
 async function TestInRange() {
     const vertex = new sd.Vertex(svg).cx(300).cy(300).r(50);

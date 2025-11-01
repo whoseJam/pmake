@@ -127,7 +127,7 @@ export class Text extends BaseText {
         if (this.vars.width > 1e-1) {
             const k = width / this.vars.width;
             this.fontSize(this.fontSize() * k);
-        } else {
+        } else if (this.text() !== "") {
             const fontSize = TextEngine.widthToFontSize(this.text(), this.fontFamily(), width);
             this.fontSize(fontSize);
         }
@@ -140,7 +140,7 @@ export class Text extends BaseText {
         if (this.vars.height > 1e-1) {
             const k = height / this.vars.height;
             this.fontSize(this.fontSize() * k);
-        } else {
+        } else if (this.text() !== "") {
             const fontSize = TextEngine.heightToFontSize(this.text(), this.fontFamily(), height);
             this.fontSize(fontSize);
         }

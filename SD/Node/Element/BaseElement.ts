@@ -1,11 +1,12 @@
-import { SDNode, SDNodeWithText } from "@/Node/SDNode";
+import { ValueManageMixin } from "@/Node/Mixin/ValueManageMixin";
+import { SDNode } from "@/Node/SDNode";
+import { SDSVGNode } from "@/Node/SDSVGNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Rule as R, SDRule } from "@/Rule/Rule";
 import { Check } from "@/Utility/Check";
 import { SDColor } from "@/Utility/Color";
-import { ValueManageMixin } from "@/Node/Mixin/ValueManageMixin";
 
-export class BaseElement<B extends SDNode> extends ValueManageMixin(SDNode) {
+export class BaseElement<B extends SDSVGNode> extends ValueManageMixin(SDNode) {
     constructor(target: SDNode | RenderNode) {
         super(target);
 
@@ -30,6 +31,7 @@ export class BaseElement<B extends SDNode> extends ValueManageMixin(SDNode) {
         this.background().x(x);
         return this;
     }
+
     y(): number;
     y(y: number): this;
     y(y?: number) {
@@ -37,6 +39,7 @@ export class BaseElement<B extends SDNode> extends ValueManageMixin(SDNode) {
         this.background().y(y);
         return this;
     }
+
     width(): number;
     width(width: number): this;
     width(width?: number) {
@@ -44,6 +47,7 @@ export class BaseElement<B extends SDNode> extends ValueManageMixin(SDNode) {
         this.background().width(width);
         return this;
     }
+
     height(): number;
     height(height: number): this;
     height(height?: number) {
@@ -51,6 +55,7 @@ export class BaseElement<B extends SDNode> extends ValueManageMixin(SDNode) {
         this.background().height(height);
         return this;
     }
+
     /**
      * Gets the visual representation scaling factor of this element component.
      * @returns The scaling factor used for proportional sizing.
@@ -73,6 +78,7 @@ export class BaseElement<B extends SDNode> extends ValueManageMixin(SDNode) {
         this.vars.mpset("rate", rate);
         return this;
     }
+
     /**
      * Gets the color of this element component.
      * @returns The color.
@@ -85,9 +91,11 @@ export class BaseElement<B extends SDNode> extends ValueManageMixin(SDNode) {
      */
     color(color: string | SDColor): this;
     color(color?: string | SDColor) {
-        if (arguments.length === 0) return backgroundCall("color");
-        return backgroundCall("color", color);
+        if (arguments.length === 0) return this.background().color();
+        this.background().color(color);
+        return this;
     }
+
     /**
      * Gets the fill color of this element component.
      * @returns The fill color.
@@ -100,9 +108,11 @@ export class BaseElement<B extends SDNode> extends ValueManageMixin(SDNode) {
      */
     fill(fill: string): this;
     fill(fill?: string) {
-        if (arguments.length === 0) return backgroundCall("fill");
-        return backgroundCall("fill", fill);
+        if (arguments.length === 0) return this.background().fill();
+        this.background().fill(fill);
+        return this;
     }
+
     /**
      * Gets the fill opacity of this element component.
      * @returns The fill opacity.
@@ -115,9 +125,11 @@ export class BaseElement<B extends SDNode> extends ValueManageMixin(SDNode) {
      */
     fillOpacity(opacity: number): this;
     fillOpacity(opacity?: number) {
-        if (arguments.length === 0) return backgroundCall("fillOpacity");
-        return backgroundCall("fillOpacity", opacity);
+        if (arguments.length === 0) return this.background().fillOpacity();
+        this.background().fillOpacity(opacity);
+        return this;
     }
+
     /**
      * Gets the stroke color of this element component.
      * @returns The stroke color.
@@ -130,9 +142,11 @@ export class BaseElement<B extends SDNode> extends ValueManageMixin(SDNode) {
      */
     stroke(stroke: string): this;
     stroke(stroke?: string) {
-        if (arguments.length === 0) return backgroundCall("stroke");
-        return backgroundCall("stroke", stroke);
+        if (arguments.length === 0) return this.background().stroke();
+        this.background().stroke(stroke);
+        return this;
     }
+
     /**
      * Gets the stroke opacity of this element component.
      * @returns The stroke opacity.
@@ -145,9 +159,11 @@ export class BaseElement<B extends SDNode> extends ValueManageMixin(SDNode) {
      */
     strokeOpacity(opacity: number): this;
     strokeOpacity(opacity?: number) {
-        if (arguments.length === 0) return backgroundCall("strokeOpacity");
-        return backgroundCall("strokeOpacity", opacity);
+        if (arguments.length === 0) return this.background().strokeOpacity();
+        this.background().strokeOpacity(opacity);
+        return this;
     }
+
     /**
      * Gets the stroke width of this element component.
      * @returns The stroke width.
@@ -160,21 +176,27 @@ export class BaseElement<B extends SDNode> extends ValueManageMixin(SDNode) {
      */
     strokeWidth(width: number): this;
     strokeWidth(width?: number) {
-        if (arguments.length === 0) return backgroundCall("strokeWidth");
-        return backgroundCall("strokeWidth", width);
+        if (arguments.length === 0) return this.background().strokeWidth();
+        this.background().strokeWidth(width);
+        return this;
     }
+
     strokeDashOffset(): number;
     strokeDashOffset(offset: number): this;
     strokeDashOffset(offset?: number) {
-        if (arguments.length === 0) return backgroundCall("strokeDashOffset");
-        return backgroundCall("strokeDashOffset", offset);
+        if (arguments.length === 0) return this.background().strokeDashOffset();
+        this.background().strokeDashOffset(offset);
+        return this;
     }
+
     strokeDashArray(): Array<number>;
     strokeDashArray(array: Array<number>): this;
     strokeDashArray(array?: Array<number>) {
-        if (arguments.length === 0) return backgroundCall("strokeDashArray");
-        return backgroundCall("strokeDashArray", array);
+        if (arguments.length === 0) return this.background().strokeDashArray();
+        this.background().strokeDashArray(array);
+        return this;
     }
+
     /**
      * Gets the background component of this element component.
      * @returns The background component instance.
@@ -186,11 +208,4 @@ export class BaseElement<B extends SDNode> extends ValueManageMixin(SDNode) {
     inRange(point: [number, number]) {
         return this.background().inRange(point);
     }
-}
-
-function backgroundCall(key: string, value?: any) {
-    const background = this.background();
-    if (arguments.length === 1) return background[key]();
-    background[key](value);
-    return this;
 }
