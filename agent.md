@@ -96,6 +96,8 @@ sd.main(async () => {
 
 ## 封装对象
 
+你应该只使用这些对象进行创作
+
 -   公共方法
     -   fill/fillOpacity
     -   stroke/strokeOpacity/strokeDashOffset/strokeDashArray
@@ -111,3 +113,17 @@ sd.main(async () => {
     -   Polyline: points
 -   其他重要对象
     -   Caption: 字幕对象，使用 caption 方法更新中英双语字幕，在创作教学动画的时候必须在场景中加入字幕讲解
+
+## 颜色
+
+颜色模块通过 `sd.color()` 来获取，在颜色模块中定义了很多预设的颜色，调用方法形如：
+
+```js
+const C = sd.color();
+rect.startAnimate(300).color(C.red).endAnimate(); // 把 rect 的填充设置为红色
+circle.startAnimate(400).fill(C.purple).endAnimate(); // 把 circle 的填充设置为紫色
+ellipse.startAnimate(500).stroke(C.green).endAnimate(); // 把 ellipse 的描边设置为绿色
+polygon.startAnimate(350).color(C.BLUE).endAnimate(); // 把 polygon 设置为蓝色系（同时设置填充为浅一点的蓝色，描边为深一点的蓝色）
+```
+
+颜色模块中全大写的预设颜色，同时定义了填充颜色和描边颜色；而小驼峰命名的预设颜色，则只定义了单一颜色，具体会设置到描边色还是填充色上取决于对象被调用的方法是 fill 还是 stroke

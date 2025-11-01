@@ -5,13 +5,13 @@ import { TextEngine } from "@/Node/Text/TextEngine";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { make1d } from "@/Utility/Base";
 import { Check } from "@/Utility/Check";
-import { SDColor } from "@/Utility/Color";
+import { SDAllColor, SDPacketColor } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 export class TextConfiguration extends BaseTextConfiguration {
     family: string;
-    attr: Array<SDColor>;
-    lastAttr?: Array<SDColor>;
+    attr: Array<SDPacketColor>;
+    lastAttr?: Array<SDPacketColor>;
     constructor(args: TextConfigDictionary) {
         super(args);
         this.family = args.family;
@@ -30,7 +30,7 @@ export class TextConfiguration extends BaseTextConfiguration {
 
 export class Text extends BaseText {
     _: BaseText["_"] & {
-        attr: Array<SDColor>;
+        attr: Array<SDPacketColor>;
     };
     constructor(target: SDNode | RenderNode, text = "") {
         super(target);
@@ -202,9 +202,9 @@ export class Text extends BaseText {
         return i;
     }
 
-    __subtextAttribute(subtext_: string | number, color: SDColor, operator: number | "all" | "first" | "last") {
+    __subtextAttribute(subtext_: string | number, color: SDAllColor, operator: number | "all" | "first" | "last") {
         const subtext = String(subtext_);
-        const attr = this._.attr.map((color: SDColor) => {
+        const attr = this._.attr.map((color: SDPacketColor) => {
             return { fill: color.fill, stroke: color.stroke };
         });
         const text = this.vars.text;

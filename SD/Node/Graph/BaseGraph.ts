@@ -4,7 +4,7 @@ import { SDNode, SDNodeWithColor, SDNodeWithText, SDNodeWithValue, SDNodeWithVal
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Vertex } from "@/sd";
 import { Check } from "@/Utility/Check";
-import { SDColor } from "@/Utility/Color";
+import { Color as C, SDAllColor, SDPacketColor } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 export type NodeCondition<NodeElement> = (node: NodeElement, id: string) => boolean;
@@ -323,14 +323,15 @@ export abstract class BaseGraph<
         element.opacity(opacity);
         return this;
     }
-    color(color: string | SDColor): this;
-    color(node: string | number | NodeElement): SDColor;
-    color(node: string | number | NodeElement, color: string | SDColor): this;
-    color(source: string | number | NodeElement, target: string | number | NodeElement): SDColor;
-    color(source: string | number | NodeElement, target: string | number | NodeElement, color: string | SDColor): this;
+
+    color(color: SDAllColor): this;
+    color(node: string | number | NodeElement): SDPacketColor;
+    color(node: string | number | NodeElement, color: SDAllColor): this;
+    color(source: string | number | NodeElement, target: string | number | NodeElement): SDPacketColor;
+    color(source: string | number | NodeElement, target: string | number | NodeElement, color: SDAllColor): this;
     color() {
         if (arguments.length === 1) {
-            if (Check.isColor(arguments[0])) {
+            if (C.isColor(arguments[0])) {
                 const [color] = arguments;
                 return this.forEachNode((node: unknown) => (node as SDNodeWithColor).color(color));
             } else {
@@ -339,7 +340,7 @@ export abstract class BaseGraph<
                 return _node.color();
             }
         } else if (arguments.length === 2) {
-            if (Check.isColor(arguments[1])) {
+            if (C.isColor(arguments[1])) {
                 const [node, color] = arguments;
                 const _node = this.__getNodeWithMethod<SDNodeWithColor>(node, "color");
                 _node.color(color);
@@ -356,6 +357,7 @@ export abstract class BaseGraph<
             return this;
         }
     }
+
     text(node: string | number | NodeElement): string;
     text(node: string | number | NodeElement, text: string): this;
     text(source: string | number | NodeElement, target: string | number | NodeElement): string;

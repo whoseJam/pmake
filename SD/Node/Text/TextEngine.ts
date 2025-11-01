@@ -13,7 +13,7 @@ import { Math as Math_, MathConfiguration } from "@/Node/Text/Math";
 import { Text, Text as Text_, TextConfiguration } from "@/Node/Text/Text";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { make1d } from "@/Utility/Base";
-import { SDColor } from "@/Utility/Color";
+import { SDPacketColor } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { PathPen } from "@/Utility/PathPen";
 import opentype from "opentype.js";
@@ -99,7 +99,7 @@ class TransformingPath {
     lastStroke: string;
     status: TransformingPathStatus;
     path: SVGPathElement;
-    ref: EXSVGElement | SDColor;
+    ref: EXSVGElement | SDPacketColor;
     constructor(
         d: string,
         transform: SVGMatrix,
@@ -107,7 +107,7 @@ class TransformingPath {
         stroke: string,
         lastFill: string,
         lastStroke: string,
-        ref: EXSVGElement | SDColor
+        ref: EXSVGElement | SDPacketColor
     ) {
         this.d = d;
         this.transform = transform;
@@ -159,8 +159,8 @@ class TransformingPathGroup {
     parent: BaseText;
     source: Array<TransformingPath>;
     target: Array<TransformingPath>;
-    sourceConfig: SDColor;
-    targetConfig: SDColor;
+    sourceConfig: SDPacketColor;
+    targetConfig: SDPacketColor;
     group: RenderNode;
     l: number;
     r: number;
@@ -168,8 +168,8 @@ class TransformingPathGroup {
         parent: BaseText,
         source: Array<TransformingPath>,
         target: Array<TransformingPath>,
-        sourceConfig: SDColor,
-        targetConfig: SDColor
+        sourceConfig: SDPacketColor,
+        targetConfig: SDPacketColor
     ) {
         this.parent = parent;
         this.source = source;
@@ -595,7 +595,7 @@ export class TextEngine {
             this.textSVG.setAttribute("text", text);
             this.textSVG.setAttribute("font-size", size);
             this.textSVG.setAttribute("font-family", family);
-            const bbox = this.textSVG.element().getBBox();
+            const bbox = this.textSVG.elementAs<SVGTextElement>().getBBox();
             return bbox;
         } else {
             const font = this.fonts[family];

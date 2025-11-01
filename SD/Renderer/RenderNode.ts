@@ -58,6 +58,9 @@ export class RenderNode {
     element() {
         return this.backingElement;
     }
+    elementAs<T>() {
+        return this.element() as T;
+    }
     append(element: string | RenderNode): RenderNode {
         if (element instanceof RenderNode) return element.moveTo(this);
         return new RenderNode({

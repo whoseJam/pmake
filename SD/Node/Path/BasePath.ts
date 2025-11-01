@@ -1,10 +1,10 @@
 import { Context } from "@/Animate/Context";
+import { ValueManageMixin } from "@/Node/Mixin/ValueManageMixin";
 import { SDSVGNode } from "@/Node/SDSVGNode";
 import { Rule as R, SDRule } from "@/Rule/Rule";
-import { Color as C } from "@/Utility/Color";
+import { Check } from "@/Utility/Check";
+import { Color as C, SDAllColor, SDPacketColor } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
-import { ValueManageMixin } from "@/Node/Mixin/ValueManageMixin";
-import { SDNode } from "@/Node/SDNode";
 
 const BASE_PATH_ATTRIBUTES = {
     fill: C.white,
@@ -21,6 +21,15 @@ const BASE_PATH_ATTRIBUTES = {
 };
 
 export class BasePath extends ValueManageMixin(SDSVGNode) {
+    color(): SDPacketColor;
+    color(color: SDAllColor): this;
+    color(color?: SDAllColor): SDPacketColor | this {
+        if (arguments.length === 0) return { fill: this.fill(), stroke: this.stroke() };
+        Check.validateColor(color, `${this.constructor.name}.color`);
+        if (C.isPacket(color)) return this.fill(C.toFill(color)).stroke(C.toStroke(color));
+        return this.stroke(color);
+    }
+
     markerStart(): string;
     markerStart(marker: string): this;
     markerStart(marker?: string) {

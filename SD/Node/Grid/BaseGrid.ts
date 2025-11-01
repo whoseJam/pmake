@@ -1,8 +1,15 @@
 import { Exit as EX } from "@/Node/Core/Exit";
-import { SDNode, SDNodeWithColor, SDNodeWithDrop, SDNodeWithIntValue, SDNodeWithText, SDNodeWithValue } from "@/Node/SDNode";
+import {
+    SDNode,
+    SDNodeWithColor,
+    SDNodeWithDrop,
+    SDNodeWithIntValue,
+    SDNodeWithText,
+    SDNodeWithValue,
+} from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
-import { SDColor } from "@/Utility/Color";
+import { SDAllColor, SDPacketColor } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 /**
@@ -33,6 +40,7 @@ export abstract class BaseGrid<E, V> extends SDNode {
             elements: [],
         });
     }
+
     /**
      * Gets the starting index of this grid component's primary dimension.
      * @returns The index of the first element in the grid component's primary layout.
@@ -52,6 +60,7 @@ export abstract class BaseGrid<E, V> extends SDNode {
         this.vars.startN = n;
         return this;
     }
+
     /**
      * Gets the starting index of this grid component's secondary dimension.
      * @returns The index of the first element in the grid component's secondary layout.
@@ -71,6 +80,7 @@ export abstract class BaseGrid<E, V> extends SDNode {
         this.vars.startM = m;
         return this;
     }
+
     /**
      * Gets the ending index of this grid component's primary dimension.
      * @returns The ending index in the grid component's primary layout.
@@ -78,6 +88,7 @@ export abstract class BaseGrid<E, V> extends SDNode {
     endN(): number {
         return this.startN() + this.n() - 1;
     }
+
     /**
      * Gets the ending index of this grid component's secondary dimension.
      *
@@ -97,6 +108,7 @@ export abstract class BaseGrid<E, V> extends SDNode {
         if (_i >= this.vars.elements.length || _i < 0) return this.startM() - 1;
         return this.startM() + this.vars.elements[this.__idxN(i)].length - 1;
     }
+
     /**
      * Gets the number of primary elements in this grid component.
      * @returns The count of elements along the primary dimension.
@@ -122,6 +134,7 @@ export abstract class BaseGrid<E, V> extends SDNode {
         while (this.n() > n) this.popPrimary();
         return this;
     }
+
     /**
      * Gets the length of primary elements in this grid component.
      *
@@ -148,6 +161,7 @@ export abstract class BaseGrid<E, V> extends SDNode {
         while (this.m() > m) this.popSecondary();
         return this;
     }
+
     /**
      * Gets the element at the specified indices.
      * @param i - The index along the primary dimension.
@@ -159,9 +173,11 @@ export abstract class BaseGrid<E, V> extends SDNode {
      */
     element(i: number, j: number): E {
         const [_i, _j] = [this.__idxN(i), this.__idxM(j)];
-        if (0 <= _i && _i < this.vars.elements.length && 0 <= _j && _j < this.vars.elements[_i].length) return this.vars.elements[_i][_j];
+        if (0 <= _i && _i < this.vars.elements.length && 0 <= _j && _j < this.vars.elements[_i].length)
+            return this.vars.elements[_i][_j];
         return undefined;
     }
+
     /**
      * Iterates over each element in this grid component.
      * @param callback - A function to execute for each element.
@@ -176,6 +192,7 @@ export abstract class BaseGrid<E, V> extends SDNode {
         });
         return this;
     }
+
     opacity(): number;
     opacity(opacity: number): this;
     opacity(i: number, j: number): number;
@@ -197,27 +214,28 @@ export abstract class BaseGrid<E, V> extends SDNode {
             return this;
         }
     }
+
     /**
      * Applies a uniform color to all elements in this grid component.
-     * @param color The color to apply.
+     * @param color The color to apply (hex string or RGB object).
      * @returns The current component instance for method chaining.
      */
-    color(color: string | SDColor): this;
+    color(color: SDAllColor): this;
     /**
      * Gets the color of a specific element.
      * @param i - The index along the primary dimension.
      * @param j - The index along the secondary dimension.
      * @returns The color of the element.
      */
-    color(i: number, j: number): SDColor;
+    color(i: number, j: number): SDPacketColor;
     /**
      * Sets the color of a specific element.
      * @param i - The index along the primary dimension.
      * @param j - The index along the secondary dimension.
-     * @param color The color to apply.
+     * @param color The color to apply (hex string or RGB object).
      * @returns The current component instance of method chaining.
      */
-    color(i: number, j: number, color: string | SDColor): this;
+    color(i: number, j: number, color: SDAllColor): this;
     color() {
         if (arguments.length === 1) {
             const [color] = arguments;
@@ -233,6 +251,7 @@ export abstract class BaseGrid<E, V> extends SDNode {
             return this;
         }
     }
+
     /**
      * Gets the text content of a specific element.
      *

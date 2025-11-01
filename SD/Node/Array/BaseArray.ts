@@ -1,9 +1,16 @@
 import { Exit as EX } from "@/Node/Core/Exit";
-import { SDNode, SDNodeWithColor, SDNodeWithDrop, SDNodeWithIntValue, SDNodeWithText, SDNodeWithValue } from "@/Node/SDNode";
+import {
+    SDNode,
+    SDNodeWithColor,
+    SDNodeWithDrop,
+    SDNodeWithIntValue,
+    SDNodeWithText,
+    SDNodeWithValue,
+} from "@/Node/SDNode";
 import { Rect } from "@/Node/Shape/Rect";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
-import { SDColor } from "@/Utility/Color";
+import { Color as C, SDAllColor, SDPacketColor } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 export class BaseArray<E, V> extends SDNode {
@@ -172,34 +179,34 @@ export class BaseArray<E, V> extends SDNode {
     }
     /**
      * Applies a uniform color to all elements in this array component.
-     * @param color - The color to apply.
+     * @param color - The color to apply (hex string or RGB object).
      * @returns The current component instance for method chaining.
      */
-    color(color: string | SDColor): this;
+    color(color: SDAllColor): this;
     /**
      * Gets the color of a specific element.
      * @param i - The index of the specific element.
      * @returns The color of the element.
      */
-    color(i: number): SDColor;
+    color(i: number): SDPacketColor;
     /**
      * Sets the color of a specific element.
      * @param i - The index of the specific element.
-     * @param color - The color to apply.
+     * @param color - The color to apply (hex string or RGB object).
      * @returns The current component instance for method chaining.
      */
-    color(i: number, color: string | SDColor): this;
+    color(i: number, color: SDAllColor): this;
     /**
      * Sets the color of elements within the specified range [l, r].
      * @param l - The start index of the range (inclusive).
      * @param r - The end index of the range (inclusive).
-     * @param color - The color to apply.
+     * @param color - The color to apply (hex string or RGB object).
      * @returns The current component instance for method chaining.
      */
-    color(l: number, r: number, color: string | SDColor): this;
+    color(l: number, r: number, color: SDAllColor): this;
     color() {
         if (arguments.length === 1) {
-            if (Check.isColor(arguments[0])) {
+            if (C.isColor(arguments[0])) {
                 const [color] = arguments;
                 return this.forEachElement(element => (element as SDNodeWithColor).color(color));
             } else {

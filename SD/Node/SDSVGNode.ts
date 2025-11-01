@@ -2,43 +2,45 @@ import { Interp } from "@/Animate/Interp";
 import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
-import { SDColor } from "@/Utility/Color";
+import { Color as C, SDAllColor, SDPacketColor, SDRGBColor } from "@/Utility/Color";
 
 export class SDSVGNode extends SDNode {
     /**
      * Gets the fill color of this component.
      * @returns The fill color.
      */
-    fill(): string;
+    fill(): SDRGBColor;
     /**
      * Sets the fill color of this component.
-     * @param fill - The fill color to apply.
+     * @param fill - The fill color to apply (hex string or RGB object).
      * @returns The current component instance for method chaining.
      */
-    fill(fill: string): this;
-    fill(fill?: string) {
+    fill(fill: SDAllColor): this;
+    fill(fill?: SDAllColor) {
         if (arguments.length === 0) return this.vars.fill;
         Check.validateColor(fill, `${this.constructor.name}.fill`);
-        this.vars.fill = fill;
+        this.vars.fill = C.toRGB(C.toFill(fill));
         return this;
     }
+
     /**
      * Gets the stroke color of this component.
      * @returns The stroke color.
      */
-    stroke(): string;
+    stroke(): SDRGBColor;
     /**
      * Sets the stroke color of this component.
-     * @param stroke - The stroke color to apply.
+     * @param stroke - The stroke color to apply (hex string or RGB object).
      * @returns The current component instance for method chaining.
      */
-    stroke(stroke: string): this;
-    stroke(stroke?: string) {
+    stroke(stroke: SDAllColor): this;
+    stroke(stroke?: SDAllColor) {
         if (arguments.length === 0) return this.vars.stroke;
         Check.validateColor(stroke, `${this.constructor.name}.stroke`);
-        this.vars.stroke = stroke;
+        this.vars.stroke = C.toRGB(C.toStroke(stroke));
         return this;
     }
+
     fillOpacity(): number;
     fillOpacity(opacity: number): this;
     fillOpacity(opacity?: number) {
@@ -47,6 +49,7 @@ export class SDSVGNode extends SDNode {
         this.vars.fillOpacity = opacity;
         return this;
     }
+
     strokeOpacity(): number;
     strokeOpacity(opacity: number): this;
     strokeOpacity(opacity?: number) {
@@ -55,6 +58,7 @@ export class SDSVGNode extends SDNode {
         this.vars.strokeOpacity = opacity;
         return this;
     }
+
     strokeWidth(): number;
     strokeWidth(width: number): this;
     strokeWidth(width?: number): number | this {
@@ -63,6 +67,7 @@ export class SDSVGNode extends SDNode {
         this.vars.strokeWidth = width;
         return this;
     }
+
     strokeDashOffset(): number;
     strokeDashOffset(offset: number): this;
     strokeDashOffset(offset?: number): number | this {
@@ -71,6 +76,7 @@ export class SDSVGNode extends SDNode {
         this.vars.strokeDashOffset = offset;
         return this;
     }
+
     strokeDashArray(): Array<number>;
     strokeDashArray(array: Array<number>): this;
     strokeDashArray(array?: Array<number>) {
@@ -78,14 +84,16 @@ export class SDSVGNode extends SDNode {
         this.vars.strokeDashArray = array;
         return this;
     }
-    color(): SDColor;
-    color(color: string | SDColor): this;
-    color(color?: string | SDColor) {
-        if (arguments.length === 0) return { fill: this.fill(), stroke: this.stroke() } as SDColor;
+
+    color(): SDPacketColor;
+    color(color: SDAllColor): this;
+    color(color?: SDAllColor): SDPacketColor | this {
+        if (arguments.length === 0) return { fill: this.fill(), stroke: this.stroke() };
         Check.validateColor(color, `${this.constructor.name}.color`);
-        if (Check.isString(color)) return this.fill(color).stroke(color);
-        return this.fill(color.fill).stroke(color.stroke);
+        if (C.isPacket(color)) return this.fill(C.toFill(color)).stroke(C.toStroke(color));
+        return this.fill(color);
     }
+
     __createSVGNode(label: string, attributes: { [key: string]: any }): RenderNode {
         this.vars.merge(attributes);
         const object = RenderNode.createRenderNode(this, this.layer(), label);

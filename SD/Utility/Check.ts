@@ -1,4 +1,5 @@
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
+import { Color } from "./Color";
 
 export class Check {
     static isFalse(object: any) {
@@ -23,22 +24,6 @@ export class Check {
     static isVector(object: any) {
         return object && typeof object[0] === "number" && typeof object[1] === "number";
     }
-    static isColor(object: any) {
-        return this.isHexColor(object) || this.isSDColor(object);
-    }
-    static isSDColor(object: any) {
-        if (!object) return false;
-        if (typeof object !== "object") return false;
-        return this.isHexColor(object.fill) && this.isHexColor(object.stroke);
-    }
-    static isHexColor(object: any) {
-        if (!object) return false;
-        if (typeof object !== "string") return false;
-        if (object.length !== 7) return false;
-        if (object[0] !== "#") return false;
-        for (let i = 1; i <= 6; i++) if ("0123456789aAbBcCdDeEfF".indexOf(object[i]) === -1) return false;
-        return true;
-    }
     static isAsyncFunction(object: any) {
         if (typeof object !== "function") return false;
         const str = object.toString();
@@ -62,13 +47,7 @@ export class Check {
         if (!this.isNumberOrString(object)) ErrorLauncher.invalidNumberOrString(object, method, i, suggestions);
     }
     static validateColor(object: any, method: string, i = 1, suggestions = []) {
-        if (!this.isColor(object)) ErrorLauncher.invalidColor(object, method, i, suggestions);
-    }
-    static validateSDColor(object: any, method: string, i = 1, suggestions = []) {
-        if (!this.isSDColor(object)) ErrorLauncher.invalidSDColor(object, method, i, suggestions);
-    }
-    static validateHexColor(object: any, method: string, i = 1, suggestions = []) {
-        if (!this.isHexColor(object)) ErrorLauncher.invalidHexColor(object, method, i, suggestions);
+        if (!Color.isColor(object)) ErrorLauncher.invalidColor(object, method, i, suggestions);
     }
     static validateSyncFunction(object: any, method: string, i = 1, suggestions = []) {
         if (!this.isSyncFunction(object)) ErrorLauncher.invalidSyncFunction(object, method, i, suggestions);

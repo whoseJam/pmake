@@ -4,7 +4,7 @@ import { SDSVGNode } from "@/Node/SDSVGNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Rule as R, SDRule } from "@/Rule/Rule";
 import { Check } from "@/Utility/Check";
-import { SDColor } from "@/Utility/Color";
+import { SDAllColor, SDPacketColor, SDRGBColor } from "@/Utility/Color";
 
 export class BaseElement<B extends SDSVGNode> extends ValueManageMixin(SDNode) {
     constructor(target: SDNode | RenderNode) {
@@ -83,14 +83,14 @@ export class BaseElement<B extends SDSVGNode> extends ValueManageMixin(SDNode) {
      * Gets the color of this element component.
      * @returns The color.
      */
-    color(): SDColor;
+    color(): SDPacketColor;
     /**
      * Sets the color of this element component.
      * @param color - The color to apply.
      * @returns The current component instance for method chaining.
      */
-    color(color: string | SDColor): this;
-    color(color?: string | SDColor) {
+    color(color: SDAllColor): this;
+    color(color?: SDAllColor) {
         if (arguments.length === 0) return this.background().color();
         this.background().color(color);
         return this;
@@ -100,14 +100,14 @@ export class BaseElement<B extends SDSVGNode> extends ValueManageMixin(SDNode) {
      * Gets the fill color of this element component.
      * @returns The fill color.
      */
-    fill(): string;
+    fill(): SDRGBColor;
     /**
      * Sets the fill color of this element component.
-     * @param fill - The fill color to apply.
+     * @param fill - The fill color to apply (hex string or RGB object).
      * @returns The current component instance for method chaining.
      */
-    fill(fill: string): this;
-    fill(fill?: string) {
+    fill(fill: SDAllColor): this;
+    fill(fill?: SDAllColor) {
         if (arguments.length === 0) return this.background().fill();
         this.background().fill(fill);
         return this;
@@ -134,14 +134,14 @@ export class BaseElement<B extends SDSVGNode> extends ValueManageMixin(SDNode) {
      * Gets the stroke color of this element component.
      * @returns The stroke color.
      */
-    stroke(): string;
+    stroke(): SDRGBColor;
     /**
      * Sets the stroke color of this element component. Defaults to `C.black`.
-     * @param stroke - The stroke color to apply.
+     * @param stroke - The stroke color to apply (hex string or RGB object).
      * @returns The current component instance for method chaining.
      */
-    stroke(stroke: string): this;
-    stroke(stroke?: string) {
+    stroke(stroke: SDAllColor): this;
+    stroke(stroke?: SDAllColor) {
         if (arguments.length === 0) return this.background().stroke();
         this.background().stroke(stroke);
         return this;
