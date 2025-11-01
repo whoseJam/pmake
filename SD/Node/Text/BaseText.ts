@@ -20,7 +20,11 @@ type TextMappingSubtextItem = [string, string];
 type TextMappingObjectSubtextItem = [BaseText, string, string];
 type TextMappingObjectItem = [BaseText, string];
 type TextMappingItem = TextMappingSubtextItem | TextMappingObjectSubtextItem | TextMappingObjectItem;
-export type TextMappingLocation = { i: number; subtext: string } | { object: BaseText; subtext: string } | string | BaseText;
+export type TextMappingLocation =
+    | { i: number; subtext: string }
+    | { object: BaseText; subtext: string }
+    | string
+    | BaseText;
 export type TextMappingObject = {
     source: TextMappingLocation;
     target: TextMappingLocation;
@@ -42,7 +46,8 @@ function processMapping(mapping: TextMapping): TextMappingArray {
     }
     function processArrayItem(item: Array<any>): TextMappingObject {
         if (item.length === 3) return processArrayObjectSubtextItem(item as TextMappingObjectSubtextItem);
-        if (typeof item[0] === "number" || typeof item[0] === "string") return processArraySubtextItem(item as TextMappingSubtextItem);
+        if (typeof item[0] === "number" || typeof item[0] === "string")
+            return processArraySubtextItem(item as TextMappingSubtextItem);
         return processArrayObjectItem(item as TextMappingObjectItem);
     }
     if (Array.isArray(mapping))
@@ -81,13 +86,13 @@ export class BaseTextConfiguration {
     }
     merge(args: TextConfigDictionary) {
         if (!args) return this;
-        this.node = args.node || this.node;
-        this.text = args.text || this.text;
-        this.size = args.size || this.size;
-        this.fill = args.fill || this.fill;
-        this.stroke = args.stroke || this.stroke;
-        this.x = args.x || this.x;
-        this.y = args.y || this.y;
+        this.node = args.node ?? this.node;
+        this.text = args.text ?? args.text;
+        this.size = args.size ?? this.size;
+        this.fill = args.fill ?? this.fill;
+        this.stroke = args.stroke ?? this.stroke;
+        this.x = args.x ?? this.x;
+        this.y = args.y ?? this.y;
         return this;
     }
 }
@@ -236,7 +241,8 @@ export abstract class BaseText extends SDSVGNode {
         this.__flushAll();
         const l = this.delay();
         const r = this.delay() + this.duration();
-        for (const transforming of this._.transformings) if (transforming.l === l && transforming.r === r) return transforming;
+        for (const transforming of this._.transformings)
+            if (transforming.l === l && transforming.r === r) return transforming;
         return undefined;
     }
     __updateTransforming(args?: TextConfigDictionary) {
@@ -248,6 +254,11 @@ export abstract class BaseText extends SDSVGNode {
         transforming.color = args.color === undefined ? transforming.color : args.color;
         transforming.source = this.__getSourceConfiguration();
         transforming.target = this.__getTargetConfiguration();
+        if (transforming.source.text === "") {
+            transforming.source.x = transforming.target.x;
+            transforming.source.y = transforming.target.y;
+            transforming.source.size = transforming.target.size;
+        }
         transforming.build();
         transforming.createAction();
         return true;
@@ -258,6 +269,7 @@ export abstract class BaseText extends SDSVGNode {
         args.auto = args.auto === undefined ? true : args.auto;
         args.color = args.color === undefined ? true : args.color;
         const transforming = TextEngine.transform(this, args.source, args.target, args.mapping, args.auto, args.color);
+        this._.transformings.push(transforming);
         transforming.build();
         transforming.createAction();
     }

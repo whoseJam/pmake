@@ -53,6 +53,11 @@ export class Text extends BaseText {
             "dominant-baseline": "text-before-edge",
         });
 
+        this._.attr = make1d(0, {
+            fill: "default",
+            stroke: "default",
+        });
+
         this.vars.merge({
             text: "",
             html: "",
@@ -99,6 +104,7 @@ export class Text extends BaseText {
 
         this.text(text);
     }
+
     fontSize(): number;
     fontSize(size: number): this;
     fontSize(size?: number) {
@@ -120,6 +126,7 @@ export class Text extends BaseText {
         this.vars.lpset("fontSize", size);
         return this;
     }
+
     width(): number;
     width(width: number): this;
     width(width?: number) {
@@ -133,6 +140,7 @@ export class Text extends BaseText {
         }
         return this;
     }
+
     height(): number;
     height(height: number): this;
     height(height?: number) {
@@ -146,6 +154,7 @@ export class Text extends BaseText {
         }
         return this;
     }
+
     text(): string;
     text(text: string | number, mapping?: TextMapping, auto?: boolean): this;
     text(text_?: string | number, mapping = [], auto = true) {
@@ -179,17 +188,20 @@ export class Text extends BaseText {
         });
         return this;
     }
+
     fontFamily(): string;
     fontFamily(family: string): this;
-    fontFamily(family?: string): string | this {
+    fontFamily(): string | this {
         if (arguments.length === 0) return "Consolas";
         return this;
     }
+
     intValue() {
         const i = Math.floor(+this.text());
         if (isNaN(i)) ErrorLauncher.failToParseAsIntValue(this.text());
         return i;
     }
+
     __subtextAttribute(subtext_: string | number, color: SDColor, operator: number | "all" | "first" | "last") {
         const subtext = String(subtext_);
         const attr = this._.attr.map((color: SDColor) => {

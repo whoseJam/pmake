@@ -284,7 +284,6 @@ class TransformingPathGroup {
                 source.fill = target.fill;
                 const ss = source.stroke === "default" ? this.sourceConfig.stroke : source.stroke;
                 const ts = target.stroke === "default" ? this.targetConfig.stroke : target.stroke;
-                console.log("source=", source, "config=", this.sourceConfig);
                 createAction(path, ss, ts, Interp.colorInterp, "stroke");
                 source.stroke = target.stroke;
             }
@@ -551,8 +550,8 @@ function getTextWidth(font: any, text: string, size: number) {
 }
 
 export class TextEngine {
-    static textSVG = undefined;
-    static mathjaxSVG: RenderNode;
+    static textSVG: RenderNode = undefined;
+    static mathjaxSVG: RenderNode = undefined;
     static fonts = {};
     static init() {
         this.load("Consolas");
@@ -652,22 +651,20 @@ export class TextEngine {
             if (!attr || !attr[i] || !attr[i][key]) return "default";
             return attr[i][key];
         };
-        for (const [i, path] of targetPaths.entries()) {
-            const d = path.toPathData(4);
-            if (!d) paths.push(undefined);
-            else {
-                const fill = getAttribute(text.attr, i, "fill");
-                const stroke = getAttribute(text.attr, i, "stroke");
-                const lastFill = getAttribute(text.lastAttr, i, "fill");
-                const lastStroke = getAttribute(text.lastAttr, i, "stroke");
-                paths.push(new TransformingPath(d, new DOMMatrix(), fill, stroke, lastFill, lastStroke, text.attr[i]));
-            }
+        for (let i = 0; i < targetPaths.length; i++) {
+            const d = targetPaths[i].toPathData(4);
+            paths.push(undefined);
+            if (!d) continue;
+            const fill = getAttribute(text.attr, i, "fill");
+            const stroke = getAttribute(text.attr, i, "stroke");
+            const lastFill = getAttribute(text.lastAttr, i, "fill");
+            const lastStroke = getAttribute(text.lastAttr, i, "stroke");
+            paths[i] = new TransformingPath(d, new DOMMatrix(), fill, stroke, lastFill, lastStroke, text.attr[i]);
         }
         return paths;
     }
     static getMathPaths(text: MathConfiguration): Array<TransformingPath> {
         const element = text.attr;
-        console.log("text=", text);
         const defs: SVGDefsElement = element.element().children[0] as SVGDefsElement;
         const root: EXSVGElement = element.element().children[1] as EXSVGElement;
         const paths = [];
@@ -714,16 +711,15 @@ export class TextEngine {
             current.range = [l, r];
         };
         dfs(root, initialMatrix(), "default", "default");
-        console.log("math=", text.text, "pathes=", paths);
         return paths;
     }
     static transform(
         text: BaseText,
         source: BaseTextConfiguration,
         target: BaseTextConfiguration,
-        mapping,
-        auto,
-        color
+        mapping: any,
+        auto: boolean,
+        color: boolean
     ) {
         const transforming = new Transforming(text, mapping, source, target, auto, color);
         return transforming;
