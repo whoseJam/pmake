@@ -1,5 +1,8 @@
-import { SDNode, SDNodeWithColor, SDNodeWithText, SDNodeWithValue } from "@/Node/SDNode";
+import { Enter as EN } from "@/Node/Core/Enter";
+import { Line } from "@/Node/Path/Line";
+import { SDNode, SDNodeWithColor, SDNodeWithText, SDNodeWithValue, SDNodeWithValueFromExist } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
+import { Vertex } from "@/sd";
 import { Check } from "@/Utility/Check";
 import { SDColor } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
@@ -207,12 +210,39 @@ export abstract class BaseGraph<
         this.unfreeze();
         return this;
     }
-    abstract newNode(id: string | number, value?: any): this;
-    abstract newNodeFromExistValue(id: string | number, value: NodeValue): this;
-    abstract newNodeFromExistElement(id: string | number, element: NodeElement): this;
-    abstract newLink(sourceId: string | number, targetId: string | number, value?: any): this;
-    abstract newLinkFromExistValue(sourceId: string | number, targetId: string | number, value: LinkValue): this;
-    abstract newLinkFromExistElement(sourceId: string | number, targetId: string | number, element: LinkElement): this;
+    newNode(id: string | number, value?: any): this {
+        const element = this.__createNodeInstance<NodeElement & SDNodeWithValue>();
+        element.value(SDNode.__asNode(this.layer("nodes"), value, String(id)));
+        element.onEnter(EN.appear("nodes"));
+        return this.__insertNode(String(id), element);
+    }
+    newNodeFromExistValue(id: string | number, value: NodeValue): this {
+        const element = this.__createNodeInstance<NodeElement & SDNodeWithValueFromExist>();
+        element.valueFromExist(value);
+        element.onEnter(EN.appear("nodes"));
+        return this.__insertNode(String(id), element);
+    }
+    newNodeFromExistElement(id: string | number, element: NodeElement): this {
+        element.onEnter(EN.moveTo("nodes"));
+        return this.__insertNode(String(id), element);
+    }
+
+    newLink(sourceId: string | number, targetId: string | number, value?: any) {
+        const element = this.__createLinkInstance<LinkElement & SDNodeWithValue>();
+        element.value(value);
+        element.onEnter(EN.appear("links"));
+        return this.__insertLink(String(sourceId), String(targetId), element);
+    }
+    newLinkFromExistValue(sourceId: string | number, targetId: string | number, value?: any) {
+        const element = this.__createLinkInstance<LinkElement & SDNodeWithValueFromExist>();
+        element.onEnter(EN.appear("links"));
+        element.valueFromExist(value.onEnter(EN.moveTo()));
+        return this.__insertLink(String(sourceId), String(targetId), element);
+    }
+    newLinkFromExistElement(sourceId: string | number, targetId: string | number, element: LinkElement) {
+        element.onEnter(EN.moveTo("links"));
+        return this.__insertLink(String(sourceId), String(targetId), element);
+    }
     cut(sourceId: string | number, targetId: string | number) {
         return this.erase(sourceId, targetId);
     }
@@ -428,6 +458,14 @@ export abstract class BaseGraph<
     }
     hasLink(source: string | number | NodeElement, target: string | number | NodeElement) {
         return this.element(source, target) !== undefined;
+    }
+    protected __createNodeInstance<T>(): T {
+        const element = new Vertex(this.layer("nodes")).opacity(0);
+        return element as unknown as T;
+    }
+    protected __createLinkInstance<T>(): T {
+        const element = new Line(this.layer("links")).opacity(0);
+        return element as unknown as T;
     }
     protected __insertNode(id: string, node: NodeElement) {
         this._.sdMap[node.id] = { node, id };

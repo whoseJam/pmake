@@ -84,25 +84,26 @@ export class GraphEngine {
         const orderedNodes = [];
         const count = [0, 0];
         const currentIndex = [1, 1];
-        graph.forEachNode(node => {
+        graph.forEachNode((node, id) => {
             orderedNodes.push(node);
-            count[no[node.id]]++;
+            count[no[id]]++;
         });
         const x = params.x;
         const y = params.y;
         const mx = params.x + params.width;
         const my = params.y + params.height;
         const gap = [(mx - x) / (count[0] + 1), (mx - x) / (count[1] + 1)];
-        const position = node => {
-            return x + gap[no[node.id]] * currentIndex[no[node.id]];
+        const position = (id: string) => {
+            return x + gap[no[id]] * currentIndex[no[id]];
         };
         for (const node of orderedNodes) {
-            const x = position(node);
-            const yLocator = ["y", "my"][no[node.id]];
+            const id = graph.nodeId(node);
+            const x = position(id);
+            const yLocator = ["y", "my"][no[id]];
             graph.tryUpdate(node, () => {
                 node.cx(x);
                 node[yLocator](graph[yLocator]());
-                currentIndex[no[node.id]]++;
+                currentIndex[no[id]]++;
             });
         }
         this.linksUpdate(graph);

@@ -53,7 +53,7 @@ export class BoxDAG<
     elementHeight() {
         return Array.prototype.elementHeight.apply(this, arguments);
     }
-    __createNodeInstance<T>(): T {
+    protected __createNodeInstance<T>(): T {
         const element = new Box(this.layer("nodes")).opacity(0);
         return element as unknown as T;
     }

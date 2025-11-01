@@ -1,9 +1,8 @@
-import { Enter as EN } from "@/Node/Core/Enter";
 import { Vertex } from "@/Node/Element/Vertex";
 import { BaseTree } from "@/Node/Graph/Tree/BaseTree";
 import { TreeEngine } from "@/Node/Graph/Tree/TreeEngine";
 import { Line } from "@/Node/Path/Line";
-import { SDNode, SDNodeWithValue, SDNodeWithValueFromExist } from "@/Node/SDNode";
+import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
 
@@ -76,38 +75,7 @@ export class Tree<
         this.vars.height = height;
         return this;
     }
-    newNode(id: string | number, value?: any) {
-        const element = this.__createNodeInstance<NodeElement & SDNodeWithValue>();
-        element.value(SDNode.__asNode(this.layer("nodes"), value, String(id)));
-        element.onEnter(EN.appear("nodes"));
-        return this.__insertNode(String(id), element);
-    }
-    newNodeFromExistValue(id: string | number, value: NodeValue) {
-        const element = this.__createNodeInstance<NodeElement & SDNodeWithValueFromExist>();
-        element.onEnter(EN.appear("nodes"));
-        element.valueFromExist(value);
-        return this.__insertNode(String(id), element);
-    }
-    newNodeFromExistElement(id: string | number, element: NodeElement) {
-        element.onEnter(EN.moveTo("nodes"));
-        return this.__insertNode(String(id), element);
-    }
-    newLink(sourceId: string | number, targetId: string | number, value?: any) {
-        const element = this.__createLinkInstance<LinkElement & SDNodeWithValue>();
-        element.value(value);
-        element.onEnter(EN.appear("links"));
-        return this.__insertLink(String(sourceId), String(targetId), element);
-    }
-    newLinkFromExistValue(sourceId: string | number, targetId: string | number, value?: any) {
-        const element = this.__createLinkInstance<LinkElement & SDNodeWithValueFromExist>();
-        element.onEnter(EN.appear("links"));
-        element.valueFromExist(value.onEnter(EN.moveTo()));
-        return this.__insertLink(String(sourceId), String(targetId), element);
-    }
-    newLinkFromExistElement(sourceId: string | number, targetId: string | number, element: LinkElement) {
-        element.onEnter(EN.moveTo("links"));
-        return this.__insertLink(String(sourceId), String(targetId), element);
-    }
+
     layout(): Layout;
     layout(layout: Layout): this;
     layout(layout?: Layout) {

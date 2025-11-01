@@ -248,7 +248,6 @@ export abstract class BaseTree<
         this.vars.structure = true;
         return this;
     }
-
     protected __reverseLink(sourceId: string, targetId: string) {
         const link = this.element(sourceId, targetId);
         this._.sdMap[link.id] = {

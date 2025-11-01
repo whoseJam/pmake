@@ -84,23 +84,11 @@ export class BinaryTree<
         const type_ = type === undefined ? (this.leftChild(sourceId) ? 1 : 0) : type;
         return this[["leftChild", "rightChild"][type_]](sourceId, targetId, value);
     }
-    newNode(id: string | number, value?: any) {
-        const element = this.__createNodeInstance<NodeElement & SDNodeWithValue>();
-        this._.son[element.id] = [undefined, undefined];
-        element.value(SDNode.__asNode(this.layer("nodes"), value, String(id)));
-        element.onEnter(EN.appear("nodes"));
-        return this.__insertNode(String(id), element);
+    protected __insertNode(id: string, node: NodeElement) {
+        this._.son[node.id] = [undefined, undefined];
+        return super.__insertNode(id, node);
     }
-    newNodeFromExistValue(id: string | number, value: NodeValue) {
-        const element = this.__createNodeInstance<NodeElement & SDNodeWithValueFromExist>();
-        element.valueFromExist(value);
-        element.onEnter(EN.appear("nodes"));
-        return this.__insertNode(String(id), element);
-    }
-    newNodeFromExistElement(id: string | number, element: NodeElement) {
-        element.onEnter(EN.moveTo("nodes"));
-        return this.__insertNode(String(id), element);
-    }
+
     newLink(sourceId: string | number, targetId: string | number, value?: any, type?: 0 | 1) {
         const element = this.__createLinkInstance<LinkElement & SDNodeWithValue>();
         element.value(value);

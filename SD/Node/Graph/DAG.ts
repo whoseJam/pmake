@@ -1,8 +1,6 @@
-import { Enter as EN } from "@/Node/Core/Enter";
 import { Graph } from "@/Node/Graph/Graph";
 import { GraphEngine } from "@/Node/Graph/GraphEngine";
-import { Tree } from "@/Node/Graph/Tree/Tree";
-import { SDNode, SDNodeWithValue, SDNodeWithValueFromExist } from "@/Node/SDNode";
+import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Line, Vertex } from "@/sd";
 import { Check } from "@/Utility/Check";
@@ -61,36 +59,22 @@ export class DAG<
             });
         });
     }
-    newNode(id: string | number, value?: any) {
-        const element = this.__createNodeInstance<NodeElement & SDNodeWithValue>();
-        this._.graph.setNode(String(id), {});
-        element.value(SDNode.__asNode(element, value, String(id)));
-        element.onEnter(EN.appear("nodes"));
-        return this.__insertNode(String(id), element);
+    protected __insertNode(id: string, node: NodeElement) {
+        this._.graph.setNode(id, {});
+        return super.__insertNode(id, node);
     }
-    newNodeFromExistValue(id: string | number, value: NodeValue) {
-        const element = this.__createNodeInstance<NodeElement & SDNodeWithValueFromExist>();
-        this._.graph.setNode(String(id), {});
-        element.valueFromExist(value);
-        element.onEnter(EN.appear("nodes"));
-        return this.__insertNode(String(id), element);
-    }
-    newNodeFromExistElement(id: string | number, element: NodeElement) {
-        this._.graph.setNode(String(id), {});
-        element.onEnter(EN.moveTo("nodes"));
-        return this.__insertNode(String(id), element);
-    }
+
     newLink(sourceId: string | number, targetId: string | number, value?: any) {
         this._.graph.setEdge(String(sourceId), String(targetId));
-        return Tree.prototype.newLink.apply(this, arguments);
+        return super.newLink.apply(this, arguments);
     }
     newLinkFromExistValue(sourceId: string | number, targetId: string | number, value?: any) {
         this._.graph.setEdge(String(sourceId), String(targetId));
-        return Tree.prototype.newLinkFromExistValue.apply(this, arguments);
+        return super.newLinkFromExistValue.apply(this, arguments);
     }
     newLinkFromExistElement(sourceId: string | number, targetId: string | number, element: LinkElement) {
         this._.graph.setEdge(String(sourceId), String(targetId));
-        return Tree.prototype.newLinkFromExistElement.apply(this, arguments);
+        return super.newLinkFromExistElement.apply(this, arguments);
     }
     align(): Align;
     align(align: Align): this;
@@ -113,13 +97,5 @@ export class DAG<
         );
         this.vars.direction = direction;
         return this;
-    }
-    __createNodeInstance<T>(): T {
-        const element = new Vertex(this.layer("nodes")).opacity(0);
-        return element as unknown as T;
-    }
-    __createLinkInstance<T>(): T {
-        const element = new Line(this.layer("links")).opacity(0);
-        return element as unknown as T;
     }
 }

@@ -1,10 +1,8 @@
-import { Enter as EN } from "@/Node/Core/Enter";
 import { Vertex } from "@/Node/Element/Vertex";
 import { Graph } from "@/Node/Graph/Graph";
 import { GraphEngine } from "@/Node/Graph/GraphEngine";
-import { Tree } from "@/Node/Graph/Tree/Tree";
 import { Line } from "@/Node/Path/Line";
-import { SDNode, SDNodeWithValue, SDNodeWithValueFromExist } from "@/Node/SDNode";
+import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
@@ -15,7 +13,7 @@ export class BipartiteGraph<
     LinkValue extends SDNode = SDNode
 > extends Graph<NodeElement, NodeValue, LinkElement, LinkValue> {
     _: Graph<NodeElement, NodeValue, LinkElement, LinkValue>["_"] & {
-        no: { [key: number]: 0 | 1 };
+        no: { [key: string]: 0 | 1 };
     };
     constructor(target: SDNode | RenderNode) {
         super(target);
@@ -44,41 +42,17 @@ export class BipartiteGraph<
     newNode(id: string | number, value?: any, type?: 0 | 1) {
         if (arguments.length === 2) return this.newNode(id, undefined, value);
         if (type === undefined) ErrorLauncher.invalidArguments();
-        const element = this.__createNodeInstance<NodeElement & SDNodeWithValue>();
-        this._.no[element.id] = type;
-        element.value(SDNode.__asNode(element, value, String(id)));
-        element.onEnter(EN.appear("nodes"));
-        return this.__insertNode(String(id), element);
+        this._.no[String(id)] = type;
+        return super.newNode(id, value);
     }
     newNodeFromExistValue(id: string | number, value: NodeValue, type?: 0 | 1) {
         if (type === undefined) ErrorLauncher.invalidArguments();
-        const element = this.__createNodeInstance<NodeElement & SDNodeWithValueFromExist>();
-        this._.no[element.id] = type;
-        element.valueFromExist(value);
-        element.onEnter(EN.appear("nodes"));
-        return this.__insertNode(String(id), element);
+        this._.no[String(id)] = type;
+        return super.newNodeFromExistValue(id, value);
     }
     newNodeFromExistElement(id: string | number, element: NodeElement, type?: 0 | 1) {
         if (type === undefined) ErrorLauncher.invalidArguments();
-        this._.no[element.id] = type;
-        element.onEnter(EN.moveTo("nodes"));
-        return this.__insertNode(String(id), element);
-    }
-    newLink(sourceId: string | number, targetId: string | number, value?: any) {
-        return Tree.prototype.newLink.apply(this, arguments);
-    }
-    newLinkFromExistValue(sourceId: string | number, targetId: string | number, value?: any) {
-        return Tree.prototype.newLinkFromExistValue.apply(this, arguments);
-    }
-    newLinkFromExistElement(sourceId: string | number, targetId: string | number, element: LinkElement) {
-        return Tree.prototype.newLinkFromExistElement.apply(this, arguments);
-    }
-    __createNodeInstance<T>(): T {
-        const element = new Vertex(this.layer("nodes")).opacity(0);
-        return element as unknown as T;
-    }
-    __createLinkInstance<T>(): T {
-        const element = new Line(this.layer("links")).opacity(0);
-        return element as unknown as T;
+        this._.no[String(id)] = type;
+        return super.newNodeFromExistElement(id, element);
     }
 }
