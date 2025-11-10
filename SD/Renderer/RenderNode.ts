@@ -50,9 +50,11 @@ export class RenderNode {
         } else args.targetLayer.append(this);
     }
     delay() {
+        if (!this.targetNode) return 0;
         return this.targetNode.delay();
     }
     duration() {
+        if (!this.targetNode) return 0;
         return this.targetNode.duration();
     }
     element() {
@@ -183,9 +185,7 @@ export class RenderNode {
      * @param math - The math render node to be cloned.
      */
     static cloneMathRenderNode(math: RenderNode) {
-        console.log("clone element=", math.element());
         const element = Dom.deepClone(math.element());
-        console.log("after clone element=", element);
         const math_ = new RenderNode({
             targetNode: math.targetNode,
             targetLayer: math.targetLayer,
@@ -201,18 +201,5 @@ export class RenderNode {
             targetLayer,
             label,
         });
-    }
-}
-
-export class RootRenderNode extends RenderNode {
-    static createRootRenderNode(targetLayer: RenderNode, label: string) {
-        return new RootRenderNode({
-            targetLayer,
-            label,
-            action: false,
-        });
-    }
-    newLayer() {
-        RenderNode.createRenderNodeWithoutAction(null, this, "g");
     }
 }

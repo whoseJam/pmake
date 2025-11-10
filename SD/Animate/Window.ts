@@ -62,7 +62,6 @@ export class Window {
         window.parent.postMessage("inited", "*");
     }
     static notifyParent() {
-        console.log("notify parent");
         window.parent.postMessage(
             {
                 operator: "SetAnimationSize",
@@ -71,7 +70,7 @@ export class Window {
                     this.IFRAME_ID,
                     this.IFRAME_URL,
                     this.SVG_MINX,
-                    this.SVG_MAXX,
+                    this.SVG_MINY,
                     this.SVG_MAXX - this.SVG_MINX,
                     this.SVG_MAXY - this.SVG_MINY,
                 ],

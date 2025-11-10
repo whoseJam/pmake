@@ -24,11 +24,11 @@ export class Root {
         this.viewBox = { x: 0, y: 0, width: 1200, height: 600 };
 
         if (true) {
-            this.svg = RenderNode.getDocumentBodyRenderNode();
-            this.svg.setAttribute("width", "100%");
-            this.svg.setAttribute("height", "100%");
-            this.svg.setAttribute("position", "absolute");
-            this.svg = RenderNode.createRenderNodeWithoutAction(undefined, this.svg, "svg");
+            const body = RenderNode.getDocumentBodyRenderNode();
+            body.setAttribute("width", "100%");
+            body.setAttribute("height", "100%");
+            body.setAttribute("position", "absolute");
+            this.svg = RenderNode.createRenderNodeWithoutAction(undefined, body, "svg");
             this.svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
             this.svg.setAttribute("width", "100%");
             this.svg.setAttribute("height", "100%");
