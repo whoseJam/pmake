@@ -569,7 +569,7 @@ export class SDNode {
             return this;
         }
         // @ts-ignore
-        Snap(nake).undrag();
+        Snap(layer).undrag();
         return this;
     }
     opacity(): number;

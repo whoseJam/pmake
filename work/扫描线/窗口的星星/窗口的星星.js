@@ -5,7 +5,6 @@ const C = sd.color();
 const W = 3;
 const H = 2;
 const stars = [];
-const layer = svg.append("g");
 const coord = new sd.Coord(svg);
 const rect = new sd.Rect(svg)
     .width(coord.globalX(W) - coord.globalX(0))
@@ -46,7 +45,7 @@ sd.main(async () => {
 function drawRect(x, y) {
     const [minX, maxY] = coord.global(x - W, y - H);
     const [maxX, minY] = coord.global(x, y);
-    return new sd.Rect(layer)
+    return new sd.Rect(svg)
         .x(minX)
         .width(maxX - minX)
         .y(minY)
@@ -54,5 +53,12 @@ function drawRect(x, y) {
 }
 
 function drawRectAndAppear(x, y) {
-    return drawRect(x, y).fillOpacity(0.2).stroke(C.textBlue).fill(C.orange).opacity(0).startAnimate().opacity(1).endAnimate();
+    return drawRect(x, y)
+        .fillOpacity(0.2)
+        .stroke(C.textBlue)
+        .fill(C.orange)
+        .opacity(0)
+        .startAnimate()
+        .opacity(1)
+        .endAnimate();
 }

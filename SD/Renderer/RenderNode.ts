@@ -203,3 +203,16 @@ export class RenderNode {
         });
     }
 }
+
+export class RootRenderNode extends RenderNode {
+    static createRootRenderNode(targetLayer: RenderNode, label: string) {
+        return new RootRenderNode({
+            targetLayer,
+            label,
+            action: false,
+        });
+    }
+    newLayer() {
+        RenderNode.createRenderNodeWithoutAction(null, this, "g");
+    }
+}

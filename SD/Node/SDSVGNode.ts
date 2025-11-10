@@ -134,7 +134,8 @@ export class SDSVGNode extends SDNode {
             const [aliasKey, interp] = attributeMap[key];
             const watchCallback = SDNode.__action(this, object, aliasKey, interp);
             this.vars.watch(key, watchCallback);
-            object.setAttribute(aliasKey, attributes[key]);
+            if (aliasKey !== "stroke-dasharray" && aliasKey !== "stroke-dashoffset")
+                object.setAttribute(aliasKey, attributes[key]);
         }
         return object;
     }

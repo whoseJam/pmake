@@ -16,9 +16,10 @@ export type SDAllColor = SDColor | SDPacketColor;
 export class Color {
     // Basic colors
     static red = "#f14c4c";
-    static blue = "#bbe0e3";
+    static blue = "#4a90e2";
     static cyan = "#00ffff";
-    static grey = "#cccccc";
+    static grey = "#999999";
+    static gray = "#999999";
     static pink = "#ff69b4";
     static snow = "#fffafa";
     static azure = "#f0ffff";
@@ -55,6 +56,7 @@ export class Color {
     static darkRed = "#b13535";
     static darkBlue = "#89a4a7";
     static darkGrey = "#808080";
+    static darkGray = "#808080";
     static darkPink = "#ff1493";
     static darkGreen = "#006400";
     static darkOrange = "#b4610e";
@@ -77,6 +79,7 @@ export class Color {
     static pureGreen = "#00ff00";
 
     // Light variants
+    static lightRed = "#ff6347";
     static lightBlue = "#add8e6";
     static lightCoral = "#f08080";
     static lightCyan = "#e0ffff";
@@ -128,9 +131,11 @@ export class Color {
     static RED = { fill: this.red, stroke: this.darkRed };
     static BLUE = { fill: this.blue, stroke: this.darkBlue };
     static GREY = { fill: this.grey, stroke: this.darkGrey };
+    static GRAY = { fill: this.gray, stroke: this.darkGray };
     static GREEN = { fill: this.green, stroke: this.darkGreen };
     static ORANGE = { fill: this.orange, stroke: this.darkOrange };
     static PURPLE = { fill: this.purple, stroke: this.darkPurple };
+    static YELLOW = { fill: this.yellow, stroke: this.gold };
     static CYAN = { fill: this.cyan, stroke: this.darkCyan };
     static PINK = { fill: this.pink, stroke: this.darkPink };
     static DEFAULT = { fill: this.white, stroke: this.black };

@@ -39,7 +39,7 @@ export class Window {
         this.attributes[key] = value;
     }
     static Flush(id: number, url: string, rate: number, pdf: boolean, maxFrame = Infinity) {
-        this.SHOULD_EXPORT = true;
+        this.SHOULD_FLUSH = true;
         this.SHOULD_EXPORT = pdf;
         this.IFRAME_ID = id;
         this.IFRAME_URL = url;
@@ -62,6 +62,7 @@ export class Window {
         window.parent.postMessage("inited", "*");
     }
     static notifyParent() {
+        console.log("notify parent");
         window.parent.postMessage(
             {
                 operator: "SetAnimationSize",
@@ -128,6 +129,7 @@ function promiseOfNormalFrame(): Promise<void> {
     const currentInteracting = Window.IS_INTERACTING;
     return new Promise(function (resolve) {
         const fn = function () {
+            console.log("SHOULD flush=", Window.SHOULD_FLUSH);
             if (Window.SHOULD_FLUSH) {
                 A.currentActionList.updateWindowSize();
                 return resolve();
@@ -203,7 +205,7 @@ function promiseForMilliseconds(ms: number): Promise<void> {
  * // Operations to execute in the next animation stage.
  */
 export function pause(ms?: number): Promise<void> {
-    const pauseBehavior = ms || NORMAL_FRAME;
+    const pauseBehavior = ms ?? NORMAL_FRAME;
     if (Window.SHOULD_FLUSH) {
         A.currentActionList.updateWindowSize();
         // limit frame count, to handle the infinite animation
@@ -218,6 +220,7 @@ export function pause(ms?: number): Promise<void> {
     A.firstTick();
     A.trigger();
     if (ms > 0) return promiseForMilliseconds(ms);
+    console.log("pause of ms=", ms, pauseBehavior);
     switch (pauseBehavior) {
         case FIRST_INTER_STAGE:
             return promiseOfFirstInterFrame();

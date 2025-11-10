@@ -58,7 +58,9 @@ rect1.startAnimate(200).x(200).endAnimate(); // rect1 的这一段动画区间�
 
 ## SVG 画布
 
-画布是一个宽度为 1200，高度为 600 的区域（单位统一为 pixel）
+画布是一个宽度为 1200，高度为 600 的区域（单位统一为 pixel），画布的大小是无法修改的
+
+画布左上角的坐标为 (0, 0)，画布右下角的坐标为 (1200, 600)
 
 在场景中创建元素时，需要尽量让元素居中，尽量避免重要元素之间的遮挡，保证视觉上的美观
 
@@ -99,8 +101,10 @@ sd.main(async () => {
 你应该只使用这些对象进行创作
 
 -   公共方法
-    -   fill/fillOpacity
-    -   stroke/strokeOpacity/strokeDashOffset/strokeDashArray
+    -   width/height：用于调整元素大小，所有元素都拥有这些方法（即使没有对应的属性，也可以找到类似的等价属性，比如 circle 的 width 就被定义为其 r 的两倍）
+    -   x/y/cx/cy/mx/my：用于实现元素的定位，其中 x/y 表示一个元素左上角的坐标；cx/cy 表示一个元素的中心坐标，mx/my 表示一个元素右下角的坐标
+    -   fill/fillOpacity：用于设置元素的填充属性
+    -   stroke/strokeOpacity/strokeDashOffset/strokeDashArray：用于设置元素的描边属性
 -   基础图形 SVG 对象
     -   Circle: cx/cy/r
     -   Ellipse: cx/cy/rx/ry
@@ -111,8 +115,17 @@ sd.main(async () => {
     -   Line: x1/y1/x2/y2
     -   Path: d
     -   Polyline: points
+-   基础文字 Text 对象
+    -   Text: text/fontSize
 -   其他重要对象
     -   Caption: 字幕对象，使用 caption 方法更新中英双语字幕，在创作教学动画的时候必须在场景中加入字幕讲解
+
+当操作元素进行布局的时候，尽可能先设置大小，再设置位置，举个例子：
+
+```js
+rect.width(50).cx(80); // 这个 rect 能精准地让自己的中心位于 80 处
+rect.cx(80).width(50); // 这个 rect 的中心不一定最后落在 80 处，因为它先调用了 cx 方法去设置中心 x 坐标，再修改了自己的宽度，宽度修改后中心是否还位于 80 就不确定了
+```
 
 ## 颜色
 
@@ -127,3 +140,76 @@ polygon.startAnimate(350).color(C.BLUE).endAnimate(); // 把 polygon 设置为�
 ```
 
 颜色模块中全大写的预设颜色，同时定义了填充颜色和描边颜色；而小驼峰命名的预设颜色，则只定义了单一颜色，具体会设置到描边色还是填充色上取决于对象被调用的方法是 fill 还是 stroke
+
+## 字幕
+
+场景中应该恰好有一个字幕，字幕需要写中英双语
+
+```js
+const caption = new sd.Caption(svg);
+caption.cx(600).my(600); // 将字幕放在合适的位置
+await sd.pause(600);
+caption
+    .startAnimate()
+    .caption("中文字幕放这里", "English caption put here") // 切换字幕内容
+    .endAnimate();
+```
+
+## 动画风格
+
+请你生成一个非常精美的动画，要像一个完整的，正在播放的视频，包含一个完整的过程，能把知识点讲清楚，页面极为精美，好看，有设计感，同时能够很好的传达知识，知识和图像要准确，附带一些旁白式的文字解说（用 Caption 来实现），从头到尾讲清楚一个小知识点
+
+使用和谐好看，广泛采用的浅色配色方案，使用很多的，丰富的视觉元素，请保证任何一个元素都被放在了画布中，避免字幕遮挡，图形位置错误等等问题影响正确的视觉传达
+
+以下是一些小动画的设计，你可以参考
+
+```js
+// 一个横向浮现效果
+const text = new sd.Text(svg, "Hello")
+    .opacity(0) // 让文本透明
+    .x(500) // 初始化 text 的 x 坐标
+    .y(100) // 初始化 text 的 y 坐标
+    .startAnimate(300)
+    .x(510) // 让文本往右移动一小段距离
+    .opacity(1) // 让文本浮现出来
+    .endAnimate();
+```
+
+```js
+// 一个文字切换效果
+text.startAnimate(200) // 第一段动画区间，让文本消失
+    .opacity(0) // 让文本透明
+    .endAnimate()
+    .text("Hello") // 切换文本内容
+    .startAnimate(200) // 第二段动画区间，让文本重新出现
+    .opacity(1) // 让文本浮现出来
+    .endAnimate();
+```
+
+```js
+// 一个元素弹出效果
+const circle = new sd.Circle(svg)
+    .cx(600)
+    .cy(200)
+    .r(0) // 让 circle 为一个不可见的点
+    .color(C.GREEN) // 同时设置 circle 的填充和描边为绿色系
+    .startAnimate()
+    .r(20) // 让 circle 生长出来
+    .endAnimate();
+```
+
+```js
+// 一个文字变红强调效果
+const text = new sd.Text(svg, "Hello").cx(100).cy(100);
+await sd.pause();
+text.startAnimate(300)
+    .fontSize(25)
+    .color(C.red)
+    .cx(100) // 重新调整文字的中心是有必要的，因为文字的字体大小变化了，中心会偏移
+    .endAnimate()
+    .startAnimate(300)
+    .fontSize(20)
+    .color(C.black)
+    .cx(100) // 重新调整文字的中心是有必要的，因为文字的字体大小变化了，中心会偏移
+    .endAnimate();
+```

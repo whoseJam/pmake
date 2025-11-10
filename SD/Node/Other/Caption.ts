@@ -34,6 +34,7 @@ class CaptionObject {
         this.en.__injectCSS({
             fontSize: "18px",
             fontWeight: "400",
+            fontFamily: "Times New Romans",
             opacity: "0.8",
             lineHeight: "1.5",
         });
@@ -45,10 +46,10 @@ class CaptionObject {
         this.en.setAttribute("opacity", 0.8 * opacity);
     }
     primaryText(text: string) {
-        this.cn.setAttribute("text", text);
+        this.cn.setAttribute("innerHTML", text);
     }
     secondaryText(text: string) {
-        this.en.setAttribute("text", text);
+        this.en.setAttribute("innerHTML", text);
     }
 }
 
