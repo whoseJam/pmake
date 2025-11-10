@@ -31,7 +31,7 @@ const segment = sd.make1d(100, 0);
 
 sd.init(() => {
     data.forEach(item => {
-        item.dot = coord.drawCircle(item.x, item.y, 5).color(C.black);
+        item.dot = coord.drawCircle(item.x, item.y).r(5).color(C.black);
     });
 });
 
@@ -85,7 +85,15 @@ sd.main(async () => {
         if (a.y !== b.y) return a.y - b.y;
         return a.type - b.type;
     });
-    const line = new sd.Line(svg).stroke(C.red).strokeWidth(2).source(coord.pos("x", "my")).target(coord.pos("mx", "my")).opacity(0).startAnimate().opacity(1).endAnimate();
+    const line = new sd.Line(svg)
+        .stroke(C.red)
+        .strokeWidth(2)
+        .source(coord.pos("x", "my"))
+        .target(coord.pos("mx", "my"))
+        .opacity(0)
+        .startAnimate()
+        .opacity(1)
+        .endAnimate();
     arr.startAnimate().opacity(1).endAnimate();
     for (let i = 0; i < nodes.length; i++) {
         await sd.pause();

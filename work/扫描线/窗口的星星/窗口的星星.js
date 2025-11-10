@@ -24,7 +24,7 @@ const data = [
 
 sd.init(() => {
     data.forEach(item => {
-        const star = coord.drawCircle(item[0], item[1], 4);
+        const star = coord.drawCircle(item[0], item[1]).r(4);
         stars.push(star);
     });
     rect.drag(true);

@@ -27,7 +27,7 @@ sd.init(() => {
         .resize(10)
         .opacity(0);
     data.forEach(item => {
-        const star = coord.drawCircle(item[0], item[1], 4);
+        const star = coord.drawCircle(item[0], item[1]).r(4);
         stars.push(star);
         drawRect(item[0], item[1]);
         nodes.push({
@@ -50,7 +50,15 @@ sd.main(async () => {
         return a.y - b.y;
     });
     await sd.pause();
-    const line = new sd.Line(svg).stroke(C.red).strokeWidth(3).source(coord.pos("x", "my")).target(coord.pos("mx", "my")).opacity(0).startAnimate().opacity(1).endAnimate();
+    const line = new sd.Line(svg)
+        .stroke(C.red)
+        .strokeWidth(3)
+        .source(coord.pos("x", "my"))
+        .target(coord.pos("mx", "my"))
+        .opacity(0)
+        .startAnimate()
+        .opacity(1)
+        .endAnimate();
     arr.startAnimate().opacity(1).endAnimate();
     for (let i = 0; i < nodes.length; i++) {
         await sd.pause();
