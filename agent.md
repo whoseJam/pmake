@@ -46,11 +46,11 @@ rect.after(400) // 直接将 400ms 作为动画区间的起始时间
 rect1.startAnimate(300).x(100).endAnimate(); // rect1 的动画区间为 [0ms, 300ms]
 rect2.after(300).startAnimate(300).y(100).endAnimate(); // rect2 的动画区间为 [300ms, 600ms]
 /**
- * 暂停 1000ms
+ * 暂停，直到用户手动点击键盘上的 'N' (Next)，才会继续之后的代码执行
  * 暂停结束后，场景中的所有元素的动画区间又会从 0ms 开始算起
  * 也就是说，每一个元素的动画区间，指的是相对于前一个 pause 而言的偏移量
  */
-await sd.pause(1000);
+await sd.pause();
 rect1.startAnimate(200).x(200).endAnimate(); // rect1 的这一段动画区间又变成了 [0ms, 200ms]
 ```
 
@@ -100,25 +100,116 @@ sd.main(async () => {
 
 你应该只使用这些对象进行创作
 
--   公共方法
-    -   width/height：用于调整元素大小，所有元素都拥有这些方法（即使没有对应的属性，也可以找到类似的等价属性，比如 circle 的 width 就被定义为其 r 的两倍）
-    -   x/y/cx/cy/mx/my：用于实现元素的定位，其中 x/y 表示一个元素左上角的坐标；cx/cy 表示一个元素的中心坐标，mx/my 表示一个元素右下角的坐标
-    -   fill/fillOpacity：用于设置元素的填充属性
-    -   stroke/strokeOpacity/strokeDashOffset/strokeDashArray：用于设置元素的描边属性
--   基础图形 SVG 对象
-    -   Circle: cx/cy/r
-    -   Ellipse: cx/cy/rx/ry
-    -   Image: x/y/width/height/href
-    -   Polygon: points
-    -   Rect: x/y/width/height
--   基础路径 SVG 对象
-    -   Line: x1/y1/x2/y2
-    -   Path: d
-    -   Polyline: points
--   基础文字 Text 对象
-    -   Text: text/fontSize
--   其他重要对象
-    -   Caption: 字幕对象，使用 caption 方法更新中英双语字幕，在创作教学动画的时候必须在场景中加入字幕讲解
+```
+├── Node
+│   ├── Array
+│   │   ├── Array.ts
+│   │   ├── BarArray.d.ts
+│   │   ├── BarArray.js
+│   │   ├── BaseArray.ts
+│   │   ├── Code.d.ts
+│   │   ├── Code.js
+│   │   ├── Pile.ts
+│   │   ├── Stack.ts
+│   │   ├── ValueArray.ts
+│   │   ├── ValuePile.ts
+│   │   └── ValueStack.ts
+│   ├── Axis
+│   │   ├── Axis.ts
+│   │   ├── BaseAxis.ts
+│   │   └── FixGapAxis.ts
+│   ├── Control
+│   │   ├── BaseControl.ts
+│   │   ├── Button.ts
+│   │   ├── Input.ts
+│   │   ├── Slider.ts
+│   │   └── TextArea.ts
+│   ├── Coord
+│   │   ├── BaseCoord.ts
+│   │   ├── CartesianCoord.ts
+│   │   ├── Coord.ts
+│   │   └── FixGapCoord.ts
+│   ├── Core
+│   │   ├── Enter.ts
+│   │   ├── Exit.ts
+│   │   ├── Reactive.d.ts
+│   │   └── Reactive.ts
+│   ├── Curve
+│   │   ├── BaseCurve.ts
+│   │   ├── Bezier.ts
+│   │   ├── BraceCurve.ts
+│   │   ├── CircleCurve.ts
+│   │   ├── Curve.ts
+│   │   ├── VHBezier.ts
+│   │   └── ZZLine.ts
+│   ├── Element
+│   │   ├── BaseElement.ts
+│   │   ├── Box.ts
+│   │   ├── EllipseVertex.ts
+│   │   └── Vertex.ts
+│   ├── Graph
+│   │   ├── BaseGraph.ts
+│   │   ├── BipartiteGraph.ts
+│   │   ├── BoxDAG.ts
+│   │   ├── DAG.ts
+│   │   ├── Graph.ts
+│   │   ├── GraphEngine.ts
+│   │   ├── GridGraph.ts
+│   │   ├── TinyGraph.ts
+│   │   ├── Tree
+│   │   │   ├── BaseTree.ts
+│   │   │   ├── BinaryTree.ts
+│   │   │   ├── BoxTree.ts
+│   │   │   ├── HorizontalTree.ts
+│   │   │   ├── HorizontalValueTree.ts
+│   │   │   ├── Splay.ts
+│   │   │   ├── Tree.ts
+│   │   │   ├── TreeEngine.ts
+│   │   │   └── ValueTree.ts
+│   │   └── ValueGridGraph.ts
+│   ├── Grid
+│   │   ├── BaseGrid.ts
+│   │   ├── Grid.ts
+│   │   └── ValueGrid.ts
+│   ├── Other
+│   │   └── Caption.ts
+│   ├── Path
+│   │   ├── BasePath.ts
+│   │   ├── Line.ts
+│   │   ├── Path.ts
+│   │   ├── PathEngine.ts
+│   │   ├── Polyline.ts
+│   │   └── PolylineEngine.ts
+│   ├── SDHTMLNode.ts
+│   ├── SDNode.ts
+│   ├── SDSVGNode.ts
+│   ├── Shape
+│   │   ├── BaseShape.ts
+│   │   ├── Circle.ts
+│   │   ├── Ellipse.ts
+│   │   ├── Image.ts
+│   │   ├── Polygon
+│   │   │   ├── PolygonEngine.ts
+│   │   │   └── Triangle.ts
+│   │   ├── Polygon.ts
+│   │   └── Rect.ts
+│   └── Text
+│       ├── BaseText.ts
+│       ├── Math.ts
+│       ├── Text.ts
+│       └── TextEngine.ts
+├── Plugin
+│   ├── Aside.ts
+│   ├── Brace.ts
+│   ├── Focus.ts
+│   ├── Index.ts
+│   ├── Label.ts
+│   ├── Link.ts
+│   ├── Pointer.ts
+│   └── Stress.ts
+```
+
+具体每个组件有什么方法，可以翻看每个组件的详细资料介绍
 
 当操作元素进行布局的时候，尽可能先设置大小，再设置位置，举个例子：
 
@@ -141,23 +232,9 @@ polygon.startAnimate(350).color(C.BLUE).endAnimate(); // 把 polygon 设置为�
 
 颜色模块中全大写的预设颜色，同时定义了填充颜色和描边颜色；而小驼峰命名的预设颜色，则只定义了单一颜色，具体会设置到描边色还是填充色上取决于对象被调用的方法是 fill 还是 stroke
 
-## 字幕
-
-场景中应该恰好有一个字幕，字幕需要写中英双语
-
-```js
-const caption = new sd.Caption(svg);
-caption.cx(600).my(600); // 将字幕放在合适的位置
-await sd.pause(600);
-caption
-    .startAnimate()
-    .caption("中文字幕放这里", "English caption put here") // 切换字幕内容
-    .endAnimate();
-```
-
 ## 动画风格
 
-请你生成一个非常精美的动画，要像一个完整的，正在播放的视频，包含一个完整的过程，能把知识点讲清楚，页面极为精美，好看，有设计感，同时能够很好的传达知识，知识和图像要准确，附带一些旁白式的文字解说（用 Caption 来实现），从头到尾讲清楚一个小知识点
+请你生成一个非常精美的动画，要像一个完整的，正在播放的视频，包含一个完整的过程，能把知识点讲清楚，页面极为精美，好看，有设计感，同时能够很好的传达知识，知识和图像要准确，你的动画是嵌入到 PPT 中的，尽量减少动画中的文字的使用，转而在 PPT 中使用解释性文字来传达知识
 
 使用和谐好看，广泛采用的浅色配色方案，使用很多的，丰富的视觉元素，请保证任何一个元素都被放在了画布中，避免字幕遮挡，图形位置错误等等问题影响正确的视觉传达
 

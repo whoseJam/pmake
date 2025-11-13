@@ -5,6 +5,7 @@ export { CONTINUE_STAGE, pause } from "./Animate/Window";
 export { device } from "./Interact/Device";
 export { svg } from "./Interact/Root";
 export { vec } from "./Math/Vector";
+export { BaseArray } from "./Node/Array/BaseArray";
 export { Array } from "./Node/Array/Array";
 export { BarArray } from "./Node/Array/BarArray";
 export { Code } from "./Node/Array/Code";

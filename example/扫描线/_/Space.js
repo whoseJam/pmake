@@ -14,7 +14,7 @@ function convertToWorld2(worldBox, viewBox, point) {
     return [x, y];
 }
 
-class Axis extends sd.SD2DNode {
+class Axis extends sd.SDNode {
     constructor(parent) {
         super(parent);
         this.type("Axis");
@@ -108,7 +108,7 @@ class Axis extends sd.SD2DNode {
     }
 }
 
-export class Space extends sd.SD2DNode {
+export class Space extends sd.SDNode {
     constructor(parent) {
         super(parent);
         this.type("Space");
@@ -133,7 +133,10 @@ export class Space extends sd.SD2DNode {
             this.vars.elements.forEach(element => {
                 if (element.rect) {
                     const mn = convert(this.worldBox(), this.viewBox(), [element.x, element.y]);
-                    const mx = convert(this.worldBox(), this.viewBox(), [element.x + element.width, element.y + element.height]);
+                    const mx = convert(this.worldBox(), this.viewBox(), [
+                        element.x + element.width,
+                        element.y + element.height,
+                    ]);
                     const rect = element.rect;
                     rect.width(mx[0] - mn[0]);
                     rect.height(mn[1] - mx[1]);
@@ -147,11 +150,15 @@ export class Space extends sd.SD2DNode {
         });
         this.childAs(new Axis(this).direction("horizontal"), (parent, child) => {
             child.x(parent.x()).y(parent.my()).length(parent.width());
-            child.tickCount(parent.tickType() === "atPoint" ? parent.vars.viewBox.width : parent.vars.viewBox.width + 1);
+            child.tickCount(
+                parent.tickType() === "atPoint" ? parent.vars.viewBox.width : parent.vars.viewBox.width + 1
+            );
         });
         this.childAs(new Axis(this).direction("vertical"), (parent, child) => {
             child.x(parent.x()).y(parent.my()).length(parent.height());
-            child.tickCount(parent.tickType() === "atPoint" ? parent.vars.viewBox.height : parent.vars.viewBox.height + 1);
+            child.tickCount(
+                parent.tickType() === "atPoint" ? parent.vars.viewBox.height : parent.vars.viewBox.height + 1
+            );
         });
     }
     x(x) {
