@@ -477,6 +477,10 @@ export class SDNode {
             element.triggerEnter(this, update);
         } else update();
     }
+    clickable(clickable: boolean) {
+        // TODO
+        return this;
+    }
     click<T extends this & SDNode>(this: T) {
         const event = new MouseEvent("click", { button: 1, view: window, bubbles: true, cancelable: true });
         const element = this.layer().element();

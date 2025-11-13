@@ -463,31 +463,39 @@ export abstract class BaseGraph<
     hasLink(source: string | number | NodeElement, target: string | number | NodeElement) {
         return this.element(source, target) !== undefined;
     }
-    protected __createNodeInstance<T>(): T {
+    nodeType(clazz: new (...args: any[]) => SDNode) {
+        this._.nodeType = clazz;
+        return this;
+    }
+    linkType(clazz: new (...args: any[]) => SDNode) {
+        this._.linkType = clazz;
+        return this;
+    }
+    __createNodeInstance<T>(): T {
         const nodeClass = this._.nodeType;
         const element = new nodeClass(this.layer("nodes")).opacity(0);
         return element as unknown as T;
     }
-    protected __createLinkInstance<T>(): T {
+    __createLinkInstance<T>(): T {
         const linkClass = this._.linkType;
         const element = new linkClass(this.layer("links")).opacity(0);
         return element as unknown as T;
     }
-    protected __insertNode(id: string, node: NodeElement) {
+    __insertNode(id: string, node: NodeElement) {
         this._.sdMap[node.id] = { node, id };
         this._.nodesMap[id] = node;
         this.childAs(node);
         this.vars.nodes.push(node);
         return this;
     }
-    protected __insertLink(sourceId: string, targetId: string, link: LinkElement) {
+    __insertLink(sourceId: string, targetId: string, link: LinkElement) {
         this._.sdMap[link.id] = { link, sourceId, targetId };
         this._.linksMap.set([sourceId, targetId], link);
         this.childAs(link);
         this.vars.links.push(link);
         return this;
     }
-    protected __eraseNode(id: string) {
+    __eraseNode(id: string) {
         this._.nodesMap.delete(id);
         const node = this.element(id);
         const nodes = this.vars.nodes;
@@ -495,7 +503,7 @@ export abstract class BaseGraph<
         this.eraseChild(node);
         return this;
     }
-    protected __eraseLink(sourceId: string, targetId: string) {
+    __eraseLink(sourceId: string, targetId: string) {
         this._.linksMap.delete([sourceId, targetId]);
         const link = this.findLinkById(sourceId, targetId);
         const links = this.vars.links;
@@ -503,13 +511,13 @@ export abstract class BaseGraph<
         this.eraseChild(link);
         return this;
     }
-    protected __getNodeWithMethod<T>(node: string | number | NodeElement, method: string): T {
+    __getNodeWithMethod<T>(node: string | number | NodeElement, method: string): T {
         const element = this.element(node);
         if (!element) ErrorLauncher.nodeNotFound(node);
         if (typeof element[method] !== "function") ErrorLauncher.methodNotFound(element, method);
         return element as unknown as T;
     }
-    protected __getLinkWithMethod<T>(
+    __getLinkWithMethod<T>(
         source: string | number | NodeElement,
         target: string | number | NodeElement,
         method: string

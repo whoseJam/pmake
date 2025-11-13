@@ -51,6 +51,6 @@ export class ValuePile extends Pile<SDNode, SDNode> {
         return ValueArray.prototype.insertFromExistValue.apply(this, arguments);
     }
     insertFromExistElement(i: number, value: SDNode) {
-        return ValuePile.prototype.insertFromExistElement.apply(this, arguments);
+        return ValueArray.prototype.insertFromExistElement.apply(this, arguments);
     }
 }
