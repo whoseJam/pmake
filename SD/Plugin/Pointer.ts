@@ -14,19 +14,37 @@ const DIRECTION_KEY_SUGGESTION = [
     () => true,
     "For pointer component, here are 4 types of directions which are 'l', 'r', 't', 'b'.",
 ];
-const pointerMap: Record<number, any[]> = {};
 
 class PointerPlugin extends ValueManageMixin(Line) {
-    static __addPointerMap(pointer: PointerPlugin, element: any): void {
-        if (!pointerMap[element.id]) pointerMap[element.id] = [];
-        pointerMap[element.id].push(pointer);
+    private static __pointerMap: Record<number, PointerPlugin[]> = {};
+
+    private static __addPointerMap(pointer: PointerPlugin, element: any): void {
+        if (!PointerPlugin.__pointerMap[element.id]) PointerPlugin.__pointerMap[element.id] = [];
+        PointerPlugin.__pointerMap[element.id].push(pointer);
     }
 
-    static __erasePointerMap(pointer: PointerPlugin): void {
+    private static __removePointerMap(pointer: PointerPlugin): void {
         const element = pointer.vars.element;
         if (!element) return;
-        pointerMap[element.id] = pointerMap[element.id].filter((p: PointerPlugin) => p !== pointer);
-        if (pointerMap[element.id].length >= 1) pointerMap[element.id][0].triggerEffect("pointer");
+        PointerPlugin.__pointerMap[element.id] = PointerPlugin.__pointerMap[element.id].filter(
+            (p: PointerPlugin) => p !== pointer
+        );
+        if (PointerPlugin.__pointerMap[element.id].length >= 1)
+            PointerPlugin.__pointerMap[element.id][0].triggerEffect("pointer");
+    }
+
+    private static __getPointers(elementId: number): PointerPlugin[] {
+        return PointerPlugin.__pointerMap[elementId] || [];
+    }
+
+    private static __getActivePointers(
+        element: SDNode,
+        direction: Direction,
+        currentPointer: PointerPlugin
+    ): PointerPlugin[] {
+        return PointerPlugin.__getPointers(element.id).filter(
+            (p: PointerPlugin) => p.direction() === direction && (p.opacity() !== 0 || p === currentPointer)
+        );
     }
 
     constructor(target: SDNode | RenderNode, text: string = "") {
@@ -52,17 +70,16 @@ class PointerPlugin extends ValueManageMixin(Line) {
             const element = this.vars.element;
             if (!element) return;
             const direction = this.direction();
-            const pointers = pointerMap[element.id].filter(
-                (p: any) => p.direction() === direction && (p.opacity() !== 0 || p === this)
-            );
-            pointers.sort((a: any, b: any) => a.id - b.id);
-            const elementlength = direction === "t" || direction === "b" ? element.width() : element.height();
-            let gapLength = 0;
-            for (let i = 1; i < pointers.length; i++) {
-                gapLength += Math.max(pointers[i - 1].gap(), pointers[i].gap());
-            }
+            const pointers = PointerPlugin.__getActivePointers(element, direction, this);
 
-            function layout(pointer: any, x: number, y: number) {
+            pointers.sort((a: any, b: any) => a.id - b.id);
+
+            const elementLength = direction === "t" || direction === "b" ? element.width() : element.height();
+            const gapLength = pointers
+                .slice(1)
+                .reduce((sum, pointer, i) => sum + Math.max(pointers[i].gap(), pointer.gap()), 0);
+
+            function layout(pointer: PointerPlugin, x: number, y: number) {
                 const gap = pointer.pointerGap();
                 const length = pointer.length();
                 if (direction === "t") pointer.source(x, y + gap + length).target(x, y + gap);
@@ -71,7 +88,7 @@ class PointerPlugin extends ValueManageMixin(Line) {
                 if (direction === "l") pointer.source(x + gap + length, y).target(x + gap, y);
             }
 
-            if (gapLength <= elementlength) {
+            if (gapLength <= elementLength) {
                 pointers.forEach((pointer: any, i: number) => {
                     const k = (i + 1) / (pointers.length + 1);
                     let x: number;
@@ -213,30 +230,67 @@ class PointerPlugin extends ValueManageMixin(Line) {
         return this;
     }
 
-    moveTo(x?: any, y?: any): this {
-        if (Check.isEmpty(x)) {
-            PointerPlugin.__erasePointerMap(this);
-            this.vars.element = undefined;
-            return this.opacity(0);
+    /**
+     * Hides the pointer by setting its opacity to 0 and removing it from the pointer map.
+     * @returns The current component instance for method chaining.
+     */
+    moveTo(): this;
+    /**
+     * Moves the pointer to point at an element in a Grid (2D array) by its row and column indices.
+     * The parent must be a BaseGrid instance.
+     * @param row - The row index of the target element in the grid.
+     * @param col - The column index of the target element in the grid.
+     * @returns The current component instance for method chaining.
+     */
+    moveTo(row: number, col: number): this;
+    /**
+     * Moves the pointer to point at an element in an Array (1D array) by its index.
+     * The parent must be a BaseArray instance.
+     * @param index - The index of the target element in the array.
+     * @returns The current component instance for method chaining.
+     */
+    moveTo(index: number): this;
+    /**
+     * Moves the pointer to point at a specific SDNode element.
+     * @param element - The target SDNode element to point at.
+     * @returns The current component instance for method chaining.
+     */
+    moveTo(element: SDNode): this;
+    moveTo(row?: number | SDNode, col?: number): this {
+        if (Check.isEmpty(row)) return this.__hidePointer();
+        if (col !== undefined) {
+            const element = (this._.parent as BaseGrid).element(+row, col);
+            return this.moveTo(element);
         }
+        if (typeof row === "number") {
+            const element = (this._.parent as BaseArray).element(row);
+            return this.moveTo(element);
+        }
+        return this.__pointToElement(row as SDNode);
+    }
 
-        const parent = this._.parent;
-        if (arguments.length === 2) return this.moveTo((parent as BaseGrid).element(x, y));
-        else if (arguments.length === 1 && !(x instanceof SDNode)) return this.moveTo((parent as BaseArray).element(x));
+    __hidePointer(): this {
+        PointerPlugin.__removePointerMap(this);
+        this.vars.element = undefined;
+        return this.opacity(0);
+    }
 
-        PointerPlugin.__erasePointerMap(this);
+    __pointToElement(element: SDNode): this {
+        PointerPlugin.__removePointerMap(this);
 
-        if (this.duration() > 0 && this.opacity() === 0) {
+        const shouldAnimate = this.duration() > 0 && this.opacity() === 0;
+
+        if (shouldAnimate) {
             const context = new Context(this);
             context.till(0, 0);
-            PointerPlugin.__addPointerMap(this, x);
-            this.vars.element = x;
+            PointerPlugin.__addPointerMap(this, element);
+            this.vars.element = element;
             context.till(0, 1);
             this.opacity(1);
         } else {
             if (this.opacity() === 0) this.opacity(1);
-            PointerPlugin.__addPointerMap(this, x);
-            this.vars.element = x;
+            PointerPlugin.__addPointerMap(this, element);
+            this.vars.element = element;
         }
 
         return this;
@@ -246,7 +300,7 @@ class PointerPlugin extends ValueManageMixin(Line) {
      * Gets the component pointed by this pointer component.
      * @returns The pointed component, or undefined if no component is pointed by this pointer component.
      */
-    pointElement(): any {
+    pointedElement(): any {
         return this.vars.element;
     }
 }
