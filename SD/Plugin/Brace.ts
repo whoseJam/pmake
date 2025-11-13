@@ -1,8 +1,8 @@
 import { Context } from "@/Animate/Context";
 import { BraceCurve } from "@/Node/Curve/BraceCurve";
+import { ValueManageMixin } from "@/Node/Mixin/ValueManageMixin";
 import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
-import { Rule as R } from "@/Rule/Rule";
 import { Check } from "@/Utility/Check";
 
 type Location = "l" | "r" | "t" | "b";
@@ -13,7 +13,71 @@ const LOCATION_KEY_SUGGESTION = [
     "For brace component, here are 4 types of locations which are 'l', 'r', 't', 'b'.",
 ];
 
-class BracePlugin {
+class BracePlugin extends ValueManageMixin(BraceCurve) {
+    constructor(target: SDNode | RenderNode) {
+        super(target);
+
+        this.opacity(0);
+
+        this.vars.merge({
+            target,
+            sourceElement: undefined,
+            targetElement: undefined,
+            location,
+            braceGap: 5,
+            valueGap: 5,
+        });
+
+        this.type("Brace");
+
+        if (target instanceof SDNode) target.childAs(this);
+
+        this.effect("brace", () => {
+            const sourceElement = this.vars.sourceElement;
+            const targetElement = this.vars.targetElement;
+
+            if (!sourceElement || !targetElement) return;
+            const gap = this.braceGap();
+            const location = this.location();
+            if (location === "b" || location === "t") {
+                const minx = Math.min(sourceElement.x(), targetElement.x());
+                const maxx = Math.max(sourceElement.mx(), targetElement.mx());
+                if (location === "b") {
+                    const maxy = Math.max(sourceElement.my(), targetElement.my()) + gap;
+                    this.source(maxx, maxy);
+                    this.target(minx, maxy);
+                } else {
+                    const miny = Math.min(sourceElement.y(), targetElement.y()) - gap;
+                    this.source(minx, miny);
+                    this.target(maxx, miny);
+                }
+            } else if (location === "l" || location === "r") {
+                const miny = Math.min(sourceElement.y(), targetElement.y());
+                const maxy = Math.max(sourceElement.my(), targetElement.my());
+                if (location === "l") {
+                    const minx = Math.min(sourceElement.x(), targetElement.x()) - gap;
+                    this.source(minx, maxy);
+                    this.target(minx, miny);
+                } else {
+                    const maxx = Math.max(sourceElement.mx(), targetElement.mx()) + gap;
+                    this.source(maxx, miny);
+                    this.target(maxx, maxy);
+                }
+            }
+        });
+    }
+
+    __defaultValueRule() {
+        return (parent: BracePlugin, child: SDNode) => {
+            const gap = parent.valueGap();
+            const location = parent.location();
+            if (location === "t") child.cx(parent.cx()).my(parent.y() - gap);
+            if (location === "b") child.cx(parent.cx()).y(parent.my() + gap);
+            if (location === "l") child.mx(parent.x() - gap).cy(parent.cy());
+            if (location === "r") child.x(parent.mx() + gap).cy(parent.cy());
+        };
+    }
+
     /**
      * Creates a brace around a region defined by two target components.
      *
@@ -28,66 +92,35 @@ class BracePlugin {
     brace(target1: number | SDNode, target2: number | SDNode, location?: Location, gap?: number): this {
         let l: any = target1;
         let r: any = target2;
-        if (Check.isNumber(l)) l = (this as any).vars.target.element(l);
-        if (Check.isNumber(r)) r = (this as any).vars.target.element(r);
-        if (arguments.length >= 3) (this as any).location(location);
-        if (arguments.length >= 4) (this as any).braceGap(gap);
-        if (!((this as any).vars.target instanceof SDNode)) replaceBrace(this as any, l, r);
-        if ((this as any).duration() > 0 && (this as any).opacity() === 0) {
-            const context = new Context(this as any);
+        if (Check.isNumber(l)) l = this.vars.target.element(l);
+        if (Check.isNumber(r)) r = this.vars.target.element(r);
+        if (arguments.length >= 3) this.location(location);
+        if (arguments.length >= 4) this.braceGap(gap);
+        if (!(this.vars.target instanceof SDNode)) this.__replaceBrace(l, r);
+        if (this.duration() > 0 && this.opacity() === 0) {
+            const context = new Context(this);
             context.till(0, 0);
-            (this as any).vars.setTogether({
-                element1: l,
-                element2: r,
+            this.vars.setTogether({
+                sourceElement: l,
+                targetElement: r,
             });
             context.till(0, 1);
-            (this as any).opacity(1);
+            this.opacity(1);
         } else {
-            if ((this as any).opacity() === 0) (this as any).opacity(1);
-            (this as any).vars.setTogether({
-                element1: l,
-                element2: r,
+            if (this.opacity() === 0) this.opacity(1);
+            this.vars.setTogether({
+                sourceElement: l,
+                targetElement: r,
             });
         }
         return this;
     }
-    /**
-     * Gets the location of the brace component relative to its target components.
-     * @returns The location.
-     */
-    location(): string;
-    /**
-     * Sets the location of the brace component relative to its target components. Defaults to `"t"`.
-     * - "l": left.
-     * - "r": right.
-     * - "t": top.
-     * - "b": bottom.
-     * @param location - The location to apply.
-     * @returns The current component instance for method chaining.
-     */
-    location(location: string): this;
-    location(location?: string): string | this {
-        if (arguments.length === 0) return (this as any).vars.location;
-        Check.validateLocation(location!, LOCATION_KEY, "BracePlugin.location", 1, LOCATION_KEY_SUGGESTION);
-        (this as any).vars.location = location;
-        return this;
-    }
-    /**
-     * Gets the gap between the brace component and its target components.
-     * @returns The gap.
-     */
-    braceGap(): number;
-    /**
-     * Sets the gap between the brace component and its target components. Defaults to `5`.
-     * @param gap - The gap to apply.
-     * @returns The current component instance for method chaining.
-     */
-    braceGap(gap: number): this;
-    braceGap(gap?: number): number | this {
-        if (arguments.length === 0) return (this as any).vars.braceGap;
-        Check.validateNumber(gap!, "BracePlugin.braceGap");
-        (this as any).vars.lpset("braceGap", gap);
-        return this;
+
+    __replaceBrace(l: SDNode, r: SDNode): void {
+        if (this.vars.sourceElement) this.vars.sourceElement.eraseChild(this);
+        if (this.vars.targetElement) this.vars.targetElement.eraseChild(this);
+        l.childAs(this);
+        r.childAs(this);
     }
     /**
      * Gets the gap between the brace component and its value component.
@@ -101,91 +134,66 @@ class BracePlugin {
      */
     valueGap(gap: number): this;
     valueGap(gap?: number): number | this {
-        if (arguments.length === 0) return (this as any).vars.valueGap;
-        Check.validateNumber(gap!, "BracePlugin.valueGap");
-        (this as any).vars.lpset("valueGap", gap);
+        if (arguments.length === 0) return this.vars.valueGap;
+        Check.validateNumber(gap!, "Brace.valueGap");
+        this.vars.lpset("valueGap", gap);
+        return this;
+    }
+
+    /**
+     * Gets the gap between the brace component and its target components.
+     * @returns The gap.
+     */
+    braceGap(): number;
+    /**
+     * Sets the gap between the brace component and its target components. Defaults to `5`.
+     * @param gap - The gap to apply.
+     * @returns The current component instance for method chaining.
+     */
+    braceGap(gap: number): this;
+    braceGap(gap?: number): number | this {
+        if (arguments.length === 0) return this.vars.braceGap;
+        Check.validateNumber(gap!, "Brace.braceGap");
+        this.vars.lpset("braceGap", gap);
+        return this;
+    }
+
+    /**
+     * Gets the location of the brace component relative to its target components.
+     * @returns The location.
+     */
+    location(): Location;
+    /**
+     * Sets the location of the brace component relative to its target components. Defaults to `"t"`.
+     * - "l": left.
+     * - "r": right.
+     * - "t": top.
+     * - "b": bottom.
+     * @param location - The location to apply.
+     * @returns The current component instance for method chaining.
+     */
+    location(location: Location): this;
+    location(location?: Location): Location | this {
+        if (arguments.length === 0) return this.vars.location;
+        Check.validateLocation(location!, LOCATION_KEY, "Brace.location", 1, LOCATION_KEY_SUGGESTION);
+        this.vars.location = location;
         return this;
     }
 }
 
 /**
- * Creates a **`sd.BracePlugin`** instance to brace a region.
+ * Creates a **`sd.Brace`** instance to brace a region.
  * @param target - The destination to render the plugin.
- * @param location - The location of the brace component. Defaults to 't'.
- * @returns A new plugin instance.
+ * @param location - The location of the brace component: "l" (left), "r" (right), "t" (top), "b" (bottom). Defaults to "t".
+ * @param braceGap - The gap between the brace and its target components. Defaults to 5.
+ * @param valueGap - The gap between the brace and its value component. Defaults to 5.
+ * @returns A new Brace instance.
  */
-export function Brace(target: SDNode | RenderNode, location: string = "t"): BraceCurve & BracePlugin {
-    Check.validateLocation(location, LOCATION_KEY, "Brace", 2, LOCATION_KEY_SUGGESTION);
-
-    const self = new BraceCurve(target).opacity(0) as any;
-
-    self.vars.merge({
-        target,
-        element1: undefined,
-        element2: undefined,
-        location,
-        braceGap: 5,
-        valueGap: 5,
-    });
-
-    self.value = BracePlugin.prototype.value;
-    self.valueFromExist = BracePlugin.prototype.valueFromExist;
-    self.brace = BracePlugin.prototype.brace;
-    self.valueGap = BracePlugin.prototype.valueGap;
-    self.braceGap = BracePlugin.prototype.braceGap;
-    self.location = BracePlugin.prototype.location;
-
-    self.effect("brace", () => {
-        const element1 = self.vars.element1;
-        const element2 = self.vars.element2;
-
-        if (!element1 || !element2) return;
-        const gap = self.braceGap();
-        const location = self.location();
-        if (location === "b" || location === "t") {
-            const minx = Math.min(element1.x(), element2.x());
-            const maxx = Math.max(element1.mx(), element2.mx());
-            if (location === "b") {
-                const maxy = Math.max(element1.my(), element2.my()) + gap;
-                self.source(maxx, maxy);
-                self.target(minx, maxy);
-            } else {
-                const miny = Math.min(element1.y(), element2.y()) - gap;
-                self.source(minx, miny);
-                self.target(maxx, miny);
-            }
-        } else if (location === "l" || location === "r") {
-            const miny = Math.min(element1.y(), element2.y());
-            const maxy = Math.max(element1.my(), element2.my());
-            if (location === "l") {
-                const minx = Math.min(element1.x(), element2.x()) - gap;
-                self.source(minx, maxy);
-                self.target(minx, miny);
-            } else {
-                const maxx = Math.max(element1.mx(), element2.mx()) + gap;
-                self.source(maxx, miny);
-                self.target(maxx, maxy);
-            }
-        }
-    });
-
-    if (target instanceof SDNode) target.childAs(self);
-
-    return self as BraceCurve & BracePlugin;
-}
-
-function labelRule(parent: any, child: SDNode): void {
-    const gap = parent.valueGap();
-    const location = parent.location();
-    if (location === "t") R.pointAtPathByRate(0.5, "cx", "my", 0, -gap)(parent, child);
-    if (location === "b") R.pointAtPathByRate(0.5, "cx", "y", 0, gap)(parent, child);
-    if (location === "l") R.pointAtPathByRate(0.5, "mx", "cy", -gap, 0)(parent, child);
-    if (location === "r") R.pointAtPathByRate(0.5, "x", "cy", gap, 0)(parent, child);
-}
-
-function replaceBrace(self: any, l: SDNode, r: SDNode): void {
-    if (self.vars.element1) self.vars.element1.eraseChild(self);
-    if (self.vars.element2) self.vars.element2.eraseChild(self);
-    l.childAs(self);
-    r.childAs(self);
+export function Brace(
+    target: SDNode | RenderNode,
+    location: Location = "t",
+    braceGap: number = 5,
+    valueGap: number = 5
+): BracePlugin {
+    return new BracePlugin(target).location(location).braceGap(braceGap).valueGap(valueGap);
 }

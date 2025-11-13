@@ -1,5 +1,6 @@
 import { LinkPluginMixin } from "@/Node/Mixin/LinkPluginMixin";
 import { SDNode } from "@/Node/SDNode";
+import { Line } from "@/sd";
 
 type XLocation = "x" | "cx" | "mx";
 type YLocation = "y" | "cy" | "my";
@@ -26,7 +27,7 @@ export function Link<T>(
     tx: XLocation = "cx",
     ty: YLocation = "cy"
 ): LinkPlugin<T> {
-    const LinkPluginClass = LinkPluginMixin(clazz);
+    const LinkPluginClass = LinkPluginMixin(clazz ?? Line);
     return new LinkPluginClass(target)
         .sourceElement(source)
         .targetElement(target)
