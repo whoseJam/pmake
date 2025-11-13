@@ -15,7 +15,7 @@ export function ValueManageMixin<T extends new (...args: any[]) => SDNode>(Base:
          * @returns The default rule for positioning value components.
          */
         __defaultValueRule(): SDRule {
-            ErrorLauncher.notImplementedYet(`${this.constructor.name}.#defaultValueRule`);
+            ErrorLauncher.notImplementedYet(`${this.constructor.name}.__defaultValueRule`);
             return undefined;
         }
         /**

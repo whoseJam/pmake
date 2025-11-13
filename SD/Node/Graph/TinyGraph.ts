@@ -1,11 +1,12 @@
+import { Vertex } from "@/Node/Element/Vertex";
 import { Graph } from "@/Node/Graph/Graph";
+import { GraphEngine } from "@/Node/Graph/GraphEngine";
 import { Line } from "@/Node/Path/Line";
 import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
-import { GraphEngine } from "./GraphEngine";
 
 export class TinyGraph<
-    NodeElement extends SDNode = SDNode,
+    NodeElement extends SDNode = Vertex,
     NodeValue extends SDNode = SDNode,
     LinkElement extends SDNode = Line,
     LinkValue extends SDNode = SDNode

@@ -24,7 +24,7 @@ import { ErrorLauncher } from "@/Utility/ErrorLauncher";
  * The element components inside the grid component are automatically positioned
  * according to the specified layout configuration.
  */
-export abstract class BaseGrid<E, V> extends SDNode {
+export abstract class BaseGrid<E = SDNode, V = SDNode> extends SDNode {
     constructor(target: SDNode | RenderNode) {
         super(target);
 

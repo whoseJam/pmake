@@ -128,7 +128,6 @@ function promiseOfNormalFrame(): Promise<void> {
     const currentInteracting = Window.IS_INTERACTING;
     return new Promise(function (resolve) {
         const fn = function () {
-            console.log("SHOULD flush=", Window.SHOULD_FLUSH);
             if (Window.SHOULD_FLUSH) {
                 A.currentActionList.updateWindowSize();
                 return resolve();
@@ -219,7 +218,6 @@ export function pause(ms?: number): Promise<void> {
     A.firstTick();
     A.trigger();
     if (ms > 0) return promiseForMilliseconds(ms);
-    console.log("pause of ms=", ms, pauseBehavior);
     switch (pauseBehavior) {
         case FIRST_INTER_STAGE:
             return promiseOfFirstInterFrame();

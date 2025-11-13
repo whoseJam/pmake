@@ -41,6 +41,8 @@ export abstract class BaseGraph<
         this._.sdMap = {};
         this._.nodesMap = new Map();
         this._.linksMap = new Map();
+        this._.nodeType = Vertex;
+        this._.linkType = Line;
     }
     x(): number;
     x(x: number): this;
@@ -462,11 +464,13 @@ export abstract class BaseGraph<
         return this.element(source, target) !== undefined;
     }
     protected __createNodeInstance<T>(): T {
-        const element = new Vertex(this.layer("nodes")).opacity(0);
+        const nodeClass = this._.nodeType;
+        const element = new nodeClass(this.layer("nodes")).opacity(0);
         return element as unknown as T;
     }
     protected __createLinkInstance<T>(): T {
-        const element = new Line(this.layer("links")).opacity(0);
+        const linkClass = this._.linkType;
+        const element = new linkClass(this.layer("links")).opacity(0);
         return element as unknown as T;
     }
     protected __insertNode(id: string, node: NodeElement) {

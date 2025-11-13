@@ -13,7 +13,7 @@ import { Check } from "@/Utility/Check";
 import { Color as C, SDAllColor, SDPacketColor } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
-export class BaseArray<E, V> extends SDNode {
+export class BaseArray<E = SDNode, V = SDNode> extends SDNode {
     constructor(target: SDNode | RenderNode) {
         super(target);
 

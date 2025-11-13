@@ -52,7 +52,9 @@ export { ValueTree } from "./Node/Graph/Tree/ValueTree";
 export { ValueGridGraph } from "./Node/Graph/ValueGridGraph";
 export { Grid } from "./Node/Grid/Grid";
 export { ValueGrid } from "./Node/Grid/ValueGrid";
+export { Caption } from "./Node/Other/Caption";
 export { Line } from "./Node/Path/Line";
+
 export { Path } from "./Node/Path/Path";
 export { Polyline } from "./Node/Path/Polyline";
 export { SDNode } from "./Node/SDNode";
@@ -64,7 +66,6 @@ export { Triangle } from "./Node/Shape/Polygon/Triangle";
 export { Rect } from "./Node/Shape/Rect";
 export { Math } from "./Node/Text/Math";
 export { Text } from "./Node/Text/Text";
-export { Caption } from "./Node/Other/Caption";
 export { Aside } from "./Plugin/Aside";
 export { Brace } from "./Plugin/Brace";
 export { Focus } from "./Plugin/Focus";
@@ -73,6 +74,7 @@ export { Label, MathLabel } from "./Plugin/Label";
 export { Link } from "./Plugin/Link";
 export { Pointer } from "./Plugin/Pointer";
 export { Stress } from "./Plugin/Stress";
+
 export { rule } from "./Rule/Rule";
 export { init, inter, irreversible, main, make1d, make2d, reversible } from "./Utility/Base";
 export { color } from "./Utility/Color";
