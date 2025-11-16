@@ -1,7 +1,7 @@
 import { Action } from "@/Animate/Action";
 import { Dom } from "@/Dom/Dom";
 import { SDNode } from "@/Node/SDNode";
-import { HTML, HTML_INNERHTML_SET, HTML_STYLE_SET } from "@/Renderer/HTML";
+import { HTML, HTML_INNERHTML_SET, HTML_STYLE_SET, isStyleKey } from "@/Renderer/HTML";
 import { SVG } from "@/Renderer/SVG";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
@@ -98,7 +98,7 @@ export class RenderNode {
     getAttribute(key: string) {
         const element = this.element() as SVGElement | HTMLElement;
         if (HTML_INNERHTML_SET.has(key)) return element.innerHTML;
-        else if (this.isHTML() && HTML_STYLE_SET.has(key)) return element.style[key];
+        else if (isStyleKey(this.getType(), key)) return element.style[key];
         return element.getAttribute(key);
     }
     setAttribute(key: string, value: any) {
@@ -107,8 +107,10 @@ export class RenderNode {
         if (HTML_INNERHTML_SET.has(key)) {
             if (key === "text") value = parseText(value);
             element.innerHTML = value;
-        } else if (this.isHTML() && HTML_STYLE_SET.has(key)) element.style[key] = value;
-        else element.setAttribute(key, value);
+        } else if (isStyleKey(this.getType(), key)) {
+            console.log("set key=", key, "value=", value);
+            element.style[key] = value;
+        } else element.setAttribute(key, value);
     }
     hasShape() {
         return SVG[this.label]?.hasShape;
@@ -118,6 +120,9 @@ export class RenderNode {
     }
     isHTML() {
         return !this.isSVG();
+    }
+    getType() {
+        return this.isSVG() ? "svg" : "html";
     }
     __append(element_: Element | RenderNode) {
         const element = element_ instanceof RenderNode ? element_.element() : element_;

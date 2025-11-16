@@ -591,6 +591,7 @@ export class SDNode {
     x(x: number): this;
     x(x?: number) {
         if (arguments.length === 0) return this.vars.x;
+        Check.validateNumber(x, `${this.constructor.name}.x`);
         this.vars.lpset("x", x);
         return this;
     }
@@ -598,6 +599,7 @@ export class SDNode {
     y(y: number): this;
     y(y?: number) {
         if (arguments.length === 0) return this.vars.y;
+        Check.validateNumber(y, `${this.constructor.name}.y`);
         this.vars.lpset("y", y);
         return this;
     }
@@ -605,6 +607,7 @@ export class SDNode {
     width(width: number): this;
     width(width?: number) {
         if (arguments.length === 0) return this.vars.width;
+        Check.validateNumber(width, `${this.constructor.name}.width`);
         this.vars.lpset("width", width);
         return this;
     }
@@ -612,6 +615,7 @@ export class SDNode {
     height(height: number): this;
     height(height?: number) {
         if (arguments.length === 0) return this.vars.height;
+        Check.validateNumber(height, `${this.constructor.name}.height`);
         this.vars.lpset("height", height);
         return this;
     }

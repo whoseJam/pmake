@@ -5,7 +5,7 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestBasic);
+sd.main(TestBorderRadius);
 
 async function TestBasic() {
     const rect = new sd.Rect(svg);
@@ -54,4 +54,16 @@ async function TestBasic() {
     console.log(`height = ${rect.height()}`);
 
     await sd.pause();
+}
+
+async function TestBorderRadius() {
+    const rect = new sd.Rect(svg).cx(600).cy(300).width(200).height(150);
+    await sd.pause();
+    rect.startAnimate().borderRadius(20).endAnimate();
+    await sd.pause();
+    rect.startAnimate().borderRadius(50).endAnimate();
+    await sd.pause();
+    rect.startAnimate().borderRadius(75).endAnimate();
+    await sd.pause();
+    rect.startAnimate().borderRadius(0).endAnimate();
 }

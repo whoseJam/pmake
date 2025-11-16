@@ -12,50 +12,29 @@ export class Rect extends BaseShape {
             y: 0,
             width: 40,
             height: 40,
+            rx: 0,
+            ry: 0,
         });
 
         this.type("Rect");
     }
-    toPolygon() {
-        // TODO
-        // return polygon([
-        //     // format
-        //     this.pos("x", "y"),
-        //     this.pos("mx", "y"),
-        //     this.pos("mx", "my"),
-        //     this.pos("x", "my"),
-        // ]);
-    }
-    x(): number;
-    x(x: number): this;
-    x(x?: number) {
-        if (arguments.length === 0) return this.vars.x;
-        Check.validateNumber(x, `${this.constructor.name}.x`);
-        this.vars.lpset("x", x);
+    rx(): number;
+    rx(rx: number): this;
+    rx(rx?: number) {
+        if (arguments.length === 0) return this.vars.rx;
+        Check.validateNumber(rx, `${this.constructor.name}.rx`);
+        this.vars.lpset("rx", rx);
         return this;
     }
-    y(): number;
-    y(y: number): this;
-    y(y?: number) {
-        if (arguments.length === 0) return this.vars.y;
-        Check.validateNumber(y, `${this.constructor.name}.y`);
-        this.vars.lpset("y", y);
+    ry(): number;
+    ry(ry: number): this;
+    ry(ry?: number) {
+        if (arguments.length === 0) return this.vars.ry;
+        Check.validateNumber(ry, `${this.constructor.name}.ry`);
+        this.vars.lpset("ry", ry);
         return this;
     }
-    width(): number;
-    width(width: number): this;
-    width(width?: number) {
-        if (arguments.length === 0) return this.vars.width;
-        Check.validateNumber(width, `${this.constructor.name}.width`);
-        this.vars.lpset("width", width);
-        return this;
-    }
-    height(): number;
-    height(height: number): this;
-    height(height?: number) {
-        if (arguments.length === 0) return this.vars.height;
-        Check.validateNumber(height, `${this.constructor.name}.height`);
-        this.vars.lpset("height", height);
-        return this;
+    borderRadius(radius) {
+        return this.freeze().rx(radius).ry(radius).unfreeze();
     }
 }
