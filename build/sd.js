@@ -81,21 +81,21 @@ function getConfiguration() {
                         loader: "ts-loader",
                         options: {
                             compilerOptions: {
-                                allowJs: true, // 允许处理JS文件
-                                jsx: "react", // 支持JSX语法
-                                esModuleInterop: true, // 兼容ES模块
+                                allowJs: true,
+                                jsx: "react",
+                                esModuleInterop: true,
                                 allowSyntheticDefaultImports: true,
-                                target: "ES5", // 目标输出ES版本
-                                module: "ESNext", // 模块系统
-                                moduleResolution: "Node", // 模块解析方式
-                                resolveJsonModule: true, // 允许导入JSON
-                                sourceMap: mode === "development", // 开发环境生成sourcemap
-                                strict: false, // 关闭严格模式检查
-                                skipLibCheck: true, // 跳过库文件检查
-                                allowDeclareFields: true, // 允许声明字段
+                                target: "ES5",
+                                module: "ESNext",
+                                moduleResolution: "Node",
+                                resolveJsonModule: true,
+                                sourceMap: mode === "development",
+                                strict: false,
+                                skipLibCheck: true,
+                                allowDeclareFields: true,
                             },
-                            transpileOnly: global["d"], // 开发环境关闭类型检查提高速度
-                            experimentalFileCaching: true, // 启用缓存提升性能
+                            transpileOnly: true,
+                            experimentalFileCaching: true,
                         },
                     },
                 },
