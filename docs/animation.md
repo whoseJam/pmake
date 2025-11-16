@@ -54,7 +54,13 @@ await sd.pause();
 rect1.startAnimate(200).x(200).endAnimate(); // rect1 的这一段动画区间又变成了 [0ms, 200ms]
 ```
 
-关于框架中具体封装了哪些元素的什么方法，可以参考“封装对象”章节
+在默认情况下，`startAnimate` 会创建一段持续时长 300ms 的动画，例如
+
+```js
+rect.startAnimate().x(100).endAnimate(); // rect 的动画区间为 [0ms, 300ms]
+```
+
+尽量使用默认动画时长配置
 
 ## SVG 画布
 
@@ -88,9 +94,9 @@ sd.init(() => {
 
 sd.main(async () => {
     // 动画的主要实现放这里面
-    await sd.pause(1000);
+    await sd.pause();
     rect.startAnimate().x(100).y(100).endAnimate();
-    await sd.pause(2000);
+    await sd.pause();
     rect.startAnimate().width(100).height(100).endAnimate();
     // ...
 });
@@ -171,8 +177,6 @@ sd.main(async () => {
 │   │   ├── BaseGrid.ts
 │   │   ├── Grid.ts
 │   │   └── ValueGrid.ts
-│   ├── Other
-│   │   └── Caption.ts
 │   ├── Path
 │   │   ├── BasePath.ts
 │   │   ├── Line.ts
@@ -290,3 +294,13 @@ text.startAnimate(300)
     .cx(100) // 重新调整文字的中心是有必要的，因为文字的字体大小变化了，中心会偏移
     .endAnimate();
 ```
+
+## Important
+
+只能使用少量文字（Text 或者 Math 组件），一定不能在动画中使用中文
+
+类似于 `dis[u]`，`d`，`f` 这种标志性文字是可以使用的
+
+类似于 `move the circle to the right` 这种解释性文字是一定不允许存在的，这种文字应该放在 PPT 里面完成
+
+在使用 `sd.pause` 的时候，不要传入任何参数，传入参数没有意义，直接用 `sd.pause()` 就行了
