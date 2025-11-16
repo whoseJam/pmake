@@ -1,7 +1,7 @@
 import { Animate as A } from "@/Animate/Animate";
 import { Device as D } from "@/Interact/Device";
 import { Root } from "@/Interact/Root";
-import { Status as S } from "@/Interact/Status";
+import { Status as S, Status } from "@/Interact/Status";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 export class Window {
@@ -49,6 +49,9 @@ export class Window {
     static SetViewBox(x: number, y: number, width: number, height: number, rate: number) {
         Root.setViewBox(x, y, width, height, rate);
     }
+    static SetDescription(description: string) {
+        Status.setDescription(description);
+    }
     static StopAnimate() {
         A.stop();
     }
@@ -80,10 +83,8 @@ export class Window {
     }
 }
 
-D.onKeyDown("n", nextFrame);
-D.onKeyDown("N", nextFrame);
-D.onKeyDown("p", prevFrame);
-D.onKeyDown("P", prevFrame);
+D.onKeyDown("nN", nextFrame);
+D.onKeyDown("pP", prevFrame);
 
 function lastMainFrame() {
     if (Window.SHOULD_EXPORT) A.forceToFinish();

@@ -17,6 +17,12 @@ export class Dom {
     static getByID(id: string | number): Element {
         return document.getElementById(String(id));
     }
+    static getHTMLByID(id: string | number): HTMLElement {
+        return this.getByID(id) as HTMLElement;
+    }
+    static getSVGByID(id: string | number): SVGElement {
+        return this.getByID(id) as SVGElement;
+    }
     static tagName(element: Element): string {
         return element.tagName;
     }

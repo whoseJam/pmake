@@ -15,12 +15,12 @@ export class Device {
     static onKeyDown(key: string, callback: DeviceCallback): void;
     static onKeyDown(key: string, cancel: null | undefined | false): void;
     static onKeyDown(key: string, callback: DeviceCallback | null | undefined | false) {
-        this.deviceMap[key] = callback;
+        for (const k of key) this.deviceMap[k] = callback;
     }
     static onKeyDownOnce(key: string, callback: DeviceCallback): void;
     static onKeyDownOnce(key: string, cancel: null | undefined | false): void;
     static onKeyDownOnce(key: string, callback: DeviceCallback | null | undefined | false) {
-        this.deviceOnceMap[key] = callback;
+        for (const k of key) this.deviceOnceMap[k] = callback;
     }
     static keyDown(key: string) {
         if (this.deviceMap[key]) this.deviceMap[key]();

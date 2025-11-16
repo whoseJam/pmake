@@ -108,7 +108,6 @@ export class RenderNode {
             if (key === "text") value = parseText(value);
             element.innerHTML = value;
         } else if (isStyleKey(this.getType(), key)) {
-            console.log("set key=", key, "value=", value);
             element.style[key] = value;
         } else element.setAttribute(key, value);
     }

@@ -14,8 +14,6 @@ function init(reveal) {
     const fontSize = element.style.fontSize;
     let lang = element.getAttribute("lang");
     if (!lang) lang = "cpp";
-
-    console.log("fontSize=", fontSize);
     const pre = document.createElement("pre");
     const code = document.createElement("code");
     pre.className = element.className;
