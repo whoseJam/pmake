@@ -1,158 +1,147 @@
-import { Context } from "@/Animate/Context";
-import { BaseGrid } from "@/Node/Grid/BaseGrid";
+import { FocusPluginMixin } from "@/Node/Mixin/FocusMixin";
 import { SDNode } from "@/Node/SDNode";
+import { Circle } from "@/Node/Shape/Circle";
+import { Ellipse } from "@/Node/Shape/Ellipse";
 import { Rect } from "@/Node/Shape/Rect";
-import { Check } from "@/Utility/Check";
+import { RenderNode } from "@/Renderer/RenderNode";
 import { Color as C } from "@/Utility/Color";
 
-class FocusPlugin {
-    /**
-     * Gets the gap between the focus component and its target components.
-     * @returns The gap.
-     */
-    gap(): number;
-    /**
-     * Sets the gap between the focus component and its target components. Defaults to `0`.
-     * @param gap - The gap to apply.
-     * @returns The current component instance for method chaining.
-     */
-    gap(gap: number): this;
-    gap(gap?: number): number | this {
-        if (arguments.length === 0) return (this as any).vars.gap;
-        Check.validateNumber(gap!, "FocusPlugin.gap");
-        (this as any).vars.lpset("gap", gap);
-        return this;
+class RectFocusPlugin extends FocusPluginMixin(Rect) {
+    constructor(target: SDNode | RenderNode) {
+        super(target);
+
+        this.opacity(0).fillOpacity(0).stroke(C.red).strokeWidth(3);
+
+        this.vars.merge({
+            target,
+            element1: undefined,
+            element2: undefined,
+            gap: 0,
+        });
+
+        this.type("RectFocus");
+
+        if (target instanceof SDNode) target.childAs(this);
+
+        this.effect("focus", () => {
+            const element1 = this.vars.element1;
+            const element2 = this.vars.element2;
+            if (!element1 || !element2) return;
+            const x = Math.min(element1.x(), element2.x());
+            const mx = Math.max(element1.mx(), element2.mx());
+            const y = Math.min(element1.y(), element2.y());
+            const my = Math.max(element1.my(), element2.my());
+            const gap = this.gap();
+            this.x(x - gap).y(y - gap);
+            this.width(mx - x + gap * 2);
+            this.height(my - y + gap * 2);
+        });
     }
-    /**
-     * Sets focus on the initialization target component.
-     * @returns The current component instance for method chaining.
-     */
-    /**
-     * Sets focus on a specific element within the initialization target component.
-     * - Throws an error if the initialization target component is not an instance of `sd.BaseArray`, `sd.BaseTree` or `sd.BaseGraph`.
-     * @param i - The index of the specific element.
-     * @returns The current component instance for method chaining.
-     */
-    /**
-     * Sets focus on a range of elements within the initialization target component.
-     * - Throws an error if the initialization target component is not an instance of `sd.BaseArray`.
-     * @param l - The left index of the range.
-     * @param r - The right index of the range.
-     * @returns The current component instance for method chaining.
-     */
-    /**
-     * Sets focus on a specific element within the initialization target component.
-     * - Throws an error if the initialization target component is not an instance of `sd.BaseGrid`.
-     * @param i - The index along the primary dimension.
-     * @param j - The index along the secondary dimension.
-     * @returns The current component instance for method chaining.
-     */
-    /**
-     * Sets focus on a region of elements within the initialization target component.
-     * - Throws an error if the initialization target component is not an instance of `sd.BaseGrid`.
-     * @param i1
-     * @param j1
-     * @param i2
-     * @param j2
-     * @returns The current component instance for method chaining.
-     */
-    /**
-     * Sets focus on the target component.
-     * @param target
-     * @returns The current component instance for method chaining.
-     */
-    /**
-     * Sets focus on a region defined by two target components.
-     * @param target1 - The first component defining the focus region.
-     * @param target2 - The second component defining the focus region.
-     * @returns The current component instance for method chaining.
-     */
-    /**
-     * Removes the current focus region.
-     * @param cancel
-     * @returns The current component instance for method chaining.
-     */
-    focus(a?: any, b?: any, c?: any, d?: any): this {
-        const self = this as any;
-        if (arguments.length === 0) return this.focus(self.vars.target, self.vars.target);
-        else if (arguments.length === 1) {
-            if (Check.isEmpty(a)) return this.focus(null, null);
-            if (!(a instanceof SDNode)) a = self.vars.target.element(a);
-            return this.focus(a, a);
-        } else if (arguments.length === 2) {
-            if (self.vars.target instanceof BaseGrid) {
-                if (Check.isNumber(a) && Check.isNumber(b)) {
-                    a = self.vars.target.element(a, b);
-                    return this.focus(a, a);
-                }
-            } else {
-                if (Check.isNumber(a) || Check.isNumber(b)) {
-                    if (Check.isNumber(a)) a = self.vars.target.element(a);
-                    if (Check.isNumber(b)) b = self.vars.target.element(b);
-                    return this.focus(a, b);
-                }
-            }
-        } else if (arguments.length === 4) {
-            a = self.vars.target.element(a, b);
-            b = self.vars.target.element(c, d);
-            return this.focus(a, b);
-        }
-        if (Check.isEmpty(a)) {
-            self.vars.setTogether({
-                element1: undefined,
-                element2: undefined,
-            });
-            return self.opacity(0);
-        }
-        if (self.duration() > 0 && self.opacity() === 0) {
-            const context = new Context(self);
-            context.till(0, 0);
-            self.vars.setTogether({
-                element1: a,
-                element2: b,
-            });
-            context.till(0, 1);
-            self.opacity(1);
-        } else {
-            if (self.opacity() === 0) self.opacity(1);
-            self.vars.setTogether({
-                element1: a,
-                element2: b,
-            });
-        }
-        return this;
+}
+
+class CircleFocusPlugin extends FocusPluginMixin(Circle) {
+    constructor(target: SDNode | RenderNode) {
+        super(target);
+
+        this.opacity(0).fillOpacity(0).stroke(C.red).strokeWidth(3);
+
+        this.vars.merge({
+            target,
+            element1: undefined,
+            element2: undefined,
+            gap: 0,
+        });
+
+        this.type("CircleFocus");
+
+        if (target instanceof SDNode) target.childAs(this);
+
+        this.effect("focus", () => {
+            const element1 = this.vars.element1;
+            const element2 = this.vars.element2;
+            if (!element1 || !element2) return;
+            const x = Math.min(element1.x(), element2.x());
+            const mx = Math.max(element1.mx(), element2.mx());
+            const y = Math.min(element1.y(), element2.y());
+            const my = Math.max(element1.my(), element2.my());
+            const gap = this.gap();
+            const width = mx - x + gap * 2;
+            const height = my - y + gap * 2;
+            const radius = Math.max(width, height) / 2;
+            this.cx((x + mx) / 2).cy((y + my) / 2);
+            this.r(radius);
+        });
+    }
+}
+
+class EllipseFocusPlugin extends FocusPluginMixin(Ellipse) {
+    constructor(target: SDNode | RenderNode) {
+        super(target);
+
+        this.opacity(0).fillOpacity(0).stroke(C.red).strokeWidth(3);
+
+        this.vars.merge({
+            target,
+            element1: undefined,
+            element2: undefined,
+            gap: 0,
+        });
+
+        this.type("EllipseFocus");
+
+        if (target instanceof SDNode) target.childAs(this);
+
+        this.effect("focus", () => {
+            const element1 = this.vars.element1;
+            const element2 = this.vars.element2;
+            if (!element1 || !element2) return;
+            const x = Math.min(element1.x(), element2.x());
+            const mx = Math.max(element1.mx(), element2.mx());
+            const y = Math.min(element1.y(), element2.y());
+            const my = Math.max(element1.my(), element2.my());
+            const gap = this.gap();
+            const width = mx - x + gap * 2;
+            const height = my - y + gap * 2;
+            this.cx((x + mx) / 2).cy((y + my) / 2);
+            this.rx(width / 2);
+            this.ry(height / 2);
+        });
     }
 }
 
 /**
- * Creates a **`sd.FocusPlugin`** instance to highlight a region.
- * @param target
- * @returns A new plugin instance.
+ * Creates a **`sd.RectFocus`** instance to highlight a region with a rectangle.
+ * @param target - The target node to attach the focus to.
+ * @returns A new RectFocus instance.
  */
-export function Focus(target: SDNode | RenderNode): Rect & FocusPlugin {
-    const self = new Rect(target).opacity(0).fillOpacity(0).stroke(C.red).strokeWidth(3) as any;
-    self.vars.merge({
-        target,
-        element1: undefined,
-        element2: undefined,
-        gap: 0,
-    });
-    self.gap = FocusPlugin.prototype.gap;
-    self.focus = FocusPlugin.prototype.focus;
+export function RectFocus(target: SDNode | RenderNode): RectFocusPlugin {
+    return new RectFocusPlugin(target);
+}
 
-    self.effect("focus", () => {
-        const element1 = self.vars.element1;
-        const element2 = self.vars.element2;
-        if (!element1 || !element2) return;
-        const x = Math.min(element1.x(), element2.x());
-        const mx = Math.max(element1.mx(), element2.mx());
-        const y = Math.min(element1.y(), element2.y());
-        const my = Math.max(element1.my(), element2.my());
-        const gap = self.gap();
-        self.x(x - gap).y(y - gap);
-        self.width(mx - x + gap * 2);
-        self.height(my - y + gap * 2);
-    });
-    if (target instanceof SDNode) target.childAs(self);
-    return self as Rect & FocusPlugin;
+/**
+ * Creates a **`sd.CircleFocus`** instance to highlight a region with a circle.
+ * @param target - The target node to attach the focus to.
+ * @returns A new CircleFocus instance.
+ */
+export function CircleFocus(target: SDNode | RenderNode): CircleFocusPlugin {
+    return new CircleFocusPlugin(target);
+}
+
+/**
+ * Creates a **`sd.EllipseFocus`** instance to highlight a region with an ellipse.
+ * @param target - The target node to attach the focus to.
+ * @returns A new EllipseFocus instance.
+ */
+export function EllipseFocus(target: SDNode | RenderNode): EllipseFocusPlugin {
+    return new EllipseFocusPlugin(target);
+}
+
+/**
+ * Creates a **`sd.Focus`** instance to highlight a region (defaults to RectFocus).
+ * @param target - The target node to attach the focus to.
+ * @returns A new RectFocus instance.
+ * @deprecated Use RectFocus or CircleFocus instead.
+ */
+export function Focus(target: SDNode | RenderNode): RectFocusPlugin {
+    return new RectFocusPlugin(target);
 }

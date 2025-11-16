@@ -69,7 +69,7 @@ export { Math } from "./Node/Text/Math";
 export { Text } from "./Node/Text/Text";
 export { Aside } from "./Plugin/Aside";
 export { Brace } from "./Plugin/Brace";
-export { Focus } from "./Plugin/Focus";
+export { Focus, RectFocus, CircleFocus, EllipseFocus } from "./Plugin/Focus";
 export { Index } from "./Plugin/Index";
 export { Label, MathLabel } from "./Plugin/Label";
 export { Link } from "./Plugin/Link";
