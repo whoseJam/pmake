@@ -39,7 +39,7 @@ export class ZZLine extends BaseCurve {
             const dt = V.add(t, d);
             ds[index ^ 1] = dt[index ^ 1] = Math[operator](ds[index ^ 1], dt[index ^ 1]);
             const pen = new PathPen();
-            pen.MoveTo(s).LinkTo(ds).LinkTo(dt).LinkTo(t);
+            pen.MoveTo(s).LineTo(ds).LineTo(dt).LineTo(t);
             return pen.toString();
         };
 

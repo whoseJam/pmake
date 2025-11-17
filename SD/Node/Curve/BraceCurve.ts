@@ -31,8 +31,8 @@ export class BraceCurve extends BaseCurve {
             const p3 = V.sub(p4, d);
             const pen = new PathPen();
             pen.MoveTo(vs).Quad(p1, p2);
-            pen.LinkTo(c1).Quad(c2, c).Quad(c2, c3);
-            pen.LinkTo(p3).Quad(p4, vt);
+            pen.LineTo(c1).Quad(c2, c).Quad(c2, c3);
+            pen.LineTo(p3).Quad(p4, vt);
             return pen.toString();
         };
 

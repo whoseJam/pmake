@@ -685,7 +685,7 @@ export class TextEngine {
                 const y = +current.getAttribute("y");
                 const mx = +current.getAttribute("width") + x;
                 const my = +current.getAttribute("height") + y;
-                return new PathPen().MoveTo(x, y).LinkTo(mx, y).LinkTo(mx, my).LinkTo(x, my).LinkTo(x, y).toString();
+                return new PathPen().MoveTo(x, y).LineTo(mx, y).LineTo(mx, my).LineTo(x, my).LineTo(x, y).toString();
             } else {
                 const href = current.getAttribute("xlink:href");
                 const ssrc = defs.querySelector(href);

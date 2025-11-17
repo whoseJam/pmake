@@ -408,7 +408,7 @@ function sampleBy(
                     pen.MoveTo(source);
                     firstMoveTo = true;
                 }
-                pen.LinkTo(target);
+                pen.LineTo(target);
             } else if (valid([x, y])) {
                 if (by === "x") {
                     if (Math.abs(parent.my() - point[1]) < parent.height() / 2) {
@@ -418,7 +418,7 @@ function sampleBy(
                             pen.MoveTo(source);
                             firstMoveTo = true;
                         }
-                        pen.LinkTo(target);
+                        pen.LineTo(target);
                     } else {
                         const source: [number, number] = [prevPoint[0], parent.y()];
                         const target = point;
@@ -426,7 +426,7 @@ function sampleBy(
                             pen.MoveTo(source);
                             firstMoveTo = true;
                         }
-                        pen.LinkTo(target);
+                        pen.LineTo(target);
                     }
                 } else {
                     if (Math.abs(parent.mx() - point[0]) < parent.width() / 2) {
@@ -436,7 +436,7 @@ function sampleBy(
                             pen.MoveTo(source);
                             firstMoveTo = true;
                         }
-                        pen.LinkTo(target);
+                        pen.LineTo(target);
                     } else {
                         const source: [number, number] = [parent.x(), prevPoint[0]];
                         const target = point;
@@ -444,7 +444,7 @@ function sampleBy(
                             pen.MoveTo(source);
                             firstMoveTo = true;
                         }
-                        pen.LinkTo(target);
+                        pen.LineTo(target);
                     }
                 }
             }

@@ -70,7 +70,7 @@ export async function inter(callback: () => void | Promise<void>): Promise<void>
  * @param defaultValue - The default value for each element. If it's an object, a shallow copy will be created for each element.
  * @returns A new array with the specified length and default values.
  */
-export function make1d(length: number): Array<number>;
+export function make1d(length: number): Array<any>;
 export function make1d(length: number, defaultValue: any): Array<any>;
 export function make1d(length: number, defaultValue: any = 0): Array<any> {
     const result: any[] = [];
@@ -92,7 +92,7 @@ export function make1d(length: number, defaultValue: any = 0): Array<any> {
  * @param defaultValue - The default value for each element.
  * @returns A new 2D array with the specified dimensions and default values.
  */
-export function make2d(rows: number, columns: number): Array<Array<number>>;
+export function make2d(rows: number, columns: number): Array<Array<any>>;
 export function make2d(rows: number, columns: number, defaultValue: any): Array<any>;
 export function make2d(rows: number, columns: number, defaultValue: any = 0): Array<any> {
     const result: any[] = [];
