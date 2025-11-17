@@ -55,7 +55,7 @@ class LabelPlugin {
      * Gets the location of this label component relatives to its target component.
      * @returns The location.
      */
-    location(): string;
+    location(): Location;
     /**
      * Sets the location of this label component relatives to its target component. Defaults to `"lc"`.
      * - "lt": left-top.
@@ -73,8 +73,8 @@ class LabelPlugin {
      * @param location - The location to apply.
      * @returns The current component instance for method chaining.
      */
-    location(location: string): this;
-    location(location?: string): string | this {
+    location(location: Location): this;
+    location(location?: Location): Location | this {
         if (arguments.length === 0) return (this as any).vars.location;
         Check.validateLocation(location!, LOCATION_KEY, "LabelPlugin.location", 1, LOCATION_KEY_SUGGESTION);
         (this as any).vars.location = location;

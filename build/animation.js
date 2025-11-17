@@ -55,8 +55,10 @@ function launch(selfLaunch = true) {
         console.log(colors("cyan", "Usage: animation -i <source file path> [-o <target path>]"));
         process.exit();
     }
-    if (global["l"] && !global["sd"] && !global["s"]) utils.copyFile("./dist/sd.js", parser.parseConfig("pptOutputPath"));
-    if (global["l"] && !global["sd"] && !global["s"]) utils.copyFonts("./dist/fonts", `${parser.parseConfig("pptOutputPath")}/fonts`);
+    if (global["l"] && !global["sd"] && !global["s"])
+        utils.copyFile("./dist/sd.js", parser.parseConfig("pptOutputPath"));
+    if (global["l"] && !global["sd"] && !global["s"])
+        utils.copyFonts("./dist/fonts", `${parser.parseConfig("pptOutputPath")}/fonts`);
     return task(sourceFilePath, animationOutputPath);
 }
 
@@ -87,9 +89,28 @@ function getConfiguration(file) {
         module: {
             rules: [
                 {
-                    test: /.js$/,
+                    test: /\.(ts|tsx|js|jsx)$/,
+                    exclude: /node_modules/,
                     use: {
-                        loader: "babel-loader",
+                        loader: "ts-loader",
+                        options: {
+                            compilerOptions: {
+                                allowJs: true,
+                                jsx: "react",
+                                esModuleInterop: true,
+                                allowSyntheticDefaultImports: true,
+                                target: "ES5",
+                                module: "ESNext",
+                                moduleResolution: "Node",
+                                resolveJsonModule: true,
+                                sourceMap: mode === "development",
+                                strict: false,
+                                skipLibCheck: true,
+                                allowDeclareFields: true,
+                            },
+                            transpileOnly: true,
+                            experimentalFileCaching: true,
+                        },
                     },
                 },
                 { test: /\.css$/, use: ["style-loader", "css-loader"] },
@@ -99,6 +120,12 @@ function getConfiguration(file) {
             hints: false,
         },
         cache: true,
+        resolve: {
+            alias: {
+                "@": path.resolve(global["projectRoot"], "SD"),
+            },
+            extensions: [".tsx", ".ts", ".jsx", ".js"],
+        },
         externals: {
             "@/sd": "sd",
             "slidew": "sd",

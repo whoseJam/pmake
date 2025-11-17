@@ -724,6 +724,53 @@ export class SDNode {
         this.opacity(1);
         return this;
     }
+    /**
+     * Makes this component disappear.
+     *
+     * This component must be animated currently.
+     * @returns The current component instance for method chaining.
+     * @example
+     * // Makes a component disappear.
+     * node.startAnimate().disappear().endAnimate();
+     */
+    disappear() {
+        const context = new Context(this);
+        context.till(0, 0);
+        this.opacity(1);
+        context.till(0, 1);
+        this.opacity(0);
+        return this;
+    }
+    zoomIn() {
+        const context = new Context(this);
+        context.till(0, 0);
+        const width = this.width();
+        const height = this.height();
+        this.scale(0.001);
+        context.till(0, 1);
+        this.freeze().width(width).height(height).opacity(1).unfreeze();
+        return this;
+    }
+    zoomOut() {
+        this.scale(0.001).opacity(1);
+        return this;
+    }
+    fadeIn() {
+        const context = new Context(this);
+        context.till(0, 0);
+        this.opacity(0);
+        context.till(0, 1);
+        this.opacity(1);
+        return this;
+    }
+    fadeOut() {
+        const context = new Context(this);
+        context.till(0, 0);
+        this.opacity(1);
+        context.till(0, 1);
+        this.opacity(0);
+        return this;
+    }
     static __asNode(target: SDNode | RenderNode, object: any, id?: string): SDNode {
         if (object === null || object === undefined) {
             const { Text } = require("@/Node/Text/Text");

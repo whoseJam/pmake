@@ -36,8 +36,13 @@ module.exports = {
             console.log(colors("red", `[Error] File ${src} not found. Please check if the input path is correct.`));
             process.exit();
         }
-        if (!src.toLowerCase().endsWith(".js")) {
-            console.log(colors("red", `[Error] Invalid file type. The file must be a JavaScript (.js) file.`));
+        if (!src.toLowerCase().endsWith(".js") && !src.toLowerCase().endsWith(".ts")) {
+            console.log(
+                colors(
+                    "red",
+                    `[Error] Invalid file type. The file must be a JavaScript (.js) or TypeScript (.ts) file.`
+                )
+            );
             process.exit();
         }
         try {

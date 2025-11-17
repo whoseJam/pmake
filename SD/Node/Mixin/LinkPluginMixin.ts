@@ -14,7 +14,7 @@ type YLocation = "y" | "cy" | "my";
  * @returns A new class that extends Base with LinkPlugin methods.
  */
 export function LinkPluginMixin<TBase extends new (...args: any[]) => SDNode>(Base: TBase) {
-    return class LinkPlugin extends Base {
+    return class extends Base {
         __postConstruct(): this {
             const self = this as any;
             const curve = self._.curve;
