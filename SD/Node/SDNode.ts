@@ -57,6 +57,7 @@ export class SDNode {
             frame: -1,
             start: 0,
             end: 0,
+            timingFunction: undefined,
             layer: undefined,
             layers: {},
             parent: undefined,
@@ -82,20 +83,20 @@ export class SDNode {
             width: 40,
             height: 40,
             opacity: 1,
+            scale: [1, 1],
+            rotate: 0,
+            translate: [0, 0],
+            transformOrigin: [0, 0],
         });
 
-        this.vars.watch("opacity", (vn: number, vo: number) => {
-            new Action(
-                this.delay(),
-                this.delay() + this.duration(),
-                vo,
-                vn,
-                Interp.opacityInterp(this.layer(), "opacity"),
-                this._.timingFunction ?? T.easeInOut,
-                this,
-                "opacity"
-            );
-        });
+        this.vars.watch("opacity", SDNode.__action(this, this._.layer, "opacity", Interp.numberInterp));
+        this.vars.watch("scale", SDNode.__action(this, this._.layer, "scale", Interp.vectorInterp));
+        this.vars.watch("rotate", SDNode.__action(this, this._.layer, "rotate", Interp.numberInterp));
+        this.vars.watch("translate", SDNode.__action(this, this._.layer, "translate", Interp.vectorInterp));
+        this.vars.watch(
+            "transformOrigin",
+            SDNode.__action(this, this._.layer, "transform-origin", Interp.vectorInterp)
+        );
     }
     /**
      * Gets the type label of this component.
@@ -623,12 +624,45 @@ export class SDNode {
         this.vars.lpset("height", height);
         return this;
     }
-    scale(scale: number) {
-        if (this.fixAspect()) return this.width(this.width() * scale);
-        return this.freeze()
-            .width(this.width() * scale)
-            .height(this.height() * scale)
-            .unfreeze();
+    scale(scale: number): this;
+    scale(sx: number, sy: number): this;
+    scale(s: [number, number]): this;
+    scale(sx?: number | [number, number], sy?: number): this {
+        if (arguments.length === 1) {
+            if (Array.isArray(sx)) return this.scale(sx[0], sx[1]);
+            return this.scale(sx, sx);
+        }
+        Check.validateNumber(sx, `${this.constructor.name}.scale`, 1);
+        Check.validateNumber(sy, `${this.constructor.name}.scale`, 2);
+        this.vars.scale = [sx, sy];
+        return this;
+    }
+    rotate(rotate: number): this;
+    rotate(rotate?: number) {
+        if (arguments.length === 0) return this.vars.rotate;
+        Check.validateNumber(rotate, `${this.constructor.name}.rotate`);
+        this.vars.lpset("rotate", rotate);
+        return this;
+    }
+    translate(dx: number, dy: number): this;
+    translate(d: [number, number]): this;
+    translate(dx: number | [number, number], dy?: number) {
+        if (Array.isArray(dx)) return this.translate(dx[0], dx[1]);
+        Check.validateNumber(dx, `${this.constructor.name}.translate`, 1);
+        Check.validateNumber(dy, `${this.constructor.name}.translate`, 2);
+        this.vars.translate = [dx, dy];
+        return this;
+    }
+    transformOrigin(x: number, y: number): this;
+    transformOrigin(origin: [number, number]): this;
+    transformOrigin(): [number, number];
+    transformOrigin(x?: number | [number, number], y?: number) {
+        if (arguments.length === 0) return this.vars.transformOrigin;
+        if (Array.isArray(x)) return this.transformOrigin(x[0], x[1]);
+        Check.validateNumber(x, `${this.constructor.name}.transformOrigin`, 1);
+        Check.validateNumber(y, `${this.constructor.name}.transformOrigin`, 2);
+        this.vars.transformOrigin = [x, y];
+        return this;
     }
     pos(x: number, y: number): this;
     pos(point: [number, number]): this;

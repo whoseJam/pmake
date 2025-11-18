@@ -2,7 +2,8 @@ import { Action } from "@/Animate/Action";
 import { TimingFunction as T } from "@/Math/TimingFunction";
 import { Dom } from "@/Dom/Dom";
 import { SDNode } from "@/Node/SDNode";
-import { HTML, HTML_INNERHTML_SET, HTML_STYLE_SET, isStyleKey } from "@/Renderer/HTML";
+import { HTML, HTML_INNERHTML_SET } from "@/Renderer/HTML";
+import { isStyleKey, setAttribute } from "@/Renderer/Attribute";
 import { SVG } from "@/Renderer/SVG";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
@@ -110,7 +111,7 @@ export class RenderNode {
             element.innerHTML = value;
         } else if (isStyleKey(this.getType(), key)) {
             element.style[key] = value;
-        } else element.setAttribute(key, value);
+        } else setAttribute(element, key, value);
     }
     hasShape() {
         return SVG[this.label]?.hasShape;

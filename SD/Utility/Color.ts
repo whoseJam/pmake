@@ -217,6 +217,12 @@ export class Color {
         if (this.isPacket(color)) return color.stroke;
         return color;
     }
+
+    static toString(color: SDColor): string {
+        const rgb = this.toRGB(color);
+        if (rgb) return `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+        return undefined;
+    }
 }
 
 export function color() {

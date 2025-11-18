@@ -129,7 +129,7 @@ export class Interp {
             const r = fRGB.r * (1 - t) + tRGB.r * t;
             const g = fRGB.g * (1 - t) + tRGB.g * t;
             const b = fRGB.b * (1 - t) + tRGB.b * t;
-            set(`rgb(${r},${g},${b})`);
+            set({ r, g, b });
         }).onInit(function () {
             this._source = Color.toRGB(this.source);
             this._target = Color.toRGB(this.target);
@@ -176,6 +176,16 @@ export class Interp {
         }).onInit(function () {
             this._source = f(this.source);
             this._target = f(this.target);
+        });
+    }
+    static vectorInterp(object: any, key: string) {
+        const set = setter(object, key);
+        return new InterpObject(function (t) {
+            const A = this.source;
+            const B = this.target;
+            const x = A[0] * (1 - t) + B[0] * t;
+            const y = A[1] * (1 - t) + B[1] * t;
+            set([x, y]);
         });
     }
     static matrixInterp(object: any, key: string) {
