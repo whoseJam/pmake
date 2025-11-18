@@ -63,6 +63,12 @@ const ATTRIBUTE_KEY_MAP: Record<string, AttributeConverter> = {
         undefined,
         (value: [number, number]) => `${value[0]} ${value[1]}`
     ),
+    "stroke-dasharray": new AttributeConverter("stroke-dasharray", undefined, (value: Array<number>) => {
+        let dashed = 0;
+        for (let i = 1; i < value.length; i += 2) dashed += value[i];
+        if (dashed > 0) return value.join(" ");
+        return undefined;
+    }),
 };
 
 export function setAttribute(element: Element, key: string, value: any) {
@@ -75,7 +81,7 @@ export function setAttribute(element: Element, key: string, value: any) {
     if (element_.__setAttributeContext === undefined) element_.__setAttributeContext = {};
     const value_ = attribute.toString(value, element_.__setAttributeContext);
     const key_ = attribute.aliasKey;
-    if (value_) element.setAttribute(key_, value_);
+    if (value_ !== undefined) element.setAttribute(key_, value_);
     else if (attribute.default) element.setAttribute(key_, attribute.default);
     else element.removeAttribute(key_);
 }
