@@ -1,74 +1,60 @@
-import { SDNode } from "@/Node/SDNode";
+import { SDNode, SDNodeWithRadius } from "@/Node/SDNode";
 import { SDRule } from "@/Rule/Rule";
 
-export function centerOnly(): SDRule {
+export function center(): SDRule {
     return function (parent: SDNode, child: SDNode) {
-        const cx = parent.cx();
-        const cy = parent.cy();
-        child.cx(cx).cy(cy);
+        child.center(parent.center());
     };
 }
 
-export function centerFixAspect(rate: number = 1.2): SDRule {
+export function centerContentFit(rate: number = 1.2): SDRule {
     return function (parent: SDNode, child: SDNode) {
-        const cx = parent.cx();
-        const cy = parent.cy();
-        if (typeof parent.r === "function") {
-            const r = parent.r() / rate;
-            const cw = Math.max(child.width(), 1);
-            const ch = Math.max(child.height(), 1);
-            const k = ch / cw;
-            const w = 2 * Math.sqrt((r * r) / (k * k + 1));
-            const h = w * k;
-            child.width(w);
-            child.height(h);
-            child.center(cx, cy);
+        const circle = parent as SDNodeWithRadius;
+        if (typeof circle.r === "function") {
+            centerCircleContentFit(rate)(parent, child);
         } else {
-            const w = parent.width();
-            const h = parent.height();
-            const cw = Math.max(child.width(), 1);
-            const ch = Math.max(child.height(), 1);
-            const kw = w / cw / rate;
-            const kh = h / ch / rate;
-            const k = Math.min(kw, kh);
-            child.width(cw * k);
-            child.height(ch * k);
-            child.center(cx, cy);
+            centerRectContentFit(rate)(parent, child);
         }
     };
 }
 
-export function center(rate: number = 1.2): SDRule {
+export function centerRectContentFit(rate: number = 1.2): SDRule {
     return function (parent: SDNode, child: SDNode) {
-        const cx = parent.cx();
-        const cy = parent.cy();
-        const w = parent.width();
-        const h = parent.height();
-        const cw = w / rate;
-        const ch = h / rate;
-        child.width(cw).height(ch);
-        child.cx(cx).cy(cy);
+        const center = parent.center();
+        const [w, h] = [parent.width(), parent.height()];
+        const cw = Math.max(child.width(), 1);
+        const ch = Math.max(child.height(), 1);
+        const k = Math.min(w / cw, h / ch) / rate;
+        child
+            .width(cw * k)
+            .height(ch * k)
+            .center(center);
     };
 }
 
-export function triangleCenterFixAspect(rate: number = 1.2): SDRule {
+export function centerCircleContentFit(rate: number = 1.2): SDRule {
     return function (parent: SDNode, child: SDNode) {
-        let width = parent.width();
-        let height = parent.height();
-        let cwidth = child.width();
-        let cheight = child.height();
-        if (cwidth === 0 || cheight === 0) {
-            child.width(width / rate);
-            child.height(height / rate);
-            cwidth = child.width();
-            cheight = child.height();
-        }
-        let k = cheight / cwidth;
-        let x = height / (height / width + cheight / cwidth);
-        child.width(x).height(k * x);
-        let H = (parent.height() * child.width()) / parent.width();
-        let y = parent.my() - H / 2;
-        child.cx(parent.cx());
-        child.my(parent.my());
+        const center = parent.center();
+        const r = Math.min(parent.width(), parent.height()) / 2 / rate;
+        const cw = Math.max(child.width(), 1);
+        const ch = Math.max(child.height(), 1);
+        const k = ch / cw;
+        const w = 2 * Math.sqrt((r * r) / (k * k + 1));
+        const h = w * k;
+        child.width(w).height(h).center(center);
+    };
+}
+
+export function centerEllipseContentFit(rate: number = 1.2): SDRule {
+    return function (parent: SDNode, child: SDNode) {
+        const center = parent.center();
+        const [w, h] = [parent.width() / 2 / rate, parent.height() / 2 / rate];
+        const cw = Math.max(child.width(), 1);
+        const ch = Math.max(child.height(), 1);
+        const k = Math.min((2 * w) / cw, (2 * h) / ch, (2 * Math.sqrt(w * h)) / Math.sqrt(cw * ch));
+        child
+            .width(cw * k)
+            .height(ch * k)
+            .center(center);
     };
 }

@@ -27,11 +27,10 @@ export class Line extends PointPairMixin(BasePath) {
         const ox = Math.min(x1, x2);
         if (arguments.length === 0) return ox;
         const dx = x - ox;
-        this.freeze();
-        this.x1(x1 + dx);
-        this.x2(x2 + dx);
-        this.unfreeze();
-        return this;
+        return this.freeze()
+            .x1(x1 + dx)
+            .x2(x2 + dx)
+            .unfreeze();
     }
     y(): number;
     y(y: number): this;
@@ -41,11 +40,10 @@ export class Line extends PointPairMixin(BasePath) {
         const oy = Math.min(y1, y2);
         if (arguments.length === 0) return oy;
         const dy = y - oy;
-        this.freeze();
-        this.y1(y1 + dy);
-        this.y2(y2 + dy);
-        this.unfreeze();
-        return this;
+        return this.freeze()
+            .y1(y1 + dy)
+            .y2(y2 + dy)
+            .unfreeze();
     }
     width(): number;
     width(width: number): this;

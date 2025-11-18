@@ -2,7 +2,7 @@ import { BaseElement } from "@/Node/Element/BaseElement";
 import { SDNode } from "@/Node/SDNode";
 import { Circle } from "@/Node/Shape/Circle";
 import { RenderNode } from "@/Renderer/RenderNode";
-import { Rule as R } from "@/Rule/Rule";
+import { Rule as R, SDRule } from "@/Rule/Rule";
 
 export class Vertex extends BaseElement<Circle> {
     constructor(target: SDNode | RenderNode, value?: any) {
@@ -14,6 +14,14 @@ export class Vertex extends BaseElement<Circle> {
 
         this.value(value);
     }
+
+    __defaultValueRule(): SDRule {
+        return function (parent: Vertex, child: SDNode) {
+            const rate = parent.rate();
+            R.centerCircleContentFit(rate)(parent, child);
+        };
+    }
+
     r(): number;
     r(r: number): this;
     r(r?: number) {

@@ -6,6 +6,8 @@ import { Rule as R, SDRule } from "@/Rule/Rule";
 import { Check } from "@/Utility/Check";
 import { SDAllColor, SDPacketColor, SDRGBColor } from "@/Utility/Color";
 
+console.log(ValueManageMixin(SDNode).prototype);
+
 export class BaseElement<B extends SDSVGNode> extends ValueManageMixin(SDNode) {
     constructor(target: SDNode | RenderNode) {
         super(target);
@@ -19,41 +21,8 @@ export class BaseElement<B extends SDSVGNode> extends ValueManageMixin(SDNode) {
     __defaultValueRule(): SDRule {
         return function (parent: BaseElement<B>, child: SDNode) {
             const rate = parent.rate();
-            const rule = R.centerFixAspect(rate);
-            rule(parent, child);
+            R.centerContentFit(rate)(parent, child);
         };
-    }
-
-    x(): number;
-    x(x: number): this;
-    x(x?: number) {
-        if (arguments.length === 0) return this.background().x();
-        this.background().x(x);
-        return this;
-    }
-
-    y(): number;
-    y(y: number): this;
-    y(y?: number) {
-        if (arguments.length === 0) return this.background().y();
-        this.background().y(y);
-        return this;
-    }
-
-    width(): number;
-    width(width: number): this;
-    width(width?: number) {
-        if (arguments.length === 0) return this.background().width();
-        this.background().width(width);
-        return this;
-    }
-
-    height(): number;
-    height(height: number): this;
-    height(height?: number) {
-        if (arguments.length === 0) return this.background().height();
-        this.background().height(height);
-        return this;
     }
 
     /**
@@ -209,3 +178,5 @@ export class BaseElement<B extends SDSVGNode> extends ValueManageMixin(SDNode) {
         return this.background().inRange(point);
     }
 }
+
+console.log(BaseElement.prototype);
