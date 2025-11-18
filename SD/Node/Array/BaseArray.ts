@@ -7,13 +7,18 @@ import {
     SDNodeWithText,
     SDNodeWithValue,
 } from "@/Node/SDNode";
-import { Rect } from "@/Node/Shape/Rect";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
 import { Color as C, SDAllColor, SDPacketColor } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
-export class BaseArray<E = SDNode, V = SDNode> extends SDNode {
+/**
+ * Base class for array components.
+ * @class
+ * @template Element - The type of elements in the array.
+ * @template Value - The type of values contained within elements.
+ */
+export class BaseArray<Element extends SDNode, Value extends SDNode> extends SDNode {
     constructor(target: SDNode | RenderNode) {
         super(target);
 
@@ -23,16 +28,6 @@ export class BaseArray<E = SDNode, V = SDNode> extends SDNode {
             start: 0,
             elements: [],
         });
-    }
-    x(): number;
-    x(x: number): this;
-    x() {
-        return Rect.prototype.x.apply(this, arguments);
-    }
-    y(): number;
-    y(y: number): this;
-    y() {
-        return Rect.prototype.y.apply(this, arguments);
     }
     /**
      * Gets the index of the first element in this array component.
@@ -110,7 +105,7 @@ export class BaseArray<E = SDNode, V = SDNode> extends SDNode {
      * @param element - The target element to locate.
      * @returns The index of the specific element, or -1 if not found.
      */
-    indexOf(element: E) {
+    indexOf(element: Element) {
         for (let i = this.start(); i <= this.end(); i++) if (this.element(i) === element) return i;
         return -1;
     }
@@ -119,7 +114,7 @@ export class BaseArray<E = SDNode, V = SDNode> extends SDNode {
      * @param i - The index of the specific element.
      * @returns The element at the specified index, or undefined if not found.
      */
-    element(i: number): E {
+    element(i: number): Element {
         const id = this.__idx(i);
         if (0 <= id && id < this.length()) return this.vars.elements[id];
         return undefined;
@@ -128,21 +123,21 @@ export class BaseArray<E = SDNode, V = SDNode> extends SDNode {
      * Gets all elements contained within this array component.
      * @returns An array containing all valid elements in this component.
      */
-    elements(): Array<E> {
+    elements(): Array<Element> {
         return [...this.vars.elements];
     }
     /**
      * Gets the first element in this array component.
      * @returns The first element, or undefined if the array is empty.
      */
-    firstElement(): E {
+    firstElement(): Element {
         return this.element(this.start());
     }
     /**
      * Gets the last element in this array component.
      * @returns The last element, or undefined if the array is empty.
      */
-    lastElement(): E {
+    lastElement(): Element {
         return this.element(this.end());
     }
     /**
@@ -150,9 +145,9 @@ export class BaseArray<E = SDNode, V = SDNode> extends SDNode {
      * @param callback - A function to execute for each element.
      * @returns The current component instance for method chaining.
      */
-    forEachElement(callback: (element: E, i: number) => void) {
+    forEachElement(callback: (element: Element, i: number) => void) {
         Check.validateSyncFunction(callback, `${this.constructor.name}.forEachElement`);
-        this.vars.elements.forEach((element: E, i: number) => callback(element, i + this.start()));
+        this.vars.elements.forEach((element: Element, i: number) => callback(element, i + this.start()));
         return this;
     }
     opacity(): number;
@@ -160,7 +155,7 @@ export class BaseArray<E = SDNode, V = SDNode> extends SDNode {
     /**
      * Sets the opacity of a specific element.
      * @param i - The index of the specific element.
-     * @param opacity The opacity to apply
+     * @param opacity - The opacity to apply.
      * @returns The current component instance for method chaining.
      */
     opacity(i: number, opacity: number): this;
@@ -208,15 +203,15 @@ export class BaseArray<E = SDNode, V = SDNode> extends SDNode {
         if (arguments.length === 1) {
             if (C.isColor(arguments[0])) {
                 const [color] = arguments;
-                return this.forEachElement(element => (element as SDNodeWithColor).color(color));
+                return this.forEachElement((element: unknown) => (element as SDNodeWithColor).color(color));
             } else {
                 const [id] = arguments;
-                const element = this.__getElementWithMethod(id, "color") as SDNodeWithColor;
+                const element = this.__getElementWithMethod<SDNodeWithColor>(id, "color");
                 return element.color();
             }
         } else if (arguments.length === 2) {
             const [id, color] = arguments;
-            const element = this.__getElementWithMethod(id, "color") as SDNodeWithColor;
+            const element = this.__getElementWithMethod<SDNodeWithColor>(id, "color");
             element.color(color);
             return this;
         } else {
@@ -243,23 +238,18 @@ export class BaseArray<E = SDNode, V = SDNode> extends SDNode {
      */
     text(i: number, text: string | number): this;
     text(i: number, text?: string | number) {
-        const element = this.element(i) as SDNodeWithText;
-        if (!element) ErrorLauncher.arrayElementNotFound(i);
-        if (!element.text) ErrorLauncher.methodNotFound(element, "text");
+        const element = this.__getElementWithMethod<SDNodeWithText>(i, "text");
         if (arguments.length === 1) return element.text();
         element.text(text);
         return this;
     }
     /**
      * Gets the integer representation of a specific element.
-     *
-     * Throws an error if the element does not implement `intValue()`.
      * @param i - The index of the specific element.
      * @returns The integer representation of the element.
      */
     intValue(i: number): number {
-        const element = this.element(i) as SDNodeWithIntValue & SDNodeWithText;
-        if (!element) ErrorLauncher.arrayElementNotFound(i);
+        const element = this.__getElementWithMethod<SDNodeWithIntValue & SDNodeWithText>(i, "text");
         if (!element.intValue) {
             if (!element.text) ErrorLauncher.methodNotFound(element, "intValue|text");
             const i = Math.floor(+element.text());
@@ -275,7 +265,7 @@ export class BaseArray<E = SDNode, V = SDNode> extends SDNode {
      * @param i - The index of the specific element.
      * @returns The value component instance, or undefined if no value has been set.
      */
-    value(i: number): V;
+    value(i: number): Value;
     /**
      * Sets the value component of a specific element.
      * - Replace any existing value component with the provided content.
@@ -288,7 +278,7 @@ export class BaseArray<E = SDNode, V = SDNode> extends SDNode {
     value(i: number, value: any): this;
     value(i: number, value?: any) {
         Check.validateNumber(i, `${this.constructor.name}.value`);
-        const element = this.__getElementWithMethod(i, "value") as SDNodeWithValue;
+        const element = this.__getElementWithMethod<SDNodeWithValue>(i, "value");
         if (arguments.length === 1) return element.value();
         element.value(value);
         return this;
@@ -308,11 +298,11 @@ export class BaseArray<E = SDNode, V = SDNode> extends SDNode {
         ErrorLauncher.notImplementedYet(`${this.constructor.name}.insert`);
         return this;
     }
-    insertFromExistValue(i: number, value: V) {
+    insertFromExistValue(i: number, value: Value) {
         ErrorLauncher.notImplementedYet(`${this.constructor.name}.insertFromExistValue`);
         return this;
     }
-    insertFromExistElement(i: number, element: E) {
+    insertFromExistElement(i: number, element: Element) {
         ErrorLauncher.notImplementedYet(`${this.constructor.name}.insertFromExistElement`);
         return this;
     }
@@ -325,11 +315,11 @@ export class BaseArray<E = SDNode, V = SDNode> extends SDNode {
         this.insert(this.end() + 1, value);
         return this;
     }
-    pushFromExistValue(value: V): this {
+    pushFromExistValue(value: Value): this {
         this.insertFromExistValue(this.end() + 1, value);
         return this;
     }
-    pushFromExistElement(element: E): this {
+    pushFromExistElement(element: Element): this {
         this.insertFromExistElement(this.end() + 1, element);
         return this;
     }
@@ -353,34 +343,36 @@ export class BaseArray<E = SDNode, V = SDNode> extends SDNode {
     pop(): this {
         return this.erase(this.end());
     }
-    dropElement(i: number): E {
-        const element = this.element(i) as E & SDNode;
+    dropElement(i: number): Element {
+        const element = this.element(i) as Element & SDNode;
         if (!element) return undefined;
         element.onExit(EX.drop());
         this.__erase(i);
         return element;
     }
-    dropFirstElement(): E {
+    dropFirstElement(): Element {
         return this.dropElement(this.start());
     }
-    dropLastElement(): E {
+    dropLastElement(): Element {
         return this.dropElement(this.end());
     }
-    dropValue(i: number): V {
-        const element = this.element(i) as SDNodeWithDrop;
-        if (!element) return undefined;
-        if (!element.drop) ErrorLauncher.methodNotFound(element, "drop");
+    dropValue(i: number): Value {
+        const element = this.__getElementWithMethod<SDNodeWithDrop>(i, "drop");
         return element.drop();
     }
-    dropFirstValue(): V {
+    dropFirstValue(): Value {
         return this.dropValue(this.start());
     }
-    dropLastValue(): V {
+    dropLastValue(): Value {
         return this.dropValue(this.end());
     }
-    sort(comparator?: (a: E, b: E) => number): this;
-    sort(l: number, r: number, comparator?: (a: E, b: E) => number): this;
-    sort(l: number | ((a: E, b: E) => number), r?: number, comparator = (a, b) => a.intValue() - b.intValue()) {
+    sort(comparator?: (a: Element, b: Element) => number): this;
+    sort(l: number, r: number, comparator?: (a: Element, b: Element) => number): this;
+    sort(
+        l: number | ((a: Element, b: Element) => number),
+        r?: number,
+        comparator = (a, b) => a.intValue() - b.intValue()
+    ) {
         if (arguments.length === 0) return this.sort(this.start(), this.end(), comparator);
         if (arguments.length === 1) return this.sort(this.start(), this.end(), arguments[0]);
         const l_ = this.__idx(+l);
@@ -396,7 +388,7 @@ export class BaseArray<E = SDNode, V = SDNode> extends SDNode {
     __idx(i: number) {
         return i - this.start();
     }
-    __insert(i: number, element: E) {
+    __insert(i: number, element: Element) {
         this.childAs(element as SDNode);
         const idx = this.__idx(i);
         if (idx < 0 || idx > this.length()) ErrorLauncher.outOfRangeError(i);
@@ -410,10 +402,10 @@ export class BaseArray<E = SDNode, V = SDNode> extends SDNode {
         this.eraseChild(element as SDNode);
         return this;
     }
-    __getElementWithMethod(i: number, method: string) {
+    __getElementWithMethod<T>(i: number, method: string): T {
         const element = this.element(i);
         if (!element) ErrorLauncher.arrayElementNotFound(i);
         if (typeof element[method] !== "function") ErrorLauncher.methodNotFound(element, method);
-        return element;
+        return element as unknown as T;
     }
 }

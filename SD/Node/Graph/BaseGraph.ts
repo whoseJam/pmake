@@ -384,7 +384,7 @@ export abstract class BaseGraph<
     nodeText(node: string | number | NodeElement): string;
     nodeText(node: string | number | NodeElement, text: string): this;
     nodeText(node: string | number | NodeElement, text?: string) {
-        const element = this.__getNodeWithMethod(node, "text") as SDNodeWithText;
+        const element = this.__getNodeWithMethod<SDNodeWithText>(node, "text");
         if (arguments.length === 1) return element.text();
         element.text(text);
         return this;
