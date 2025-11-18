@@ -14,9 +14,8 @@ function setupButtonStyles() {
     document.adoptedStyleSheets = [...document.adoptedStyleSheets, styleSheet];
 }
 
-setupButtonStyles();
-
 export function init() {
+    setupButtonStyles();
     Root.init();
     Window.init();
     Device.init();

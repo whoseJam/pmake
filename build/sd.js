@@ -1,69 +1,67 @@
 const fs = require("fs");
 const gulp = require("gulp");
 const path = require("path");
-const utils = require("./utils");
 const webpack = require("webpack-stream");
 const TerserPlugin = require("terser-webpack-plugin");
 const JavaScriptObfuscator = require("webpack-obfuscator");
 
 function extractReversedNames() {
-    const filePath = path.join(__dirname, "../SD/sd.js");
+    const filePath = path.join(__dirname, "../SD/sd.ts");
     try {
         const fileContent = fs.readFileSync(filePath, "utf8");
         const regex = /\{([^}]+)\}/g;
-        const matches = [];
+        const matched = new Set();
         let match;
         while ((match = regex.exec(fileContent)) !== null) {
-            const contents = match[1].split(",");
-            contents.forEach(content => {
-                content = content.trim();
-                if (content === "CONTINUE_STAGE") return;
-                if (/^[A-Z]/.test(content)) matches.push(content);
+            match[1].split(",").forEach(content => {
+                const trimmed = content.trim();
+                if (trimmed !== "CONTINUE_STAGE" && !matched.has(trimmed) && /^[A-Z]/.test(trimmed))
+                    matched.add(trimmed);
             });
         }
-        console.log("reversedNames:", matches);
-        return matches;
+        return [...matched];
     } catch (error) {
-        console.error("读取文件时出错:", error);
+        console.error("Error reading sd.ts file:", error.message);
         return [];
     }
 }
 
-/**
- * Compile sd.js to the target folder.
- * @param {string} targetFolder The folder to hold the output.
- * @returns {NodeJS.ReadWriteStream}
- */
 module.exports = function (targetFolder) {
-    const config = getConfiguration();
-    return (
-        gulp
-            // 调整入口以支持TypeScript文件
-            .src(["./SD/sd.js"])
-            .pipe(webpack(config))
-            .pipe(gulp.dest(targetFolder))
-    );
+    return gulp
+        .src(["./SD/sd.ts"])
+        .pipe(webpack(getConfiguration()))
+        .on("error", function (err) {
+            console.error("Webpack compilation error:", err.message);
+            this.emit("end");
+        })
+        .pipe(gulp.dest(targetFolder));
 };
 
 function getConfiguration() {
+    const isDevelopment = global["d"] || false;
+    const isWatch = global["w"] || false;
+    const mode = isDevelopment ? "development" : "production";
     const plugins = [];
-    if (!global["d"]) {
-        const obfuscator = new JavaScriptObfuscator({
-            identifierNamesGenerator: "mangled",
-            splitStrings: true,
-            rotateStringArray: true,
-            shuffleStringArray: true,
-            stringArray: true,
-            simplify: true,
-            reservedNames: extractReversedNames(),
-        });
-        plugins.push(obfuscator);
+
+    if (!isDevelopment) {
+        plugins.push(
+            new JavaScriptObfuscator({
+                identifierNamesGenerator: "mangled",
+                splitStrings: true,
+                rotateStringArray: true,
+                shuffleStringArray: true,
+                stringArray: true,
+                simplify: true,
+                reservedNames: extractReversedNames(),
+                compact: true,
+                controlFlowFlattening: false,
+            })
+        );
     }
-    const mode = global["d"] ? "development" : "production";
-    const watch = global["w"] ? true : false;
+
     return {
         mode,
-        watch,
+        watch: isWatch,
         plugins,
         output: {
             filename: "sd.js",
@@ -89,13 +87,14 @@ function getConfiguration() {
                                 module: "ESNext",
                                 moduleResolution: "Node",
                                 resolveJsonModule: true,
-                                sourceMap: mode === "development",
+                                sourceMap: isDevelopment,
                                 strict: false,
                                 skipLibCheck: true,
                                 allowDeclareFields: true,
                             },
                             transpileOnly: true,
                             experimentalFileCaching: true,
+                            happyPackMode: false,
                         },
                     },
                 },
@@ -104,26 +103,36 @@ function getConfiguration() {
         },
         performance: {
             hints: false,
+            maxEntrypointSize: 512000,
+            maxAssetSize: 512000,
         },
         optimization: {
+            minimize: !isDevelopment,
             minimizer: [
                 new TerserPlugin({
                     terserOptions: {
                         keep_classnames: true,
                         keep_fnames: true,
+                        compress: {
+                            drop_console: !isDevelopment,
+                            drop_debugger: !isDevelopment,
+                        },
                     },
+                    parallel: true,
+                    extractComments: false,
                 }),
             ],
         },
-        cache: true,
+        cache: {
+            type: "filesystem",
+            buildDependencies: { config: [__filename] },
+        },
         resolve: {
-            alias: {
-                "@": path.resolve(global["projectRoot"], "SD"),
-            },
-            extensions: [".tsx", ".ts", ".jsx", ".js"], // 包含所有需要解析的扩展名
+            alias: { "@": path.resolve(global["projectRoot"], "SD") },
+            extensions: [".tsx", ".ts", ".jsx", ".js"],
+            symlinks: false,
         },
-        externals: {
-            dagre: "dagre",
-        },
+        externals: { dagre: "dagre" },
+        stats: isDevelopment ? "minimal" : "normal",
     };
 }
