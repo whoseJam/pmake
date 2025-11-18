@@ -209,6 +209,10 @@ export class ActionList {
             action_.target = action.source;
             action_._source = action._target;
             action_._target = action._source;
+            const timingFunction = action.timingFunction;
+            action_.timingFunction = (t: number) => {
+                return 1.0 - timingFunction(1.0 - t);
+            };
             list.push(action_);
         });
         list.enabled = true;
@@ -247,7 +251,14 @@ export class ActionList {
             console.log(action.toString(), action);
             used++;
         });
-        console.log("input action count =", this.totalCount, "used action count =", this.validCount, "rate =", this.validCount / this.totalCount);
+        console.log(
+            "input action count =",
+            this.totalCount,
+            "used action count =",
+            this.validCount,
+            "rate =",
+            this.validCount / this.totalCount
+        );
         console.log("---------------Action List debug---------------");
         console.log("");
     }

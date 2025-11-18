@@ -1,4 +1,5 @@
 import { Action } from "@/Animate/Action";
+import { TimingFunction as T } from "@/Math/TimingFunction";
 import { Dom } from "@/Dom/Dom";
 import { SDNode } from "@/Node/SDNode";
 import { HTML, HTML_INNERHTML_SET, HTML_STYLE_SET, isStyleKey } from "@/Renderer/HTML";
@@ -88,7 +89,7 @@ export class RenderNode {
                 if (this.reverse && t === 0) this.target.__append(this_); // remove reverse
             }
         }
-        new Action(l, r, this.targetLayer, targetLayer, structure, this, "moveTo");
+        new Action(l, r, this.targetLayer, targetLayer, structure, T.easeInOut, this, "moveTo");
         this.targetLayer = targetLayer;
         return this;
     }

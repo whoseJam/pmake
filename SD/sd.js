@@ -77,6 +77,7 @@ export { Pointer } from "./Plugin/Pointer";
 export { Stress } from "./Plugin/Stress";
 
 export { rule } from "./Rule/Rule";
+export { timingFunction } from "./Math/TimingFunction";
 export { init, inter, irreversible, main, make1d, make2d, reversible } from "./Utility/Base";
 export { color } from "./Utility/Color";
 export { PathPen } from "./Utility/PathPen";

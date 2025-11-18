@@ -16,6 +16,7 @@ import { make1d } from "@/Utility/Base";
 import { SDPacketColor } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import { PathPen } from "@/Utility/PathPen";
+import { TimingFunction as T } from "@/Math/TimingFunction";
 import opentype from "opentype.js";
 
 function getCodePointCount(str: string): number {
@@ -252,7 +253,7 @@ class TransformingPathGroup {
     build(l: number, r: number) {
         if (this.group) return;
         function createAction(path, source, target, interp, channel) {
-            new Action(l, r, source, target, interp(path, channel), path, channel);
+            new Action(l, r, source, target, interp(path, channel), T.easeInOut, path, channel);
         }
         const actions = [];
         this.parent.startAnimate(this.l, this.l);
@@ -529,6 +530,7 @@ export class Transforming {
                     group.build(action.l, action.r);
                 });
             }),
+            T.easeInOut,
             this.text,
             "transforming"
         );

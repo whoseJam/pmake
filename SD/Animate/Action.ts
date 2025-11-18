@@ -1,13 +1,10 @@
 import { Animate } from "@/Animate/Animate";
 import { GroupInterpObject, InterpFunction, InterpObject } from "@/Animate/Interp";
 import { Window } from "@/Animate/Window";
+import { SDTimingFunction } from "@/Math/TimingFunction";
 import { SDNode } from "@/Node/SDNode";
 
 global.ACTION_TICK = 0;
-
-function easeInOut(t: number) {
-    return 0.5 * (1 - Math.cos(Math.PI * t));
-}
 
 export class Action {
     static stopFlag = 1 << 0;
@@ -23,6 +20,7 @@ export class Action {
     _source: any;
     _target: any;
     interp: InterpObject;
+    timingFunction: SDTimingFunction;
     owner: any;
     channel: string;
     reverse: boolean;
@@ -30,8 +28,26 @@ export class Action {
     prev: Action;
     flag: number;
     constructor(action: Action);
-    constructor(l: number, r: number, source: any, target: any, interp: InterpObject | InterpFunction, owner: any, channel: string);
-    constructor(l: number | Action, r?: number, source?: any, target?: any, interp?: InterpObject | InterpFunction, owner?: any, channel?: string) {
+    constructor(
+        l: number,
+        r: number,
+        source: any,
+        target: any,
+        interp: InterpObject | InterpFunction,
+        timingFunction: SDTimingFunction,
+        owner: any,
+        channel: string
+    );
+    constructor(
+        l: number | Action,
+        r?: number,
+        source?: any,
+        target?: any,
+        interp?: InterpObject | InterpFunction,
+        timingFunction?: SDTimingFunction,
+        owner?: any,
+        channel?: string
+    ) {
         this.t = 0;
         this.reverse = false;
         this.skipping = 0;
@@ -44,6 +60,7 @@ export class Action {
             this._source = other._source;
             this._target = other._target;
             this.interp = other.interp;
+            this.timingFunction = other.timingFunction;
             this.owner = other.owner;
             this.channel = other.channel;
             this.frame = other.frame;
@@ -55,6 +72,7 @@ export class Action {
             this.source = source;
             this.target = target;
             this.interp = interp instanceof InterpObject ? interp : new InterpObject(interp);
+            this.timingFunction = timingFunction;
             this.owner = owner;
             this.channel = channel;
             // @ts-ignore
@@ -74,7 +92,7 @@ export class Action {
         if (t < this.l) return false;
         global.ACTION_TICK++;
         if (this.l < this.r - 1) {
-            const k0 = easeInOut((t - this.l) / (this.r - this.l));
+            const k0 = this.timingFunction((t - this.l) / (this.r - this.l));
             const k1 = this.is(Action.firstCallFlag) ? 0 : t > this.r ? 1 : k0;
             if (k1 === 0) {
                 this.interp.onInit(this);

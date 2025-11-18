@@ -10,6 +10,7 @@ import { RenderNode } from "@/Renderer/RenderNode";
 import { SDRule } from "@/Rule/Rule";
 import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
+import { SDTimingFunction, TimingFunction as T } from "@/Math/TimingFunction";
 
 type ClickCallback = () => void;
 type ValueCallback = (value: string) => void;
@@ -32,6 +33,7 @@ export class SDNode {
         frame: number;
         start: number;
         end: number;
+        timingFunction: SDTimingFunction;
         layer: RenderNode;
         layers: { [key: string]: RenderNode };
         parent: SDNode;
@@ -89,6 +91,7 @@ export class SDNode {
                 vo,
                 vn,
                 Interp.opacityInterp(this.layer(), "opacity"),
+                this._.timingFunction ?? T.easeInOut,
                 this,
                 "opacity"
             );
@@ -183,6 +186,8 @@ export class SDNode {
      * parent.endAnimate();
      */
     startAnimate(duration?: number): this;
+    startAnimate(duration: number, timingFunction: SDTimingFunction): this;
+    startAnimate(timingFunction: SDTimingFunction): this;
     /**
      * Starts an animation sequence by copying parameters from another component.
      * @param other - The source component whose animation parameters will be copied.
@@ -194,19 +199,26 @@ export class SDNode {
      * Animations will be evaluated over the specified duration in milliseconds.
      * @param start - The start time of the animation in milliseconds.
      * @param end - The end time of the animation in milliseconds.
+     * @param timingFunction - The timing function to use for the animation.
      * @returns The current component instance for method chaining.
      */
-    startAnimate(start: number, end: number): this;
+    startAnimate(start: number, end: number, timingFunction?: SDTimingFunction): this;
     startAnimate() {
-        this.#__animationCheck();
+        this.__animationCheck();
         if (arguments.length === 0) return this.startAnimate(this._.start, this._.start + 300);
         if (arguments.length === 1) {
             const object = arguments[0];
             if (typeof object === "number") return this.startAnimate(this._.start, this._.start + object);
-            return this.startAnimate(object.delay(), object.delay() + object.duration());
+            else if (typeof object === "function") return this.startAnimate(this._.start, this._.start + 300, object);
+            return this.startAnimate(object.delay(), object.delay() + object.duration(), object._.timingFunction);
+        } else if (arguments.length === 2) {
+            if (typeof arguments[1] === "function")
+                return this.startAnimate(this._.start, this._.start + arguments[0], arguments[1]);
+            const [start, end] = arguments;
+            return this.startAnimate(start, end, T.easeInOut);
         }
-        [this._.start, this._.end] = arguments;
-        this.__forEachChild(child => child.startAnimate(this._.start, this._.end));
+        [this._.start, this._.end, this._.timingFunction] = arguments;
+        this.__forEachChild(child => child.startAnimate(this._.start, this._.end, this._.timingFunction));
         return this;
     }
     /**
@@ -215,7 +227,7 @@ export class SDNode {
      * @returns The current component instance for method chaining.
      */
     endAnimate(): this {
-        this.#__animationCheck();
+        this.__animationCheck();
         this._.start = this._.end;
         this.__forEachChild(child => child.endAnimate());
         return this;
@@ -236,7 +248,7 @@ export class SDNode {
      * @returns This instance for method chaining.
      */
     after(delay_: number | SDNode): this {
-        this.#__animationCheck();
+        this.__animationCheck();
         const delay = typeof delay_ === "number" ? delay_ : delay_.delay();
         this._.start = delay;
         this._.end = delay;
@@ -249,17 +261,17 @@ export class SDNode {
      * @returns The delay duration in milliseconds.
      */
     delay() {
-        this.#__animationCheck();
+        this.__animationCheck();
         return this._.start;
     }
     /**
      * Gets the duration of current animation sequence.
      */
     duration() {
-        this.#__animationCheck();
+        this.__animationCheck();
         return this._.end - this._.start;
     }
-    #__animationCheck() {
+    __animationCheck() {
         if (this._.frame === Window.CURRENT_FRAME) return;
         this._.frame = Window.CURRENT_FRAME;
         this._.start = 0;
@@ -277,14 +289,6 @@ export class SDNode {
         if (rule_) this.tryUpdate(child_, () => this.__pushChild(name_, child_, rule_));
         else this.__pushChild(name_, child_, rule_);
         return this;
-        // const update = () => {
-        //     if (child._.parent !== this && !child.onEnter()) child.attachTo(this);
-        //     this.__pushChild(args[0], args[1], args[2]);
-        // };
-        // if (!child.onEnter()) child.onEnter(EN.appear());
-        // if (rule) this.tryUpdate(child, update);
-        // else update();
-        // return this;
     }
     child(name: string) {
         return this._.children[name];
@@ -798,7 +802,16 @@ export class SDNode {
                 else ErrorLauncher.whatHappened();
                 return;
             }
-            new Action(node.delay(), node.delay() + node.duration(), vo, vn, interp(object(), key), node, key);
+            new Action(
+                node.delay(),
+                node.delay() + node.duration(),
+                vo,
+                vn,
+                interp(object(), key),
+                node._.timingFunction ?? T.easeInOut,
+                node,
+                key
+            );
         };
     }
 }
