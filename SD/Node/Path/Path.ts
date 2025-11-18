@@ -1,7 +1,7 @@
 import { BasePath } from "@/Node/Path/BasePath";
 import { RenderNode } from "@/Renderer/RenderNode";
-import { SDNode } from "@/Node/SDNode";
-import { PathEngine } from "@/Node/Path/PathEngine";
+import { SDNode } from "../SDNode";
+import { PathEngine } from "./PathEngine";
 
 export class Path extends BasePath {
     constructor(target: SDNode | RenderNode, value?: any) {
