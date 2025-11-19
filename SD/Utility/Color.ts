@@ -187,7 +187,7 @@ export class Color {
     }
 
     static isHEX(color: SDAllColor): color is SDHEXColor {
-        return typeof color === "string";
+        return typeof color === "string" && /^#[0-9a-fA-F]{6}$/.test(color);
     }
 
     static isPacket(color: SDAllColor): color is SDPacketColor {

@@ -145,8 +145,6 @@ export class RenderNode {
         });
     }
     static __asValue(value: any) {
-        if (value && typeof value.r === "number" && typeof value.g === "number" && typeof value.b === "number")
-            return `rgb(${value.r}, ${value.g}, ${value.b})`;
         if (
             value &&
             typeof value.x === "number" &&
