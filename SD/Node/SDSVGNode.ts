@@ -2,14 +2,14 @@ import { Interp } from "@/Animate/Interp";
 import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
-import { Color as C, SDAllColor, SDPacketColor, SDRGBColor } from "@/Utility/Color";
+import { Color as C, SDAllColor, SDHEXColor, SDPacketColor, SDRGBColor } from "@/Utility/Color";
 
 export class SDSVGNode extends SDNode {
     /**
      * Gets the fill color of this component.
      * @returns The fill color.
      */
-    fill(): SDRGBColor;
+    fill(): SDHEXColor;
     /**
      * Sets the fill color of this component.
      * @param fill - The fill color to apply (hex string or RGB object).
@@ -17,7 +17,7 @@ export class SDSVGNode extends SDNode {
      */
     fill(fill: SDAllColor): this;
     fill(fill?: SDAllColor) {
-        if (arguments.length === 0) return this.vars.fill;
+        if (arguments.length === 0) return C.toHEX(this.vars.fill);
         Check.validateColor(fill, `${this.constructor.name}.fill`);
         this.vars.fill = C.toRGB(C.toFill(fill));
         return this;
@@ -27,7 +27,7 @@ export class SDSVGNode extends SDNode {
      * Gets the stroke color of this component.
      * @returns The stroke color.
      */
-    stroke(): SDRGBColor;
+    stroke(): SDHEXColor;
     /**
      * Sets the stroke color of this component.
      * @param stroke - The stroke color to apply (hex string or RGB object).
@@ -35,7 +35,7 @@ export class SDSVGNode extends SDNode {
      */
     stroke(stroke: SDAllColor): this;
     stroke(stroke?: SDAllColor) {
-        if (arguments.length === 0) return this.vars.stroke;
+        if (arguments.length === 0) return C.toHEX(this.vars.stroke);
         Check.validateColor(stroke, `${this.constructor.name}.stroke`);
         this.vars.stroke = C.toRGB(C.toStroke(stroke));
         return this;

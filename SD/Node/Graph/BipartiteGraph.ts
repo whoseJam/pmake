@@ -13,7 +13,7 @@ export class BipartiteGraph<
     LinkValue extends SDNode = SDNode
 > extends Graph<NodeElement, NodeValue, LinkElement, LinkValue> {
     _: Graph<NodeElement, NodeValue, LinkElement, LinkValue>["_"] & {
-        no: { [key: string]: 0 | 1 };
+        no: Record<string, 0 | 1>;
     };
     constructor(target: SDNode | RenderNode) {
         super(target);
@@ -37,8 +37,8 @@ export class BipartiteGraph<
             });
         });
     }
-    newNode(id: string | number, type: 0 | 1);
-    newNode(id: string | number, value?: any, type?: 0 | 1);
+    newNode(id: string | number, type: 0 | 1): this;
+    newNode(id: string | number, value?: any, type?: 0 | 1): this;
     newNode(id: string | number, value?: any, type?: 0 | 1) {
         if (arguments.length === 2) return this.newNode(id, undefined, value);
         if (type === undefined) ErrorLauncher.invalidArguments();
