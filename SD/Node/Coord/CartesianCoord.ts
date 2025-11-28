@@ -2,7 +2,6 @@ import { dqual } from "@/Math/Math";
 import { Vector as V } from "@/Math/Vector";
 import { BaseAxis } from "@/Node/Axis/BaseAxis";
 import { BaseCoord } from "@/Node/Coord/BaseCoord";
-import { Enter as EN } from "@/Node/Core/Enter";
 import { Path } from "@/Node/Path/Path";
 import { SDNode } from "@/Node/SDNode";
 import { Circle } from "@/Node/Shape/Circle";

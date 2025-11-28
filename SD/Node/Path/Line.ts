@@ -2,9 +2,8 @@ import { Vector as V } from "@/Math/Vector";
 import { BasePath } from "@/Node/Path/BasePath";
 import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
-import { PointPairMixin } from "@/Node/Mixin/PointPairMixin";
 
-export class Line extends PointPairMixin(BasePath) {
+export class Line extends BasePath {
     constructor(target: SDNode | RenderNode, value?: any) {
         super(target);
 

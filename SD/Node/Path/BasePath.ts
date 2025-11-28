@@ -1,5 +1,4 @@
 import { Context } from "@/Animate/Context";
-import { ValueManageMixin } from "@/Node/Mixin/ValueManageMixin";
 import { SDSVGNode } from "@/Node/SDSVGNode";
 import { Rule as R, SDRule } from "@/Rule/Rule";
 import { Check } from "@/Utility/Check";
@@ -20,7 +19,7 @@ const BASE_PATH_ATTRIBUTES = {
     markerEnd: "",
 };
 
-export class BasePath extends ValueManageMixin(SDSVGNode) {
+export class BasePath extends SDSVGNode {
     color(): SDPacketColor;
     color(color: SDAllColor): this;
     color(color?: SDAllColor): SDPacketColor | this {

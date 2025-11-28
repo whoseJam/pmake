@@ -184,7 +184,8 @@ class Effect {
         for (let i = 0; i < this.in.length; i++) {
             const old = this.in[i];
             const objectManager = objectsMap.get(old.object);
-            if (hasChanged(old.value, old.object[old.key], objectManager.precise.get(old.key))) return [old.key, old.value, old.object[old.key]];
+            if (hasChanged(old.value, old.object[old.key], objectManager.precise.get(old.key)))
+                return [old.key, old.value, old.object[old.key]];
         }
     }
     inputValue(key: string) {

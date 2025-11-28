@@ -3,14 +3,11 @@ import { Context } from "@/Animate/Context";
 import { Interp, InterpCreator } from "@/Animate/Interp";
 import { Window } from "@/Animate/Window";
 import { Dom } from "@/Dom/Dom";
-import { Enter as EN, EnterCallback } from "@/Node/Core/Enter";
-import { Exit as EX, ExitCallback } from "@/Node/Core/Exit";
-import { effect, reactive, uneffect } from "@/Node/Core/Reactive";
+import { SDTimingFunction, TimingFunction as T } from "@/Math/TimingFunction";
+import { effect, reactive } from "@/Node/Core/Reactive";
 import { RenderNode } from "@/Renderer/RenderNode";
-import { SDRule } from "@/Rule/Rule";
 import { Check } from "@/Utility/Check";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
-import { SDTimingFunction, TimingFunction as T } from "@/Math/TimingFunction";
 
 type ClickCallback = () => void;
 type ValueCallback = (value: string) => void;
@@ -43,10 +40,6 @@ export class SDNode {
         onChange: EventListener;
         onInput: EventListener;
         clickTimeout: NodeJS.Timeout;
-        updaters: { [key: string]: any };
-        freezing: number;
-        enter: EnterCallback;
-        exit: ExitCallback;
         [key: string]: any;
     };
     static NODE_ID = 0;
@@ -68,10 +61,6 @@ export class SDNode {
             onInput: undefined,
             clickTimeout: undefined,
             ready: false, // only when ready = true, the action can impact the node
-            updaters: {},
-            freezing: 0,
-            enter: undefined,
-            exit: undefined,
         };
 
         const targetLayer = target instanceof SDNode ? target.layer() : target;
@@ -219,7 +208,6 @@ export class SDNode {
             return this.startAnimate(start, end, T.easeInOut);
         }
         [this._.start, this._.end, this._.timingFunction] = arguments;
-        this.__forEachChild(child => child.startAnimate(this._.start, this._.end, this._.timingFunction));
         return this;
     }
     /**
@@ -230,7 +218,6 @@ export class SDNode {
     endAnimate(): this {
         this.__animationCheck();
         this._.start = this._.end;
-        this.__forEachChild(child => child.endAnimate());
         return this;
     }
     /**
@@ -253,7 +240,6 @@ export class SDNode {
         const delay = typeof delay_ === "number" ? delay_ : delay_.delay();
         this._.start = delay;
         this._.end = delay;
-        this.__forEachChild(child => child.after(delay));
         return this;
     }
     /**
@@ -279,56 +265,9 @@ export class SDNode {
         this._.end = 0;
     }
 
-    childAs(child: SDNode, rule?: SDRule): this;
-    childAs(name: string, child: SDNode, rule?: SDRule): this;
-    childAs(name: string | SDNode, child?: SDNode | SDRule, rule?: SDRule) {
-        const name_ =
-            typeof name === "string" || typeof name === "number" ? String(name) : "child__" + String(++SDNode.CHILD_ID);
-        const child_ = name instanceof SDNode ? name : (child as SDNode);
-        const rule_ = typeof child === "function" ? child : rule;
-        if (!child_.onEnter()) child_.onEnter(EN.appear());
-        if (rule_) this.tryUpdate(child_, () => this.__pushChild(name_, child_, rule_));
-        else this.__pushChild(name_, child_, rule_);
+    effect(name, callback) {
+        effect(callback);
         return this;
-    }
-    child(name: string) {
-        return this._.children[name];
-    }
-    __forEachChild(callback: (child: SDNode, id: string) => void) {
-        for (const id in this._.children) callback(this._.children[id], id);
-    }
-    __pushChild(name_: string, child: SDNode, rule?: SDRule) {
-        const name = typeof name_ === "string" ? name_ : String(++SDNode.CHILD_ID);
-        child._.parent = this;
-        this._.children[name] = child;
-        child.rule(rule);
-        return name;
-    }
-    /**
-     * Removes a child component from this component.
-     * @param child - The identifier or instance of the child component to remove.
-     * @returns The removed child component if it existed; otherwise, undefined.
-     */
-    eraseChild(child: string | SDNode) {
-        const child_ = typeof child === "string" ? this._.children[child] : child;
-        const name = Object.keys(this._.children).find(key => this._.children[key] === child_);
-        if (name === undefined) return undefined;
-        if (!child_.onExit()) child_.onExit(EX.fade());
-        child_.triggerExit();
-        if (child_.rule()) child_.eraseRule();
-        child_._.parent = undefined;
-        delete this._.children[name];
-        return child;
-    }
-    /**
-     * Checks if a child component exists within this component.
-     * @param child - The identifier or instance of the child component to check.
-     * @returns Returns true if the chidl exists; otherwise, false.
-     */
-    hasChild(child: string | SDNode) {
-        const child_ = typeof child === "string" ? this._.children[child] : child;
-        const name = Object.keys(this._.children).find(key => this._.children[key] === child_);
-        return name !== undefined;
     }
     /**
      * Removes this component from the scene.
@@ -337,151 +276,7 @@ export class SDNode {
     remove() {
         this._.layer.remove();
     }
-    freeze() {
-        this._.freezing++;
-        for (const key in this._.updaters) this._.updaters[key].freeze();
-        // this.vars.freeze();
-        return this;
-    }
-    unfreeze() {
-        this._.freezing--;
-        for (const key in this._.updaters) this._.updaters[key].unfreeze();
-        // this.vars.unfreeze();
-        return this;
-    }
-    freezing() {
-        return this._.freezing > 0;
-    }
-    /**
-     * Gets the responsive rule of this component.
-     * @returns The responsive rule.
-     */
-    rule(): SDRule;
-    /**
-     * Sets the responsive rule of this component.
-     *
-     * In most cases it is suggested to define the responsive rule via `childAs`.
-     * @param rule - The responsive rule to apply.
-     * @returns The current component instance for method chaining.
-     * @example
-     * // Defines a custom responsive rule.
-     * parent.childAs(child, (parent, child) => {
-     *     child.center(parent.center());
-     * });
-     * // Use a preset layout rule.
-     * parent.childAs(child, R.aside("rc")); // right center.
-     */
-    rule(rule: SDRule): this;
-    rule(rule?: SDRule) {
-        if (rule === undefined) return this._.rule;
-        this._.rule = effect(() => {
-            // @ts-ignore
-            rule(this._.parent, this);
-        });
-        return this;
-    }
-    /**
-     * Removes the responsive rule of this component.
-     * @returns The current component instance for method chaining.
-     */
-    eraseRule() {
-        if (!this.rule()) return this;
-        uneffect(this._.rule);
-        this._.rule = undefined;
-        return this;
-    }
-    effect(name: string): any;
-    /**
-     * Defines a responsive effect on this component.
-     *
-     * This method is intended for advanced use cases requiring deep customization.
-     * In most cases prefer using responsive rules instead of responsive effects.
-     * @param name - The name of the responsive effect.
-     * @param callback - The effect.
-     * @returns The current component instance for method chaining.
-     */
-    effect(name: string, callback: EffectCallback): this;
-    effect(name: string, callback?: EffectCallback) {
-        if (arguments.length === 1) return this._.updaters[name];
-        this._.updaters[name] = effect(callback);
-        return this;
-    }
-    /**
-     * Removes a specified responsive effect on this component.
-     * @param name - The name of the responsive effect.
-     * @returns The current component instance for method chaining.
-     */
-    uneffect(name: string) {
-        uneffect(this._.updaters[name]);
-        delete this._.updaters[name];
-        return this;
-    }
-    /**
-     * Removes all responsive effect on this component.
-     * @returns The current component instance for method chaining.
-     */
-    uneffectAll() {
-        for (const name in this._.updaters) this.uneffect(name);
-        return this;
-    }
-    /**
-     * Triggers a specified responsive effect defined on this component.
-     *
-     * In most cases responsive effects are to activate automatically by the responsive system.
-     * Do not use this method unless you truely understand what are you doing.
-     * @param name - The name of the effect to be triggered.
-     * @returns The current component instance for method chaining.
-     */
-    triggerEffect(name: string) {
-        this._.updaters[name].trigger();
-        return this;
-    }
-    hasEffect(name: string) {
-        return this._.updaters[name] !== undefined;
-    }
-    onEnter(): EnterCallback;
-    onEnter(enter: EnterCallback): this;
-    onEnter(enter?: EnterCallback) {
-        if (arguments.length === 0) return this._.enter;
-        this._.enter = enter;
-        return this;
-    }
-    onEnterDefault(enter: EnterCallback) {
-        if (!this._.enter) this._.enter = enter;
-        return this;
-    }
-    triggerEnter(parent: SDNode, move: () => void) {
-        if (!this._.enter) return this;
-        this._.entering = true;
-        this._.enter.call(parent, this, move);
-        this._.entering = this._.enter = undefined;
-        return this;
-    }
-    entering() {
-        return this._.entering !== undefined;
-    }
-    onExit(): ExitCallback;
-    onExit(exit: ExitCallback): this;
-    onExit(exit?: ExitCallback) {
-        if (arguments.length === 0) return this._.exit;
-        this._.exit = exit;
-        return this;
-    }
-    onExitDefault(exit: ExitCallback) {
-        if (!this._.exit) this._.exit = exit;
-        return this;
-    }
-    triggerExit() {
-        if (!this._.exit) return this;
-        this._.exit.call(this._.parent, this);
-        this._.exit = undefined;
-        return this;
-    }
-    tryUpdate(element, update) {
-        if (element.onEnter()) {
-            element.triggerEnter(this, update);
-        } else update();
-    }
+
     clickable(clickable: boolean) {
         // TODO
         return this;
@@ -668,7 +463,7 @@ export class SDNode {
     pos(point: [number, number]): this;
     pos(x: XL, y: YL, dx?: number, dy?: number): [number, number];
     pos(x: number | [number, number] | XL, y?: number | YL, dx = 0, dy = 0) {
-        if (typeof x === "number" && typeof y === "number") return this.freeze().x(x).y(y).unfreeze();
+        if (typeof x === "number" && typeof y === "number") return this.x(x).y(y);
         if (Array.isArray(x)) return this.pos(x[0], x[1]);
         return [this[x]() + dx, this[y]() + dy];
     }
@@ -681,10 +476,7 @@ export class SDNode {
     center(cx?: number | [number, number], cy?: number) {
         if (arguments.length === 0) return this.pos("cx", "cy");
         if (arguments.length === 1) return this.center(cx[0], cx[1]);
-        return this.freeze()
-            .cx(cx as number)
-            .cy(cy)
-            .unfreeze();
+        return this.cx(cx as number).cy(cy);
     }
     kx(k: number) {
         return this.x() + this.width() * k;
@@ -738,12 +530,10 @@ export class SDNode {
             const box = x as SDBox;
             return this.boundingBox(box.x, box.y, box.width, box.height);
         }
-        return this.freeze()
-            .width(width)
+        return this.width(width)
             .height(height)
             .x(x as number)
-            .y(y)
-            .unfreeze();
+            .y(y);
     }
     /**
      * Makes this component appear.
@@ -786,7 +576,7 @@ export class SDNode {
         const height = this.height();
         this.scale(0.001);
         context.till(0, 1);
-        this.freeze().width(width).height(height).opacity(1).unfreeze();
+        this.width(width).height(height).opacity(1);
         return this;
     }
     zoomOut() {

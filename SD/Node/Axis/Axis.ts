@@ -1,7 +1,6 @@
 import { dqual } from "@/Math/Math";
 import { Vector as V } from "@/Math/Vector";
 import { BaseAxis } from "@/Node/Axis/BaseAxis";
-import { Enter as EN } from "@/Node/Core/Enter";
 import { Line } from "@/Node/Path/Line";
 import { SDNode } from "@/Node/SDNode";
 import { Text } from "@/Node/Text/Text";
