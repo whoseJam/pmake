@@ -4,7 +4,7 @@ const svg = sd.svg();
 
 sd.init(() => {});
 
-sd.main(TestZoomInAndZoomOut);
+sd.main(TestFadeInAndFadeOut);
 
 async function TestFadeInAndFadeOut() {
     const node1 = new sd.Rect(svg).x(100).y(100);

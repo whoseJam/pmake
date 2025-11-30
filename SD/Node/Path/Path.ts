@@ -1,10 +1,10 @@
 import { BasePath } from "@/Node/Path/BasePath";
-import { RenderNode } from "@/Renderer/RenderNode";
-import { SDNode } from "@/Node/SDNode";
 import { PathEngine } from "@/Node/Path/PathEngine";
+import { SDNode } from "@/Node/SDNode";
+import { RenderNode } from "@/Renderer/RenderNode";
 
 export class Path extends BasePath {
-    constructor(target: SDNode | RenderNode, value?: any) {
+    constructor(target: SDNode | RenderNode) {
         super(target);
 
         this.__createSVGNode("path", {
@@ -18,8 +18,6 @@ export class Path extends BasePath {
         });
 
         this.type("Path");
-
-        this.value(value);
     }
     x(): number;
     x(x: number): this;

@@ -4,9 +4,16 @@ import { Root } from "@/Interact/Root";
 import { Status as S, Status } from "@/Interact/Status";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
+export const NORMAL_FRAME = -1;
+export const LAST_MAIN_STAGE = -2;
+export const LAST_INTER_STAGE = -3;
+export const FIRST_INTER_STAGE = -4;
+export const CONTINUE_STAGE = -5;
+
 export class Window {
     static DEBUG = true;
     static RATE = 1;
+    static ACTION_TICK = 0;
     static ACTION_COUNT = 0;
     static EFFECT_COUNT = 0;
     static CURRENT_FRAME = 0;
@@ -95,12 +102,6 @@ function lastMainFrame() {
         else ErrorLauncher.reloadMyself();
     }
 }
-
-export const NORMAL_FRAME = -1;
-export const LAST_MAIN_STAGE = -2;
-export const LAST_INTER_STAGE = -3;
-export const FIRST_INTER_STAGE = -4;
-export const CONTINUE_STAGE = -5;
 
 function promiseOfFirstInterFrame(): Promise<void> {
     if (Window.IS_CONTINUING) throw new Error();

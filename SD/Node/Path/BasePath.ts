@@ -1,6 +1,5 @@
 import { Context } from "@/Animate/Context";
 import { SDSVGNode } from "@/Node/SDSVGNode";
-import { Rule as R, SDRule } from "@/Rule/Rule";
 import { Check } from "@/Utility/Check";
 import { Color as C, SDAllColor, SDPacketColor } from "@/Utility/Color";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
@@ -15,7 +14,6 @@ const BASE_PATH_ATTRIBUTES = {
     strokeDashArray: [1, 0],
     markerStart: "",
     markerMid: "",
-
     markerEnd: "",
 };
 
@@ -192,10 +190,6 @@ export class BasePath extends SDSVGNode {
     totalLength(): number {
         ErrorLauncher.notImplementedYet(`${this.constructor.name}.totalLength`);
         return 0;
-    }
-
-    __defaultValueRule(): SDRule {
-        return R.pointAtPathByRate(0.5, "cx", "cy");
     }
 
     __createSVGNode(label: string, attributes?: { [key: string]: any }) {

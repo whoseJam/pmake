@@ -5,7 +5,6 @@ import { Line } from "@/Node/Path/Line";
 import { SDNode } from "@/Node/SDNode";
 import { Text } from "@/Node/Text/Text";
 import { RenderNode } from "@/Renderer/RenderNode";
-import { ObjectPool } from "@/Utility/Pool/ObjectPool";
 
 function createTickPool(axis: Axis): ObjectPool {
     return new ObjectPool<any>({

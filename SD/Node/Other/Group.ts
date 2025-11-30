@@ -2,6 +2,9 @@ import { SDNode } from "@/Node/SDNode";
 import { SDSVGNode } from "@/Node/SDSVGNode";
 
 export class Group extends SDSVGNode {
+    _: SDSVGNode["_"] & {
+        nodes: Array<SDNode>;
+    };
     constructor(target: SDSVGNode) {
         super(target);
         this._.nodes = [];
@@ -13,17 +16,18 @@ export class Group extends SDSVGNode {
     }
     startAnimate() {
         super.startAnimate.apply(this, arguments);
-        this._.nodes.forEach(node => node.startAnimate.apply(node, arguments));
+        if (arguments.length !== 3) return this;
+        for (const node of this._.nodes) node.startAnimate.apply(node, arguments);
         return this;
     }
     endAnimate() {
         super.endAnimate.apply(this, arguments);
-        this._.nodes.forEach(node => node.endAnimate.apply(node, arguments));
+        for (const node of this._.nodes) node.endAnimate.apply(node, arguments);
         return this;
     }
     after() {
         super.after.apply(this, arguments);
-        this._.nodes.forEach(node => node.after.apply(node, arguments));
+        for (const node of this._.nodes) node.after.apply(node, arguments);
         return this;
     }
     nodes() {

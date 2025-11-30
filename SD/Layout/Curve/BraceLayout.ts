@@ -1,10 +1,10 @@
 import { Vector as V } from "@/Math/Vector";
+import { Path } from "@/Node/Path/Path";
 import { SDNode } from "@/Node/SDNode";
-import { Path } from "@/sd";
 import { PathPen } from "@/Utility/PathPen";
 import { trim } from "@/Utility/Trim";
 
-interface BraceCurveLayoutArgs {
+interface BraceLayoutArgs {
     source: [number, number];
     target: [number, number];
     bending?: number;
@@ -41,7 +41,7 @@ interface BraceCurveLayoutArgs {
  * @example
  * // Basic brace curve with default bending
  * const path = sd.Path();
- * BraceCurveLayout(path, {
+ * BraceLayout(path, {
  *   source: [100, 100],
  *   target: [100, 300]
  * });
@@ -49,7 +49,7 @@ interface BraceCurveLayoutArgs {
  * @example
  * // Deeper brace curve
  * const path = sd.Path();
- * BraceCurveLayout(path, {
+ * BraceLayout(path, {
  *   source: [100, 100],
  *   target: [100, 300],
  *   bending: 10
@@ -58,7 +58,7 @@ interface BraceCurveLayoutArgs {
  * @example
  * // Shallow brace curve
  * const path = sd.Path();
- * BraceCurveLayout(path, {
+ * BraceLayout(path, {
  *   source: [100, 100],
  *   target: [100, 300],
  *   bending: 2
@@ -67,7 +67,7 @@ interface BraceCurveLayoutArgs {
  * @example
  * // With node clipping
  * const path = sd.Path();
- * BraceCurveLayout(path, {
+ * BraceLayout(path, {
  *   source: [nodeA.cx(), nodeA.cy()],
  *   target: [nodeB.cx(), nodeB.cy()],
  *   bending: 5,
@@ -75,10 +75,10 @@ interface BraceCurveLayoutArgs {
  *   targetClipper: nodeB
  * });
  */
-export function BraceCurveLayout(path: Path, args: BraceCurveLayoutArgs) {
+export function BraceLayout(path: Path, args: BraceLayoutArgs) {
     const { source, target, bending = 5, sourceClipper, targetClipper } = args;
 
-    // Generate brace curve path using the same algorithm as BraceCurve class
+    // Generate brace curve path using the same algorithm as Brace class
     const vs = source;
     const vt = target;
     const vc = V.numberMul(V.add(vs, vt), 0.5);

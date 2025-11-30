@@ -30,6 +30,7 @@ export class SDNode {
         frame: number;
         start: number;
         end: number;
+        subAnimates: Array<Context>;
         timingFunction: SDTimingFunction;
         layer: RenderNode;
         layers: { [key: string]: RenderNode };
@@ -50,6 +51,7 @@ export class SDNode {
             frame: -1,
             start: 0,
             end: 0,
+            subAnimates: [],
             timingFunction: undefined,
             layer: undefined,
             layers: {},
@@ -86,6 +88,21 @@ export class SDNode {
             "transformOrigin",
             SDNode.__action(this, this._.layer, "transform-origin", Interp.vectorInterp)
         );
+    }
+    startSubAnimate() {
+        const context = new Context(this);
+        this._.subAnimates.push(context);
+        return this;
+    }
+    subAnimate(l: number, r: number) {
+        const context = this._.subAnimates[this._.subAnimates.length - 1];
+        context.till(l, r);
+        return this;
+    }
+    endSubAnimate() {
+        const context = this._.subAnimates.pop();
+        context.recover();
+        return this;
     }
     /**
      * Gets the type label of this component.
@@ -514,10 +531,10 @@ export class SDNode {
         if (arguments.length === 0) return this.ky(1);
         return this.y(my - this.height());
     }
-    boundingBox(): SDBox;
-    boundingBox(box: SDBox): this;
-    boundingBox(x: number, y: number, width: number, height: number): this;
-    boundingBox(x?: number | SDBox, y?: number, width?: number, height?: number) {
+    box(): SDBox;
+    box(box: SDBox): this;
+    box(x: number, y: number, width: number, height: number): this;
+    box(x?: number | SDBox, y?: number, width?: number, height?: number) {
         if (arguments.length === 0) {
             return {
                 x: this.x(),
@@ -526,14 +543,8 @@ export class SDNode {
                 height: this.height(),
             };
         }
-        if (arguments.length === 1) {
-            const box = x as SDBox;
-            return this.boundingBox(box.x, box.y, box.width, box.height);
-        }
-        return this.width(width)
-            .height(height)
-            .x(x as number)
-            .y(y);
+        if (typeof x === "number") return this.width(width).height(height).x(x).y(y);
+        return this.box(x.x, x.y, x.width, x.height);
     }
     /**
      * Makes this component appear.
@@ -545,13 +556,14 @@ export class SDNode {
      * node.startAnimate().appear().endAnimate();
      */
     appear() {
-        const context = new Context(this);
-        context.till(0, 0);
-        this.opacity(0);
-        context.till(0, 1);
-        this.opacity(1);
-        return this;
+        return this.startSubAnimate() // opacity from 0 to 1
+            .subAnimate(0, 0)
+            .opacity(0)
+            .subAnimate(0, 1)
+            .opacity(1)
+            .endSubAnimate();
     }
+    0;
     /**
      * Makes this component disappear.
      *
@@ -562,43 +574,74 @@ export class SDNode {
      * node.startAnimate().disappear().endAnimate();
      */
     disappear() {
-        const context = new Context(this);
-        context.till(0, 0);
-        this.opacity(1);
-        context.till(0, 1);
-        this.opacity(0);
-        return this;
+        return this.startSubAnimate() // opacity from 1 to 0
+            .subAnimate(0, 0)
+            .opacity(1)
+            .subAnimate(0, 1)
+            .opacity(0)
+            .endSubAnimate();
     }
+    /**
+     * Makes this component zoom in from scale 0 to 1.
+     *
+     * This component must be animated currently.
+     * @returns The current component instance for method chaining.
+     * @example
+     * // Makes a component zoom in.
+     * node.startAnimate().zoomIn().endAnimate();
+     */
     zoomIn() {
-        const context = new Context(this);
-        context.till(0, 0);
-        const width = this.width();
-        const height = this.height();
-        this.scale(0.001);
-        context.till(0, 1);
-        this.width(width).height(height).opacity(1);
-        return this;
+        return this.startSubAnimate() // scale from 0 to 1
+            .subAnimate(0, 0)
+            .transformOrigin(this.center())
+            .scale(0)
+            .subAnimate(0, 1)
+            .scale(1)
+            .endSubAnimate();
     }
+    /**
+     * Makes this component zoom out from scale 1 to 0.
+     *
+     * This component must be animated currently.
+     * @returns The current component instance for method chaining.
+     * @example
+     * // Makes a component zoom out.
+     * node.startAnimate().zoomOut().endAnimate();
+     */
     zoomOut() {
-        this.scale(0.001).opacity(1);
-        return this;
+        return this.startSubAnimate() // scale from 1 to 0
+            .subAnimate(0, 0)
+            .transformOrigin(this.center())
+            .scale(1)
+            .subAnimate(0, 1)
+            .scale(0)
+            .endSubAnimate();
     }
+    /**
+     * Makes this component fade in by gradually increasing opacity from 0 to 1.
+     *
+     * This component must be animated currently.
+     * @returns The current component instance for method chaining.
+     * @example
+     * // Makes a component fade in.
+     * node.startAnimate().fadeIn().endAnimate();
+     */
     fadeIn() {
-        const context = new Context(this);
-        context.till(0, 0);
-        this.opacity(0);
-        context.till(0, 1);
-        this.opacity(1);
-        return this;
+        return this.appear();
     }
+    /**
+     * Makes this component fade out by gradually decreasing opacity from 1 to 0.
+     *
+     * This component must be animated currently.
+     * @returns The current component instance for method chaining.
+     * @example
+     * // Makes a component fade out.
+     * node.startAnimate().fadeOut().endAnimate();
+     */
     fadeOut() {
-        const context = new Context(this);
-        context.till(0, 0);
-        this.opacity(1);
-        context.till(0, 1);
-        this.opacity(0);
-        return this;
+        return this.disappear();
     }
+
     static __asNode(target: SDNode | RenderNode, object: any, id?: string): SDNode {
         if (object === null || object === undefined) {
             const { Text } = require("@/Node/Text/Text");

@@ -1,8 +1,8 @@
 import { Interp } from "@/Animate/Interp";
 import { SDNode } from "@/Node/SDNode";
+import { SDSVGNode } from "@/Node/SDSVGNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Color as C } from "@/Utility/Color";
-import { SDSVGNode } from "@/Node/SDSVGNode";
 
 const BASE_HTML_ATTRIBUTES = {
     "fill": C.white,
@@ -22,12 +22,7 @@ export class SDHTMLNode extends SDSVGNode {
      * @param attributes - Additional attributes to apply to the HTML element
      * @returns The created RenderNode
      */
-    __createHTMLNode(
-        label: string,
-        width: number,
-        height: number,
-        attributes: { [key: string]: any } = {}
-    ): RenderNode {
+    __createHTMLNode(label: string, width: number, height: number, attributes: Record<string, any> = {}): RenderNode {
         this.vars.merge(attributes);
         const foreign = this.__createSVGNode("foreignObject", {
             x: 0,

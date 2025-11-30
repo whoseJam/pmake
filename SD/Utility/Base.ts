@@ -75,11 +75,8 @@ export function make1d(length: number, defaultValue: any): Array<any>;
 export function make1d(length: number, defaultValue: any = 0): Array<any> {
     const result: any[] = [];
     for (let i = 0; i < length; i++) {
-        if (typeof defaultValue === "object") {
-            result.push(Object.assign({}, defaultValue));
-        } else {
-            result.push(defaultValue);
-        }
+        if (typeof defaultValue === "object") result.push(Object.assign({}, defaultValue));
+        else result.push(defaultValue);
     }
     return result;
 }
@@ -96,9 +93,7 @@ export function make2d(rows: number, columns: number): Array<Array<any>>;
 export function make2d(rows: number, columns: number, defaultValue: any): Array<any>;
 export function make2d(rows: number, columns: number, defaultValue: any = 0): Array<any> {
     const result: any[] = [];
-    for (let i = 0; i < rows; i++) {
-        result.push(make1d(columns, defaultValue));
-    }
+    for (let i = 0; i < rows; i++) result.push(make1d(columns, defaultValue));
     return result;
 }
 
@@ -107,7 +102,7 @@ export function make2d(rows: number, columns: number, defaultValue: any = 0): Ar
  * This allows the action to be undone in the animation system.
  */
 export function reversible(): void {
-    (global as any).ACTION_TICK++;
+    Window.ACTION_TICK++;
 }
 
 /**
@@ -115,5 +110,5 @@ export function reversible(): void {
  * This prevents the action from being undone in the animation system.
  */
 export function irreversible(): void {
-    (global as any).ACTION_TICK--;
+    Window.ACTION_TICK--;
 }

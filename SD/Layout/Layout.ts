@@ -2,7 +2,7 @@ import { ArrayLayout } from "@/Layout/Array/ArrayLayout";
 import { PileLayout } from "@/Layout/Array/PileLayout";
 import { StackLayout } from "@/Layout/Array/StackLayout";
 import { BezierLayout } from "@/Layout/Curve/BezierLayout";
-import { BraceCurveLayout } from "@/Layout/Curve/BraceCurveLayout";
+import { BraceLayout } from "@/Layout/Curve/BraceLayout";
 import { CurveLayout } from "@/Layout/Curve/CurveLayout";
 import { VHBezierLayout } from "@/Layout/Curve/VHBezierLayout";
 import { BipartiteGraphLayout } from "@/Layout/Graph/BipartiteGraphLayout";
@@ -27,7 +27,7 @@ const Layout = {
     BezierLayout,
     CurveLayout,
     VHBezierLayout,
-    BraceCurveLayout,
+    BraceLayout,
     GridLayout,
     TinyGraphLayout,
     GridGraphLayout,
