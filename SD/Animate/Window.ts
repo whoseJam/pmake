@@ -2,7 +2,6 @@ import { Animate as A } from "@/Animate/Animate";
 import { Device as D } from "@/Interact/Device";
 import { Root } from "@/Interact/Root";
 import { Status as S, Status } from "@/Interact/Status";
-import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 export const NORMAL_FRAME = -1;
 export const LAST_MAIN_STAGE = -2;
@@ -98,8 +97,8 @@ function lastMainFrame() {
     if (Window.SHOULD_FLUSH) {
         if (Window.PUPPETEER) return;
         Window.notifyParent(); // set the animation size of parent window
-        if (Window.SHOULD_EXPORT) ErrorLauncher.notImplementedYet("lastMainFrame::export");
-        else ErrorLauncher.reloadMyself();
+        if (Window.SHOULD_EXPORT) throw new Error("Not implemented yet");
+        else throw new Error("Reload (not an error)");
     }
 }
 

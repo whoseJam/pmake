@@ -2,7 +2,6 @@ import { Context } from "@/Animate/Context";
 import { SDSVGNode } from "@/Node/SDSVGNode";
 import { Check } from "@/Utility/Check";
 import { Color as C, SDAllColor, SDPacketColor } from "@/Utility/Color";
-import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 const BASE_PATH_ATTRIBUTES = {
     fill: C.white,
@@ -171,7 +170,7 @@ export class BasePath extends SDSVGNode {
      * @returns The coordinates of the point.
      */
     at(k: number): [number, number] {
-        ErrorLauncher.notImplementedYet(`${this.constructor.name}.at`);
+        throw new Error(`Not implemented yet: ${this.constructor.name}.at`);
         return [0, 0];
     }
     /**
@@ -180,7 +179,7 @@ export class BasePath extends SDSVGNode {
      * @returns The coordinates of the point.
      */
     getPointAtLength(length: number): [number, number] {
-        ErrorLauncher.notImplementedYet(`${this.constructor.name}.getPointAtLength`);
+        throw new Error(`Not implemented yet: ${this.constructor.name}.getPointAtLength`);
         return [0, 0];
     }
     /**
@@ -188,7 +187,7 @@ export class BasePath extends SDSVGNode {
      * @returns The total length.
      */
     totalLength(): number {
-        ErrorLauncher.notImplementedYet(`${this.constructor.name}.totalLength`);
+        throw new Error(`Not implemented yet: ${this.constructor.name}.totalLength`);
         return 0;
     }
 

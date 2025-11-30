@@ -16,7 +16,6 @@ import { RenderNode } from "@/Renderer/RenderNode";
 import { make1d } from "@/Utility/Base";
 import { SDPacketColor } from "@/Utility/Color";
 import { Dom } from "@/Utility/Dom";
-import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 import opentype from "opentype.js";
 
 function getCodePointCount(str: string): number {
@@ -434,7 +433,7 @@ export class MathMatchingMachine extends MatchingMachine {
 function createMatchingMachine(text: BaseTextConfiguration): MatchingMachine {
     if (text instanceof MathConfiguration) return new MathMatchingMachine(text);
     if (text instanceof TextConfiguration) return new TextMatchingMachine(text);
-    ErrorLauncher.whatHappened();
+    throw new Error("Unknown Text Type");
 }
 
 export class Transforming {
@@ -583,7 +582,7 @@ export class TextEngine {
     static getPaths(config: BaseTextConfiguration): Array<TransformingPath> {
         if (config instanceof MathConfiguration) return TextEngine.getMathPaths(config);
         if (config instanceof TextConfiguration) return TextEngine.getTextPaths(config);
-        ErrorLauncher.whatHappened();
+        throw new Error("Unknown Configuration");
     }
     static textBoundingBox(text_: Text | string, family_?: string, size_?: number) {
         const text = typeof text_ === "string" ? text_ : text_.text();

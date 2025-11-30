@@ -1,6 +1,5 @@
 import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
-import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 function hasChanged(v1: any, v2: any, precise?: (v1: number, v2: number) => boolean) {
     if (typeof v1 === "number" && typeof v2 === "number") {
@@ -102,8 +101,9 @@ class Effect {
     }
     trigger() {
         globalAllowUpdate = false;
-        if (globalActiveEffect) ErrorLauncher.whatHappened();
+        if (globalActiveEffect) throw new Error("Unexpected: globalActiveEffect is already set");
         globalActiveEffect = this;
+
         const out = this.out;
         this.clear();
         this.call();
@@ -112,8 +112,9 @@ class Effect {
         globalAllowUpdate = true;
     }
     __trigger() {
-        if (globalActiveEffect) ErrorLauncher.whatHappened();
+        if (globalActiveEffect) throw new Error("Unexpected: globalActiveEffect is already set");
         globalActiveEffect = this;
+
         const out = this.out;
         this.clear();
         this.call();
@@ -165,7 +166,7 @@ class Effect {
     inputHasChanged(object: any, key: string) {
         const objectManager = objectsMap.get(object);
         const old = this.in.find(variable => variable.key === key && variable.object === object);
-        if (!old) ErrorLauncher.whatHappened();
+        if (!old) throw new Error("Unexpected: input variable not found");
         return hasChanged(old.value, object[key], objectManager.precise.get(key));
     }
     anyInputHasChanged() {
@@ -459,7 +460,8 @@ function collectEffect(queue: Queue, object: any, key: string) {
 }
 
 function collectEffectOnDAG(queue: Queue, objects: Array<any>, keys: Array<string>) {
-    if (objects.length !== keys.length) ErrorLauncher.whatHappened();
+    if (objects.length !== keys.length) throw new Error("Unexpected: objects and keys length mismatch");
+
     const visitedObject: Map<any, Map<string, Set<Effect>>> = new Map(); // Object -> Key -> Set<Effect>
     const visitedEffect: Map<Effect, { degree: number; object: any }> = new Map();
     function dfs(object: any, key: string, lastEffect: Effect = undefined) {

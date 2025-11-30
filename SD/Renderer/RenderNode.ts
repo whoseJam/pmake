@@ -5,7 +5,6 @@ import { isStyleKey, setAttribute } from "@/Renderer/Attribute";
 import { HTML, HTML_INNERHTML_SET } from "@/Renderer/HTML";
 import { SVG } from "@/Renderer/SVG";
 import { Dom } from "@/Utility/Dom";
-import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 function parseText(text: string) {
     let ans = "";
@@ -37,7 +36,7 @@ export class RenderNode {
         if (args.action === undefined) args.action = true;
         if (args.append === undefined) args.append = true;
         if (!args.element) {
-            if (!args.label) ErrorLauncher.whatHappened();
+            if (!args.label) throw new Error("Unexpected: label is required when element is not provided");
             if (HTML[args.label]) args.element = Dom.createElement(args.label);
             else args.element = Dom.createSVGElement(args.label);
         } else args.label = Dom.tagName(args.element);

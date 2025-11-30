@@ -7,7 +7,6 @@ import { effect, reactive } from "@/Node/Core/Reactive";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
 import { Dom } from "@/Utility/Dom";
-import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 type ClickCallback = () => void;
 type ValueCallback = (value: string) => void;
@@ -491,22 +490,11 @@ export class SDNode {
         this.vars.transformOrigin = [x_, y_];
         return this;
     }
-    pos(x: number, y: number): this;
-    pos(point: [number, number]): this;
-    pos(x: XL, y: YL, dx?: number, dy?: number): [number, number];
-    pos(x: number | [number, number] | XL, y?: number | YL, dx = 0, dy = 0) {
-        if (typeof x === "number" && typeof y === "number") return this.x(x).y(y);
-        if (Array.isArray(x)) return this.pos(x[0], x[1]);
-        return [this[x]() + dx, this[y]() + dy];
-    }
-    position() {
-        return this.pos.apply(this, arguments);
-    }
     center(): [number, number];
     center(cx: number, cy: number): this;
     center(point: [number, number]): this;
     center(cx?: number | [number, number], cy?: number) {
-        if (arguments.length === 0) return this.pos("cx", "cy");
+        if (arguments.length === 0) return [this.cx(), this.cy()];
         if (arguments.length === 1) return this.center(cx[0], cx[1]);
         return this.cx(cx as number).cy(cy);
     }
@@ -681,7 +669,7 @@ export class SDNode {
                 const obj = object();
                 if (obj.setAttribute) obj.setAttribute(key, vn);
                 else if (obj[key]) obj[key] = vn;
-                else ErrorLauncher.whatHappened();
+                else throw new Error("Unexpected: unable to set property");
                 return;
             }
             new Action(

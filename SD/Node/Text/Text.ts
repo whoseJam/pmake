@@ -6,7 +6,6 @@ import { RenderNode } from "@/Renderer/RenderNode";
 import { make1d } from "@/Utility/Base";
 import { Check } from "@/Utility/Check";
 import { SDAllColor, SDPacketColor } from "@/Utility/Color";
-import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 export class TextConfiguration extends BaseTextConfiguration {
     family: string;
@@ -198,7 +197,7 @@ export class Text extends BaseText {
 
     intValue() {
         const i = Math.floor(+this.text());
-        if (isNaN(i)) ErrorLauncher.failToParseAsIntValue(this.text());
+        if (isNaN(i)) throw new Error(`Failed to parse as int value: ${this.text()}`);
         return i;
     }
 

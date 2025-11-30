@@ -1,7 +1,6 @@
+import { Action } from "@/Animate/Action";
 import { PathEngine, PathOper, PathOpers } from "@/Node/Path/PathEngine";
 import { Color } from "@/Utility/Color";
-import { ErrorLauncher } from "@/Utility/ErrorLauncher";
-import { Action } from "./Action";
 
 export type InterpFunction = (this: Action, t: number) => void;
 export type InterpCreator = (object: any, key: string) => InterpObject;
@@ -25,7 +24,7 @@ function setter(object: any, key: string): Setter {
             object[key] = value;
         };
     }
-    ErrorLauncher.unknownKeyError(key);
+    throw new Error(`Unknown key: ${key}`);
 }
 
 export class InterpObject {

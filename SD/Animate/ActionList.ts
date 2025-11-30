@@ -2,7 +2,6 @@ import { Action } from "@/Animate/Action";
 import { Window } from "@/Animate/Window";
 import { SDNode } from "@/Node/SDNode";
 import { SDSVGNode } from "@/Node/SDSVGNode";
-import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 const SIZE_KEY = new Set([
     // the channel which will impact the shape (boundingBox) of an element
@@ -105,7 +104,7 @@ export class ActionList {
         if (!action.is(Action.hideFlag)) {
             this.validCount++;
             if (action.is(Action.stopFlag)) this.stopCount++;
-        } else ErrorLauncher.whatHappened();
+        } else throw new Error("Unexpected: action has hideFlag set");
     }
     checkConflict(before: Action, after: Action) {
         /**
