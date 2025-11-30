@@ -160,10 +160,9 @@ export abstract class BaseText extends SDSVGNode {
      * @param i - Optional index specifying which matched subtext to be colored. Defaults to `0`.
      * @returns The current component instance for method chaining.
      */
-    subtextColor(subtext: string | number, color: string | SDColor, i: number = 0) {
-        if (typeof color === "string") color = { fill: color, stroke: color };
-        return this.__subtextAttribute(subtext, color, i);
-    }
+    // subtextColor(subtext: string | number, color: SDColor, i: number = 0) {
+    //     return this.__subtextAttribute(subtext, color, i);
+    // }
     /**
      * Sets the color of all matched subtexts in this text component.
      * @param subtext - The subtext to match.

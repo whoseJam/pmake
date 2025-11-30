@@ -1,48 +1,20 @@
 import { Interp } from "@/Animate/Interp";
 import { SDNode } from "@/Node/SDNode";
-import { BaseText, BaseTextConfiguration, TextConfigDictionary, TextMapping } from "@/Node/Text/BaseText";
+import { BaseText, TextMapping } from "@/Node/Text/BaseText";
 import { TextEngine } from "@/Node/Text/TextEngine";
+import { buildTransforming } from "@/Node/Text/TextEngine/Animation";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Action } from "@/sd";
-import { make1d } from "@/Utility/Base";
 import { Check } from "@/Utility/Check";
-import { SDAllColor, SDPacketColor } from "@/Utility/Color";
-
-export class TextConfiguration extends BaseTextConfiguration {
-    family: string;
-    attr: Array<SDPacketColor>;
-    lastAttr?: Array<SDPacketColor>;
-    constructor(args: TextConfigDictionary) {
-        super(args);
-        this.family = args.family;
-        this.attr = args.attr;
-        this.lastAttr = args.lastAttr;
-    }
-    merge(args: TextConfigDictionary) {
-        if (!args) return this;
-        super.merge(args);
-        this.family = args.family || this.family;
-        this.attr = args.attr || this.attr;
-        this.lastAttr = args.lastAttr || this.lastAttr;
-        return this;
-    }
-}
+import { SDAllColor, SDColor, SDPacketColor } from "@/Utility/Color";
+import { matchSubtext } from "./TextEngine/Mapping";
+import { createTextView, PathStyle } from "./TextEngine/TextView";
 
 export class Text extends BaseText {
-    _: BaseText["_"] & {
-        attr: Array<SDPacketColor>;
-    };
     constructor(target: SDNode | RenderNode, text = "") {
         super(target);
 
         this.type("Text");
-
-        Object.assign(this._, {
-            attr: undefined,
-            textFrame: 0,
-            transformings: [],
-            configurations: {},
-        });
 
         const object = this.__createSVGNode("text", {
             "x": 0,
@@ -53,55 +25,18 @@ export class Text extends BaseText {
             "dominant-baseline": "text-before-edge",
         });
 
-        this._.attr = make1d(0, {
-            fill: "default",
-            stroke: "default",
-        });
-
         this.vars.merge({
             text: "",
             html: "",
+            subtextStyles: [],
             width: 0,
             height: 0,
             object,
         });
 
+        this.vars.watch("text", SDNode.__action(this, object, "text", Interp.emptyInterp));
+        this.vars.watch("subtextStyles", SDNode.__action(this, object, "subtextStyles", Interp.emptyInterp));
         this.vars.watch("html", SDNode.__action(this, object, "innerHTML", Interp.blankStringInterp));
-        this.vars.watch("x", (x: number, vo: number) => {
-            if (this.duration() > 0) {
-                this.__updateSourceConfiguration({ x: vo });
-                this.__updateTargetConfiguration({ x });
-            }
-            this.__updateTransforming();
-        });
-        this.vars.watch("y", (y: number, vo: number) => {
-            if (this.duration() > 0) {
-                this.__updateSourceConfiguration({ y: vo });
-                this.__updateTargetConfiguration({ y });
-            }
-            this.__updateTransforming();
-        });
-        this.vars.watch("fontSize", (size: number, vo: number) => {
-            if (this.duration() > 0) {
-                this.__updateSourceConfiguration({ size: vo });
-                this.__updateTargetConfiguration({ size });
-            }
-            this.__updateTransforming();
-        });
-        this.vars.watch("fill", (fill: string, vo: string) => {
-            if (this.duration() > 0) {
-                this.__updateSourceConfiguration({ fill: vo });
-                this.__updateTargetConfiguration({ fill });
-            }
-            this.__updateTransforming();
-        });
-        this.vars.watch("stroke", (stroke: string, vo: string) => {
-            if (this.duration() > 0) {
-                this.__updateSourceConfiguration({ stroke: vo });
-                this.__updateTargetConfiguration({ stroke });
-            }
-            this.__updateTransforming();
-        });
 
         this.text(text);
     }
@@ -161,27 +96,12 @@ export class Text extends BaseText {
     text(text_?: string | number, mapping = [], auto = true) {
         if (arguments.length === 0) return this.vars.text;
         const text = String(text_);
-        const attr = make1d(text.length, {
-            fill: "default",
-            stroke: "default",
-        });
         if (this.vars.text === text) return this;
         const box = TextEngine.textBoundingBox(text, this.fontFamily(), this.fontSize());
-        if (this.duration() > 0 && TextEngine.fontExists(this.fontFamily())) {
-            this.__updateSourceConfiguration({ text: this.vars.text, attr: this._.attr });
-            this.__updateTargetConfiguration({ text, attr });
-            const source = this.__getSourceConfiguration();
-            const target = this.__getTargetConfiguration();
-            this.__createOrUpdateTransforming({
-                source,
-                target,
-                mapping,
-                auto,
-                color: true,
-            });
-        }
+        const source = { text: this.text(), styles: this.vars.subtextStyles };
+        const target = { text: text };
+        this.vars.subtextStyles = buildTransforming(this, source, target, mapping, this.layer());
         this.vars.text = text;
-        this._.attr = attr;
         this.vars.setTogether({
             html: parseToHTML.call(this),
             width: box.width,
@@ -224,6 +144,18 @@ export class Text extends BaseText {
         return this;
     }
 
+    subtextColor(subtext: string | number, color: SDColor, i: number = 0) {
+        const textView = createTextView(this.vars.text, {});
+        const subtextView = matchSubtext(textView, String(subtext));
+        const styles = this.vars.subtextStyles.map((style: PathStyle) => style.clone());
+        subtextView.__iterate(i => {
+            styles[i].fill = color;
+        });
+        this.vars.subtextStyles = styles;
+        this.vars.html = parseToHTML.call(this);
+        return this;
+    }
+
     __subtextAttribute(subtext_: string | number, color: SDAllColor, operator: number | "all" | "first" | "last") {
         const subtext = String(subtext_);
         const attr = this._.attr.map((color: SDPacketColor) => {
@@ -257,34 +189,11 @@ export class Text extends BaseText {
         this.vars.html = parseToHTML.call(this);
         return this;
     }
-    __getConfiguration(): TextConfiguration {
-        return new TextConfiguration({
-            node: this,
-            text: this.text(),
-            size: this.fontSize(),
-            family: this.fontFamily(),
-            fill: this.fill(),
-            stroke: this.stroke(),
-            x: this.x(),
-            y: this.y(),
-            attr: this._.attr,
-        });
-    }
-    __getSourceConfiguration(): TextConfiguration {
-        const config = super.__getSourceConfiguration() as TextConfiguration;
-        config.lastAttr = this._.attr;
-        return config;
-    }
 }
 
 function parseToHTML() {
-    const attr = this._.attr;
+    const styles = this.vars.subtextStyles;
     const text = this.text();
-    const equal = (i: number, j: number) => {
-        if (attr[i].fill !== attr[j].fill) return false;
-        if (attr[i].stroke !== attr[j].stroke) return false;
-        return true;
-    };
     const parseText = (text_: string | number) => {
         let ans = "";
         const text = String(text_);
@@ -297,15 +206,18 @@ function parseToHTML() {
         return ans;
     };
     let html = "";
-    for (let l = 0, r = 0; l < text.length; l = r + 1) {
-        r = l;
-        while (r + 1 < text.length && equal(l, r + 1)) r++;
-        let attribute = "";
-        if (attr[l].fill !== "default") attribute = attribute + ` fill='${attr[l].fill}'`;
-        if (attr[l].stroke !== "default") attribute = attribute + ` stroke='${attr[l].stroke}'`;
-        html = html + `<tspan ${attribute} alignment-baseline='text-before-edge'>`;
-        html = html + parseText(text.slice(l, r + 1));
-        html = html + "</tspan>";
-    }
+    console.log("styles=", styles);
+    if (styles.length === text.length) {
+        for (let l = 0, r = 0; l < text.length; l = r + 1) {
+            r = l;
+            while (r + 1 < text.length && styles[l].equalTo(styles[r + 1])) r++;
+            let attribute = "";
+            if (styles[l].fill !== "default") attribute = attribute + ` fill='${styles[l].fill}'`;
+            if (styles[l].stroke !== "default") attribute = attribute + ` stroke='${styles[l].stroke}'`;
+            html = html + `<tspan ${attribute} alignment-baseline='text-before-edge'>`;
+            html = html + parseText(text.slice(l, r + 1));
+            html = html + "</tspan>";
+        }
+    } else html = parseText(text);
     return html;
 }

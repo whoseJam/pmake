@@ -228,6 +228,7 @@ export class ActionList {
         });
         this.actionsList.forEachReverse(action => {
             const action_ = action.clone();
+            if (!action_) return;
             action_.reverse = true;
             action_.l = maxTimestamp - action.r;
             action_.r = maxTimestamp - action.l;
@@ -247,8 +248,9 @@ export class ActionList {
     replay() {
         const other = new ActionList();
         this.actionsList.forEach(action => {
-            const newAction = action.clone();
-            other.push(newAction);
+            const action_ = action.clone();
+            if (!action_) return;
+            other.push(action_);
         });
         other.enabled = true;
         return other;
@@ -269,6 +271,21 @@ export class ActionList {
                 }
             }
         });
+    }
+    getAttribute(entity: SDNode | RenderNode, animatedKey: string, t: number, default_?: any) {
+        const actionMap = this.actionsMap.get(entity);
+        if (!actionMap) return;
+        const actions = actionMap[animatedKey] ?? [];
+        let value = undefined;
+        actions.forEach(action => {
+            if (action.l === t) value = action.source;
+            if (action.r === t) value = action.target;
+        });
+        if (value === undefined) {
+            if (default_ !== undefined) return default_;
+            throw new Error(`Unable to find attribute ${animatedKey}`);
+        }
+        return value;
     }
     debug() {
         console.log("---------------Action List debug---------------");

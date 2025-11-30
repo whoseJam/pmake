@@ -91,6 +91,10 @@ export class Action {
         }
     }
     tick(t: number) {
+        if (!this.interp) {
+            this.set(Action.stopFlag);
+            return true;
+        }
         if (t < this.l) return false;
         Window.ACTION_TICK++;
         if (this.l < this.r - 1) {
@@ -148,6 +152,7 @@ export class Action {
         this.flag &= ~flag;
     }
     clone() {
+        if (this.lazyInterp) return undefined;
         return new Action(this);
     }
 }

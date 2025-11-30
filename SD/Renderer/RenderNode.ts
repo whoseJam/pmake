@@ -25,6 +25,8 @@ interface RenderNodeParams {
     element?: Element;
     append?: boolean;
     action?: boolean;
+    l?: number;
+    r?: number;
 }
 
 export class RenderNode {
@@ -32,6 +34,8 @@ export class RenderNode {
     targetLayer: RenderNode;
     label: string;
     backingElement: Element;
+    l?: number;
+    r?: number;
     constructor(args: RenderNodeParams) {
         if (args.action === undefined) args.action = true;
         if (args.append === undefined) args.append = true;
@@ -43,6 +47,8 @@ export class RenderNode {
         this.targetNode = args.targetNode;
         this.label = args.label;
         this.backingElement = args.element;
+        this.l = args.l;
+        this.r = args.r;
         if (!args.append) return;
         if (!args.targetLayer) return;
         if (!args.action) {
@@ -51,11 +57,11 @@ export class RenderNode {
         } else args.targetLayer.append(this); // set targetLayer in moveTo
     }
     delay() {
-        if (!this.targetNode) return 0;
+        if (!this.targetNode) return this.l;
         return this.targetNode.delay();
     }
     duration() {
-        if (!this.targetNode) return 0;
+        if (!this.targetNode) return this.r - this.l;
         return this.targetNode.duration();
     }
     element() {
@@ -123,6 +129,11 @@ export class RenderNode {
     }
     getType() {
         return this.isSVG() ? "svg" : "html";
+    }
+    __animate(l: number, r: number) {
+        this.l = l;
+        this.r = r;
+        return this;
     }
     __append(element_: Element | RenderNode) {
         const element = element_ instanceof RenderNode ? element_.element() : element_;
@@ -202,6 +213,14 @@ export class RenderNode {
         return new RenderNode({
             targetNode,
             targetLayer,
+            label,
+        });
+    }
+    static createRenderNodeWithTime(targetLayer: RenderNode, l: number, r: number, label: string) {
+        return new RenderNode({
+            targetLayer,
+            l,
+            r,
             label,
         });
     }

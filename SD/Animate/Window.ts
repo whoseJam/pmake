@@ -217,8 +217,8 @@ export function pause(ms?: number): Promise<void> {
         }
     }
     A.firstTick();
-    A.debug();
     A.trigger();
+    // A.debug();
     if (ms > 0) return promiseForMilliseconds(ms);
     switch (pauseBehavior) {
         case FIRST_INTER_STAGE:
