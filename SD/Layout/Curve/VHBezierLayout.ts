@@ -1,7 +1,7 @@
 import { Vector as V } from "@/Math/Vector";
+import { PathPen } from "@/Node/Path/PathPen";
 import { SDNode } from "@/Node/SDNode";
 import { Path } from "@/sd";
-import { PathPen } from "@/Utility/PathPen";
 import { trim } from "@/Utility/Trim";
 
 interface VHBezierLayoutArgs {

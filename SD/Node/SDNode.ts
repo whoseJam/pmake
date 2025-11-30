@@ -2,16 +2,21 @@ import { Action } from "@/Animate/Action";
 import { Context } from "@/Animate/Context";
 import { Interp, InterpCreator } from "@/Animate/Interp";
 import { Window } from "@/Animate/Window";
-import { Dom } from "@/Dom/Dom";
 import { SDTimingFunction, TimingFunction as T } from "@/Math/TimingFunction";
 import { effect, reactive } from "@/Node/Core/Reactive";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
+import { Dom } from "@/Utility/Dom";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 type ClickCallback = () => void;
 type ValueCallback = (value: string) => void;
 type DragCallback = (dx: number, dy: number) => [number, number];
+type PercentString = `${number}%`;
+type XLocationString = "left" | "center" | "right";
+type YLocationString = "top" | "middle" | "bottom";
+type XLocation = number | PercentString | XLocationString;
+type YLocation = number | PercentString | YLocationString;
 type EffectCallback = () => void;
 type XL = "x" | "cx" | "mx";
 type YL = "y" | "cy" | "my";
@@ -465,15 +470,25 @@ export class SDNode {
         this.vars.translate = [dx, dy];
         return this;
     }
-    transformOrigin(x: number, y: number): this;
-    transformOrigin(origin: [number, number]): this;
+    transformOrigin(x: XLocation, y: YLocation): this;
+    transformOrigin(origin: [XLocation, YLocation]): this;
     transformOrigin(): [number, number];
-    transformOrigin(x?: number | [number, number], y?: number) {
+    transformOrigin(x?: XLocation | [XLocation, YLocation], y?: YLocation) {
         if (arguments.length === 0) return this.vars.transformOrigin;
         if (Array.isArray(x)) return this.transformOrigin(x[0], x[1]);
-        Check.validateNumber(x, `${this.constructor.name}.transformOrigin`, 1);
-        Check.validateNumber(y, `${this.constructor.name}.transformOrigin`, 2);
-        this.vars.transformOrigin = [x, y];
+        const parse = (value: number | string, position: string, size: string) => {
+            if (typeof value === "number") return value;
+            if (value === "center") return parse("50%", position, size);
+            if (value === "top") return parse("0%", position, size);
+            if (value === "bottom") return parse("100%", position, size);
+            if (value === "left") return parse("0%", position, size);
+            if (value === "right") return parse("100%", position, size);
+            if (value.endsWith("%")) return this[position]() + (parseFloat(value) / 100) * this[size]();
+            return +value;
+        };
+        const x_ = parse(x, "x", "width");
+        const y_ = parse(y, "y", "height");
+        this.vars.transformOrigin = [x_, y_];
         return this;
     }
     pos(x: number, y: number): this;

@@ -1,8 +1,8 @@
 import { Action } from "@/Animate/Action";
 import { ActionList } from "@/Animate/ActionList";
 import { Window } from "@/Animate/Window";
-import { Dom } from "@/Dom/Dom";
 import { Status as S } from "@/Interact/Status";
+import { Dom } from "@/Utility/Dom";
 
 let checkWaterMarkTick = 0;
 const WATER_MARK_CHECK_INTERVAL = 100;

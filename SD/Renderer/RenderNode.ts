@@ -1,10 +1,10 @@
 import { Action } from "@/Animate/Action";
 import { TimingFunction as T } from "@/Math/TimingFunction";
-import { Dom } from "@/Dom/Dom";
 import { SDNode } from "@/Node/SDNode";
-import { HTML, HTML_INNERHTML_SET } from "@/Renderer/HTML";
 import { isStyleKey, setAttribute } from "@/Renderer/Attribute";
+import { HTML, HTML_INNERHTML_SET } from "@/Renderer/HTML";
 import { SVG } from "@/Renderer/SVG";
+import { Dom } from "@/Utility/Dom";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
 
 function parseText(text: string) {

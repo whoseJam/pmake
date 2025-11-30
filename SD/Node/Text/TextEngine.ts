@@ -1,7 +1,8 @@
 import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
-import { Dom } from "@/Dom/Dom";
 import { svg } from "@/Interact/Root";
+import { TimingFunction as T } from "@/Math/TimingFunction";
+import { PathPen } from "@/Node/Path/PathPen";
 import {
     BaseText,
     BaseTextConfiguration,
@@ -14,9 +15,8 @@ import { Text, Text as Text_, TextConfiguration } from "@/Node/Text/Text";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { make1d } from "@/Utility/Base";
 import { SDPacketColor } from "@/Utility/Color";
+import { Dom } from "@/Utility/Dom";
 import { ErrorLauncher } from "@/Utility/ErrorLauncher";
-import { PathPen } from "@/Utility/PathPen";
-import { TimingFunction as T } from "@/Math/TimingFunction";
 import opentype from "opentype.js";
 
 function getCodePointCount(str: string): number {

@@ -1,9 +1,9 @@
-import { Dom } from "@/Dom/Dom";
 import { Status } from "@/Interact/Status";
 import { BaseControl } from "@/Node/Control/BaseControl";
 import { Input } from "@/Node/Control/Input";
 import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
+import { Dom } from "@/Utility/Dom";
 
 export class TextArea extends BaseControl {
     constructor(target: SDNode | RenderNode) {

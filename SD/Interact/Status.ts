@@ -1,6 +1,6 @@
-import { Dom } from "@/Dom/Dom";
-import { Device as D } from "@/Interact/Device";
 import { Window } from "@/Animate/Window";
+import { Device as D } from "@/Interact/Device";
+import { Dom } from "@/Utility/Dom";
 
 function reload(): void {
     if (window.parent) {
