@@ -3,6 +3,7 @@ import { SDNode } from "@/Node/SDNode";
 import { BaseText, BaseTextConfiguration, TextConfigDictionary, TextMapping } from "@/Node/Text/BaseText";
 import { TextEngine } from "@/Node/Text/TextEngine";
 import { RenderNode } from "@/Renderer/RenderNode";
+import { Action } from "@/sd";
 import { make1d } from "@/Utility/Base";
 import { Check } from "@/Utility/Check";
 import { SDAllColor, SDPacketColor } from "@/Utility/Color";
@@ -62,6 +63,7 @@ export class Text extends BaseText {
             html: "",
             width: 0,
             height: 0,
+            object,
         });
 
         this.vars.watch("html", SDNode.__action(this, object, "innerHTML", Interp.blankStringInterp));
@@ -199,6 +201,27 @@ export class Text extends BaseText {
         const i = Math.floor(+this.text());
         if (isNaN(i)) throw new Error(`Failed to parse as int value: ${this.text()}`);
         return i;
+    }
+
+    typewritter(text: string) {
+        const currentText = this.vars.text;
+        const this_ = this;
+        new Action(
+            this.delay(),
+            this.delay() + this.duration(),
+            currentText,
+            text,
+            function (t: number) {
+                if (this.reverse) t = 1.0 - t;
+                const targetLength = Math.floor(text.length * t);
+                const displayText = this.target.slice(0, targetLength);
+                this_.vars.object.setAttribute("text", displayText);
+            },
+            this._.timingFunction,
+            this,
+            "text:typewritter"
+        );
+        return this;
     }
 
     __subtextAttribute(subtext_: string | number, color: SDAllColor, operator: number | "all" | "first" | "last") {

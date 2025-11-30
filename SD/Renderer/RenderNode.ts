@@ -48,7 +48,7 @@ export class RenderNode {
         if (!args.action) {
             this.targetLayer = args.targetLayer;
             args.targetLayer.__append(this);
-        } else args.targetLayer.append(this);
+        } else args.targetLayer.append(this); // set targetLayer in moveTo
     }
     delay() {
         if (!this.targetNode) return 0;
@@ -89,7 +89,7 @@ export class RenderNode {
                 if (this.reverse && t === 0) this.target.__append(this_); // remove reverse
             }
         }
-        new Action(l, r, this.targetLayer, targetLayer, structure, T.easeInOut, this, "moveTo");
+        new Action(l, r, this.targetLayer, targetLayer, structure, T.linear, this, "moveTo");
         this.targetLayer = targetLayer;
         return this;
     }

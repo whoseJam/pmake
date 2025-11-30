@@ -115,7 +115,7 @@ export class ActionList {
     }
     push(action: Action) {
         if (action.lazyInterp) this.pushLazyAction(action);
-        else this.pushAction(action);
+        this.pushAction(action);
     }
     pushLazyAction(action: Action) {
         this.lazyActions.push(action);
@@ -134,7 +134,7 @@ export class ActionList {
         }
     }
     checkConflict(action1: Action, action2: Action) {
-        if (isInstantaneous(action1) && isInstantaneous(action2)) {
+        if (isInstantaneous(action1) && isInstantaneous(action2) && action1.l === action2.l) {
             action2.source = action1.source;
             action1.set(Action.hideFlag);
         }

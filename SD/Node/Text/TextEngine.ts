@@ -519,19 +519,20 @@ export class Transforming {
         this.groups.push(transformingGroup);
     }
     createAction() {
+        console.log("create transforming action");
         new Action(
             this.text.delay(),
             this.text.delay() + this.text.duration(),
             this.source,
             this.target,
-            Interp.groupInterp((action: Action) => {
+            (l: number, r: number, source: any, target: any) => {
                 this.groups.forEach(group => {
-                    group.build(action.l, action.r);
+                    group.build(l, r);
                 });
-            }),
+            },
             T.easeInOut,
             this.text,
-            "transforming"
+            "text:transforming"
         );
     }
 }

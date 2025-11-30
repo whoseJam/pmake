@@ -69,12 +69,18 @@ async function TestTransformFromEmpty() {
 async function TestMapTransform() {
     const text = new sd.Text(svg, "HA").fontSize(150).x(100).y(100);
     await sd.pause();
-    text.startAnimate().text("IIa", { H: "II" }).fontFamily("Times New Roman").subtextColorAll("Ia", C.textBlue).endAnimate();
+    text.startAnimate()
+        .text("IIa", { H: "II" })
+        .fontFamily("Times New Roman")
+        .subtextColorAll("Ia", C.textBlue)
+        .endAnimate();
 }
 
 async function TestSpaceAndEnter() {
     const text = new sd.Text(svg).fontSize(100).text("a a a");
-    const path = new sd.Path(svg).d(`M105 67L105 67Q105 73 103 78Q101 83 98 86Q95 89 91 91Q86 93 81 93L81 93Q76 93 72 92Q67 91 63 89L63 89L63 23L71 23L71 42L71 51Q75 46 79 44Q83 42 88 42L88 42Q92 42 95 44Q98 46 100 49Q103 52 104 57Q105 61 105 67ZM96 67L96 67Q96 63 95 60Q95 57 94 55Q92 52 91 51Q89 50 86 50L86 50Q84 50 83 50Q81 51 79 52Q77 53 76 55Q74 57 71 60L71 60L71 84Q74 85 76 85Q79 86 81 86L81 86Q84 86 87 85Q90 84 92 82Q94 80 95 76Q96 73 96 67Z`);
+    const path = new sd.Path(svg).d(
+        `M105 67L105 67Q105 73 103 78Q101 83 98 86Q95 89 91 91Q86 93 81 93L81 93Q76 93 72 92Q67 91 63 89L63 89L63 23L71 23L71 42L71 51Q75 46 79 44Q83 42 88 42L88 42Q92 42 95 44Q98 46 100 49Q103 52 104 57Q105 61 105 67ZM96 67L96 67Q96 63 95 60Q95 57 94 55Q92 52 91 51Q89 50 86 50L86 50Q84 50 83 50Q81 51 79 52Q77 53 76 55Q74 57 71 60L71 60L71 84Q74 85 76 85Q79 86 81 86L81 86Q84 86 87 85Q90 84 92 82Q94 80 95 76Q96 73 96 67Z`
+    );
     await sd.pause();
     text.startAnimate().text(" b b ").endAnimate();
 }
@@ -95,6 +101,8 @@ async function TestTextTransform() {
 
 async function TestConsecutiveTransform() {
     const text = new sd.Text(svg, "A").x(100).y(100).fontSize(100);
+    await sd.pause();
+    text.startAnimate(1000).typewritter("hello").text("world").endAnimate();
     await sd.pause();
     text.startAnimate(1000).text("B").endAnimate();
     await sd.pause();
