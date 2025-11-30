@@ -2,36 +2,27 @@ import { SDNode } from "@/Node/SDNode";
 import { Color } from "./Color";
 
 export class Check {
-    static isFalse(object: any) {
+    static isFalse(object: any): object is false | null | undefined {
         return object === null || object === undefined || object === false;
     }
-    static isEmpty(object: any) {
+    static isEmpty(object: any): object is null | undefined {
         return object === null || object === undefined;
     }
-    static isString(object: any) {
+    static isString(object: any): object is string {
         return typeof object === "string";
     }
-    static isOpacity(object: any) {
+    static isOpacity(object: any): object is number {
         if (typeof object !== "number") return false;
         return 0 <= object && object <= 1;
     }
-    static isNumber(object: any) {
+    static isNumber(object: any): object is number {
         return typeof object === "number" && !isNaN(object) && object !== Infinity && object !== -Infinity;
     }
-    static isNumberOrString(object: any) {
+    static isNumberOrString(object: any): object is number | string {
         return typeof object === "number" || typeof object === "string";
     }
-    static isVector(object: any) {
+    static isVector(object: any): object is [number, number] {
         return object && typeof object[0] === "number" && typeof object[1] === "number";
-    }
-    static isAsyncFunction(object: any) {
-        if (typeof object !== "function") return false;
-        const str = object.toString();
-        return str.startsWith("async");
-    }
-    static isSyncFunction(object: any) {
-        if (typeof object !== "function") return false;
-        return !this.isAsyncFunction(object);
     }
     static validateOpacity(object: any, method: string, i = 1) {
         if (!this.isOpacity(object)) {
@@ -75,15 +66,6 @@ export class Check {
                 `We expect a hex-color or a { fill: hex-color, stroke: hex-color } for the ${this.generateLocation(
                     i
                 )} argument when calling ${method} but got <${object}>[type is ${typeof object}].`
-            );
-        }
-    }
-    static validateSyncFunction(object: any, method: string, i = 1) {
-        if (!this.isSyncFunction(object)) {
-            throw new Error(
-                `We expect a synchronized function for the ${this.generateLocation(
-                    i
-                )} argument when calling the ${method} but got <${object}>[type is ${typeof object}].`
             );
         }
     }

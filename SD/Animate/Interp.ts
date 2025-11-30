@@ -3,6 +3,7 @@ import { PathEngine, PathOper, PathOpers } from "@/Node/Path/PathEngine";
 import { Color } from "@/Utility/Color";
 
 export type InterpFunction = (this: Action, t: number) => void;
+export type LazyInterpFunction = (l: number, r: number, source: any, target: any) => void;
 export type InterpCreator = (object: any, key: string) => InterpObject;
 type InitGroupFunction = (action: Action) => void;
 type InitFunction = (this: Action) => void;
@@ -64,19 +65,6 @@ export class InterpObject {
     }
 }
 
-export class GroupInterpObject extends InterpObject {
-    onCreateGroup_: InitGroupFunction;
-    constructor(callback: InitGroupFunction) {
-        super(() => {});
-        this.onCreateGroup_ = callback;
-    }
-    onCreateGroup(call: InitGroupFunction | Action) {
-        if (call instanceof Action) return this.onCreateGroup_(call);
-        this.onCreateGroup_ = call;
-        return this;
-    }
-}
-
 export class Interp {
     static exLengthInterp(object: any, key: string) {
         const set = setter(object, key);
@@ -107,7 +95,7 @@ export class Interp {
             const B = this.target;
             const current = A * (1 - t) + B * t;
             set(current);
-            if (t === 1 && !this.owner._.clickableCalled)
+            if (t === 1 && !this.entity._.clickableCalled)
                 object.setAttribute("pointer-events", current === 0 ? "none" : "auto");
         });
     }

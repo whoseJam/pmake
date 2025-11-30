@@ -1,10 +1,9 @@
 import { Animate } from "@/Animate/Animate";
-import { GroupInterpObject, InterpFunction, InterpObject } from "@/Animate/Interp";
+import { InterpFunction, InterpObject, LazyInterpFunction } from "@/Animate/Interp";
 import { Window } from "@/Animate/Window";
 import { SDTimingFunction } from "@/Math/TimingFunction";
 import { SDNode } from "@/Node/SDNode";
-
-global.ACTION_TICK = 0;
+import { RenderNode } from "@/Renderer/RenderNode";
 
 export class Action {
     static stopFlag = 1 << 0;
@@ -19,10 +18,11 @@ export class Action {
     target: any;
     _source: any;
     _target: any;
-    interp: InterpObject;
+    interp?: InterpObject;
+    lazyInterp?: LazyInterpFunction;
     timingFunction: SDTimingFunction;
-    owner: any;
-    channel: string;
+    entity: any;
+    animatedKey: string;
     reverse: boolean;
     next: Action;
     prev: Action;
@@ -33,20 +33,20 @@ export class Action {
         r: number,
         source: any,
         target: any,
-        interp: InterpObject | InterpFunction,
+        interp: InterpObject | InterpFunction | LazyInterpFunction,
         timingFunction: SDTimingFunction,
-        owner: any,
-        channel: string
+        entity: SDNode | RenderNode,
+        animatedKey: string
     );
     constructor(
         l: number | Action,
         r?: number,
         source?: any,
         target?: any,
-        interp?: InterpObject | InterpFunction,
+        interp?: InterpObject | InterpFunction | LazyInterpFunction,
         timingFunction?: SDTimingFunction,
-        owner?: any,
-        channel?: string
+        entity?: SDNode | RenderNode,
+        animatedKey?: string
     ) {
         this.t = 0;
         this.reverse = false;
@@ -61,8 +61,8 @@ export class Action {
             this._target = other._target;
             this.interp = other.interp;
             this.timingFunction = other.timingFunction;
-            this.owner = other.owner;
-            this.channel = other.channel;
+            this.entity = other.entity;
+            this.animatedKey = other.animatedKey;
             this.frame = other.frame;
             this.next = undefined;
             this.flag = Action.firstCallFlag | (other.flag & Action.hideFlag);
@@ -71,26 +71,28 @@ export class Action {
             this.r = r;
             this.source = source;
             this.target = target;
-            this.interp = interp instanceof InterpObject ? interp : new InterpObject(interp);
+            if (interp instanceof InterpObject) {
+                this.interp = interp;
+                this.lazyInterp = undefined;
+            } else if (interp.length === 1) {
+                this.interp = new InterpObject(interp as InterpFunction);
+                this.lazyInterp = undefined;
+            } else {
+                this.interp = undefined;
+                this.lazyInterp = interp as LazyInterpFunction;
+            }
             this.timingFunction = timingFunction;
-            this.owner = owner;
-            this.channel = channel;
-            // @ts-ignore
+            this.entity = entity;
+            this.animatedKey = animatedKey;
             this.frame = Window.CURRENT_FRAME;
             this.next = undefined;
             this.flag = Action.firstCallFlag;
             Animate.push(this);
         }
     }
-    triggerGroupInterp() {
-        if (this.interp instanceof GroupInterpObject) {
-            const interp_ = this.interp as GroupInterpObject;
-            interp_.onCreateGroup(this);
-        }
-    }
     tick(t: number) {
         if (t < this.l) return false;
-        global.ACTION_TICK++;
+        Window.ACTION_TICK++;
         if (this.l < this.r - 1) {
             const k0 = this.timingFunction((t - this.l) / (this.r - this.l));
             const k1 = this.is(Action.firstCallFlag) ? 0 : t > this.r ? 1 : k0;
@@ -114,7 +116,7 @@ export class Action {
             this.unset(Action.firstCallFlag);
             if (k1 === 0) this.tick(t);
         }
-        global.ACTION_TICK--;
+        Window.ACTION_TICK--;
         return true;
     }
     forceToFinish() {
@@ -122,18 +124,18 @@ export class Action {
         if (!this.is(Action.stopFlag)) this.tick(this.r + 5);
     }
     toString() {
-        return `[${this.l}, ${this.r}] channel=${this.channel} source=${this.source} target=${this.target} id=${this.owner.id} frame=${this.frame}`;
+        return `[${this.l}, ${this.r}] animatedKey=${this.animatedKey} source=${this.source} target=${this.target} id=${this.entity.id} frame=${this.frame}`;
     }
-    ownerIsReady() {
-        if (this.channel === "moveTo") return true;
+    entityIsReady() {
+        if (this.animatedKey === "moveTo") return true;
         if (this.r - this.l < 1) return true;
-        if (this.owner instanceof SDNode) {
-            return this.owner._.ready;
+        if (this.entity instanceof SDNode) {
+            return this.entity._.ready;
         } else return true;
     }
-    ownerIsCreated() {
-        if (this.channel === "moveTo") return true;
-        if (this.owner instanceof SDNode) return this.owner._.created;
+    entityIsCreated() {
+        if (this.animatedKey === "moveTo") return true;
+        if (this.entity instanceof SDNode) return this.entity._.created;
         return true;
     }
     is(flag: number) {

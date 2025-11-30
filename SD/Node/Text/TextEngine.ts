@@ -251,8 +251,8 @@ class TransformingPathGroup {
     }
     build(l: number, r: number) {
         if (this.group) return;
-        function createAction(path, source, target, interp, channel) {
-            new Action(l, r, source, target, interp(path, channel), T.easeInOut, path, channel);
+        function createAction(path, source, target, interp, animatedKey) {
+            new Action(l, r, source, target, interp(path, animatedKey), T.easeInOut, path, animatedKey);
         }
         const actions = [];
         this.parent.startAnimate(this.l, this.l);

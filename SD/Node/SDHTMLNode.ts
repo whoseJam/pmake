@@ -8,8 +8,8 @@ const BASE_HTML_ATTRIBUTES = {
     "fill": C.white,
     "stroke": C.black,
     "strokeWidth": 1,
-    "width": "100%",
-    "height": "100%",
+    "width": "98%",
+    "height": "98%",
     "border-style": "solid",
 };
 

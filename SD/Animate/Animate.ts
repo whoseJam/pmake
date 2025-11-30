@@ -91,7 +91,7 @@ export class Animate {
     static rollbackFrame() {
         const nextFrame = Window.CURRENT_FRAME;
         if (nextFrame === Window.MAXIMUM_FRAME) this.historyActionList[nextFrame] = this.currentActionList;
-        if (nextFrame < 0) return; // no frame to rollback
+        if (nextFrame < 0) return;
         Window.CURRENT_FRAME--;
         if (!this.historyActionList[nextFrame]) {
             this.historyActionList[nextFrame] = this.currentActionList;

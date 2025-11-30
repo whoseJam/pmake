@@ -665,7 +665,7 @@ export class SDNode {
         if (typeof _object === "string") object = () => node._[_object];
         else if (typeof _object === "function") object = _object;
         return function (vn: any, vo: any) {
-            if (global.ACTION_TICK !== 0) {
+            if (Window.ACTION_TICK !== 0) {
                 const obj = object();
                 if (obj.setAttribute) obj.setAttribute(key, vn);
                 else if (obj[key]) obj[key] = vn;
