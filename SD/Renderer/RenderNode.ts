@@ -50,28 +50,25 @@ export class RenderNode {
             args.targetLayer.__append(this);
         } else args.targetLayer.append(this); // set targetLayer in moveTo
     }
+
     delay() {
         if (!this.targetNode) return 0;
         return this.targetNode.delay();
     }
+
     duration() {
         if (!this.targetNode) return 0;
         return this.targetNode.duration();
     }
+
     element() {
         return this.backingElement;
     }
+
     elementAs<T>() {
         return this.element() as T;
     }
-    append(element: string | RenderNode): RenderNode {
-        if (element instanceof RenderNode) return element.moveTo(this);
-        return new RenderNode({
-            targetNode: this.targetNode,
-            targetLayer: this,
-            label: element,
-        });
-    }
+
     moveTo(targetLayer: RenderNode) {
         if (this.targetLayer === targetLayer) return;
         const l = this.delay();
@@ -93,17 +90,15 @@ export class RenderNode {
         this.targetLayer = targetLayer;
         return this;
     }
-    remove() {
-        return this.moveTo(undefined);
-    }
+
     getAttribute(key: string) {
         const element = this.element() as SVGElement | HTMLElement;
         if (HTML_INNERHTML_SET.has(key)) return element.innerHTML;
         else if (isStyleKey(this.getType(), key)) return element.style[key];
         return element.getAttribute(key);
     }
+
     setAttribute(key: string, value: any) {
-        value = RenderNode.__asValue(value);
         const element = this.element() as SVGElement | HTMLElement;
         if (HTML_INNERHTML_SET.has(key)) {
             if (key === "text") value = parseText(value);
@@ -112,48 +107,129 @@ export class RenderNode {
             element.style[key] = value;
         } else setAttribute(element, key, value);
     }
+
     hasShape() {
         return SVG[this.label]?.hasShape;
     }
+
     isSVG() {
         return SVG[this.label] !== undefined;
     }
+
     isHTML() {
         return !this.isSVG();
     }
+
     getType() {
         return this.isSVG() ? "svg" : "html";
     }
-    __append(element_: Element | RenderNode) {
-        const element = element_ instanceof RenderNode ? element_.element() : element_;
-        this.element().append(element);
+
+    append(element: string | RenderNode) {
+        if (typeof element === "string") {
+            return new RenderNode({
+                targetNode: this.targetNode,
+                targetLayer: this,
+                label: element,
+            });
+        }
+        const l = this.delay();
+        const r = this.delay() + this.duration();
+        const source = element.targetLayer;
+        const target = this;
+        function structure(t: number) {
+            if (!this.reverse && t === 1) this.target.__appendChild(element);
+            else if (this.reverse && t === 0) {
+                if (this.target) this.target.__appendChild(element);
+                else (element as RenderNode).__remove();
+            }
+        }
+        new Action(l, r, source, target, structure, T.linear, this, "layer");
         return this;
     }
+
+    appendChild(element: RenderNode) {
+        const l = this.delay();
+        const r = this.delay() + this.duration();
+        const source = element.targetLayer;
+        const target = this;
+        function structure(t: number) {
+            if (!this.reverse && t === 1) this.target.__appendChild(element);
+            else if (this.reverse && t === 0) {
+                if (this.target) this.target.__appendChild(element);
+                else element.__remove();
+            }
+        }
+        new Action(l, r, source, target, structure, T.linear, this, "layer");
+        return this;
+    }
+
+    insertBefore(element: RenderNode, referenced: RenderNode) {
+        const l = this.delay();
+        const r = this.delay() + this.duration();
+        const source = element.targetLayer;
+        const target = this;
+        function structure(t: number) {
+            if (!this.reverse && t === 1) this.target.__insertBefore(element, referenced);
+            else if (this.reverse && t === 0) {
+                if (this.target) this.target.__appendChild(element);
+                else element.__remove();
+            }
+        }
+        new Action(l, r, source, target, structure, T.linear, this, "layer");
+        return this;
+    }
+
+    remove() {
+        if (!this.targetLayer) return this;
+        const l = this.delay();
+        const r = this.delay() + this.duration();
+        const source = this.targetLayer;
+        const target = undefined;
+        const element = this;
+        function structure(t: number) {
+            if (!this.reverse && t === 1) element.__remove();
+            else this.target.__appendChild(element);
+        }
+        new Action(l, r, source, target, structure, T.linear, this, "layer");
+        return this;
+    }
+
+    __append(element: Element | RenderNode) {
+        const element_ = element instanceof RenderNode ? element.element() : element;
+        this.element().append(element_);
+        return this;
+    }
+
+    __appendChild(element: Element | RenderNode) {
+        const element_ = element instanceof RenderNode ? element.element() : element;
+        this.element().appendChild(element_);
+        return this;
+    }
+
+    __insertBefore(element: Element | RenderNode, referenced: Element | RenderNode) {
+        const element_ = element instanceof RenderNode ? element.element() : element;
+        const referenced_ = referenced instanceof RenderNode ? referenced.element() : referenced;
+        this.element().insertBefore(element_, referenced_);
+        return this;
+    }
+
     __remove() {
         this.element().remove();
         return this;
     }
-    __removeChild(element_: Element | RenderNode) {
-        const element = element_ instanceof RenderNode ? element_.element() : element_;
-        this.element().removeChild(element);
+
+    __removeChild(element: Element | RenderNode) {
+        const element_ = element instanceof RenderNode ? element.element() : element;
+        this.element().removeChild(element_);
         return this;
     }
+
     __injectCSS(css: { [key: string]: string }) {
         Object.keys(css).forEach(key => {
             (this.element() as HTMLElement).style[key] = css[key];
         });
     }
-    static __asValue(value: any) {
-        if (
-            value &&
-            typeof value.x === "number" &&
-            typeof value.y === "number" &&
-            typeof value.width === "number" &&
-            typeof value.height === "number"
-        )
-            return `${value.x} ${value.y} ${value.width} ${value.height}`;
-        return value;
-    }
+
     static getDocumentBodyRenderNode() {
         return new RenderNode({
             targetNode: null,
@@ -163,6 +239,7 @@ export class RenderNode {
             action: false,
         });
     }
+
     static createRenderNodeWithoutAction(targetNode: SDNode, targetLayer: RenderNode, label: string) {
         return new RenderNode({
             targetNode,
@@ -171,6 +248,7 @@ export class RenderNode {
             action: false,
         });
     }
+
     static createMathRenderNode(targetNode: SDNode, targetLayer: RenderNode, element: Element) {
         const { TextEngine } = require("@/Node/Text/TextEngine");
         const math = new RenderNode({
@@ -182,6 +260,7 @@ export class RenderNode {
         TextEngine.adjustMath(math);
         return math;
     }
+
     /**
      * The method will clone a math render node. The result math render node will not be appended to
      * the layer instantly. It will be appended by the blank node interpolation defined on 'math'.
@@ -198,6 +277,7 @@ export class RenderNode {
         });
         return math_;
     }
+
     static createRenderNode(targetNode: SDNode, targetLayer: RenderNode, label: string) {
         return new RenderNode({
             targetNode,
