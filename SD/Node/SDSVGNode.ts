@@ -1,24 +1,22 @@
 import { Interp } from "@/Animate/Interp";
 import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
-import { Check } from "@/Utility/Check";
-import { Color as C, SDAllColor, SDHEXColor, SDPacketColor, SDRGBColor } from "@/Utility/Color";
+import { Color as C, SDAllColor, SDHEXColor } from "@/Utility/Color";
 
 export abstract class SDSVGNode extends SDNode {
     /**
      * Gets the fill color of this component.
      * @returns The fill color.
      */
-    fill(): SDHEXColor;
+    getFill(): SDHEXColor {
+        return C.toHEX(this.vars.fill);
+    }
     /**
      * Sets the fill color of this component.
      * @param fill - The fill color to apply (hex string or RGB object).
      * @returns The current component instance for method chaining.
      */
-    fill(fill: SDAllColor): this;
-    fill(fill?: SDAllColor) {
-        if (arguments.length === 0) return C.toHEX(this.vars.fill);
-        Check.validateColor(fill, `${this.constructor.name}.fill`);
+    setFill(fill?: SDAllColor) {
         this.vars.fill = C.toRGB(C.toFill(fill));
         return this;
     }
@@ -27,71 +25,62 @@ export abstract class SDSVGNode extends SDNode {
      * Gets the stroke color of this component.
      * @returns The stroke color.
      */
-    stroke(): SDHEXColor;
+    getStroke(): SDHEXColor {
+        return C.toHEX(this.vars.stroke);
+    }
     /**
      * Sets the stroke color of this component.
      * @param stroke - The stroke color to apply (hex string or RGB object).
      * @returns The current component instance for method chaining.
      */
-    stroke(stroke: SDAllColor): this;
-    stroke(stroke?: SDAllColor) {
-        if (arguments.length === 0) return C.toHEX(this.vars.stroke);
-        Check.validateColor(stroke, `${this.constructor.name}.stroke`);
+    setStroke(stroke: SDAllColor): this {
         this.vars.stroke = C.toRGB(C.toStroke(stroke));
         return this;
     }
 
-    fillOpacity(): number;
-    fillOpacity(opacity: number): this;
-    fillOpacity(opacity?: number) {
-        if (arguments.length === 0) return this.vars.fillOpacity;
-        Check.validateOpacity(opacity, `${this.constructor.name}.fillOpacity`);
-        this.vars.fillOpacity = opacity;
+    getFillOpacity(): number {
+        return this.vars.fillOpacity;
+    }
+
+    setFillOpacity(opacity: number): this {
+        this.vars.mpset("fillOpacity", opacity);
         return this;
     }
 
-    strokeOpacity(): number;
-    strokeOpacity(opacity: number): this;
-    strokeOpacity(opacity?: number) {
-        if (arguments.length === 0) return this.vars.strokeOpacity;
-        Check.validateOpacity(opacity, `${this.constructor.name}.strokeOpacity`);
-        this.vars.strokeOpacity = opacity;
+    getStrokeOpacity(): number {
+        return this.vars.strokeOpacity;
+    }
+
+    setStrokeOpacity(opacity: number): this {
+        this.vars.mpset("strokeOpacity", opacity);
         return this;
     }
 
-    strokeWidth(): number;
-    strokeWidth(width: number): this;
-    strokeWidth(width?: number): number | this {
-        if (arguments.length === 0) return this.vars.strokeWidth;
-        Check.validateNumber(width, `${this.constructor.name}.strokeWidth`);
-        this.vars.strokeWidth = width;
+    getStrokeWidth(): number {
+        return this.vars.strokeWidth;
+    }
+
+    setStrokeWidth(width: number): this {
+        this.vars.mpset("width", width);
         return this;
     }
 
-    strokeDashOffset(): number;
-    strokeDashOffset(offset: number): this;
-    strokeDashOffset(offset?: number): number | this {
-        if (arguments.length === 0) return this.vars.strokeDashOffset;
-        Check.validateNumber(offset, `${this.constructor.name}.strokeDashOffset`);
-        this.vars.strokeDashOffset = offset;
+    getStrokeDashOffset(): number {
+        return this.vars.strokeDashOffset;
+    }
+
+    setStrokeDashOffset(offset: number): this {
+        this.vars.lpset("offset", offset);
         return this;
     }
 
-    strokeDashArray(): Array<number>;
-    strokeDashArray(array: Array<number>): this;
-    strokeDashArray(array?: Array<number>) {
-        if (arguments.length === 0) return this.vars.strokeDashArray;
+    getStrokeDashArray(): Array<number> {
+        return this.vars.strokeDashArray;
+    }
+
+    setStrokeDashArray(array: Array<number>): this {
         this.vars.strokeDashArray = array;
         return this;
-    }
-
-    color(): SDPacketColor;
-    color(color: SDAllColor): this;
-    color(color?: SDAllColor): SDPacketColor | this {
-        if (arguments.length === 0) return { fill: this.fill(), stroke: this.stroke() };
-        Check.validateColor(color, `${this.constructor.name}.color`);
-        if (C.isPacket(color)) return this.fill(C.toFill(color)).stroke(C.toStroke(color));
-        return this.fill(color);
     }
 
     __createSVGNode(label: string, attributes: { [key: string]: any }): RenderNode {

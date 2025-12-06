@@ -11,9 +11,6 @@ type XLocationString = "left" | "center" | "right";
 type YLocationString = "top" | "middle" | "bottom";
 type XLocation = number | PercentString | XLocationString;
 type YLocation = number | PercentString | YLocationString;
-type EffectCallback = () => void;
-type XL = "x" | "cx" | "mx";
-type YL = "y" | "cy" | "my";
 
 export type SDBox = {
     x: number;
