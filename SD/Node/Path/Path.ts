@@ -1,11 +1,9 @@
 import { BasePath } from "@/Node/Path/BasePath";
 import { PathEngine } from "@/Node/Path/PathEngine";
-import { SDNode } from "@/Node/SDNode";
-import { RenderNode } from "@/Renderer/RenderNode";
 
 export class Path extends BasePath {
-    constructor(target: SDNode | RenderNode) {
-        super(target);
+    constructor() {
+        super();
 
         this.__createSVGNode("path", {
             d: "M0,0L0,0",
@@ -17,43 +15,21 @@ export class Path extends BasePath {
             height: 0,
         });
 
-        this.type("Path");
+        this.setType("Path");
     }
-    x(): number;
-    x(x: number): this;
-    x(x?: number) {
-        if (arguments.length === 0) return this.vars.x;
-        const [x0, y0, dx, dy, sx, sy] = [this.x(), this.y(), x - this.vars.x, 0, 1, 1];
-        this.d(PathEngine.updatePath(this.vars.d, x0, y0, dx, dy, sx, sy));
-        return this;
+    getX() {
+        return this.vars.x;
     }
-    y(): number;
-    y(y: number): this;
-    y(y?: number) {
-        if (arguments.length === 0) return this.vars.y;
-        const [x0, y0, dx, dy, sx, sy] = [this.x(), this.y(), 0, y - this.vars.y, 1, 1];
-        this.d(PathEngine.updatePath(this.vars.d, x0, y0, dx, dy, sx, sy));
-        return this;
+    getY() {
+        return this.vars.y;
     }
-    width(): number;
-    width(width: number): this;
-    width(width?: number) {
-        if (arguments.length === 0) return this.vars.width;
-        if (this.width() === 0) return this;
-        const [x0, y0, dx, dy, sx, sy] = [this.x(), this.y(), 0, 0, width / this.width(), 1];
-        this.d(PathEngine.updatePath(this.vars.d, x0, y0, dx, dy, sx, sy));
-        return this;
+    getWidth() {
+        return this.vars.width;
     }
-    height(): number;
-    height(height: number): this;
-    height(height?: number) {
-        if (arguments.length === 0) return this.vars.height;
-        if (this.height() === 0) return this;
-        const [x0, y0, dx, dy, sx, sy] = [this.x(), this.y(), 0, 0, 1, height / this.height()];
-        this.d(PathEngine.updatePath(this.vars.d, x0, y0, dx, dy, sx, sy));
-        return this;
+    getHeight() {
+        return this.vars.height;
     }
-    at(k: number) {
+    getPointAtRate(k: number) {
         return PathEngine.getPointByRate(this.d(), k);
     }
     getPointAtLength(length: number) {

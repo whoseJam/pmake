@@ -16,76 +16,32 @@ const BASE_PATH_ATTRIBUTES = {
     markerEnd: "",
 };
 
-export class BasePath extends SDSVGNode {
-    color(): SDPacketColor;
-    color(color: SDAllColor): this;
-    color(color?: SDAllColor): SDPacketColor | this {
-        if (arguments.length === 0) return { fill: this.fill(), stroke: this.stroke() };
-        Check.validateColor(color, `${this.constructor.name}.color`);
-        if (C.isPacket(color)) return this.fill(C.toFill(color)).stroke(C.toStroke(color));
-        return this.stroke(color);
+export abstract class BasePath extends SDSVGNode {
+    getMarkerStart(): string {
+        return this.vars.markerStart;
+    }
+    setMarkerStart(marker: string): this {
+        const marker_ = marker !== "" ? `url(#${marker})` : "";
+        this.vars.markerStart = marker_;
+        return this;
+    }
+    getMarkerMid(): string {
+        return this.vars.markerMid;
+    }
+    setMarkerMid(marker: string): this {
+        const marker_ = marker !== "" ? `url(#${marker})` : "";
+        this.vars.markerMid = marker_;
+        return this;
+    }
+    setMarkerEnd(): string {
+        return this.vars.markerEnd;
+    }
+    getMarkerEnd(marker: string): this {
+        const marker_ = marker !== "" ? `url(#${marker})` : "";
+        this.vars.markerEnd = marker_;
+        return this;
     }
 
-    markerStart(): string;
-    markerStart(marker: string): this;
-    markerStart(marker?: string) {
-        if (marker === undefined) return this.vars.markerStart;
-        marker = marker !== "" ? `url(#${marker})` : "";
-        this.vars.markerStart = marker;
-        return this;
-    }
-    markerMid(): string;
-    markerMid(marker: string): this;
-    markerMid(marker?: string) {
-        if (marker === undefined) return this.vars.markerMid;
-        marker = marker !== "" ? `url(#${marker})` : "";
-        this.vars.markerMid = marker;
-        return this;
-    }
-    markerEnd(): string;
-    markerEnd(marker: string): this;
-    markerEnd(marker?: string) {
-        if (marker === undefined) return this.vars.markerEnd;
-        marker = marker !== "" ? `url(#${marker})` : "";
-        this.vars.markerEnd = marker;
-        return this;
-    }
-    /**
-     * Sets an arrow to the end of this path component.
-     * @param arrow
-     * @returns The current component instance for method chaining.
-     */
-    arrow(arrow?: true): this;
-    /**
-     * Removes the arrow at the end of this path component.
-     * @param cancel
-     * @returns The current component instance for method chaining.
-     */
-    arrow(cancel: null | undefined | false): this;
-    arrow(arrow = true) {
-        return this.markerEnd(arrow ? "arrow" : "");
-    }
-    /**
-     * Sets an arrow to the start of this path component.
-     * @param arrow
-     * @returns The current component instance for method chaining.
-     */
-    revArrow(arrow?: true): this;
-    /**
-     * Removes the arrow at the start of this path component.
-     * @param arrow
-     * @returns The current component instance for method chaining.
-     */
-    revArrow(cancel: null | undefined | false): this;
-    revArrow(arrow = true) {
-        return this.markerStart(arrow ? "arrow" : "");
-    }
-    doubleArrow(arrow?: true): this;
-    doubleArrow(cancel: null | undefined | false): this;
-    doubleArrow(arrow_ = true) {
-        const arrow = arrow_ ? true : null;
-        return this.arrow(arrow).revArrow(arrow);
-    }
     /**
      * Makes this component gradually appear from the starting point to the ending point.
      *
@@ -96,13 +52,13 @@ export class BasePath extends SDSVGNode {
      * line.startAnimate().pointStoT().endAnimate().arrow();
      */
     pointStoT() {
-        const len = this.totalLength();
-        const context = new Context(this);
-        context.till(0, 0);
-        this.strokeDashArray([0, len]);
-        context.till(0, 1);
-        this.strokeDashArray([len, 0]);
-        return this;
+        const length = this.totalLength();
+        return this.startSubAnimate()
+            .subAnimate(0, 0)
+            .setStrokeDashArray([0, length])
+            .subAnimate(0, 1)
+            .setStrokeDashArray([length, 0])
+            .endSubAnimate();
     }
     /**
      * Makes this component gradually appear from the ending point to the starting point.
@@ -114,15 +70,15 @@ export class BasePath extends SDSVGNode {
      * line.startAnimate().pointTtoS().endAnimate().revArrow();
      */
     pointTtoS() {
-        const len = this.totalLength();
-        const context = new Context(this);
-        context.till(0, 0);
-        this.strokeDashArray([len, len]);
-        this.strokeDashOffset(-len);
-        context.till(0, 1);
-        this.strokeDashArray([len, 0]);
-        this.strokeDashOffset(0);
-        return this;
+        const length = this.totalLength();
+        return this.startSubAnimate()
+            .subAnimate(0, 0)
+            .setStrokeDashArray([length, length])
+            .setStrokeDashOffset(-length)
+            .subAnimate(0, 1)
+            .setStrokeDashArray([length, 0])
+            .setStrokeDashOffset(0)
+            .endSubAnimate();
     }
     /**
      * Makes this component gradually fade from the starting point to the ending point.
@@ -134,15 +90,15 @@ export class BasePath extends SDSVGNode {
      * line.startAnimate().fadeStoT().endAnimate().arrow(null);
      */
     fadeStoT() {
-        const len = this.totalLength();
-        const context = new Context(this);
-        context.till(0, 0);
-        this.strokeDashArray([len, len]);
-        this.strokeDashOffset(0);
-        context.till(0, 1);
-        this.strokeDashArray([0, len]);
-        this.strokeDashOffset(-len);
-        return this;
+        const length = this.totalLength();
+        return this.startSubAnimate()
+            .subAnimate(0, 0)
+            .setStrokeDashArray([length, length])
+            .setStrokeDashOffset(0)
+            .subAnimate(0, 1)
+            .setStrokeDashArray([0, length])
+            .setStrokeDashOffset(-length)
+            .endSubAnimate();
     }
     /**
      * Makes this component gradually fade from the ending point to the starting point.
@@ -154,13 +110,13 @@ export class BasePath extends SDSVGNode {
      * line.startAnimate().fadeTtoS().endAnimate().revArrow(null);
      */
     fadeTtoS() {
-        const len = this.totalLength();
-        const context = new Context(this);
-        context.till(0, 0);
-        this.strokeDashArray([len, 0]);
-        context.till(0, 1);
-        this.strokeDashArray([0, len]);
-        return this;
+        const length = this.totalLength();
+        return this.startSubAnimate()
+            .subAnimate(0, 0)
+            .setStrokeDashArray([length, 0])
+            .subAnimate(0, 1)
+            .setStrokeDashArray([0, length])
+            .endSubAnimate();
     }
     /**
      * Gets the coordinates of a point along this path component at a specified fractinal position.
@@ -169,27 +125,18 @@ export class BasePath extends SDSVGNode {
      * @param k - A numeric value between 0 and 1 representing the fraction of the path length.
      * @returns The coordinates of the point.
      */
-    at(k: number): [number, number] {
-        throw new Error(`Not implemented yet: ${this.constructor.name}.at`);
-        return [0, 0];
-    }
+    abstract getPointAtRate(k: number): [number, number];
     /**
      * Gets the coordinates of a point along this path component at a specified distance.
      * @param length - The cumulative distance from the start of the path component.
      * @returns The coordinates of the point.
      */
-    getPointAtLength(length: number): [number, number] {
-        throw new Error(`Not implemented yet: ${this.constructor.name}.getPointAtLength`);
-        return [0, 0];
-    }
+    abstract getPointAtLength(length: number): [number, number];
     /**
      * Gets the total length of this path component.
      * @returns The total length.
      */
-    totalLength(): number {
-        throw new Error(`Not implemented yet: ${this.constructor.name}.totalLength`);
-        return 0;
-    }
+    abstract totalLength(): number;
 
     __createSVGNode(label: string, attributes?: { [key: string]: any }) {
         return super.__createSVGNode(label, {

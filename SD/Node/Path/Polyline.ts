@@ -1,64 +1,42 @@
 import { BasePath } from "@/Node/Path/BasePath";
 import { PolylineEngine } from "@/Node/Path/PolylineEngine";
-import { SDNode } from "@/Node/SDNode";
-import { Polygon } from "@/Node/Shape/Polygon";
-import { RenderNode } from "@/Renderer/RenderNode";
 
 export class Polyline extends BasePath {
-    constructor(target: SDNode | RenderNode, points = []) {
-        super(target);
+    constructor() {
+        super();
 
         this.__createSVGNode("polyline", {
-            points,
+            points: [],
         });
-        this.vars.merge(PolylineEngine.toBox(points));
 
-        this.type("Polyline");
-
-        this.type("Polyline");
+        this.setType("Polyline");
     }
-    x(): number;
-    x(x: number): this;
-    x(x?: number) {
-        if (arguments.length === 0) return Polygon.prototype.x.call(this);
-        return Polygon.prototype.x.call(this, x);
+    getX() {
+        return PolylineEngine.toBox(this.vars.points).x;
     }
-    y(): number;
-    y(y: number): this;
-    y(y?: number) {
-        if (arguments.length === 0) return Polygon.prototype.y.call(this);
-        return Polygon.prototype.y.call(this, y);
+    getY() {
+        return PolylineEngine.toBox(this.vars.points).y;
     }
-    width(): number;
-    width(width: number): this;
-    width(width?: number) {
-        if (arguments.length === 0) return Polygon.prototype.width.call(this);
-        return Polygon.prototype.width.call(this, width);
+    getWidth() {
+        return PolylineEngine.toBox(this.vars.points).width;
     }
-    height(): number;
-    height(height: number): this;
-    height(height?: number) {
-        if (arguments.length === 0) return Polygon.prototype.height.call(this);
-        return Polygon.prototype.height.call(this, height);
+    getHeight() {
+        return PolylineEngine.toBox(this.vars.points).height;
     }
-    at(k: number) {
-        return PolylineEngine.getPointByRate(this.points(), k);
+    getPointAtRate(k: number) {
+        return PolylineEngine.getPointByRate(this.vars.points, k);
     }
     getPointAtLength(length: number): [number, number] {
-        return PolylineEngine.getPointAtLength(this.points(), length);
+        return PolylineEngine.getPointAtLength(this.vars.points, length);
     }
-    length(): number {
-        return PolylineEngine.getTotalLength(this.points());
+    totalLength(): number {
+        return PolylineEngine.getTotalLength(this.vars.points);
     }
-    points(): Array<[number, number]>;
-    points(points: Array<[number, number]>): this;
-    points(points?: Array<[number, number]>) {
-        if (arguments.length === 0) return this.vars.points;
-        this.__points(points);
-        this.vars.setTogether(PolylineEngine.toBox(points));
+    getPoints(): Array<[number, number]> {
+        return this.vars.points;
+    }
+    setPoints(points: Array<[number, number]>): this {
+        this.vars.points = points;
         return this;
-    }
-    __points(points: Array<[number, number]>) {
-        return Polygon.prototype.__points.call(this, points);
     }
 }
