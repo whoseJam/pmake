@@ -1,18 +1,51 @@
 import { SDNode } from "@/Node/SDNode";
 import { SDSVGNode } from "@/Node/SDSVGNode";
-import { RenderNode } from "@/Renderer/RenderNode";
 
 export class Group extends SDSVGNode {
     _: SDSVGNode["_"] & {
         nodes: Array<SDNode>;
     };
-    constructor() {
+    constructor(nodes?: Array<SDNode>) {
         super();
         this._.nodes = [];
+        if (nodes) nodes.forEach(node => this.add(node));
+    }
+    getX() {
+        let x = this._.nodes[0].getX();
+        for (let i = 1; i < this._.nodes.length; i++) x = Math.min(x, this._.nodes[i].getX());
+        return x;
+    }
+    getY() {
+        let y = this._.nodes[0].getY();
+        for (let i = 1; i < this._.nodes.length; i++) y = Math.min(y, this._.nodes[i].getY());
+        return y;
+    }
+    getMaxX() {
+        let mx = this._.nodes[0].getMaxX();
+        for (let i = 1; i < this._.nodes.length; i++) mx = Math.max(mx, this._.nodes[i].getMaxX());
+        return mx;
+    }
+    getMaxY() {
+        let my = this._.nodes[0].getMaxY();
+        for (let i = 1; i < this._.nodes.length; i++) my = Math.max(my, this._.nodes[i].getMaxY());
+        return my;
+    }
+    getWidth() {
+        return this.getMaxX() - this.getX();
+    }
+    getHeight() {
+        return this.getMaxY() - this.getY();
     }
     add(node: SDNode) {
-        node.attachTo(this);
+        this.appendChild(node);
         this._.nodes.push(node);
+        return this;
+    }
+    erase(node: SDNode) {
+        const id = this._.nodes.indexOf(node);
+        if (id === -1) return this;
+        node.remove();
+        this._.nodes.splice(id, 1);
         return this;
     }
     startAnimate() {
@@ -31,5 +64,4 @@ export class Group extends SDSVGNode {
         for (const node of this._.nodes) node.after.apply(node, arguments);
         return this;
     }
-    x() {}
 }

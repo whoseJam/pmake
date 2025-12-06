@@ -116,9 +116,20 @@ export abstract class SDNode {
         layer.setAttribute("layer", name);
         return this;
     }
+    append(child: SDNode | RenderNode) {
+        if (child instanceof SDNode) this.getLayer().append(child.getLayer());
+        else this.getLayer().append(child);
+        return this;
+    }
     appendChild(child: SDNode | RenderNode) {
-        if (child instanceof SDNode) child.getLayer().moveTo(this.getLayer());
-        else child.moveTo(this.getLayer());
+        if (child instanceof SDNode) this.getLayer().appendChild(child.getLayer());
+        else this.getLayer().appendChild(child);
+        return this;
+    }
+    insertBefore(child: SDNode | RenderNode, referenced: SDNode | RenderNode) {
+        const child_ = child instanceof SDNode ? child.getLayer() : child;
+        const referenced_ = referenced instanceof SDNode ? referenced.getLayer() : referenced;
+        this.getLayer().insertBefore(child_, referenced_);
         return this;
     }
     /**

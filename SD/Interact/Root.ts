@@ -1,6 +1,7 @@
 import { Window } from "@/Animate/Window";
 import { SDBox } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
+import { Group } from "@/Node/Other/Group";
 
 /**
  * Gets the svg canvas.
@@ -12,12 +13,13 @@ import { RenderNode } from "@/Renderer/RenderNode";
  * const rect = new sd.Rect(svg);
  * const circle = new sd.Circle(svg);
  */
-export function svg(): RenderNode {
-    return Root.svg;
+export function svg(): Group {
+    return Root.group;
 }
 
 export class Root {
     static svg: RenderNode;
+    static group: Group;
     static viewBox: SDBox;
     static init() {
         // screen delta / Window.RATE = svg delta
@@ -39,6 +41,8 @@ export class Root {
             updateWindowRate(this.viewBox);
             this.svg.setAttribute("opacity", 1);
         } else this.svg.setAttribute("opacity", 0);
+        this.group = new Group();
+        this.svg.appendChild(this.group.getLayer());
     }
 
     static setViewBox(x: number, y: number, width: number, height: number, rate: number) {
@@ -83,7 +87,7 @@ const markerHardcode = [
 ];
 
 function defineMarkers() {
-    const nake = svg().element();
+    const nake = Root.svg.element();
     // @ts-ignore
     Snap(nake);
     // @ts-ignore

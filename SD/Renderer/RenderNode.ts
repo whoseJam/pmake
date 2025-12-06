@@ -69,28 +69,6 @@ export class RenderNode {
         return this.element() as T;
     }
 
-    moveTo(targetLayer: RenderNode) {
-        if (this.targetLayer === targetLayer) return;
-        const l = this.delay();
-        const r = this.delay() + this.duration();
-        const this_ = this;
-        function structure(t: number) {
-            if (this.source && this.target) {
-                if (!this.reverse && t === 1) this.target.__append(this_); // moveTo
-                if (this.reverse && t === 0) this.target.__append(this_); // moveTo reverse
-            } else if (this.source && !this.target) {
-                if (!this.reverse && t === 1) this_.__remove(); // remove
-                if (this.reverse && t === 0) this_.__remove(); // appear reverse
-            } else if (!this.source && this.target) {
-                if (!this.reverse && t === 1) this.target.__append(this_); // appear
-                if (this.reverse && t === 0) this.target.__append(this_); // remove reverse
-            }
-        }
-        new Action(l, r, this.targetLayer, targetLayer, structure, T.linear, this, "moveTo");
-        this.targetLayer = targetLayer;
-        return this;
-    }
-
     getAttribute(key: string) {
         const element = this.element() as SVGElement | HTMLElement;
         if (HTML_INNERHTML_SET.has(key)) return element.innerHTML;
