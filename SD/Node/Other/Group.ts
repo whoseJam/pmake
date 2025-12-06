@@ -1,12 +1,13 @@
 import { SDNode } from "@/Node/SDNode";
 import { SDSVGNode } from "@/Node/SDSVGNode";
+import { RenderNode } from "@/Renderer/RenderNode";
 
 export class Group extends SDSVGNode {
     _: SDSVGNode["_"] & {
         nodes: Array<SDNode>;
     };
-    constructor(target: SDSVGNode) {
-        super(target);
+    constructor() {
+        super();
         this._.nodes = [];
     }
     add(node: SDNode) {
@@ -30,7 +31,5 @@ export class Group extends SDSVGNode {
         for (const node of this._.nodes) node.after.apply(node, arguments);
         return this;
     }
-    nodes() {
-        return this._.nodes;
-    }
+    x() {}
 }

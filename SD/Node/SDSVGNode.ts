@@ -4,7 +4,7 @@ import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
 import { Color as C, SDAllColor, SDHEXColor, SDPacketColor, SDRGBColor } from "@/Utility/Color";
 
-export class SDSVGNode extends SDNode {
+export abstract class SDSVGNode extends SDNode {
     /**
      * Gets the fill color of this component.
      * @returns The fill color.
@@ -96,7 +96,7 @@ export class SDSVGNode extends SDNode {
 
     __createSVGNode(label: string, attributes: { [key: string]: any }): RenderNode {
         this.vars.merge(attributes);
-        const object = RenderNode.createRenderNode(this, this.layer(), label);
+        const object = RenderNode.createRenderNode(this, this.getLayer(), label);
         const attributeMap = {
             x: ["x", Interp.numberInterp],
             y: ["y", Interp.numberInterp],
@@ -124,7 +124,7 @@ export class SDSVGNode extends SDNode {
             markerStart: ["marker-start", Interp.stringInterp],
             markerMid: ["marker-mid", Interp.stringInterp],
             markerEnd: ["marker-end", Interp.stringInterp],
-            href: ["href", Interp.stringInterp],
+            src: ["href", Interp.stringInterp],
         };
         for (const key in attributes) {
             if (!attributeMap[key]) {

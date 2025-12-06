@@ -11,7 +11,7 @@ const BASE_SHAPE_ATTRIBUTES = {
     strokeDashArray: [1, 0],
 };
 
-export class BaseShape extends SDSVGNode {
+export abstract class BaseShape extends SDSVGNode {
     __createSVGNode(label: string, attributes?: { [key: string]: any }) {
         return super.__createSVGNode(label, {
             ...BASE_SHAPE_ATTRIBUTES,

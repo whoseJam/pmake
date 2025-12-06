@@ -1,65 +1,32 @@
-import { SDNode } from "@/Node/SDNode";
 import { BaseShape } from "@/Node/Shape/BaseShape";
-import { PolygonEngine } from "@/Node/Shape/Polygon/PolygonEngine";
-import { RenderNode } from "@/Renderer/RenderNode";
+import { PolygonEngine } from "@/Node/Shape/PolygonEngine";
 
 export class Polygon extends BaseShape {
-    constructor(target: SDNode | RenderNode, points = []) {
-        super(target);
+    constructor() {
+        super();
 
         this.__createSVGNode("polygon", {
-            points: points.length >= 3 ? points : [],
+            points: [],
         });
-        this.vars.merge(PolygonEngine.pointsToBox(points));
 
-        this.type("Polygon");
+        this.setType("Polygon");
     }
-    toPolygon() {
-        // return polygon(this.vars.points.map(v => v));
+    getX() {
+        return PolygonEngine.pointsToBox(this.vars.points).x;
     }
-    x(): number;
-    x(x: number): this;
-    x(x?: number) {
-        if (arguments.length === 0) return this.vars.x;
-        const dx = x - this.x();
-        this.vars.x = x;
-        return this.__points(this.points().map(v => [v[0] + dx, v[1]]));
+    getY() {
+        return PolygonEngine.pointsToBox(this.vars.points).y;
     }
-    y(): number;
-    y(y: number): this;
-    y(y?: number) {
-        if (arguments.length === 0) return this.vars.y;
-        const dy = y - this.y();
-        this.vars.y = y;
-        return this.__points(this.points().map(v => [v[0], v[1] + dy]));
+    getWidth() {
+        return PolygonEngine.pointsToBox(this.vars.points).width;
     }
-    width(): number;
-    width(width: number): this;
-    width(width?: number) {
-        if (arguments.length === 0) return this.vars.width;
-        const x = this.x();
-        const k = width / this.width();
-        this.vars.width = width;
-        return this.__points(this.points().map(v => [(v[0] - x) * k + x, v[1]]));
+    getHeight() {
+        return PolygonEngine.pointsToBox(this.vars.points).height;
     }
-    height(): number;
-    height(height: number): this;
-    height(height?: number) {
-        if (arguments.length === 0) return this.vars.height;
-        const y = this.y();
-        const k = height / this.height();
-        this.vars.height = height;
-        return this.__points(this.points().map(v => [v[0], (v[1] - y) * k + y]));
+    getPoints() {
+        return this.vars.points;
     }
-    points(): Array<[number, number]>;
-    points(points: Array<[number, number]>): this;
-    points(points?: Array<[number, number]>) {
-        if (arguments.length === 0) return this.vars.points;
-        this.__points(points);
-        this.vars.setTogether(PolygonEngine.pointsToBox(points));
-        return this;
-    }
-    __points(points: Array<[number, number]>) {
+    setPoints(points: Array<[number, number]>): this {
         this.vars.points = points;
         return this;
     }

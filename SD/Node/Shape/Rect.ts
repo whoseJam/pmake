@@ -1,11 +1,8 @@
-import { SDNode } from "@/Node/SDNode";
 import { BaseShape } from "@/Node/Shape/BaseShape";
-import { RenderNode } from "@/Renderer/RenderNode";
-import { Check } from "@/Utility/Check";
 
 export class Rect extends BaseShape {
-    constructor(target: SDNode | RenderNode) {
-        super(target);
+    constructor() {
+        super();
 
         this.__createSVGNode("rect", {
             x: 0,
@@ -16,25 +13,51 @@ export class Rect extends BaseShape {
             ry: 0,
         });
 
-        this.type("Rect");
+        this.setType("Rect");
     }
-    rx(): number;
-    rx(rx: number): this;
-    rx(rx?: number) {
-        if (arguments.length === 0) return this.vars.rx;
-        Check.validateNumber(rx, `${this.constructor.name}.rx`);
+    getX(): number {
+        return this.vars.x;
+    }
+    setX(x: number): this {
+        this.vars.lpset("x", x);
+        return this;
+    }
+    getY(): number {
+        return this.vars.y;
+    }
+    setY(y: number): this {
+        this.vars.lpset("y", y);
+        return this;
+    }
+    getWidth(): number {
+        return this.vars.width;
+    }
+    setWidth(width: number) {
+        this.vars.lpset("width", width);
+        return this;
+    }
+    getHeight(): number {
+        return this.vars.height;
+    }
+    setHeight(height: number) {
+        this.vars.lpset("height", height);
+        return this;
+    }
+    getRX(): number {
+        return this.vars.rx;
+    }
+    setRX(rx: number): this {
         this.vars.lpset("rx", rx);
         return this;
     }
-    ry(): number;
-    ry(ry: number): this;
-    ry(ry?: number) {
-        if (arguments.length === 0) return this.vars.ry;
-        Check.validateNumber(ry, `${this.constructor.name}.ry`);
+    getRY(): number {
+        return this.vars.ry;
+    }
+    setRY(ry: number): this {
         this.vars.lpset("ry", ry);
         return this;
     }
-    borderRadius(radius) {
-        return this.freeze().rx(radius).ry(radius).unfreeze();
+    setBorderRadius(r: number): this {
+        return this.setRX(r).setRY(r);
     }
 }

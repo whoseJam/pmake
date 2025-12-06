@@ -13,7 +13,7 @@ const BASE_HTML_ATTRIBUTES = {
     "border-style": "solid",
 };
 
-export class SDHTMLNode extends SDSVGNode {
+export abstract class SDHTMLNode extends SDSVGNode {
     /**
      * Creates an HTML node wrapped in a foreignObject element.
      * @param label - The HTML element tag name

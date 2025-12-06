@@ -3,14 +3,9 @@ import { Context } from "@/Animate/Context";
 import { Interp, InterpCreator } from "@/Animate/Interp";
 import { Window } from "@/Animate/Window";
 import { SDTimingFunction, TimingFunction as T } from "@/Math/TimingFunction";
-import { effect, reactive } from "@/Node/Core/Reactive";
+import { reactive } from "@/Node/Core/Reactive";
 import { RenderNode } from "@/Renderer/RenderNode";
-import { Check } from "@/Utility/Check";
-import { Dom } from "@/Utility/Dom";
 
-type ClickCallback = () => void;
-type ValueCallback = (value: string) => void;
-type DragCallback = (dx: number, dy: number) => [number, number];
 type PercentString = `${number}%`;
 type XLocationString = "left" | "center" | "right";
 type YLocationString = "top" | "middle" | "bottom";
@@ -27,7 +22,7 @@ export type SDBox = {
     height: number;
 };
 
-export class SDNode {
+export abstract class SDNode {
     id: number;
     vars: any;
     _: {
@@ -37,19 +32,10 @@ export class SDNode {
         subAnimates: Array<Context>;
         timingFunction: SDTimingFunction;
         layer: RenderNode;
-        layers: { [key: string]: RenderNode };
-        parent: SDNode;
-        children: { [key: string]: SDNode };
-        onClick: EventListener;
-        onDblClick: EventListener;
-        onChange: EventListener;
-        onInput: EventListener;
-        clickTimeout: NodeJS.Timeout;
         [key: string]: any;
     };
     static NODE_ID = 0;
-    static CHILD_ID = 0;
-    constructor(target: SDNode | RenderNode) {
+    constructor() {
         this.id = ++SDNode.NODE_ID;
         this._ = {
             frame: -1,
@@ -58,25 +44,12 @@ export class SDNode {
             subAnimates: [],
             timingFunction: undefined,
             layer: undefined,
-            layers: {},
-            parent: undefined,
-            children: {},
-            onClick: undefined,
-            onDblClick: undefined,
-            onChange: undefined,
-            onInput: undefined,
-            clickTimeout: undefined,
             ready: false, // only when ready = true, the action can impact the node
         };
 
-        const targetLayer = target instanceof SDNode ? target.layer() : target;
-        this._.layer = RenderNode.createRenderNode(this, targetLayer, "g");
+        this._.layer = RenderNode.createRenderNode(this, undefined, "g");
 
         this.vars = reactive({
-            x: 0,
-            y: 0,
-            width: 40,
-            height: 40,
             opacity: 1,
             scale: [1, 1],
             rotate: 0,
@@ -113,43 +86,26 @@ export class SDNode {
      * Returns undefined if the type was not defined during component initialization.
      * @returns {string | undefined} The type label if defined; otherwise, undefined.
      */
-    type(): string;
+    getType(): string {
+        return this._.layer.getAttribute("type");
+    }
     /**
      * Sets the type label for this component.
      * This method should be called during component initialization.
      * @param type - The type label to assign to the component.
      * @returns The current component instance for method chaining.
      */
-    type(type: string): this;
-    type(type?: string) {
-        if (arguments.length === 0) return this._.layer.getAttribute("type");
+    setType(type: string): this {
         this._.layer.setAttribute("type", type);
         return this;
-    }
-    /**
-     * Determines whether the component's aspect ratio is fixed.
-     * Components with a fixed aspect ratio include sd.Text and similar elements.
-     * Most components do not have a fixed aspect ratio.
-     * @returns Returns true if the aspect ratio is fixed; otherwise, false.
-     */
-    fixAspect() {
-        return false;
     }
     /**
      * Gets the default render layer for this component.
      * The layer determines the display order and may affect visual stacking (z-index).
      * @returns The render layer associated with this component.
      */
-    layer(): RenderNode;
-    /**
-     * Gets a named render layer for this component.
-     * The layer determines the display order and visual stacking (z-index).
-     * @param name - The unique identifier for the render layer.
-     * @returns The render layer associated with the specified name.
-     */
-    layer(name: string): RenderNode;
-    layer(name?: string): RenderNode {
-        return name === undefined ? this._.layer : this._.layers[name];
+    getLayer(): RenderNode {
+        return this._.layer;
     }
     /**
      * Creates a new named render layer on this component.
@@ -163,16 +119,9 @@ export class SDNode {
         layer.setAttribute("layer", name);
         return this;
     }
-    /**
-     * Attaches this component to a specified target.
-     * If the target is a component, this attaches to its default render layer.
-     * If the target is a render layer, this attaches directly to that layer.
-     * @param target - The component or render layer to which this component will be attached.
-     * @returns The current component instance for method chaining.
-     */
-    attachTo(target: SDNode | RenderNode) {
-        if (target instanceof SDNode) this._.layer.moveTo(target.layer());
-        else this._.layer.moveTo(target);
+    appendChild(child: SDNode | RenderNode) {
+        if (child instanceof SDNode) child.getLayer().moveTo(this.getLayer());
+        else child.moveTo(this.getLayer());
         return this;
     }
     /**
@@ -286,10 +235,6 @@ export class SDNode {
         this._.end = 0;
     }
 
-    effect(name, callback) {
-        effect(callback);
-        return this;
-    }
     /**
      * Removes this component from the scene.
      * @returns The current component instance for method chaining.
@@ -298,183 +243,49 @@ export class SDNode {
         this._.layer.remove();
     }
 
-    clickable(clickable: boolean) {
-        // TODO
-        return this;
+    getOpacity(): number {
+        return this.vars.opacity;
     }
-    click<T extends this & SDNode>(this: T) {
-        const event = new MouseEvent("click", { button: 1, view: window, bubbles: true, cancelable: true });
-        const element = this.layer().element();
-        element.dispatchEvent(event);
-    }
-    onClick(callback: ClickCallback): this;
-    onClick(cancel: null | false | undefined): this;
-    onClick(callback: ClickCallback | null | false | undefined) {
-        const nake = this.layer().element();
-        Dom.removeEventListener(nake, "click", this._.onClick);
-        if (!callback) return this;
-        this._.onClick = () => {
-            clearTimeout(this._.timeout);
-            this._.clickTimeout = setTimeout(() => {
-                callback();
-            }, 200);
-        };
-        Dom.addEventListener(nake, "click", this._.onClick);
-        return this;
-    }
-    onDblClick(callback: ClickCallback): this;
-    onDblClick(cancel: null | false | undefined): this;
-    onDblClick(callback: ClickCallback | null | false | undefined) {
-        const layer = this.layer().element();
-        Dom.removeEventListener(layer, "dblclick", this._.onDblClick);
-        if (!callback) return this;
-        this._.onDblClick = () => {
-            clearTimeout(this._.clickTimeout);
-            callback();
-        };
-        Dom.addEventListener(layer, "dblclick", this._.onDblClick);
-        return this;
-    }
-    onChange(callback: ValueCallback): this;
-    onChange(cancel: null | false | undefined): this;
-    onChange(callback: ValueCallback | null | false | undefined) {
-        const layer = this.layer().element();
-        Dom.removeEventListener(layer, "change", this._.onChange);
-        if (!callback) return this;
-        // @ts-ignore
-        this._.onChange = (event: Event) => callback(event.target.value);
-        Dom.addEventListener(layer, "change", this._.onChange);
-        return this;
-    }
-    onInput(callback: ValueCallback): this;
-    onInput(cancel: null | false | undefined): this;
-    onInput(callback: ValueCallback | null | false | undefined) {
-        const layer = this.layer().element();
-        Dom.removeEventListener(layer, "input", this._.onInput);
-        if (callback) {
-            // @ts-ignore
-            this._.onInput = (event: Event) => callback(event.target.value);
-            Dom.addEventListener(layer, "input", this._.onInput);
-        }
-        return this;
-    }
-    drag(callback: DragCallback): this;
-    drag(cancel: null | false | undefined): this;
-    drag<T extends this & SDNode>(this: T, callback: DragCallback | null | false | undefined) {
-        const layer = this.layer().element() as SVGGElement;
-        if (typeof callback === "function" || arguments.length === 0) {
-            let currentX = 0;
-            let currentY = 0;
-            let lastDx = 0;
-            let lastDy = 0;
-            // @ts-ignore
-            Snap(layer).drag(
-                function (dx: number, dy: number) {
-                    let screenDx = (dx - lastDx) / Window.RATE;
-                    let screenDy = (dy - lastDy) / Window.RATE;
-                    if (typeof callback === "function") {
-                        [screenDx, screenDy] = callback(screenDx, screenDy);
-                    }
-                    lastDx = dx;
-                    lastDy = dy;
-                    currentX += screenDx;
-                    currentY += screenDy;
-                    const transform = `matrix(1,0,0,1,${currentX},${currentY})`;
-                    layer.setAttribute("transform", transform);
-                },
-                function () {
-                    if (layer.transform.baseVal.length > 0) {
-                        currentX = layer.transform.baseVal.getItem(0).matrix.e;
-                        currentY = layer.transform.baseVal.getItem(0).matrix.f;
-                        lastDx = 0;
-                        lastDy = 0;
-                    }
-                }
-            );
-            return this;
-        }
-        // @ts-ignore
-        Snap(layer).undrag();
-        return this;
-    }
-    opacity(): number;
-    opacity(opactiy: number): this;
-    opacity(opacity?: number) {
-        if (arguments.length === 0) return this.vars.opacity;
-        Check.validateOpacity(opacity, `${this.constructor.name}.opacity`);
+    setOpacity(opacity: number): this {
         this.vars.mpset("opacity", opacity);
         return this;
     }
-    inRange(point: [number, number]) {
-        return this.x() <= point[0] && point[0] <= this.mx() && this.y() <= point[1] && point[1] <= this.my();
-    }
-    x(): number;
-    x(x: number): this;
-    x(x?: number) {
-        if (arguments.length === 0) return this.vars.x;
-        Check.validateNumber(x, `${this.constructor.name}.x`);
-        this.vars.lpset("x", x);
-        return this;
-    }
-    y(): number;
-    y(y: number): this;
-    y(y?: number) {
-        if (arguments.length === 0) return this.vars.y;
-        Check.validateNumber(y, `${this.constructor.name}.y`);
-        this.vars.lpset("y", y);
-        return this;
-    }
-    width(): number;
-    width(width: number): this;
-    width(width?: number) {
-        if (arguments.length === 0) return this.vars.width;
-        Check.validateNumber(width, `${this.constructor.name}.width`);
-        this.vars.lpset("width", width);
-        return this;
-    }
-    height(): number;
-    height(height: number): this;
-    height(height?: number) {
-        if (arguments.length === 0) return this.vars.height;
-        Check.validateNumber(height, `${this.constructor.name}.height`);
-        this.vars.lpset("height", height);
-        return this;
-    }
-    scale(scale: number): this;
-    scale(sx: number, sy: number): this;
-    scale(s: [number, number]): this;
-    scale(sx?: number | [number, number], sy?: number): this {
-        if (arguments.length === 1) {
-            if (Array.isArray(sx)) return this.scale(sx[0], sx[1]);
-            return this.scale(sx, sx);
-        }
-        Check.validateNumber(sx, `${this.constructor.name}.scale`, 1);
-        Check.validateNumber(sy, `${this.constructor.name}.scale`, 2);
+    // inRange(point: [number, number]) {
+    //     return this.getX() <= point[0] && point[0] <= this.mx() && this.y() <= point[1] && point[1] <= this.my();
+    // }
+
+    abstract getX(): number;
+    abstract getY(): number;
+    abstract getWidth(): number;
+    abstract getHeight(): number;
+
+    setScale(scale: number): this;
+    setScale(sx: number, sy: number): this;
+    setScale(s: [number, number]): this;
+    setScale(sx: number | [number, number], sy?: number): this {
+        if (Array.isArray(sx)) return this.setScale(sx[0], sx[1]);
+        if (sy === undefined) return this.setScale(sx, sx);
         this.vars.scale = [sx, sy];
         return this;
     }
-    rotate(rotate: number): this;
-    rotate(rotate?: number) {
-        if (arguments.length === 0) return this.vars.rotate;
-        Check.validateNumber(rotate, `${this.constructor.name}.rotate`);
+    getScale(): [number, number] {
+        return this.vars.scale;
+    }
+    setRotation(rotate: number): this {
         this.vars.lpset("rotate", rotate);
         return this;
     }
-    translate(dx: number, dy: number): this;
-    translate(d: [number, number]): this;
-    translate(dx: number | [number, number], dy?: number) {
-        if (Array.isArray(dx)) return this.translate(dx[0], dx[1]);
-        Check.validateNumber(dx, `${this.constructor.name}.translate`, 1);
-        Check.validateNumber(dy, `${this.constructor.name}.translate`, 2);
+    setTranslate(dx: number, dy: number): this;
+    setTranslate(d: [number, number]): this;
+    setTranslate(dx: number | [number, number], dy?: number): this {
+        if (Array.isArray(dx)) return this.setTranslate(dx[0], dx[1]);
         this.vars.translate = [dx, dy];
         return this;
     }
-    transformOrigin(x: XLocation, y: YLocation): this;
-    transformOrigin(origin: [XLocation, YLocation]): this;
-    transformOrigin(): [number, number];
-    transformOrigin(x?: XLocation | [XLocation, YLocation], y?: YLocation) {
-        if (arguments.length === 0) return this.vars.transformOrigin;
-        if (Array.isArray(x)) return this.transformOrigin(x[0], x[1]);
+    setTransformOrigin(x: XLocation, y: YLocation): this;
+    setTransformOrigin(origin: [XLocation, YLocation]): this;
+    setTransformOrigin(x: XLocation | [XLocation, YLocation], y?: YLocation) {
+        if (Array.isArray(x)) return this.setTransformOrigin(x[0], x[1]);
         const parse = (value: number | string, position: string, size: string) => {
             if (typeof value === "number") return value;
             if (value === "center") return parse("50%", position, size);
@@ -490,64 +301,23 @@ export class SDNode {
         this.vars.transformOrigin = [x_, y_];
         return this;
     }
-    center(): [number, number];
-    center(cx: number, cy: number): this;
-    center(point: [number, number]): this;
-    center(cx?: number | [number, number], cy?: number) {
-        if (arguments.length === 0) return [this.cx(), this.cy()];
-        if (arguments.length === 1) return this.center(cx[0], cx[1]);
-        return this.cx(cx as number).cy(cy);
+    getTransformOrigin(): [number, number] {
+        return this.vars.transformOrigin;
     }
-    kx(k: number) {
-        return this.x() + this.width() * k;
+    getCenter(): [number, number] {
+        return [this.getCenterX(), this.getCenterY()];
     }
-    ky(k: number) {
-        return this.y() + this.height() * k;
+    getCenterX(): number {
+        return this.getX() + this.getWidth() / 2;
     }
-    dx(dx: number) {
-        return this.x(this.x() + dx);
+    getCenterY(): number {
+        return this.getY() + this.getHeight() / 2;
     }
-    dy(dy: number) {
-        return this.y(this.y() + dy);
+    getMaxX() {
+        return this.getX() + this.getWidth();
     }
-    cx(): number;
-    cx(cx: number): this;
-    cx(cx?: number) {
-        if (arguments.length === 0) return this.kx(0.5);
-        return this.x(cx - this.width() * 0.5);
-    }
-    cy(): number;
-    cy(cy: number): this;
-    cy(cy?: number) {
-        if (arguments.length === 0) return this.ky(0.5);
-        return this.y(cy - this.height() * 0.5);
-    }
-    mx(): number;
-    mx(mx: number): this;
-    mx(mx?: number) {
-        if (arguments.length === 0) return this.kx(1);
-        return this.x(mx - this.width());
-    }
-    my(): number;
-    my(my: number): this;
-    my(my?: number) {
-        if (arguments.length === 0) return this.ky(1);
-        return this.y(my - this.height());
-    }
-    box(): SDBox;
-    box(box: SDBox): this;
-    box(x: number, y: number, width: number, height: number): this;
-    box(x?: number | SDBox, y?: number, width?: number, height?: number) {
-        if (arguments.length === 0) {
-            return {
-                x: this.x(),
-                y: this.y(),
-                width: this.width(),
-                height: this.height(),
-            };
-        }
-        if (typeof x === "number") return this.width(width).height(height).x(x).y(y);
-        return this.box(x.x, x.y, x.width, x.height);
+    getMaxY() {
+        return this.getY() + this.getHeight();
     }
     /**
      * Makes this component appear.
@@ -561,12 +331,11 @@ export class SDNode {
     appear() {
         return this.startSubAnimate() // opacity from 0 to 1
             .subAnimate(0, 0)
-            .opacity(0)
+            .setOpacity(0)
             .subAnimate(0, 1)
-            .opacity(1)
+            .setOpacity(1)
             .endSubAnimate();
     }
-    0;
     /**
      * Makes this component disappear.
      *
@@ -579,9 +348,9 @@ export class SDNode {
     disappear() {
         return this.startSubAnimate() // opacity from 1 to 0
             .subAnimate(0, 0)
-            .opacity(1)
+            .setOpacity(1)
             .subAnimate(0, 1)
-            .opacity(0)
+            .setOpacity(0)
             .endSubAnimate();
     }
     /**
@@ -596,10 +365,10 @@ export class SDNode {
     zoomIn() {
         return this.startSubAnimate() // scale from 0 to 1
             .subAnimate(0, 0)
-            .transformOrigin(this.center())
-            .scale(0)
+            .setTransformOrigin(this.getCenter())
+            .setScale(0)
             .subAnimate(0, 1)
-            .scale(1)
+            .setScale(1)
             .endSubAnimate();
     }
     /**
@@ -614,10 +383,10 @@ export class SDNode {
     zoomOut() {
         return this.startSubAnimate() // scale from 1 to 0
             .subAnimate(0, 0)
-            .transformOrigin(this.center())
-            .scale(1)
+            .setTransformOrigin(this.getCenter())
+            .setScale(1)
             .subAnimate(0, 1)
-            .scale(0)
+            .setScale(0)
             .endSubAnimate();
     }
     /**

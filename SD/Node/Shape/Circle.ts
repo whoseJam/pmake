@@ -1,12 +1,8 @@
-import { Vector as V } from "@/Math/Vector";
-import { SDNode } from "@/Node/SDNode";
 import { BaseShape } from "@/Node/Shape/BaseShape";
-import { RenderNode } from "@/Renderer/RenderNode";
-import { Check } from "@/Utility/Check";
 
 export class Circle extends BaseShape {
-    constructor(target: SDNode | RenderNode) {
-        super(target);
+    constructor() {
+        super();
 
         this.__createSVGNode("circle", {
             cx: 20,
@@ -14,57 +10,39 @@ export class Circle extends BaseShape {
             r: 20,
         });
 
-        this.type("Circle");
+        this.setType("Circle");
     }
-    cx(): number;
-    cx(cx: number): this;
-    cx(cx?: number) {
-        if (arguments.length === 0) return this.vars.cx;
-        Check.validateNumber(cx, `${this.constructor.name}.cx`);
+    getCenterX(): number {
+        return this.vars.cx;
+    }
+    setCenterX(cx: number): this {
         this.vars.lpset("cx", cx);
         return this;
     }
-    cy(): number;
-    cy(cy: number): this;
-    cy(cy?: number) {
-        if (arguments.length === 0) return this.vars.cy;
-        Check.validateNumber(cy, `${this.constructor.name}.cy`);
+    getCenterY(): number {
+        return this.vars.cy;
+    }
+    setCenterY(cy: number): this {
         this.vars.lpset("cy", cy);
         return this;
     }
-    r(): number;
-    r(r: number): this;
-    r(r?: number) {
-        if (arguments.length === 0) return this.vars.r;
-        Check.validateNumber(r, `${this.constructor.name}.r`);
+    getR(): number {
+        return this.vars.r;
+    }
+    setR(r: number): this {
         this.vars.lpset("r", r);
         return this;
     }
-    x(): number;
-    x(x: number): this;
-    x(x?: number) {
-        if (x === undefined) return this.cx() - this.r();
-        return this.cx(x - this.x() + this.cx());
+    getX(): number {
+        return this.getCenterX() - this.getR();
     }
-    y(): number;
-    y(y: number): this;
-    y(y?: number) {
-        if (y === undefined) return this.cy() - this.r();
-        return this.cy(y - this.y() + this.cy());
+    getY(): number {
+        return this.getCenterY() - this.getR();
     }
-    width(): number;
-    width(width: number): this;
-    width(width?: number) {
-        if (arguments.length === 0) return this.r() * 2;
-        return this.r(width / 2);
+    getWidth(): number {
+        return this.getR() * 2;
     }
-    height(): number;
-    height(height: number): this;
-    height(height?: number) {
-        if (arguments.length === 0) return this.r() * 2;
-        return this.r(height / 2);
-    }
-    inRange(point: [number, number]) {
-        return V.norm(V.sub(point, this.center())) <= this.r();
+    getHeight(): number {
+        return this.getR() * 2;
     }
 }
