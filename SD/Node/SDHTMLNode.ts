@@ -17,18 +17,16 @@ export abstract class SDHTMLNode extends SDSVGNode {
     /**
      * Creates an HTML node wrapped in a foreignObject element.
      * @param label - The HTML element tag name
-     * @param width - The width of the foreignObject container
-     * @param height - The height of the foreignObject container
      * @param attributes - Additional attributes to apply to the HTML element
      * @returns The created RenderNode
      */
-    __createHTMLNode(label: string, width: number, height: number, attributes: Record<string, any> = {}): RenderNode {
+    __createHTMLNode(label: string, attributes: Record<string, any> = {}): RenderNode {
         this.vars.merge(attributes);
         const foreign = this.__createSVGNode("foreignObject", {
-            x: 0,
-            y: 0,
-            width,
-            height,
+            x: attributes.x,
+            y: attributes.y,
+            width: attributes.width,
+            height: attributes.height,
         });
         const attributes_ = {
             ...BASE_HTML_ATTRIBUTES,

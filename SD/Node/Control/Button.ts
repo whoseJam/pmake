@@ -1,20 +1,22 @@
 import { BaseControl } from "@/Node/Control/BaseControl";
-import { SDNode } from "@/Node/SDNode";
-import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
 import { Color as C } from "@/Utility/Color";
 
 export class Button extends BaseControl {
-    constructor(target: SDNode | RenderNode) {
-        super(target);
+    constructor(args?: { x?: number; y?: number; width?: number; height?: number; text?: string }) {
+        super();
 
-        this.__createHTMLNode("button", 60, 25, {
+        this.__createHTMLNode("button", {
+            x: args?.x ?? 0,
+            y: args?.y ?? 0,
+            width: args?.width ?? 60,
+            height: args?.height ?? 25,
             fill: C.buttonGrey,
             stroke: C.darkButtonGrey,
-            text: "点击",
+            text: args?.text ?? "点击",
         });
 
-        this.type("Button");
+        this.setType("Button");
     }
     /**
      * Gets the text content of the button component.

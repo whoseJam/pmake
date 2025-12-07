@@ -185,11 +185,11 @@ function castPolygonLogicToPath(polygon) {
     const regex = /d="([^"]*)"/;
     const match = str.match(regex);
     const d = match[1];
-    const path = new Path(svg()).d(d).fillOpacity(1);
-    path.toPolygon = function () {
-        return polygon;
-    };
-    return path;
+    // const path = new Path(svg()).d(d).fillOpacity(1);
+    // path.toPolygon = function () {
+    //     return polygon;
+    // };
+    // return path;
 }
 
 export function vec() {
