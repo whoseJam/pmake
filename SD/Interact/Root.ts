@@ -80,24 +80,6 @@ export class Root {
     }
 }
 
-const markerHardcode = [
-    // format
-    `<marker id="arrow" markerUnits="userSpaceOnUse" viewBox="0 0 12 12" refX="9.5" refY="6" markerWidth="12" markerHeight="12" orient="auto-start-reverse"><path d="M2,2 L10,6 L2,10 L6,6 L2,2" stroke="context-stroke" fill="context-stroke"></path></marker>`,
-    `<marker id="adaptiveArrow" markerUnits="strokeWidth" viewBox="0 0 12 12" refX="9.5" refY="6" markerWidth="12" markerHeight="12" orient="auto-start-reverse"><path d="M2,2 L10,6 L2,10 L6,6 L2,2" stroke="context-stroke" fill="context-stroke"></path></marker>`,
-];
-
-function defineMarkers() {
-    const nake = Root.svg.element();
-    // @ts-ignore
-    Snap(nake);
-    // @ts-ignore
-    const defs = Snap(nake.children[1]);
-    markerHardcode.forEach(code => {
-        // @ts-ignore
-        defs.append(Snap.parse(code));
-    });
-}
-
 function updateSVGViewBox(box: SDBox) {
     const view = svg();
     view.setAttribute("viewBox", `${box.x} ${box.y} ${box.width} ${box.height}`);
