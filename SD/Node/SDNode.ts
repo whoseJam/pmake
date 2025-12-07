@@ -102,6 +102,7 @@ export abstract class SDNode {
      * @returns The render layer associated with this component.
      */
     getLayer(): RenderNode {
+        console.log("layer=", this._.layer);
         return this._.layer;
     }
     /**
@@ -117,11 +118,13 @@ export abstract class SDNode {
         return this;
     }
     append(child: SDNode | RenderNode) {
+        console.log("append , child=", child, "this.layer=", this.getLayer());
         if (child instanceof SDNode) this.getLayer().append(child.getLayer());
         else this.getLayer().append(child);
         return this;
     }
     appendChild(child: SDNode | RenderNode) {
+        console.log("append child, child=", child, "this.layer=", this.getLayer());
         if (child instanceof SDNode) this.getLayer().appendChild(child.getLayer());
         else this.getLayer().appendChild(child);
         return this;

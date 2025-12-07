@@ -5,24 +5,36 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestStrokeDashArray);
+sd.main(TestBorderRadius);
 
 async function TestStrokeDashArray() {
-    const rect = new sd.Rect(svg).strokeWidth(3).x(100).y(100).width(100).height(100);
+    const rect = new sd.Rect({
+        targetNode: svg,
+        x: 100,
+        y: 100,
+        width: 100,
+        height: 100,
+    }).setStrokeWidth(3);
     await sd.pause();
-    rect.startAnimate().strokeDashArray([10, 10]).endAnimate();
+    rect.startAnimate().setStrokeDashArray([10, 10]).endAnimate();
     await sd.pause();
-    rect.startAnimate().strokeDashArray([10, 0]).endAnimate();
+    rect.startAnimate().setStrokeDashArray([10, 0]).endAnimate();
 }
 
 async function TestBorderRadius() {
-    const rect = new sd.Rect(svg).cx(600).cy(300).width(200).height(150);
+    const rect = new sd.Rect({
+        targetNode: svg,
+    })
+        .setWidth(200)
+        .setHeight(150)
+        .setCenterX(600)
+        .setCenterY(300);
     await sd.pause();
-    rect.startAnimate().borderRadius(20).endAnimate();
+    rect.startAnimate().setBorderRadius(20).endAnimate();
     await sd.pause();
-    rect.startAnimate().borderRadius(50).endAnimate();
+    rect.startAnimate().setBorderRadius(50).endAnimate();
     await sd.pause();
-    rect.startAnimate().borderRadius(75).endAnimate();
+    rect.startAnimate().setBorderRadius(75).endAnimate();
     await sd.pause();
-    rect.startAnimate().borderRadius(0).endAnimate();
+    rect.startAnimate().setBorderRadius(0).endAnimate();
 }

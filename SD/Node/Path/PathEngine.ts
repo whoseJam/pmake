@@ -1,15 +1,35 @@
-import { svg } from "@/Interact/Root";
+import { Root, svg } from "@/Interact/Root";
 import { SDBox, SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 
-export type PathCode = "M" | "m" | "L" | "l" | "H" | "h" | "V" | "v" | "C" | "c" | "S" | "s" | "Q" | "q" | "T" | "t" | "A" | "a" | "Z" | "z";
+export type PathCode =
+    | "M"
+    | "m"
+    | "L"
+    | "l"
+    | "H"
+    | "h"
+    | "V"
+    | "v"
+    | "C"
+    | "c"
+    | "S"
+    | "s"
+    | "Q"
+    | "q"
+    | "T"
+    | "t"
+    | "A"
+    | "a"
+    | "Z"
+    | "z";
 export type PathOper = [PathCode, ...number[]];
 export type PathOpers = Array<PathOper>;
 
 export class PathEngine {
     static pathSVG = undefined;
     static init() {
-        this.pathSVG = RenderNode.createRenderNodeWithoutAction(undefined, svg(), "path");
+        this.pathSVG = RenderNode.createRenderNodeWithoutAction(undefined, Root.svg, "path");
         this.pathSVG.setAttribute("opacity", 0);
     }
     static toBox(d: string): SDBox {
@@ -68,7 +88,14 @@ export class PathEngine {
                     break;
                 }
                 case "C": {
-                    const [x1, y1, x2, y2, x, y] = operator.slice(1) as [number, number, number, number, number, number];
+                    const [x1, y1, x2, y2, x, y] = operator.slice(1) as [
+                        number,
+                        number,
+                        number,
+                        number,
+                        number,
+                        number
+                    ];
                     operator[1] = fx(x1);
                     operator[2] = fy(y1);
                     operator[3] = fx(x2);

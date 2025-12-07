@@ -1,10 +1,11 @@
+import { Root } from "@/Interact/Root";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { svg } from "@/sd";
 
 export class PolygonEngine {
     static polygonSVG = undefined;
     static init() {
-        this.polygonSVG = RenderNode.createRenderNodeWithoutAction(undefined, svg(), "polygon");
+        this.polygonSVG = RenderNode.createRenderNodeWithoutAction(undefined, Root.svg, "polygon");
         this.polygonSVG.setAttribute("opacity", 0);
     }
     static pointsToBox(points: Array<[number, number]>) {

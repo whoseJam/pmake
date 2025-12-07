@@ -66,6 +66,9 @@ export class InterpObject {
 }
 
 export class Interp {
+    static emptyInterp(object: any, key: string) {
+        return new InterpObject(function (t: number) {});
+    }
     static exLengthInterp(object: any, key: string) {
         const set = setter(object, key);
         const f = (value: string) => +value.slice(0, -2);

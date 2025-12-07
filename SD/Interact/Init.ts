@@ -4,7 +4,7 @@ import { Device } from "@/Interact/Device";
 import { Root } from "@/Interact/Root";
 import { Status } from "@/Interact/Status";
 import { PathEngine } from "@/Node/Path/PathEngine";
-import { PolygonEngine } from "@/Node/Shape/Polygon/PolygonEngine";
+import { PolygonEngine } from "@/Node/Shape/PolygonEngine";
 import { TextEngine } from "@/Node/Text/TextEngine";
 
 function setupButtonStyles() {

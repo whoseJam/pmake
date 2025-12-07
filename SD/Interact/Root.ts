@@ -34,7 +34,6 @@ export class Root {
             this.svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
             this.svg.setAttribute("width", "100%");
             this.svg.setAttribute("height", "100%");
-            defineMarkers();
         }
         if (window.self === window.top) {
             updateSVGViewBox(this.viewBox);
@@ -81,12 +80,12 @@ export class Root {
 }
 
 function updateSVGViewBox(box: SDBox) {
-    const view = svg();
+    const view = Root.svg;
     view.setAttribute("viewBox", `${box.x} ${box.y} ${box.width} ${box.height}`);
 }
 
 function updateWindowRate(box: SDBox) {
-    const view = svg();
+    const view = Root.svg;
     const width = view.element().getBoundingClientRect().width;
     const height = view.element().getBoundingClientRect().height;
     if (width / box.width > height / box.height) Window.RATE = height / box.height;

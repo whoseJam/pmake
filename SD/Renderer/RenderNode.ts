@@ -32,6 +32,8 @@ export class RenderNode {
     targetLayer: RenderNode;
     label: string;
     backingElement: Element;
+    l?: number;
+    r?: number;
     constructor(args: RenderNodeParams) {
         if (args.action === undefined) args.action = true;
         if (args.append === undefined) args.append = true;
@@ -46,18 +48,19 @@ export class RenderNode {
         if (!args.append) return;
         if (!args.targetLayer) return;
         if (!args.action) {
+            console.log("target layer=", args.targetLayer, args);
             this.targetLayer = args.targetLayer;
             args.targetLayer.__append(this);
         } else args.targetLayer.append(this); // set targetLayer in moveTo
     }
 
     delay() {
-        if (!this.targetNode) return 0;
+        if (!this.targetNode) return this.l;
         return this.targetNode.delay();
     }
 
     duration() {
-        if (!this.targetNode) return 0;
+        if (!this.targetNode) return this.r - this.l;
         return this.targetNode.duration();
     }
 
@@ -260,6 +263,15 @@ export class RenderNode {
         return new RenderNode({
             targetNode,
             targetLayer,
+            label,
+        });
+    }
+
+    static createRenderNodeWithTime(targetLayer: RenderNode, l: number, r: number, label: string) {
+        return new RenderNode({
+            targetLayer,
+            l,
+            r,
             label,
         });
     }

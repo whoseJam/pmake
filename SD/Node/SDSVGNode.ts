@@ -61,7 +61,7 @@ export abstract class SDSVGNode extends SDNode {
     }
 
     setStrokeWidth(width: number): this {
-        this.vars.mpset("width", width);
+        this.vars.mpset("strokeWidth", width);
         return this;
     }
 
@@ -70,7 +70,7 @@ export abstract class SDSVGNode extends SDNode {
     }
 
     setStrokeDashOffset(offset: number): this {
-        this.vars.lpset("offset", offset);
+        this.vars.lpset("strokeDashOffset", offset);
         return this;
     }
 

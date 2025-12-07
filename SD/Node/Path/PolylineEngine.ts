@@ -1,10 +1,10 @@
-import { svg } from "@/Interact/Root";
+import { Root, svg } from "@/Interact/Root";
 import { RenderNode } from "@/Renderer/RenderNode";
 
 export class PolylineEngine {
     static polylineSVG = undefined;
     static init() {
-        this.polylineSVG = RenderNode.createRenderNodeWithoutAction(undefined, svg(), "polyline");
+        this.polylineSVG = RenderNode.createRenderNodeWithoutAction(undefined, Root.svg, "polyline");
         this.polylineSVG.setAttribute("opacity", 0);
     }
     static toBox(points: Array<[number, number]>) {

@@ -1,6 +1,6 @@
 import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
-import { svg } from "@/Interact/Root";
+import { Root, svg } from "@/Interact/Root";
 import { TimingFunction as T } from "@/Math/TimingFunction";
 import { PathPen } from "@/Node/Path/PathPen";
 import {
@@ -557,11 +557,11 @@ export class TextEngine {
     static fonts = {};
     static init() {
         this.load("Consolas");
-        this.textSVG = RenderNode.createRenderNodeWithoutAction(undefined, svg(), "text");
+        this.textSVG = RenderNode.createRenderNodeWithoutAction(undefined, Root.svg, "text");
         this.textSVG.setAttribute("fill-opacity", 0);
         this.textSVG.setAttribute("stroke-opacity", 0);
         this.textSVG.setAttribute("font-family", "consolas");
-        this.mathjaxSVG = RenderNode.createRenderNodeWithoutAction(undefined, svg(), "g");
+        this.mathjaxSVG = RenderNode.createRenderNodeWithoutAction(undefined, Root.svg, "g");
         this.mathjaxSVG.setAttribute("opacity", 0);
         this.mathjaxSVG.setAttribute("font-size", 20);
     }
