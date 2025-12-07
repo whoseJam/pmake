@@ -2,11 +2,6 @@ import { BaseShape } from "@/Node/Shape/BaseShape";
 import { SDNode } from "@/Node/SDNode";
 
 export class Rect extends BaseShape {
-    /**
-     *
-     * @param args
-     * @param args.x
-     */
     constructor(args?: {
         targetNode?: SDNode;
         x?: number;
