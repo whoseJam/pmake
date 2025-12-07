@@ -91,6 +91,10 @@ export class Action {
         }
     }
     tick(t: number) {
+        if (!this.interp) {
+            this.set(Action.stopFlag);
+            return true;
+        }
         if (t < this.l) return false;
         Window.ACTION_TICK++;
         if (this.l < this.r - 1) {
@@ -127,15 +131,9 @@ export class Action {
         return `[${this.l}, ${this.r}] animatedKey=${this.animatedKey} source=${this.source} target=${this.target} id=${this.entity.id} frame=${this.frame}`;
     }
     entityIsReady() {
-        if (this.animatedKey === "moveTo") return true;
-        if (this.r - this.l < 1) return true;
-        if (this.entity instanceof SDNode) {
-            return this.entity._.ready;
-        } else return true;
+        return true;
     }
     entityIsCreated() {
-        if (this.animatedKey === "moveTo") return true;
-        if (this.entity instanceof SDNode) return this.entity._.created;
         return true;
     }
     is(flag: number) {
@@ -148,6 +146,7 @@ export class Action {
         this.flag &= ~flag;
     }
     clone() {
+        if (this.lazyInterp) return undefined;
         return new Action(this);
     }
 }

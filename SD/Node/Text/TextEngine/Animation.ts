@@ -7,6 +7,7 @@ import { getTextPaths } from "@/Node/Text/TextEngine/Path";
 import { createTextView, PathStyle } from "@/Node/Text/TextEngine/TextView";
 import { transforming } from "@/Node/Text/TextEngine/Transforming";
 import { RenderNode } from "@/Renderer/RenderNode";
+import { processMapping } from "@/Node/Text/BaseText";
 
 export function buildTransforming(
     text: Text,
@@ -24,7 +25,7 @@ export function buildTransforming(
 ) {
     const sourceView = createTextView(source.text, { styles: source.styles, backing: source.backing });
     const targetView = createTextView(target.text, { backing: target.backing });
-    const matchings = match(sourceView, targetView, mapping);
+    const matchings = match(sourceView, targetView, processMapping(mapping));
     const callback = (l: number, r: number, source: any, target: any) => {
         for (const matching of matchings) {
             const [sourceSubtextView, targetSubtextView] = matching;
@@ -32,7 +33,8 @@ export function buildTransforming(
             const targetPaths = getTextPaths(text, r);
             const sourceStyles = A.getAttribute(text, "subtextStyles", l, sourceSubtextView.getStyle());
             const targetStyles = A.getAttribute(text, "subtextStyles", r, targetSubtextView.getStyle());
-            console.log("queryStyle=", targetStyles);
+            console.log("sourceStyles=", sourceStyles);
+            console.log("targetStyles=", targetStyles);
             transforming(
                 text,
                 targetLayer,

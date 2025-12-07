@@ -27,7 +27,7 @@ const SIZE_RELATED_KEY = new Set([
 
 const visible = (element: SDNode) => {
     if (element instanceof SDNode) {
-        if (element.opacity() === 0) return false;
+        if (element.getOpacity() === 0) return false;
         if (element._.parent) return visible(element._.parent);
         return true;
     }
@@ -228,6 +228,7 @@ export class ActionList {
         });
         this.actionsList.forEachReverse(action => {
             const action_ = action.clone();
+            if (!action_) return;
             action_.reverse = true;
             action_.l = maxTimestamp - action.r;
             action_.r = maxTimestamp - action.l;
@@ -247,8 +248,9 @@ export class ActionList {
     replay() {
         const other = new ActionList();
         this.actionsList.forEach(action => {
-            const newAction = action.clone();
-            other.push(newAction);
+            const action_ = action.clone();
+            if (!action_) return;
+            other.push(action_);
         });
         other.enabled = true;
         return other;
@@ -258,17 +260,32 @@ export class ActionList {
             if (SIZE_RELATED_KEY.has(action.animatedKey)) {
                 const entity = action.entity;
                 if (entity instanceof SDSVGNode && visible(entity)) {
-                    const x = entity.x();
-                    const mx = entity.mx();
-                    const y = entity.y();
-                    const my = entity.my();
-                    Window.SVG_MAXX = Math.max(Window.SVG_MAXX, mx);
+                    const x = entity.getX();
+                    const y = entity.getY();
+                    const mx = entity.getMaxX();
+                    const my = entity.getMaxY();
                     Window.SVG_MINX = Math.min(Window.SVG_MINX, x);
-                    Window.SVG_MAXY = Math.max(Window.SVG_MAXY, my);
                     Window.SVG_MINY = Math.min(Window.SVG_MINY, y);
+                    Window.SVG_MAXY = Math.max(Window.SVG_MAXY, my);
+                    Window.SVG_MAXX = Math.max(Window.SVG_MAXX, mx);
                 }
             }
         });
+    }
+    getAttribute(entity: SDNode | RenderNode, animatedKey: string, t: number, default_?: any) {
+        const actionMap = this.actionsMap.get(entity);
+        if (!actionMap) return;
+        const actions = actionMap[animatedKey] ?? [];
+        let value = undefined;
+        actions.forEach(action => {
+            if (action.l === t) value = action.source;
+            if (action.r === t) value = action.target;
+        });
+        if (value === undefined) {
+            if (default_ !== undefined) return default_;
+            throw new Error(`Unable to find attribute ${animatedKey}`);
+        }
+        return value;
     }
     debug() {
         console.log("---------------Action List debug---------------");

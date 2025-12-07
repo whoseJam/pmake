@@ -31,16 +31,15 @@ export class PathStyle {
         });
     }
     styleAt(text: Text, t: number) {
-        const fill = this.fill === "default" ? A.getAttribute(text, "fill", t, text.fill()) : this.fill;
-        const stroke = this.stroke === "default" ? A.getAttribute(text, "stroke", t, text.stroke()) : this.stroke;
-        console.log("text.strokeWidth=", text.strokeWidth());
+        const fill = this.fill === "default" ? A.getAttribute(text, "fill", t, text.getFill()) : this.fill;
+        const stroke = this.stroke === "default" ? A.getAttribute(text, "stroke", t, text.getStroke()) : this.stroke;
         const strokeWidth =
             this.strokeWidth === "default"
-                ? A.getAttribute(text, "stroke-width", t, text.strokeWidth())
+                ? A.getAttribute(text, "stroke-width", t, text.getStrokeWidth())
                 : this.strokeWidth;
         const strokeDashArray =
             this.strokeDashArray === "default"
-                ? A.getAttribute(text, "stroke-dasharray", t, text.strokeDashArray())
+                ? A.getAttribute(text, "stroke-dasharray", t, text.getStrokeDashArray())
                 : this.strokeDashArray;
         return new PathStyle({
             fill,

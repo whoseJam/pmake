@@ -2,6 +2,8 @@ import { Action } from "@/Animate/Action";
 import { ActionList } from "@/Animate/ActionList";
 import { Window } from "@/Animate/Window";
 import { Status as S } from "@/Interact/Status";
+import { RenderNode } from "@/Renderer/RenderNode";
+import { SDNode } from "@/sd";
 import { Dom } from "@/Utility/Dom";
 
 let checkWaterMarkTick = 0;
@@ -105,6 +107,9 @@ export class Animate {
         this.currentActionList = this.historyActionList[frame].replay();
         this.currentActionList.restart();
         S.updateFrameStatus();
+    }
+    static getAttribute(entity: SDNode | RenderNode, animatedKey: string, t: number, default_?: any) {
+        return this.currentActionList.getAttribute(entity, animatedKey, t, default_);
     }
     static debug() {
         this.currentActionList.debug();

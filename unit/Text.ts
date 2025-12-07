@@ -100,13 +100,17 @@ async function TestTextTransform() {
 }
 
 async function TestConsecutiveTransform() {
-    const text = new sd.Text(svg, "A").x(100).y(100).fontSize(100);
+    const text = new sd.Text({
+        targetNode: svg,
+        text: "A",
+        x: 100,
+        y: 100,
+        fontSize: 100,
+    });
     await sd.pause();
-    text.startAnimate(1000).typewritter("hello").text("world").endAnimate();
+    text.startAnimate(1000).setText("B").endAnimate();
     await sd.pause();
-    text.startAnimate(1000).text("B").endAnimate();
-    await sd.pause();
-    text.startAnimate(1000).text("C").endAnimate();
+    text.startAnimate(1000).setText("C").endAnimate();
 }
 
 async function TestSubtextColorWithTransform() {

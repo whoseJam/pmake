@@ -3,23 +3,21 @@ import { SDNode } from "@/Node/SDNode";
 import { BaseText, TextMapping } from "@/Node/Text/BaseText";
 import { TextEngine } from "@/Node/Text/TextEngine";
 import { buildTransforming } from "@/Node/Text/TextEngine/Animation";
-import { RenderNode } from "@/Renderer/RenderNode";
 import { Action } from "@/sd";
-import { Check } from "@/Utility/Check";
-import { SDAllColor, SDColor, SDPacketColor } from "@/Utility/Color";
+import { SDColor } from "@/Utility/Color";
 import { matchSubtext } from "./TextEngine/Mapping";
-import { createTextView, PathStyle } from "./TextEngine/TextView";
+import { createTextView, PathStyle } from "@/Node/Text/TextEngine/TextView";
 
 export class Text extends BaseText {
-    constructor(text = "") {
+    constructor(args?: { targetNode?: SDNode; x?: number; y?: number; fontSize?: number; text?: string }) {
         super();
 
         this.setType("Text");
 
         const object = this.__createSVGNode("text", {
-            "x": 0,
-            "y": 0,
-            "fontSize": 20,
+            "x": args?.x ?? 0,
+            "y": args?.y ?? 0,
+            "fontSize": args?.fontSize ?? 20,
             "font-family": "Consolas",
             "text-anchor": "start",
             "dominant-baseline": "text-before-edge",
@@ -38,7 +36,8 @@ export class Text extends BaseText {
         this.vars.watch("subtextStyles", SDNode.__action(this, object, "subtextStyles", Interp.emptyInterp));
         this.vars.watch("html", SDNode.__action(this, object, "innerHTML", Interp.blankStringInterp));
 
-        this.text(text);
+        if (args?.text) this.setText(args.text);
+        args?.targetNode?.appendChild(this);
     }
 
     getFontSize(): number {
@@ -70,10 +69,10 @@ export class Text extends BaseText {
     setWidth(width: number): this {
         if (this.vars.width > 1e-1) {
             const k = width / this.vars.width;
-            this.fontSize(this.fontSize() * k);
-        } else if (this.text() !== "") {
-            const fontSize = TextEngine.widthToFontSize(this.text(), this.fontFamily(), width);
-            this.fontSize(fontSize);
+            this.setFontSize(this.getFontSize() * k);
+        } else if (this.getText() !== "") {
+            const fontSize = TextEngine.widthToFontSize(this.getText(), this.getFontFamily(), width);
+            this.setFontSize(fontSize);
         }
         return this;
     }
@@ -85,10 +84,10 @@ export class Text extends BaseText {
     setHeight(height: number): this {
         if (this.vars.height > 1e-1) {
             const k = height / this.vars.height;
-            this.fontSize(this.fontSize() * k);
-        } else if (this.text() !== "") {
-            const fontSize = TextEngine.heightToFontSize(this.text(), this.fontFamily(), height);
-            this.fontSize(fontSize);
+            this.setFontSize(this.getFontSize() * k);
+        } else if (this.getText() !== "") {
+            const fontSize = TextEngine.heightToFontSize(this.getText(), this.getFontFamily(), height);
+            this.setFontSize(fontSize);
         }
         return this;
     }
@@ -97,14 +96,15 @@ export class Text extends BaseText {
         return this.vars.text;
     }
 
-    setText(text: string, mapping?: TextMapping, auto?: boolean): this {
+    setText(text: string, mapping?: TextMapping): this {
         const text_ = String(text);
         if (this.vars.text === text_) return this;
-        const box = TextEngine.textBoundingBox(text_, this.getFontFamily(), this.fontSize());
-        const source = { text: this.text(), styles: this.vars.subtextStyles };
+        const box = TextEngine.textBoundingBox(text_, this.getFontFamily(), this.getFontSize());
+        const source = { text: this.getText(), styles: this.vars.subtextStyles };
         const target = { text: text_ };
         this.vars.subtextStyles = buildTransforming(this, source, target, mapping, this.getLayer());
         this.vars.text = text;
+        console.log("text=", text);
         this.vars.setTogether({
             html: parseToHTML.call(this),
             width: box.width,
@@ -153,7 +153,7 @@ export class Text extends BaseText {
 
 function parseToHTML() {
     const styles = this.vars.subtextStyles;
-    const text = this.text();
+    const text = this.getText();
     const parseText = (text_: string | number) => {
         let ans = "";
         const text = String(text_);
@@ -166,7 +166,6 @@ function parseToHTML() {
         return ans;
     };
     let html = "";
-    console.log("styles=", styles);
     if (styles.length === text.length) {
         for (let l = 0, r = 0; l < text.length; l = r + 1) {
             r = l;

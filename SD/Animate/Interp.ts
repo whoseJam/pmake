@@ -5,7 +5,6 @@ import { Color } from "@/Utility/Color";
 export type InterpFunction = (this: Action, t: number) => void;
 export type LazyInterpFunction = (l: number, r: number, source: any, target: any) => void;
 export type InterpCreator = (object: any, key: string) => InterpObject;
-type InitGroupFunction = (action: Action) => void;
 type InitFunction = (this: Action) => void;
 type BeforeInterpFunction = (this: Action) => void;
 type AfterInterpFunction = (this: Action) => void;
@@ -252,8 +251,5 @@ export class Interp {
             this._source = f(this.source, length);
             this._target = f(this.target, length);
         });
-    }
-    static groupInterp(onCreateGroup: InitGroupFunction) {
-        return new GroupInterpObject(onCreateGroup);
     }
 }

@@ -4,11 +4,11 @@ import { TextEngine } from "../TextEngine";
 import { PathView } from "./TextView";
 
 export function getTextPaths(text: Text, t: number) {
-    const text_ = A.getAttribute(text, "text", t, text.text());
-    const family = A.getAttribute(text, "font-family", t, text.fontFamily());
-    const size = A.getAttribute(text, "font-size", t, text.fontSize());
-    const x = A.getAttribute(text, "x", t, text.x());
-    const y = A.getAttribute(text, "y", t, text.y());
+    const text_ = A.getAttribute(text, "text", t, text.getText());
+    const family = A.getAttribute(text, "font-family", t, text.getFontFamily());
+    const size = A.getAttribute(text, "font-size", t, text.getFontSize());
+    const x = A.getAttribute(text, "x", t, text.getX());
+    const y = A.getAttribute(text, "y", t, text.getY());
     const paths = TextEngine.getTextPathsFromOpenType(text_, family, size, x, y);
     const paths_ = [];
     for (let i = 0; i < paths.length; i++) {

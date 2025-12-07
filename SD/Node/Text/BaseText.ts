@@ -33,7 +33,7 @@ type TextMappingDictionary = { [key: string]: string };
 export type TextMapping = TextMappingDictionary | Array<TextMappingItem>;
 export type TextMappingArray = Array<TextMappingObject>;
 
-function processMapping(mapping: TextMapping): TextMappingArray {
+export function processMapping(mapping: TextMapping): TextMappingArray {
     const result = [] as TextMappingArray;
     function processArraySubtextItem(item: TextMappingSubtextItem): TextMappingObject {
         return { source: String(item[0]), target: String(item[1]) };
@@ -76,16 +76,20 @@ export abstract class BaseText extends SDSVGNode {
             y: 0,
         });
     }
+
     getX(): number {
         return this.vars.x;
     }
+
     setX(x: number): this {
         this.vars.lpset("x", x);
         return this;
     }
+
     getY(): number {
         return this.vars.y;
     }
+
     setY(y: number): this {
         this.vars.lpset("y", y);
         return this;

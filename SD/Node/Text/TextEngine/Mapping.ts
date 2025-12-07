@@ -1,4 +1,4 @@
-import { TextMappingLocation } from "@/Node/Text/BaseText";
+import { TextMappingArray, TextMappingLocation } from "@/Node/Text/BaseText";
 import { SubtextView, TextView } from "@/Node/Text/TextEngine/TextView";
 import { make1d } from "@/Utility/Base";
 
@@ -40,7 +40,11 @@ export function matchSubtext(textView: TextView, pattern: string) {
     }
 }
 
-export function match(sourceView: TextView, targetView: TextView, mappings: any): Array<[SubtextView, SubtextView]> {
+export function match(
+    sourceView: TextView,
+    targetView: TextView,
+    mappings: TextMappingArray
+): Array<[SubtextView, SubtextView]> {
     const matchings = [];
     const sourceDeleted = make1d(sourceView.hash.length, false);
     const targetDeleted = make1d(targetView.hash.length, false);
