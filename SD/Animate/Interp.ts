@@ -41,6 +41,7 @@ export class InterpObject {
         this.onAfterInterp_ = () => {};
     }
     call(action: Action, t: number): void {
+        if (action.animatedKey === "aaa") console.log("Aciton=", action);
         this.callback_.call(action, t);
     }
     onInit(call: InitFunction | Action) {

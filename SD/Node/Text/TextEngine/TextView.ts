@@ -86,6 +86,9 @@ export class TextView {
         this.hash = hash;
         this.styles = styles;
     }
+    asSubtextView() {
+        return new SubtextView(this, 0, this.styles.length - 1);
+    }
 }
 
 export class SubtextView {

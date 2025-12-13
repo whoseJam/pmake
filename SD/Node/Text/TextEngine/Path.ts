@@ -1,9 +1,9 @@
 import { Animate as A } from "@/Animate/Animate";
 import { Text } from "@/Node/Text/Text";
-import { TextEngine } from "../TextEngine";
+import { TextEngine } from "../TextEngine_";
 import { PathView } from "./TextView";
 
-export function getTextPaths(text: Text, t: number) {
+export function getTextPaths(text: Text, t: number): Array<PathView> {
     const text_ = A.getAttribute(text, "text", t, text.getText());
     const family = A.getAttribute(text, "font-family", t, text.getFontFamily());
     const size = A.getAttribute(text, "font-size", t, text.getFontSize());

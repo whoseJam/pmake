@@ -1,9 +1,10 @@
 import { Interp } from "@/Animate/Interp";
 import { SDNode } from "@/Node/SDNode";
 import { BaseText, TextMapping } from "@/Node/Text/BaseText";
-import { TextEngine } from "@/Node/Text/TextEngine";
-import { buildTransforming } from "@/Node/Text/TextEngine/Animation";
-import { Action } from "@/sd";
+import { TextEngine } from "@/Node/Text/TextEngine_";
+import { buildAnimation } from "@/Node/Text/TextEngine/Animation";
+import { transformProcess, transformPostProcess } from "@/Node/Text/TextEngine/Transform";
+import { typewritterProcess, typewritterPostProcess } from "@/Node/Text/TextEngine/Typewritter";
 import { SDColor } from "@/Utility/Color";
 import { matchSubtext } from "./TextEngine/Mapping";
 import { createTextView, PathStyle } from "@/Node/Text/TextEngine/TextView";
@@ -105,13 +106,18 @@ export class Text extends BaseText {
         return this.vars.text;
     }
 
-    setText(text: string, mapping?: TextMapping): this {
+    setText(text: string | number, mapping?: TextMapping): this {
         const text_ = String(text);
         if (this.vars.text === text_) return this;
         const box = TextEngine.textBoundingBox(text_, this.getFontFamily(), this.getFontSize());
-        const source = { text: this.getText(), styles: this.vars.subtextStyles };
-        const target = { text: text_ };
-        this.vars.subtextStyles = buildTransforming(this, source, target, mapping, this.getLayer());
+        this.vars.subtextStyles = buildAnimation(
+            this,
+            { text: this.getText(), styles: this.vars.subtextStyles },
+            { text: text_ },
+            transformProcess(mapping),
+            transformPostProcess(this, this.getLayer()),
+            "transform"
+        );
         this.vars.text = text;
         this.vars.setTogether({
             html: parseToHTML.call(this),
@@ -128,36 +134,36 @@ export class Text extends BaseText {
     setFontFamily(family: "Times New Roman" | "Arial") {
         const text = String(this.vars.text);
         this.vars.fontFamily = family;
-        this.vars.subtextStyles = buildTransforming(
+        this.vars.subtextStyles = buildAnimation(
             this,
             { text: this.getText() },
             { text: this.getText() },
-            [],
-            this.getLayer()
+            transformProcess([]),
+            transformPostProcess(this, this.getLayer()),
+            "transform"
         );
         this.vars.text = text;
         this.vars.trigger("html");
         return this;
     }
 
-    typewritter(text: string) {
-        const currentText = this.vars.text;
-        const this_ = this;
-        new Action(
-            this.delay(),
-            this.delay() + this.duration(),
-            currentText,
-            text,
-            function (t: number) {
-                if (this.reverse) t = 1.0 - t;
-                const targetLength = Math.floor(text.length * t);
-                const displayText = this.target.slice(0, targetLength);
-                this_.vars.object.setAttribute("text", displayText);
-            },
-            this._.timingFunction,
+    typewritter(text: string | number) {
+        const text_ = String(text);
+        const box = TextEngine.textBoundingBox(text_, this.getFontFamily(), this.getFontSize());
+        this.vars.subtextStyles = buildAnimation(
             this,
-            "text:typewritter"
+            { text: this.getText(), styles: this.vars.subtextStyles },
+            { text: text_ },
+            typewritterProcess(),
+            typewritterPostProcess(this, this.getLayer()),
+            "typewritter"
         );
+        this.vars.text = text;
+        this.vars.setTogether({
+            html: parseToHTML.call(this),
+            width: box.width,
+            height: box.height,
+        });
         return this;
     }
 

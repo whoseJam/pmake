@@ -5,7 +5,7 @@ import { Root } from "@/Interact/Root";
 import { Status } from "@/Interact/Status";
 import { PathEngine } from "@/Node/Path/PathEngine";
 import { PolygonEngine } from "@/Node/Shape/PolygonEngine";
-import { TextEngine } from "@/Node/Text/TextEngine";
+import { TextEngine } from "@/Node/Text/TextEngine_";
 
 function setupButtonStyles() {
     const css = `button:active { box-shadow: inset 0 2px 4px rgba(0,0,0,0.2); }`;
