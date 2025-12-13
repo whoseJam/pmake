@@ -53,7 +53,6 @@ export function match(
         const target = mapping.target;
         const sourceSubtextView = calculate(sourceView, sourceDeleted, source);
         const targetSubtextView = calculate(targetView, targetDeleted, target);
-        sourceSubtextView.validateStyle();
         targetSubtextView.setStyle(sourceSubtextView.getStyle());
         matchings.push(sourceSubtextView, targetSubtextView);
     }
@@ -67,7 +66,6 @@ export function match(
     });
     const sourceSubtextView = new SubtextView(sourceView, sourceSet);
     const targetSubtextView = new SubtextView(targetView, targetSet);
-    sourceSubtextView.validateStyle();
     targetSubtextView.setStyle(sourceSubtextView.getStyle());
     matchings.push([sourceSubtextView, targetSubtextView]);
     return matchings;

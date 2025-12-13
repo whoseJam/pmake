@@ -99,7 +99,7 @@ function getConfiguration(file) {
                                 jsx: "react",
                                 esModuleInterop: true,
                                 allowSyntheticDefaultImports: true,
-                                target: "ES5",
+                                target: "ES6",
                                 module: "ESNext",
                                 moduleResolution: "Node",
                                 resolveJsonModule: true,

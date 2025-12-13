@@ -294,7 +294,6 @@ export function reactive(object: { [key: string]: any }, fatherObject?: any) {
             const value = Reflect.get(object, key, receiver);
             traceInput(object, key, value);
             if (value instanceof SDNode || value instanceof RenderNode) return value;
-            if (typeof value === "object") return reactive(value, object);
             return value;
         },
         set(object, key: string, value: any, receiver) {

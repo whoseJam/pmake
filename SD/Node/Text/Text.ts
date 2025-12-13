@@ -167,14 +167,57 @@ export class Text extends BaseText {
         return this;
     }
 
-    setSubtextColor(subtext: string | number, color: SDColor, i: number = 0) {
+    setSubtextFill(subtext: string | number, color: SDColor, i: number = 0) {
         const textView = createTextView(this.vars.text, {});
         const subtextView = matchSubtext(textView, String(subtext));
-        const styles = this.vars.subtextStyles.map((style: PathStyle) => style.clone());
-        subtextView.__iterate(i => {
-            styles[i].fill = color;
-        });
-        this.vars.subtextStyles = styles;
+        const newStyles = this.vars.subtextStyles.map((style: PathStyle) => style.clone());
+        subtextView.__iterate(i => (newStyles[i].fill = color));
+        buildAnimation(
+            this,
+            { text: this.getText() },
+            { text: this.getText() },
+            transformProcess([]),
+            transformPostProcess(this, this.getLayer()),
+            "*"
+        );
+        this.vars.subtextStyles = newStyles;
+        this.vars.html = parseToHTML.call(this);
+        return this;
+    }
+
+    setSubtextStroke(subtext: string | number, color: SDColor, i: number = 0) {
+        const textView = createTextView(this.vars.text, {});
+        const subtextView = matchSubtext(textView, String(subtext));
+        const newStyles = this.vars.subtextStyles.map((style: PathStyle) => style.clone());
+        subtextView.__iterate(i => (newStyles[i].stroke = color));
+        buildAnimation(
+            this,
+            { text: this.getText() },
+            { text: this.getText() },
+            transformProcess([]),
+            transformPostProcess(this, this.getLayer()),
+            "*"
+        );
+        this.vars.subtextStyles = newStyles;
+        this.vars.html = parseToHTML.call(this);
+        return this;
+    }
+
+    setSubtextStrokeWidth(subtext: string | number, width: number, i: number = 0) {
+        const textView = createTextView(this.vars.text, {});
+        const subtextView = matchSubtext(textView, String(subtext));
+        const newStyles = this.vars.subtextStyles.map((style: PathStyle) => style.clone());
+        subtextView.__iterate(i => (newStyles[i].strokeWidth = width));
+        buildAnimation(
+            this,
+            { text: this.getText() },
+            { text: this.getText() },
+            transformProcess([]),
+            transformPostProcess(this, this.getLayer()),
+            "*"
+        );
+        this.vars.subtextStyles = newStyles;
+        this.vars.html = parseToHTML.call(this);
         return this;
     }
 }
@@ -205,6 +248,7 @@ function parseToHTML() {
             let attribute = "";
             if (styles[l].fill !== "default") attribute = attribute + ` fill='${styles[l].fill}'`;
             if (styles[l].stroke !== "default") attribute = attribute + ` stroke='${styles[l].stroke}'`;
+            if (styles[l].strokeWidth !== "default") attribute = attribute + ` stroke-width='${styles[l].strokeWidth}'`;
             html = html + `<tspan ${attribute} alignment-baseline='text-before-edge'>`;
             html = html + parseText(text.slice(l, r + 1));
             html = html + "</tspan>";

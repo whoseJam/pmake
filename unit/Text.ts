@@ -5,7 +5,7 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestFontFamilyWithTypewritter);
+sd.main(TestSubtextColorWithPosition);
 
 // async function TestSubtextColor() {
 //     const text = new sd.Text(svg, "for(int i=1;i<=n;i++)ans+=i;").x(100).y(100).fontSize(40);
@@ -151,65 +151,169 @@ async function TestSubtextColorWithFontSize() {
 }
 
 async function TestSubtextColorWithPosition() {
-    const text1 = new sd.Text(svg, "hello").x(100).y(100).fontSize(50);
-    const text2 = new sd.Text(svg, "hello").x(100).y(200).fontSize(50);
-    const text3 = new sd.Text(svg, "hello").x(100).y(300).fontSize(50);
+    const text1 = new sd.Text({
+        targetNode: svg,
+        text: "hello",
+        x: 100,
+        y: 100,
+        fontSize: 50,
+    });
+    const text2 = new sd.Text({
+        targetNode: svg,
+        text: "hello",
+        x: 100,
+        y: 200,
+        fontSize: 50,
+    });
+    const text3 = new sd.Text({
+        targetNode: svg,
+        text: "hello",
+        x: 100,
+        y: 300,
+        fontSize: 50,
+    });
     await sd.pause();
-    text1.startAnimate().x(200).endAnimate();
-    text2.startAnimate().subtextColor("ll", C.red).x(200).endAnimate();
-    text3.startAnimate().x(200).subtextColor("ll", C.red).endAnimate();
+    text1.startAnimate().setX(200).endAnimate();
+    text2.startAnimate().setSubtextFill("ll", C.red).setX(200).endAnimate();
+    text3.startAnimate().setX(200).setSubtextFill("ll", C.red).endAnimate();
+}
+
+async function TestSubtextAttribute() {
+    const text = new sd.Text({
+        targetNode: svg,
+        x: 100,
+        y: 100,
+        fontSize: 100,
+        text: "abcabcabc",
+    });
+    await sd.pause();
+    text.startAnimate(1000)
+        .setSubtextFill("bca", C.red)
+        .setSubtextStrokeWidth("bcab", 3)
+        .setSubtextStroke("cabc", C.green)
+        .endAnimate();
+    await sd.pause();
+    text.startAnimate().setText("hello").endAnimate();
 }
 
 async function TestSubtextColor() {
-    const text = new sd.Text(svg).fontSize(100).text("abcabcabc");
+    const text = new sd.Text({
+        targetNode: svg,
+        x: 100,
+        y: 100,
+        fontSize: 100,
+        text: "abcabcabc",
+    });
     await sd.pause();
-    text.startAnimate().subtextColorAll("bc", C.red).endAnimate();
+    text.startAnimate().setSubtextFill("bc", C.red).endAnimate();
     await sd.pause();
-    text.startAnimate().subtextColorAll("c", C.textBlue).endAnimate();
+    text.startAnimate().setSubtextFill("c", C.textBlue).endAnimate();
     await sd.pause();
-    text.startAnimate().fill(C.purple).endAnimate();
+    text.startAnimate().setFill(C.purple).endAnimate();
     await sd.pause();
-    text.startAnimate().fill(C.grey).endAnimate();
+    text.startAnimate().setFill(C.grey).endAnimate();
 }
 
 async function TestTransformWithFontSize() {
-    const text1 = new sd.Text(svg).text("hello").x(100).y(100).fontSize(50);
-    const text2 = new sd.Text(svg).text("world").x(100).y(200).fontSize(50);
-    const text3 = new sd.Text(svg).text("world").x(100).y(300).fontSize(50);
+    const text1 = new sd.Text({
+        targetNode: svg,
+        text: "hello",
+        x: 100,
+        y: 100,
+        fontSize: 50,
+    });
+    const text2 = new sd.Text({
+        targetNode: svg,
+        text: "hello",
+        x: 100,
+        y: 200,
+        fontSize: 50,
+    });
+    const text3 = new sd.Text({
+        targetNode: svg,
+        text: "hello",
+        x: 100,
+        y: 300,
+        fontSize: 50,
+    });
     await sd.pause();
-    text1.startAnimate().fontSize(80).endAnimate();
-    text2.startAnimate().fontSize(80).text("hello").endAnimate();
-    text3.startAnimate().text("hello").fontSize(80).endAnimate();
+    text1.startAnimate().setFontSize(80).endAnimate();
+    text2.startAnimate().setFontSize(80).setText("world").endAnimate();
+    text3.startAnimate().setText("world").setFontSize(80).endAnimate();
 }
 
 async function TestTransformWithColor() {
-    const text1 = new sd.Text(svg).text("hello").x(100).y(100).fontSize(50);
-    const text2 = new sd.Text(svg).text("world").x(100).y(200).fontSize(50);
-    const text3 = new sd.Text(svg).text("world").x(100).y(300).fontSize(50);
+    const text1 = new sd.Text({
+        targetNode: svg,
+        text: "hello",
+        x: 100,
+        y: 100,
+        fontSize: 50,
+    });
+    const text2 = new sd.Text({
+        targetNode: svg,
+        text: "hello",
+        x: 100,
+        y: 200,
+        fontSize: 50,
+    });
+    const text3 = new sd.Text({
+        targetNode: svg,
+        text: "hello",
+        x: 100,
+        y: 300,
+        fontSize: 50,
+    });
     await sd.pause();
-    text1.startAnimate().fill(C.red).endAnimate();
-    text2.startAnimate().fill(C.red).text("hello").endAnimate();
-    text3.startAnimate().text("hello").fill(C.red).endAnimate();
+    text1.startAnimate().setFill(C.red).endAnimate();
+    text2.startAnimate().setFill(C.red).setText("world").endAnimate();
+    text3.startAnimate().setText("world").setFill(C.red).endAnimate();
 }
 
 async function TestTransformWithPosition() {
-    const text1 = new sd.Text(svg).text("hello").x(100).y(100).fontSize(50);
-    const text2 = new sd.Text(svg).text("world").x(100).y(200).fontSize(50);
-    const text3 = new sd.Text(svg).text("world").x(100).y(300).fontSize(50);
+    const text1 = new sd.Text({
+        targetNode: svg,
+        x: 100,
+        y: 100,
+        fontSize: 50,
+        text: "hello",
+    });
+    const text2 = new sd.Text({
+        targetNode: svg,
+        x: 100,
+        y: 200,
+        fontSize: 50,
+        text: "hello",
+    });
+    const text3 = new sd.Text({
+        targetNode: svg,
+        x: 100,
+        y: 300,
+        fontSize: 50,
+        text: "hello",
+    });
     await sd.pause();
-    text1.startAnimate().text("world").x(200).endAnimate();
-    text2.startAnimate().x(200).endAnimate();
-    text3.startAnimate().x(200).text("hello").endAnimate();
+    text1.startAnimate().setX(200).endAnimate();
+    text2.startAnimate().setText("world").setX(200).endAnimate();
+    text3.startAnimate().setX(200).setText("world").endAnimate();
 }
 
 async function TestHugeStrokeWidth() {
-    const text = new sd.Text(svg, "Hello").x(100).y(100).fill(C.red).stroke(C.textBlue).fontSize(50);
+    const text = new sd.Text({
+        targetNode: svg,
+        text: "hello",
+        x: 100,
+        y: 100,
+        fontSize: 50,
+    })
+        .setFill(C.red)
+        .setStroke(C.textBlue);
     await sd.pause();
-    text.startAnimate().strokeWidth(3).endAnimate();
+    text.startAnimate().setStrokeWidth(3).endAnimate();
     await sd.pause();
-    text.startAnimate().strokeWidth(6).endAnimate();
+    text.startAnimate().setStrokeWidth(6).endAnimate();
     await sd.pause();
-    text.startAnimate().strokeWidth(9).endAnimate();
+    text.startAnimate().setStrokeWidth(9).endAnimate();
 }
 
 async function TestFontFamilyWithTypewritter() {

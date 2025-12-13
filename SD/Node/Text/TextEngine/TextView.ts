@@ -40,7 +40,6 @@ export class PathStyle {
         });
     }
     styleAt(text: Text, t: number) {
-        console.log("Text=", text);
         const fill = this.fill === "default" ? A.getAttribute(text, "fill", t, text.getFill()) : this.fill;
         const stroke = this.stroke === "default" ? A.getAttribute(text, "stroke", t, text.getStroke()) : this.stroke;
         const strokeWidth =
@@ -105,13 +104,6 @@ export class SubtextView {
             this.r = r;
         } else this.positions = l;
     }
-    validateStyle() {
-        if (!this.textView.styles) return;
-        this.__iterate(i => {
-            if (!this.textView.styles[i].equalTo(this.textView.styles[this.__first()]))
-                throw new Error("The styles in a text group is not the same");
-        });
-    }
     getStyle() {
         if (!this.textView.styles) return new PathStyle({});
         if (this.__first() === undefined) return new PathStyle({});
@@ -125,6 +117,11 @@ export class SubtextView {
         this.__iterate(i => {
             this.textView.styles[i] = style;
         });
+    }
+    count(): number {
+        let count = 0;
+        this.__iterate(() => count++);
+        return count;
     }
     __iterate(callback: (position: number) => void) {
         if (this.positions) for (const position of this.positions.values()) callback(position);
