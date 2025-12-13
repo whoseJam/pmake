@@ -8,6 +8,7 @@ import { SDColor } from "@/Utility/Color";
 import { matchSubtext } from "./TextEngine/Mapping";
 import { createTextView, PathStyle } from "@/Node/Text/TextEngine/TextView";
 import { Color as C } from "@/Utility/Color";
+import { getOS } from "@/Utility/Base";
 
 export class Text extends BaseText {
     constructor(args?: { targetNode?: SDNode; x?: number; y?: number; fontSize?: number; text?: string }) {
@@ -26,7 +27,7 @@ export class Text extends BaseText {
             "strokeWidth": 0,
             "strokeOffset": 0,
             "strokeDashArray": [1, 0],
-            "font-family": "Consolas",
+            "fontFamily": getOS() === "Windows" ? "Consolas" : "Times New Roman",
             "text-anchor": "start",
             "dominant-baseline": "text-before-edge",
         });
@@ -112,7 +113,6 @@ export class Text extends BaseText {
         const target = { text: text_ };
         this.vars.subtextStyles = buildTransforming(this, source, target, mapping, this.getLayer());
         this.vars.text = text;
-        console.log("text=", text);
         this.vars.setTogether({
             html: parseToHTML.call(this),
             width: box.width,
@@ -122,7 +122,7 @@ export class Text extends BaseText {
     }
 
     getFontFamily() {
-        return "Consolas";
+        return this.vars.fontFamily;
     }
 
     typewritter(text: string) {

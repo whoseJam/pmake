@@ -102,6 +102,7 @@ export abstract class SDSVGNode extends SDNode {
             width: ["width", Interp.numberInterp],
             height: ["height", Interp.numberInterp],
             fontSize: ["font-size", Interp.numberInterp],
+            fontFamily: ["font-family", Interp.stringInterp],
             points: ["points", Interp.pointsInterp],
             fill: ["fill", Interp.colorInterp],
             stroke: ["stroke", Interp.colorInterp],
