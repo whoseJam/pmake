@@ -1,15 +1,17 @@
 import { Status } from "@/Interact/Status";
 import { BaseControl } from "@/Node/Control/BaseControl";
-import { SDNode } from "@/Node/SDNode";
-import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
 import { Dom } from "@/Utility/Dom";
 
 export class Input extends BaseControl {
-    constructor(target: SDNode | RenderNode) {
-        super(target);
+    constructor(args?: { x?: number; y?: number; width?: number; height?: number }) {
+        super();
 
-        const object = this.__createHTMLNode("input", 120, 25, {
+        const object = this.__createHTMLNode("input", {
+            x: args?.x ?? 0,
+            y: args?.y ?? 0,
+            width: args?.width ?? 120,
+            height: args?.height ?? 25,
             value: "",
             type: "text",
         });
@@ -21,22 +23,23 @@ export class Input extends BaseControl {
             // @ts-ignore
             this.value(event.target.value);
         });
+
+        this.setType("Input");
     }
     /**
      * Gets the value of the input component.
      * @returns The value.
      */
-    value(): string;
+    getValue(): string {
+        return this.vars.value;
+    }
     /**
      * Sets the value of the input component.
      * @param value - The value to apply.
      * @returns The current component instance for method chaining.
      */
-    value(value: string | number): this;
-    value(value?: string | number) {
-        if (arguments.length === 0) return this.vars.value;
-        Check.validateNumberOrString(value, `${this.constructor.name}.value`);
-        this.vars.value = value;
+    setValue(value: string | number): this {
+        this.vars.value = String(value);
         return this;
     }
 }

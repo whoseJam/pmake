@@ -1,5 +1,4 @@
 import { BaseControl } from "@/Node/Control/BaseControl";
-import { Check } from "@/Utility/Check";
 import { Color as C } from "@/Utility/Color";
 
 export class Button extends BaseControl {
@@ -22,16 +21,15 @@ export class Button extends BaseControl {
      * Gets the text content of the button component.
      * @returns The text content.
      */
-    text(): string;
+    getText(): string {
+        return this.vars.text;
+    }
     /**
      * Sets the text content of the button component.
      * @param text - The text content to apply.
      * @returns The current component instance for method chaining.
      */
-    text(text: string): this;
-    text(text?: string) {
-        if (arguments.length === 0) return this.vars.text;
-        Check.validateNumberOrString(text, `${this.constructor.name}.text`);
+    setText(text: string): this {
         this.vars.text = text;
         return this;
     }

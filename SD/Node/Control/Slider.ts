@@ -1,20 +1,21 @@
 import { Status } from "@/Interact/Status";
 import { BaseControl } from "@/Node/Control/BaseControl";
-import { SDNode } from "@/Node/SDNode";
-import { RenderNode } from "@/Renderer/RenderNode";
 import { Check } from "@/Utility/Check";
 import { Dom } from "@/Utility/Dom";
 
 export class Slider extends BaseControl {
-    constructor(target: SDNode | RenderNode) {
-        super(target);
+    constructor(args: { x?: number; y?: number; width?: number; height?: number }) {
+        super();
 
-        const object = this.__createHTMLNode("input", 80, 20, {
+        const object = this.__createHTMLNode("input", {
+            x: args?.x ?? 0,
+            y: args?.y ?? 0,
+            width: args?.width ?? 80,
+            height: args?.height ?? 20,
             min: 0,
             max: 10,
             value: 0,
             type: "range",
-            width: "97%",
         });
 
         Dom.addEventListener(object.element(), "mousedown", e => {
@@ -28,58 +29,55 @@ export class Slider extends BaseControl {
             this.value(+e.target.value);
         });
 
-        this.type("Slider");
+        this.setType("Slider");
     }
     /**
      * Gets the maximum value of the slider component's range.
      * @returns The maximum value of the range.
      */
-    max(): number;
+    getMax(): number {
+        return this.vars.max;
+    }
     /**
      * Sets the maximum value of the slider component's range. Defaults to `10`.
      * @param max - The maximum value to apply.
      * @returns The current component instance for method chaining.
      */
-    max(max: number): this;
-    max(max?: number) {
-        if (arguments.length === 0) return this.vars.max;
-        Check.validateNumber(max, `${this.constructor.name}.max`);
+    setMax(max: number) {
         this.vars.lpset("max", max);
-        if (this.value() > max) this.value(max);
+        if (this.getValue() > max) this.setValue(max);
         return this;
     }
     /**
      * Gets the minimum value of the slider component's range.
      * @returns The minimum value of the range.
      */
-    min(): number;
+    getMin(): number {
+        return this.vars.min;
+    }
     /**
      * Sets the minimum value of the slider component's range. Defaults to `0`.
      * @param min - The minimum value to apply.
      * @returns The current component instance for method chaining.
      */
-    min(min: number): this;
-    min(min?: number) {
-        if (arguments.length === 0) return this.vars.min;
-        Check.validateNumber(min, `${this.constructor.name}.min`);
+    setMin(min?: number) {
         this.vars.lpset("min", min);
-        if (this.value() < min) this.value(min);
+        if (this.getValue() < min) this.setValue(min);
         return this;
     }
     /**
      * Gets the value of the slider component.
      * @returns The value.
      */
-    value(): number;
+    getValue(): number {
+        return this.vars.value;
+    }
     /**
      * Sets the vlaue of the slider component.
      * @param value The value to apply.
      * @returns The current component instance for method chaining.
      */
-    value(value: number): this;
-    value(value?: number) {
-        if (arguments.length === 0) return this.vars.value;
-        Check.validateNumber(value, `${this.constructor.name}.value`);
+    setValue(value?: number) {
         this.vars.lpset("value", value);
         return this;
     }

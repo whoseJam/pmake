@@ -7,6 +7,7 @@ import { Action } from "@/sd";
 import { SDColor } from "@/Utility/Color";
 import { matchSubtext } from "./TextEngine/Mapping";
 import { createTextView, PathStyle } from "@/Node/Text/TextEngine/TextView";
+import { Color as C } from "@/Utility/Color";
 
 export class Text extends BaseText {
     constructor(args?: { targetNode?: SDNode; x?: number; y?: number; fontSize?: number; text?: string }) {
@@ -18,6 +19,13 @@ export class Text extends BaseText {
             "x": args?.x ?? 0,
             "y": args?.y ?? 0,
             "fontSize": args?.fontSize ?? 20,
+            "fill": C.black,
+            "fillOpacity": 1,
+            "stroke": C.black,
+            "strokeOpacity": 1,
+            "strokeWidth": 0,
+            "strokeOffset": 0,
+            "strokeDashArray": [1, 0],
             "font-family": "Consolas",
             "text-anchor": "start",
             "dominant-baseline": "text-before-edge",
@@ -170,6 +178,10 @@ function parseToHTML() {
         for (let l = 0, r = 0; l < text.length; l = r + 1) {
             r = l;
             while (r + 1 < text.length && styles[l].equalTo(styles[r + 1])) r++;
+            if (l === 0 && r === text.length - 1 && styles[l].fill === "default" && styles[l].stroke === "default") {
+                html = html + text;
+                break;
+            }
             let attribute = "";
             if (styles[l].fill !== "default") attribute = attribute + ` fill='${styles[l].fill}'`;
             if (styles[l].stroke !== "default") attribute = attribute + ` stroke='${styles[l].stroke}'`;
@@ -178,5 +190,6 @@ function parseToHTML() {
             html = html + "</tspan>";
         }
     } else html = parseText(text);
+    console.log("parse html=", html);
     return html;
 }

@@ -3,12 +3,21 @@ import { Text } from "@/Node/Text/Text";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { SDColor } from "@/Utility/Color";
 
+type SDColorOrDefault = SDColor | "default";
+type NumberOrDefault = number | "default";
+type NumberArrayOrDefault = Array<number> | "default";
+
 export class PathStyle {
-    fill: SDColor | "default";
-    stroke: SDColor | "default";
-    strokeWidth: number | "default";
-    strokeDashArray: Array<number> | "default";
-    constructor(args: any) {
+    fill: SDColorOrDefault;
+    stroke: SDColorOrDefault;
+    strokeWidth: NumberOrDefault;
+    strokeDashArray: NumberArrayOrDefault;
+    constructor(args: {
+        fill?: SDColorOrDefault;
+        stroke?: SDColorOrDefault;
+        strokeWidth?: NumberOrDefault;
+        strokeDashArray?: NumberArrayOrDefault;
+    }) {
         this.fill = args.fill ?? "default";
         this.stroke = args.stroke ?? "default";
         this.strokeWidth = args.strokeWidth ?? "default";
@@ -31,6 +40,7 @@ export class PathStyle {
         });
     }
     styleAt(text: Text, t: number) {
+        console.log("Text=", text);
         const fill = this.fill === "default" ? A.getAttribute(text, "fill", t, text.getFill()) : this.fill;
         const stroke = this.stroke === "default" ? A.getAttribute(text, "stroke", t, text.getStroke()) : this.stroke;
         const strokeWidth =

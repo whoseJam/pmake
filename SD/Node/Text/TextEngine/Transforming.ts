@@ -103,6 +103,8 @@ export function transforming(
         paths: Array<PathView>;
     }
 ) {
+    console.log("transforming, l=", l, "r=", r);
+    if (l === r) return;
     let sourcePaths = source.paths;
     let sourceStyles = source.styles;
     let targetPaths = target.paths;
@@ -118,6 +120,7 @@ export function transforming(
         new Action(l, r, source, target, interp(path, animatedKey), T.easeInOut, path, animatedKey);
     };
 
+    console.log("Create group onto target=", targetLayer);
     const group = RenderNode.createRenderNodeWithTime(targetLayer, l, l, "g");
     const transformingPath = [];
 
@@ -131,7 +134,10 @@ export function transforming(
         const sourceStyle = sourceStyles[i].styleAt(text, l);
         const targetStyle = targetStyles[i].styleAt(text, r);
         const path = transformingPath[i];
-        console.log("sourceStyles=", sourceStyle);
+        console.log("sourceStyle=", sourceStyle);
+        console.log("targetStyle=", targetStyle);
+        console.log("source_=", source_);
+        console.log("target_=", target_);
         if (source_.status !== "normal") {
             const so = +source_.status.slice(8, 9);
             const to = +source_.status.slice(11);
@@ -140,7 +146,6 @@ export function transforming(
         if (target_) {
             const sd = source_.d;
             const td = target_.d;
-            // console.log("sd=", sd, "td=", td);
             path.setAttribute("d", sd);
             create(path, sd, td, Interp.pathInterp, "d");
             // const sm = source_.transform;
@@ -148,7 +153,6 @@ export function transforming(
             // create(path, sm, tm, Interp.matrixInterp, "transform");
             const sf = sourceStyle.fill;
             const tf = targetStyle.fill;
-            console.log("sf=", sf, "tf=", tf);
             create(path, sf, tf, Interp.colorInterp, "fill");
             // const ss = sourceStyle.stroke;
             // const ts = targetStyle.stroke;

@@ -1,20 +1,4 @@
-import { Window } from "@/Animate/Window";
-import { SDNode } from "@/Node/SDNode";
 import { SDSVGNode } from "@/Node/SDSVGNode";
-import { TextEngine, Transforming } from "@/Node/Text/TextEngine";
-import { RenderNode } from "@/Renderer/RenderNode";
-import { Check } from "@/Utility/Check";
-import { Color as C, SDColor } from "@/Utility/Color";
-
-const BASE_TEXT_ATTRIBUTES = {
-    fill: C.black,
-    stroke: C.black,
-    fillOpacity: 1,
-    strokeOpacity: 1,
-    strokeWidth: 0,
-    strokeOffset: 0,
-    strokeDashArray: [1, 0],
-};
 
 type TextMappingSubtextItem = [string, string];
 type TextMappingObjectSubtextItem = [BaseText, string, string];

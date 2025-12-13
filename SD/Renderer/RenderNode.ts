@@ -25,6 +25,8 @@ interface RenderNodeParams {
     element?: Element;
     append?: boolean;
     action?: boolean;
+    l?: number;
+    r?: number;
 }
 
 export class RenderNode {
@@ -45,10 +47,11 @@ export class RenderNode {
         this.targetNode = args.targetNode;
         this.label = args.label;
         this.backingElement = args.element;
+        this.l = args?.l ?? 0;
+        this.r = args?.r ?? 0;
         if (!args.append) return;
         if (!args.targetLayer) return;
         if (!args.action) {
-            console.log("target layer=", args.targetLayer, args);
             this.targetLayer = args.targetLayer;
             args.targetLayer.__append(this);
         } else args.targetLayer.append(this); // set targetLayer in moveTo
@@ -113,8 +116,8 @@ export class RenderNode {
                 label: element,
             });
         }
-        const l = this.delay();
-        const r = this.delay() + this.duration();
+        const l = element.delay();
+        const r = element.delay() + element.duration();
         const source = element.targetLayer;
         const target = this;
         function structure(t: number) {
@@ -124,13 +127,14 @@ export class RenderNode {
                 else (element as RenderNode).__remove();
             }
         }
-        new Action(l, r, source, target, structure, T.linear, this, "layer");
+        element.targetLayer = target;
+        new Action(l, r, source, target, structure, T.linear, element, "layer(append)");
         return this;
     }
 
     appendChild(element: RenderNode) {
-        const l = this.delay();
-        const r = this.delay() + this.duration();
+        const l = element.delay();
+        const r = element.delay() + element.duration();
         const source = element.targetLayer;
         const target = this;
         function structure(t: number) {
@@ -140,13 +144,14 @@ export class RenderNode {
                 else element.__remove();
             }
         }
-        new Action(l, r, source, target, structure, T.linear, this, "layer");
+        element.targetLayer = target;
+        new Action(l, r, source, target, structure, T.linear, element, "layer(appendChild)");
         return this;
     }
 
     insertBefore(element: RenderNode, referenced: RenderNode) {
-        const l = this.delay();
-        const r = this.delay() + this.duration();
+        const l = element.delay();
+        const r = element.delay() + element.duration();
         const source = element.targetLayer;
         const target = this;
         function structure(t: number) {
@@ -156,7 +161,8 @@ export class RenderNode {
                 else element.__remove();
             }
         }
-        new Action(l, r, source, target, structure, T.linear, this, "layer");
+        element.targetLayer = target;
+        new Action(l, r, source, target, structure, T.linear, element, "layer(insertBefore)");
         return this;
     }
 
@@ -169,9 +175,15 @@ export class RenderNode {
         const element = this;
         function structure(t: number) {
             if (!this.reverse && t === 1) element.__remove();
-            else this.target.__appendChild(element);
+            else if (this.reverse && t === 0) this.target.__appendChild(element);
         }
-        new Action(l, r, source, target, structure, T.linear, this, "layer");
+        new Action(l, r, source, target, structure, T.linear, element, "layer(remove)");
+        return this;
+    }
+
+    __animate(l: number, r: number) {
+        this.l = l;
+        this.r = r;
         return this;
     }
 
