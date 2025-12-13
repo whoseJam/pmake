@@ -125,6 +125,21 @@ export class Text extends BaseText {
         return this.vars.fontFamily;
     }
 
+    setFontFamily(family: "Times New Roman" | "Arial") {
+        const text = String(this.vars.text);
+        this.vars.fontFamily = family;
+        this.vars.subtextStyles = buildTransforming(
+            this,
+            { text: this.getText() },
+            { text: this.getText() },
+            [],
+            this.getLayer()
+        );
+        this.vars.text = text;
+        this.vars.trigger("html");
+        return this;
+    }
+
     typewritter(text: string) {
         const currentText = this.vars.text;
         const this_ = this;
@@ -154,7 +169,6 @@ export class Text extends BaseText {
             styles[i].fill = color;
         });
         this.vars.subtextStyles = styles;
-        this.vars.html = parseToHTML.call(this);
         return this;
     }
 }
@@ -190,6 +204,5 @@ function parseToHTML() {
             html = html + "</tspan>";
         }
     } else html = parseText(text);
-    console.log("parse html=", html);
     return html;
 }

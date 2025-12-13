@@ -317,6 +317,14 @@ export function reactive(object: { [key: string]: any }, fatherObject?: any) {
     proxiesMap.set(proxy, object);
     objectsMap.set(object, new ObjectManager(object, proxy));
     Object.assign(object, {
+        trigger(key: string) {
+            const value = object[key];
+            if (watchingList[key]) {
+                const triggerWatching = () => watchingList[key].forEach(callback => callback(value, value));
+                if (object.freezing() > 0) freezingWatches.push(triggerWatching);
+                else triggerWatching();
+            }
+        },
         watch(key: string, callback: (vn: any, vo: any) => void) {
             if (arguments.length === 0) return watchingList;
             const keys = key.split(".");

@@ -558,6 +558,7 @@ export class TextEngine {
     static init() {
         this.load("Consolas");
         this.load("Times New Roman");
+        this.load("Arial");
         this.textSVG = RenderNode.createRenderNodeWithoutAction(undefined, Root.svg, "text");
         this.textSVG.setAttribute("fill-opacity", 0);
         this.textSVG.setAttribute("stroke-opacity", 0);

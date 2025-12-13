@@ -96,15 +96,16 @@ export abstract class SDNode {
         this._.layer.setAttribute("type", type);
         return this;
     }
+
     /**
      * Gets the default render layer for this component.
      * The layer determines the display order and may affect visual stacking (z-index).
      * @returns The render layer associated with this component.
      */
     getLayer(): RenderNode {
-        console.log("layer=", this._.layer);
         return this._.layer;
     }
+
     /**
      * Creates a new named render layer on this component.
      * Newly created layers are stacked above existing ones.

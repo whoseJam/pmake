@@ -103,7 +103,6 @@ export function transforming(
         paths: Array<PathView>;
     }
 ) {
-    console.log("transforming, l=", l, "r=", r);
     if (l === r) return;
     let sourcePaths = source.paths;
     let sourceStyles = source.styles;
@@ -113,14 +112,10 @@ export function transforming(
         [sourcePaths, sourceStyles] = sourcePrepare(sourcePaths, sourceStyles, targetPaths, targetStyles);
     else [targetPaths, targetStyles] = targetPrepare(sourcePaths, sourceStyles, targetPaths, targetStyles);
 
-    console.log(sourcePaths, sourceStyles);
-    console.log(targetPaths, targetStyles);
-
     const create = (path: RenderNode, source: any, target: any, interp: any, animatedKey: string) => {
         new Action(l, r, source, target, interp(path, animatedKey), T.easeInOut, path, animatedKey);
     };
 
-    console.log("Create group onto target=", targetLayer);
     const group = RenderNode.createRenderNodeWithTime(targetLayer, l, l, "g");
     const transformingPath = [];
 
@@ -134,10 +129,6 @@ export function transforming(
         const sourceStyle = sourceStyles[i].styleAt(text, l);
         const targetStyle = targetStyles[i].styleAt(text, r);
         const path = transformingPath[i];
-        console.log("sourceStyle=", sourceStyle);
-        console.log("targetStyle=", targetStyle);
-        console.log("source_=", source_);
-        console.log("target_=", target_);
         if (source_.status !== "normal") {
             const so = +source_.status.slice(8, 9);
             const to = +source_.status.slice(11);

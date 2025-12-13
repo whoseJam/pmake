@@ -5,7 +5,7 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestConsecutiveTransform);
+sd.main(TestFontFamily);
 
 // async function TestSubtextColor() {
 //     const text = new sd.Text(svg, "for(int i=1;i<=n;i++)ans+=i;").x(100).y(100).fontSize(40);
@@ -210,4 +210,16 @@ async function TestHugeStrokeWidth() {
     text.startAnimate().strokeWidth(6).endAnimate();
     await sd.pause();
     text.startAnimate().strokeWidth(9).endAnimate();
+}
+
+async function TestFontFamily() {
+    const text = new sd.Text({
+        targetNode: svg,
+        x: 100,
+        y: 100,
+        fontSize: 60,
+        text: "hello",
+    });
+    await sd.pause();
+    text.startAnimate().setFontFamily("Arial").endAnimate();
 }

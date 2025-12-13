@@ -33,8 +33,6 @@ export function buildTransforming(
             const targetPaths = getTextPaths(text, r);
             const sourceStyles = A.getAttribute(text, "subtextStyles", l, sourceSubtextView.getStyle());
             const targetStyles = A.getAttribute(text, "subtextStyles", r, targetSubtextView.getStyle());
-            console.log("sourceStyles=", sourceStyles);
-            console.log("targetStyles=", targetStyles);
             transforming(
                 text,
                 targetLayer,
