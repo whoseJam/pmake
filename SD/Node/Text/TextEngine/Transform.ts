@@ -1,6 +1,6 @@
 import { match } from "@/Node/Text/TextEngine/Mapping";
 import { TextMapping, processMapping } from "@/Node/Text/BaseText";
-import { createTextView, PathStyle, SubtextView, TextView } from "@/Node/Text/TextEngine/TextView";
+import { SubtextView, TextView } from "@/Node/Text/TextEngine/TextView";
 import { getTextPaths } from "@/Node/Text/TextEngine/Path";
 import { Animate as A } from "@/Animate/Animate";
 import { transforming } from "@/Node/Text/TextEngine/Transforming";

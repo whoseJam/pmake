@@ -133,14 +133,14 @@ export class ActionList {
             if (action.is(Action.stopFlag)) this.stopCount++;
         }
     }
-    checkConflict(action1: Action, action2: Action) {
+    checkConflict(action1: Action, action2: Action, hideAction: (action: Action) => void) {
         if (isInstantaneous(action1) && isInstantaneous(action2) && action1.l === action2.l) {
             action2.source = action1.source;
-            action1.set(Action.hideFlag);
+            hideAction(action1);
         }
         if (isCompleteOverlap(action1, action2)) {
             action2.source = action1.source;
-            action1.set(Action.hideFlag);
+            hideAction(action1);
         }
         if (isPartialOverlap(action1, action2)) {
             throw new Error(
@@ -151,34 +151,57 @@ export class ActionList {
     trim(action: Action) {
         const actionMap = this.actionsMap.get(action.entity);
         if (!actionMap) return;
+        const hideActionList: Array<Action> = [];
+        const hideAction = (action: Action) => {
+            if (action.is(Action.hideFlag)) return;
+            action.set(Action.hideFlag);
+            hideActionList.push(action);
+            if (action.is(Action.stopFlag)) this.stopCount--;
+            this.validCount--;
+        };
         const animatedKey = action.animatedKey;
         const otherActions = actionMap[animatedKey] ?? [];
         otherActions.forEach(otherAction => {
-            this.checkConflict(otherAction, action);
-            if (otherAction.is(Action.hideFlag)) {
-                if (otherAction.is(Action.stopFlag)) this.stopCount--;
-                this.validCount--;
-            }
+            this.checkConflict(otherAction, action, hideAction);
         });
-        otherActions.forEach(action => {
-            if (action.is(Action.hideFlag)) this.actionsList.erase(action);
-        });
-        actionMap[animatedKey] = otherActions.filter(action => !action.is(Action.hideFlag));
         const prefixLength = animatedKey.indexOf(":");
         if (prefixLength !== -1) {
+            const intersectCheck = (actions: Action | Array<Action>) => {
+                if (Array.isArray(actions)) return actions.find(action => intersectCheck(action));
+                return isCompleteOverlap(action, actions) || isPartialOverlap(action, actions);
+            };
             const prefix = animatedKey.slice(0, prefixLength + 1);
-            for (const key in actionMap) {
-                if (!key.startsWith(prefix) || key === animatedKey) continue;
-                const otherActions = actionMap[key];
-                otherActions.forEach(otherAction => {
-                    if (isCompleteOverlap(action, otherAction) || isPartialOverlap(action, otherAction)) {
-                        throw new Error(
-                            `Action conflict on ${action.animatedKey} and ${otherAction.animatedKey} when [${action.l}, ${action.r}] and [${otherAction.l}, ${otherAction.r}]`
-                        );
+            const suffix = animatedKey.slice(prefixLength + 1);
+            if (suffix === "*") {
+                for (const key in actionMap) {
+                    if (!key.startsWith(prefix) || key === animatedKey) continue;
+                    if (intersectCheck(actionMap[key])) hideAction(action);
+                }
+            } else {
+                for (const key in actionMap) {
+                    if (!key.startsWith(prefix) || key === animatedKey) continue;
+                    if (key.endsWith("*")) {
+                        actionMap[key].forEach(action => {
+                            if (intersectCheck(action)) hideAction(action);
+                        });
+                    } else {
+                        const conflictedAction = intersectCheck(actionMap[key]);
+                        if (conflictedAction)
+                            throw new Error(
+                                `Action conflict on ${action.animatedKey} and ${key} when [${action.l}, ${action.r}] and [${conflictedAction.l}, ${conflictedAction.r}]`
+                            );
                     }
-                });
+                }
             }
         }
+        hideActionList.forEach(action_ => {
+            if (action !== action_) {
+                actionMap[action_.animatedKey] = actionMap[action_.animatedKey].filter(a => a !== action_);
+                this.actionsList.erase(action_);
+            }
+            const index = this.lazyActions.indexOf(action_);
+            if (index !== -1) this.lazyActions.splice(index, 1);
+        });
     }
     firstTick() {
         this.lazyActions.forEach(action => {
@@ -215,10 +238,12 @@ export class ActionList {
     }
     finished() {
         let stopCount = 0;
+        let totalCount = 0;
         this.actionsList.forEach(action => {
             if (action.is(Action.stopFlag)) stopCount++;
+            totalCount++;
         });
-        return stopCount === this.validCount;
+        return stopCount === totalCount;
     }
     rollback() {
         const list = new ActionList();

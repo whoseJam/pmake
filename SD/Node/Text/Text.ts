@@ -140,7 +140,7 @@ export class Text extends BaseText {
             { text: this.getText() },
             transformProcess([]),
             transformPostProcess(this, this.getLayer()),
-            "transform"
+            "*"
         );
         this.vars.text = text;
         this.vars.trigger("html");

@@ -5,7 +5,7 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestTypewritter);
+sd.main(TestFontFamilyWithTypewritter);
 
 // async function TestSubtextColor() {
 //     const text = new sd.Text(svg, "for(int i=1;i<=n;i++)ans+=i;").x(100).y(100).fontSize(40);
@@ -212,6 +212,24 @@ async function TestHugeStrokeWidth() {
     text.startAnimate().strokeWidth(9).endAnimate();
 }
 
+async function TestFontFamilyWithTypewritter() {
+    const text1 = new sd.Text({
+        targetNode: svg,
+        x: 100,
+        y: 100,
+        fontSize: 60,
+    });
+    const text2 = new sd.Text({
+        targetNode: svg,
+        x: 100,
+        y: 200,
+        fontSize: 60,
+    });
+    await sd.pause();
+    text1.startAnimate(1000).typewritter("hello").setFontFamily("Arial").endAnimate();
+    text2.startAnimate(1000).typewritter("hello").endAnimate();
+}
+
 async function TestTypewritter() {
     const text = new sd.Text({
         targetNode: svg,
@@ -221,6 +239,17 @@ async function TestTypewritter() {
     });
     await sd.pause();
     text.startAnimate().typewritter("hello").endAnimate();
+}
+
+async function TestTypewritterWithTransform() {
+    const text = new sd.Text({
+        targetNode: svg,
+        x: 100,
+        y: 100,
+        fontSize: 60,
+    });
+    await sd.pause();
+    text.startAnimate().typewritter("hello").setText("world").endAnimate();
 }
 
 async function TestFontFamilyWithTransform() {
