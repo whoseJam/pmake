@@ -166,7 +166,7 @@ export class ActionList {
         actionMap[animatedKey] = otherActions.filter(action => !action.is(Action.hideFlag));
         const prefixLength = animatedKey.indexOf(":");
         if (prefixLength !== -1) {
-            const prefix = animatedKey.slice(0, prefixLength);
+            const prefix = animatedKey.slice(0, prefixLength + 1);
             for (const key in actionMap) {
                 if (!key.startsWith(prefix) || key === animatedKey) continue;
                 const otherActions = actionMap[key];
