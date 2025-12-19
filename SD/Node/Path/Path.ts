@@ -1,13 +1,30 @@
 import { BasePath } from "@/Node/Path/BasePath";
 import { PathEngine } from "@/Node/Path/PathEngine";
+import { SDNode } from "@/Node/SDNode";
+import { SDColor, Color as C } from "@/Utility/Color";
 
 export class Path extends BasePath {
-    constructor() {
+    constructor(args?: {
+        targetNode?: SDNode;
+        opacity?: number;
+        d?: string;
+        stroke?: SDColor;
+        strokeWidth?: number;
+        strokeDashOffset?: number;
+        strokeDashArray?: Array<number>;
+    }) {
         super();
 
+        this.setType("Path");
+
         this.__createSVGNode("path", {
-            d: "M0,0L0,0",
+            d: args?.d || "",
+            stroke: args?.stroke ?? C.black,
+            strokeWidth: args?.strokeWidth ?? 0,
+            strokeDashOffset: args?.strokeDashOffset ?? 0,
+            strokeDashArray: args?.strokeDashArray ?? [],
         });
+
         this.vars.merge({
             x: 0,
             y: 0,
@@ -15,7 +32,7 @@ export class Path extends BasePath {
             height: 0,
         });
 
-        this.setType("Path");
+        args?.targetNode?.appendChild(this);
     }
     getX() {
         return this.vars.x;
@@ -29,19 +46,23 @@ export class Path extends BasePath {
     getHeight() {
         return this.vars.height;
     }
+
     getPointAtRate(k: number) {
-        return PathEngine.getPointByRate(this.d(), k);
+        return PathEngine.getPointByRate(this.getD(), k);
     }
+
     getPointAtLength(length: number) {
-        return PathEngine.getPointAtLength(this.d(), length);
+        return PathEngine.getPointAtLength(this.getD(), length);
     }
+
     totalLength() {
-        return PathEngine.getTotalLength(this.d());
+        return PathEngine.getTotalLength(this.getD());
     }
-    d(): string;
-    d(d: string): this;
-    d(d?: string) {
-        if (arguments.length === 0) return this.vars.d;
+
+    getD(): string {
+        return this.vars.d;
+    }
+    setD(d: string): this {
         this.vars.d = d;
         this.vars.setTogether(PathEngine.toBox(d));
         return this;

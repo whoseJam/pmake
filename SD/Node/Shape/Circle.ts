@@ -1,14 +1,26 @@
 import { BaseShape } from "@/Node/Shape/BaseShape";
-import { SDNode } from "../SDNode";
+import { SDColor, Color as C } from "@/Utility/Color";
+import { SDNode } from "@/Node/SDNode";
 
 export class Circle extends BaseShape {
-    constructor(args?: { targetNode?: SDNode; cx?: number; cy?: number; r?: number }) {
+    constructor(args?: {
+        targetNode?: SDNode;
+        cx?: number;
+        cy?: number;
+        r?: number;
+        fill?: SDColor;
+        stroke?: SDColor;
+        strokeWidth?: number;
+    }) {
         super();
 
         this.__createSVGNode("circle", {
             cx: args?.cx ?? 0,
             cy: args?.cy ?? 0,
             r: args?.r ?? 20,
+            fill: args?.fill ?? C.white,
+            stroke: args?.stroke ?? C.black,
+            strokeWidth: args?.strokeWidth ?? 0,
         });
 
         this.setType("Circle");
@@ -25,6 +37,10 @@ export class Circle extends BaseShape {
         return this;
     }
 
+    setCx(cx: number): this {
+        return this.setCenterX(cx);
+    }
+
     getCenterY(): number {
         return this.vars.cy;
     }
@@ -32,6 +48,10 @@ export class Circle extends BaseShape {
     setCenterY(cy: number): this {
         this.vars.lpset("cy", cy);
         return this;
+    }
+
+    setCy(cy: number): this {
+        return this.setCenterY(cy);
     }
 
     getR(): number {

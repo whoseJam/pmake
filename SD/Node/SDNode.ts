@@ -35,6 +35,7 @@ export abstract class SDNode {
     constructor() {
         this.id = ++SDNode.NODE_ID;
         this._ = {
+            renderer: undefined,
             frame: -1,
             start: 0,
             end: 0,
@@ -317,12 +318,23 @@ export abstract class SDNode {
     getCenter(): [number, number] {
         return [this.getCenterX(), this.getCenterY()];
     }
+
     getCenterX(): number {
         return this.getX() + this.getWidth() / 2;
     }
+
+    getCx(): number {
+        return this.getCenterX();
+    }
+
     getCenterY(): number {
         return this.getY() + this.getHeight() / 2;
     }
+
+    getCy(): number {
+        return this.getCenterY();
+    }
+
     getMaxX() {
         return this.getX() + this.getWidth();
     }

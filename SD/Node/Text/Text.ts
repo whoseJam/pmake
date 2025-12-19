@@ -1,18 +1,29 @@
 import { Interp } from "@/Animate/Interp";
 import { SDNode } from "@/Node/SDNode";
 import { BaseText, TextMapping } from "@/Node/Text/BaseText";
-import { TextEngine } from "@/Node/Text/TextEngine_";
 import { buildAnimation } from "@/Node/Text/TextEngine/Animation";
 import { transformProcess, transformPostProcess } from "@/Node/Text/TextEngine/Transform";
 import { typewritterProcess, typewritterPostProcess } from "@/Node/Text/TextEngine/Typewritter";
 import { SDColor } from "@/Utility/Color";
-import { matchSubtext } from "./TextEngine/Mapping";
+import { matchSubtext } from "@/Node/Text/TextEngine/Mapping";
 import { createTextView, PathStyle } from "@/Node/Text/TextEngine/TextView";
 import { Color as C } from "@/Utility/Color";
 import { getOS } from "@/Utility/Base";
+import { FontManager } from "@/Node/Text/TextEngine/Opentype";
 
 export class Text extends BaseText {
-    constructor(args?: { targetNode?: SDNode; x?: number; y?: number; fontSize?: number; text?: string }) {
+    constructor(args?: {
+        targetNode?: SDNode;
+        x?: number;
+        y?: number;
+        fontSize?: number;
+        text?: string;
+        fill?: SDColor;
+        stroke?: SDColor;
+        strokeWidth?: number;
+        strokeDashOffset?: number;
+        strokeDashArray?: Array<number>;
+    }) {
         super();
 
         this.setType("Text");
@@ -21,13 +32,13 @@ export class Text extends BaseText {
             "x": args?.x ?? 0,
             "y": args?.y ?? 0,
             "fontSize": args?.fontSize ?? 20,
-            "fill": C.black,
+            "fill": args?.fill ?? C.black,
             "fillOpacity": 1,
-            "stroke": C.black,
+            "stroke": args?.stroke ?? C.black,
             "strokeOpacity": 1,
-            "strokeWidth": 0,
-            "strokeOffset": 0,
-            "strokeDashArray": [1, 0],
+            "strokeWidth": args?.strokeWidth ?? 0,
+            "strokeOffset": args?.strokeDashOffset ?? 0,
+            "strokeDashArray": args?.strokeDashArray ?? [1, 0],
             "fontFamily": getOS() === "Windows" ? "Consolas" : "Times New Roman",
             "text-anchor": "start",
             "dominant-baseline": "text-before-edge",
@@ -62,7 +73,7 @@ export class Text extends BaseText {
                 height: this.vars.height * k,
             });
         } else {
-            const box = TextEngine.textBoundingBox(this);
+            const box = FontManager.boundingBox(this);
             this.vars.setTogether({
                 width: box.width,
                 height: box.height,
@@ -81,7 +92,7 @@ export class Text extends BaseText {
             const k = width / this.vars.width;
             this.setFontSize(this.getFontSize() * k);
         } else if (this.getText() !== "") {
-            const fontSize = TextEngine.widthToFontSize(this.getText(), this.getFontFamily(), width);
+            const fontSize = FontManager.widthToFontSize(this.getText(), this.getFontFamily(), width);
             this.setFontSize(fontSize);
         }
         return this;
@@ -96,7 +107,7 @@ export class Text extends BaseText {
             const k = height / this.vars.height;
             this.setFontSize(this.getFontSize() * k);
         } else if (this.getText() !== "") {
-            const fontSize = TextEngine.heightToFontSize(this.getText(), this.getFontFamily(), height);
+            const fontSize = FontManager.heightToFontSize(this.getText(), this.getFontFamily(), height);
             this.setFontSize(fontSize);
         }
         return this;
@@ -109,7 +120,7 @@ export class Text extends BaseText {
     setText(text: string | number, mapping?: TextMapping): this {
         const text_ = String(text);
         if (this.vars.text === text_) return this;
-        const box = TextEngine.textBoundingBox(text_, this.getFontFamily(), this.getFontSize());
+        const box = FontManager.boundingBox(text_, this.getFontFamily(), this.getFontSize());
         this.vars.subtextStyles = buildAnimation(
             this,
             { text: this.getText(), styles: this.vars.subtextStyles },
@@ -149,7 +160,7 @@ export class Text extends BaseText {
 
     typewritter(text: string | number) {
         const text_ = String(text);
-        const box = TextEngine.textBoundingBox(text_, this.getFontFamily(), this.getFontSize());
+        const box = FontManager.boundingBox(text_, this.getFontFamily(), this.getFontSize());
         this.vars.subtextStyles = buildAnimation(
             this,
             { text: this.getText(), styles: this.vars.subtextStyles },

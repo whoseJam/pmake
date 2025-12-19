@@ -1,7 +1,7 @@
 import { Animate as A } from "@/Animate/Animate";
 import { Text } from "@/Node/Text/Text";
-import { TextEngine } from "../TextEngine_";
-import { PathView } from "./TextView";
+import { PathView } from "@/Node/Text/TextEngine/TextView";
+import { FontManager } from "@/Node/Text/TextEngine/Opentype";
 
 export function getTextPaths(text: Text, t: number): Array<PathView> {
     const text_ = A.getAttribute(text, "text", t, text.getText());
@@ -9,7 +9,7 @@ export function getTextPaths(text: Text, t: number): Array<PathView> {
     const size = A.getAttribute(text, "font-size", t, text.getFontSize());
     const x = A.getAttribute(text, "x", t, text.getX());
     const y = A.getAttribute(text, "y", t, text.getY());
-    const paths = TextEngine.getTextPathsFromOpenType(text_, family, size, x, y);
+    const paths = FontManager.getTextPathsFromOpenType(text_, family, size, x, y);
     const paths_ = [];
     for (let i = 0; i < paths.length; i++) {
         const d = paths[i].toPathData(4);
@@ -23,7 +23,7 @@ export function getTextPaths2(text: Text, t: number, string: string): Array<Path
     const size = A.getAttribute(text, "font-size", t, text.getFontSize());
     const x = A.getAttribute(text, "x", t, text.getX());
     const y = A.getAttribute(text, "y", t, text.getY());
-    const paths = TextEngine.getTextPathsFromOpenType(string, family, size, x, y);
+    const paths = FontManager.getTextPathsFromOpenType(string, family, size, x, y);
     const paths_ = [];
     for (let i = 0; i < paths.length; i++) {
         const d = paths[i].toPathData(4);

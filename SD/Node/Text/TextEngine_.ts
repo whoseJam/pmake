@@ -552,65 +552,19 @@ function getTextWidth(font: any, text: string, size: number) {
 }
 
 export class TextEngine {
-    static textSVG: RenderNode = undefined;
     static mathjaxSVG: RenderNode = undefined;
-    static fonts = {};
     static init() {
-        this.load("Consolas");
-        this.load("Times New Roman");
-        this.load("Arial");
-        this.textSVG = RenderNode.createRenderNodeWithoutAction(undefined, Root.svg, "text");
-        this.textSVG.setAttribute("fill-opacity", 0);
-        this.textSVG.setAttribute("stroke-opacity", 0);
-        this.textSVG.setAttribute("font-family", "consolas");
         this.mathjaxSVG = RenderNode.createRenderNodeWithoutAction(undefined, Root.svg, "g");
         this.mathjaxSVG.setAttribute("opacity", 0);
         this.mathjaxSVG.setAttribute("font-size", 20);
     }
-    static fontExists(family: string) {
-        return this.fonts[family] !== undefined;
-    }
-    static load(family: string) {
-        const url = `https://whosejam.site/public/fonts/${family}.ttf`;
-        fetch(url)
-            .then(res => res.arrayBuffer())
-            .then(buffer => {
-                this.fonts[family] = opentype.parse(buffer);
-            });
-    }
     static boundingBox(text: Text | Math_) {
         if (text instanceof Math_) return this.mathjaxBoundingBox(text._.math);
-        return this.textBoundingBox(text);
     }
     static getPaths(config: BaseTextConfiguration): Array<TransformingPath> {
         if (config instanceof MathConfiguration) return TextEngine.getMathPaths(config);
         if (config instanceof TextConfiguration) return TextEngine.getTextPaths(config);
         throw new Error("Unknown Configuration");
-    }
-    static textBoundingBox(text_: Text | string, family_?: string, size_?: number) {
-        const text = typeof text_ === "string" ? text_ : text_.text();
-        const family = typeof text_ === "string" ? family_ : text_.fontFamily();
-        const size = typeof text_ === "string" ? size_ : text_.fontSize();
-        function hasChinese(str: string) {
-            const regex = /[\u4e00-\u9fa5]/;
-            return regex.test(str);
-        }
-        if (!this.fonts[family] || hasChinese(text)) {
-            this.textSVG.setAttribute("text", text);
-            this.textSVG.setAttribute("font-size", size);
-            this.textSVG.setAttribute("font-family", family);
-            const bbox = this.textSVG.elementAs<SVGTextElement>().getBBox();
-            return bbox;
-        } else {
-            const font = this.fonts[family];
-            const ascender = font.ascender;
-            const descender = -font.descender;
-            const lineGap = font.lineGap || 0;
-            const scale = size / font.unitsPerEm;
-            const height = (ascender + descender + lineGap) * scale;
-            const width = getTextWidth(this.fonts[family], text, size);
-            return { width, height };
-        }
     }
     static mathjaxBoundingBox(math: RenderNode) {
         const parentNode = math.element().parentNode;
@@ -629,44 +583,7 @@ export class TextEngine {
         else math.__remove();
         return [bbox, ibbox];
     }
-    static widthToFontSize(text: string, family: string, width: number) {
-        const box = this.textBoundingBox(text, family, 20);
-        return (width / box.width) * 20;
-    }
-    static heightToFontSize(text: string, family: string, height: number) {
-        const box = this.textBoundingBox(text, family, 20);
-        return (height / box.height) * 20;
-    }
-    static getTextPathsFromOpenType(text: string, family: string, size: number, x: number, y: number): Array<any> {
-        const font = this.fonts[family];
-        const unitsPerEm = font.unitsPerEm;
-        const ascender = font.ascender;
-        const descender = -font.descender;
-        const lineGap = font.lineGap || 0;
-        const scale = size / unitsPerEm;
-        const height = (ascender + descender + lineGap) * scale;
-        const offset = -descender * scale;
-        return font.getPaths(text, x, y + height + offset, size);
-    }
-    static getTextPaths(text: TextConfiguration): Array<TransformingPath> {
-        const paths = [];
-        const targetPaths = TextEngine.getTextPathsFromOpenType(text.text, text.family, text.size, text.x, text.y);
-        const getAttribute = (attr: any, i: number, key: string) => {
-            if (!attr || !attr[i] || !attr[i][key]) return "default";
-            return attr[i][key];
-        };
-        for (let i = 0; i < targetPaths.length; i++) {
-            const d = targetPaths[i].toPathData(4);
-            paths.push(undefined);
-            if (!d) continue;
-            const fill = getAttribute(text.attr, i, "fill");
-            const stroke = getAttribute(text.attr, i, "stroke");
-            const lastFill = getAttribute(text.lastAttr, i, "fill");
-            const lastStroke = getAttribute(text.lastAttr, i, "stroke");
-            paths[i] = new TransformingPath(d, new DOMMatrix(), fill, stroke, lastFill, lastStroke, text.attr[i]);
-        }
-        return paths;
-    }
+
     static getMathPaths(text: MathConfiguration): Array<TransformingPath> {
         const element = text.attr;
         const defs: SVGDefsElement = element.element().children[0] as SVGDefsElement;

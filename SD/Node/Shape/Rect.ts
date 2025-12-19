@@ -1,5 +1,6 @@
 import { BaseShape } from "@/Node/Shape/BaseShape";
 import { SDNode } from "@/Node/SDNode";
+import { SDColor } from "@/Utility/Color";
 
 export class Rect extends BaseShape {
     constructor(args?: {
@@ -10,6 +11,11 @@ export class Rect extends BaseShape {
         height?: number;
         rx?: number;
         ry?: number;
+        fill?: SDColor;
+        stroke?: SDColor;
+        strokeWidth?: number;
+        strokeDashOffset?: number;
+        strokeDashArray?: Array<number>;
     }) {
         super();
 
@@ -20,6 +26,11 @@ export class Rect extends BaseShape {
             height: args?.height ?? 40,
             rx: args?.rx ?? 0,
             ry: args?.ry ?? 0,
+            fill: args?.fill ?? C,
+            stroke: args?.stroke ?? C.Transparent,
+            strokeWidth: args?.strokeWidth ?? 0,
+            strokeDashOffset: args?.strokeDashOffset ?? 0,
+            strokeDashArray: args?.strokeDashArray ?? [],
         });
 
         this.setType("Rect");
@@ -67,29 +78,37 @@ export class Rect extends BaseShape {
         return this.setX(this.getX() + cx - this.getCenterX());
     }
 
+    setCx(cx: number) {
+        return this.setCenterX(cx);
+    }
+
     setCenterY(cy: number) {
         return this.setY(this.getY() + cy - this.getCenterY());
     }
 
-    getRX(): number {
+    setCy(cy: number) {
+        return this.setCenterY(cy);
+    }
+
+    getRx(): number {
         return this.vars.rx;
     }
 
-    setRX(rx: number): this {
+    setRx(rx: number): this {
         this.vars.lpset("rx", rx);
         return this;
     }
 
-    getRY(): number {
+    getRy(): number {
         return this.vars.ry;
     }
 
-    setRY(ry: number): this {
+    setRy(ry: number): this {
         this.vars.lpset("ry", ry);
         return this;
     }
 
     setBorderRadius(r: number): this {
-        return this.setRX(r).setRY(r);
+        return this.setRx(r).setRy(r);
     }
 }
