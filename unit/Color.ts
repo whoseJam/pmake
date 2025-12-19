@@ -5,7 +5,22 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestColorPreset);
+sd.main(TestLiterialColor);
+
+async function TestLiterialColor() {
+    const rect = new sd.Rect({
+        targetNode: svg,
+        x: 100,
+        y: 100,
+        width: 100,
+        height: 40,
+        fill: C.rosyBrown,
+    });
+    await sd.pause();
+    rect.startAnimate().setFill("none").endAnimate();
+    await sd.pause();
+    rect.startAnimate().setFill("yellow").endAnimate();
+}
 
 async function TestColorPreset() {
     // 按照 Color 模块的分类组织颜色
@@ -146,14 +161,28 @@ async function TestColorPreset() {
     let currentY = 10;
     let totalColors = 0;
     colorCategories.forEach(category => {
-        new sd.Text(svg, category.title).x(10).y(currentY).fontSize(16).fill(C.black);
+        new sd.Text({
+            targetNode: svg,
+            text: category.title,
+            x: 10,
+            y: currentY,
+            fontSize: 16,
+            fill: C.black,
+        });
         currentY += titleHeight;
         category.colors.forEach((color, index) => {
             const row = Math.floor(index / colsPerRow);
             const col = index % colsPerRow;
             const x = col * (rectWidth + padding) + 10;
             const y = currentY + row * (rectHeight + padding);
-            new sd.Box(svg, color.name).x(x).y(y).width(rectWidth).height(rectHeight).color(color.value);
+            new sd.Rect({
+                targetNode: svg,
+                x,
+                y,
+                width: rectWidth,
+                height: rectHeight,
+                fill: color.value,
+            });
         });
         const rows = Math.ceil(category.colors.length / colsPerRow);
         currentY += rows * (rectHeight + padding) + categorySpacing;

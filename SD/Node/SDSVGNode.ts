@@ -11,13 +11,14 @@ export abstract class SDSVGNode extends SDNode {
     getFill(): SDHEXColor {
         return C.toHEX(this.vars.fill);
     }
+
     /**
      * Sets the fill color of this component.
      * @param fill - The fill color to apply (hex string or RGB object).
      * @returns The current component instance for method chaining.
      */
     setFill(fill?: SDAllColor) {
-        this.vars.fill = C.toRGB(C.toFill(fill));
+        this.vars.fill = C.toRGBA(C.toFill(fill));
         return this;
     }
 
@@ -28,13 +29,14 @@ export abstract class SDSVGNode extends SDNode {
     getStroke(): SDHEXColor {
         return C.toHEX(this.vars.stroke);
     }
+
     /**
      * Sets the stroke color of this component.
      * @param stroke - The stroke color to apply (hex string or RGB object).
      * @returns The current component instance for method chaining.
      */
     setStroke(stroke: SDAllColor): this {
-        this.vars.stroke = C.toRGB(C.toStroke(stroke));
+        this.vars.stroke = C.toRGBA(C.toStroke(stroke));
         return this;
     }
 

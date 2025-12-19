@@ -28,7 +28,9 @@ sd.init(() => {
     });
     for (let x = FX + 30; x < FX + FW; x += 50) {
         for (let y = FY + 30; y < FY + FH; y += 50) {
-            ms.push(new sd.Text({ targetNode: svg, text: "×", x, y, fill: "#ccc", fontSize: 20, opacity: 0 }));
+            ms.push(
+                new sd.Text({ targetNode: svg, text: "×", fill: "#ccc", fontSize: 20, opacity: 0 }).setCx(x).setCy(y)
+            );
         }
     }
     tr = new sd.Path({

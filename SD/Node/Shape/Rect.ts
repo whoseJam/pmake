@@ -1,6 +1,6 @@
 import { BaseShape } from "@/Node/Shape/BaseShape";
 import { SDNode } from "@/Node/SDNode";
-import { SDColor } from "@/Utility/Color";
+import { SDColor, Color as C } from "@/Utility/Color";
 
 export class Rect extends BaseShape {
     constructor(args?: {
@@ -26,8 +26,8 @@ export class Rect extends BaseShape {
             height: args?.height ?? 40,
             rx: args?.rx ?? 0,
             ry: args?.ry ?? 0,
-            fill: args?.fill ?? C,
-            stroke: args?.stroke ?? C.Transparent,
+            fill: args?.fill ?? C.white,
+            stroke: args?.stroke ?? C.black,
             strokeWidth: args?.strokeWidth ?? 0,
             strokeDashOffset: args?.strokeDashOffset ?? 0,
             strokeDashArray: args?.strokeDashArray ?? [],

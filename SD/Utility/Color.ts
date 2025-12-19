@@ -5,8 +5,32 @@ export type SDRGBColor = {
     g: number;
     b: number;
 };
-export type SDHEXColor = string;
-export type SDColor = SDRGBColor | SDHEXColor;
+export type SDRGBAColor = {
+    r: number;
+    g: number;
+    b: number;
+    a: number;
+};
+export type SDHEXColor = `#${string}`;
+export type SDLiteralColor =
+    | "none"
+    | "black"
+    | "red"
+    | "blue"
+    | "cyan"
+    | "gray"
+    | "silver"
+    | "olive"
+    | "teal"
+    | "white"
+    | "green"
+    | "yellow"
+    | "magenta"
+    | "grey"
+    | "maroon"
+    | "purple"
+    | "navy";
+export type SDColor = SDRGBColor | SDHEXColor | SDRGBAColor | SDLiteralColor;
 export type SDPacketColor = {
     fill: SDColor;
     stroke: SDColor;
@@ -15,118 +39,118 @@ export type SDAllColor = SDColor | SDPacketColor;
 
 export class Color {
     // Basic colors
-    static red = "#f14c4c";
-    static blue = "#4a90e2";
-    static cyan = "#00ffff";
-    static grey = "#999999";
-    static gray = "#999999";
-    static pink = "#ff69b4";
-    static snow = "#fffafa";
-    static azure = "#f0ffff";
-    static black = "#000000";
-    static brown = "#8b4726";
-    static coral = "#ff7256";
-    static green = "#92d050";
-    static white = "#ffffff";
-    static orange = "#f58617";
-    static purple = "#da70d6";
-    static violet = "#ee82ee";
-    static yellow = "#ffff4d";
-    static indigo = "#4b0082";
-    static lime = "#00ff00";
-    static teal = "#008080";
-    static navy = "#000080";
-    static maroon = "#800000";
-    static olive = "#808000";
-    static silver = "#c0c0c0";
-    static gold = "#ffd700";
-    static beige = "#f5f5dc";
-    static ivory = "#fffff0";
-    static khaki = "#f0e68c";
-    static lavender = "#e6e6fa";
-    static magenta = "#ff00ff";
-    static mint = "#98ff98";
-    static peach = "#ffdab9";
-    static plum = "#dda0dd";
-    static salmon = "#fa8072";
-    static tan = "#d2b48c";
-    static turquoise = "#40e0d0";
+    static red: SDHEXColor = "#f14c4c";
+    static blue: SDHEXColor = "#4a90e2";
+    static cyan: SDHEXColor = "#00ffff";
+    static grey: SDHEXColor = "#999999";
+    static gray: SDHEXColor = "#999999";
+    static pink: SDHEXColor = "#ff69b4";
+    static snow: SDHEXColor = "#fffafa";
+    static azure: SDHEXColor = "#f0ffff";
+    static black: SDHEXColor = "#000000";
+    static brown: SDHEXColor = "#8b4726";
+    static coral: SDHEXColor = "#ff7256";
+    static green: SDHEXColor = "#92d050";
+    static white: SDHEXColor = "#ffffff";
+    static orange: SDHEXColor = "#f58617";
+    static purple: SDHEXColor = "#da70d6";
+    static violet: SDHEXColor = "#ee82ee";
+    static yellow: SDHEXColor = "#ffff4d";
+    static indigo: SDHEXColor = "#4b0082";
+    static lime: SDHEXColor = "#00ff00";
+    static teal: SDHEXColor = "#008080";
+    static navy: SDHEXColor = "#000080";
+    static maroon: SDHEXColor = "#800000";
+    static olive: SDHEXColor = "#808000";
+    static silver: SDHEXColor = "#c0c0c0";
+    static gold: SDHEXColor = "#ffd700";
+    static beige: SDHEXColor = "#f5f5dc";
+    static ivory: SDHEXColor = "#fffff0";
+    static khaki: SDHEXColor = "#f0e68c";
+    static lavender: SDHEXColor = "#e6e6fa";
+    static magenta: SDHEXColor = "#ff00ff";
+    static mint: SDHEXColor = "#98ff98";
+    static peach: SDHEXColor = "#ffdab9";
+    static plum: SDHEXColor = "#dda0dd";
+    static salmon: SDHEXColor = "#fa8072";
+    static tan: SDHEXColor = "#d2b48c";
+    static turquoise: SDHEXColor = "#40e0d0";
 
     // Dark variants
-    static darkRed = "#b13535";
-    static darkBlue = "#89a4a7";
-    static darkGrey = "#808080";
-    static darkGray = "#808080";
-    static darkPink = "#ff1493";
-    static darkGreen = "#006400";
-    static darkOrange = "#b4610e";
-    static darkPurple = "#9932cc";
-    static darkCyan = "#008b8b";
-    static darkGoldenrod = "#b8860b";
-    static darkKhaki = "#bdb76b";
-    static darkMagenta = "#8b008b";
-    static darkOlive = "#556b2f";
-    static darkSalmon = "#e9967a";
-    static darkSeaGreen = "#8fbc8f";
-    static darkSlateBlue = "#483d8b";
-    static darkSlateGrey = "#2f4f4f";
-    static darkTurquoise = "#00ced1";
-    static darkViolet = "#9400d3";
+    static darkRed: SDHEXColor = "#b13535";
+    static darkBlue: SDHEXColor = "#89a4a7";
+    static darkGrey: SDHEXColor = "#808080";
+    static darkGray: SDHEXColor = "#808080";
+    static darkPink: SDHEXColor = "#ff1493";
+    static darkGreen: SDHEXColor = "#006400";
+    static darkOrange: SDHEXColor = "#b4610e";
+    static darkPurple: SDHEXColor = "#9932cc";
+    static darkCyan: SDHEXColor = "#008b8b";
+    static darkGoldenrod: SDHEXColor = "#b8860b";
+    static darkKhaki: SDHEXColor = "#bdb76b";
+    static darkMagenta: SDHEXColor = "#8b008b";
+    static darkOlive: SDHEXColor = "#556b2f";
+    static darkSalmon: SDHEXColor = "#e9967a";
+    static darkSeaGreen: SDHEXColor = "#8fbc8f";
+    static darkSlateBlue: SDHEXColor = "#483d8b";
+    static darkSlateGrey: SDHEXColor = "#2f4f4f";
+    static darkTurquoise: SDHEXColor = "#00ced1";
+    static darkViolet: SDHEXColor = "#9400d3";
 
     // Pure colors
-    static pureRed = "#ff0000";
-    static pureBlue = "#0000ff";
-    static pureGreen = "#00ff00";
+    static pureRed: SDHEXColor = "#ff0000";
+    static pureBlue: SDHEXColor = "#0000ff";
+    static pureGreen: SDHEXColor = "#00ff00";
 
     // Light variants
-    static lightRed = "#ff6347";
-    static lightBlue = "#add8e6";
-    static lightCoral = "#f08080";
-    static lightCyan = "#e0ffff";
-    static lightGreen = "#90ee90";
-    static lightGrey = "#d3d3d3";
-    static lightPink = "#ffb6c1";
-    static lightSalmon = "#ffa07a";
-    static lightSeaGreen = "#20b2aa";
-    static lightSkyBlue = "#87cefa";
-    static lightYellow = "#ffffe0";
+    static lightRed: SDHEXColor = "#ff6347";
+    static lightBlue: SDHEXColor = "#add8e6";
+    static lightCoral: SDHEXColor = "#f08080";
+    static lightCyan: SDHEXColor = "#e0ffff";
+    static lightGreen: SDHEXColor = "#90ee90";
+    static lightGrey: SDHEXColor = "#d3d3d3";
+    static lightPink: SDHEXColor = "#ffb6c1";
+    static lightSalmon: SDHEXColor = "#ffa07a";
+    static lightSeaGreen: SDHEXColor = "#20b2aa";
+    static lightSkyBlue: SDHEXColor = "#87cefa";
+    static lightYellow: SDHEXColor = "#ffffe0";
 
     // Special colors
-    static textBlue = "#24b7ff";
-    static aliceBlue = "#f0f8ff";
-    static chocolate = "#d2691e";
-    static paleGreen = "#98fb98";
-    static peachPuff = "#ffdab9";
-    static buttonGrey = "#f0f0f0";
-    static ghostWhite = "#f8f8ff";
-    static deepSkyBlue = "#00bfff";
-    static lemonChiffon = "#fffacd";
-    static darkButtonGrey = "#767676";
-    static crimson = "#dc143c";
-    static hotPink = "#ff69b4";
-    static mediumPurple = "#9370db";
-    static mediumSeaGreen = "#3cb371";
-    static mediumSlateBlue = "#7b68ee";
-    static mediumSpringGreen = "#00fa9a";
-    static mediumTurquoise = "#48d1cc";
-    static mediumVioletRed = "#c71585";
-    static midnightBlue = "#191970";
-    static mistyRose = "#ffe4e1";
-    static orchid = "#da70d6";
-    static paleVioletRed = "#db7093";
-    static powderBlue = "#b0e0e6";
-    static rosyBrown = "#bc8f8f";
-    static royalBlue = "#4169e1";
-    static sandyBrown = "#f4a460";
-    static seaGreen = "#2e8b57";
-    static skyBlue = "#87ceeb";
-    static slateBlue = "#6a5acd";
-    static slateGrey = "#708090";
-    static springGreen = "#00ff7f";
-    static steelBlue = "#4682b4";
-    static tomato = "#ff6347";
-    static wheat = "#f5deb3";
-    static yellowGreen = "#9acd32";
+    static textBlue: SDHEXColor = "#24b7ff";
+    static aliceBlue: SDHEXColor = "#f0f8ff";
+    static chocolate: SDHEXColor = "#d2691e";
+    static paleGreen: SDHEXColor = "#98fb98";
+    static peachPuff: SDHEXColor = "#ffdab9";
+    static buttonGrey: SDHEXColor = "#f0f0f0";
+    static ghostWhite: SDHEXColor = "#f8f8ff";
+    static deepSkyBlue: SDHEXColor = "#00bfff";
+    static lemonChiffon: SDHEXColor = "#fffacd";
+    static darkButtonGrey: SDHEXColor = "#767676";
+    static crimson: SDHEXColor = "#dc143c";
+    static hotPink: SDHEXColor = "#ff69b4";
+    static mediumPurple: SDHEXColor = "#9370db";
+    static mediumSeaGreen: SDHEXColor = "#3cb371";
+    static mediumSlateBlue: SDHEXColor = "#7b68ee";
+    static mediumSpringGreen: SDHEXColor = "#00fa9a";
+    static mediumTurquoise: SDHEXColor = "#48d1cc";
+    static mediumVioletRed: SDHEXColor = "#c71585";
+    static midnightBlue: SDHEXColor = "#191970";
+    static mistyRose: SDHEXColor = "#ffe4e1";
+    static orchid: SDHEXColor = "#da70d6";
+    static paleVioletRed: SDHEXColor = "#db7093";
+    static powderBlue: SDHEXColor = "#b0e0e6";
+    static rosyBrown: SDHEXColor = "#bc8f8f";
+    static royalBlue: SDHEXColor = "#4169e1";
+    static sandyBrown: SDHEXColor = "#f4a460";
+    static seaGreen: SDHEXColor = "#2e8b57";
+    static skyBlue: SDHEXColor = "#87ceeb";
+    static slateBlue: SDHEXColor = "#6a5acd";
+    static slateGrey: SDHEXColor = "#708090";
+    static springGreen: SDHEXColor = "#00ff7f";
+    static steelBlue: SDHEXColor = "#4682b4";
+    static tomato: SDHEXColor = "#ff6347";
+    static wheat: SDHEXColor = "#f5deb3";
+    static yellowGreen: SDHEXColor = "#9acd32";
 
     static RED = { fill: this.red, stroke: this.darkRed };
     static BLUE = { fill: this.blue, stroke: this.darkBlue };
@@ -155,7 +179,7 @@ export class Color {
         return hexA.toLowerCase() === hexB.toLowerCase();
     }
 
-    static gradient(start: string, end: string, l: number, r: number): (at: number) => SDRGBColor {
+    static gradient(start: SDColor, end: SDColor, l: number, r: number): (at: number) => SDRGBColor {
         const startRgb = this.toRGB(start);
         const endRgb = this.toRGB(end);
         return (at: number) => {
@@ -199,8 +223,19 @@ export class Color {
     }
 
     static toRGB(color: SDColor): SDRGBColor {
-        if (typeof color === "string") return hexToRgb(color);
+        if (typeof color === "string") {
+            if (color.startsWith("#")) return hexToRgb(color as SDHEXColor);
+            return literalToRgba(color as SDLiteralColor);
+        }
         return color;
+    }
+
+    static toRGBA(color: SDColor): SDRGBAColor {
+        if (typeof color === "string") {
+            if (color.startsWith("#")) return hexToRgba(color as SDHEXColor);
+            return literalToRgba(color as SDLiteralColor);
+        }
+        return { ...color, a: (color as SDRGBAColor).a ?? 1 };
     }
 
     static toHEX(color: SDColor): SDHEXColor {
@@ -219,8 +254,8 @@ export class Color {
     }
 
     static toString(color: SDColor): string {
-        const rgb = this.toRGB(color);
-        if (rgb) return `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+        const rgba = this.toRGBA(color);
+        if (rgba) return `rgb(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a})`;
         return undefined;
     }
 }
@@ -246,6 +281,22 @@ function hexToRgb(hex: string): SDRGBColor {
     };
 }
 
+function hexToRgba(hex: SDHEXColor): SDRGBAColor {
+    console.log("hex=", hex);
+    const color = hex.replace("#", "");
+    return {
+        r: hexToNumber(color.slice(0, 2)),
+        g: hexToNumber(color.slice(2, 4)),
+        b: hexToNumber(color.slice(4, 6)),
+        a: 1,
+    };
+}
+
 function rgbToHex(color: SDRGBColor): string {
     return "#" + numberToHex(color.r) + numberToHex(color.g) + numberToHex(color.b);
+}
+
+function literalToRgba(literal: SDLiteralColor): SDRGBAColor {
+    if (literal === "none") return { r: 0, g: 0, b: 0, a: 0 };
+    return hexToRgba(Color[literal]);
 }

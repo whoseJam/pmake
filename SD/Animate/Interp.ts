@@ -41,7 +41,6 @@ export class InterpObject {
         this.onAfterInterp_ = () => {};
     }
     call(action: Action, t: number): void {
-        if (action.animatedKey === "aaa") console.log("Aciton=", action);
         this.callback_.call(action, t);
     }
     onInit(call: InitFunction | Action) {
@@ -114,15 +113,16 @@ export class Interp {
     static colorInterp(object: any, key: string) {
         const set = setter(object, key);
         return new InterpObject(function (t) {
-            const fRGB = this._source;
-            const tRGB = this._target;
-            const r = fRGB.r * (1 - t) + tRGB.r * t;
-            const g = fRGB.g * (1 - t) + tRGB.g * t;
-            const b = fRGB.b * (1 - t) + tRGB.b * t;
-            set({ r, g, b });
+            const fRGBA = this._source;
+            const tRGBA = this._target;
+            const r = fRGBA.r * (1 - t) + tRGBA.r * t;
+            const g = fRGBA.g * (1 - t) + tRGBA.g * t;
+            const b = fRGBA.b * (1 - t) + tRGBA.b * t;
+            const a = fRGBA.a * (1 - t) + tRGBA.a * t;
+            set({ r, g, b, a });
         }).onInit(function () {
-            this._source = Color.toRGB(this.source);
-            this._target = Color.toRGB(this.target);
+            this._source = Color.toRGBA(this.source);
+            this._target = Color.toRGBA(this.target);
         });
     }
     static stringInterp(object: any, key: string) {

@@ -121,14 +121,15 @@ export class Text extends BaseText {
         const text_ = String(text);
         if (this.vars.text === text_) return this;
         const box = FontManager.boundingBox(text_, this.getFontFamily(), this.getFontSize());
-        this.vars.subtextStyles = buildAnimation(
-            this,
-            { text: this.getText(), styles: this.vars.subtextStyles },
-            { text: text_ },
-            transformProcess(mapping),
-            transformPostProcess(this, this.getLayer()),
-            "transform"
-        );
+        if (FontManager.fontExists(this.getFontFamily()))
+            this.vars.subtextStyles = buildAnimation(
+                this,
+                { text: this.getText(), styles: this.vars.subtextStyles },
+                { text: text_ },
+                transformProcess(mapping),
+                transformPostProcess(this, this.getLayer()),
+                "transform"
+            );
         this.vars.text = text;
         this.vars.setTogether({
             html: parseToHTML.call(this),

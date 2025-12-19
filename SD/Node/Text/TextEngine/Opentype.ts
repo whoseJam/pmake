@@ -58,6 +58,7 @@ export class FontManager {
         x: number,
         y: number
     ): Array<opentype.Path> {
+        console.log("family=", family, "font=", this.fonts[family]);
         const font = this.fonts[family];
         const ascender = font.ascender;
         const descender = font.descender;
