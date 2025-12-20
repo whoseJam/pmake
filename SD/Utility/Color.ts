@@ -38,6 +38,8 @@ export type SDPacketColor = {
 export type SDAllColor = SDColor | SDPacketColor;
 
 export class Color {
+    static none: SDLiteralColor = "none";
+
     // Basic colors
     static red: SDHEXColor = "#f14c4c";
     static blue: SDHEXColor = "#4a90e2";

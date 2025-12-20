@@ -4,6 +4,8 @@ export class Image extends BaseShape {
     constructor() {
         super();
 
+        this.setType("Image");
+
         this.__createSVGNode("image", {
             x: 0,
             y: 0,
@@ -12,8 +14,6 @@ export class Image extends BaseShape {
             src: "",
             preserveAspectRatio: "xMidYMid meet",
         });
-
-        this.setType("Image");
     }
     getX(): number {
         return this.vars.x;

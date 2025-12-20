@@ -8,7 +8,10 @@ export class Path extends BasePath {
         targetNode?: SDNode;
         opacity?: number;
         d?: string;
+        fill?: SDColor;
+        fillOpacity?: number;
         stroke?: SDColor;
+        strokeOpacity?: number;
         strokeWidth?: number;
         strokeDashOffset?: number;
         strokeDashArray?: Array<number>;
@@ -19,8 +22,11 @@ export class Path extends BasePath {
 
         this.__createSVGNode("path", {
             d: args?.d || "",
+            fill: args?.fill ?? C.none,
+            fillOpacity: args?.fillOpacity ?? 1,
             stroke: args?.stroke ?? C.black,
-            strokeWidth: args?.strokeWidth ?? 0,
+            strokeOpacity: args?.strokeOpacity ?? 1,
+            strokeWidth: args?.strokeWidth ?? 1,
             strokeDashOffset: args?.strokeDashOffset ?? 0,
             strokeDashArray: args?.strokeDashArray ?? [],
         });

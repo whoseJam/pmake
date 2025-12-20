@@ -9,21 +9,29 @@ export class Circle extends BaseShape {
         cy?: number;
         r?: number;
         fill?: SDColor;
+        fillOpacity?: number;
         stroke?: SDColor;
+        strokeOpacity?: number;
         strokeWidth?: number;
+        strokeDashOffset?: number;
+        strokeDashArray?: Array<number>;
     }) {
         super();
+
+        this.setType("Circle");
 
         this.__createSVGNode("circle", {
             cx: args?.cx ?? 0,
             cy: args?.cy ?? 0,
             r: args?.r ?? 20,
             fill: args?.fill ?? C.white,
+            fillOpacity: args?.fillOpacity ?? 1,
             stroke: args?.stroke ?? C.black,
-            strokeWidth: args?.strokeWidth ?? 0,
+            strokeOpacity: args?.strokeOpacity ?? 1,
+            strokeWidth: args?.strokeWidth ?? 1,
+            strokeDashOffset: args?.strokeDashOffset ?? 0,
+            strokeDashArray: args?.strokeDashArray ?? [],
         });
-
-        this.setType("Circle");
 
         args?.targetNode?.appendChild(this);
     }

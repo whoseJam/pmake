@@ -12,12 +12,16 @@ export class Rect extends BaseShape {
         rx?: number;
         ry?: number;
         fill?: SDColor;
+        fillOpacity?: number;
         stroke?: SDColor;
+        strokeOpacity?: number;
         strokeWidth?: number;
         strokeDashOffset?: number;
         strokeDashArray?: Array<number>;
     }) {
         super();
+
+        this.setType("Rect");
 
         this.__createSVGNode("rect", {
             x: args?.x ?? 0,
@@ -27,13 +31,13 @@ export class Rect extends BaseShape {
             rx: args?.rx ?? 0,
             ry: args?.ry ?? 0,
             fill: args?.fill ?? C.white,
+            fillOpacity: args?.fillOpacity ?? 1,
             stroke: args?.stroke ?? C.black,
-            strokeWidth: args?.strokeWidth ?? 0,
+            strokeOpacity: args?.strokeOpacity ?? 1,
+            strokeWidth: args?.strokeWidth ?? 1,
             strokeDashOffset: args?.strokeDashOffset ?? 0,
             strokeDashArray: args?.strokeDashArray ?? [],
         });
-
-        this.setType("Rect");
 
         args?.targetNode?.appendChild(this);
     }
@@ -88,6 +92,13 @@ export class Rect extends BaseShape {
 
     setCy(cy: number) {
         return this.setCenterY(cy);
+    }
+
+    setCenter(center: [number, number]): this;
+    setCenter(cx: number, cy: number): this;
+    setCenter(cx: number | [number, number], cy?: number) {
+        if (Array.isArray(cx)) return this.setCenter(cx[0], cx[1]);
+        return this.setCenterX(cx).setCenterY(cy);
     }
 
     getRx(): number {
