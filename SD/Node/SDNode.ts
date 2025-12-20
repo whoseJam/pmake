@@ -1,9 +1,8 @@
 import { Action } from "@/Animate/Action";
 import { Context } from "@/Animate/Context";
-import { Interp, InterpCreator } from "@/Animate/Interp";
+import { Interp, InterpCreator, InterpFunction, InterpObject, LazyInterpFunction } from "@/Animate/Interp";
 import { Window } from "@/Animate/Window";
 import { SDTimingFunction, TimingFunction as T } from "@/Math/TimingFunction";
-import { reactive } from "@/Node/Core/Reactive";
 import { RenderNode } from "@/Renderer/RenderNode";
 
 type PercentString = `${number}%`;
@@ -19,9 +18,20 @@ export type SDBox = {
     height: number;
 };
 
+function isBuiltinInterp(
+    method: InterpObject | InterpFunction | LazyInterpFunction | InterpCreator
+): method is InterpCreator {
+    if (typeof method !== "function") return false;
+    const statics = Object.getOwnPropertyNames(Interp);
+    for (const propName of statics) {
+        const propValue = Interp[propName];
+        if (propValue === method) return true;
+    }
+    return false;
+}
+
 export abstract class SDNode {
     id: number;
-    vars: any;
     _: {
         frame: number;
         start: number;
@@ -29,6 +39,12 @@ export abstract class SDNode {
         subAnimates: Array<Context>;
         timingFunction: SDTimingFunction;
         layer: RenderNode;
+        opacity: number;
+        scale: [number, number];
+        rotate: number;
+        translate: [number, number];
+        transformOrigin: [number, number];
+        attributeListeners: { [key: string]: Array<(vn: any, vo: any) => void> };
         [key: string]: any;
     };
     static NODE_ID = 0;
@@ -42,43 +58,18 @@ export abstract class SDNode {
             subAnimates: [],
             timingFunction: undefined,
             layer: undefined,
-            ready: false, // only when ready = true, the action can impact the node
-        };
-
-        this._.layer = RenderNode.createRenderNode(this, undefined, "g");
-
-        this.vars = reactive({
+            ready: false,
             opacity: 1,
             scale: [1, 1],
             rotate: 0,
             translate: [0, 0],
             transformOrigin: [0, 0],
-        });
+            attributeListeners: {},
+        };
 
-        this.vars.watch("opacity", SDNode.__action(this, this._.layer, "opacity", Interp.numberInterp));
-        this.vars.watch("scale", SDNode.__action(this, this._.layer, "scale", Interp.vectorInterp));
-        this.vars.watch("rotate", SDNode.__action(this, this._.layer, "rotate", Interp.numberInterp));
-        this.vars.watch("translate", SDNode.__action(this, this._.layer, "translate", Interp.vectorInterp));
-        this.vars.watch(
-            "transformOrigin",
-            SDNode.__action(this, this._.layer, "transform-origin", Interp.vectorInterp)
-        );
+        this._.layer = RenderNode.createRenderNode(this, undefined, "g");
     }
-    startSubAnimate() {
-        const context = new Context(this);
-        this._.subAnimates.push(context);
-        return this;
-    }
-    subAnimate(l: number, r: number) {
-        const context = this._.subAnimates[this._.subAnimates.length - 1];
-        context.till(l, r);
-        return this;
-    }
-    endSubAnimate() {
-        const context = this._.subAnimates.pop();
-        context.recover();
-        return this;
-    }
+
     /**
      * Gets the type label of this component.
      * Returns undefined if the type was not defined during component initialization.
@@ -87,6 +78,7 @@ export abstract class SDNode {
     getType(): string {
         return this._.layer.getAttribute("type");
     }
+
     /**
      * Sets the type label for this component.
      * This method should be called during component initialization.
@@ -119,131 +111,76 @@ export abstract class SDNode {
         layer.setAttribute("layer", name);
         return this;
     }
+
     append(child: SDNode | RenderNode) {
         if (child instanceof SDNode) this.getLayer().append(child.getLayer());
         else this.getLayer().append(child);
         return this;
     }
+
     appendChild(child: SDNode | RenderNode) {
         if (child instanceof SDNode) this.getLayer().appendChild(child.getLayer());
         else this.getLayer().appendChild(child);
         return this;
     }
+
     insertBefore(child: SDNode | RenderNode, referenced: SDNode | RenderNode) {
         const child_ = child instanceof SDNode ? child.getLayer() : child;
         const referenced_ = referenced instanceof SDNode ? referenced.getLayer() : referenced;
         this.getLayer().insertBefore(child_, referenced_);
         return this;
     }
-    /**
-     * Starts an animation sequence with optional custom duration.
-     * During this sequence, all property changes are automatically animated instead of applied immediately.
-     * Any child in the component tree will also be animated.
-     *
-     * - Call `endAnimate()` to finalize the animation sequence.
-     * - All property changes between `startAnimate()` and `endAnimate()` are animated.
-     * @param duration - Animation duration in milliseconds (default: 300ms).
-     * @returns The current component instance for method chaining.*
-     * @example
-     * // Move a rectangle to (100, 100) and resize it to (50, 80)
-     * rect.startAnimate().x(100).y(100).width(50).height(80).endAnimate();
-     * @example
-     * // Create a slow color transition for a circle
-     * circle.startAnimate(5000).color(C.red).endAnimate();
-     * @example
-     * parent.startAnimate();
-     * parent.color(C.blue);
-     * child.color(C.yellow); // The child component will also be animated.
-     * parent.endAnimate();
-     */
-    startAnimate(duration?: number): this;
-    startAnimate(duration: number, timingFunction: SDTimingFunction): this;
-    startAnimate(timingFunction: SDTimingFunction): this;
-    /**
-     * Starts an animation sequence by copying parameters from another component.
-     * @param other - The source component whose animation parameters will be copied.
-     * @returns The current component instance for method chaining.
-     */
-    startAnimate(other: SDNode): this;
-    /**
-     * Starts an animation sequence with a custom time range.
-     * Animations will be evaluated over the specified duration in milliseconds.
-     * @param start - The start time of the animation in milliseconds.
-     * @param end - The end time of the animation in milliseconds.
-     * @param timingFunction - The timing function to use for the animation.
-     * @returns The current component instance for method chaining.
-     */
-    startAnimate(start: number, end: number, timingFunction?: SDTimingFunction): this;
-    startAnimate() {
-        this.__animationCheck();
-        if (arguments.length === 0) return this.startAnimate(this._.start, this._.start + 300);
-        if (arguments.length === 1) {
-            const object = arguments[0];
-            if (typeof object === "number") return this.startAnimate(this._.start, this._.start + object);
-            else if (typeof object === "function") return this.startAnimate(this._.start, this._.start + 300, object);
-            return this.startAnimate(object.delay(), object.delay() + object.duration(), object._.timingFunction);
-        } else if (arguments.length === 2) {
-            if (typeof arguments[1] === "function")
-                return this.startAnimate(this._.start, this._.start + arguments[0], arguments[1]);
-            const [start, end] = arguments;
-            return this.startAnimate(start, end, T.easeInOut);
-        }
-        [this._.start, this._.end, this._.timingFunction] = arguments;
+
+    startSubAnimate() {
+        const context = new Context(this);
+        this._.subAnimates.push(context);
         return this;
     }
+
+    subAnimate(l: number, r: number) {
+        const context = this._.subAnimates[this._.subAnimates.length - 1];
+        context.till(l, r);
+        return this;
+    }
+    endSubAnimate() {
+        const context = this._.subAnimates.pop();
+        context.recover();
+        return this;
+    }
+
+    startAnimate(args?: { delay?: number; duration?: number; easing?: SDTimingFunction }) {
+        this._.start = args?.delay ?? 0;
+        this._.end = args?.duration ?? 300;
+        this._.timingFunction = args?.easing ?? T.easeInOut;
+        return this;
+    }
+
     /**
      * Finalizes and applies the current animation sequence.
      * - Call this method after configuring properties with `startAnimate()` to finish the animation.
      * @returns The current component instance for method chaining.
      */
     endAnimate(): this {
-        this.__animationCheck();
-        this._.start = this._.end;
+        this._.start = 0;
+        this._.end = 0;
+        this._.timingFunction = undefined;
         return this;
     }
-    /**
-     * Creates a temporal dependency between animations, either delaying the start
-     * of this animation by a specified duration or scheduling it to start
-     * immediately after another component's animation completes.
-     *
-     * @example
-     * // Animate rectangles sequentially with temporal dependencies
-     * rect1.startAnimate().dx(100).endAnimate();
-     * rect2.after(rect1).startAnimate().dx(100).endAnimate();
-     * rect3.after(rect2).startAnimate().dx(100).endAnimate();
-     *
-     * @param delay - The delay in milliseconds before starting the animation,
-     *                or an SDNode whose animation completion triggers this animation.
-     * @returns This instance for method chaining.
-     */
-    after(delay_: number | SDNode): this {
-        this.__animationCheck();
-        const delay = typeof delay_ === "number" ? delay_ : delay_.delay();
-        this._.start = delay;
-        this._.end = delay;
-        return this;
-    }
+
     /**
      * Gets the delay of current animation sequence.
      * This method returns the time offset from the animation's start time.
      * @returns The delay duration in milliseconds.
      */
     delay() {
-        this.__animationCheck();
         return this._.start;
     }
+
     /**
      * Gets the duration of current animation sequence.
      */
     duration() {
-        this.__animationCheck();
         return this._.end - this._.start;
-    }
-    __animationCheck() {
-        if (this._.frame === Window.CURRENT_FRAME) return;
-        this._.frame = Window.CURRENT_FRAME;
-        this._.start = 0;
-        this._.end = 0;
     }
 
     /**
@@ -255,15 +192,20 @@ export abstract class SDNode {
     }
 
     getOpacity(): number {
-        return this.vars.opacity;
+        return this._.opacity;
     }
+
     setOpacity(opacity: number): this {
-        this.vars.mpset("opacity", opacity);
-        return this;
+        return this.triggerAttributeChanged(this._.layer, "opacity", opacity, this._.opacity);
     }
-    // inRange(point: [number, number]) {
-    //     return this.getX() <= point[0] && point[0] <= this.mx() && this.y() <= point[1] && point[1] <= this.my();
-    // }
+
+    onOpacityChanged(listener: (vn: number, vo: number) => void): this {
+        return this.onAttributeChanged("opacity", listener);
+    }
+
+    offOpacityChanged(listener: (vn: number, vo: number) => void): this {
+        return this.offAttributeChanged("opacity", listener);
+    }
 
     abstract getX(): number;
     abstract getY(): number;
@@ -276,23 +218,48 @@ export abstract class SDNode {
     setScale(sx: number | [number, number], sy?: number): this {
         if (Array.isArray(sx)) return this.setScale(sx[0], sx[1]);
         if (sy === undefined) return this.setScale(sx, sx);
-        this.vars.scale = [sx, sy];
-        return this;
+        return this.triggerAttributeChanged(this._.layer, "scale", [sx, sy], this._.scale);
     }
+
     getScale(): [number, number] {
-        return this.vars.scale;
+        return this._.scale;
     }
+
+    onScaleChanged(listener: (vn: [number, number], vo: [number, number]) => void): this {
+        return this.onAttributeChanged("scale", listener);
+    }
+
+    offScaleChanged(listener: (vn: [number, number], vo: [number, number]) => void): this {
+        return this.offAttributeChanged("scale", listener);
+    }
+
     setRotation(rotate: number): this {
-        this.vars.lpset("rotate", rotate);
-        return this;
+        return this.triggerAttributeChanged(this._.layer, "rotate", rotate, this._.rotate);
     }
+
+    onRotateChanged(listener: (vn: number, vo: number) => void): this {
+        return this.onAttributeChanged("rotate", listener);
+    }
+
+    offRotateChanged(listener: (vn: number, vo: number) => void): this {
+        return this.offAttributeChanged("rotate", listener);
+    }
+
     setTranslate(dx: number, dy: number): this;
     setTranslate(d: [number, number]): this;
     setTranslate(dx: number | [number, number], dy?: number): this {
         if (Array.isArray(dx)) return this.setTranslate(dx[0], dx[1]);
-        this.vars.translate = [dx, dy];
-        return this;
+        return this.triggerAttributeChanged(this._.layer, "translate", [dx, dy], this._.translate);
     }
+
+    onTranslateChanged(listener: (vn: [number, number], vo: [number, number]) => void) {
+        return this.onAttributeChanged("translate", listener);
+    }
+
+    offTranslateChanged(listener: (vn: [number, number], vo: [number, number]) => void) {
+        return this.offAttributeChanged("translate", listener);
+    }
+
     setTransformOrigin(x: XLocation, y: YLocation): this;
     setTransformOrigin(origin: [XLocation, YLocation]): this;
     setTransformOrigin(x: XLocation | [XLocation, YLocation], y?: YLocation) {
@@ -309,12 +276,23 @@ export abstract class SDNode {
         };
         const x_ = parse(x, "x", "width");
         const y_ = parse(y, "y", "height");
-        this.vars.transformOrigin = [x_, y_];
-        return this;
+        const vo = this._.transformOrigin;
+        this._.transformOrigin = [x_, y_];
+        return this.triggerAttributeChanged(this._.layer, "transformOrigin", [x_, y_], vo);
     }
+
     getTransformOrigin(): [number, number] {
-        return this.vars.transformOrigin;
+        return this._.transformOrigin;
     }
+
+    onTransformOriginChanged(listener: (vn: [number, number], vo: [number, number]) => void) {
+        return this.onAttributeChanged("transformOrigin", listener);
+    }
+
+    offTransformOriginChanged(listener: (vn: [number, number], vo: [number, number]) => void) {
+        return this.offAttributeChanged("transformOrigin", listener);
+    }
+
     getCenter(): [number, number] {
         return [this.getCenterX(), this.getCenterY()];
     }
@@ -338,9 +316,11 @@ export abstract class SDNode {
     getMaxX() {
         return this.getX() + this.getWidth();
     }
+
     getMaxY() {
         return this.getY() + this.getHeight();
     }
+
     /**
      * Makes this component appear.
      *
@@ -358,6 +338,7 @@ export abstract class SDNode {
             .setOpacity(1)
             .endSubAnimate();
     }
+
     /**
      * Makes this component disappear.
      *
@@ -375,6 +356,7 @@ export abstract class SDNode {
             .setOpacity(0)
             .endSubAnimate();
     }
+
     /**
      * Makes this component zoom in from scale 0 to 1.
      *
@@ -393,6 +375,7 @@ export abstract class SDNode {
             .setScale(1)
             .endSubAnimate();
     }
+
     /**
      * Makes this component zoom out from scale 1 to 0.
      *
@@ -411,6 +394,7 @@ export abstract class SDNode {
             .setScale(0)
             .endSubAnimate();
     }
+
     /**
      * Makes this component fade in by gradually increasing opacity from 0 to 1.
      *
@@ -423,6 +407,7 @@ export abstract class SDNode {
     fadeIn() {
         return this.appear();
     }
+
     /**
      * Makes this component fade out by gradually decreasing opacity from 1 to 0.
      *
@@ -434,6 +419,35 @@ export abstract class SDNode {
      */
     fadeOut() {
         return this.disappear();
+    }
+
+    protected onAttributeChanged(key: string, listener: (vn: any, vo: any) => void) {
+        if (!this._.attributeListeners[key]) this._.attributeListeners[key] = [];
+        this._.attributeListeners[key].push(listener);
+        return this;
+    }
+
+    protected offAttributeChanged(key: string, listener: (vn: any, vo: any) => void) {
+        const index = this._.attributeListeners[key].indexOf(listener);
+        if (index !== -1) this._.attributeListeners[key].splice(index, 1);
+        return this;
+    }
+
+    protected triggerAttributeChanged(
+        object: RenderNode,
+        key: string,
+        vn: any,
+        vo: any,
+        interp?: InterpObject | InterpFunction | LazyInterpFunction | InterpCreator
+    ) {
+        this._[key] = vn;
+        object.setAttribute(key, vn);
+        if (this.duration() > 0 && interp) {
+            const interp_ = isBuiltinInterp(interp) ? interp(object, key) : interp;
+            new Action(this._.start, this._.end, vo, vn, interp_, this._.timingFunction, this, key);
+        }
+        this._.attributeListeners[key]?.forEach(listener => listener(vn, vo));
+        return this;
     }
 
     static __asNode(target: SDNode | RenderNode, object: any, id?: string): SDNode {
@@ -450,30 +464,6 @@ export abstract class SDNode {
             return new Text(target, object).opacity(0);
         }
         return object;
-    }
-    static __action(node: SDNode, _object: any, key: string, interp: InterpCreator) {
-        let object = () => _object;
-        if (typeof _object === "string") object = () => node._[_object];
-        else if (typeof _object === "function") object = _object;
-        return function (vn: any, vo: any) {
-            if (Window.ACTION_TICK !== 0) {
-                const obj = object();
-                if (obj.setAttribute) obj.setAttribute(key, vn);
-                else if (obj[key]) obj[key] = vn;
-                else throw new Error("Unexpected: unable to set property");
-                return;
-            }
-            new Action(
-                node.delay(),
-                node.delay() + node.duration(),
-                vo,
-                vn,
-                interp(object(), key),
-                node._.timingFunction ?? T.easeInOut,
-                node,
-                key
-            );
-        };
     }
 }
 

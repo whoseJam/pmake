@@ -1,8 +1,18 @@
 import { BaseShape } from "@/Node/Shape/BaseShape";
-import { SDNode } from "@/Node/SDNode";
 import { SDColor, Color as C } from "@/Utility/Color";
+import { SDNode } from "@/Node/SDNode";
+import { Interp } from "@/Animate/Interp";
 
 export class Rect extends BaseShape {
+    _: BaseShape["_"] & {
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        rx: number;
+        ry: number;
+    };
+
     constructor(args?: {
         targetNode?: SDNode;
         x?: number;
@@ -43,39 +53,67 @@ export class Rect extends BaseShape {
     }
 
     getX(): number {
-        return this.vars.x;
+        return this._.x;
     }
 
     setX(x: number): this {
-        this.vars.lpset("x", x);
-        return this;
+        return this.triggerAttributeChanged(this._.renderer, "x", x, this._.x, Interp.numberInterp);
+    }
+
+    onXChanged(listener: (vn: number, vo: number) => void) {
+        return this.onAttributeChanged("x", listener);
+    }
+
+    offXChanged(listener: (vn: number, vo: number) => void) {
+        return this.offAttributeChanged("x", listener);
     }
 
     getY(): number {
-        return this.vars.y;
+        return this._.y;
     }
 
     setY(y: number): this {
-        this.vars.lpset("y", y);
-        return this;
+        return this.triggerAttributeChanged(this._.renderer, "y", y, this._.y, Interp.numberInterp);
+    }
+
+    onYChanged(listener: (vn: number, vo: number) => void) {
+        return this.onAttributeChanged("y", listener);
+    }
+
+    offYChanged(listener: (vn: number, vo: number) => void) {
+        return this.offAttributeChanged("y", listener);
     }
 
     getWidth(): number {
-        return this.vars.width;
+        return this._.width;
     }
 
     setWidth(width: number) {
-        this.vars.lpset("width", width);
-        return this;
+        return this.triggerAttributeChanged(this._.renderer, "width", width, this._.width, Interp.numberInterp);
+    }
+
+    onWidthChanged(listener: (vn: number, vo: number) => void): this {
+        return this.onAttributeChanged("width", listener);
+    }
+
+    offWidthChanged(listener: (vn: number, vo: number) => void): this {
+        return this.offAttributeChanged("width", listener);
     }
 
     getHeight(): number {
-        return this.vars.height;
+        return this._.height;
     }
 
     setHeight(height: number) {
-        this.vars.lpset("height", height);
-        return this;
+        return this.triggerAttributeChanged(this._.renderer, "height", height, this._.height, Interp.numberInterp);
+    }
+
+    onHeightChanged(listener: (vn: number, vo: number) => void): this {
+        return this.onAttributeChanged("height", listener);
+    }
+
+    offHeightChanged(listener: (vn: number, vo: number) => void): this {
+        return this.offAttributeChanged("height", listener);
     }
 
     setCenterX(cx: number) {
@@ -102,21 +140,19 @@ export class Rect extends BaseShape {
     }
 
     getRx(): number {
-        return this.vars.rx;
+        return this._.rx;
     }
 
     setRx(rx: number): this {
-        this.vars.lpset("rx", rx);
-        return this;
+        return this.triggerAttributeChanged(this._.renderer, "rx", rx, this._.rx, Interp.numberInterp);
     }
 
     getRy(): number {
-        return this.vars.ry;
+        return this._.ry;
     }
 
     setRy(ry: number): this {
-        this.vars.lpset("ry", ry);
-        return this;
+        return this.triggerAttributeChanged(this._.renderer, "ry", ry, this._.ry, Interp.numberInterp);
     }
 
     setBorderRadius(r: number): this {

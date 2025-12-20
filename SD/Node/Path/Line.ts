@@ -1,3 +1,7 @@
+import { Action } from "@/Animate/Action";
+import { Interp } from "@/Animate/Interp";
+import { Window } from "@/Animate/Window";
+import { TimingFunction as T } from "@/Math/TimingFunction";
 import { Vector as V } from "@/Math/Vector";
 import { BasePath } from "@/Node/Path/BasePath";
 import { SDNode } from "@/Node/SDNode";
@@ -43,39 +47,115 @@ export class Line extends BasePath {
     }
 
     getX1(): number {
-        return this.vars.x1;
+        return this._.x1;
     }
 
     setX1(x1: number): this {
-        this.vars.lpset("x1", x1);
+        const vo = this._.x1;
+        this._.x1 = x1;
+        this.watchX1(x1, vo);
         return this;
+    }
+    watchX1(vn: number, vo: number) {
+        if (Math.abs(vn - vo) < 1) return;
+        if (Window.ACTION_TICK !== 0) {
+            this._.renderer.setAttribute("x1", vn);
+            return;
+        }
+        new Action(
+            this.delay(),
+            this.delay() + this.duration(),
+            vo,
+            vn,
+            Interp.numberInterp(this._.renderer, "x1"),
+            this._.timingFunction ?? T.easeInOut,
+            this,
+            "x1"
+        );
     }
 
     getX2(): number {
-        return this.vars.x2;
+        return this._.x2;
     }
 
     setX2(x2: number): this {
-        this.vars.lpset("x2", x2);
+        const vo = this._.x2;
+        this._.x2 = x2;
+        this.watchX2(x2, vo);
         return this;
+    }
+    watchX2(vn: number, vo: number) {
+        if (Math.abs(vn - vo) < 1) return;
+        if (Window.ACTION_TICK !== 0) {
+            this._.renderer.setAttribute("x2", vn);
+            return;
+        }
+        new Action(
+            this.delay(),
+            this.delay() + this.duration(),
+            vo,
+            vn,
+            Interp.numberInterp(this._.renderer, "x2"),
+            this._.timingFunction ?? T.easeInOut,
+            this,
+            "x2"
+        );
     }
 
     getY1(): number {
-        return this.vars.y1;
+        return this._.y1;
     }
 
     setY1(y1: number) {
-        this.vars.lpset("y1", y1);
+        const vo = this._.y1;
+        this._.y1 = y1;
+        this.watchY1(y1, vo);
         return this;
+    }
+    watchY1(vn: number, vo: number) {
+        if (Math.abs(vn - vo) < 1) return;
+        if (Window.ACTION_TICK !== 0) {
+            this._.renderer.setAttribute("y1", vn);
+            return;
+        }
+        new Action(
+            this.delay(),
+            this.delay() + this.duration(),
+            vo,
+            vn,
+            Interp.numberInterp(this._.renderer, "y1"),
+            this._.timingFunction ?? T.easeInOut,
+            this,
+            "y1"
+        );
     }
 
     getY2(): number {
-        return this.vars.y2;
+        return this._.y2;
     }
 
     setY2(y2: number): this {
-        this.vars.lpset("y2", y2);
+        const vo = this._.y2;
+        this._.y2 = y2;
+        this.watchY2(y2, vo);
         return this;
+    }
+    watchY2(vn: number, vo: number) {
+        if (Math.abs(vn - vo) < 1) return;
+        if (Window.ACTION_TICK !== 0) {
+            this._.renderer.setAttribute("y2", vn);
+            return;
+        }
+        new Action(
+            this.delay(),
+            this.delay() + this.duration(),
+            vo,
+            vn,
+            Interp.numberInterp(this._.renderer, "y2"),
+            this._.timingFunction ?? T.easeInOut,
+            this,
+            "y2"
+        );
     }
 
     getSourcePoint(): [number, number] {

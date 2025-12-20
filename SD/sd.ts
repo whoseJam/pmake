@@ -25,7 +25,7 @@ export { Rect } from "@/Node/Shape/Rect";
 // export { Math } from "@/Node/Text/Math";
 export { Text } from "@/Node/Text/Text";
 export { Marker } from "@/Node/Define/Marker";
-export { init, inter, irreversible, main, make1d, make2d, reversible } from "@/Utility/Base";
+export { init, inter, main, make1d, make2d, loopUpdate } from "@/Utility/Base";
 export { color } from "@/Utility/Color";
 export { rand } from "@/Utility/Random";
 export { input } from "@/Utility/Reader";

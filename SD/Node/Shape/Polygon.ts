@@ -1,3 +1,7 @@
+import { Action } from "@/Animate/Action";
+import { Interp } from "@/Animate/Interp";
+import { Window } from "@/Animate/Window";
+import { TimingFunction as T } from "@/Math/TimingFunction";
 import { BaseShape } from "@/Node/Shape/BaseShape";
 import { PolygonEngine } from "@/Node/Shape/PolygonEngine";
 
@@ -12,22 +16,23 @@ export class Polygon extends BaseShape {
         this.setType("Polygon");
     }
     getX() {
-        return PolygonEngine.pointsToBox(this.vars.points).x;
+        return PolygonEngine.pointsToBox(this._.points).x;
     }
     getY() {
-        return PolygonEngine.pointsToBox(this.vars.points).y;
+        return PolygonEngine.pointsToBox(this._.points).y;
     }
     getWidth() {
-        return PolygonEngine.pointsToBox(this.vars.points).width;
+        return PolygonEngine.pointsToBox(this._.points).width;
     }
     getHeight() {
-        return PolygonEngine.pointsToBox(this.vars.points).height;
+        return PolygonEngine.pointsToBox(this._.points).height;
     }
     getPoints() {
-        return this.vars.points;
+        return this._.points;
     }
     setPoints(points: Array<[number, number]>): this {
-        this.vars.points = points;
+        const vo = this._.points;
+        this._.points = points;
         return this;
     }
 }

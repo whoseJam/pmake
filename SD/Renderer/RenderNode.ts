@@ -5,6 +5,7 @@ import { isStyleKey, setAttribute } from "@/Renderer/Attribute";
 import { HTML, HTML_INNERHTML_SET } from "@/Renderer/HTML";
 import { SVG } from "@/Renderer/SVG";
 import { Dom } from "@/Utility/Dom";
+import { Window } from "@/Animate/Window";
 
 function parseText(text: string) {
     let ans = "";
@@ -116,6 +117,10 @@ export class RenderNode {
                 label: element,
             });
         }
+        if (Window.ACTION_TICK > 0) {
+            this.__appendChild(element);
+            return this;
+        }
         const l = element.delay();
         const r = element.delay() + element.duration();
         const source = element.targetLayer;
@@ -133,6 +138,10 @@ export class RenderNode {
     }
 
     appendChild(element: RenderNode) {
+        if (Window.ACTION_TICK > 0) {
+            this.__appendChild(element);
+            return this;
+        }
         const l = element.delay();
         const r = element.delay() + element.duration();
         const source = element.targetLayer;
@@ -150,6 +159,10 @@ export class RenderNode {
     }
 
     insertBefore(element: RenderNode, referenced: RenderNode) {
+        if (Window.ACTION_TICK > 0) {
+            this.__insertBefore(element, referenced);
+            return this;
+        }
         const l = element.delay();
         const r = element.delay() + element.duration();
         const source = element.targetLayer;
@@ -168,6 +181,10 @@ export class RenderNode {
 
     remove() {
         if (!this.targetLayer) return this;
+        if (Window.ACTION_TICK > 0) {
+            this.__remove();
+            return this;
+        }
         const l = this.delay();
         const r = this.delay() + this.duration();
         const source = this.targetLayer;
@@ -194,6 +211,7 @@ export class RenderNode {
     }
 
     __appendChild(element: Element | RenderNode) {
+        console.log("append child, element=", element, "this=", this);
         const element_ = element instanceof RenderNode ? element.element() : element;
         this.element().appendChild(element_);
         return this;

@@ -1,3 +1,7 @@
+import { Action } from "@/Animate/Action";
+import { Interp } from "@/Animate/Interp";
+import { Window } from "@/Animate/Window";
+import { TimingFunction as T } from "@/Math/TimingFunction";
 import { BaseShape } from "@/Node/Shape/BaseShape";
 import { SDColor, Color as C } from "@/Utility/Color";
 import { SDNode } from "@/Node/SDNode";
@@ -55,20 +59,24 @@ export class Ellipse extends BaseShape {
     }
 
     getCenterX(): number {
-        return this.vars.cx;
+        return this._.cx;
     }
 
     setCenterX(cx: number): this {
-        this.vars.lpset("cx", cx);
+        const vo = this._.cx;
+        this._.cx = cx;
+
         return this;
     }
 
     getCenterY(): number {
-        return this.vars.cy;
+        return this._.cy;
     }
 
     setCenterY(cy: number): this {
-        this.vars.lpset("cy", cy);
+        const vo = this._.cy;
+        this._.cy = cy;
+
         return this;
     }
 
@@ -80,20 +88,23 @@ export class Ellipse extends BaseShape {
     }
 
     getRx(): number {
-        return this.vars.rx;
+        return this._.rx;
     }
 
     setRx(rx: number): this {
-        this.vars.lpset("rx", rx);
+        const vo = this._.rx;
+        this._.rx = rx;
+
         return this;
     }
 
     getRy(): number {
-        return this.vars.ry;
+        return this._.ry;
     }
 
     setRy(ry: number): this {
-        this.vars.lpset("ry", ry);
+        const vo = this._.ry;
+        this._.ry = ry;
         return this;
     }
 }

@@ -1,15 +1,28 @@
-import { Interp } from "@/Animate/Interp";
 import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
-import { Color as C, SDAllColor, SDHEXColor } from "@/Utility/Color";
+import { Color as C, SDAllColor, SDHEXColor, SDRGBAColor } from "@/Utility/Color";
 
 export abstract class SDSVGNode extends SDNode {
+    _: SDNode["_"] & {
+        fill: SDRGBAColor;
+        stroke: SDRGBAColor;
+        fillOpacity: number;
+        strokeOpacity: number;
+        strokeWidth: number;
+        strokeDashOffset: number;
+        strokeDashArray: Array<number>;
+    };
+
+    constructor() {
+        super();
+    }
+
     /**
      * Gets the fill color of this component.
      * @returns The fill color.
      */
     getFill(): SDHEXColor {
-        return C.toHEX(this.vars.fill);
+        return C.toHEX(this._.fill);
     }
 
     /**
@@ -18,8 +31,15 @@ export abstract class SDSVGNode extends SDNode {
      * @returns The current component instance for method chaining.
      */
     setFill(fill?: SDAllColor) {
-        this.vars.fill = C.toRGBA(C.toFill(fill));
-        return this;
+        return this.triggerAttributeChanged(this._.renderer, "fill", C.toRGBA(C.toFill(fill)), this._.fill);
+    }
+
+    onFillChanged(listener: (vn: any, vo: any) => void) {
+        return this.onAttributeChanged("fill", listener);
+    }
+
+    offFillChanged(listener: (vn: any, vo: any) => void) {
+        return this.offAttributeChanged("fill", listener);
     }
 
     /**
@@ -27,7 +47,7 @@ export abstract class SDSVGNode extends SDNode {
      * @returns The stroke color.
      */
     getStroke(): SDHEXColor {
-        return C.toHEX(this.vars.stroke);
+        return C.toHEX(this._.stroke);
     }
 
     /**
@@ -36,98 +56,104 @@ export abstract class SDSVGNode extends SDNode {
      * @returns The current component instance for method chaining.
      */
     setStroke(stroke: SDAllColor): this {
-        this.vars.stroke = C.toRGBA(C.toStroke(stroke));
-        return this;
+        return this.triggerAttributeChanged(this._.renderer, "stroke", C.toRGBA(C.toStroke(stroke)), this._.stroke);
+    }
+
+    onStrokeChanged(listener: (vn: any, vo: any) => void) {
+        return this.onAttributeChanged("stroke", listener);
+    }
+
+    offStrokeChanged(listener: (vn: any, vo: any) => void) {
+        return this.offAttributeChanged("stroke", listener);
     }
 
     getFillOpacity(): number {
-        return this.vars.fillOpacity;
+        return this._.fillOpacity;
     }
 
     setFillOpacity(opacity: number): this {
-        this.vars.mpset("fillOpacity", opacity);
-        return this;
+        return this.triggerAttributeChanged(this._.renderer, "fillOpacity", opacity, this._.fillOpacity);
+    }
+
+    onFillOpacityChanged(listener: (vn: number, vo: number) => void) {
+        return this.onAttributeChanged("fillOpacity", listener);
+    }
+
+    offFillOpacityChanged(listener: (vn: number, vo: number) => void) {
+        return this.offAttributeChanged("fillOpacity", listener);
     }
 
     getStrokeOpacity(): number {
-        return this.vars.strokeOpacity;
+        return this._.strokeOpacity;
     }
 
     setStrokeOpacity(opacity: number): this {
-        this.vars.mpset("strokeOpacity", opacity);
-        return this;
+        return this.triggerAttributeChanged(this._.renderer, "strokeOpacity", opacity, this._.strokeOpacity);
+    }
+
+    onStrokeOpacityChanged(listener: (vn: number, vo: number) => void) {
+        return this.onAttributeChanged("strokeOpacity", listener);
+    }
+
+    offStrokeOpacityChanged(listener: (vn: number, vo: number) => void) {
+        return this.offAttributeChanged("strokeOpacity", listener);
     }
 
     getStrokeWidth(): number {
-        return this.vars.strokeWidth;
+        return this._.strokeWidth;
     }
 
     setStrokeWidth(width: number): this {
-        this.vars.mpset("strokeWidth", width);
-        return this;
+        return this.triggerAttributeChanged(this._.renderer, "strokeWidth", width, this._.strokeWidth);
+    }
+
+    onStrokeWidthChanged(listener: (vn: number, vo: number) => void) {
+        return this.onAttributeChanged("strokeWidth", listener);
+    }
+
+    offStrokeWidthChanged(listener: (vn: number, vo: number) => void) {
+        return this.offAttributeChanged("strokeWidth", listener);
     }
 
     getStrokeDashOffset(): number {
-        return this.vars.strokeDashOffset;
+        return this._.strokeDashOffset;
     }
 
     setStrokeDashOffset(offset: number): this {
-        this.vars.lpset("strokeDashOffset", offset);
-        return this;
+        return this.triggerAttributeChanged(this._.renderer, "strokeDashOffset", offset, this._.strokeDashOffset);
+    }
+
+    onStrokeDashOffsetChanged(listener: (vn: number, vo: number) => void) {
+        return this.onAttributeChanged("strokeDashOffset", listener);
+    }
+
+    offStrokeDashOffsetChanged(listener: (vn: number, vo: number) => void) {
+        return this.offAttributeChanged("strokeDashOffset", listener);
     }
 
     getStrokeDashArray(): Array<number> {
-        return this.vars.strokeDashArray;
+        return this._.strokeDashArray;
     }
 
     setStrokeDashArray(array: Array<number>): this {
-        this.vars.strokeDashArray = array;
-        return this;
+        return this.triggerAttributeChanged(this._.renderer, "strokeDashArray", array, this._.strokeDashArray);
+    }
+
+    onStrokeDashArrayChanged(listener: (vn: Array<number>, vo: Array<number>) => void) {
+        return this.onAttributeChanged("strokeDashArray", listener);
+    }
+
+    offStrokeDashArrayChanged(listener: (vn: Array<number>, vo: Array<number>) => void) {
+        return this.offAttributeChanged("strokeDashArray", listener);
     }
 
     __createSVGNode(label: string, attributes: { [key: string]: any }): RenderNode {
-        this.vars.merge(attributes);
+        Object.assign(this._, attributes);
         const object = RenderNode.createRenderNode(this, this.getLayer(), label);
-        const attributeMap = {
-            x: ["x", Interp.numberInterp],
-            y: ["y", Interp.numberInterp],
-            x1: ["x1", Interp.numberInterp],
-            y1: ["y1", Interp.numberInterp],
-            x2: ["x2", Interp.numberInterp],
-            y2: ["y2", Interp.numberInterp],
-            d: ["d", Interp.pathInterp],
-            cx: ["cx", Interp.numberInterp],
-            cy: ["cy", Interp.numberInterp],
-            r: ["r", Interp.numberInterp],
-            rx: ["rx", Interp.numberInterp],
-            ry: ["ry", Interp.numberInterp],
-            width: ["width", Interp.numberInterp],
-            height: ["height", Interp.numberInterp],
-            fontSize: ["font-size", Interp.numberInterp],
-            fontFamily: ["font-family", Interp.stringInterp],
-            points: ["points", Interp.pointsInterp],
-            fill: ["fill", Interp.colorInterp],
-            stroke: ["stroke", Interp.colorInterp],
-            fillOpacity: ["fill-opacity", Interp.numberInterp],
-            strokeOpacity: ["stroke-opacity", Interp.numberInterp],
-            strokeWidth: ["stroke-width", Interp.numberInterp],
-            strokeDashOffset: ["stroke-dashoffset", Interp.numberInterp],
-            strokeDashArray: ["stroke-dasharray", Interp.arrayInterp],
-            markerStart: ["marker-start", Interp.stringInterp],
-            markerMid: ["marker-mid", Interp.stringInterp],
-            markerEnd: ["marker-end", Interp.stringInterp],
-            src: ["href", Interp.stringInterp],
-        };
+        this._.renderer = object;
         for (const key in attributes) {
-            if (!attributeMap[key]) {
-                object.setAttribute(key, attributes[key]);
-                continue;
-            }
-            const [aliasKey, interp] = attributeMap[key];
-            const watchCallback = SDNode.__action(this, object, aliasKey, interp);
-            this.vars.watch(key, watchCallback);
-            if (aliasKey !== "stroke-dasharray" && aliasKey !== "stroke-dashoffset")
-                object.setAttribute(aliasKey, attributes[key]);
+            const value = attributes[key];
+            object.setAttribute(key, value);
         }
         return object;
     }

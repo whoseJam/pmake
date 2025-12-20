@@ -35,40 +35,41 @@ class AttributeConverter {
 }
 
 const ATTRIBUTE_KEY_MAP: Record<string, AttributeConverter> = {
-    "fill": new AttributeConverter("fill", C.white, color => C.toString(color)),
-    "stroke": new AttributeConverter("stroke", C.black, color => C.toString(color)),
-    "scale": new AttributeConverter("transform", undefined, (value: [number, number], context: Context) => {
+    fill: new AttributeConverter("fill", C.white, color => C.toString(color)),
+    stroke: new AttributeConverter("stroke", C.black, color => C.toString(color)),
+    scale: new AttributeConverter("transform", undefined, (value: [number, number], context: Context) => {
         context.scale = value;
         const scale = context.scale ?? [1, 1];
         const translate = context.translate ?? [0, 0];
         const rotate = context.rotate ?? 0;
         return `matrix(${scale[0]}, 0, 0, ${scale[1]}, ${translate[0]}, ${translate[1]}) rotate(${rotate})`;
     }),
-    "rotate": new AttributeConverter("transform", undefined, (value: any, context: Context) => {
+    rotate: new AttributeConverter("transform", undefined, (value: any, context: Context) => {
         context.rotate = value;
         const scale = context.scale ?? [1, 1];
         const translate = context.translate ?? [0, 0];
         const rotate = context.rotate ?? 0;
         return `matrix(${scale[0]}, 0, 0, ${scale[1]}, ${translate[0]}, ${translate[1]}) rotate(${rotate})`;
     }),
-    "translate": new AttributeConverter("transform", undefined, (value: [number, number], context: Context) => {
+    translate: new AttributeConverter("transform", undefined, (value: [number, number], context: Context) => {
         context.translate = value;
         const scale = context.scale ?? [1, 1];
         const translate = context.translate ?? [0, 0];
         const rotate = context.rotate ?? 0;
         return `matrix(${scale[0]}, 0, 0, ${scale[1]}, ${translate[0]}, ${translate[1]}) rotate(${rotate})`;
     }),
-    "transform-origin": new AttributeConverter(
+    transformOrigin: new AttributeConverter(
         "transform-origin",
         undefined,
         (value: [number, number]) => `${value[0]} ${value[1]}`
     ),
-    "stroke-dasharray": new AttributeConverter("stroke-dasharray", undefined, (value: Array<number>) => {
+    strokeDashArray: new AttributeConverter("stroke-dasharray", undefined, (value: Array<number>) => {
         let dashed = 0;
         for (let i = 1; i < value.length; i += 2) dashed += value[i];
         if (dashed > 0) return value.join(" ");
         return undefined;
     }),
+    strokeDashOffset: new AttributeConverter("stroke-dashoffset", undefined, (value: number) => `${value}`),
 };
 
 export function setAttribute(element: Element, key: string, value: any) {

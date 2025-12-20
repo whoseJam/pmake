@@ -1,3 +1,7 @@
+import { Action } from "@/Animate/Action";
+import { Interp } from "@/Animate/Interp";
+import { Window } from "@/Animate/Window";
+import { TimingFunction as T } from "@/Math/TimingFunction";
 import { BasePath } from "@/Node/Path/BasePath";
 import { PolylineEngine } from "@/Node/Path/PolylineEngine";
 import { SDNode } from "@/Node/SDNode";
@@ -16,39 +20,40 @@ export class Polyline extends BasePath {
     }
 
     getX() {
-        return PolylineEngine.toBox(this.vars.points).x;
+        return PolylineEngine.toBox(this._.points).x;
     }
 
     getY() {
-        return PolylineEngine.toBox(this.vars.points).y;
+        return PolylineEngine.toBox(this._.points).y;
     }
 
     getWidth() {
-        return PolylineEngine.toBox(this.vars.points).width;
+        return PolylineEngine.toBox(this._.points).width;
     }
 
     getHeight() {
-        return PolylineEngine.toBox(this.vars.points).height;
+        return PolylineEngine.toBox(this._.points).height;
     }
 
     getPointAtRate(k: number) {
-        return PolylineEngine.getPointByRate(this.vars.points, k);
+        return PolylineEngine.getPointByRate(this._.points, k);
     }
 
     getPointAtLength(length: number): [number, number] {
-        return PolylineEngine.getPointAtLength(this.vars.points, length);
+        return PolylineEngine.getPointAtLength(this._.points, length);
     }
 
     totalLength(): number {
-        return PolylineEngine.getTotalLength(this.vars.points);
+        return PolylineEngine.getTotalLength(this._.points);
     }
 
     getPoints(): Array<[number, number]> {
-        return this.vars.points;
+        return this._.points;
     }
 
     setPoints(points: Array<[number, number]>): this {
-        this.vars.points = points;
+        const vo = this._.points;
+        this._.points = points;
         return this;
     }
 }

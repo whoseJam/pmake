@@ -1,3 +1,7 @@
+import { Action } from "@/Animate/Action";
+import { Interp } from "@/Animate/Interp";
+import { Window } from "@/Animate/Window";
+import { TimingFunction as T } from "@/Math/TimingFunction";
 import { BaseShape } from "@/Node/Shape/BaseShape";
 
 export class Image extends BaseShape {
@@ -16,38 +20,48 @@ export class Image extends BaseShape {
         });
     }
     getX(): number {
-        return this.vars.x;
+        return this._.x;
     }
     setX(x: number): this {
-        this.vars.lpset("x", x);
+        const vo = this._.x;
+        this._.x = x;
         return this;
     }
+
     getY(): number {
-        return this.vars.y;
+        return this._.y;
     }
     setY(y: number): this {
-        this.vars.lpset("y", y);
+        const vo = this._.y;
+        this._.y = y;
+
         return this;
     }
+
     getWidth(): number {
-        return this.vars.width;
+        return this._.width;
     }
     setWidth(width: number): this {
-        this.vars.lpset("width", width);
+        const vo = this._.width;
+        this._.width = width;
         return this;
     }
+
     getHeight(): number {
-        return this.vars.height;
+        return this._.height;
     }
     setHeight(height: number): this {
-        this.vars.lpset("height", height);
+        const vo = this._.height;
+        this._.height = height;
+
         return this;
     }
     getSrc(): string {
-        return this.vars.src;
+        return this._.src;
     }
     setSrc(src: string): this {
-        this.vars.src = src;
+        const vo = this._.src;
+        this._.src = src;
         return this;
     }
 }

@@ -1,4 +1,5 @@
 import { FIRST_INTER_STAGE, LAST_INTER_STAGE, LAST_MAIN_STAGE, pause, Window } from "@/Animate/Window";
+import { Animate as A } from "@/Animate/Animate";
 
 let initFinished: boolean = true;
 
@@ -46,6 +47,17 @@ export async function main(callback: () => void | Promise<void>): Promise<void> 
         }
     };
     setTimeout(fn, 20);
+}
+
+export async function loopUpdate(callback: (t: number) => void | Promise<void>): Promise<void> {
+    A.shouldStop = true;
+    A.forceToFinish();
+    Window.ACTION_TICK = 1000;
+    const wrapper = (dt: number) => {
+        callback(dt);
+        requestAnimationFrame(wrapper);
+    };
+    requestAnimationFrame(wrapper);
 }
 
 /**
