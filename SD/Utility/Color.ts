@@ -275,7 +275,8 @@ function numberToHex(number: number): string {
 }
 
 function hexToRgb(hex: string): SDRGBColor {
-    const color = hex.replace("#", "");
+    let color = hex.replace("#", "");
+    if (color.length === 3) color = color[0] + color[0] + color[1] + color[1] + color[2] + color[2];
     return {
         r: hexToNumber(color.slice(0, 2)),
         g: hexToNumber(color.slice(2, 4)),
@@ -284,8 +285,8 @@ function hexToRgb(hex: string): SDRGBColor {
 }
 
 function hexToRgba(hex: SDHEXColor): SDRGBAColor {
-    console.log("hex=", hex);
-    const color = hex.replace("#", "");
+    let color = hex.replace("#", "");
+    if (color.length === 3) color = color[0] + color[0] + color[1] + color[1] + color[2] + color[2];
     return {
         r: hexToNumber(color.slice(0, 2)),
         g: hexToNumber(color.slice(2, 4)),

@@ -62,6 +62,13 @@ export class Circle extends BaseShape {
         return this.setCenterY(cy);
     }
 
+    setCenter(center: [number, number]): this;
+    setCenter(cx: number, cy: number): this;
+    setCenter(cx: number | [number, number], cy?: number) {
+        if (Array.isArray(cx)) return this.setCenter(cx[0], cx[1]);
+        return this.setCenterX(cx).setCenterY(cy);
+    }
+
     getR(): number {
         return this.vars.r;
     }

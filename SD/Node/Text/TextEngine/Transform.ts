@@ -52,6 +52,16 @@ export function transformPostProcess(text: Text, targetLayer: RenderNode) {
                     character.setAttribute("d", source.d);
                     createAction(character, 1, 0, Interp.numberInterp, "opacity");
                     continue;
+                } else if (source === undefined && target === undefined) {
+                    continue;
+                } else if (source === undefined) {
+                    character.setAttribute("d", target.d);
+                    createAction(character, 0, 1, Interp.numberInterp, "opacity");
+                    continue;
+                } else if (target === undefined) {
+                    character.setAttribute("d", source.d);
+                    createAction(character, 1, 0, Interp.numberInterp, "opacity");
+                    continue;
                 }
                 character.setAttribute("d", source.d);
                 createAction(character, source.d, target.d, Interp.pathInterp, "d");
