@@ -39,6 +39,7 @@ export abstract class SDNode {
         subAnimates: Array<Context>;
         timingFunction: SDTimingFunction;
         layer: RenderNode;
+        renderer: RenderNode;
         opacity: number;
         scale: [number, number];
         rotate: number;

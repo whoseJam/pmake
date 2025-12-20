@@ -50,9 +50,6 @@ export async function main(callback: () => void | Promise<void>): Promise<void> 
 }
 
 export async function loopUpdate(callback: (t: number) => void | Promise<void>): Promise<void> {
-    A.shouldStop = true;
-    A.forceToFinish();
-    Window.ACTION_TICK = 1000;
     const wrapper = (dt: number) => {
         callback(dt);
         requestAnimationFrame(wrapper);

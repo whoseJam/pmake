@@ -1,7 +1,4 @@
-import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
-import { Window } from "@/Animate/Window";
-import { TimingFunction as T } from "@/Math/TimingFunction";
 import { BaseShape } from "@/Node/Shape/BaseShape";
 import { SDColor, Color as C } from "@/Utility/Color";
 import { SDNode } from "@/Node/SDNode";
@@ -25,7 +22,7 @@ export class Ellipse extends BaseShape {
 
         this.setType("Ellipse");
 
-        this.__createSVGNode("ellipse", {
+        this._.renderer = this.__createSVGNode("ellipse", {
             rx: args?.rx ?? 20,
             ry: args?.ry ?? 20,
             cx: args?.cx ?? 20,
@@ -42,42 +39,100 @@ export class Ellipse extends BaseShape {
         args?.targetNode?.appendChild(this);
     }
 
-    getX() {
+    getX(): number {
         return this.getCenterX() - this.getRx();
     }
 
-    getY() {
+    setX(x: number): this {
+        return this.setCenterX(this.getCenterX() + x - this.getX());
+    }
+
+    getY(): number {
         return this.getCenterY() - this.getRy();
     }
 
-    getWidth() {
+    setY(y: number): this {
+        return this.setCenterY(this.getCenterY() + y - this.getY());
+    }
+
+    getWidth(): number {
         return this.getRx() * 2;
     }
 
-    getHeight() {
+    setWidth(width: number): this {
+        return this.setRx(width / 2);
+    }
+
+    getHeight(): number {
         return this.getRy() * 2;
     }
 
-    getCenterX(): number {
+    setHeight(height: number): this {
+        return this.setRy(height / 2);
+    }
+
+    getCx(): number {
         return this._.cx;
     }
 
-    setCenterX(cx: number): this {
-        const vo = this._.cx;
-        this._.cx = cx;
-
-        return this;
+    setCx(cx: number): this {
+        return this.triggerAttributeChanged(this._.renderer, "cx", cx, this._.cx, Interp.numberInterp);
     }
 
-    getCenterY(): number {
+    onCxChanged(listener: (vn: number, vo: number) => void) {
+        return this.onAttributeChanged("cx", listener);
+    }
+
+    offCxChanged(listener: (vn: number, vo: number) => void) {
+        return this.offAttributeChanged("cx", listener);
+    }
+
+    getCenterX(): number {
+        return this.getCx();
+    }
+
+    setCenterX(cx: number): this {
+        return this.setCx(cx);
+    }
+
+    onCenterXChanged(listener: (vn: number, vo: number) => void) {
+        return this.onCxChanged(listener);
+    }
+
+    offCenterXChanged(listener: (vn: number, vo: number) => void) {
+        return this.offCxChanged(listener);
+    }
+
+    getCy(): number {
         return this._.cy;
     }
 
-    setCenterY(cy: number): this {
-        const vo = this._.cy;
-        this._.cy = cy;
+    setCy(cy: number): this {
+        return this.triggerAttributeChanged(this._.renderer, "cy", cy, this._.cy, Interp.numberInterp);
+    }
 
-        return this;
+    onCyChanged(listener: (vn: number, vo: number) => void) {
+        return this.onAttributeChanged("cy", listener);
+    }
+
+    offCyChanged(listener: (vn: number, vo: number) => void) {
+        return this.offAttributeChanged("cy", listener);
+    }
+
+    getCenterY(): number {
+        return this.getCy();
+    }
+
+    setCenterY(cy: number): this {
+        return this.setCy(cy);
+    }
+
+    onCenterYChanged(listener: (vn: number, vo: number) => void) {
+        return this.onCyChanged(listener);
+    }
+
+    offCenterYChanged(listener: (vn: number, vo: number) => void) {
+        return this.offCyChanged(listener);
     }
 
     setCenter(center: [number, number]): this;
@@ -92,10 +147,15 @@ export class Ellipse extends BaseShape {
     }
 
     setRx(rx: number): this {
-        const vo = this._.rx;
-        this._.rx = rx;
+        return this.triggerAttributeChanged(this._.renderer, "rx", rx, this._.rx, Interp.numberInterp);
+    }
 
-        return this;
+    onRxChanged(listener: (vn: number, vo: number) => void) {
+        return this.onAttributeChanged("rx", listener);
+    }
+
+    offRxChanged(listener: (vn: number, vo: number) => void) {
+        return this.offAttributeChanged("rx", listener);
     }
 
     getRy(): number {
@@ -103,8 +163,14 @@ export class Ellipse extends BaseShape {
     }
 
     setRy(ry: number): this {
-        const vo = this._.ry;
-        this._.ry = ry;
-        return this;
+        return this.triggerAttributeChanged(this._.renderer, "ry", ry, this._.ry, Interp.numberInterp);
+    }
+
+    onRyChanged(listener: (vn: number, vo: number) => void) {
+        return this.onAttributeChanged("ry", listener);
+    }
+
+    offRyChanged(listener: (vn: number, vo: number) => void) {
+        return this.offAttributeChanged("ry", listener);
     }
 }
