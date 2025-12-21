@@ -8,7 +8,7 @@ import { RenderNode } from "@/Renderer/RenderNode";
 type Percent = `${number}%`;
 type NumberOrPercent = number | Percent;
 type XLocationString = "left" | "center" | "right";
-type YLocationString = "top" | "middle" | "bottom";
+type YLocationString = "top" | "center" | "bottom";
 type XLocation = NumberOrPercent | XLocationString;
 type YLocation = NumberOrPercent | YLocationString;
 
@@ -27,8 +27,8 @@ export abstract class SDNode {
         end: number;
         subAnimates: Array<Context>;
         timingFunction: SDTimingFunction;
-        layer: RenderNode;
         renderer: RenderNode;
+        foreign?: RenderNode;
         opacity: number;
         scale: [number, number];
         rotate: number;
@@ -47,7 +47,6 @@ export abstract class SDNode {
             end: 0,
             subAnimates: [],
             timingFunction: undefined,
-            layer: undefined,
             ready: false,
             opacity: 1,
             scale: [1, 1],
@@ -56,69 +55,11 @@ export abstract class SDNode {
             transformOrigin: ["50%", "50%"],
             attributeListeners: {},
         };
-
-        this._.layer = RenderNode.createRenderNode(this, undefined, "g");
     }
 
-    /**
-     * Gets the type label of this component.
-     * Returns undefined if the type was not defined during component initialization.
-     * @returns {string | undefined} The type label if defined; otherwise, undefined.
-     */
-    getType(): string {
-        return this._.layer.getAttribute("type");
-    }
-
-    /**
-     * Sets the type label for this component.
-     * This method should be called during component initialization.
-     * @param type - The type label to assign to the component.
-     * @returns The current component instance for method chaining.
-     */
-    setType(type: string): this {
-        this._.layer.setAttribute("type", type);
-        return this;
-    }
-
-    /**
-     * Gets the default render layer for this component.
-     * The layer determines the display order and may affect visual stacking (z-index).
-     * @returns The render layer associated with this component.
-     */
-    getLayer(): RenderNode {
-        return this._.layer;
-    }
-
-    /**
-     * Creates a new named render layer on this component.
-     * Newly created layers are stacked above existing ones.
-     * @param name - The unique identifier for the new layer.
-     * @returns The current component instance for method chaining.
-     */
-    newLayer(name: string) {
-        const layer = RenderNode.createRenderNodeWithoutAction(this, this._.layer, "g");
-        this._.layers[name] = layer;
-        layer.setAttribute("layer", name);
-        return this;
-    }
-
-    append(child: SDNode | RenderNode) {
-        if (child instanceof SDNode) this.getLayer().append(child.getLayer());
-        else this.getLayer().append(child);
-        return this;
-    }
-
-    appendChild(child: SDNode | RenderNode) {
-        if (child instanceof SDNode) this.getLayer().appendChild(child.getLayer());
-        else this.getLayer().appendChild(child);
-        return this;
-    }
-
-    insertBefore(child: SDNode | RenderNode, referenced: SDNode | RenderNode) {
-        const child_ = child instanceof SDNode ? child.getLayer() : child;
-        const referenced_ = referenced instanceof SDNode ? referenced.getLayer() : referenced;
-        this.getLayer().insertBefore(child_, referenced_);
-        return this;
+    getRootRenderNode(): RenderNode {
+        if (this._.foreign) return this._.foreign;
+        return this._.renderer;
     }
 
     startSubAnimate() {
@@ -208,7 +149,7 @@ export abstract class SDNode {
     setScale(sx: number | [number, number], sy?: number): this {
         if (Array.isArray(sx)) return this.setScale(sx[0], sx[1]);
         if (sy === undefined) return this.setScale(sx, sx);
-        return this.triggerAttributeChanged(this._.layer, "scale", [sx, sy], this._.scale);
+        return this.triggerAttributeChanged(this._.renderer, "scale", [sx, sy], this._.scale);
     }
 
     getScale(): [number, number] {
@@ -224,7 +165,7 @@ export abstract class SDNode {
     }
 
     setRotation(rotate: number): this {
-        return this.triggerAttributeChanged(this._.layer, "rotate", rotate, this._.rotate);
+        return this.triggerAttributeChanged(this._.renderer, "rotate", rotate, this._.rotate);
     }
 
     onRotateChanged(listener: (vn: number, vo: number) => void): this {
@@ -239,7 +180,7 @@ export abstract class SDNode {
     setTranslate(d: [number, number]): this;
     setTranslate(dx: number | [number, number], dy?: number): this {
         if (Array.isArray(dx)) return this.setTranslate(dx[0], dx[1]);
-        return this.triggerAttributeChanged(this._.layer, "translate", [dx, dy], this._.translate);
+        return this.triggerAttributeChanged(this._.renderer, "translate", [dx, dy], this._.translate);
     }
 
     onTranslateChanged(listener: (vn: [number, number], vo: [number, number]) => void) {
@@ -254,7 +195,7 @@ export abstract class SDNode {
     setTransformOrigin(origin: [XLocation, YLocation]): this;
     setTransformOrigin(x: XLocation | [XLocation, YLocation], y?: YLocation) {
         if (Array.isArray(x)) return this.setTransformOrigin(x[0], x[1]);
-        return this.triggerAttributeChanged(this._.layer, "transformOrigin", [x, y], this._.transformOrigin);
+        return this.triggerAttributeChanged(this._.renderer, "transformOrigin", [x, y], this._.transformOrigin);
     }
 
     getTransformOrigin(): [NumberOrPercent, NumberOrPercent] {

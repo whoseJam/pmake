@@ -90,7 +90,7 @@ export class RenderNode {
             element.innerHTML = value;
         } else if (isStyleKey(this.getType(), key)) {
             element.style[key] = value;
-        } else setAttribute(element, key, value);
+        } else setAttribute(this.getType(), element, key, value);
     }
 
     hasShape() {

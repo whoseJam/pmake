@@ -41,7 +41,7 @@ export class Root {
             this.svg.setAttribute("opacity", 1);
         } else this.svg.setAttribute("opacity", 0);
         this.group = new Group();
-        this.svg.appendChild(this.group.getLayer());
+        this.svg.appendChild(this.group.getRootRenderNode());
     }
 
     static setViewBox(x: number, y: number, width: number, height: number, rate: number) {

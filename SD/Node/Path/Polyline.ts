@@ -1,16 +1,10 @@
-import { Action } from "@/Animate/Action";
-import { Interp } from "@/Animate/Interp";
-import { Window } from "@/Animate/Window";
-import { TimingFunction as T } from "@/Math/TimingFunction";
 import { BasePath } from "@/Node/Path/BasePath";
 import { PolylineEngine } from "@/Node/Path/PolylineEngine";
-import { SDNode } from "@/Node/SDNode";
+import { Group } from "@/Node/Other/Group";
 
 export class Polyline extends BasePath {
-    constructor(args?: { targetNode?: SDNode; points?: Array<[number, number]> }) {
+    constructor(args?: { targetNode?: Group; points?: Array<[number, number]> }) {
         super();
-
-        this.setType("Polyline");
 
         this.__createSVGNode("polyline", {
             points: args?.points ?? [],

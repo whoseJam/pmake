@@ -10,19 +10,26 @@ export class Slider extends BaseControl {
         value: number;
     };
 
-    constructor(args: { targetNode?: SDNode; x?: number; y?: number; width?: number; height?: number }) {
+    constructor(args: {
+        targetNode?: SDNode;
+        x?: number;
+        y?: number;
+        width?: number;
+        height?: number;
+        min?: number;
+        max?: number;
+        value?: number;
+    }) {
         super();
-
-        this.setType("Slider");
 
         const [foreign, renderer] = this.createHTMLNode("input", {
             x: args?.x ?? 0,
             y: args?.y ?? 0,
             width: args?.width ?? 80,
             height: args?.height ?? 20,
-            min: 0,
-            max: 10,
-            value: 0,
+            min: args?.min ?? 0,
+            max: args?.max ?? 10,
+            value: args?.value ?? 0,
             type: "range",
         });
 
@@ -35,7 +42,7 @@ export class Slider extends BaseControl {
         Dom.addEventListener(renderer.element(), "touchstart", e => {
             if (!Status.isInteractable()) e.preventDefault();
         });
-        Dom.addEventListener(renderer.element(), "change", e => {
+        Dom.addEventListener(renderer.element(), "input", e => {
             // @ts-ignore
             this.setValue(+e.target.value);
         });

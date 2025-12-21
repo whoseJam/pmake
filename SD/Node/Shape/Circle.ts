@@ -1,11 +1,11 @@
 import { Interp } from "@/Animate/Interp";
 import { BaseShape } from "@/Node/Shape/BaseShape";
 import { SDColor, Color as C } from "@/Utility/Color";
-import { SDNode } from "@/Node/SDNode";
+import { Group } from "@/Node/Other/Group";
 
 export class Circle extends BaseShape {
     constructor(args?: {
-        targetNode?: SDNode;
+        targetNode?: Group;
         cx?: number;
         cy?: number;
         r?: number;
@@ -18,8 +18,6 @@ export class Circle extends BaseShape {
         strokeDashArray?: Array<number>;
     }) {
         super();
-
-        this.setType("Circle");
 
         this._.renderer = this.__createSVGNode("circle", {
             cx: args?.cx ?? 0,

@@ -10,7 +10,7 @@ export abstract class SDHTMLNode extends SDNode {
      */
     protected createHTMLNode(label: string, attributes: Record<string, any> = {}): [RenderNode, RenderNode] {
         Object.assign(this._, attributes);
-        const foreign = RenderNode.createRenderNode(this, this.getLayer(), "foreignObject");
+        const foreign = RenderNode.createRenderNode(this, undefined, "foreignObject");
         foreign.setAttribute("x", attributes.x);
         foreign.setAttribute("y", attributes.y);
         foreign.setAttribute("width", attributes.width);

@@ -26,8 +26,6 @@ export class Text extends BaseText {
     }) {
         super();
 
-        this.setType("Text");
-
         const object = this.__createSVGNode("text", {
             "x": args?.x ?? 0,
             "y": args?.y ?? 0,

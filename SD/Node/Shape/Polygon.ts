@@ -6,8 +6,6 @@ export class Polygon extends BaseShape {
     constructor() {
         super();
 
-        this.setType("Polygon");
-
         this._.renderer = this.__createSVGNode("polygon", {
             points: [],
         });

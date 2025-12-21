@@ -11,6 +11,7 @@ const STYLE_KEY_MAP = {
     "justify-content": true,
     "align-items": true,
     "border-radius": true,
+    "transform-origin": true,
     "width": { svg: false, html: true },
     "height": { svg: false, html: true },
     "opacity": { svg: false, html: true },
@@ -74,17 +75,26 @@ const ATTRIBUTE_KEY_MAP: Record<string, AttributeConverter> = {
     strokeDashOffset: new AttributeConverter("stroke-dashoffset", undefined, (value: number) => `${value}`),
 };
 
-export function setAttribute(element: Element, key: string, value: any) {
+export function setAttribute(type: "svg" | "html", element: Element, key: string, value: any) {
     const attribute = ATTRIBUTE_KEY_MAP[key];
     if (!attribute) {
         element.setAttribute(key, value);
         return;
     }
-    const element_ = element as Element & { __setAttributeContext: Record<string, any> };
+    const element_ = element as (SVGElement | HTMLElement) & { __setAttributeContext: Record<string, any> };
     if (element_.__setAttributeContext === undefined) element_.__setAttributeContext = {};
     const value_ = attribute.toString(value, element_.__setAttributeContext);
     const key_ = attribute.aliasKey;
-    if (value_ !== undefined) element.setAttribute(key_, value_);
-    else if (attribute.default) element.setAttribute(key_, attribute.default);
-    else element.removeAttribute(key_);
+    if (isStyleKey(type, key_)) {
+        if (value_ !== undefined) element_.style[key_] = value_;
+        else if (attribute.default) element_.style[key_] = attribute.default;
+        else element_.style.removeProperty(key_);
+        if (key_ === "transform-origin") {
+            element_.style["transform-box"] = "fill-box";
+        }
+    } else {
+        if (value_ !== undefined) element.setAttribute(key_, value_);
+        else if (attribute.default) element.setAttribute(key_, attribute.default);
+        else element.removeAttribute(key_);
+    }
 }

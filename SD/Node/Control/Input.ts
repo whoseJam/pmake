@@ -23,8 +23,6 @@ export class Input extends BaseControl {
             // @ts-ignore
             this.value(event.target.value);
         });
-
-        this.setType("Input");
     }
     /**
      * Gets the value of the input component.

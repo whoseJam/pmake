@@ -20,8 +20,6 @@ export class Ellipse extends BaseShape {
     }) {
         super();
 
-        this.setType("Ellipse");
-
         this._.renderer = this.__createSVGNode("ellipse", {
             rx: args?.rx ?? 20,
             ry: args?.ry ?? 20,

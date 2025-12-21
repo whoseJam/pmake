@@ -1,7 +1,7 @@
 import { BaseShape } from "@/Node/Shape/BaseShape";
 import { SDColor, Color as C } from "@/Utility/Color";
-import { SDNode } from "@/Node/SDNode";
 import { Interp } from "@/Animate/Interp";
+import { Group } from "@/Node/Other/Group";
 
 export class Rect extends BaseShape {
     _: BaseShape["_"] & {
@@ -14,7 +14,7 @@ export class Rect extends BaseShape {
     };
 
     constructor(args?: {
-        targetNode?: SDNode;
+        targetNode?: Group;
         x?: number;
         y?: number;
         width?: number;
@@ -30,8 +30,6 @@ export class Rect extends BaseShape {
         strokeDashArray?: Array<number>;
     }) {
         super();
-
-        this.setType("Rect");
 
         this.__createSVGNode("rect", {
             x: args?.x ?? 0,

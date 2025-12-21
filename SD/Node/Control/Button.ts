@@ -18,8 +18,6 @@ export class Button extends BaseControl {
     }) {
         super();
 
-        this.setType("Button");
-
         const [foreign, renderer] = this.createHTMLNode("button", {
             x: args?.x ?? 0,
             y: args?.y ?? 0,

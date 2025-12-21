@@ -54,7 +54,7 @@ planets.forEach(p => {
             strokeWidth: 2,
             opacity: 0.6,
         })
-            .setTransformOrigin("50%", "50%")
+            .setTransformOrigin("center", "center")
             .setRotation(20);
     }
 

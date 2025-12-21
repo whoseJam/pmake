@@ -4,13 +4,11 @@ import { Window } from "@/Animate/Window";
 import { TimingFunction as T } from "@/Math/TimingFunction";
 import { Vector as V } from "@/Math/Vector";
 import { BasePath } from "@/Node/Path/BasePath";
-import { SDNode } from "@/Node/SDNode";
+import { Group } from "@/Node/Other/Group";
 
 export class Line extends BasePath {
-    constructor(args?: { targetNode?: SDNode; x1?: number; y1?: number; x2?: number; y2?: number }) {
+    constructor(args?: { targetNode?: Group; x1?: number; y1?: number; x2?: number; y2?: number }) {
         super();
-
-        this.setType("Line");
 
         this.__createSVGNode("line", {
             x1: args?.x1 ?? 0,

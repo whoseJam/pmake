@@ -18,8 +18,6 @@ export class Path extends BasePath {
     }) {
         super();
 
-        this.setType("Path");
-
         this.__createSVGNode("path", {
             d: args?.d || "",
             fill: args?.fill ?? C.none,
