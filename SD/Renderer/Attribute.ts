@@ -38,6 +38,8 @@ class AttributeConverter {
 }
 
 const ATTRIBUTE_KEY_MAP: Record<string, AttributeConverter> = {
+    rx: new AttributeConverter("rx", undefined, (value: number) => `${value}`),
+    ry: new AttributeConverter("ry", undefined, (value: number) => `${value}`),
     fill: new AttributeConverter("fill", C.white, color => C.toString(color)),
     fillOpacity: new AttributeConverter("fill-opacity", undefined, (value: number) => `${value}`),
     stroke: new AttributeConverter("stroke", C.black, color => C.toString(color)),
@@ -88,7 +90,7 @@ export function setAttribute(type: "svg" | "html", element: Element, key: string
     }
     const element_ = element as (SVGElement | HTMLElement) & { __setAttributeContext: Record<string, any> };
     if (element_.__setAttributeContext === undefined) element_.__setAttributeContext = {};
-    const value_ = attribute.toString(value, element_.__setAttributeContext);
+    const value_ = value === undefined ? undefined : attribute.toString(value, element_.__setAttributeContext);
     const key_ = attribute.aliasKey;
     if (isStyleKey(type, key_)) {
         if (value_ !== undefined) element_.style[key_] = value_;

@@ -5,7 +5,7 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestPosition);
+sd.main(TestRx);
 
 async function TestStrokeDashArray() {
     const rect = new sd.Rect({
@@ -18,6 +18,17 @@ async function TestStrokeDashArray() {
     rect.startAnimate().setStrokeDashArray([10, 10]).endAnimate();
     await sd.pause();
     rect.startAnimate().setStrokeDashArray([10, 0]).endAnimate();
+}
+
+async function TestRx() {
+    const rect = new sd.Rect({
+        targetNode: svg,
+        x: 100,
+        y: 100,
+        width: 100,
+        height: 100,
+        rx: 20,
+    });
 }
 
 async function TestBorderRadius() {
