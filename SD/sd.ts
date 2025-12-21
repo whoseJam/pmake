@@ -25,6 +25,8 @@ export { Rect } from "@/Node/Shape/Rect";
 // export { Math } from "@/Node/Text/Math";
 export { Text } from "@/Node/Text/Text";
 export { Marker } from "@/Node/Define/Marker";
+export { Filter } from "@/Node/Filter/Filter";
+export { GaussianBlur } from "@/Node/Filter/GaussianBlur";
 export { init, inter, main, make1d, make2d, loopUpdate } from "@/Utility/Base";
 export { color } from "@/Utility/Color";
 export { rand } from "@/Utility/Random";

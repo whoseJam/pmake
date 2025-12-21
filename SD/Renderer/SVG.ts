@@ -29,4 +29,7 @@ export const SVG = {
     g: {
         hasShape: false,
     },
+    filter: {
+        hasShape: false,
+    },
 };

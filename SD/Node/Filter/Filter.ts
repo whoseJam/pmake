@@ -1,15 +1,26 @@
-import { SDNode } from "@/Node/SDNode";
 import { SDSVGNode } from "@/Node/SDSVGNode";
+import { NumberOrPercent, SDNode } from "@/Node/SDNode";
+import { Group } from "@/Node/Other/Group";
 import { RenderNode } from "@/Renderer/RenderNode";
 
-export class Group extends SDSVGNode {
-    _: SDSVGNode["_"] & {
-        nodes: Array<SDNode>;
-    };
-    constructor(args?: { targetNode?: Group }) {
+export class Filter extends SDSVGNode {
+    constructor(args?: {
+        targetNode?: Group;
+        id?: string;
+        x?: NumberOrPercent;
+        y?: NumberOrPercent;
+        width?: NumberOrPercent;
+        height?: NumberOrPercent;
+    }) {
         super();
 
-        this._.renderer = this.createSVGNode("g");
+        this._.renderer = this.createSVGNode("filter", {
+            id: args?.id ?? "",
+            x: args?.x ?? "0%",
+            y: args?.y ?? "0%",
+            width: args?.width ?? "100%",
+            height: args?.height ?? "100%",
+        });
 
         args?.targetNode?.append(this);
     }
@@ -40,34 +51,18 @@ export class Group extends SDSVGNode {
     }
 
     getX() {
-        let x = this._.nodes[0].getX();
-        for (let i = 1; i < this._.nodes.length; i++) x = Math.min(x, this._.nodes[i].getX());
-        return x;
+        return this._.x;
     }
 
     getY() {
-        let y = this._.nodes[0].getY();
-        for (let i = 1; i < this._.nodes.length; i++) y = Math.min(y, this._.nodes[i].getY());
-        return y;
-    }
-
-    getMaxX() {
-        let mx = this._.nodes[0].getMaxX();
-        for (let i = 1; i < this._.nodes.length; i++) mx = Math.max(mx, this._.nodes[i].getMaxX());
-        return mx;
-    }
-
-    getMaxY() {
-        let my = this._.nodes[0].getMaxY();
-        for (let i = 1; i < this._.nodes.length; i++) my = Math.max(my, this._.nodes[i].getMaxY());
-        return my;
+        return this._.y;
     }
 
     getWidth() {
-        return this.getMaxX() - this.getX();
+        return this._.width;
     }
 
     getHeight() {
-        return this.getMaxY() - this.getY();
+        return this._.height;
     }
 }

@@ -29,6 +29,7 @@ export class Rect extends BaseShape {
         strokeWidth?: number;
         strokeDashOffset?: number;
         strokeDashArray?: Array<number>;
+        filter?: string;
     }) {
         super();
 
@@ -47,6 +48,7 @@ export class Rect extends BaseShape {
             strokeWidth: args?.strokeWidth ?? 1,
             strokeDashOffset: args?.strokeDashOffset ?? 0,
             strokeDashArray: args?.strokeDashArray ?? [],
+            filter: args?.filter ?? "",
         });
 
         args?.targetNode?.appendChild(this);

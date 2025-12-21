@@ -4,9 +4,10 @@ import { Interp, InterpCreator, InterpFunction, InterpObject, LazyInterpFunction
 import { SDTimingFunction, TimingFunction as T } from "@/Math/TimingFunction";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Group } from "@/Node/Other/Group";
+import { Filter } from "@/Node/Filter/Filter";
 
 type Percent = `${number}%`;
-type NumberOrPercent = number | Percent;
+export type NumberOrPercent = number | Percent;
 type XLocationString = "left" | "center" | "right";
 type YLocationString = "top" | "center" | "bottom";
 type XLocation = NumberOrPercent | XLocationString;
@@ -22,7 +23,7 @@ export type SDBox = {
 export abstract class SDNode {
     id: number;
     _: {
-        parent: Group;
+        parent: Group | Filter;
         frame: number;
         start: number;
         end: number;
