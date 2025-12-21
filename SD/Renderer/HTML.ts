@@ -1,4 +1,4 @@
-export const HTML_INNERHTML_SET = new Set(["innerHTML", "text"]);
+export const HTML_INNERHTML_SET = new Set(["innerHTML", "html", "text"]);
 
 export const HTML = {
     div: {

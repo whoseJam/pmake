@@ -1,3 +1,4 @@
+import { Interp } from "@/Animate/Interp";
 import { SDSVGNode } from "@/Node/SDSVGNode";
 
 type TextMappingSubtextItem = [string, string];
@@ -52,22 +53,25 @@ export function processMapping(mapping: TextMapping): TextMappingArray {
 export type TextConfigDictionary = { [key: string]: any };
 
 export abstract class BaseText extends SDSVGNode {
-    constructor() {
-        super();
-
-        this.vars.merge({
-            x: 0,
-            y: 0,
-        });
-    }
+    _: SDSVGNode["_"] & {
+        x: number;
+        y: number;
+    };
 
     getX(): number {
-        return this.vars.x;
+        return this._.x;
     }
 
     setX(x: number): this {
-        this.vars.lpset("x", x);
-        return this;
+        return this.triggerAttributeChanged(this._.renderer, "x", x, this._.x, Interp.numberInterp);
+    }
+
+    onXChanged(listener: (vn: number, vo: number) => void) {
+        return this.onAttributeChanged("x", listener);
+    }
+
+    offXChanged(listener: (vn: number, vo: number) => void) {
+        return this.offAttributeChanged("x", listener);
     }
 
     setCenterX(cx: number): this {
@@ -81,12 +85,19 @@ export abstract class BaseText extends SDSVGNode {
     }
 
     getY(): number {
-        return this.vars.y;
+        return this._.y;
     }
 
     setY(y: number): this {
-        this.vars.lpset("y", y);
-        return this;
+        return this.triggerAttributeChanged(this._.renderer, "y", y, this._.y, Interp.numberInterp);
+    }
+
+    onYChanged(listener: (vn: number, vo: number) => void) {
+        return this.onAttributeChanged("y", listener);
+    }
+
+    offYChanged(listener: (vn: number, vo: number) => void) {
+        return this.offAttributeChanged("y", listener);
     }
 
     setCenterY(cy: number): this {

@@ -65,6 +65,15 @@ planets.forEach(p => {
         r: p.s,
         fill: p.c,
     });
+
+    p.text = new sd.Text({
+        targetNode: svg,
+        cx: CX + p.o,
+        cy: CY - p.o - 20,
+        text: p.n,
+        fontSize: 12,
+        fill: "#ffffff",
+    });
 });
 
 sd.loopUpdate(() => {
@@ -73,6 +82,7 @@ sd.loopUpdate(() => {
         const x = CX + Math.cos(p.a) * p.o;
         const y = CY + Math.sin(p.a) * p.o;
         p.el.setCx(x).setCy(y);
+        p.text.setCx(x).setCy(y - p.o - 20);
         if (p.ring) {
             p.ring.setCenterX(x).setCenterY(y);
         }

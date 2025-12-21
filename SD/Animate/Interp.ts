@@ -132,7 +132,7 @@ export class Interp {
             if (this.reverse && t === 0) set(this.target);
         });
     }
-    static blankStringInterp(object: any, key: string) {
+    static stringBlankInMiddleInterp(object: any, key: string) {
         const set = setter(object, key);
         return new InterpObject(function (t) {
             if (t === 0) set(" ");

@@ -1,5 +1,3 @@
-import { Interp } from "@/Animate/Interp";
-import { SDNode } from "@/Node/SDNode";
 import { BaseText, TextMapping } from "@/Node/Text/BaseText";
 import { buildAnimation } from "@/Node/Text/TextEngine/Animation";
 import { transformProcess, transformPostProcess } from "@/Node/Text/TextEngine/Transform";
@@ -10,10 +8,22 @@ import { createTextView, PathStyle } from "@/Node/Text/TextEngine/TextView";
 import { Color as C } from "@/Utility/Color";
 import { getOS } from "@/Utility/Base";
 import { FontManager } from "@/Node/Text/TextEngine/Opentype";
+import { Group } from "@/Node/Other/Group";
+import { Interp } from "@/Animate/Interp";
 
 export class Text extends BaseText {
+    _: BaseText["_"] & {
+        text: string;
+        html: string;
+        width: number;
+        height: number;
+        fontSize: number;
+        fontFamily: string;
+        subtextStyles: Array<PathStyle>;
+    };
+
     constructor(args?: {
-        targetNode?: SDNode;
+        targetNode?: Group;
         x?: number;
         y?: number;
         fontSize?: number;
@@ -26,7 +36,8 @@ export class Text extends BaseText {
     }) {
         super();
 
-        const object = this.__createSVGNode("text", {
+        this._.renderer = this.__createSVGNode("text", {
+            "text": args?.text ?? "",
             "x": args?.x ?? 0,
             "y": args?.y ?? 0,
             "fontSize": args?.fontSize ?? 20,
@@ -42,134 +53,112 @@ export class Text extends BaseText {
             "dominant-baseline": "text-before-edge",
         });
 
-        this.vars.merge({
-            text: "",
-            html: "",
-            subtextStyles: [],
-            width: 0,
-            height: 0,
-            object,
+        const styles = generateDefaultStyles(args?.text);
+        Object.assign(this._, {
+            subtextStyles: styles,
+            html: parseToHTML(styles, args?.text ?? ""),
         });
 
-        this.vars.watch("text", SDNode.__action(this, object, "text", Interp.emptyInterp));
-        this.vars.watch("subtextStyles", SDNode.__action(this, object, "subtextStyles", Interp.emptyInterp));
-        this.vars.watch("html", SDNode.__action(this, object, "innerHTML", Interp.blankStringInterp));
-
-        if (args?.text) this.setText(args.text);
         args?.targetNode?.appendChild(this);
     }
 
     getFontSize(): number {
-        return this.vars.fontSize;
+        return this._.fontSize;
     }
 
     setFontSize(size: number): this {
-        if (this.vars.fontSize > 1e-1) {
-            const k = size / this.vars.fontSize;
-            this.vars.setTogether({
-                width: this.vars.width * k,
-                height: this.vars.height * k,
-            });
+        if (this._.fontSize > 1e-1) {
+            const k = size / this._.fontSize;
+            this._.width *= k;
+            this._.height *= k;
         } else {
             const box = FontManager.boundingBox(this);
-            this.vars.setTogether({
-                width: box.width,
-                height: box.height,
-            });
+            this._.width = box.width;
+            this._.height = box.height;
         }
-        this.vars.lpset("fontSize", size);
-        return this;
+        this._.fontSize = size;
+        return this.triggerAttributeChanged(this._.renderer, "fontSize", size, this._.fontSize, Interp.numberInterp);
+    }
+
+    onFontSizeChanged(listener: (vn: number, vo: number) => void) {
+        return this.onAttributeChanged("fontSize", listener);
+    }
+
+    offFontSizeChanged(listener: (vn: number, vo: number) => void) {
+        return this.offAttributeChanged("fontSize", listener);
     }
 
     getWidth(): number {
-        return this.vars.width;
-    }
-
-    setWidth(width: number): this {
-        if (this.vars.width > 1e-1) {
-            const k = width / this.vars.width;
-            this.setFontSize(this.getFontSize() * k);
-        } else if (this.getText() !== "") {
-            const fontSize = FontManager.widthToFontSize(this.getText(), this.getFontFamily(), width);
-            this.setFontSize(fontSize);
-        }
-        return this;
+        return this._.width;
     }
 
     getHeight(): number {
-        return this.vars.height;
-    }
-
-    setHeight(height: number): this {
-        if (this.vars.height > 1e-1) {
-            const k = height / this.vars.height;
-            this.setFontSize(this.getFontSize() * k);
-        } else if (this.getText() !== "") {
-            const fontSize = FontManager.heightToFontSize(this.getText(), this.getFontFamily(), height);
-            this.setFontSize(fontSize);
-        }
-        return this;
+        return this._.height;
     }
 
     getText(): string {
-        return this.vars.text;
+        return this._.text;
     }
 
     setText(text: string | number, mapping?: TextMapping): this {
         const text_ = String(text);
-        if (this.vars.text === text_) return this;
+        if (this._.text === text_) return this;
         const box = FontManager.boundingBox(text_, this.getFontFamily(), this.getFontSize());
-        if (FontManager.fontExists(this.getFontFamily()))
-            this.vars.subtextStyles = buildAnimation(
-                this,
-                { text: this.getText(), styles: this.vars.subtextStyles },
-                { text: text_ },
-                transformProcess(mapping),
-                transformPostProcess(this, this.getLayer()),
-                "transform"
-            );
-        this.vars.text = text;
-        this.vars.setTogether({
-            html: parseToHTML.call(this),
-            width: box.width,
-            height: box.height,
-        });
+        const styles = buildAnimation(
+            this,
+            { text: this.getText(), styles: this._.subtextStyles },
+            { text: text_ },
+            transformProcess(mapping),
+            transformPostProcess(this, this._.parent.getRootRenderNode()),
+            "transform"
+        );
+        const html = parseToHTML(styles, text_);
+        this._.width = box.width;
+        this._.height = box.height;
+        this.triggerAttributeChanged(undefined, "text", text_, this._.text, Interp.emptyInterp);
+        this.triggerAttributeChanged(undefined, "subtextStyles", styles, this._.subtextStyles, Interp.emptyInterp);
+        this.triggerAttributeChanged(this._.renderer, "html", html, this._.html, Interp.stringBlankInMiddleInterp);
         return this;
     }
 
     getFontFamily() {
-        return this.vars.fontFamily;
+        return this._.fontFamily;
     }
 
     setFontFamily(family: "Times New Roman" | "Arial") {
-        const text = String(this.vars.text);
-        this.vars.fontFamily = family;
-        this.vars.subtextStyles = buildAnimation(
+        const text = String(this._.text);
+        this._.fontFamily = family;
+        this._.subtextStyles = buildAnimation(
             this,
             { text: this.getText() },
             { text: this.getText() },
             transformProcess([]),
-            transformPostProcess(this, this.getLayer()),
+            transformPostProcess(this, this._.parent.getRootRenderNode()),
             "*"
         );
-        this.vars.text = text;
-        this.vars.trigger("html");
-        return this;
+        this._.text = text;
+        return this.triggerAttributeChanged(
+            this._.renderer,
+            "fontFamily",
+            family,
+            this._.fontFamily,
+            Interp.stringInterp
+        );
     }
 
     typewritter(text: string | number) {
         const text_ = String(text);
         const box = FontManager.boundingBox(text_, this.getFontFamily(), this.getFontSize());
-        this.vars.subtextStyles = buildAnimation(
+        this._.subtextStyles = buildAnimation(
             this,
-            { text: this.getText(), styles: this.vars.subtextStyles },
+            { text: this.getText(), styles: this._.subtextStyles },
             { text: text_ },
             typewritterProcess(),
-            typewritterPostProcess(this, this.getLayer()),
+            typewritterPostProcess(this, this._.parent.getRootRenderNode()),
             "typewritter"
         );
-        this.vars.text = text;
-        this.vars.setTogether({
+        this._.text = text_;
+        this._.setTogether({
             html: parseToHTML.call(this),
             width: box.width,
             height: box.height,
@@ -178,63 +167,68 @@ export class Text extends BaseText {
     }
 
     setSubtextFill(subtext: string | number, color: SDColor, i: number = 0) {
-        const textView = createTextView(this.vars.text, {});
+        const textView = createTextView(this._.text, {});
         const subtextView = matchSubtext(textView, String(subtext));
-        const newStyles = this.vars.subtextStyles.map((style: PathStyle) => style.clone());
+        const newStyles = this._.subtextStyles.map((style: PathStyle) => style.clone());
         subtextView.__iterate(i => (newStyles[i].fill = color));
         buildAnimation(
             this,
             { text: this.getText() },
             { text: this.getText() },
             transformProcess([]),
-            transformPostProcess(this, this.getLayer()),
+            transformPostProcess(this, this._.parent.getRootRenderNode()),
             "*"
         );
-        this.vars.subtextStyles = newStyles;
-        this.vars.html = parseToHTML.call(this);
+        this._.subtextStyles = newStyles;
+        this._.html = parseToHTML.call(this);
         return this;
     }
 
     setSubtextStroke(subtext: string | number, color: SDColor, i: number = 0) {
-        const textView = createTextView(this.vars.text, {});
+        const textView = createTextView(this._.text, {});
         const subtextView = matchSubtext(textView, String(subtext));
-        const newStyles = this.vars.subtextStyles.map((style: PathStyle) => style.clone());
+        const newStyles = this._.subtextStyles.map((style: PathStyle) => style.clone());
         subtextView.__iterate(i => (newStyles[i].stroke = color));
         buildAnimation(
             this,
             { text: this.getText() },
             { text: this.getText() },
             transformProcess([]),
-            transformPostProcess(this, this.getLayer()),
+            transformPostProcess(this, this._.parent.getRootRenderNode()),
             "*"
         );
-        this.vars.subtextStyles = newStyles;
-        this.vars.html = parseToHTML.call(this);
+        this._.subtextStyles = newStyles;
+        this._.html = parseToHTML.call(this);
         return this;
     }
 
     setSubtextStrokeWidth(subtext: string | number, width: number, i: number = 0) {
-        const textView = createTextView(this.vars.text, {});
+        const textView = createTextView(this._.text, {});
         const subtextView = matchSubtext(textView, String(subtext));
-        const newStyles = this.vars.subtextStyles.map((style: PathStyle) => style.clone());
+        const newStyles = this._.subtextStyles.map((style: PathStyle) => style.clone());
         subtextView.__iterate(i => (newStyles[i].strokeWidth = width));
         buildAnimation(
             this,
             { text: this.getText() },
             { text: this.getText() },
             transformProcess([]),
-            transformPostProcess(this, this.getLayer()),
+            transformPostProcess(this, this._.parent.getRootRenderNode()),
             "*"
         );
-        this.vars.subtextStyles = newStyles;
-        this.vars.html = parseToHTML.call(this);
+        this._.subtextStyles = newStyles;
+        this._.html = parseToHTML.call(this);
         return this;
     }
 }
 
-function parseToHTML() {
-    const styles = this.vars.subtextStyles;
-    const text = this.getText();
+function generateDefaultStyles(text: string) {
+    const styles: Array<PathStyle> = [];
+    if (!text) return styles;
+    for (let i = 0; i < text.length; i++) styles.push(new PathStyle({}));
+    return styles;
+}
+
+function parseToHTML(styles: Array<PathStyle>, text: string) {
     const parseText = (text_: string | number) => {
         let ans = "";
         const text = String(text_);

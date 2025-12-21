@@ -39,7 +39,12 @@ class AttributeConverter {
 
 const ATTRIBUTE_KEY_MAP: Record<string, AttributeConverter> = {
     fill: new AttributeConverter("fill", C.white, color => C.toString(color)),
+    fillOpacity: new AttributeConverter("fill-opacity", undefined, (value: number) => `${value}`),
     stroke: new AttributeConverter("stroke", C.black, color => C.toString(color)),
+    strokeOpacity: new AttributeConverter("stroke-opacity", undefined, (value: number) => `${value}`),
+    strokeWidth: new AttributeConverter("stroke-width", undefined, (value: number) => `${value}`),
+    fontFamily: new AttributeConverter("font-family", undefined, (value: string) => value),
+    fontSize: new AttributeConverter("font-size", undefined, (value: number) => `${value}`),
     scale: new AttributeConverter("transform", undefined, (value: [number, number], context: Context) => {
         context.scale = value;
         const scale = context.scale ?? [1, 1];

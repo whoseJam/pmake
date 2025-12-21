@@ -17,14 +17,13 @@ export function transformProcess(mapping: TextMapping) {
 export function transformPostProcess(text: Text, targetLayer: RenderNode) {
     return function (l: number, r: number, source: Array<SubtextView>, target: Array<SubtextView>) {
         const createAction = (character: RenderNode, source: any, target: any, interp: any, animatedKey: string) => {
-            // if (source !== target) {
             new Action(
                 l,
                 r,
                 source,
                 target,
                 interp(character, animatedKey),
-                text._.timingFunction,
+                this.timingFunction,
                 character,
                 animatedKey
             );
@@ -38,6 +37,8 @@ export function transformPostProcess(text: Text, targetLayer: RenderNode) {
             const targetSubtext = target[i];
             const sourceStyles: Array<PathStyle> = A.getAttribute(text, "subtextStyles", l, sourceSubtext.getStyle());
             const targetStyles: Array<PathStyle> = A.getAttribute(text, "subtextStyles", r, targetSubtext.getStyle());
+            console.log("sourceStyles=", sourceStyles);
+            console.log("targetStyles=", targetStyles);
             const group = RenderNode.createRenderNodeWithTime(targetLayer, l, l, "g");
             const mapping = buildMapping(sourceSubtext.count(), targetSubtext.count());
             for (const [sourceIndex, targetIndex] of mapping) {

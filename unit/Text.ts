@@ -5,7 +5,7 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestSubtextAttribute);
+sd.main(TestConsecutiveTransform);
 
 // async function TestSubtextColor() {
 //     const text = new sd.Text(svg, "for(int i=1;i<=n;i++)ans+=i;").x(100).y(100).fontSize(40);
@@ -108,9 +108,9 @@ async function TestConsecutiveTransform() {
         fontSize: 100,
     });
     await sd.pause();
-    text.startAnimate(1000).setText("B").endAnimate();
+    text.startAnimate({ duration: 1000 }).setText("B").endAnimate();
     await sd.pause();
-    text.startAnimate(1000).setText("C").endAnimate();
+    text.startAnimate({ duration: 1000 }).setText("C").endAnimate();
 }
 
 async function TestSubtextColorWithTransform() {

@@ -1,9 +1,9 @@
 import { Action } from "@/Animate/Action";
 import { Context } from "@/Animate/Context";
 import { Interp, InterpCreator, InterpFunction, InterpObject, LazyInterpFunction } from "@/Animate/Interp";
-import { Window } from "@/Animate/Window";
 import { SDTimingFunction, TimingFunction as T } from "@/Math/TimingFunction";
 import { RenderNode } from "@/Renderer/RenderNode";
+import { Group } from "@/Node/Other/Group";
 
 type Percent = `${number}%`;
 type NumberOrPercent = number | Percent;
@@ -22,6 +22,7 @@ export type SDBox = {
 export abstract class SDNode {
     id: number;
     _: {
+        parent: Group;
         frame: number;
         start: number;
         end: number;
@@ -41,6 +42,7 @@ export abstract class SDNode {
     constructor() {
         this.id = ++SDNode.NODE_ID;
         this._ = {
+            parent: undefined,
             renderer: undefined,
             frame: -1,
             start: 0,
@@ -362,11 +364,10 @@ export abstract class SDNode {
         interp?: InterpObject | InterpFunction | LazyInterpFunction | InterpCreator
     ) {
         this._[key] = vn;
-        object.setAttribute(key, vn);
         if (this.duration() > 0 && interp) {
             const interp_ = isBuiltinInterp(interp) ? interp(object, key) : interp;
             new Action(this._.start, this._.end, vo, vn, interp_, this._.timingFunction, this, key);
-        }
+        } else object?.setAttribute(key, vn);
         this._.attributeListeners[key]?.forEach(listener => listener(vn, vo));
         return this;
     }
