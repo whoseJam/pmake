@@ -28,6 +28,7 @@ export { Marker } from "@/Node/Define/Marker";
 export { Filter } from "@/Node/Filter/Filter";
 export { GaussianBlur } from "@/Node/Filter/GaussianBlur";
 export { DropShadow } from "@/Node/Filter/DropShadow";
+export { ColorMatrix } from "@/Node/Filter/ColorMatrix";
 export { init, inter, main, make1d, make2d, loopUpdate } from "@/Utility/Base";
 export { color } from "@/Utility/Color";
 export { rand } from "@/Utility/Random";
