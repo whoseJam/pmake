@@ -147,14 +147,11 @@ export abstract class SDSVGNode extends SDNode {
         return this.offAttributeChanged("strokeDashArray", listener);
     }
 
-    __createSVGNode(label: string, attributes: { [key: string]: any }): RenderNode {
+    __createSVGNode(label: string, attributes: Record<string, any> = {}): RenderNode {
         Object.assign(this._, attributes);
         const object = RenderNode.createRenderNode(this, this.getLayer(), label);
         this._.renderer = object;
-        for (const key in attributes) {
-            const value = attributes[key];
-            object.setAttribute(key, value);
-        }
+        for (const key in attributes) object.setAttribute(key, attributes[key]);
         return object;
     }
 }

@@ -5,11 +5,12 @@ import { Window } from "@/Animate/Window";
 import { SDTimingFunction, TimingFunction as T } from "@/Math/TimingFunction";
 import { RenderNode } from "@/Renderer/RenderNode";
 
-type PercentString = `${number}%`;
+type Percent = `${number}%`;
+type NumberOrPercent = number | Percent;
 type XLocationString = "left" | "center" | "right";
 type YLocationString = "top" | "middle" | "bottom";
-type XLocation = number | PercentString | XLocationString;
-type YLocation = number | PercentString | YLocationString;
+type XLocation = NumberOrPercent | XLocationString;
+type YLocation = NumberOrPercent | YLocationString;
 
 export type SDBox = {
     x: number;
@@ -17,18 +18,6 @@ export type SDBox = {
     width: number;
     height: number;
 };
-
-function isBuiltinInterp(
-    method: InterpObject | InterpFunction | LazyInterpFunction | InterpCreator
-): method is InterpCreator {
-    if (typeof method !== "function") return false;
-    const statics = Object.getOwnPropertyNames(Interp);
-    for (const propName of statics) {
-        const propValue = Interp[propName];
-        if (propValue === method) return true;
-    }
-    return false;
-}
 
 export abstract class SDNode {
     id: number;
@@ -44,7 +33,7 @@ export abstract class SDNode {
         scale: [number, number];
         rotate: number;
         translate: [number, number];
-        transformOrigin: [number, number];
+        transformOrigin: [NumberOrPercent, NumberOrPercent];
         attributeListeners: { [key: string]: Array<(vn: any, vo: any) => void> };
         [key: string]: any;
     };
@@ -64,7 +53,7 @@ export abstract class SDNode {
             scale: [1, 1],
             rotate: 0,
             translate: [0, 0],
-            transformOrigin: [0, 0],
+            transformOrigin: ["50%", "50%"],
             attributeListeners: {},
         };
 
@@ -265,32 +254,22 @@ export abstract class SDNode {
     setTransformOrigin(origin: [XLocation, YLocation]): this;
     setTransformOrigin(x: XLocation | [XLocation, YLocation], y?: YLocation) {
         if (Array.isArray(x)) return this.setTransformOrigin(x[0], x[1]);
-        const parse = (value: number | string, position: string, size: string) => {
-            if (typeof value === "number") return value;
-            if (value === "center") return parse("50%", position, size);
-            if (value === "top") return parse("0%", position, size);
-            if (value === "bottom") return parse("100%", position, size);
-            if (value === "left") return parse("0%", position, size);
-            if (value === "right") return parse("100%", position, size);
-            if (value.endsWith("%")) return this[position]() + (parseFloat(value) / 100) * this[size]();
-            return +value;
-        };
-        const x_ = parse(x, "x", "width");
-        const y_ = parse(y, "y", "height");
-        const vo = this._.transformOrigin;
-        this._.transformOrigin = [x_, y_];
-        return this.triggerAttributeChanged(this._.layer, "transformOrigin", [x_, y_], vo);
+        return this.triggerAttributeChanged(this._.layer, "transformOrigin", [x, y], this._.transformOrigin);
     }
 
-    getTransformOrigin(): [number, number] {
+    getTransformOrigin(): [NumberOrPercent, NumberOrPercent] {
         return this._.transformOrigin;
     }
 
-    onTransformOriginChanged(listener: (vn: [number, number], vo: [number, number]) => void) {
+    onTransformOriginChanged(
+        listener: (vn: [NumberOrPercent, NumberOrPercent], vo: [NumberOrPercent, NumberOrPercent]) => void
+    ) {
         return this.onAttributeChanged("transformOrigin", listener);
     }
 
-    offTransformOriginChanged(listener: (vn: [number, number], vo: [number, number]) => void) {
+    offTransformOriginChanged(
+        listener: (vn: [NumberOrPercent, NumberOrPercent], vo: [NumberOrPercent, NumberOrPercent]) => void
+    ) {
         return this.offAttributeChanged("transformOrigin", listener);
     }
 
@@ -476,3 +455,19 @@ export type SDNodeWithText = SDNode & { text: AnyFunction };
 export type SDNodeWithValue = SDNode & { value: AnyFunction };
 export type SDNodeWithValueFromExist = SDNode & { valueFromExist: AnyFunction };
 export type SDNodeWithRadius = SDNode & { r: AnyFunction };
+
+function isBuiltinInterp(
+    method: InterpObject | InterpFunction | LazyInterpFunction | InterpCreator
+): method is InterpCreator {
+    if (typeof method !== "function") return false;
+    const statics = Object.getOwnPropertyNames(Interp);
+    for (const propName of statics) {
+        const propValue = Interp[propName];
+        if (propValue === method) return true;
+    }
+    return false;
+}
+
+function isPercent(value: any): value is Percent {
+    return typeof value === "string" && value.endsWith("%");
+}

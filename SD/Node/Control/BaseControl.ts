@@ -1,43 +1,49 @@
+import { Interp } from "@/Animate/Interp";
 import { SDHTMLNode } from "@/Node/SDHTMLNode";
+import { RenderNode } from "@/Renderer/RenderNode";
 
 export class BaseControl extends SDHTMLNode {
+    _: SDHTMLNode["_"] & {
+        foreign: RenderNode;
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+    };
+
     constructor() {
         super();
     }
 
     getX(): number {
-        return this.vars.x;
+        return this._.x;
     }
 
     setX(x: number): this {
-        this.vars.lpset("x", x);
-        return this;
+        return this.triggerAttributeChanged(this._.foreign, "x", x, this._.x, Interp.numberInterp);
     }
 
     getY(): number {
-        return this.vars.y;
+        return this._.y;
     }
 
     setY(y: number): this {
-        this.vars.lpset("y", y);
-        return this;
+        return this.triggerAttributeChanged(this._.foreign, "y", y, this._.y, Interp.numberInterp);
     }
 
     getWidth(): number {
-        return this.vars.width;
+        return this._.width;
     }
 
     setWidth(width: number): this {
-        this.vars.lpset("width", width);
-        return this;
+        return this.triggerAttributeChanged(this._.foreign, "width", width, this._.width, Interp.numberInterp);
     }
 
     getHeight(): number {
-        return this.vars.height;
+        return this._.height;
     }
 
     setHeight(height: number): this {
-        this.vars.lpset("height", height);
-        return this;
+        return this.triggerAttributeChanged(this._.foreign, "height", height, this._.height, Interp.numberInterp);
     }
 }

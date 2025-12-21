@@ -5,13 +5,15 @@ type Context = Record<string, any>;
 const STYLE_KEY_MAP = {
     "pointer-events": true,
     "position": true,
-    "width": { svg: false, html: true },
-    "height": { svg: false, html: true },
     "min-width": true,
     "min-height": true,
     "display": true,
-    "opacity": { svg: false, html: true },
+    "justify-content": true,
+    "align-items": true,
     "border-radius": true,
+    "width": { svg: false, html: true },
+    "height": { svg: false, html: true },
+    "opacity": { svg: false, html: true },
 };
 
 export function isStyleKey(type: "svg" | "html", key: string) {

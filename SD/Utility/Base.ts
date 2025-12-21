@@ -38,6 +38,7 @@ export async function init(callback: (args?: Record<string, any>) => void | Prom
  *                   Use `sd.pause()` within this callback to segment the animation into stages.
  */
 export async function main(callback: () => void | Promise<void>): Promise<void> {
+    A.forceToFinish();
     const fn = async (): Promise<void> => {
         if (initFinished) {
             await callback();
@@ -50,6 +51,7 @@ export async function main(callback: () => void | Promise<void>): Promise<void> 
 }
 
 export async function loopUpdate(callback: (t: number) => void | Promise<void>): Promise<void> {
+    A.forceToFinish();
     const wrapper = (dt: number) => {
         callback(dt);
         requestAnimationFrame(wrapper);
