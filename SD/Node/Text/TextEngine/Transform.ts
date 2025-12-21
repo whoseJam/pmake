@@ -27,7 +27,6 @@ export function transformPostProcess(text: Text, targetLayer: RenderNode) {
                 character,
                 animatedKey
             );
-            // }
         };
 
         const sourcePaths = getTextPaths(text, l);
@@ -37,8 +36,6 @@ export function transformPostProcess(text: Text, targetLayer: RenderNode) {
             const targetSubtext = target[i];
             const sourceStyles: Array<PathStyle> = A.getAttribute(text, "subtextStyles", l, sourceSubtext.getStyle());
             const targetStyles: Array<PathStyle> = A.getAttribute(text, "subtextStyles", r, targetSubtext.getStyle());
-            console.log("sourceStyles=", sourceStyles);
-            console.log("targetStyles=", targetStyles);
             const group = RenderNode.createRenderNodeWithTime(targetLayer, l, l, "g");
             const mapping = buildMapping(sourceSubtext.count(), targetSubtext.count());
             for (const [sourceIndex, targetIndex] of mapping) {
@@ -68,8 +65,6 @@ export function transformPostProcess(text: Text, targetLayer: RenderNode) {
                 createAction(character, source.d, target.d, Interp.pathInterp, "d");
                 const sourceStyle = sourceStyles[sourceIndex].styleAt(text, l);
                 const targetStyle = targetStyles[targetIndex].styleAt(text, r);
-                console.log("sourceStyle=", sourceStyle, sourceIndex);
-                console.log("targetStyle=", targetStyle, targetIndex);
                 createAction(character, sourceStyle.fill, targetStyle.fill, Interp.colorInterp, "fill");
                 createAction(character, sourceStyle.stroke, targetStyle.stroke, Interp.colorInterp, "stroke");
                 createAction(
@@ -86,7 +81,6 @@ export function transformPostProcess(text: Text, targetLayer: RenderNode) {
 }
 
 function buildMapping(sourceCount: number, targetCount: number): Array<[number, number]> {
-    console.log("sourceCount=", sourceCount, "targetCount=", targetCount);
     const mapping: Array<[number, number]> = [];
     if (sourceCount < targetCount) {
         const count = targetCount - sourceCount;
@@ -154,5 +148,4 @@ function buildMapping(sourceCount: number, targetCount: number): Array<[number, 
             return mapping;
         }
     }
-    return mapping;
 }

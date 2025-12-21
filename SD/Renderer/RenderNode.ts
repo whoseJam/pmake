@@ -211,7 +211,6 @@ export class RenderNode {
     }
 
     __appendChild(element: Element | RenderNode) {
-        console.log("append child, element=", element, "this=", this);
         const element_ = element instanceof RenderNode ? element.element() : element;
         this.element().appendChild(element_);
         return this;

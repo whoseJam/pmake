@@ -125,10 +125,11 @@ export class Text extends BaseText {
         return this._.fontFamily;
     }
 
-    setFontFamily(family: "Times New Roman" | "Arial") {
-        const text = String(this._.text);
-        this._.fontFamily = family;
-        this._.subtextStyles = buildAnimation(
+    setFontFamily(family: string) {
+        if (family !== "Times New Roman" && family !== "Arial")
+            throw new Error(`Font family ${family} is not supported in all platform`);
+        const box = FontManager.boundingBox(this._.text, family, this.getFontSize());
+        const styles = buildAnimation(
             this,
             { text: this.getText() },
             { text: this.getText() },
@@ -136,14 +137,13 @@ export class Text extends BaseText {
             transformPostProcess(this, this._.parent.getRootRenderNode()),
             "*"
         );
-        this._.text = text;
-        return this.triggerAttributeChanged(
-            this._.renderer,
-            "fontFamily",
-            family,
-            this._.fontFamily,
-            Interp.stringInterp
-        );
+        const html = parseToHTML(styles, this.getText());
+        this._.width = box.width;
+        this._.height = box.height;
+        this.triggerAttributeChanged(undefined, "subtextStyles", styles, this._.subtextStyles, Interp.emptyInterp);
+        this.triggerAttributeChanged(this._.renderer, "html", html, this._.html, Interp.stringBlankInMiddleInterp);
+        this.triggerAttributeChanged(this._.renderer, "fontFamily", family, this._.fontFamily, Interp.stringInterp);
+        return this;
     }
 
     typewritter(text: string | number) {
