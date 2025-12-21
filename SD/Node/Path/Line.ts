@@ -5,9 +5,24 @@ import { TimingFunction as T } from "@/Math/TimingFunction";
 import { Vector as V } from "@/Math/Vector";
 import { BasePath } from "@/Node/Path/BasePath";
 import { Group } from "@/Node/Other/Group";
+import { SDColor, Color as C } from "@/Utility/Color";
 
 export class Line extends BasePath {
-    constructor(args?: { targetNode?: Group; x1?: number; y1?: number; x2?: number; y2?: number }) {
+    constructor(args?: {
+        targetNode?: Group;
+        x1?: number;
+        y1?: number;
+        x2?: number;
+        y2?: number;
+        opacity?: number;
+        fill?: SDColor;
+        fillOpacity?: number;
+        stroke?: SDColor;
+        strokeOpacity?: number;
+        strokeWidth?: number;
+        strokeDashOffset?: number;
+        strokeDashArray?: Array<number>;
+    }) {
         super();
 
         this.createSVGNode("line", {
@@ -15,6 +30,14 @@ export class Line extends BasePath {
             y1: args?.y1 ?? 0,
             x2: args?.x2 ?? 40,
             y2: args?.y2 ?? 40,
+            opacity: args?.opacity ?? 1,
+            fill: args?.fill ?? C.none,
+            fillOpacity: args?.fillOpacity ?? 0,
+            stroke: args?.stroke ?? C.black,
+            strokeOpacity: args?.strokeOpacity ?? 1,
+            strokeWidth: args?.strokeWidth ?? 1,
+            strokeDashOffset: args?.strokeDashOffset ?? 0,
+            strokeDashArray: args?.strokeDashArray ?? [],
         });
 
         args?.targetNode?.appendChild(this);

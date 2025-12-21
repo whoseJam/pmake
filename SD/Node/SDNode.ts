@@ -121,7 +121,7 @@ export abstract class SDNode {
      * @returns The current component instance for method chaining.
      */
     remove() {
-        this._.layer.remove();
+        this.getRootRenderNode().remove();
     }
 
     getOpacity(): number {
@@ -129,7 +129,7 @@ export abstract class SDNode {
     }
 
     setOpacity(opacity: number): this {
-        return this.triggerAttributeChanged(this._.layer, "opacity", opacity, this._.opacity);
+        return this.triggerAttributeChanged(this.getRootRenderNode(), "opacity", opacity, this._.opacity);
     }
 
     onOpacityChanged(listener: (vn: number, vo: number) => void): this {
@@ -151,7 +151,7 @@ export abstract class SDNode {
     setScale(sx: number | [number, number], sy?: number): this {
         if (Array.isArray(sx)) return this.setScale(sx[0], sx[1]);
         if (sy === undefined) return this.setScale(sx, sx);
-        return this.triggerAttributeChanged(this._.renderer, "scale", [sx, sy], this._.scale);
+        return this.triggerAttributeChanged(this.getRootRenderNode(), "scale", [sx, sy], this._.scale);
     }
 
     getScale(): [number, number] {
@@ -167,7 +167,7 @@ export abstract class SDNode {
     }
 
     setRotation(rotate: number): this {
-        return this.triggerAttributeChanged(this._.renderer, "rotate", rotate, this._.rotate);
+        return this.triggerAttributeChanged(this.getRootRenderNode(), "rotate", rotate, this._.rotate);
     }
 
     onRotateChanged(listener: (vn: number, vo: number) => void): this {
@@ -182,7 +182,7 @@ export abstract class SDNode {
     setTranslate(d: [number, number]): this;
     setTranslate(dx: number | [number, number], dy?: number): this {
         if (Array.isArray(dx)) return this.setTranslate(dx[0], dx[1]);
-        return this.triggerAttributeChanged(this._.renderer, "translate", [dx, dy], this._.translate);
+        return this.triggerAttributeChanged(this.getRootRenderNode(), "translate", [dx, dy], this._.translate);
     }
 
     onTranslateChanged(listener: (vn: [number, number], vo: [number, number]) => void) {
@@ -197,7 +197,12 @@ export abstract class SDNode {
     setTransformOrigin(origin: [XLocation, YLocation]): this;
     setTransformOrigin(x: XLocation | [XLocation, YLocation], y?: YLocation) {
         if (Array.isArray(x)) return this.setTransformOrigin(x[0], x[1]);
-        return this.triggerAttributeChanged(this._.renderer, "transformOrigin", [x, y], this._.transformOrigin);
+        return this.triggerAttributeChanged(
+            this.getRootRenderNode(),
+            "transformOrigin",
+            [x, y],
+            this._.transformOrigin
+        );
     }
 
     getTransformOrigin(): [NumberOrPercent, NumberOrPercent] {

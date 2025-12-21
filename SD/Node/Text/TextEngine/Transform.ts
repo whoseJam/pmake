@@ -16,6 +16,7 @@ export function transformProcess(mapping: TextMapping) {
 
 export function transformPostProcess(text: Text, targetLayer: RenderNode) {
     return function (l: number, r: number, source: Array<SubtextView>, target: Array<SubtextView>) {
+        if (l === r) return;
         const createAction = (character: RenderNode, source: any, target: any, interp: any, animatedKey: string) => {
             new Action(
                 l,
@@ -43,10 +44,12 @@ export function transformPostProcess(text: Text, targetLayer: RenderNode) {
                 const source = sourcePaths[sourceIndex];
                 const target = targetPaths[targetIndex];
                 if (sourceIndex === undefined) {
+                    if (!target) continue;
                     character.setAttribute("d", target.d);
                     createAction(character, 0, 1, Interp.numberInterp, "opacity");
                     continue;
                 } else if (targetIndex === undefined) {
+                    if (!source) continue;
                     character.setAttribute("d", source.d);
                     createAction(character, 1, 0, Interp.numberInterp, "opacity");
                     continue;

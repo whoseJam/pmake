@@ -111,7 +111,7 @@ const codeLines = codeTexts.map(
             fontSize: 20,
             fill: "#888",
             fontFamily: "Arial",
-            opacity: 0,
+            opacity: 1,
         })
 );
 
@@ -163,7 +163,7 @@ const wait = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 async function showSubtitle(en: string, cn: string, duration: number = 2000) {
     subEn.startAnimate({ duration: 300 }).setOpacity(0).endAnimate();
     subCn.startAnimate({ duration: 300 }).setOpacity(0).endAnimate();
-    await wait(300);
+    await sd.pause(300);
 
     (subEn as any).setText(en);
     (subCn as any).setText(cn);
@@ -171,7 +171,7 @@ async function showSubtitle(en: string, cn: string, duration: number = 2000) {
     subEn.startAnimate({ duration: 300 }).setOpacity(1).endAnimate();
     subCn.startAnimate({ duration: 300 }).setOpacity(1).endAnimate();
 
-    if (duration > 0) await wait(duration);
+    if (duration > 0) await sd.pause(duration);
 }
 
 async function highlightLine(index: number) {
@@ -188,17 +188,18 @@ async function highlightLine(index: number) {
 
 sd.main(async () => {
     // 开场
-    await wait(500);
+    await sd.pause();
     subBg.startAnimate({ duration: 500 }).setOpacity(0.9).endAnimate();
+    console.log("set sub Bg to visible");
     await showSubtitle("Welcome to Bubble Sort Visualization", "欢迎来到冒泡排序可视化演示", 2000);
 
     // 依次显示数据条
     for (let i = 0; i < bars.length; i++) {
         bars[i].rect.startAnimate({ duration: 300 }).setOpacity(1).endAnimate();
         bars[i].text.startAnimate({ duration: 300 }).setOpacity(1).endAnimate();
-        await wait(100);
+        await sd.pause();
     }
-    await wait(500);
+    await sd.pause(500);
 
     // 显示代码块
     codeBg.startAnimate({ duration: 500 }).setOpacity(1).endAnimate();
@@ -208,7 +209,7 @@ sd.main(async () => {
             .setOpacity(0.6)
             .endAnimate()
     );
-    await wait(1000);
+    await sd.pause(1000);
 
     await showSubtitle("We will sort these numbers from smallest to largest", "我们将把这些数字从小到大排序", 2500);
 
@@ -266,7 +267,7 @@ sd.main(async () => {
                     .setCx(x1 + BAR_WIDTH / 2)
                     .endAnimate();
 
-                await wait(600);
+                await sd.pause(600);
 
                 // 逻辑交换
                 bars[j] = b2;
@@ -284,7 +285,7 @@ sd.main(async () => {
             // 恢复默认色
             bars[j].rect.startAnimate({ duration: 300 }).setFill("#8ecae6").endAnimate();
             bars[j + 1].rect.startAnimate({ duration: 300 }).setFill("#8ecae6").endAnimate();
-            await wait(300);
+            await sd.pause(300);
         }
 
         // 锁定已排序元素

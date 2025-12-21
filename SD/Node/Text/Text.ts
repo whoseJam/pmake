@@ -31,6 +31,7 @@ export class Text extends BaseText {
         fontSize?: number;
         fontFamily?: string;
         text?: string;
+        opacity?: number;
         fill?: SDColor;
         stroke?: SDColor;
         strokeWidth?: number;
@@ -45,6 +46,7 @@ export class Text extends BaseText {
             "y": args?.y ?? 0,
             "fontSize": args?.fontSize ?? 20,
             "fontFamily": args?.fontFamily ?? "Times New Roman",
+            "opacity": args?.opacity ?? 1,
             "fill": args?.fill ?? C.black,
             "fillOpacity": 1,
             "stroke": args?.stroke ?? C.black,
