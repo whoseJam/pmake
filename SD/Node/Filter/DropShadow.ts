@@ -2,18 +2,22 @@ import { SDSVGNode } from "@/Node/SDSVGNode";
 import { Filter } from "@/Node/Filter/Filter";
 import { Interp } from "@/Animate/Interp";
 
-export class GaussianBlur extends SDSVGNode {
+export class DropShadow extends SDSVGNode {
     _: SDSVGNode["_"] & {
         in: string;
         stdDeviation: number;
+        dx: number;
+        dy: number;
     };
 
-    constructor(args?: { targetNode?: Filter; in?: string; stdDeviation?: number }) {
+    constructor(args?: { targetNode?: Filter; in?: string; stdDeviation?: number; dx?: number; dy?: number }) {
         super();
 
-        this._.renderer = this.createSVGNode("feGaussianBlur", {
+        this._.renderer = this.createSVGNode("feDropShadow", {
             in: args?.in ?? "SourceGraphic",
             stdDeviation: args?.stdDeviation ?? 2,
+            dx: args?.dx ?? 0,
+            dy: args?.dy ?? 0,
         });
 
         args?.targetNode?.append(this);
@@ -59,5 +63,37 @@ export class GaussianBlur extends SDSVGNode {
 
     offStdDeviationChanged(listener: (vn: number, vo: number) => void) {
         return this.offAttributeChanged("stdDeviation", listener);
+    }
+
+    getDx() {
+        return this._.dx;
+    }
+
+    setDx(dx: number) {
+        return this.triggerAttributeChanged(this._.renderer, "dx", dx, this._.dx, Interp.numberInterp);
+    }
+
+    onDxChanged(listener: (vn: number, vo: number) => void) {
+        return this.onAttributeChanged("dx", listener);
+    }
+
+    offDxChanged(listener: (vn: number, vo: number) => void) {
+        return this.offAttributeChanged("dx", listener);
+    }
+
+    getDy() {
+        return this._.dy;
+    }
+
+    setDy(dy: number) {
+        return this.triggerAttributeChanged(this._.renderer, "dy", dy, this._.dy, Interp.numberInterp);
+    }
+
+    onDyChanged(listener: (vn: number, vo: number) => void) {
+        return this.onAttributeChanged("dy", listener);
+    }
+
+    offDyChanged(listener: (vn: number, vo: number) => void) {
+        return this.offAttributeChanged("dy", listener);
     }
 }

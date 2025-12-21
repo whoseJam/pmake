@@ -27,6 +27,7 @@ export { Text } from "@/Node/Text/Text";
 export { Marker } from "@/Node/Define/Marker";
 export { Filter } from "@/Node/Filter/Filter";
 export { GaussianBlur } from "@/Node/Filter/GaussianBlur";
+export { DropShadow } from "@/Node/Filter/DropShadow";
 export { init, inter, main, make1d, make2d, loopUpdate } from "@/Utility/Base";
 export { color } from "@/Utility/Color";
 export { rand } from "@/Utility/Random";
