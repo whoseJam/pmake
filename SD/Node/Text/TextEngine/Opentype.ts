@@ -64,7 +64,7 @@ export class FontManager {
         const scale = size / font.unitsPerEm;
         const height = (ascender + descender) * scale;
         const offset = -descender * scale;
-        return font.getPaths(text, x, y + height + offset, size);
+        return Array.from(font.getPaths(text, x, y + height + offset, size));
     }
 
     static widthToFontSize(text: string, family: string, width: number) {

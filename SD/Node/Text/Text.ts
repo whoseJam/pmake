@@ -27,6 +27,7 @@ export class Text extends BaseText {
         x?: number;
         y?: number;
         fontSize?: number;
+        fontFamily?: string;
         text?: string;
         fill?: SDColor;
         stroke?: SDColor;
@@ -41,6 +42,7 @@ export class Text extends BaseText {
             "x": args?.x ?? 0,
             "y": args?.y ?? 0,
             "fontSize": args?.fontSize ?? 20,
+            "fontFamily": args?.fontFamily ?? "Times New Roman",
             "fill": args?.fill ?? C.black,
             "fillOpacity": 1,
             "stroke": args?.stroke ?? C.black,
@@ -48,15 +50,17 @@ export class Text extends BaseText {
             "strokeWidth": args?.strokeWidth ?? 0,
             "strokeOffset": args?.strokeDashOffset ?? 0,
             "strokeDashArray": args?.strokeDashArray ?? [1, 0],
-            "fontFamily": getOS() === "Windows" ? "Consolas" : "Times New Roman",
             "text-anchor": "start",
             "dominant-baseline": "text-before-edge",
         });
 
-        const styles = generateDefaultStyles(args?.text);
+        const styles = generateDefaultStyles(this.getText());
+        const box = FontManager.boundingBox(this.getText(), this.getFontFamily(), this.getFontSize());
         Object.assign(this._, {
             subtextStyles: styles,
-            html: parseToHTML(styles, args?.text ?? ""),
+            html: parseToHTML(styles, this.getText()),
+            width: box.width,
+            height: box.height,
         });
 
         args?.targetNode?.appendChild(this);
@@ -233,7 +237,7 @@ function parseToHTML(styles: Array<PathStyle>, text: string) {
         let ans = "";
         const text = String(text_);
         for (let i = 0; i < text.length; i++) {
-            if (text[i] === " ") ans += "&emsp;";
+            if (text[i] === " ") ans += " ";
             else if (text[i] === "<") ans += "&lt;";
             else if (text[i] === ">") ans += "&gt;";
             else ans += text[i];

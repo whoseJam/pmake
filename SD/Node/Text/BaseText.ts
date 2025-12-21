@@ -75,13 +75,15 @@ export abstract class BaseText extends SDSVGNode {
     }
 
     setCenterX(cx: number): this {
-        this.setX(cx - this.getWidth() / 2);
-        return this;
+        return this.setX(cx - this.getWidth() / 2);
     }
 
     setCx(cx: number): this {
-        this.setCenterX(cx);
-        return this;
+        return this.setCenterX(cx);
+    }
+
+    setMaxX(mx: number): this {
+        return this.setX(mx - this.getWidth());
     }
 
     getY(): number {
@@ -101,12 +103,14 @@ export abstract class BaseText extends SDSVGNode {
     }
 
     setCenterY(cy: number): this {
-        this.setY(cy - this.getHeight() / 2);
-        return this;
+        return this.setY(cy - this.getHeight() / 2);
     }
 
     setCy(cy: number): this {
-        this.setCenterY(cy);
-        return this;
+        return this.setCenterY(cy);
+    }
+
+    setMaxY(my: number): this {
+        return this.setY(my - this.getHeight());
     }
 }

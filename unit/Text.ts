@@ -5,7 +5,7 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestTransformWithColor);
+sd.main(TestTransformWithSpaceCharacter);
 
 // async function TestSubtextColor() {
 //     const text = new sd.Text(svg, "for(int i=1;i<=n;i++)ans+=i;").x(100).y(100).fontSize(40);
@@ -212,6 +212,18 @@ async function TestSubtextColor() {
     text.startAnimate().setFill(C.purple).endAnimate();
     await sd.pause();
     text.startAnimate().setFill(C.grey).endAnimate();
+}
+
+async function TestTransformWithSpaceCharacter() {
+    const text = new sd.Text({
+        targetNode: svg,
+        x: 100,
+        y: 100,
+        fontSize: 100,
+        text: "hello world",
+    });
+    await sd.pause();
+    text.startAnimate().setText("how are you").endAnimate();
 }
 
 async function TestTransformWithFontSize() {

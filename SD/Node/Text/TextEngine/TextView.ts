@@ -61,16 +61,13 @@ export class PathStyle {
 
 export class PathView {
     d: string;
-    status: string;
     transform: SVGMatrix;
     constructor(d: string, transform: SVGMatrix = new DOMMatrix()) {
         this.d = d;
-        this.status = "normal";
         this.transform = transform;
     }
-    clone(status = "normal") {
+    clone() {
         const path = new PathView(this.d, this.transform);
-        path.status = status;
         return path;
     }
 }

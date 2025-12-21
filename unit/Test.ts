@@ -20,14 +20,69 @@ for (let i = 0; i < 150; i++) {
 new sd.Circle({ targetNode: svg, cx: CX, cy: CY, r: 25, fill: "#FFD700" });
 
 const planets = [
-    { n: "Mercury", c: "#A5A5A5", s: 4, o: 40, v: 2.0, a: Math.random() * 6.28, el: null as any },
-    { n: "Venus", c: "#E3BB76", s: 7, o: 65, v: 1.5, a: Math.random() * 6.28, el: null as any },
-    { n: "Earth", c: "#4F86F7", s: 7.5, o: 95, v: 1.0, a: Math.random() * 6.28, el: null as any },
-    { n: "Mars", c: "#E27B58", s: 5, o: 125, v: 0.8, a: Math.random() * 6.28, el: null as any },
-    { n: "Jupiter", c: "#D6A574", s: 18, o: 175, v: 0.4, a: Math.random() * 6.28, el: null as any },
-    { n: "Saturn", c: "#F4D03F", s: 15, o: 225, v: 0.3, a: Math.random() * 6.28, el: null as any, ring: null as any },
-    { n: "Uranus", c: "#7DE3F4", s: 10, o: 265, v: 0.2, a: Math.random() * 6.28, el: null as any },
-    { n: "Neptune", c: "#5B5DD1", s: 10, o: 295, v: 0.15, a: Math.random() * 6.28, el: null as any },
+    {
+        n: "Mercury",
+        c: "#A5A5A5",
+        s: 4,
+        o: 40,
+        v: 2.0,
+        a: Math.random() * 6.28,
+        el: null as any,
+        text: null as sd.Text,
+    },
+    { n: "Venus", c: "#E3BB76", s: 7, o: 65, v: 1.5, a: Math.random() * 6.28, el: null as any, text: null as sd.Text },
+    {
+        n: "Earth",
+        c: "#4F86F7",
+        s: 7.5,
+        o: 95,
+        v: 1.0,
+        a: Math.random() * 6.28,
+        el: null as any,
+        text: null as sd.Text,
+    },
+    { n: "Mars", c: "#E27B58", s: 5, o: 125, v: 0.8, a: Math.random() * 6.28, el: null as any, text: null as sd.Text },
+    {
+        n: "Jupiter",
+        c: "#D6A574",
+        s: 18,
+        o: 175,
+        v: 0.4,
+        a: Math.random() * 6.28,
+        el: null as any,
+        text: null as sd.Text,
+    },
+    {
+        n: "Saturn",
+        c: "#F4D03F",
+        s: 15,
+        o: 225,
+        v: 0.3,
+        a: Math.random() * 6.28,
+        el: null as any,
+        ring: null as any,
+        text: null as sd.Text,
+    },
+    {
+        n: "Uranus",
+        c: "#7DE3F4",
+        s: 10,
+        o: 265,
+        v: 0.2,
+        a: Math.random() * 6.28,
+        el: null as any,
+        text: null as sd.Text,
+    },
+    {
+        n: "Neptune",
+        c: "#5B5DD1",
+        s: 10,
+        o: 295,
+        v: 0.15,
+        a: Math.random() * 6.28,
+        el: null as any,
+        text: null as sd.Text,
+    },
 ];
 
 planets.forEach(p => {
@@ -82,7 +137,7 @@ sd.loopUpdate(() => {
         const x = CX + Math.cos(p.a) * p.o;
         const y = CY + Math.sin(p.a) * p.o;
         p.el.setCx(x).setCy(y);
-        p.text.setCx(x).setCy(y - p.o - 20);
+        p.text.setCx(x).setMaxY(y - p.o - 20);
         if (p.ring) {
             p.ring.setCenterX(x).setCenterY(y);
         }

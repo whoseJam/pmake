@@ -10,12 +10,11 @@ export function getTextPaths(text: Text, t: number): Array<PathView> {
     const x = A.getAttribute(text, "x", t, text.getX());
     const y = A.getAttribute(text, "y", t, text.getY());
     const paths = FontManager.getTextPathsFromOpenType(text_, family, size, x, y);
-    const paths_ = [];
-    for (let i = 0; i < paths.length; i++) {
-        const d = paths[i].toPathData(4);
-        paths_.push(new PathView(d));
-    }
-    return paths_;
+    return paths.map(path => {
+        const data = path.toPathData(4);
+        if (data === "") return undefined;
+        return new PathView(data);
+    });
 }
 
 export function getTextPaths2(text: Text, t: number, string: string): Array<PathView> {
@@ -24,10 +23,9 @@ export function getTextPaths2(text: Text, t: number, string: string): Array<Path
     const x = A.getAttribute(text, "x", t, text.getX());
     const y = A.getAttribute(text, "y", t, text.getY());
     const paths = FontManager.getTextPathsFromOpenType(string, family, size, x, y);
-    const paths_ = [];
-    for (let i = 0; i < paths.length; i++) {
-        const d = paths[i].toPathData(4);
-        paths_.push(new PathView(d));
-    }
-    return paths_;
+    return paths.map(path => {
+        const data = path.toPathData(4);
+        if (data === "") return undefined;
+        return new PathView(data);
+    });
 }

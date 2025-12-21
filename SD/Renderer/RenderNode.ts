@@ -11,7 +11,7 @@ function parseText(text: string) {
     let ans = "";
     text = String(text);
     for (let i = 0; i < text.length; i++) {
-        if (text[i] === " ") ans += "&emsp;";
+        if (text[i] === " ") ans += " ";
         else if (text[i] === "<") ans += "&lt;";
         else if (text[i] === ">") ans += "&gt;";
         else ans += text[i];
