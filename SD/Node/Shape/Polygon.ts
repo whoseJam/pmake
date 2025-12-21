@@ -1,14 +1,37 @@
 import { Interp } from "@/Animate/Interp";
 import { BaseShape } from "@/Node/Shape/BaseShape";
 import { PolygonEngine } from "@/Node/Shape/PolygonEngine";
+import { Group } from "@/Node/Other/Group";
+import { SDColor, Color as C } from "@/Utility/Color";
 
 export class Polygon extends BaseShape {
-    constructor() {
+    constructor(args?: {
+        targetNode?: Group;
+        points?: Array<[number, number]>;
+        opacity?: number;
+        fill?: SDColor;
+        fillOpacity?: number;
+        stroke?: SDColor;
+        strokeOpacity?: number;
+        strokeWidth?: number;
+        strokeDashOffset?: number;
+        strokeDashArray?: Array<number>;
+    }) {
         super();
 
         this._.renderer = this.createSVGNode("polygon", {
-            points: [],
+            points: args?.points ?? [],
+            opacity: args?.opacity ?? 1,
+            fill: args?.fill ?? C.white,
+            fillOpacity: args?.fillOpacity ?? 1,
+            stroke: args?.stroke ?? C.black,
+            strokeOpacity: args?.strokeOpacity ?? 1,
+            strokeWidth: args?.strokeWidth ?? 1,
+            strokeDashOffset: args?.strokeDashOffset ?? 0,
+            strokeDashArray: args?.strokeDashArray ?? [],
         });
+
+        args?.targetNode?.appendChild(this);
     }
 
     getX() {

@@ -26,6 +26,8 @@ export class Text extends BaseText {
         targetNode?: Group;
         x?: number;
         y?: number;
+        cx?: number;
+        cy?: number;
         fontSize?: number;
         fontFamily?: string;
         text?: string;
@@ -62,6 +64,9 @@ export class Text extends BaseText {
             width: box.width,
             height: box.height,
         });
+
+        if (args?.cx !== undefined) this.setCx(args.cx);
+        if (args?.cy !== undefined) this.setCy(args.cy);
 
         args?.targetNode?.appendChild(this);
     }

@@ -21,6 +21,7 @@ export class Rect extends BaseShape {
         height?: number;
         rx?: number;
         ry?: number;
+        opacity?: number;
         fill?: SDColor;
         fillOpacity?: number;
         stroke?: SDColor;
@@ -38,6 +39,7 @@ export class Rect extends BaseShape {
             height: args?.height ?? 40,
             rx: args?.rx ?? 0,
             ry: args?.ry ?? 0,
+            opacity: args?.opacity ?? 1,
             fill: args?.fill ?? C.white,
             fillOpacity: args?.fillOpacity ?? 1,
             stroke: args?.stroke ?? C.black,

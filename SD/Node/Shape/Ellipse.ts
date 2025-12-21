@@ -1,15 +1,16 @@
 import { Interp } from "@/Animate/Interp";
 import { BaseShape } from "@/Node/Shape/BaseShape";
 import { SDColor, Color as C } from "@/Utility/Color";
-import { SDNode } from "@/Node/SDNode";
+import { Group } from "@/Node/Other/Group";
 
 export class Ellipse extends BaseShape {
     constructor(args?: {
-        targetNode?: SDNode;
+        targetNode?: Group;
         cx?: number;
         cy?: number;
         rx?: number;
         ry?: number;
+        opacity?: number;
         fill?: SDColor;
         fillOpacity?: number;
         stroke?: SDColor;
@@ -25,6 +26,7 @@ export class Ellipse extends BaseShape {
             ry: args?.ry ?? 20,
             cx: args?.cx ?? 20,
             cy: args?.cy ?? 20,
+            opacity: args?.opacity ?? 1,
             fill: args?.fill ?? C.white,
             fillOpacity: args?.fillOpacity ?? 1,
             stroke: args?.stroke ?? C.black,

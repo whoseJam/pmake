@@ -9,6 +9,7 @@ export class Circle extends BaseShape {
         cx?: number;
         cy?: number;
         r?: number;
+        opacity?: number;
         fill?: SDColor;
         fillOpacity?: number;
         stroke?: SDColor;
@@ -23,6 +24,7 @@ export class Circle extends BaseShape {
             cx: args?.cx ?? 0,
             cy: args?.cy ?? 0,
             r: args?.r ?? 20,
+            opacity: args?.opacity ?? 1,
             fill: args?.fill ?? C.white,
             fillOpacity: args?.fillOpacity ?? 1,
             stroke: args?.stroke ?? C.black,

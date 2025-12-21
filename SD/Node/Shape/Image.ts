@@ -1,18 +1,30 @@
 import { Interp } from "@/Animate/Interp";
 import { BaseShape } from "@/Node/Shape/BaseShape";
+import { Group } from "@/Node/Other/Group";
 
 export class Image extends BaseShape {
-    constructor() {
+    constructor(args?: {
+        targetNode?: Group;
+        x?: number;
+        y?: number;
+        width?: number;
+        height?: number;
+        src?: string;
+        opacity?: number;
+    }) {
         super();
 
         this._.renderer = this.createSVGNode("image", {
-            x: 0,
-            y: 0,
-            width: 40,
-            height: 40,
-            src: "",
+            x: args?.x ?? 0,
+            y: args?.y ?? 0,
+            width: args?.width ?? 40,
+            height: args?.height ?? 40,
+            src: args?.src ?? "",
+            opacity: args?.opacity ?? 1,
             preserveAspectRatio: "xMidYMid meet",
         });
+
+        args?.targetNode?.appendChild(this._.renderer);
     }
 
     getX(): number {
