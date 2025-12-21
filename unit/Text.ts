@@ -5,7 +5,7 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestFontFamilyWithTransform);
+sd.main(TestFontFamilyWithTypewritter);
 
 // async function TestSubtextColor() {
 //     const text = new sd.Text(svg, "for(int i=1;i<=n;i++)ans+=i;").x(100).y(100).fontSize(40);
@@ -330,8 +330,8 @@ async function TestFontFamilyWithTypewritter() {
         fontSize: 60,
     });
     await sd.pause();
-    text1.startAnimate(1000).typewritter("hello").setFontFamily("Arial").endAnimate();
-    text2.startAnimate(1000).typewritter("hello").endAnimate();
+    text1.startAnimate({ duration: 1000 }).typewritter("Arial").setFontFamily("Arial").endAnimate();
+    text2.startAnimate({ duration: 1000 }).typewritter("Times New Roman").endAnimate();
 }
 
 async function TestTypewritter() {

@@ -149,7 +149,7 @@ export class Text extends BaseText {
     typewritter(text: string | number) {
         const text_ = String(text);
         const box = FontManager.boundingBox(text_, this.getFontFamily(), this.getFontSize());
-        this._.subtextStyles = buildAnimation(
+        const styles = buildAnimation(
             this,
             { text: this.getText(), styles: this._.subtextStyles },
             { text: text_ },
@@ -157,12 +157,12 @@ export class Text extends BaseText {
             typewritterPostProcess(this, this._.parent.getRootRenderNode()),
             "typewritter"
         );
-        this._.text = text_;
-        this._.setTogether({
-            html: parseToHTML.call(this),
-            width: box.width,
-            height: box.height,
-        });
+        const html = parseToHTML(styles, text_);
+        this._.width = box.width;
+        this._.height = box.height;
+        this.triggerAttributeChanged(undefined, "text", text_, this._.text, Interp.emptyInterp);
+        this.triggerAttributeChanged(undefined, "subtextStyles", styles, this._.subtextStyles, Interp.emptyInterp);
+        this.triggerAttributeChanged(this._.renderer, "html", html, this._.html, Interp.stringBlankInMiddleInterp);
         return this;
     }
 

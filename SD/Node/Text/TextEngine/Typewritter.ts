@@ -37,7 +37,7 @@ export function typewritterPostProcess(text: Text, targetLayer: RenderNode) {
                     else characters[i].setAttribute("opacity", this.source);
                 }
             },
-            text._.timingFunction,
+            this.timingFunction,
             text,
             "typewritter"
         );
