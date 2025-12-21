@@ -9,7 +9,7 @@ export class Marker extends SDSVGNode {
     constructor() {
         super();
 
-        this._.marker = this.__createSVGNode("marker", {});
+        this._.marker = this.createSVGNode("marker", {});
     }
     getX() {
         return 0;

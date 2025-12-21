@@ -10,7 +10,7 @@ export class Line extends BasePath {
     constructor(args?: { targetNode?: Group; x1?: number; y1?: number; x2?: number; y2?: number }) {
         super();
 
-        this.__createSVGNode("line", {
+        this.createSVGNode("line", {
             x1: args?.x1 ?? 0,
             y1: args?.y1 ?? 0,
             x2: args?.x2 ?? 40,

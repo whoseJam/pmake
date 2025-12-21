@@ -1,3 +1,4 @@
+import { Interp } from "@/Animate/Interp";
 import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Color as C, SDAllColor, SDHEXColor, SDRGBAColor } from "@/Utility/Color";
@@ -31,7 +32,13 @@ export abstract class SDSVGNode extends SDNode {
      * @returns The current component instance for method chaining.
      */
     setFill(fill?: SDAllColor) {
-        return this.triggerAttributeChanged(this._.renderer, "fill", C.toRGBA(C.toFill(fill)), this._.fill);
+        return this.triggerAttributeChanged(
+            this._.renderer,
+            "fill",
+            C.toRGBA(C.toFill(fill)),
+            this._.fill,
+            Interp.colorInterp
+        );
     }
 
     onFillChanged(listener: (vn: any, vo: any) => void) {
@@ -56,7 +63,13 @@ export abstract class SDSVGNode extends SDNode {
      * @returns The current component instance for method chaining.
      */
     setStroke(stroke: SDAllColor): this {
-        return this.triggerAttributeChanged(this._.renderer, "stroke", C.toRGBA(C.toStroke(stroke)), this._.stroke);
+        return this.triggerAttributeChanged(
+            this._.renderer,
+            "stroke",
+            C.toRGBA(C.toStroke(stroke)),
+            this._.stroke,
+            Interp.colorInterp
+        );
     }
 
     onStrokeChanged(listener: (vn: any, vo: any) => void) {
@@ -72,7 +85,13 @@ export abstract class SDSVGNode extends SDNode {
     }
 
     setFillOpacity(opacity: number): this {
-        return this.triggerAttributeChanged(this._.renderer, "fillOpacity", opacity, this._.fillOpacity);
+        return this.triggerAttributeChanged(
+            this._.renderer,
+            "fillOpacity",
+            opacity,
+            this._.fillOpacity,
+            Interp.numberInterp
+        );
     }
 
     onFillOpacityChanged(listener: (vn: number, vo: number) => void) {
@@ -88,7 +107,13 @@ export abstract class SDSVGNode extends SDNode {
     }
 
     setStrokeOpacity(opacity: number): this {
-        return this.triggerAttributeChanged(this._.renderer, "strokeOpacity", opacity, this._.strokeOpacity);
+        return this.triggerAttributeChanged(
+            this._.renderer,
+            "strokeOpacity",
+            opacity,
+            this._.strokeOpacity,
+            Interp.numberInterp
+        );
     }
 
     onStrokeOpacityChanged(listener: (vn: number, vo: number) => void) {
@@ -104,7 +129,13 @@ export abstract class SDSVGNode extends SDNode {
     }
 
     setStrokeWidth(width: number): this {
-        return this.triggerAttributeChanged(this._.renderer, "strokeWidth", width, this._.strokeWidth);
+        return this.triggerAttributeChanged(
+            this._.renderer,
+            "strokeWidth",
+            width,
+            this._.strokeWidth,
+            Interp.numberInterp
+        );
     }
 
     onStrokeWidthChanged(listener: (vn: number, vo: number) => void) {
@@ -120,7 +151,13 @@ export abstract class SDSVGNode extends SDNode {
     }
 
     setStrokeDashOffset(offset: number): this {
-        return this.triggerAttributeChanged(this._.renderer, "strokeDashOffset", offset, this._.strokeDashOffset);
+        return this.triggerAttributeChanged(
+            this._.renderer,
+            "strokeDashOffset",
+            offset,
+            this._.strokeDashOffset,
+            Interp.numberInterp
+        );
     }
 
     onStrokeDashOffsetChanged(listener: (vn: number, vo: number) => void) {
@@ -136,7 +173,13 @@ export abstract class SDSVGNode extends SDNode {
     }
 
     setStrokeDashArray(array: Array<number>): this {
-        return this.triggerAttributeChanged(this._.renderer, "strokeDashArray", array, this._.strokeDashArray);
+        return this.triggerAttributeChanged(
+            this._.renderer,
+            "strokeDashArray",
+            array,
+            this._.strokeDashArray,
+            Interp.arrayInterp
+        );
     }
 
     onStrokeDashArrayChanged(listener: (vn: Array<number>, vo: Array<number>) => void) {
@@ -147,7 +190,7 @@ export abstract class SDSVGNode extends SDNode {
         return this.offAttributeChanged("strokeDashArray", listener);
     }
 
-    __createSVGNode(label: string, attributes: Record<string, any> = {}): RenderNode {
+    protected createSVGNode(label: string, attributes: Record<string, any> = {}): RenderNode {
         Object.assign(this._, attributes);
         const object = RenderNode.createRenderNode(this, undefined, label);
         this._.renderer = object;

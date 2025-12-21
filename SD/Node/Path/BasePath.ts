@@ -138,8 +138,8 @@ export abstract class BasePath extends SDSVGNode {
      */
     abstract totalLength(): number;
 
-    __createSVGNode(label: string, attributes?: { [key: string]: any }) {
-        return super.__createSVGNode(label, {
+    createSVGNode(label: string, attributes?: { [key: string]: any }) {
+        return super.createSVGNode(label, {
             ...BASE_PATH_ATTRIBUTES,
             ...(attributes || {}),
         });

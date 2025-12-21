@@ -31,7 +31,7 @@ export class Rect extends BaseShape {
     }) {
         super();
 
-        this.__createSVGNode("rect", {
+        this.createSVGNode("rect", {
             x: args?.x ?? 0,
             y: args?.y ?? 0,
             width: args?.width ?? 40,

@@ -9,7 +9,7 @@ export class Group extends SDSVGNode {
     constructor(nodes?: Array<SDNode>) {
         super();
 
-        this._.renderer = this.__createSVGNode("g");
+        this._.renderer = this.createSVGNode("g");
 
         this._.nodes = [];
         if (nodes) nodes.forEach(node => this.add(node));

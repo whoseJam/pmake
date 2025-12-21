@@ -36,7 +36,7 @@ export class Text extends BaseText {
     }) {
         super();
 
-        this._.renderer = this.__createSVGNode("text", {
+        this._.renderer = this.createSVGNode("text", {
             "text": args?.text ?? "",
             "x": args?.x ?? 0,
             "y": args?.y ?? 0,

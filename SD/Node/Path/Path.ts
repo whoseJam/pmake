@@ -18,7 +18,7 @@ export class Path extends BasePath {
     }) {
         super();
 
-        this.__createSVGNode("path", {
+        this.createSVGNode("path", {
             d: args?.d || "",
             fill: args?.fill ?? C.none,
             fillOpacity: args?.fillOpacity ?? 1,

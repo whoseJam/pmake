@@ -5,7 +5,7 @@ export class Image extends BaseShape {
     constructor() {
         super();
 
-        this._.renderer = this.__createSVGNode("image", {
+        this._.renderer = this.createSVGNode("image", {
             x: 0,
             y: 0,
             width: 40,

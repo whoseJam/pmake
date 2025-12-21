@@ -6,7 +6,7 @@ export class Polyline extends BasePath {
     constructor(args?: { targetNode?: Group; points?: Array<[number, number]> }) {
         super();
 
-        this.__createSVGNode("polyline", {
+        this.createSVGNode("polyline", {
             points: args?.points ?? [],
         });
 

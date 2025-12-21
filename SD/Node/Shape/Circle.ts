@@ -19,7 +19,7 @@ export class Circle extends BaseShape {
     }) {
         super();
 
-        this._.renderer = this.__createSVGNode("circle", {
+        this._.renderer = this.createSVGNode("circle", {
             cx: args?.cx ?? 0,
             cy: args?.cy ?? 0,
             r: args?.r ?? 20,

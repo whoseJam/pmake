@@ -12,8 +12,8 @@ const BASE_SHAPE_ATTRIBUTES = {
 };
 
 export abstract class BaseShape extends SDSVGNode {
-    __createSVGNode(label: string, attributes?: { [key: string]: any }) {
-        return super.__createSVGNode(label, {
+    createSVGNode(label: string, attributes?: { [key: string]: any }) {
+        return super.createSVGNode(label, {
             ...BASE_SHAPE_ATTRIBUTES,
             ...(attributes || {}),
         });
