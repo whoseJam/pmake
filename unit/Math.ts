@@ -3,7 +3,25 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const C = sd.color();
 
-sd.main(TestPythagoreanTheorem);
+sd.main(TestSubtextColor);
+
+async function TestSubtextColor() {
+    const text = new sd.Math({
+        targetNode: svg,
+        x: 100,
+        y: 100,
+        fontSize: 100,
+        text: "abcabcabc",
+    });
+    await sd.pause();
+    text.startAnimate().setSubtextFill("bc", C.red).endAnimate();
+    await sd.pause();
+    text.startAnimate().setSubtextFill("c", C.textBlue).endAnimate();
+    await sd.pause();
+    text.startAnimate().setFill(C.purple).endAnimate();
+    await sd.pause();
+    text.startAnimate().setFill(C.grey).endAnimate();
+}
 
 async function TestTransformWithPosition() {
     const text1 = new sd.Math({

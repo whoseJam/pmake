@@ -1,8 +1,9 @@
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Root } from "@/Interact/Root";
-import { PathView } from "./TextView";
+import { PathStyle, PathView } from "@/Node/Text/TextEngine/TextView";
 import { Dom } from "@/Utility/Dom";
 import { PathPen } from "@/Node/Path/PathPen";
+import { Color as C } from "@/Utility/Color";
 
 export class MathManager {
     private static mathSVG: RenderNode;
@@ -87,7 +88,7 @@ export class MathManager {
         const text = [];
         const extract = (current: SVGElement): string => {
             if (Dom.tagName(current) === "rect") return "rect";
-            return current.getAttribute("xlink:href");
+            return current.getAttribute("data-c");
         };
         const dfs = (current: SVGGraphicsElement) => {
             if (!Dom.tagName(current)) return;
@@ -98,6 +99,26 @@ export class MathManager {
         };
         dfs(root);
         return text;
+    }
+
+    static applyStyles(math: RenderNode, styles: Array<PathStyle>) {
+        if (!math) return;
+        let i = 0;
+        const root: SVGGElement = math.element().children[1] as SVGGElement;
+        const apply = (current: SVGElement) => {
+            const style = styles[i];
+            if (style.fill !== "default") current.setAttribute("fill", C.toString(style.fill));
+            if (style.stroke !== "default") current.setAttribute("stroke", C.toString(style.stroke));
+            if (i + 1 < styles.length) i++;
+        };
+        const dfs = (current: SVGGraphicsElement) => {
+            if (!Dom.tagName(current)) return;
+            if (Dom.tagName(current) === "defs") return;
+            if (Dom.tagName(current) === "path") return;
+            if (Dom.tagName(current) === "rect" || Dom.tagName(current) === "use") apply(current);
+            for (let i = 0; i < current.children.length; i++) dfs(current.children[i] as SVGGraphicsElement);
+        };
+        dfs(root);
     }
 
     static adjustMath(math: RenderNode) {

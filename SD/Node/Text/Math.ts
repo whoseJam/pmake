@@ -54,12 +54,12 @@ export class Math extends BaseText {
         });
 
         if (this.getText() !== "") {
-            const html = parseToHTML([], this.getText(), this);
-            const styles = generateDefaultStyles(html);
+            const [html, text, styles] = parseToHTML(this, this.getText());
             const box = MathManager.boundingBox(html);
             this.getRootRenderNode().__append(html);
+            console.log("Default styles=", styles);
             Object.assign(this._, {
-                text: MathManager.getMathText(html),
+                text,
                 subtextStyles: styles,
                 html: html,
                 width: box.width,
@@ -122,10 +122,7 @@ export class Math extends BaseText {
 
     setText(text: string | number, mapping?: TextMapping): this {
         if (this.getText() === String(text)) return this;
-        const html = parseToHTML([], String(text), this);
-        const text_ = MathManager.getMathText(html);
-        console.log("old text=", this._.text);
-        console.log("new text=", text_);
+        const [html, text_, _] = parseToHTML(this, String(text));
         const box = MathManager.boundingBox(html);
         const styles = buildAnimation(
             this,
@@ -135,6 +132,7 @@ export class Math extends BaseText {
             transformPostProcess(this, this.getRootRenderNode()),
             "transform"
         );
+        MathManager.applyStyles(html, styles);
         this._.width = box.width;
         this._.height = box.height;
         this.triggerAttributeChanged(undefined, "string", String(text), this._.string, Interp.emptyInterp);
@@ -152,10 +150,10 @@ export class Math extends BaseText {
         return this.offAttributeChanged("string", listener);
     }
 
-    setSubtextFill(subtext: string | number, color: SDColor, i: number = 0) {
+    setSubtextFill(subtext: string | number, color: SDColor, i: number = 0): this {
         const textView = createTextView(this._.text, {});
-        const html = parseToHTML([], String(subtext), this);
-        const subtextView = matchSubtext(textView, MathManager.getMathText(html));
+        const text = parseToHTML(this, String(subtext))[1];
+        const subtextView = matchSubtext(textView, text);
         const newStyles = this._.subtextStyles.map((style: PathStyle) => style.clone());
         subtextView.__iterate(i => (newStyles[i].fill = color));
         buildAnimation(
@@ -166,31 +164,35 @@ export class Math extends BaseText {
             transformPostProcess(this, this.getRootRenderNode()),
             "*"
         );
-        this._.subtextStyles = newStyles;
-        this._.html = html;
+        const html = parseToHTML(this, this._.string, newStyles)[0];
+        this.triggerAttributeChanged(undefined, "subtextStyles", newStyles, this._.subtextStyles, Interp.emptyInterp);
+        this.triggerAttributeChanged(this._.renderer, "html", html, this._.html, Interp.childBlankInMiddleInterp);
         return this;
     }
 }
 
-function generateDefaultStyles(math: RenderNode): Array<PathStyle> {
-    const text = MathManager.getMathText(math);
-    const styles: Array<PathStyle> = [];
-    for (let i = 0; i < text.length; i++) styles.push(new PathStyle({}));
-    return styles;
-}
-
-function parseToHTML(styles: Array<PathStyle>, text: string, targetNode: Math) {
+function parseToHTML(
+    node: Math,
+    string: string,
+    styles?: Array<PathStyle>
+): [RenderNode, Array<string>, Array<PathStyle>] {
     // @ts-ignore
-    const element = MathJax.tex2svg(text).children[0] as SVGSVGElement;
+    const element = MathJax.tex2svg(string).children[0] as SVGSVGElement;
     element.setAttribute("fill", element.children[1].getAttribute("fill"));
     element.setAttribute("stroke", element.children[1].getAttribute("stroke"));
     element.children[1].removeAttribute("fill");
     element.children[1].removeAttribute("stroke");
-    const math = RenderNode.createMathRenderNode(targetNode, targetNode.getRootRenderNode(), element);
+    const math = RenderNode.createMathRenderNode(node, node.getRootRenderNode(), element);
     math.setAttribute("fill", "currentColor");
     math.setAttribute("stroke", "currentColor");
-    math.setAttribute("x", String(targetNode.getX()));
-    math.setAttribute("y", String(targetNode.getY()));
-    math.setAttribute("fontSize", String(targetNode.getFontSize()));
-    return math;
+    math.setAttribute("x", node.getX());
+    math.setAttribute("y", node.getY());
+    math.setAttribute("fontSize", node.getFontSize());
+    const text = MathManager.getMathText(math);
+    if (styles === undefined) {
+        styles = [];
+        for (let i = 0; i < text.length; i++) styles.push(new PathStyle({}));
+    }
+    MathManager.applyStyles(math, styles);
+    return [math, text, styles];
 }

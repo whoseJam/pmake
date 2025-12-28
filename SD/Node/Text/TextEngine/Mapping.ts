@@ -11,6 +11,8 @@ function calculate(textView: TextView, deleted: Array<boolean>, pattern: TextMap
             if (matched) return new SubtextView(textView, i, i + pattern.length - 1);
         }
     }
+    console.warn(pattern);
+    throw new Error("Subtext Not Found");
 }
 
 export function matchSubtext(textView: TextView, pattern: string | Array<string>): SubtextView {
@@ -19,6 +21,8 @@ export function matchSubtext(textView: TextView, pattern: string | Array<string>
         for (let j = 0; j < pattern.length && matched; j++) if (pattern[j] !== textView.text[i + j]) matched = false;
         if (matched) return new SubtextView(textView, i, i + pattern.length - 1);
     }
+    console.warn(pattern);
+    throw new Error("Subtext Not Found");
 }
 
 export function match(
