@@ -2,12 +2,15 @@ import { Interp } from "@/Animate/Interp";
 import { BaseShape } from "@/Node/Shape/BaseShape";
 import { SDColor, Color as C } from "@/Utility/Color";
 import { Group } from "@/Node/Other/Group";
+import { Filter, SDFilter } from "@/Node/Filter/Filter";
 
 export class Circle extends BaseShape {
     constructor(args?: {
         targetNode?: Group;
         cx?: number;
         cy?: number;
+        centerX?: number;
+        centerY?: number;
         r?: number;
         opacity?: number;
         fill?: SDColor;
@@ -17,12 +20,13 @@ export class Circle extends BaseShape {
         strokeWidth?: number;
         strokeDashOffset?: number;
         strokeDashArray?: Array<number>;
+        filter?: SDFilter;
     }) {
         super();
 
         this._.renderer = this.createSVGNode("circle", {
-            cx: args?.cx ?? 0,
-            cy: args?.cy ?? 0,
+            cx: args?.cx ?? args?.centerX ?? 0,
+            cy: args?.cy ?? args?.centerY ?? 0,
             r: args?.r ?? 20,
             opacity: args?.opacity ?? 1,
             fill: args?.fill ?? C.white,
@@ -32,6 +36,7 @@ export class Circle extends BaseShape {
             strokeWidth: args?.strokeWidth ?? 1,
             strokeDashOffset: args?.strokeDashOffset ?? 0,
             strokeDashArray: args?.strokeDashArray ?? [],
+            filter: Filter.toURLString(args?.filter) ?? "",
         });
 
         args?.targetNode?.appendChild(this);

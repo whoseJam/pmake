@@ -3,6 +3,7 @@ import { BaseShape } from "@/Node/Shape/BaseShape";
 import { PolygonEngine } from "@/Node/Shape/PolygonEngine";
 import { Group } from "@/Node/Other/Group";
 import { SDColor, Color as C } from "@/Utility/Color";
+import { Filter, SDFilter } from "@/Node/Filter/Filter";
 
 export class Polygon extends BaseShape {
     constructor(args?: {
@@ -16,6 +17,7 @@ export class Polygon extends BaseShape {
         strokeWidth?: number;
         strokeDashOffset?: number;
         strokeDashArray?: Array<number>;
+        filter?: SDFilter;
     }) {
         super();
 
@@ -29,6 +31,7 @@ export class Polygon extends BaseShape {
             strokeWidth: args?.strokeWidth ?? 1,
             strokeDashOffset: args?.strokeDashOffset ?? 0,
             strokeDashArray: args?.strokeDashArray ?? [],
+            filter: Filter.toURLString(args?.filter) ?? "",
         });
 
         args?.targetNode?.appendChild(this);

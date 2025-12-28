@@ -2,6 +2,7 @@ import { BaseShape } from "@/Node/Shape/BaseShape";
 import { SDColor, Color as C } from "@/Utility/Color";
 import { Interp } from "@/Animate/Interp";
 import { Group } from "@/Node/Other/Group";
+import { Filter, SDFilter } from "@/Node/Filter/Filter";
 
 export class Rect extends BaseShape {
     _: BaseShape["_"] & {
@@ -17,6 +18,10 @@ export class Rect extends BaseShape {
         targetNode?: Group;
         x?: number;
         y?: number;
+        cx?: number;
+        cy?: number;
+        centerX?: number;
+        centerY?: number;
         width?: number;
         height?: number;
         rx?: number;
@@ -29,7 +34,7 @@ export class Rect extends BaseShape {
         strokeWidth?: number;
         strokeDashOffset?: number;
         strokeDashArray?: Array<number>;
-        filter?: string;
+        filter?: SDFilter;
     }) {
         super();
 
@@ -48,8 +53,13 @@ export class Rect extends BaseShape {
             strokeWidth: args?.strokeWidth ?? 1,
             strokeDashOffset: args?.strokeDashOffset ?? 0,
             strokeDashArray: args?.strokeDashArray ?? [],
-            filter: args?.filter ?? "",
+            filter: Filter.toURLString(args?.filter) ?? "",
         });
+
+        if (args?.cx !== undefined) this.setCx(args.cx);
+        if (args?.cy !== undefined) this.setCy(args.cy);
+        if (args?.centerX !== undefined) this.setCenterX(args.centerX);
+        if (args?.centerY !== undefined) this.setCenterY(args.centerY);
 
         args?.targetNode?.appendChild(this);
     }

@@ -5,15 +5,17 @@ import { Interp } from "@/Animate/Interp";
 export class GaussianBlur extends SDSVGNode {
     _: SDSVGNode["_"] & {
         in: string;
+        out: string;
         stdDeviation: number;
     };
 
-    constructor(args?: { targetNode?: Filter; in?: string; stdDeviation?: number }) {
+    constructor(args?: { targetNode?: Filter; in?: string; out?: string; stdDeviation?: number; result?: string }) {
         super();
 
         this._.renderer = this.createSVGNode("feGaussianBlur", {
             in: args?.in ?? "SourceGraphic",
             stdDeviation: args?.stdDeviation ?? 2,
+            result: args?.result ?? undefined,
         });
 
         args?.targetNode?.append(this);

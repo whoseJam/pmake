@@ -6,10 +6,10 @@ import { SDColor } from "@/Utility/Color";
 import { matchSubtext } from "@/Node/Text/TextEngine/Mapping";
 import { createTextView, PathStyle } from "@/Node/Text/TextEngine/TextView";
 import { Color as C } from "@/Utility/Color";
-import { getOS } from "@/Utility/Base";
 import { FontManager } from "@/Node/Text/TextEngine/Opentype";
 import { Group } from "@/Node/Other/Group";
 import { Interp } from "@/Animate/Interp";
+import { SDFilter } from "@/Node/Filter/Filter";
 
 export class Text extends BaseText {
     _: BaseText["_"] & {
@@ -28,6 +28,8 @@ export class Text extends BaseText {
         y?: number;
         cx?: number;
         cy?: number;
+        centerX?: number;
+        centerY?: number;
         fontSize?: number;
         fontFamily?: string;
         text?: string;
@@ -37,6 +39,7 @@ export class Text extends BaseText {
         strokeWidth?: number;
         strokeDashOffset?: number;
         strokeDashArray?: Array<number>;
+        filter?: SDFilter;
     }) {
         super();
 
@@ -69,6 +72,8 @@ export class Text extends BaseText {
 
         if (args?.cx !== undefined) this.setCx(args.cx);
         if (args?.cy !== undefined) this.setCy(args.cy);
+        if (args?.centerX !== undefined) this.setCenterX(args.centerX);
+        if (args?.centerY !== undefined) this.setCenterY(args.centerY);
 
         args?.targetNode?.appendChild(this);
     }

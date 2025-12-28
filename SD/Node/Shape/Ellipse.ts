@@ -2,6 +2,7 @@ import { Interp } from "@/Animate/Interp";
 import { BaseShape } from "@/Node/Shape/BaseShape";
 import { SDColor, Color as C } from "@/Utility/Color";
 import { Group } from "@/Node/Other/Group";
+import { Filter, SDFilter } from "@/Node/Filter/Filter";
 
 export class Ellipse extends BaseShape {
     constructor(args?: {
@@ -18,6 +19,7 @@ export class Ellipse extends BaseShape {
         strokeWidth?: number;
         strokeDashOffset?: number;
         strokeDashArray?: Array<number>;
+        filter?: SDFilter;
     }) {
         super();
 
@@ -34,6 +36,7 @@ export class Ellipse extends BaseShape {
             strokeWidth: args?.strokeWidth ?? 1,
             strokeDashOffset: args?.strokeDashOffset ?? 0,
             strokeDashArray: args?.strokeDashArray ?? [],
+            filter: Filter.toURLString(args?.filter) ?? "",
         });
 
         args?.targetNode?.appendChild(this);
