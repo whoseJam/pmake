@@ -2,6 +2,7 @@ import { Animate as A } from "@/Animate/Animate";
 import { Text } from "@/Node/Text/Text";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { SDColor } from "@/Utility/Color";
+import { BaseText } from "@/Node/Text/BaseText";
 
 type SDColorOrDefault = SDColor | "default";
 type NumberOrDefault = number | "default";
@@ -39,7 +40,7 @@ export class PathStyle {
             strokeDashArray: this.strokeDashArray,
         });
     }
-    styleAt(text: Text, t: number) {
+    styleAt(text: BaseText, t: number) {
         const fill = this.fill === "default" ? A.getAttribute(text, "fill", t, text.getFill()) : this.fill;
         const stroke = this.stroke === "default" ? A.getAttribute(text, "stroke", t, text.getStroke()) : this.stroke;
         const strokeWidth =
@@ -73,11 +74,11 @@ export class PathView {
 }
 
 export class TextView {
-    text: string;
+    text: string | Array<string>;
     hash: Array<string>;
     styles?: Array<PathStyle>;
     backing?: RenderNode;
-    constructor(text: string, hash: Array<string>, styles?: Array<PathStyle>) {
+    constructor(text: string | Array<string>, hash: Array<string>, styles?: Array<PathStyle>) {
         this.text = text;
         this.hash = hash;
         this.styles = styles;
@@ -132,23 +133,13 @@ export class SubtextView {
     }
 }
 
-export function createTextView(
-    text: string,
-    args: {
-        styles?: Array<PathStyle>;
-        backing?: RenderNode;
-    }
-) {
+export function createTextView(text: string | Array<string>, args: { styles?: Array<PathStyle> }) {
     const hash = [];
     const styles = [];
-    if (args.backing) {
-        // Math TODO
-    } else {
-        for (let i = 0; i < text.length; i++) {
-            hash.push(text[i]);
-            if (args.styles) styles.push(args.styles[i]);
-            else styles.push(new PathStyle({}));
-        }
+    for (let i = 0; i < text.length; i++) {
+        hash.push(text[i]);
+        if (args.styles) styles.push(args.styles[i]);
+        else styles.push(new PathStyle({}));
     }
     return new TextView(text, hash, styles);
 }

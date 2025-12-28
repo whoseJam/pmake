@@ -83,8 +83,8 @@ export class Text extends BaseText {
     }
 
     setFontSize(size: number): this {
-        if (this._.fontSize > 1e-1) {
-            const k = size / this._.fontSize;
+        if (this.getFontSize() > 1e-1) {
+            const k = size / this.getFontSize();
             this._.width *= k;
             this._.height *= k;
         } else {
@@ -92,7 +92,6 @@ export class Text extends BaseText {
             this._.width = box.width;
             this._.height = box.height;
         }
-        this._.fontSize = size;
         return this.triggerAttributeChanged(this._.renderer, "fontSize", size, this._.fontSize, Interp.numberInterp);
     }
 
@@ -118,7 +117,7 @@ export class Text extends BaseText {
 
     setText(text: string | number, mapping?: TextMapping): this {
         const text_ = String(text);
-        if (this._.text === text_) return this;
+        if (this.getText() === text_) return this;
         const box = FontManager.boundingBox(text_, this.getFontFamily(), this.getFontSize());
         const styles = buildAnimation(
             this,

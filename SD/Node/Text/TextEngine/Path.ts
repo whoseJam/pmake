@@ -1,7 +1,15 @@
 import { Animate as A } from "@/Animate/Animate";
 import { Text } from "@/Node/Text/Text";
+import { Math } from "@/Node/Text/Math";
 import { PathView } from "@/Node/Text/TextEngine/TextView";
 import { FontManager } from "@/Node/Text/TextEngine/Opentype";
+import { BaseText } from "../BaseText";
+import { MathManager } from "./Mathjax";
+
+export function getPaths(text: BaseText, t: number): Array<PathView> {
+    if (text instanceof Text) return getTextPaths(text, t);
+    if (text instanceof Math) return getMathPaths(text, t);
+}
 
 export function getTextPaths(text: Text, t: number): Array<PathView> {
     const text_ = A.getAttribute(text, "text", t, text.getText());
@@ -15,6 +23,12 @@ export function getTextPaths(text: Text, t: number): Array<PathView> {
         if (data === "") return undefined;
         return new PathView(data);
     });
+}
+
+function getMathPaths(text: Math, t: number): Array<PathView> {
+    const html = A.getAttribute(text, "html", t, text._.html);
+    const paths = MathManager.getMathPaths(html);
+    return paths;
 }
 
 export function getTextPaths2(text: Text, t: number, string: string): Array<PathView> {

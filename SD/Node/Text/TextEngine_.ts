@@ -558,9 +558,6 @@ export class TextEngine {
         this.mathjaxSVG.setAttribute("opacity", 0);
         this.mathjaxSVG.setAttribute("font-size", 20);
     }
-    static boundingBox(text: Text | Math_) {
-        if (text instanceof Math_) return this.mathjaxBoundingBox(text._.math);
-    }
     static getPaths(config: BaseTextConfiguration): Array<TransformingPath> {
         if (config instanceof MathConfiguration) return TextEngine.getMathPaths(config);
         if (config instanceof TextConfiguration) return TextEngine.getTextPaths(config);

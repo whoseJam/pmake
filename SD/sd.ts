@@ -22,7 +22,7 @@ export { Ellipse } from "@/Node/Shape/Ellipse";
 export { Image } from "@/Node/Shape/Image";
 export { Polygon } from "@/Node/Shape/Polygon";
 export { Rect } from "@/Node/Shape/Rect";
-// export { Math } from "@/Node/Text/Math";
+export { Math } from "@/Node/Text/Math";
 export { Text } from "@/Node/Text/Text";
 export { Marker } from "@/Node/Define/Marker";
 export { Filter } from "@/Node/Filter/Filter";

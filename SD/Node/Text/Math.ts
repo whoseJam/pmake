@@ -268,3 +268,116 @@
 //     element.setAttribute("font-size", String(targetNode.fontSize()));
 //     return RenderNode.createMathRenderNode(targetNode, targetNode.layer(), element);
 // }
+
+import { BaseText, TextMapping } from "@/Node/Text/BaseText";
+import { Group } from "@/Node/Other/Group";
+import { RenderNode } from "@/Renderer/RenderNode";
+import { PathStyle } from "@/Node/Text/TextEngine/TextView";
+import { MathManager } from "@/Node/Text/TextEngine/Mathjax";
+import { buildAnimation } from "./TextEngine/Animation";
+import { transformPostProcess, transformProcess } from "./TextEngine/Transform";
+import { Interp } from "@/Animate/Interp";
+import { Color as C, SDColor } from "@/Utility/Color";
+
+export class Math extends BaseText {
+    _: BaseText["_"] & {
+        text: string;
+        html: RenderNode;
+        width: number;
+        height: number;
+        fontSize: number;
+        subtextStyles: Array<PathStyle>;
+    };
+
+    constructor(args?: {
+        targetNode?: Group;
+        x?: number;
+        y?: number;
+        fontSize?: number;
+        text?: string;
+        fill?: SDColor;
+        stroke?: SDColor;
+    }) {
+        super();
+
+        this._.renderer = this.createSVGNode("g", {
+            fill: args?.fill ?? C.black,
+            stroke: args?.stroke ?? C.black,
+        });
+
+        Object.assign(this._, {
+            x: args?.x ?? 0,
+            y: args?.y ?? 0,
+            fontSize: args?.fontSize ?? 20,
+        });
+
+        if (args?.text) this.setText(args?.text);
+
+        args?.targetNode?.appendChild(this);
+    }
+
+    getFontSize(): number {
+        return this._.fontSize;
+    }
+
+    setFontSize(size: number): this {
+        if (this.getFontSize() > 1e-1) {
+            const k = size / this.getFontSize();
+            this._.width *= k;
+            this._.height *= k;
+        } else {
+            const box = MathManager.boundingBox(this._.html);
+            this._.width = box.width;
+            this._.height = box.height;
+        }
+        return this.triggerAttributeChanged(this._.renderer, "fontSize", size, this._.fontSize, Interp.numberInterp);
+    }
+
+    getWidth(): number {
+        return this._.width;
+    }
+
+    getHeight(): number {
+        return this._.height;
+    }
+
+    getText(): string {
+        return this._.text;
+    }
+
+    setText(text: string | number, mapping?: TextMapping): this {
+        const text_ = String(text);
+        if (this.getText() === text_) return this;
+        const html = parseToHTML([], text_, this);
+        const box = MathManager.boundingBox(html);
+        const styles = buildAnimation(
+            this,
+            { text: MathManager.getMathText(this._.html), styles: this._.subtextStyles },
+            { text: MathManager.getMathText(html) },
+            transformProcess(mapping),
+            transformPostProcess(this, this.getRootRenderNode()),
+            "transform"
+        );
+        this._.width = box.width;
+        this._.height = box.height;
+        this.triggerAttributeChanged(undefined, "text", text_, this._.text, Interp.emptyInterp);
+        this.triggerAttributeChanged(undefined, "subtextStyles", styles, this._.subtextStyles, Interp.emptyInterp);
+        this.triggerAttributeChanged(this._.renderer, "html", html, this._.html, Interp.childBlankInMiddleInterp);
+        return this;
+    }
+}
+
+function parseToHTML(styles: Array<PathStyle>, text: string, targetNode: Math) {
+    // @ts-ignore
+    const element = MathJax.tex2svg(text).children[0] as SVGSVGElement;
+    element.setAttribute("fill", element.children[1].getAttribute("fill"));
+    element.setAttribute("stroke", element.children[1].getAttribute("stroke"));
+    element.children[1].removeAttribute("fill");
+    element.children[1].removeAttribute("stroke");
+    element.setAttribute("fill", "currentColor");
+    element.setAttribute("stroke", "currentColor");
+    element.setAttribute("x", String(targetNode.getX()));
+    element.setAttribute("y", String(targetNode.getY()));
+    element.setAttribute("font-size", String(targetNode.getFontSize()));
+    return RenderNode.createMathRenderNode(targetNode, targetNode.getRootRenderNode(), element);
+}

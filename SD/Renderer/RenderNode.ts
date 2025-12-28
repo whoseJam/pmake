@@ -260,14 +260,14 @@ export class RenderNode {
     }
 
     static createMathRenderNode(targetNode: SDNode, targetLayer: RenderNode, element: Element) {
-        const { TextEngine } = require("@/Node/Text/TextEngine");
+        const { MathManager } = require("@/Node/Text/TextEngine/Mathjax");
         const math = new RenderNode({
             targetNode,
             targetLayer,
             element,
             action: false,
         });
-        TextEngine.adjustMath(math);
+        MathManager.adjustMath(math);
         return math;
     }
 

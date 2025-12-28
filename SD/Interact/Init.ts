@@ -5,6 +5,7 @@ import { Root } from "@/Interact/Root";
 import { Status } from "@/Interact/Status";
 import { PathEngine } from "@/Node/Path/PathEngine";
 import { PolygonEngine } from "@/Node/Shape/PolygonEngine";
+import { MathManager } from "@/Node/Text/TextEngine/Mathjax";
 import { FontManager } from "@/Node/Text/TextEngine/Opentype";
 
 function setupButtonStyles() {
@@ -21,6 +22,7 @@ export function init() {
     Device.init();
     Status.init();
     FontManager.init();
+    MathManager.init();
     PathEngine.init();
     PolygonEngine.init();
     createWaterMark();

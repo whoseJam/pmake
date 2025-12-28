@@ -1,7 +1,7 @@
 import { Root } from "@/Interact/Root";
 import { RenderNode } from "@/Renderer/RenderNode";
+import { Text } from "@/Node/Text/Text";
 import opentype from "opentype.js";
-import { Text } from "../Text";
 
 export class FontManager {
     private static textSVG: RenderNode;
@@ -12,8 +12,7 @@ export class FontManager {
         this.load("Times New Roman");
         this.load("Arial");
         this.textSVG = RenderNode.createRenderNodeWithoutAction(undefined, Root.svg, "text");
-        this.textSVG.setAttribute("fill-opacity", 0);
-        this.textSVG.setAttribute("stroke-opacity", 0);
+        this.textSVG.setAttribute("opacity", 0);
     }
 
     private static load(family: string) {

@@ -125,6 +125,7 @@ export class Interp {
             this._target = Color.toRGBA(this.target);
         });
     }
+
     static stringInterp(object: any, key: string) {
         const set = setter(object, key);
         return new InterpObject(function (t) {
@@ -132,6 +133,7 @@ export class Interp {
             if (this.reverse && t === 0) set(this.target);
         });
     }
+
     static stringBlankInMiddleInterp(object: any, key: string) {
         const set = setter(object, key);
         return new InterpObject(function (t) {
@@ -139,12 +141,14 @@ export class Interp {
             if (t === 1) set(this.target);
         });
     }
-    static blankNodeInterp(object: any, key?: string) {
+
+    static childBlankInMiddleInterp(object: any, key?: string) {
         return new InterpObject(function (t) {
             if (t === 0 && this.source) object.__removeChild(this.source);
             if (t === 1 && this.target) object.__append(this.target);
         });
     }
+
     static arrayInterp(object: any, key: string) {
         const set = setter(object, key);
         const f = (value: Array<number> | number) => {
@@ -168,6 +172,7 @@ export class Interp {
             this._target = f(this.target);
         });
     }
+
     static vectorInterp(object: any, key: string) {
         const set = setter(object, key);
         return new InterpObject(function (t) {
@@ -178,6 +183,7 @@ export class Interp {
             set([x, y]);
         });
     }
+
     static matrixInterp(object: any, key: string) {
         const set = setter(object, key);
         return new InterpObject(function (t) {

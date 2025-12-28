@@ -1,13 +1,12 @@
 import { Action } from "@/Animate/Action";
-import { Text } from "@/Node/Text/Text";
 import { createTextView, PathStyle, SubtextView, TextView } from "@/Node/Text/TextEngine/TextView";
-import { RenderNode } from "@/Renderer/RenderNode";
 import { LazyInterpFunction } from "@/Animate/Interp";
+import { BaseText } from "@/Node/Text/BaseText";
 
 export function buildAnimation(
-    text: Text,
-    source: { text: string; styles?: Array<PathStyle>; backing?: RenderNode },
-    target: { text: string; backing?: RenderNode },
+    text: BaseText,
+    source: { text: string | Array<string>; styles?: Array<PathStyle> },
+    target: { text: string | Array<string> },
     process: (sourceView: TextView, targetView: TextView) => Array<[SubtextView, SubtextView]>,
     postProcess: LazyInterpFunction,
     animatedKey: string

@@ -1,9 +1,8 @@
 import { match } from "@/Node/Text/TextEngine/Mapping";
-import { TextMapping, processMapping } from "@/Node/Text/BaseText";
+import { BaseText, TextMapping, processMapping } from "@/Node/Text/BaseText";
 import { PathStyle, SubtextView, TextView } from "@/Node/Text/TextEngine/TextView";
-import { getTextPaths } from "@/Node/Text/TextEngine/Path";
+import { getPaths } from "@/Node/Text/TextEngine/Path";
 import { RenderNode } from "@/Renderer/RenderNode";
-import { Text } from "@/Node/Text/Text";
 import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
 import { Animate as A } from "@/Animate/Animate";
@@ -14,7 +13,7 @@ export function transformProcess(mapping: TextMapping) {
     };
 }
 
-export function transformPostProcess(text: Text, targetLayer: RenderNode) {
+export function transformPostProcess(text: BaseText, targetLayer: RenderNode) {
     return function (l: number, r: number, source: Array<SubtextView>, target: Array<SubtextView>) {
         if (l === r) return;
         const createAction = (character: RenderNode, source: any, target: any, interp: any, animatedKey: string) => {
@@ -30,8 +29,8 @@ export function transformPostProcess(text: Text, targetLayer: RenderNode) {
             );
         };
 
-        const sourcePaths = getTextPaths(text, l);
-        const targetPaths = getTextPaths(text, r);
+        const sourcePaths = getPaths(text, l);
+        const targetPaths = getPaths(text, r);
         for (let i = 0; i < source.length; i++) {
             const sourceSubtext = source[i];
             const targetSubtext = target[i];
