@@ -5,7 +5,7 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestRx);
+sd.main(TestStrokeDashArray);
 
 async function TestStrokeDashArray() {
     const rect = new sd.Rect({
@@ -14,7 +14,12 @@ async function TestStrokeDashArray() {
         y: 100,
         width: 100,
         height: 100,
-    }).setStrokeWidth(3);
+        fill: C.blue,
+        stroke: C.red,
+        strokeWidth: 3,
+        strokeDashArray: 1000,
+    });
+    await sd.pause();
     rect.startAnimate().setStrokeDashArray([10, 10]).endAnimate();
     await sd.pause();
     rect.startAnimate().setStrokeDashArray([10, 0]).endAnimate();

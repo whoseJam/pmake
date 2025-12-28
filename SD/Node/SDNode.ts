@@ -130,7 +130,13 @@ export abstract class SDNode {
     }
 
     setOpacity(opacity: number): this {
-        return this.triggerAttributeChanged(this.getRootRenderNode(), "opacity", opacity, this._.opacity);
+        return this.triggerAttributeChanged(
+            this.getRootRenderNode(),
+            "opacity",
+            opacity,
+            this._.opacity,
+            Interp.numberInterp
+        );
     }
 
     onOpacityChanged(listener: (vn: number, vo: number) => void): this {
@@ -152,7 +158,13 @@ export abstract class SDNode {
     setScale(sx: number | [number, number], sy?: number): this {
         if (Array.isArray(sx)) return this.setScale(sx[0], sx[1]);
         if (sy === undefined) return this.setScale(sx, sx);
-        return this.triggerAttributeChanged(this.getRootRenderNode(), "scale", [sx, sy], this._.scale);
+        return this.triggerAttributeChanged(
+            this.getRootRenderNode(),
+            "scale",
+            [sx, sy],
+            this._.scale,
+            Interp.arrayInterp
+        );
     }
 
     getScale(): [number, number] {
@@ -168,7 +180,13 @@ export abstract class SDNode {
     }
 
     setRotation(rotate: number): this {
-        return this.triggerAttributeChanged(this.getRootRenderNode(), "rotate", rotate, this._.rotate);
+        return this.triggerAttributeChanged(
+            this.getRootRenderNode(),
+            "rotate",
+            rotate,
+            this._.rotate,
+            Interp.numberInterp
+        );
     }
 
     onRotateChanged(listener: (vn: number, vo: number) => void): this {
@@ -183,7 +201,13 @@ export abstract class SDNode {
     setTranslate(d: [number, number]): this;
     setTranslate(dx: number | [number, number], dy?: number): this {
         if (Array.isArray(dx)) return this.setTranslate(dx[0], dx[1]);
-        return this.triggerAttributeChanged(this.getRootRenderNode(), "translate", [dx, dy], this._.translate);
+        return this.triggerAttributeChanged(
+            this.getRootRenderNode(),
+            "translate",
+            [dx, dy],
+            this._.translate,
+            Interp.arrayInterp
+        );
     }
 
     onTranslateChanged(listener: (vn: [number, number], vo: [number, number]) => void) {
@@ -378,21 +402,21 @@ export abstract class SDNode {
         return this;
     }
 
-    static __asNode(target: SDNode | RenderNode, object: any, id?: string): SDNode {
-        if (object === null || object === undefined) {
-            const { Text } = require("@/Node/Text/Text");
-            if (id !== undefined) return new Text(target, id).opacity(0);
-            return null;
-        }
-        if (typeof object === "function") return object(target).opacity(0);
-        if (typeof object === "number" || typeof object === "string") {
-            const { Text } = require("@/Node/Text/Text");
-            const { Math } = require("@/Node/Text/Math");
-            if (String(object).startsWith("$")) return new Math(target, id).opacity(0);
-            return new Text(target, object).opacity(0);
-        }
-        return object;
-    }
+    // static __asNode(target: SDNode | RenderNode, object: any, id?: string): SDNode {
+    //     if (object === null || object === undefined) {
+    //         const { Text } = require("@/Node/Text/Text");
+    //         if (id !== undefined) return new Text(target, id).opacity(0);
+    //         return null;
+    //     }
+    //     if (typeof object === "function") return object(target).opacity(0);
+    //     if (typeof object === "number" || typeof object === "string") {
+    //         const { Text } = require("@/Node/Text/Text");
+    //         const { Math } = require("@/Node/Text/Math");
+    //         if (String(object).startsWith("$")) return new Math(target, id).opacity(0);
+    //         return new Text(target, object).opacity(0);
+    //     }
+    //     return object;
+    // }
 }
 
 type AnyFunction = (...args: any[]) => any;

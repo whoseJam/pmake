@@ -172,7 +172,8 @@ export abstract class SDSVGNode extends SDNode {
         return this._.strokeDashArray;
     }
 
-    setStrokeDashArray(array: Array<number>): this {
+    setStrokeDashArray(array: number | Array<number>): this {
+        if (typeof array === "number") array = [array, array];
         return this.triggerAttributeChanged(
             this._.renderer,
             "strokeDashArray",

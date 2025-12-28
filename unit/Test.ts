@@ -1,207 +1,248 @@
 import * as sd from "@/sd";
 
-const sleep = async (ms: number) => {
-    await sd.pause(ms);
-};
-
 sd.main(async () => {
     const svg = sd.svg();
+    const C = sd.color();
 
-    // Colors
-    const C_BG = "#1e1e1e";
-    const C_A = "#FF6B6B";
-    const C_B = "#4ECDC4";
-    const C_C = "#FFE66D";
-    const C_WHITE = "#ffffff";
+    // --- Config ---
+    const scale = 4.5;
+    const dx = 300;
+    const dy = 50;
+    const tr = (x: number, y: number) => [dx + x * scale, dy + y * scale];
 
-    // Background
-    new sd.Rect({
+    // --- Elements ---
+
+    // 1. Triangle (Path or Polygon)
+    // HTML: M40 20 L40 60 L70 60 Z
+    const p1 = tr(40, 20);
+    const p2 = tr(40, 60);
+    const p3 = tr(70, 60);
+    const tri = new sd.Polygon({
         targetNode: svg,
-        x: 0,
-        y: 0,
-        width: 1200,
-        height: 600,
-        fill: C_BG,
-    });
-
-    // Caption
-    const setCaption = new sd.Caption(svg);
-
-    // Coordinate transformation
-    const SCALE = 4;
-    const OFF_X = 360;
-    const OFF_Y = 80;
-    const T = (x: number, y: number) => [x * SCALE + OFF_X, y * SCALE + OFF_Y];
-
-    // Paths Data
-    // sq-b: M10 20 H40 V60 H10 Z
-    const d_sq_b = `M${T(10, 20)[0]} ${T(10, 20)[1]} L${T(40, 20)[0]} ${T(40, 20)[1]} L${T(40, 60)[0]} ${
-        T(40, 60)[1]
-    } L${T(10, 60)[0]} ${T(10, 60)[1]} Z`;
-    // sq-a: M40 60 H70 V90 H40 Z
-    const d_sq_a = `M${T(40, 60)[0]} ${T(40, 60)[1]} L${T(70, 60)[0]} ${T(70, 60)[1]} L${T(70, 90)[0]} ${
-        T(70, 90)[1]
-    } L${T(40, 90)[0]} ${T(40, 90)[1]} Z`;
-    // sq-c: M40 20 L80 -10 L110 30 L70 60 Z
-    const d_sq_c = `M${T(40, 20)[0]} ${T(40, 20)[1]} L${T(80, -10)[0]} ${T(80, -10)[1]} L${T(110, 30)[0]} ${
-        T(110, 30)[1]
-    } L${T(70, 60)[0]} ${T(70, 60)[1]} Z`;
-    // tri: M40 20 L40 60 L70 60 Z
-    const d_tri = `M${T(40, 20)[0]} ${T(40, 20)[1]} L${T(40, 60)[0]} ${T(40, 60)[1]} L${T(70, 60)[0]} ${
-        T(70, 60)[1]
-    } Z`;
-    // right-angle: M40 55 H45 V60
-    const d_ra = `M${T(40, 55)[0]} ${T(40, 55)[1]} L${T(45, 55)[0]} ${T(45, 55)[1]} L${T(45, 60)[0]} ${T(45, 60)[1]}`;
-
-    // Create Objects (Hidden initially)
-
-    // Triangle
-    const tri = new sd.Path({
-        targetNode: svg,
-        d: d_tri,
+        points: [p1[0], p1[1], p2[0], p2[1], p3[0], p3[1]],
         fill: "none",
-        stroke: C_WHITE,
+        stroke: "#000",
         strokeWidth: 4,
-        strokeDashArray: [2000],
+        strokeDashArray: 2000,
         strokeDashOffset: 2000,
     });
 
-    const ra = new sd.Path({
+    // Right Angle
+    // HTML: M40 55 H45 V60
+    // (40, 55) -> (45, 55) -> (45, 60)
+    const ra1 = tr(40, 55);
+    const ra2 = tr(45, 55);
+    const ra3 = tr(45, 60);
+    const rightAngle = new sd.Polyline({
         targetNode: svg,
-        d: d_ra,
+        points: [ra1[0], ra1[1], ra2[0], ra2[1], ra3[0], ra3[1]],
         fill: "none",
-        stroke: C_WHITE,
+        stroke: "#000",
         strokeWidth: 2,
-        strokeDashArray: [200],
+        strokeDashArray: 200,
         strokeDashOffset: 200,
     });
 
     // Squares
-    const sq_b = new sd.Path({
+    // sq-b: M10 20 H40 V60 H10 Z (Rect)
+    // (10, 20) w=30 h=40
+    const sqB_pos = tr(10, 20);
+    const sqB = new sd.Rect({
         targetNode: svg,
-        d: d_sq_b,
-        fill: C_B,
-        stroke: C_B,
-        fillOpacity: 0,
+        x: sqB_pos[0],
+        y: sqB_pos[1],
+        width: 30 * scale,
+        height: 40 * scale,
+        fill: "#4ECDC4",
+        stroke: "#4ECDC4",
         strokeWidth: 3,
-        strokeDashArray: [2000],
+        fillOpacity: 0,
+        strokeDashArray: 2000,
         strokeDashOffset: 2000,
     });
-    const sq_a = new sd.Path({
+
+    // sq-a: M40 60 H70 V90 H40 Z (Rect)
+    // (40, 60) w=30 h=30
+    const sqA_pos = tr(40, 60);
+    const sqA = new sd.Rect({
         targetNode: svg,
-        d: d_sq_a,
-        fill: C_A,
-        stroke: C_A,
-        fillOpacity: 0,
+        x: sqA_pos[0],
+        y: sqA_pos[1],
+        width: 30 * scale,
+        height: 30 * scale,
+        fill: "#FF6B6B",
+        stroke: "#FF6B6B",
         strokeWidth: 3,
-        strokeDashArray: [2000],
+        fillOpacity: 0,
+        strokeDashArray: 2000,
         strokeDashOffset: 2000,
     });
-    const sq_c = new sd.Path({
+
+    // sq-c: M40 20 L80 -10 L110 30 L70 60 Z (Polygon)
+    const sqC_p1 = tr(40, 20);
+    const sqC_p2 = tr(80, -10);
+    const sqC_p3 = tr(110, 30);
+    const sqC_p4 = tr(70, 60);
+    const sqC = new sd.Polygon({
         targetNode: svg,
-        d: d_sq_c,
-        fill: C_C,
-        stroke: C_C,
-        fillOpacity: 0,
+        points: [sqC_p1[0], sqC_p1[1], sqC_p2[0], sqC_p2[1], sqC_p3[0], sqC_p3[1], sqC_p4[0], sqC_p4[1]],
+        fill: "#FFE66D",
+        stroke: "#FFE66D",
         strokeWidth: 3,
-        strokeDashArray: [2000],
+        fillOpacity: 0,
+        strokeDashArray: 2000,
         strokeDashOffset: 2000,
     });
 
     // Labels
-    const createLabel = (text: string, x: number, y: number, color: string) => {
-        const [tx, ty] = T(x, y);
-        return new sd.Text({
-            targetNode: svg,
-            text: text,
-            centerX: tx,
-            centerY: ty,
-            fill: color,
-            fontSize: 24,
-            opacity: 0,
-            fontFamily: "Times New Roman",
-        });
-    };
+    // lbl-b: (35, 40)
+    const lblB_pos = tr(35, 40);
+    const lblB = new sd.Text({
+        targetNode: svg,
+        text: "b",
+        centerX: lblB_pos[0],
+        centerY: lblB_pos[1],
+        fill: "#4ECDC4",
+        fontSize: 24,
+        fontFamily: "Times New Roman",
+        opacity: 0,
+    });
+    // lbl-a: (55, 65)
+    const lblA_pos = tr(55, 65);
+    const lblA = new sd.Text({
+        targetNode: svg,
+        text: "a",
+        centerX: lblA_pos[0],
+        centerY: lblA_pos[1],
+        fill: "#FF6B6B",
+        fontSize: 24,
+        fontFamily: "Times New Roman",
+        opacity: 0,
+    });
+    // lbl-c: (62, 35)
+    const lblC_pos = tr(62, 35);
+    const lblC = new sd.Text({
+        targetNode: svg,
+        text: "c",
+        centerX: lblC_pos[0],
+        centerY: lblC_pos[1],
+        fill: "#FFE66D",
+        fontSize: 24,
+        fontFamily: "Times New Roman",
+        opacity: 0,
+    });
 
-    const lbl_b = createLabel("b", 35, 40, C_B);
-    const lbl_a = createLabel("a", 55, 65, C_A);
-    const lbl_c = createLabel("c", 62, 35, C_C);
+    // Area Labels
+    // area-b: (25, 40)
+    const areaB_pos = tr(25, 40);
+    const areaB = new sd.Text({
+        targetNode: svg,
+        text: "b²",
+        centerX: areaB_pos[0],
+        centerY: areaB_pos[1],
+        fill: "#4ECDC4",
+        fontSize: 24,
+        fontFamily: "Times New Roman",
+        opacity: 0,
+    });
+    // area-a: (55, 75)
+    const areaA_pos = tr(55, 75);
+    const areaA = new sd.Text({
+        targetNode: svg,
+        text: "a²",
+        centerX: areaA_pos[0],
+        centerY: areaA_pos[1],
+        fill: "#FF6B6B",
+        fontSize: 24,
+        fontFamily: "Times New Roman",
+        opacity: 0,
+    });
+    // area-c: (75, 25)
+    const areaC_pos = tr(75, 25);
+    const areaC = new sd.Text({
+        targetNode: svg,
+        text: "c²",
+        centerX: areaC_pos[0],
+        centerY: areaC_pos[1],
+        fill: "#FFE66D",
+        fontSize: 24,
+        fontFamily: "Times New Roman",
+        opacity: 0,
+    });
 
-    const area_b = createLabel("b²", 25, 40, C_B);
-    const area_a = createLabel("a²", 55, 75, C_A);
-    const area_c = createLabel("c²", 75, 25, C_C);
-
+    // Formula
+    // (55, 105)
+    const form_pos = tr(55, 105);
     const formula = new sd.Text({
         targetNode: svg,
         text: "a² + b² = c²",
-        centerX: T(55, 105)[0],
-        centerY: T(55, 105)[1],
-        fill: C_WHITE,
-        fontSize: 40,
-        opacity: 0,
+        centerX: form_pos[0],
+        centerY: form_pos[1],
+        fill: "#fff",
+        fontSize: 32,
         fontFamily: "Times New Roman",
+        opacity: 0,
     });
 
-    // Animation Sequence
+    // Caption
+    const caption = new sd.Caption({
+        targetNode: svg,
+        cx: 600,
+        cy: 550, // Bottom
+    });
+
+    // --- Animation Sequence ---
+
     await sd.pause();
-    await sleep(500);
 
     // 1. Triangle
-    setCaption.setCaption("这是一个直角三角形", "Consider a right-angled triangle.");
+    caption.setCaption("这是一个直角三角形", "Consider a right-angled triangle.");
     tri.startAnimate({ duration: 1500 }).setStrokeDashOffset(0).endAnimate();
-    await sleep(1500);
-    ra.startAnimate({ duration: 500 }).setStrokeDashOffset(0).endAnimate();
-    await sleep(2000);
+    await sd.pause();
+
+    rightAngle.startAnimate({ duration: 500 }).setStrokeDashOffset(0).endAnimate();
+    await sd.pause();
 
     // 2. Sides
-    setCaption.setCaption("直角边 a 和 b", "The legs are labeled a and b.");
-    lbl_a.startAnimate({ duration: 1000 }).setOpacity(1).endAnimate();
-    lbl_b.startAnimate({ duration: 1000 }).setOpacity(1).endAnimate();
-    await sleep(2000);
+    caption.setCaption("直角边 a 和 b", "The legs are labeled a and b.");
+    lblA.startAnimate().setOpacity(1).endAnimate();
+    lblB.startAnimate().setOpacity(1).endAnimate();
+    await sd.pause();
 
-    setCaption.setCaption("斜边 c", "The hypotenuse is labeled c.");
-    lbl_c.startAnimate({ duration: 1000 }).setOpacity(1).endAnimate();
-    await sleep(2000);
+    caption.setCaption("斜边 c", "The hypotenuse is labeled c.");
+    lblC.startAnimate().setOpacity(1).endAnimate();
+    await sd.pause();
 
     // 3. Squares
-    setCaption.setCaption("以各边为边长构建正方形", "Construct squares on each of the three sides.");
-
-    sq_a.startAnimate({ duration: 1000 }).setStrokeDashOffset(0).setFillOpacity(0.2).endAnimate();
-    await sleep(500);
-    sq_b.startAnimate({ duration: 1000 }).setStrokeDashOffset(0).setFillOpacity(0.2).endAnimate();
-    await sleep(500);
-    sq_c.startAnimate({ duration: 1000 }).setStrokeDashOffset(0).setFillOpacity(0.2).endAnimate();
+    caption.setCaption("以各边为边长构建正方形", "Construct squares on each of the three sides.");
+    sqA.startAnimate({ duration: 500 }).setStrokeDashOffset(0).setFillOpacity(0.2).endAnimate();
+    await sd.pause();
+    sqB.startAnimate({ duration: 500 }).setStrokeDashOffset(0).setFillOpacity(0.2).endAnimate();
+    await sd.pause();
+    sqC.startAnimate({ duration: 500 }).setStrokeDashOffset(0).setFillOpacity(0.2).endAnimate();
 
     // Switch labels
-    lbl_a.startAnimate({ duration: 500 }).setOpacity(0).endAnimate();
-    lbl_b.startAnimate({ duration: 500 }).setOpacity(0).endAnimate();
-    lbl_c.startAnimate({ duration: 500 }).setOpacity(0).endAnimate();
-
-    area_a.startAnimate({ duration: 500 }).setOpacity(1).endAnimate();
-    area_b.startAnimate({ duration: 500 }).setOpacity(1).endAnimate();
-    area_c.startAnimate({ duration: 500 }).setOpacity(1).endAnimate();
-
-    await sleep(3000);
+    lblA.setOpacity(0);
+    lblB.setOpacity(0);
+    lblC.setOpacity(0);
+    areaA.setOpacity(1);
+    areaB.setOpacity(1);
+    areaC.setOpacity(1);
+    await sd.pause();
 
     // 4. Theorem
-    setCaption.setCaption("直角边正方形面积之和", "The sum of the areas of the squares on the legs...");
+    caption.setCaption("直角边正方形面积之和", "The sum of the areas of the squares on the legs...");
+    sqA.startAnimate().setFillOpacity(0.8).endAnimate();
+    sqB.startAnimate().setFillOpacity(0.8).endAnimate();
+    await sd.pause();
 
-    // Highlight a and b
-    sq_a.startAnimate({ duration: 500 }).setFillOpacity(0.8).endAnimate();
-    sq_b.startAnimate({ duration: 500 }).setFillOpacity(0.8).endAnimate();
+    caption.setCaption("等于斜边正方形的面积", "...equals the area of the square on the hypotenuse.");
+    sqA.startAnimate().setFillOpacity(0.2).endAnimate();
+    sqB.startAnimate().setFillOpacity(0.2).endAnimate();
+    sqC.startAnimate().setFillOpacity(0.8).endAnimate();
+    await sd.pause();
 
-    await sleep(2500);
-
-    setCaption.setCaption("等于斜边正方形的面积", "...equals the area of the square on the hypotenuse.");
-
-    sq_a.startAnimate({ duration: 500 }).setFillOpacity(0.2).endAnimate();
-    sq_b.startAnimate({ duration: 500 }).setFillOpacity(0.2).endAnimate();
-    sq_c.startAnimate({ duration: 500 }).setFillOpacity(0.8).endAnimate();
-
-    await sleep(2500);
-
-    setCaption.setCaption("这就是勾股定理", "This is the Pythagorean Theorem.");
-
-    sq_c.startAnimate({ duration: 500 }).setFillOpacity(0.2).endAnimate();
-    formula.startAnimate({ duration: 1000 }).setOpacity(1).endAnimate();
+    caption.setCaption("这就是勾股定理", "This is the Pythagorean Theorem.");
+    sqC.startAnimate().setFillOpacity(0.2).endAnimate();
+    formula.startAnimate().setOpacity(1).endAnimate();
 });

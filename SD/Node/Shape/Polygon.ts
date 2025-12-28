@@ -16,7 +16,7 @@ export class Polygon extends BaseShape {
         strokeOpacity?: number;
         strokeWidth?: number;
         strokeDashOffset?: number;
-        strokeDashArray?: Array<number>;
+        strokeDashArray?: number | Array<number>;
         filter?: SDFilter;
     }) {
         super();

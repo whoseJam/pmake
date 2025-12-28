@@ -73,13 +73,15 @@ const ATTRIBUTE_KEY_MAP: Record<string, AttributeConverter> = {
         undefined,
         (value: [number, number]) => `${value[0]} ${value[1]}`
     ),
-    strokeDashArray: new AttributeConverter("stroke-dasharray", undefined, (value: Array<number>) => {
+    strokeDashArray: new AttributeConverter("stroke-dasharray", undefined, (value: number | Array<number>) => {
+        if (typeof value === "number") return `${value} ${value}`;
         let dashed = 0;
         for (let i = 1; i < value.length; i += 2) dashed += value[i];
         if (dashed > 0) return value.join(" ");
         return undefined;
     }),
     strokeDashOffset: new AttributeConverter("stroke-dashoffset", undefined, (value: number) => `${value}`),
+    filter: new AttributeConverter("filter", undefined, (value: string) => (value === "" ? undefined : value)),
 };
 
 export function setAttribute(type: "svg" | "html", element: Element, key: string, value: any) {
