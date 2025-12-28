@@ -28,6 +28,7 @@ export function getTextPaths(text: Text, t: number): Array<PathView> {
 function getMathPaths(text: Math, t: number): Array<PathView> {
     const html = A.getAttribute(text, "html", t, text._.html);
     const paths = MathManager.getMathPaths(html);
+    console.log("html=", html, "paths=", paths);
     return paths;
 }
 

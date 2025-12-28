@@ -24,16 +24,6 @@ export function matchSubtext(textView: TextView, pattern: string) {
         for (let j = 0; j < pattern.length && matched; j++) {
             if (pattern[j] !== textView.hash[i + j]) matched = false;
         }
-        console.log(
-            "i=",
-            i,
-            "matched=",
-            matched,
-            "pattern=",
-            pattern,
-            "slice=",
-            textView.text.slice(i, i + pattern.length)
-        );
         if (matched) {
             return new SubtextView(textView, i, i + pattern.length - 1);
         }

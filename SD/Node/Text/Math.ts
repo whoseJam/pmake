@@ -297,6 +297,9 @@ export class Math extends BaseText {
         text?: string;
         fill?: SDColor;
         stroke?: SDColor;
+        strokeWidth?: number;
+        strokeDashOffset?: number;
+        strokeDashArray?: number | Array<number>;
     }) {
         super();
 
@@ -309,11 +312,22 @@ export class Math extends BaseText {
             x: args?.x ?? 0,
             y: args?.y ?? 0,
             fontSize: args?.fontSize ?? 20,
+            strokeWidth: args?.strokeWidth ?? 1,
+            strokeDashOffset: args?.strokeDashOffset ?? 0,
+            strokeDashArray: args?.strokeDashArray ?? [1, 0],
         });
 
         if (args?.text) this.setText(args?.text);
 
         args?.targetNode?.appendChild(this);
+    }
+
+    setX(x: number): this {
+        return this.triggerAttributeChanged(this._.html, "x", x, this._.x, Interp.numberInterp);
+    }
+
+    setY(y: number): this {
+        return this.triggerAttributeChanged(this._.html, "y", y, this._.y, Interp.numberInterp);
     }
 
     getFontSize(): number {

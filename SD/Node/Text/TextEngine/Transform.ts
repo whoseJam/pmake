@@ -17,6 +17,11 @@ export function transformPostProcess(text: BaseText, targetLayer: RenderNode) {
     return function (l: number, r: number, source: Array<SubtextView>, target: Array<SubtextView>) {
         if (l === r) return;
         const createAction = (character: RenderNode, source: any, target: any, interp: any, animatedKey: string) => {
+            if (animatedKey === "transform") {
+                const source_ = source as SVGMatrix;
+                const target_ = target as SVGMatrix;
+                if (source_.toString() === target_.toString()) return;
+            }
             new Action(
                 l,
                 r,
@@ -64,7 +69,9 @@ export function transformPostProcess(text: BaseText, targetLayer: RenderNode) {
                     continue;
                 }
                 character.setAttribute("d", source.d);
+                character.setAttribute("transform", source.transform);
                 createAction(character, source.d, target.d, Interp.pathInterp, "d");
+                createAction(character, source.transform, target.transform, Interp.matrixInterp, "transform");
                 const sourceStyle = sourceStyles[sourceIndex].styleAt(text, l);
                 const targetStyle = targetStyles[targetIndex].styleAt(text, r);
                 createAction(character, sourceStyle.fill, targetStyle.fill, Interp.colorInterp, "fill");
@@ -85,6 +92,7 @@ export function transformPostProcess(text: BaseText, targetLayer: RenderNode) {
 function buildMapping(sourceCount: number, targetCount: number): Array<[number, number]> {
     const mapping: Array<[number, number]> = [];
     if (sourceCount < targetCount) {
+        console.log("aaa");
         const count = targetCount - sourceCount;
         const gap = Math.floor(sourceCount / count);
         if (sourceCount === 0) {
@@ -93,7 +101,7 @@ function buildMapping(sourceCount: number, targetCount: number): Array<[number, 
         }
         if (gap > 0) {
             let current = 0;
-            for (let i = 0; i < sourceCount - 1; i++) {
+            for (let i = 0; i < sourceCount; i++) {
                 if (i % gap === 0 && current < count) {
                     mapping.push([i, mapping.length]);
                     current++;

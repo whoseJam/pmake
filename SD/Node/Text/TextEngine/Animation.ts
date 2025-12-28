@@ -11,8 +11,8 @@ export function buildAnimation(
     postProcess: LazyInterpFunction,
     animatedKey: string
 ) {
-    const sourceView = createTextView(source.text, { styles: source.styles, backing: source.backing });
-    const targetView = createTextView(target.text, { backing: target.backing });
+    const sourceView = createTextView(source.text, { styles: source.styles });
+    const targetView = createTextView(target.text, {});
     const mappings = process(sourceView, targetView);
     const l = text.delay();
     const r = text.delay() + text.duration();

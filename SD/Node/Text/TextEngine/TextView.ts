@@ -41,6 +41,9 @@ export class PathStyle {
         });
     }
     styleAt(text: BaseText, t: number) {
+        console.log("this=", this);
+        console.log("text.getFill=", text.getFill());
+        console.log("text.getStrokeWidth=", text.getStrokeWidth());
         const fill = this.fill === "default" ? A.getAttribute(text, "fill", t, text.getFill()) : this.fill;
         const stroke = this.stroke === "default" ? A.getAttribute(text, "stroke", t, text.getStroke()) : this.stroke;
         const strokeWidth =

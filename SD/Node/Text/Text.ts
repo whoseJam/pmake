@@ -38,7 +38,7 @@ export class Text extends BaseText {
         stroke?: SDColor;
         strokeWidth?: number;
         strokeDashOffset?: number;
-        strokeDashArray?: Array<number>;
+        strokeDashArray?: number | Array<number>;
         filter?: SDFilter;
     }) {
         super();
