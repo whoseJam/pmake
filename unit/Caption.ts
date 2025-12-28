@@ -2,7 +2,7 @@ import * as sd from "@/sd";
 
 const svg = sd.svg();
 
-sd.main(TestCaption);
+sd.main(TestCaptionDynamic);
 
 async function TestTextOpacity() {
     const caption = new sd.Caption(svg).cx(600).y(100).caption("你好世界", "Hello World");
@@ -11,31 +11,38 @@ async function TestTextOpacity() {
 }
 
 async function TestCaption() {
-    const caption = new sd.Caption(svg).cx(600).y(100);
+    const caption = new sd.Caption({
+        targetNode: svg,
+        cx: 600,
+        cy: 100,
+    });
     await sd.pause();
-    caption.startAnimate().caption("你好，世界", "Hello, World").endAnimate();
+    caption.startAnimate().setCaption("你好，世界", "Hello, World").endAnimate();
     await sd.pause();
-    caption.startAnimate().caption("数据结构", "Data Structure").endAnimate();
+    caption.startAnimate().setCaption("数据结构", "Data Structure").endAnimate();
     await sd.pause();
-    caption.startAnimate().caption("算法可视化", "Algorithm Visualization").endAnimate();
+    caption.startAnimate().setCaption("算法可视化", "Algorithm Visualization").endAnimate();
 }
 
 async function TestCaptionAnimation() {
-    const caption = new sd.Caption(svg);
-    caption.x(600).y(100);
-    caption.caption("初始文本", "Initial Text");
+    const caption = new sd.Caption({
+        targetNode: svg,
+        cx: 600,
+        cy: 100,
+    });
+    caption.setCaption("初始文本", "Initial Text");
 
     await sd.pause();
-    caption.startAnimate().x(300).y(200).endAnimate();
+    caption.startAnimate().setX(300).setY(200).endAnimate();
 
     await sd.pause();
-    caption.caption("移动后的文本", "Moved Text");
+    caption.setCaption("移动后的文本", "Moved Text");
 
     await sd.pause();
-    caption.startAnimate().x(900).y(400).endAnimate();
+    caption.startAnimate().setX(100).setY(400).endAnimate();
 
     await sd.pause();
-    caption.caption("最终位置", "Final Position");
+    caption.setCaption("最终位置", "Final Position");
 }
 
 async function TestCaptionWithRect() {
@@ -99,8 +106,10 @@ async function TestCaptionWithAnimation() {
 }
 
 async function TestCaptionDynamic() {
-    const caption = new sd.Caption(svg);
-    caption.x(600).y(300);
+    const caption = new sd.Caption({
+        targetNode: svg,
+    });
+    caption.setX(600).setY(300);
 
     const messages = [
         ["欢迎", "Welcome"],
@@ -112,6 +121,6 @@ async function TestCaptionDynamic() {
 
     for (let i = 0; i < messages.length; i++) {
         await sd.pause(800);
-        caption.caption(messages[i][0], messages[i][1]);
+        caption.setCaption(messages[i][0], messages[i][1]);
     }
 }

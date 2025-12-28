@@ -26,7 +26,7 @@ export abstract class SDNode {
         parent: Group | Filter;
         frame: number;
         start: number;
-        end: number;
+        duration: number;
         subAnimates: Array<Context>;
         timingFunction: SDTimingFunction;
         renderer: RenderNode;
@@ -47,7 +47,7 @@ export abstract class SDNode {
             renderer: undefined,
             frame: -1,
             start: 0,
-            end: 0,
+            duration: 0,
             subAnimates: [],
             timingFunction: undefined,
             ready: false,
@@ -84,7 +84,7 @@ export abstract class SDNode {
 
     startAnimate(args?: { delay?: number; duration?: number; easing?: SDTimingFunction }) {
         this._.start = args?.delay ?? 0;
-        this._.end = args?.duration ?? 300;
+        this._.duration = args?.duration ?? 300;
         this._.timingFunction = args?.easing ?? T.easeInOut;
         return this;
     }
@@ -96,7 +96,7 @@ export abstract class SDNode {
      */
     endAnimate(): this {
         this._.start = 0;
-        this._.end = 0;
+        this._.duration = 0;
         this._.timingFunction = undefined;
         return this;
     }
@@ -114,7 +114,7 @@ export abstract class SDNode {
      * Gets the duration of current animation sequence.
      */
     duration() {
-        return this._.end - this._.start;
+        return this._.duration;
     }
 
     /**
@@ -370,9 +370,9 @@ export abstract class SDNode {
         interp?: InterpObject | InterpFunction | LazyInterpFunction | InterpCreator
     ) {
         this._[key] = vn;
-        if (this.duration() > 0 && interp) {
+        if (interp) {
             const interp_ = isBuiltinInterp(interp) ? interp(object, key) : interp;
-            new Action(this._.start, this._.end, vo, vn, interp_, this._.timingFunction, this, key);
+            new Action(this.delay(), this.delay() + this.duration(), vo, vn, interp_, this._.timingFunction, this, key);
         } else object?.setAttribute(key, vn);
         this._.attributeListeners[key]?.forEach(listener => listener(vn, vo));
         return this;

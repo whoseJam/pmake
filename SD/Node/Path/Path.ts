@@ -1,11 +1,19 @@
 import { BasePath } from "@/Node/Path/BasePath";
 import { PathEngine } from "@/Node/Path/PathEngine";
-import { SDNode } from "@/Node/SDNode";
+import { Group } from "@/Node/Other/Group";
 import { SDColor, Color as C } from "@/Utility/Color";
 
 export class Path extends BasePath {
+    _: BasePath["_"] & {
+        d: string;
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+    };
+
     constructor(args?: {
-        targetNode?: SDNode;
+        targetNode?: Group;
         opacity?: number;
         d?: string;
         fill?: SDColor;
@@ -19,7 +27,7 @@ export class Path extends BasePath {
         super();
 
         this.createSVGNode("path", {
-            d: args?.d || "",
+            d: args?.d ?? "",
             fill: args?.fill ?? C.none,
             fillOpacity: args?.fillOpacity ?? 1,
             stroke: args?.stroke ?? C.black,
@@ -29,26 +37,33 @@ export class Path extends BasePath {
             strokeDashArray: args?.strokeDashArray ?? [],
         });
 
-        this.vars.merge({
-            x: 0,
-            y: 0,
-            width: 0,
-            height: 0,
+        const box = PathEngine.toBox(args?.d ?? "");
+
+        Object.assign(this._, {
+            d: args?.d ?? "",
+            x: box.x ?? 0,
+            y: box.y ?? 0,
+            width: box.width ?? 0,
+            height: box.height ?? 0,
         });
 
         args?.targetNode?.appendChild(this);
     }
+
     getX() {
-        return this.vars.x;
+        return this._.x;
     }
+
     getY() {
-        return this.vars.y;
+        return this._.y;
     }
+
     getWidth() {
-        return this.vars.width;
+        return this._.width;
     }
+
     getHeight() {
-        return this.vars.height;
+        return this._.height;
     }
 
     getPointAtRate(k: number) {
@@ -64,11 +79,11 @@ export class Path extends BasePath {
     }
 
     getD(): string {
-        return this.vars.d;
+        return this._.d;
     }
+
     setD(d: string): this {
-        this.vars.d = d;
-        this.vars.setTogether(PathEngine.toBox(d));
-        return this;
+        Object.assign(this._, { d, ...PathEngine.toBox(d) });
+        return this.triggerAttributeChanged(this._.renderer, "d", d, this._.d);
     }
 }
