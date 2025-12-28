@@ -41,9 +41,6 @@ export class PathStyle {
         });
     }
     styleAt(text: BaseText, t: number) {
-        console.log("this=", this);
-        console.log("text.getFill=", text.getFill());
-        console.log("text.getStrokeWidth=", text.getStrokeWidth());
         const fill = this.fill === "default" ? A.getAttribute(text, "fill", t, text.getFill()) : this.fill;
         const stroke = this.stroke === "default" ? A.getAttribute(text, "stroke", t, text.getStroke()) : this.stroke;
         const strokeWidth =
@@ -78,12 +75,10 @@ export class PathView {
 
 export class TextView {
     text: string | Array<string>;
-    hash: Array<string>;
     styles?: Array<PathStyle>;
     backing?: RenderNode;
-    constructor(text: string | Array<string>, hash: Array<string>, styles?: Array<PathStyle>) {
+    constructor(text: string | Array<string>, styles?: Array<PathStyle>) {
         this.text = text;
-        this.hash = hash;
         this.styles = styles;
     }
     asSubtextView() {
@@ -137,12 +132,10 @@ export class SubtextView {
 }
 
 export function createTextView(text: string | Array<string>, args: { styles?: Array<PathStyle> }) {
-    const hash = [];
     const styles = [];
     for (let i = 0; i < text.length; i++) {
-        hash.push(text[i]);
         if (args.styles) styles.push(args.styles[i]);
         else styles.push(new PathStyle({}));
     }
-    return new TextView(text, hash, styles);
+    return new TextView(text, styles);
 }

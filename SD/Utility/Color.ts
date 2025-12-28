@@ -256,6 +256,7 @@ export class Color {
     }
 
     static toString(color: SDColor): string {
+        if ((color as any) === "currentColor") return "currentColor";
         const rgba = this.toRGBA(color);
         if (rgba) return `rgb(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a})`;
         return undefined;

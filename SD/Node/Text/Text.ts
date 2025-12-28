@@ -236,7 +236,7 @@ export class Text extends BaseText {
     }
 }
 
-function generateDefaultStyles(text: string) {
+function generateDefaultStyles(text: string): Array<PathStyle> {
     const styles: Array<PathStyle> = [];
     if (!text) return styles;
     for (let i = 0; i < text.length; i++) styles.push(new PathStyle({}));

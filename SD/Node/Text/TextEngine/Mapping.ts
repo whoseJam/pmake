@@ -2,31 +2,22 @@ import { TextMappingArray, TextMappingLocation } from "@/Node/Text/BaseText";
 import { SubtextView, TextView } from "@/Node/Text/TextEngine/TextView";
 import { make1d } from "@/Utility/Base";
 
-function calculate(textView: TextView, deleted: Array<boolean>, pattern: TextMappingLocation) {
+function calculate(textView: TextView, deleted: Array<boolean>, pattern: TextMappingLocation): SubtextView {
     if (typeof pattern === "string") {
-        for (let i = 0; i < textView.hash.length; i++) {
+        for (let i = 0; i < textView.text.length; i++) {
             let matched = true;
-            for (let j = 0; j < pattern.length && matched; j++) {
-                if (pattern[j] !== textView.hash[i + j] || deleted[j]) matched = false;
-            }
-            if (matched) {
-                // for (let j  = 0; j < pattern.length; j ++) {
-
-                return new SubtextView(textView, i, i + pattern.length - 1);
-            }
+            for (let j = 0; j < pattern.length && matched; j++)
+                if (pattern[j] !== textView.text[i + j] || deleted[j]) matched = false;
+            if (matched) return new SubtextView(textView, i, i + pattern.length - 1);
         }
     }
 }
 
-export function matchSubtext(textView: TextView, pattern: string) {
-    for (let i = 0; i < textView.hash.length; i++) {
+export function matchSubtext(textView: TextView, pattern: string | Array<string>): SubtextView {
+    for (let i = 0; i < textView.text.length; i++) {
         let matched = true;
-        for (let j = 0; j < pattern.length && matched; j++) {
-            if (pattern[j] !== textView.hash[i + j]) matched = false;
-        }
-        if (matched) {
-            return new SubtextView(textView, i, i + pattern.length - 1);
-        }
+        for (let j = 0; j < pattern.length && matched; j++) if (pattern[j] !== textView.text[i + j]) matched = false;
+        if (matched) return new SubtextView(textView, i, i + pattern.length - 1);
     }
 }
 
@@ -36,8 +27,8 @@ export function match(
     mappings: TextMappingArray
 ): Array<[SubtextView, SubtextView]> {
     const matchings = [];
-    const sourceDeleted = make1d(sourceView.hash.length, false);
-    const targetDeleted = make1d(targetView.hash.length, false);
+    const sourceDeleted = make1d(sourceView.text.length, false);
+    const targetDeleted = make1d(targetView.text.length, false);
     for (const mapping of mappings) {
         const source = mapping.source;
         const target = mapping.target;
