@@ -10,7 +10,7 @@ async function TestSubtextColor() {
         targetNode: svg,
         x: 100,
         y: 100,
-        fontSize: 100,
+        fontSize: 50,
         text: "abcabcabc",
     });
     await sd.pause();
@@ -21,6 +21,16 @@ async function TestSubtextColor() {
     text.startAnimate().setFill(C.purple).endAnimate();
     await sd.pause();
     text.startAnimate().setFill(C.grey).endAnimate();
+}
+
+async function TestTransformWithColor() {
+    const math1 = new sd.Math({ targetNode: svg, text: "hello", x: 100, y: 100, fontSize: 50 });
+    const math2 = new sd.Math({ targetNode: svg, text: "hello", x: 100, y: 200, fontSize: 50 });
+    const math3 = new sd.Math({ targetNode: svg, text: "hello", x: 100, y: 300, fontSize: 50 });
+    await sd.pause();
+    math1.startAnimate().setFill(C.red).endAnimate();
+    math2.startAnimate().setFill(C.red).setText("world").endAnimate();
+    math3.startAnimate().setText("world").setFill(C.red).endAnimate();
 }
 
 async function TestTransformWithPosition() {

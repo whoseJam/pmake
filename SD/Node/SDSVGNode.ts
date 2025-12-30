@@ -31,7 +31,7 @@ export abstract class SDSVGNode extends SDNode {
      * @param fill - The fill color to apply (hex string or RGB object).
      * @returns The current component instance for method chaining.
      */
-    setFill(fill?: SDAllColor) {
+    setFill(fill: SDAllColor) {
         return this.triggerAttributeChanged(
             this._.renderer,
             "fill",

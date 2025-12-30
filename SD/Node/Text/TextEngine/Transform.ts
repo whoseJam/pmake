@@ -37,9 +37,6 @@ export function transformPostProcess(text: BaseText, targetLayer: RenderNode) {
         const sourcePaths = getPaths(text, l);
         const targetPaths = getPaths(text, r);
 
-        console.log("source paths=", sourcePaths);
-        console.log("target paths=", targetPaths);
-
         for (let i = 0; i < source.length; i++) {
             const sourceSubtext = source[i];
             const targetSubtext = target[i];

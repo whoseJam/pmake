@@ -6,7 +6,7 @@ import { MathManager } from "@/Node/Text/TextEngine/Mathjax";
 import { buildAnimation } from "@/Node/Text/TextEngine/Animation";
 import { transformPostProcess, transformProcess } from "@/Node/Text/TextEngine/Transform";
 import { Interp } from "@/Animate/Interp";
-import { Color as C, SDColor } from "@/Utility/Color";
+import { Color as C, SDAllColor, SDColor } from "@/Utility/Color";
 import { matchSubtext } from "@/Node/Text/TextEngine/Mapping";
 
 export class Math extends BaseText {
@@ -81,6 +81,14 @@ export class Math extends BaseText {
 
     setY(y: number): this {
         return this.triggerAttributeChanged(this._.html, "y", y, this._.y, Interp.numberInterp);
+    }
+
+    setFill(fill: SDAllColor) {
+        return this.triggerAttributeChanged(this._.html, "fill", fill, this.getFill(), Interp.colorInterp);
+    }
+
+    setStroke(stroke: SDAllColor) {
+        return this.triggerAttributeChanged(this._.html, "stroke", stroke, this.getStroke(), Interp.colorInterp);
     }
 
     getFontSize(): number {
@@ -178,13 +186,11 @@ function parseToHTML(
 ): [RenderNode, Array<string>, Array<PathStyle>] {
     // @ts-ignore
     const element = MathJax.tex2svg(string).children[0] as SVGSVGElement;
-    element.setAttribute("fill", element.children[1].getAttribute("fill"));
-    element.setAttribute("stroke", element.children[1].getAttribute("stroke"));
     element.children[1].removeAttribute("fill");
     element.children[1].removeAttribute("stroke");
     const math = RenderNode.createMathRenderNode(node, node.getRootRenderNode(), element);
-    math.setAttribute("fill", "currentColor");
-    math.setAttribute("stroke", "currentColor");
+    math.setAttribute("fill", node.getFill());
+    math.setAttribute("stroke", node.getStroke());
     math.setAttribute("x", node.getX());
     math.setAttribute("y", node.getY());
     math.setAttribute("fontSize", node.getFontSize());
