@@ -136,6 +136,14 @@ export class Text extends BaseText {
         return this;
     }
 
+    onTextChanged(listener: (vn: string, vo: string) => void) {
+        return this.onAttributeChanged("text", listener);
+    }
+
+    offTextChanged(listener: (vn: string, vo: string) => void) {
+        return this.offAttributeChanged("text", listener);
+    }
+
     getFontFamily() {
         return this._.fontFamily;
     }
@@ -159,6 +167,14 @@ export class Text extends BaseText {
         this.triggerAttributeChanged(this._.renderer, "html", html, this._.html, Interp.stringBlankInMiddleInterp);
         this.triggerAttributeChanged(this._.renderer, "fontFamily", family, this._.fontFamily, Interp.stringInterp);
         return this;
+    }
+
+    onFontFamilyChanged(listener: (vn: string, vo: string) => void) {
+        return this.onAttributeChanged("fontFamily", listener);
+    }
+
+    offFontFamilyChanged(listener: (vn: string, vo: string) => void) {
+        return this.offAttributeChanged("fontFamily", listener);
     }
 
     typewritter(text: string | number) {

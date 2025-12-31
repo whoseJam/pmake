@@ -5,7 +5,7 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestTextBox);
+sd.main(TestTransformWithFontSize);
 
 // async function TestSubtextColor() {
 //     const text = new sd.Text(svg, "for(int i=1;i<=n;i++)ans+=i;").x(100).y(100).fontSize(40);
@@ -213,6 +213,33 @@ async function TestTextBox() {
         fill: C.red,
         fillOpacity: 0.5,
     });
+}
+
+async function TestTransform() {
+    const text = new sd.Text({
+        targetNode: svg,
+        text: "a",
+        x: 100,
+        y: 100,
+        fontSize: 100,
+    });
+    const box = new sd.Rect({
+        targetNode: svg,
+        x: text.getX(),
+        y: text.getY(),
+        width: text.getWidth(),
+        height: text.getHeight(),
+        fill: C.red,
+        fillOpacity: 0.5,
+    });
+    await sd.pause();
+    text.startAnimate().setText("a=3").endAnimate();
+    box.startAnimate()
+        .setX(text.getX())
+        .setY(text.getY())
+        .setWidth(text.getWidth())
+        .setHeight(text.getHeight())
+        .endAnimate();
 }
 
 async function TestSubtextColor() {
