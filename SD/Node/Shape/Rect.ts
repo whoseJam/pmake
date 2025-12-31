@@ -3,6 +3,7 @@ import { SDColor, Color as C } from "@/Utility/Color";
 import { Interp } from "@/Animate/Interp";
 import { Group } from "@/Node/Other/Group";
 import { Filter, SDFilter } from "@/Node/Filter/Filter";
+import { SDSVGNode } from "@/Node/SDSVGNode";
 
 export class Rect extends BaseShape {
     _: BaseShape["_"] & {
@@ -38,16 +39,13 @@ export class Rect extends BaseShape {
     }) {
         super();
 
-        if (typeof args?.strokeDashArray === "number") args.strokeDashArray = [args.strokeDashArray];
-        if (typeof args?.strokeDashArray === "string")
-            args.strokeDashArray = args.strokeDashArray.split(/[\s,]+/).map(value => +value);
         this.createSVGNode("rect", {
             x: args?.x ?? 0,
             y: args?.y ?? 0,
             width: args?.width ?? 40,
             height: args?.height ?? 40,
-            rx: args?.rx ?? undefined,
-            ry: args?.ry ?? undefined,
+            rx: args?.rx ?? 0,
+            ry: args?.ry ?? 0,
             opacity: args?.opacity ?? 1,
             fill: args?.fill ?? C.white,
             fillOpacity: args?.fillOpacity ?? 1,
@@ -55,8 +53,8 @@ export class Rect extends BaseShape {
             strokeOpacity: args?.strokeOpacity ?? 1,
             strokeWidth: args?.strokeWidth ?? 1,
             strokeDashOffset: args?.strokeDashOffset ?? 0,
-            strokeDashArray: args?.strokeDashArray ?? [],
-            filter: Filter.toURLString(args?.filter) ?? "",
+            strokeDashArray: SDSVGNode.toStrokeDashArray(args?.strokeDashArray),
+            filter: Filter.toURLString(args?.filter),
         });
 
         if (args?.cx !== undefined) this.setCx(args.cx);
@@ -162,12 +160,28 @@ export class Rect extends BaseShape {
         return this.triggerAttributeChanged(this._.renderer, "rx", rx, this._.rx, Interp.numberInterp);
     }
 
+    onRxChanged(listener: (vn: number, vo: number) => void): this {
+        return this.onAttributeChanged("rx", listener);
+    }
+
+    offRxChanged(listener: (vn: number, vo: number) => void): this {
+        return this.offAttributeChanged("rx", listener);
+    }
+
     getRy(): number {
         return this._.ry;
     }
 
     setRy(ry: number): this {
         return this.triggerAttributeChanged(this._.renderer, "ry", ry, this._.ry, Interp.numberInterp);
+    }
+
+    onRyChanged(listener: (vn: number, vo: number) => void): this {
+        return this.onAttributeChanged("ry", listener);
+    }
+
+    offRyChanged(listener: (vn: number, vo: number) => void): this {
+        return this.offAttributeChanged("ry", listener);
     }
 
     setBorderRadius(r: number): this {

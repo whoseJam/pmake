@@ -3,10 +3,15 @@ import { Group } from "@/Node/Other/Group";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { SDString, URLString } from "@/Utility/String";
 import { BaseFilter } from "@/Node/Filter/BaseFilter";
+import { Interp } from "@/Animate/Interp";
 
 export type SDFilter = Filter | string | URLString;
 
 export class Filter extends BaseFilter {
+    _: BaseFilter["_"] & {
+        id: string;
+    };
+
     constructor(args?: {
         targetNode?: Group;
         id?: string;
@@ -55,6 +60,10 @@ export class Filter extends BaseFilter {
 
     getId() {
         return this._.id;
+    }
+
+    setId(id: string) {
+        return this.triggerAttributeChanged(this._.renderer, "id", id, this._.id, Interp.stringInterp);
     }
 
     setX(x: Percent) {

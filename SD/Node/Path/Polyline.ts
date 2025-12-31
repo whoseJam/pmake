@@ -5,6 +5,7 @@ import { Filter, SDFilter } from "@/Node/Filter/Filter";
 import { Group } from "@/Node/Other/Group";
 import { SDSVGNode } from "@/Node/SDSVGNode";
 import { Interp } from "@/Animate/Interp";
+import { TransformOrigin } from "@/Node/SDNode";
 
 export class Polyline extends BasePath {
     _: BasePath["_"] & {
@@ -14,6 +15,8 @@ export class Polyline extends BasePath {
     constructor(args?: {
         targetNode?: Group;
         points?: Array<[number, number]>;
+        transformOrigin?: TransformOrigin;
+        opacity?: number;
         fill?: SDColor;
         fillOpacity?: number;
         stroke?: SDColor;
@@ -27,6 +30,8 @@ export class Polyline extends BasePath {
 
         this.createSVGNode("polyline", {
             points: args?.points ?? [],
+            transformOrigin: ["center", "center"],
+            opacity: args?.opacity ?? 1,
             fill: args?.fill ?? C.none,
             fillOpacity: args?.fillOpacity ?? 1,
             stroke: args?.stroke ?? C.black,

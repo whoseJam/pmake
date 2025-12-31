@@ -38,8 +38,8 @@ class AttributeConverter {
 }
 
 const ATTRIBUTE_KEY_MAP: Record<string, AttributeConverter> = {
-    rx: new AttributeConverter("rx", undefined, value => `${value}`),
-    ry: new AttributeConverter("ry", undefined, value => `${value}`),
+    rx: new AttributeConverter("rx", undefined, value => (value === 0 ? undefined : `${value}`)),
+    ry: new AttributeConverter("ry", undefined, value => (value === 0 ? undefined : `${value}`)),
     opacity: new AttributeConverter("opacity", undefined, value => (value === 1 ? undefined : `${value}`)),
     fill: new AttributeConverter("fill", C.white, color => C.toString(color)),
     fillOpacity: new AttributeConverter("fill-opacity", undefined, value => `${value}`),

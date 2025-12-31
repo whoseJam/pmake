@@ -84,6 +84,7 @@ export class RenderNode {
     }
 
     setAttribute(key: string, value: any) {
+        console.log("set attribute, key=", key, "value=", value);
         const element = this.element() as SVGElement | HTMLElement;
         if (HTML_INNERHTML_SET.has(key)) {
             if (key === "text") value = parseText(value);

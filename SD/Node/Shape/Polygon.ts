@@ -28,6 +28,7 @@ export class Polygon extends BaseShape {
 
         this._.renderer = this.createSVGNode("polygon", {
             points: args?.points ?? [],
+            transformOrigin: ["center", "center"],
             opacity: args?.opacity ?? 1,
             fill: args?.fill ?? C.white,
             fillOpacity: args?.fillOpacity ?? 1,
@@ -36,7 +37,7 @@ export class Polygon extends BaseShape {
             strokeWidth: args?.strokeWidth ?? 1,
             strokeDashOffset: args?.strokeDashOffset ?? 0,
             strokeDashArray: SDSVGNode.toStrokeDashArray(args?.strokeDashArray),
-            filter: Filter.toURLString(args?.filter) ?? "",
+            filter: Filter.toURLString(args?.filter),
         });
 
         args?.targetNode?.appendChild(this);

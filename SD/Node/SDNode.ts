@@ -12,6 +12,7 @@ type XLocationString = "left" | "center" | "right";
 type YLocationString = "top" | "center" | "bottom";
 type XLocation = NumberOrPercent | XLocationString;
 type YLocation = NumberOrPercent | YLocationString;
+export type TransformOrigin = [XLocation, YLocation];
 
 export type SDBox = {
     x: number;
