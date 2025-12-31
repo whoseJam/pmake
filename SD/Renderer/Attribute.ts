@@ -38,15 +38,16 @@ class AttributeConverter {
 }
 
 const ATTRIBUTE_KEY_MAP: Record<string, AttributeConverter> = {
-    rx: new AttributeConverter("rx", undefined, (value: number) => `${value}`),
-    ry: new AttributeConverter("ry", undefined, (value: number) => `${value}`),
+    rx: new AttributeConverter("rx", undefined, value => `${value}`),
+    ry: new AttributeConverter("ry", undefined, value => `${value}`),
+    opacity: new AttributeConverter("opacity", undefined, value => (value === 1 ? undefined : `${value}`)),
     fill: new AttributeConverter("fill", C.white, color => C.toString(color)),
-    fillOpacity: new AttributeConverter("fill-opacity", undefined, (value: number) => `${value}`),
+    fillOpacity: new AttributeConverter("fill-opacity", undefined, value => `${value}`),
     stroke: new AttributeConverter("stroke", C.black, color => C.toString(color)),
-    strokeOpacity: new AttributeConverter("stroke-opacity", undefined, (value: number) => `${value}`),
-    strokeWidth: new AttributeConverter("stroke-width", undefined, (value: number) => `${value}`),
-    fontFamily: new AttributeConverter("font-family", undefined, (value: string) => value),
-    fontSize: new AttributeConverter("font-size", undefined, (value: number) => `${value}`),
+    strokeOpacity: new AttributeConverter("stroke-opacity", undefined, value => `${value}`),
+    strokeWidth: new AttributeConverter("stroke-width", undefined, value => `${value}`),
+    fontFamily: new AttributeConverter("font-family", undefined, value => value),
+    fontSize: new AttributeConverter("font-size", undefined, value => `${value}`),
     scale: new AttributeConverter("transform", undefined, (value: [number, number], context: Context) => {
         context.scale = value;
         const scale = context.scale ?? [1, 1];
@@ -80,8 +81,13 @@ const ATTRIBUTE_KEY_MAP: Record<string, AttributeConverter> = {
         if (dashed > 0) return value.join(" ");
         return undefined;
     }),
-    strokeDashOffset: new AttributeConverter("stroke-dashoffset", undefined, (value: number) => `${value}`),
-    filter: new AttributeConverter("filter", undefined, (value: string) => (value === "" ? undefined : value)),
+    strokeDashOffset: new AttributeConverter("stroke-dashoffset", undefined, value =>
+        value === 0 ? undefined : `${value}`
+    ),
+    markerStart: new AttributeConverter("marker-start", undefined, value => (value === "" ? undefined : value)),
+    markerMid: new AttributeConverter("marker-mid", undefined, value => (value === "" ? undefined : value)),
+    markerEnd: new AttributeConverter("marker-end", undefined, value => (value === "" ? undefined : value)),
+    filter: new AttributeConverter("filter", undefined, value => (value === "" ? undefined : value)),
 };
 
 export function setAttribute(type: "svg" | "html", element: Element, key: string, value: any) {

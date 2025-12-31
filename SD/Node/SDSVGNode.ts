@@ -172,12 +172,11 @@ export abstract class SDSVGNode extends SDNode {
         return this._.strokeDashArray;
     }
 
-    setStrokeDashArray(array: number | Array<number>): this {
-        if (typeof array === "number") array = [array, array];
+    setStrokeDashArray(array: string | number | Array<number>): this {
         return this.triggerAttributeChanged(
             this._.renderer,
             "strokeDashArray",
-            array,
+            SDSVGNode.toStrokeDashArray(array),
             this._.strokeDashArray,
             Interp.arrayInterp
         );
@@ -197,5 +196,12 @@ export abstract class SDSVGNode extends SDNode {
         this._.renderer = object;
         for (const key in attributes) object.setAttribute(key, attributes[key]);
         return object;
+    }
+
+    protected static toStrokeDashArray(strokeDashArray: string | number | Array<number>): Array<number> {
+        if (strokeDashArray === undefined) return [];
+        if (typeof strokeDashArray === "number") return [strokeDashArray];
+        if (typeof strokeDashArray === "string") return strokeDashArray.split(/[\s,]+/).map(value => +value);
+        return strokeDashArray;
     }
 }

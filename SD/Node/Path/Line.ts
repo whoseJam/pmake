@@ -3,6 +3,8 @@ import { Vector as V } from "@/Math/Vector";
 import { BasePath } from "@/Node/Path/BasePath";
 import { Group } from "@/Node/Other/Group";
 import { SDColor, Color as C } from "@/Utility/Color";
+import { Filter, SDFilter } from "@/Node/Filter/Filter";
+import { SDSVGNode } from "@/Node/SDSVGNode";
 
 export class Line extends BasePath {
     constructor(args?: {
@@ -19,12 +21,10 @@ export class Line extends BasePath {
         strokeWidth?: number;
         strokeDashOffset?: number;
         strokeDashArray?: string | number | Array<number>;
+        filter?: SDFilter;
     }) {
         super();
 
-        if (typeof args?.strokeDashArray === "number") args.strokeDashArray = [args.strokeDashArray];
-        if (typeof args?.strokeDashArray === "string")
-            args.strokeDashArray = args.strokeDashArray.split(/[\s,]+/).map(value => +value);
         this.createSVGNode("line", {
             x1: args?.x1 ?? 0,
             y1: args?.y1 ?? 0,
@@ -37,7 +37,8 @@ export class Line extends BasePath {
             strokeOpacity: args?.strokeOpacity ?? 1,
             strokeWidth: args?.strokeWidth ?? 1,
             strokeDashOffset: args?.strokeDashOffset ?? 0,
-            strokeDashArray: args?.strokeDashArray ?? [],
+            strokeDashArray: SDSVGNode.toStrokeDashArray(args?.strokeDashArray),
+            filter: Filter.toURLString(args?.filter),
         });
 
         args?.targetNode?.appendChild(this);

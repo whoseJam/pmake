@@ -1,13 +1,40 @@
 import { BasePath } from "@/Node/Path/BasePath";
 import { PolylineEngine } from "@/Node/Path/PolylineEngine";
+import { SDColor, Color as C } from "@/Utility/Color";
+import { Filter, SDFilter } from "@/Node/Filter/Filter";
 import { Group } from "@/Node/Other/Group";
+import { SDSVGNode } from "@/Node/SDSVGNode";
+import { Interp } from "@/Animate/Interp";
 
 export class Polyline extends BasePath {
-    constructor(args?: { targetNode?: Group; points?: Array<[number, number]> }) {
+    _: BasePath["_"] & {
+        points: Array<[number, number]>;
+    };
+
+    constructor(args?: {
+        targetNode?: Group;
+        points?: Array<[number, number]>;
+        fill?: SDColor;
+        fillOpacity?: number;
+        stroke?: SDColor;
+        strokeOpacity?: number;
+        strokeWidth?: number;
+        strokeDashOffset?: number;
+        strokeDashArray?: string | number | Array<number>;
+        filter?: SDFilter;
+    }) {
         super();
 
         this.createSVGNode("polyline", {
             points: args?.points ?? [],
+            fill: args?.fill ?? C.none,
+            fillOpacity: args?.fillOpacity ?? 1,
+            stroke: args?.stroke ?? C.black,
+            strokeOpacity: args?.strokeOpacity ?? 1,
+            strokeWidth: args?.strokeWidth ?? 1,
+            strokeDashOffset: args?.strokeDashOffset ?? 0,
+            strokeDashArray: SDSVGNode.toStrokeDashArray(args?.strokeDashArray),
+            filter: Filter.toURLString(args?.filter),
         });
 
         args?.targetNode?.appendChild(this);
@@ -46,8 +73,14 @@ export class Polyline extends BasePath {
     }
 
     setPoints(points: Array<[number, number]>): this {
-        const vo = this._.points;
-        this._.points = points;
-        return this;
+        return this.triggerAttributeChanged(this._.renderer, "points", points, this._.points, Interp.pointsInterp);
+    }
+
+    onPointsChanged(listener: (vn: Array<[number, number]>, vo: Array<[number, number]>) => void): this {
+        return this.onAttributeChanged("points", listener);
+    }
+
+    offPointsChanged(listener: (vn: Array<[number, number]>, vo: Array<[number, number]>) => void): this {
+        return this.offAttributeChanged("points", listener);
     }
 }

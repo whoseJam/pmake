@@ -74,7 +74,7 @@ export class Filter extends BaseFilter {
     }
 
     static toURLString(filter: SDFilter) {
-        if (filter === undefined) return undefined;
+        if (filter === undefined) return "";
         if (filter instanceof Filter) return `url(#${filter.getId()})`;
         return SDString.toURLString(filter);
     }

@@ -33,11 +33,14 @@ export class Rect extends BaseShape {
         strokeOpacity?: number;
         strokeWidth?: number;
         strokeDashOffset?: number;
-        strokeDashArray?: number | Array<number>;
+        strokeDashArray?: string | number | Array<number>;
         filter?: SDFilter;
     }) {
         super();
 
+        if (typeof args?.strokeDashArray === "number") args.strokeDashArray = [args.strokeDashArray];
+        if (typeof args?.strokeDashArray === "string")
+            args.strokeDashArray = args.strokeDashArray.split(/[\s,]+/).map(value => +value);
         this.createSVGNode("rect", {
             x: args?.x ?? 0,
             y: args?.y ?? 0,

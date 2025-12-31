@@ -1,6 +1,5 @@
 import { Root } from "@/Interact/Root";
 import { RenderNode } from "@/Renderer/RenderNode";
-import { svg } from "@/sd";
 
 export class PolygonEngine {
     static polygonSVG = undefined;

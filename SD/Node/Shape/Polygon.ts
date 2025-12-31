@@ -4,8 +4,13 @@ import { PolygonEngine } from "@/Node/Shape/PolygonEngine";
 import { Group } from "@/Node/Other/Group";
 import { SDColor, Color as C } from "@/Utility/Color";
 import { Filter, SDFilter } from "@/Node/Filter/Filter";
+import { SDSVGNode } from "@/Node/SDSVGNode";
 
 export class Polygon extends BaseShape {
+    _: BaseShape["_"] & {
+        points: Array<[number, number]>;
+    };
+
     constructor(args?: {
         targetNode?: Group;
         points?: Array<[number, number]>;
@@ -16,7 +21,7 @@ export class Polygon extends BaseShape {
         strokeOpacity?: number;
         strokeWidth?: number;
         strokeDashOffset?: number;
-        strokeDashArray?: number | Array<number>;
+        strokeDashArray?: string | number | Array<number>;
         filter?: SDFilter;
     }) {
         super();
@@ -30,7 +35,7 @@ export class Polygon extends BaseShape {
             strokeOpacity: args?.strokeOpacity ?? 1,
             strokeWidth: args?.strokeWidth ?? 1,
             strokeDashOffset: args?.strokeDashOffset ?? 0,
-            strokeDashArray: args?.strokeDashArray ?? [],
+            strokeDashArray: SDSVGNode.toStrokeDashArray(args?.strokeDashArray),
             filter: Filter.toURLString(args?.filter) ?? "",
         });
 

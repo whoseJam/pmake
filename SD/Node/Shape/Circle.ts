@@ -3,6 +3,7 @@ import { BaseShape } from "@/Node/Shape/BaseShape";
 import { SDColor, Color as C } from "@/Utility/Color";
 import { Group } from "@/Node/Other/Group";
 import { Filter, SDFilter } from "@/Node/Filter/Filter";
+import { SDSVGNode } from "../SDSVGNode";
 
 export class Circle extends BaseShape {
     constructor(args?: {
@@ -19,7 +20,7 @@ export class Circle extends BaseShape {
         strokeOpacity?: number;
         strokeWidth?: number;
         strokeDashOffset?: number;
-        strokeDashArray?: Array<number>;
+        strokeDashArray?: string | number | Array<number>;
         filter?: SDFilter;
     }) {
         super();
@@ -35,7 +36,7 @@ export class Circle extends BaseShape {
             strokeOpacity: args?.strokeOpacity ?? 1,
             strokeWidth: args?.strokeWidth ?? 1,
             strokeDashOffset: args?.strokeDashOffset ?? 0,
-            strokeDashArray: args?.strokeDashArray ?? [],
+            strokeDashArray: SDSVGNode.toStrokeDashArray(args?.strokeDashArray),
             filter: Filter.toURLString(args?.filter) ?? "",
         });
 

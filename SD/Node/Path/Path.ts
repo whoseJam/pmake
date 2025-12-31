@@ -2,6 +2,8 @@ import { BasePath } from "@/Node/Path/BasePath";
 import { PathEngine } from "@/Node/Path/PathEngine";
 import { Group } from "@/Node/Other/Group";
 import { SDColor, Color as C } from "@/Utility/Color";
+import { Filter, SDFilter } from "@/Node/Filter/Filter";
+import { SDSVGNode } from "@/Node/SDSVGNode";
 
 export class Path extends BasePath {
     _: BasePath["_"] & {
@@ -22,7 +24,8 @@ export class Path extends BasePath {
         strokeOpacity?: number;
         strokeWidth?: number;
         strokeDashOffset?: number;
-        strokeDashArray?: Array<number>;
+        strokeDashArray?: string | number | Array<number>;
+        filter?: SDFilter;
     }) {
         super();
 
@@ -34,7 +37,8 @@ export class Path extends BasePath {
             strokeOpacity: args?.strokeOpacity ?? 1,
             strokeWidth: args?.strokeWidth ?? 1,
             strokeDashOffset: args?.strokeDashOffset ?? 0,
-            strokeDashArray: args?.strokeDashArray ?? [],
+            strokeDashArray: SDSVGNode.toStrokeDashArray(args?.strokeDashArray),
+            filter: Filter.toURLString(args?.filter),
         });
 
         const box = PathEngine.toBox(args?.d ?? "");
