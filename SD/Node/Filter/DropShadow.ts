@@ -1,46 +1,52 @@
-import { SDSVGNode } from "@/Node/SDSVGNode";
+import { ColorInterpolationFilters, OneInputFilter } from "@/Node/Filter/OneInputFilter";
 import { Filter } from "@/Node/Filter/Filter";
 import { Interp } from "@/Animate/Interp";
+import { SDAllColor, SDColor, Color as C } from "@/Utility/Color";
+import { Percent } from "@/Node/SDNode";
 
-export class DropShadow extends SDSVGNode {
-    _: SDSVGNode["_"] & {
-        in: string;
-        stdDeviation: number;
+export class DropShadow extends OneInputFilter {
+    _: OneInputFilter["_"] & {
+        stdDeviation: number | [number, number];
         dx: number;
         dy: number;
+        floodColor: SDAllColor;
+        floodOpacity: number;
     };
 
-    constructor(args?: { targetNode?: Filter; in?: string; stdDeviation?: number; dx?: number; dy?: number }) {
+    constructor(args?: {
+        targetNode?: Filter;
+        x?: Percent;
+        y?: Percent;
+        width?: Percent;
+        height?: Percent;
+        in?: string;
+        result?: string;
+        colorInterpolationFilters?: ColorInterpolationFilters;
+        stdDeviation?: number | [number, number];
+        dx?: number;
+        dy?: number;
+        floodColor?: SDColor;
+        floodOpacity?: number;
+    }) {
         super();
 
+        if (typeof args?.stdDeviation === "number") args.stdDeviation = [args.stdDeviation, args.stdDeviation];
         this._.renderer = this.createSVGNode("feDropShadow", {
+            x: args?.x ?? "-10%",
+            y: args?.y ?? "-10%",
+            width: args?.width ?? "120%",
+            height: args?.height ?? "120%",
             in: args?.in ?? "SourceGraphic",
-            stdDeviation: args?.stdDeviation ?? 2,
+            result: args?.result ?? "",
+            colorInterpolationFilters: args?.colorInterpolationFilters ?? "sRGB",
+            stdDeviation: args?.stdDeviation ?? [0, 0],
             dx: args?.dx ?? 0,
             dy: args?.dy ?? 0,
+            floodColor: args?.floodColor ?? C.black,
+            floodOpacity: args?.floodOpacity ?? 1,
         });
 
         args?.targetNode?.append(this);
-    }
-
-    getX() {
-        return 0;
-    }
-
-    getY() {
-        return 0;
-    }
-
-    getWidth() {
-        return 0;
-    }
-
-    getHeight() {
-        return 0;
-    }
-
-    getIn() {
-        return this._.in;
     }
 
     getStdDeviation() {
@@ -53,7 +59,7 @@ export class DropShadow extends SDSVGNode {
             "stdDeviation",
             std,
             this._.stdDeviation,
-            Interp.numberInterp
+            Interp.vectorInterp
         );
     }
 
@@ -95,5 +101,49 @@ export class DropShadow extends SDSVGNode {
 
     offDyChanged(listener: (vn: number, vo: number) => void) {
         return this.offAttributeChanged("dy", listener);
+    }
+
+    getFloodColor() {
+        return this._.floodColor;
+    }
+
+    setFloodColor(color: SDColor) {
+        return this.triggerAttributeChanged(
+            this._.renderer,
+            "floodColor",
+            color,
+            this._.floodColor,
+            Interp.colorInterp
+        );
+    }
+
+    onFloodColorChanged(listener: (vn: SDColor, vo: SDColor) => void) {
+        return this.onAttributeChanged("floodColor", listener);
+    }
+
+    offFloodColorChanged(listener: (vn: SDColor, vo: SDColor) => void) {
+        return this.offAttributeChanged("floodColor", listener);
+    }
+
+    getFloodOpacity() {
+        return this._.floodOpacity;
+    }
+
+    setFloodOpacity(opacity: number) {
+        return this.triggerAttributeChanged(
+            this._.renderer,
+            "floodOpacity",
+            opacity,
+            this._.floodOpacity,
+            Interp.numberInterp
+        );
+    }
+
+    onFloodOpacityChanged(listener: (vn: number, vo: number) => void) {
+        return this.onAttributeChanged("floodOpacity", listener);
+    }
+
+    offFloodOpacityChanged(listener: (vn: number, vo: number) => void) {
+        return this.offAttributeChanged("floodOpacity", listener);
     }
 }

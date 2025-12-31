@@ -1,14 +1,11 @@
+import { ColorInterpolationFilters, OneInputFilter } from "@/Node/Filter/OneInputFilter";
 import { Filter } from "@/Node/Filter/Filter";
 import { Interp } from "@/Animate/Interp";
 import { Percent } from "@/Node/SDNode";
-import { OneInputFilter } from "@/Node/Filter/OneInputFilter";
-
-type ColorInterpolationFilters = "sRGB" | "linearRGB";
 
 export class GaussianBlur extends OneInputFilter {
     _: OneInputFilter["_"] & {
-        stdDeviation: number;
-        colorInterpolationFilters: ColorInterpolationFilters;
+        stdDeviation: [number, number];
     };
 
     constructor(args?: {
@@ -19,11 +16,12 @@ export class GaussianBlur extends OneInputFilter {
         height?: Percent;
         in?: string;
         result?: string;
-        stdDeviation?: number | [number, number];
         colorInterpolationFilters?: ColorInterpolationFilters;
+        stdDeviation?: number | [number, number];
     }) {
         super();
 
+        if (typeof args?.stdDeviation === "number") args.stdDeviation = [args.stdDeviation, args.stdDeviation];
         this._.renderer = this.createSVGNode("feGaussianBlur", {
             x: args?.x ?? "-10%",
             y: args?.y ?? "-10%",
@@ -31,8 +29,8 @@ export class GaussianBlur extends OneInputFilter {
             height: args?.height ?? "120%",
             in: args?.in ?? "SourceGraphic",
             result: args?.result ?? "",
-            stdDeviation: args?.stdDeviation ?? 0,
             colorInterpolationFilters: args?.colorInterpolationFilters ?? "sRGB",
+            stdDeviation: args?.stdDeviation ?? [0, 0],
         });
 
         args?.targetNode?.append(this);
@@ -43,46 +41,21 @@ export class GaussianBlur extends OneInputFilter {
     }
 
     setStdDeviation(std: number | [number, number]) {
+        if (typeof std === "number") std = [std, std];
         return this.triggerAttributeChanged(
             this._.renderer,
             "stdDeviation",
             std,
             this._.stdDeviation,
-            Interp.numberInterp
+            Interp.vectorInterp
         );
     }
 
-    onStdDeviationChanged(listener: (vn: number | [number, number], vo: number | [number, number]) => void) {
+    onStdDeviationChanged(listener: (vn: [number, number], vo: [number, number]) => void) {
         return this.onAttributeChanged("stdDeviation", listener);
     }
 
-    offStdDeviationChanged(listener: (vn: number | [number, number], vo: number | [number, number]) => void) {
+    offStdDeviationChanged(listener: (vn: [number, number], vo: [number, number]) => void) {
         return this.offAttributeChanged("stdDeviation", listener);
-    }
-
-    getColorInterpolationFilters() {
-        return this._.colorInterpolationFilters;
-    }
-
-    setColorInterpolationFilters(color: ColorInterpolationFilters) {
-        return this.triggerAttributeChanged(
-            this._.renderer,
-            "colorInterpolationFilters",
-            color,
-            this._.colorInterpolationFilters,
-            Interp.stringInterp
-        );
-    }
-
-    onColorInterpolationFiltersChanged(
-        listener: (vn: ColorInterpolationFilters, vo: ColorInterpolationFilters) => void
-    ) {
-        return this.onAttributeChanged("colorInterpolationFilters", listener);
-    }
-
-    offColorInterpolationFiltersChanged(
-        listener: (vn: ColorInterpolationFilters, vo: ColorInterpolationFilters) => void
-    ) {
-        return this.offAttributeChanged("colorInterpolationFilters", listener);
     }
 }
