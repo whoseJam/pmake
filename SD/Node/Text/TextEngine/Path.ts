@@ -33,7 +33,7 @@ function getMathPaths(text: Math, t: number): Array<PathView> {
     html.setAttribute("font-size", size);
     html.setAttribute("x", x);
     html.setAttribute("y", y);
-    const paths = MathManager.getMathPaths(html);
+    const paths = MathManager.getMathPaths(y, html);
     return paths;
 }
 

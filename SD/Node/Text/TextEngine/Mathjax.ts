@@ -14,12 +14,14 @@ export class MathManager {
         this.mathSVG.setAttribute("font-size", 20);
     }
 
-    static boundingBox(math: RenderNode) {
+    static boundingBox(y: number, math: RenderNode) {
         const parentNode = math.element().parentNode;
         this.mathSVG.__append(math);
         const bbox = (this.mathSVG.element() as SVGGElement).getBBox();
         if (parentNode) parentNode.appendChild(math.element());
         else math.__remove();
+        const delta = bbox.y - y;
+        bbox.height += delta * 2;
         return bbox;
     }
 
@@ -33,7 +35,7 @@ export class MathManager {
         return [bbox, ibbox];
     }
 
-    static getMathPaths(math: RenderNode): Array<PathView> {
+    static getMathPaths(y: number, math: RenderNode): Array<PathView> {
         if (!math) return [];
         const defs: SVGDefsElement = math.element().children[0] as SVGDefsElement;
         const root: SVGGElement = math.element().children[1] as SVGGElement;
@@ -43,11 +45,11 @@ export class MathManager {
             const [bbox, ibbox] = this.boundingBoxAndInnerBoundingBox(math);
             const view = svg.getAttribute("viewBox").split(" ");
             const [vx, vy, vw, vh] = [+view[0], +view[1], +view[2], +view[3]];
-            const x = +svg.getAttribute("x");
-            const y = +svg.getAttribute("y");
+            const x_ = +svg.getAttribute("x");
+            const y_ = +svg.getAttribute("y") + (bbox.y - y);
             const w = bbox.width * (vw / ibbox.width);
             const h = bbox.height * (vh / ibbox.height);
-            return new DOMMatrix([w / vw, 0, 0, h / vh, x - (w / vw) * vx, y - (h / vh) * vy]);
+            return new DOMMatrix([w / vw, 0, 0, h / vh, x_ - (w / vw) * vx, y_ - (h / vh) * vy]);
         };
         const extract = (current: SVGElement): string => {
             if (Dom.tagName(current) === "rect") {
@@ -63,8 +65,10 @@ export class MathManager {
             }
         };
         const dfs = (current: SVGGraphicsElement, matrix: DOMMatrix, fill: string, stroke: string) => {
-            for (let i = 0; i < current.transform.baseVal.length; i++)
+            for (let i = 0; i < current.transform.baseVal.length; i++) {
+                if (current === root && i === current.transform.baseVal.length - 2) continue;
                 matrix = matrix.multiply(current.transform.baseVal[i].matrix);
+            }
             fill = current.getAttribute("fill") ?? fill;
             stroke = current.getAttribute("stroke") ?? stroke;
             if (!Dom.tagName(current)) return;
@@ -125,7 +129,7 @@ export class MathManager {
         this.mathSVG.__append(math);
         const root = math.element().children[1] as SVGGElement;
         const ibbox = root.getBBox();
-        const transform = `${root.getAttribute("transform")} translate(${-ibbox.x},0)`;
+        const transform = `${root.getAttribute("transform")} scale(0.8) translate(${-ibbox.x},0)`;
         root.setAttribute("transform", transform);
         math.__remove();
     }

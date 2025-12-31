@@ -3,7 +3,26 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const C = sd.color();
 
-sd.main(TestFontSizeBetweenTextAndMath);
+sd.main(TestTransform);
+
+async function TestMathBox() {
+    const math = new sd.Math({
+        targetNode: svg,
+        text: "hello",
+        x: 100,
+        y: 100,
+        fontSize: 100,
+    });
+    const box = new sd.Rect({
+        targetNode: svg,
+        x: math.getX(),
+        y: math.getY(),
+        width: math.getWidth(),
+        height: math.getHeight(),
+        fill: C.red,
+        fillOpacity: 0.5,
+    });
+}
 
 async function TestFontSizeBetweenTextAndMath() {
     const label = new sd.Text({
@@ -113,6 +132,33 @@ async function TestPosition() {
     });
     await sd.pause();
     math.startAnimate().setX(200).setY(300).endAnimate();
+}
+
+async function TestTransform() {
+    const math = new sd.Math({
+        targetNode: svg,
+        text: "a",
+        x: 100,
+        y: 100,
+        fontSize: 100,
+    });
+    const box = new sd.Rect({
+        targetNode: svg,
+        x: math.getX(),
+        y: math.getY(),
+        width: math.getWidth(),
+        height: math.getHeight(),
+        fill: C.red,
+        fillOpacity: 0.5,
+    });
+    await sd.pause();
+    math.startAnimate().setText("b").endAnimate();
+    box.startAnimate()
+        .setX(math.getX())
+        .setY(math.getY())
+        .setWidth(math.getWidth())
+        .setHeight(math.getHeight())
+        .endAnimate();
 }
 
 async function TestPythagoreanTheorem() {

@@ -57,9 +57,8 @@ export class Math extends BaseText {
 
         if (this.getText() !== "") {
             const [html, text, styles] = parseToHTML(this, this.getText());
-            const box = MathManager.boundingBox(html);
+            const box = MathManager.boundingBox(this.getY(), html);
             this.getRootRenderNode().__append(html);
-            console.log("Default styles=", styles);
             Object.assign(this._, {
                 text,
                 subtextStyles: styles,
@@ -103,7 +102,7 @@ export class Math extends BaseText {
             this._.width *= k;
             this._.height *= k;
         } else {
-            const box = MathManager.boundingBox(this._.html);
+            const box = MathManager.boundingBox(this.getY(), this._.html);
             this._.width = box.width;
             this._.height = box.height;
         }
@@ -133,7 +132,7 @@ export class Math extends BaseText {
     setText(text: string | number, mapping?: TextMapping): this {
         if (this.getText() === String(text)) return this;
         const [html, text_, _] = parseToHTML(this, String(text));
-        const box = MathManager.boundingBox(html);
+        const box = MathManager.boundingBox(this.getY(), html);
         const styles = buildAnimation(
             this,
             { text: this._.text, styles: this._.subtextStyles },
@@ -191,7 +190,6 @@ function parseToHTML(
     element.children[1].removeAttribute("fill");
     element.children[1].removeAttribute("stroke");
     element.children[1].removeAttribute("stroke-width");
-    element.children[1].setAttribute("transform", element.children[1].getAttribute("transform") + "scale(0.8)");
     const math = RenderNode.createMathRenderNode(node, node.getRootRenderNode(), element);
     math.setAttribute("fill", node.getFill());
     math.setAttribute("stroke", node.getStroke());
