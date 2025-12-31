@@ -3,7 +3,50 @@ import * as sd from "@/sd";
 const svg = sd.svg();
 const C = sd.color();
 
-sd.main(TestSubtextColor);
+sd.main(TestFontSizeBetweenTextAndMath);
+
+async function TestFontSizeBetweenTextAndMath() {
+    const label = new sd.Text({
+        targetNode: svg,
+        text: "FontSize",
+        fontSize: 50,
+        fill: C.black,
+        centerX: 600,
+        y: 50,
+    });
+    const text = new sd.Text({
+        targetNode: svg,
+        x: 100,
+        y: 300,
+        fontSize: 50,
+        text: "hello",
+    });
+    const math = new sd.Math({
+        targetNode: svg,
+        x: 100,
+        y: 300,
+        fontSize: 50,
+        text: "hello",
+    });
+    const textBox = new sd.Rect({
+        targetNode: svg,
+        x: text.getX(),
+        y: text.getY(),
+        width: text.getWidth(),
+        height: text.getHeight(),
+        fill: C.red,
+        fillOpacity: 0.5,
+    });
+    const mathBox = new sd.Rect({
+        targetNode: svg,
+        x: math.getX(),
+        y: math.getY(),
+        width: math.getWidth(),
+        height: math.getHeight(),
+        fill: C.blue,
+        fillOpacity: 0.5,
+    });
+}
 
 async function TestSubtextColor() {
     const text = new sd.Math({

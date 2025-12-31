@@ -5,7 +5,7 @@ const C = sd.color();
 
 sd.init(() => {});
 
-sd.main(TestTransformWithSpaceCharacter);
+sd.main(TestTextBox);
 
 // async function TestSubtextColor() {
 //     const text = new sd.Text(svg, "for(int i=1;i<=n;i++)ans+=i;").x(100).y(100).fontSize(40);
@@ -194,6 +194,25 @@ async function TestSubtextAttribute() {
         .endAnimate();
     await sd.pause();
     text.startAnimate().setText("hello").endAnimate();
+}
+
+async function TestTextBox() {
+    const text = new sd.Text({
+        targetNode: svg,
+        text: "hello",
+        x: 100,
+        y: 100,
+        fontSize: 100,
+    });
+    const box = new sd.Rect({
+        targetNode: svg,
+        x: text.getX(),
+        y: text.getY(),
+        width: text.getWidth(),
+        height: text.getHeight(),
+        fill: C.red,
+        fillOpacity: 0.5,
+    });
 }
 
 async function TestSubtextColor() {

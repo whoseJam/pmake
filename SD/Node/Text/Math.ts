@@ -107,7 +107,7 @@ export class Math extends BaseText {
             this._.width = box.width;
             this._.height = box.height;
         }
-        return this.triggerAttributeChanged(this._.renderer, "fontSize", size, this._.fontSize, Interp.numberInterp);
+        return this.triggerAttributeChanged(this._.html, "fontSize", size, this._.fontSize, Interp.numberInterp);
     }
 
     onFontSizeChanged(listener: (vn: number, vo: number) => void) {
@@ -190,6 +190,8 @@ function parseToHTML(
     const element = MathJax.tex2svg(string).children[0] as SVGSVGElement;
     element.children[1].removeAttribute("fill");
     element.children[1].removeAttribute("stroke");
+    element.children[1].removeAttribute("stroke-width");
+    element.children[1].setAttribute("transform", element.children[1].getAttribute("transform") + "scale(0.8)");
     const math = RenderNode.createMathRenderNode(node, node.getRootRenderNode(), element);
     math.setAttribute("fill", node.getFill());
     math.setAttribute("stroke", node.getStroke());
