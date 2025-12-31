@@ -1,7 +1,4 @@
-import { Action } from "@/Animate/Action";
 import { Interp } from "@/Animate/Interp";
-import { Window } from "@/Animate/Window";
-import { TimingFunction as T } from "@/Math/TimingFunction";
 import { Vector as V } from "@/Math/Vector";
 import { BasePath } from "@/Node/Path/BasePath";
 import { Group } from "@/Node/Other/Group";
@@ -21,10 +18,13 @@ export class Line extends BasePath {
         strokeOpacity?: number;
         strokeWidth?: number;
         strokeDashOffset?: number;
-        strokeDashArray?: Array<number>;
+        strokeDashArray?: string | number | Array<number>;
     }) {
         super();
 
+        if (typeof args?.strokeDashArray === "number") args.strokeDashArray = [args.strokeDashArray];
+        if (typeof args?.strokeDashArray === "string")
+            args.strokeDashArray = args.strokeDashArray.split(/[\s,]+/).map(value => +value);
         this.createSVGNode("line", {
             x1: args?.x1 ?? 0,
             y1: args?.y1 ?? 0,
@@ -72,27 +72,15 @@ export class Line extends BasePath {
     }
 
     setX1(x1: number): this {
-        const vo = this._.x1;
-        this._.x1 = x1;
-        this.watchX1(x1, vo);
-        return this;
+        return this.triggerAttributeChanged(this._.renderer, "x1", x1, this._.x1, Interp.numberInterp);
     }
-    watchX1(vn: number, vo: number) {
-        if (Math.abs(vn - vo) < 1) return;
-        if (Window.ACTION_TICK !== 0) {
-            this._.renderer.setAttribute("x1", vn);
-            return;
-        }
-        new Action(
-            this.delay(),
-            this.delay() + this.duration(),
-            vo,
-            vn,
-            Interp.numberInterp(this._.renderer, "x1"),
-            this._.timingFunction ?? T.easeInOut,
-            this,
-            "x1"
-        );
+
+    onX1Changed(listener: (vn: number, vo: number) => void): this {
+        return this.onAttributeChanged("x1", listener);
+    }
+
+    offX1Changed(listener: (vn: number, vo: number) => void): this {
+        return this.offAttributeChanged("x1", listener);
     }
 
     getX2(): number {
@@ -100,27 +88,15 @@ export class Line extends BasePath {
     }
 
     setX2(x2: number): this {
-        const vo = this._.x2;
-        this._.x2 = x2;
-        this.watchX2(x2, vo);
-        return this;
+        return this.triggerAttributeChanged(this._.renderer, "x2", x2, this._.x2, Interp.numberInterp);
     }
-    watchX2(vn: number, vo: number) {
-        if (Math.abs(vn - vo) < 1) return;
-        if (Window.ACTION_TICK !== 0) {
-            this._.renderer.setAttribute("x2", vn);
-            return;
-        }
-        new Action(
-            this.delay(),
-            this.delay() + this.duration(),
-            vo,
-            vn,
-            Interp.numberInterp(this._.renderer, "x2"),
-            this._.timingFunction ?? T.easeInOut,
-            this,
-            "x2"
-        );
+
+    onX2Changed(listener: (vn: number, vo: number) => void): this {
+        return this.onAttributeChanged("x2", listener);
+    }
+
+    offX2Changed(listener: (vn: number, vo: number) => void): this {
+        return this.offAttributeChanged("x2", listener);
     }
 
     getY1(): number {
@@ -128,27 +104,15 @@ export class Line extends BasePath {
     }
 
     setY1(y1: number) {
-        const vo = this._.y1;
-        this._.y1 = y1;
-        this.watchY1(y1, vo);
-        return this;
+        return this.triggerAttributeChanged(this._.renderer, "y1", y1, this._.y1, Interp.numberInterp);
     }
-    watchY1(vn: number, vo: number) {
-        if (Math.abs(vn - vo) < 1) return;
-        if (Window.ACTION_TICK !== 0) {
-            this._.renderer.setAttribute("y1", vn);
-            return;
-        }
-        new Action(
-            this.delay(),
-            this.delay() + this.duration(),
-            vo,
-            vn,
-            Interp.numberInterp(this._.renderer, "y1"),
-            this._.timingFunction ?? T.easeInOut,
-            this,
-            "y1"
-        );
+
+    onY1Changed(listener: (vn: number, vo: number) => void): this {
+        return this.onAttributeChanged("y1", listener);
+    }
+
+    offY1Changed(listener: (vn: number, vo: number) => void): this {
+        return this.offAttributeChanged("y1", listener);
     }
 
     getY2(): number {
@@ -156,27 +120,15 @@ export class Line extends BasePath {
     }
 
     setY2(y2: number): this {
-        const vo = this._.y2;
-        this._.y2 = y2;
-        this.watchY2(y2, vo);
-        return this;
+        return this.triggerAttributeChanged(this._.renderer, "y2", y2, this._.y2, Interp.numberInterp);
     }
-    watchY2(vn: number, vo: number) {
-        if (Math.abs(vn - vo) < 1) return;
-        if (Window.ACTION_TICK !== 0) {
-            this._.renderer.setAttribute("y2", vn);
-            return;
-        }
-        new Action(
-            this.delay(),
-            this.delay() + this.duration(),
-            vo,
-            vn,
-            Interp.numberInterp(this._.renderer, "y2"),
-            this._.timingFunction ?? T.easeInOut,
-            this,
-            "y2"
-        );
+
+    onY2Changed(listener: (vn: number, vo: number) => void): this {
+        return this.onAttributeChanged("y2", listener);
+    }
+
+    offY2Changed(listener: (vn: number, vo: number) => void): this {
+        return this.offAttributeChanged("y2", listener);
     }
 
     getSourcePoint(): [number, number] {

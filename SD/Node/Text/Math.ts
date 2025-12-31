@@ -30,6 +30,7 @@ export class Math extends BaseText {
         centerY?: number;
         fontSize?: number;
         text?: string;
+        opacity?: number;
         fill?: SDColor;
         stroke?: SDColor;
         strokeWidth?: number;
@@ -46,6 +47,7 @@ export class Math extends BaseText {
         Object.assign(this._, {
             x: args?.x ?? 0,
             y: args?.y ?? 0,
+            opacity: args?.opacity ?? 1,
             string: args?.text ?? "",
             fontSize: args?.fontSize ?? 20,
             strokeWidth: args?.strokeWidth ?? 1,
