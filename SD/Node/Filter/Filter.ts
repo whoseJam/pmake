@@ -1,19 +1,19 @@
-import { SDSVGNode } from "@/Node/SDSVGNode";
-import { NumberOrPercent, SDNode } from "@/Node/SDNode";
+import { Percent, SDNode } from "@/Node/SDNode";
 import { Group } from "@/Node/Other/Group";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { SDString, URLString } from "@/Utility/String";
+import { BaseFilter } from "@/Node/Filter/BaseFilter";
 
 export type SDFilter = Filter | string | URLString;
 
-export class Filter extends SDSVGNode {
+export class Filter extends BaseFilter {
     constructor(args?: {
         targetNode?: Group;
         id?: string;
-        x?: NumberOrPercent;
-        y?: NumberOrPercent;
-        width?: NumberOrPercent;
-        height?: NumberOrPercent;
+        x?: Percent;
+        y?: Percent;
+        width?: Percent;
+        height?: Percent;
     }) {
         super();
 
@@ -57,35 +57,19 @@ export class Filter extends SDSVGNode {
         return this._.id;
     }
 
-    getX() {
-        return this._.x;
-    }
-
-    setX(x: NumberOrPercent) {
+    setX(x: Percent) {
         return this.triggerAttributeChanged(this._.renderer, "x", x, this._.x);
     }
 
-    getY() {
-        return this._.y;
-    }
-
-    setY(y: NumberOrPercent) {
+    setY(y: Percent) {
         return this.triggerAttributeChanged(this._.renderer, "y", y, this._.y);
     }
 
-    getWidth() {
-        return this._.width;
-    }
-
-    setWidth(width: NumberOrPercent) {
+    setWidth(width: Percent) {
         return this.triggerAttributeChanged(this._.renderer, "width", width, this._.width);
     }
 
-    getHeight() {
-        return this._.height;
-    }
-
-    setHeight(height: NumberOrPercent) {
+    setHeight(height: Percent) {
         return this.triggerAttributeChanged(this._.renderer, "height", height, this._.height);
     }
 

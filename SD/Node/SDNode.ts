@@ -6,7 +6,7 @@ import { RenderNode } from "@/Renderer/RenderNode";
 import { Group } from "@/Node/Other/Group";
 import { Filter } from "@/Node/Filter/Filter";
 
-type Percent = `${number}%`;
+export type Percent = `${number}%`;
 export type NumberOrPercent = number | Percent;
 type XLocationString = "left" | "center" | "right";
 type YLocationString = "top" | "center" | "bottom";
