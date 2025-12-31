@@ -1,12 +1,13 @@
-import { SDSVGNode } from "@/Node/SDSVGNode";
+import { TwoInputFilter } from "@/Node/Filter/TwoInputFilter";
 import { Filter } from "@/Node/Filter/Filter";
 import { Interp } from "@/Animate/Interp";
+import { Percent } from "@/Node/SDNode";
 
-export class Composite extends SDSVGNode {
-    _: SDSVGNode["_"] & {
-        in: string;
-        in2: string;
-        operator: string;
+type Operator = "over" | "in" | "out" | "atop" | "xor" | "arithmetic" | "lighter";
+
+export class Composite extends TwoInputFilter {
+    _: TwoInputFilter["_"] & {
+        operator: Operator;
         k1: number;
         k2: number;
         k3: number;
@@ -15,8 +16,13 @@ export class Composite extends SDSVGNode {
 
     constructor(args?: {
         targetNode?: Filter;
+        x?: Percent;
+        y?: Percent;
+        width?: Percent;
+        height?: Percent;
         in?: string;
         in2?: string;
+        result?: string;
         operator?: string;
         k1?: number;
         k2?: number;
@@ -36,30 +42,6 @@ export class Composite extends SDSVGNode {
         });
 
         args?.targetNode?.append(this);
-    }
-
-    getX() {
-        return 0;
-    }
-
-    getY() {
-        return 0;
-    }
-
-    getWidth() {
-        return 0;
-    }
-
-    getHeight() {
-        return 0;
-    }
-
-    getIn() {
-        return this._.in;
-    }
-
-    getIn2() {
-        return this._.in2;
     }
 
     getOperator() {

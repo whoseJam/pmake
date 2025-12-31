@@ -1,15 +1,37 @@
-import { SDSVGNode } from "@/Node/SDSVGNode";
+import { TwoInputFilter } from "@/Node/Filter/TwoInputFilter";
 import { Filter } from "@/Node/Filter/Filter";
 import { Interp } from "@/Animate/Interp";
+import { Percent } from "@/Node/SDNode";
 
-export class Blend extends SDSVGNode {
-    _: SDSVGNode["_"] & {
-        in: string;
-        in2: string;
-        mode: string;
+type Mode =
+    | "normal"
+    | "multiply"
+    | "screen"
+    | "darken"
+    | "lighten"
+    | "color-dodge"
+    | "color-burn"
+    | "hard-light"
+    | "soft-light"
+    | "difference"
+    | "exclusion";
+
+export class Blend extends TwoInputFilter {
+    _: TwoInputFilter["_"] & {
+        mode: Mode;
     };
 
-    constructor(args?: { targetNode?: Filter; in?: string; in2?: string; mode?: string }) {
+    constructor(args?: {
+        targetNode?: Filter;
+        x?: Percent;
+        y?: Percent;
+        width?: Percent;
+        height?: Percent;
+        in?: string;
+        in2?: string;
+        result?: string;
+        mode?: Mode;
+    }) {
         super();
 
         this._.renderer = this.createSVGNode("feBlend", {
@@ -19,30 +41,6 @@ export class Blend extends SDSVGNode {
         });
 
         args?.targetNode?.append(this);
-    }
-
-    getX() {
-        return 0;
-    }
-
-    getY() {
-        return 0;
-    }
-
-    getWidth() {
-        return 0;
-    }
-
-    getHeight() {
-        return 0;
-    }
-
-    getIn() {
-        return this._.in;
-    }
-
-    getIn2() {
-        return this._.in2;
     }
 
     getMode() {
