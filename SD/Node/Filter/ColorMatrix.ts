@@ -1,42 +1,43 @@
-import { SDSVGNode } from "@/Node/SDSVGNode";
+import { ColorInterpolationFilters, OneInputFilter } from "@/Node/Filter/OneInputFilter";
+import { Percent } from "@/Node/SDNode";
 import { Filter } from "@/Node/Filter/Filter";
 import { Interp } from "@/Animate/Interp";
 
 type ColorMatrixType = "saturate" | "hueRotate" | "luminanceToAlpha" | "matrix";
 
-export class ColorMatrix extends SDSVGNode {
-    _: SDSVGNode["_"] & {
-        in: string;
-        type: string;
-        values: string;
+export class ColorMatrix extends OneInputFilter {
+    _: OneInputFilter["_"] & {
+        type: ColorMatrixType;
+        values: number | Array<number>;
     };
 
-    constructor(args?: { targetNode?: Filter; in?: string; type?: ColorMatrixType; values?: number | Array<number> }) {
+    constructor(args?: {
+        targetNode?: Filter;
+        x?: Percent;
+        y?: Percent;
+        width?: Percent;
+        height?: Percent;
+        in?: string;
+        result?: string;
+        colorInterpolationFilters?: ColorInterpolationFilters;
+        type?: ColorMatrixType;
+        values?: number | Array<number>;
+    }) {
         super();
 
         this._.renderer = this.createSVGNode("feColorMatrix", {
+            x: args?.x ?? "-10%",
+            y: args?.y ?? "-10%",
+            width: args?.width ?? "120%",
+            height: args?.height ?? "120%",
             in: args?.in ?? "SourceGraphic",
+            result: args?.result ?? "",
+            colorInterpolationFilters: args?.colorInterpolationFilters ?? "sRGB",
             type: args?.type ?? "matrix",
-            values: args?.values ?? "1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0",
+            values: args?.values ?? [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0],
         });
 
         args?.targetNode?.append(this);
-    }
-
-    getX() {
-        return 0;
-    }
-
-    getY() {
-        return 0;
-    }
-
-    getWidth() {
-        return 0;
-    }
-
-    getHeight() {
-        return 0;
     }
 
     getType() {
@@ -47,11 +48,11 @@ export class ColorMatrix extends SDSVGNode {
         return this.triggerAttributeChanged(this._.renderer, "type", type, this._.type);
     }
 
-    onTypeChanged(listener: (vn: string, vo: string) => void) {
+    onTypeChanged(listener: (vn: ColorMatrixType, vo: ColorMatrixType) => void) {
         return this.onAttributeChanged("type", listener);
     }
 
-    offTypeChanged(listener: (vn: string, vo: string) => void) {
+    offTypeChanged(listener: (vn: ColorMatrixType, vo: ColorMatrixType) => void) {
         return this.offAttributeChanged("type", listener);
     }
 
@@ -60,7 +61,7 @@ export class ColorMatrix extends SDSVGNode {
     }
 
     setValues(values: number | Array<number>) {
-        return this.triggerAttributeChanged(this._.renderer, "values", values, this._.values, Interp.numberInterp);
+        return this.triggerAttributeChanged(this._.renderer, "values", values, this._.values, Interp.arrayInterp);
     }
 
     onValuesChanged(listener: (vn: number | Array<number>, vo: number | Array<number>) => void) {

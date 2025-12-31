@@ -19,10 +19,10 @@ export class Filter extends BaseFilter {
 
         this._.renderer = this.createSVGNode("filter", {
             id: args?.id ?? "",
-            x: args?.x ?? "0%",
-            y: args?.y ?? "0%",
-            width: args?.width ?? "100%",
-            height: args?.height ?? "100%",
+            x: args?.x ?? "-10%",
+            y: args?.y ?? "-10%",
+            width: args?.width ?? "120%",
+            height: args?.height ?? "120%",
         });
 
         args?.targetNode?.append(this);
