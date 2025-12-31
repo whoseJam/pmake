@@ -1,35 +1,39 @@
+import { ColorInterpolationFilters, OneInputFilter } from "@/Node/Filter/OneInputFilter";
+import { Percent } from "@/Node/SDNode";
+import { Filter } from "@/Node/Filter/Filter";
 import { Interp } from "@/Animate/Interp";
-import { SDSVGNode } from "@/Node/SDSVGNode";
 
-export class Offset extends SDSVGNode {
-    constructor(args?: { dx: number; dy: number; in: string; out: string }) {
+export class Offset extends OneInputFilter {
+    _: OneInputFilter["_"] & {
+        dx: number;
+        dy: number;
+    };
+
+    constructor(args?: {
+        targetNode?: Filter;
+        x?: Percent;
+        y?: Percent;
+        width?: Percent;
+        height?: Percent;
+        in?: string;
+        result?: string;
+        colorInterpolationFilters?: ColorInterpolationFilters;
+        dx?: number;
+        dy?: number;
+    }) {
         super();
 
         this._.renderer = this.createSVGNode("feOffset", {
+            x: args?.x ?? "-10%",
+            y: args?.y ?? "-10%",
+            width: args?.width ?? "120%",
+            height: args?.height ?? "120%",
             in: args?.in ?? "SourceGraphic",
+            result: args?.result ?? "",
+            colorInterpolationFilters: args?.colorInterpolationFilters ?? "sRGB",
             dx: args?.dx ?? 0,
             dy: args?.dy ?? 0,
         });
-    }
-
-    getX() {
-        return 0;
-    }
-
-    getY() {
-        return 0;
-    }
-
-    getWidth() {
-        return 0;
-    }
-
-    getHeight() {
-        return 0;
-    }
-
-    getIn() {
-        return this._.in;
     }
 
     getDx() {
