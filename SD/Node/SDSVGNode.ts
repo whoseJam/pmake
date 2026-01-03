@@ -3,6 +3,9 @@ import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Color as C, SDAllColor, SDHEXColor, SDRGBAColor } from "@/Utility/Color";
 
+export type StrokeLineCap = "butt" | "round" | "square";
+export type StrokeLineJoin = "miter" | "round" | "bevel";
+
 export abstract class SDSVGNode extends SDNode {
     _: SDNode["_"] & {
         fill: SDRGBAColor;
@@ -12,6 +15,8 @@ export abstract class SDSVGNode extends SDNode {
         strokeWidth: number;
         strokeDashOffset: number;
         strokeDashArray: Array<number>;
+        strokeLineCap: StrokeLineCap;
+        strokeLineJoin: StrokeLineJoin;
     };
 
     constructor() {
@@ -188,6 +193,50 @@ export abstract class SDSVGNode extends SDNode {
 
     offStrokeDashArrayChanged(listener: (vn: Array<number>, vo: Array<number>) => void) {
         return this.offAttributeChanged("strokeDashArray", listener);
+    }
+
+    getStrokeLineCap(): StrokeLineCap {
+        return this._.strokeLineCap;
+    }
+
+    setStrokeLineCap(lineCap: StrokeLineCap) {
+        return this.triggerAttributeChanged(
+            this._.renderer,
+            "strokeLineCap",
+            lineCap,
+            this._.strokeLineCap,
+            Interp.stringInterp
+        );
+    }
+
+    onStrokeLineCapChanged(listener: (vn: StrokeLineCap, vo: StrokeLineCap) => void): this {
+        return this.onAttributeChanged("strokeLineCap", listener);
+    }
+
+    offStrokeLineCapChanged(listener: (vn: StrokeLineCap, vo: StrokeLineCap) => void): this {
+        return this.offAttributeChanged("strokeLineCap", listener);
+    }
+
+    getStrokeLineJoin(): StrokeLineJoin {
+        return this._.strokeLineJoin;
+    }
+
+    setStrokeLineJoin(lineJoin: StrokeLineJoin): this {
+        return this.triggerAttributeChanged(
+            this._.renderer,
+            "strokeLineJoin",
+            lineJoin,
+            this._.strokeLineJoin,
+            Interp.stringInterp
+        );
+    }
+
+    onStrokeLineJoinChanged(listener: (vn: StrokeLineJoin, vo: StrokeLineJoin) => void): this {
+        return this.onAttributeChanged("strokeLineJoin", listener);
+    }
+
+    offStrokeLineJoinChanged(listener: (vn: StrokeLineJoin, vo: StrokeLineJoin) => void): this {
+        return this.offAttributeChanged("strokeLineJoin", listener);
     }
 
     protected createSVGNode(label: string, attributes: Record<string, any> = {}): RenderNode {

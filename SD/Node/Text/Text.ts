@@ -10,6 +10,7 @@ import { FontManager } from "@/Node/Text/TextEngine/Opentype";
 import { Group } from "@/Node/Other/Group";
 import { Interp } from "@/Animate/Interp";
 import { SDFilter } from "@/Node/Filter/Filter";
+import { SDSVGNode, StrokeLineCap, StrokeLineJoin } from "@/Node/SDSVGNode";
 
 export class Text extends BaseText {
     _: BaseText["_"] & {
@@ -38,7 +39,9 @@ export class Text extends BaseText {
         stroke?: SDColor;
         strokeWidth?: number;
         strokeDashOffset?: number;
-        strokeDashArray?: number | Array<number>;
+        strokeDashArray?: string | number | Array<number>;
+        strokeLineCap?: StrokeLineCap;
+        strokeLineJoin?: StrokeLineJoin;
         filter?: SDFilter;
     }) {
         super();
@@ -56,7 +59,9 @@ export class Text extends BaseText {
             "strokeOpacity": 1,
             "strokeWidth": args?.strokeWidth ?? 0,
             "strokeOffset": args?.strokeDashOffset ?? 0,
-            "strokeDashArray": args?.strokeDashArray ?? [1, 0],
+            "strokeDashArray": SDSVGNode.toStrokeDashArray(args?.strokeDashArray),
+            "strokeLineCap": args?.strokeLineCap ?? "butt",
+            "strokeLineJoin": args?.strokeLineJoin ?? "miter",
             "text-anchor": "start",
             "dominant-baseline": "text-before-edge",
         });
