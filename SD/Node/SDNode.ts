@@ -181,7 +181,7 @@ export abstract class SDNode {
         return this.offAttributeChanged("scale", listener);
     }
 
-    setRotation(rotate: number): this {
+    setRotate(rotate: number): this {
         return this.triggerAttributeChanged(
             this.getRootRenderNode(),
             "rotate",
@@ -189,6 +189,10 @@ export abstract class SDNode {
             this._.rotate,
             Interp.numberInterp
         );
+    }
+
+    setRotation(rotation: number): this {
+        return this.setRotate(rotation);
     }
 
     onRotateChanged(listener: (vn: number, vo: number) => void): this {

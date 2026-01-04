@@ -11,6 +11,7 @@ import { Group } from "@/Node/Other/Group";
 import { Interp } from "@/Animate/Interp";
 import { Filter, SDFilter } from "@/Node/Filter/Filter";
 import { SDSVGNode, StrokeLineCap, StrokeLineJoin } from "@/Node/SDSVGNode";
+import { TransformOrigin } from "../SDNode";
 
 export class Text extends BaseText {
     _: BaseText["_"] & {
@@ -34,6 +35,10 @@ export class Text extends BaseText {
         fontSize?: number;
         fontFamily?: string;
         text?: string;
+        transformOrigin?: TransformOrigin;
+        translate?: [number, number];
+        rotate?: number;
+        scale?: [number, number];
         opacity?: number;
         fill?: SDColor;
         fillOpacity?: number;
@@ -54,6 +59,10 @@ export class Text extends BaseText {
             "y": args?.y ?? 0,
             "fontSize": args?.fontSize ?? 20,
             "fontFamily": args?.fontFamily ?? "Times New Roman",
+            "transformOrigin": args?.transformOrigin ?? ["center", "center"],
+            "translate": args?.translate ?? [0, 0],
+            "rotate": args?.rotate ?? 0,
+            "scale": args?.scale ?? [1, 1],
             "opacity": args?.opacity ?? 1,
             "fill": args?.fill ?? C.black,
             "fillOpacity": args?.fillOpacity ?? 1,

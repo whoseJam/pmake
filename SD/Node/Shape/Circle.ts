@@ -4,6 +4,7 @@ import { SDColor, Color as C } from "@/Utility/Color";
 import { Group } from "@/Node/Other/Group";
 import { Filter, SDFilter } from "@/Node/Filter/Filter";
 import { SDSVGNode, StrokeLineCap, StrokeLineJoin } from "@/Node/SDSVGNode";
+import { TransformOrigin } from "@/Node/SDNode";
 
 export class Circle extends BaseShape {
     constructor(args?: {
@@ -13,6 +14,10 @@ export class Circle extends BaseShape {
         centerX?: number;
         centerY?: number;
         r?: number;
+        transformOrigin?: TransformOrigin;
+        translate?: [number, number];
+        rotate?: number;
+        scale?: [number, number];
         opacity?: number;
         fill?: SDColor;
         fillOpacity?: number;
@@ -31,6 +36,10 @@ export class Circle extends BaseShape {
             cx: args?.cx ?? args?.centerX ?? 0,
             cy: args?.cy ?? args?.centerY ?? 0,
             r: args?.r ?? 20,
+            transformOrigin: args?.transformOrigin ?? ["center", "center"],
+            translate: args?.translate ?? [0, 0],
+            rotate: args?.rotate ?? 0,
+            scale: args?.scale ?? [1, 1],
             opacity: args?.opacity ?? 1,
             fill: args?.fill ?? C.white,
             fillOpacity: args?.fillOpacity ?? 1,

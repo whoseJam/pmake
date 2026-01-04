@@ -25,6 +25,6 @@
         "resolveJsonModule": true,
         "incremental": true
     },
-    "include": ["SD/*", "unit/*"],
+    "include": ["SD/*", "unit/*", "unit/StyleText/*"],
     "exclude": ["node_modules", "dist", "**/*.spec.ts", "work", "题库"]
 }
