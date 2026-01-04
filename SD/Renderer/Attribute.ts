@@ -84,6 +84,10 @@ const ATTRIBUTE_KEY_MAP: Record<string, AttributeConverter> = {
     strokeDashOffset: new AttributeConverter("stroke-dashoffset", undefined, value =>
         value === 0 ? undefined : `${value}`
     ),
+    strokeLineCap: new AttributeConverter("stroke-linecap", undefined, value => (value === "butt" ? undefined : value)),
+    strokeLineJoin: new AttributeConverter("stroke-linejoin", undefined, value =>
+        value === "miter" ? undefined : value
+    ),
     markerStart: new AttributeConverter("marker-start", undefined, value => (value === "" ? undefined : value)),
     markerMid: new AttributeConverter("marker-mid", undefined, value => (value === "" ? undefined : value)),
     markerEnd: new AttributeConverter("marker-end", undefined, value => (value === "" ? undefined : value)),

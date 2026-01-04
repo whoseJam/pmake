@@ -34,7 +34,7 @@ export class Polygon extends BaseShape {
             opacity: args?.opacity ?? 1,
             fill: args?.fill ?? C.white,
             fillOpacity: args?.fillOpacity ?? 1,
-            stroke: args?.stroke ?? C.none,
+            stroke: args?.stroke ?? C.black,
             strokeOpacity: args?.strokeOpacity ?? 1,
             strokeWidth: args?.strokeWidth ?? 1,
             strokeDashOffset: args?.strokeDashOffset ?? 0,

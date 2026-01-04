@@ -1,327 +1,269 @@
 import * as sd from "@/sd";
 
-sd.main(async () => {
-    const svg = sd.svg();
+const svg = sd.svg();
 
-    // Background
-    const bg = new sd.Rect({
-        targetNode: svg,
-        x: 0,
-        y: 0,
-        width: 1200,
-        height: 600,
-        fill: "#fdfbf7",
-        strokeWidth: 0,
-    });
+// 标题
+const title = new sd.Text({
+    targetNode: svg,
+    text: "树 (Tree) 的基础概念",
+    fontSize: 36,
+    fill: "#333",
+    y: 50,
+    opacity: 0,
+});
+title.setCenterX(600);
 
-    // Subtitles
-    const subEn = new sd.Text({
+// 说明文字区域
+const descText = new sd.Text({
+    targetNode: svg,
+    text: "",
+    fontSize: 24,
+    fill: "#555",
+    y: 530,
+    opacity: 0,
+});
+descText.setCenterX(600);
+
+// 节点配置
+const nodeRadius = 30;
+const nodeColor = "#E3F2FD";
+const nodeStroke = "#1E88E5";
+const highlightColor = "#FFECB3";
+const highlightStroke = "#FF8F00";
+
+// 节点数据
+const nodesData = [
+    { id: "A", x: 600, y: 150, label: "A" },
+    { id: "B", x: 400, y: 300, label: "B" },
+    { id: "C", x: 800, y: 300, label: "C" },
+    { id: "D", x: 300, y: 450, label: "D" },
+    { id: "E", x: 500, y: 450, label: "E" },
+    { id: "F", x: 800, y: 450, label: "F" },
+];
+
+// 连线数据
+const linksData = [
+    { from: "A", to: "B" },
+    { from: "A", to: "C" },
+    { from: "B", to: "D" },
+    { from: "B", to: "E" },
+    { from: "C", to: "F" },
+];
+
+const nodeMap: Record<string, { circle: sd.Circle; text: sd.Text }> = {};
+const linkMap: Record<string, sd.Line> = {};
+
+// 创建连线
+linksData.forEach(link => {
+    const fromNode = nodesData.find(n => n.id === link.from)!;
+
+    const line = new sd.Line({
         targetNode: svg,
-        text: "",
-        fontSize: 24,
-        fill: "#2c3e50",
-        fontFamily: "Arial",
-        centerX: 600,
-        y: 520,
+        x1: fromNode.x,
+        y1: fromNode.y,
+        x2: fromNode.x,
+        y2: fromNode.y,
+        stroke: "#9E9E9E",
+        strokeWidth: 2,
         opacity: 0,
     });
-    const subZh = new sd.Text({
+    linkMap[`${link.from}-${link.to}`] = line;
+});
+
+// 创建节点
+nodesData.forEach(data => {
+    const circle = new sd.Circle({
         targetNode: svg,
-        text: "",
+        cx: data.x,
+        cy: data.y,
+        r: 0,
+        fill: nodeColor,
+        stroke: nodeStroke,
+        strokeWidth: 2,
+    });
+
+    const text = new sd.Text({
+        targetNode: svg,
+        text: data.label,
         fontSize: 20,
-        fill: "#7f8c8d",
-        fontFamily: "Arial",
-        centerX: 600,
-        y: 555,
+        fill: "#1565C0",
+        x: data.x,
+        y: data.y,
         opacity: 0,
     });
+    text.setCenterX(data.x).setCenterY(data.y);
 
-    async function subtitle(en: string, zh: string) {
-        if (subEn.getOpacity() > 0.1) {
-            subEn.startAnimate({ duration: 300 }).setOpacity(0).endAnimate();
-            subZh.startAnimate({ duration: 300 }).setOpacity(0).endAnimate();
-            await sd.pause(300);
-        }
-        subEn.setText(en);
-        subZh.setText(zh);
-        subEn.setCenterX(600);
-        subZh.setCenterX(600);
-        subEn.startAnimate({ duration: 300 }).setOpacity(1).endAnimate();
-        subZh.startAnimate({ duration: 300 }).setOpacity(1).endAnimate();
-    }
+    nodeMap[data.id] = { circle, text };
+});
 
-    // Title
-    const title = new sd.Text({
-        targetNode: svg,
-        text: "Pythagorean Theorem",
-        fontSize: 48,
-        fill: "#2c3e50",
-        centerX: 600,
-        centerY: 260,
-        opacity: 0,
-    });
-    const titleZh = new sd.Text({
-        targetNode: svg,
-        text: "勾股定理",
-        fontSize: 32,
-        fill: "#7f8c8d",
-        centerX: 600,
-        centerY: 320,
-        opacity: 0,
-    });
-
-    title.startAnimate({ duration: 800 }).setOpacity(1).setCenterY(250).endAnimate();
-    titleZh.startAnimate({ duration: 800, delay: 200 }).setOpacity(1).setCenterY(310).endAnimate();
-    await sd.pause(2500);
-    title.startAnimate({ duration: 500 }).setOpacity(0).endAnimate();
-    titleZh.startAnimate({ duration: 500 }).setOpacity(0).endAnimate();
+sd.main(async () => {
+    // 1. 标题入场
+    title.startAnimate().setOpacity(1).endAnimate();
     await sd.pause(500);
 
-    // Triangle Setup
-    // C=(480, 450), A=(480, 270), B=(720, 450)
-    // a=180, b=240, c=300
-    const cx = 480,
-        cy = 450;
-    const ax = 480,
-        ay = 270;
-    const bx = 720,
-        by = 450;
+    // 2. 构建树
+    const nodeA = nodeMap["A"];
+    nodeA.circle.startAnimate().setR(nodeRadius).endAnimate();
+    nodeA.text.startAnimate().setOpacity(1).endAnimate();
+    await sd.pause(300);
 
-    await subtitle(
-        "The Pythagorean theorem describes the relationship between the sides of a right triangle.",
-        "勾股定理描述了直角三角形三边之间的关系。"
-    );
+    // 生长第一层连线
+    const linkAB = linkMap["A-B"];
+    const linkAC = linkMap["A-C"];
+    const dataB = nodesData.find(n => n.id === "B")!;
+    const dataC = nodesData.find(n => n.id === "C")!;
 
-    const lineA = new sd.Line({
-        targetNode: svg,
-        x1: cx,
-        y1: cy,
-        x2: cx,
-        y2: cy,
-        stroke: "#e74c3c",
-        strokeWidth: 4,
-        opacity: 1,
-    });
-    const lineB = new sd.Line({
-        targetNode: svg,
-        x1: cx,
-        y1: cy,
-        x2: cx,
-        y2: cy,
-        stroke: "#3498db",
-        strokeWidth: 4,
-        opacity: 1,
-    });
-    const lineC = new sd.Line({
-        targetNode: svg,
-        x1: ax,
-        y1: ay,
-        x2: ax,
-        y2: ay,
-        stroke: "#9b59b6",
-        strokeWidth: 4,
-        opacity: 1,
-    });
+    linkAB.setOpacity(1).startAnimate().setX2(dataB.x).setY2(dataB.y).endAnimate();
+    linkAC.setOpacity(1).startAnimate().setX2(dataC.x).setY2(dataC.y).endAnimate();
+    await sd.pause(300);
 
-    lineA.startAnimate({ duration: 800 }).setY2(ay).endAnimate();
-    lineB.startAnimate({ duration: 800 }).setX2(bx).endAnimate();
-    await sd.pause(800);
-    lineC.startAnimate({ duration: 800 }).setX2(bx).setY2(by).endAnimate();
+    // 显示 B, C
+    const nodeB = nodeMap["B"];
+    const nodeC = nodeMap["C"];
+    nodeB.circle.startAnimate().setR(nodeRadius).endAnimate();
+    nodeB.text.startAnimate().setOpacity(1).endAnimate();
+    nodeC.circle.startAnimate().setR(nodeRadius).endAnimate();
+    nodeC.text.startAnimate().setOpacity(1).endAnimate();
+    await sd.pause(300);
+
+    // 生长第二层连线
+    const linkBD = linkMap["B-D"];
+    const linkBE = linkMap["B-E"];
+    const linkCF = linkMap["C-F"];
+    const dataD = nodesData.find(n => n.id === "D")!;
+    const dataE = nodesData.find(n => n.id === "E")!;
+    const dataF = nodesData.find(n => n.id === "F")!;
+
+    linkBD.setOpacity(1).startAnimate().setX2(dataD.x).setY2(dataD.y).endAnimate();
+    linkBE.setOpacity(1).startAnimate().setX2(dataE.x).setY2(dataE.y).endAnimate();
+    linkCF.setOpacity(1).startAnimate().setX2(dataF.x).setY2(dataF.y).endAnimate();
+    await sd.pause(300);
+
+    // 显示 D, E, F
+    const nodeD = nodeMap["D"];
+    const nodeE = nodeMap["E"];
+    const nodeF = nodeMap["F"];
+    nodeD.circle.startAnimate().setR(nodeRadius).endAnimate();
+    nodeD.text.startAnimate().setOpacity(1).endAnimate();
+    nodeE.circle.startAnimate().setR(nodeRadius).endAnimate();
+    nodeE.text.startAnimate().setOpacity(1).endAnimate();
+    nodeF.circle.startAnimate().setR(nodeRadius).endAnimate();
+    nodeF.text.startAnimate().setOpacity(1).endAnimate();
+
     await sd.pause(1000);
 
-    // Labels
-    const txtA = new sd.Text({
-        targetNode: svg,
-        text: "a",
-        fontSize: 28,
-        fill: "#e74c3c",
-        centerX: cx - 30,
-        centerY: (cy + ay) / 2,
-        opacity: 0,
-    });
-    const txtB = new sd.Text({
-        targetNode: svg,
-        text: "b",
-        fontSize: 28,
-        fill: "#3498db",
-        centerX: (cx + bx) / 2,
-        centerY: cy + 30,
-        opacity: 0,
-    });
-    const txtC = new sd.Text({
-        targetNode: svg,
-        text: "c",
-        fontSize: 28,
-        fill: "#9b59b6",
-        centerX: (ax + bx) / 2 + 20,
-        centerY: (ay + by) / 2 - 20,
-        opacity: 0,
-    });
+    // 辅助函数
+    const updateDesc = async (text: string) => {
+        descText.startAnimate({ duration: 200 }).setOpacity(0).endAnimate();
+        await sd.pause(200);
+        descText.setText(text).setCenterX(600);
+        descText.startAnimate({ duration: 200 }).setOpacity(1).endAnimate();
+    };
 
-    txtA.startAnimate().setOpacity(1).endAnimate();
-    txtB.startAnimate().setOpacity(1).endAnimate();
-    txtC.startAnimate().setOpacity(1).endAnimate();
+    const highlightNode = (id: string, active: boolean) => {
+        const n = nodeMap[id];
+        n.circle
+            .startAnimate()
+            .setFill(active ? highlightColor : nodeColor)
+            .setStroke(active ? highlightStroke : nodeStroke)
+            .endAnimate();
+    };
 
-    // Right Angle Mark
-    const ra = new sd.Rect({
-        targetNode: svg,
-        x: cx,
-        y: cy - 20,
-        width: 20,
-        height: 20,
-        stroke: "#7f8c8d",
-        strokeWidth: 2,
-        fill: "none",
-        opacity: 0,
-    });
-    ra.startAnimate().setOpacity(1).endAnimate();
-    await sd.pause(2000);
+    const highlightLink = (from: string, to: string, active: boolean) => {
+        const l = linkMap[`${from}-${to}`];
+        if (l) {
+            l.startAnimate()
+                .setStroke(active ? highlightStroke : "#9E9E9E")
+                .setStrokeWidth(active ? 4 : 2)
+                .endAnimate();
+        }
+    };
 
-    // Formula
-    await subtitle(
-        "It states that the square of the hypotenuse (c) is equal to the sum of the squares of the legs (a and b).",
-        "它指出斜边(c)的平方等于两直角边(a和b)的平方和。"
-    );
+    // 3. 树根
+    await updateDesc("根节点 (Root): 树的顶部节点，没有父节点");
+    highlightNode("A", true);
+    await sd.pause();
 
-    const formula = new sd.Math({
-        targetNode: svg,
-        text: "a^2 + b^2 = c^2",
-        fontSize: 40,
-        fill: "#2c3e50",
-        centerX: 950,
-        centerY: 250,
-        opacity: 0,
-    });
-    formula.startAnimate({ duration: 1000 }).setOpacity(1).endAnimate();
-    await sd.pause(3000);
+    // 4. 父子
+    highlightNode("A", false);
+    await updateDesc("父节点 (Parent) & 子节点 (Child): 直接相连的节点");
+    highlightNode("B", true);
+    highlightNode("D", true);
+    highlightLink("B", "D", true);
+    await sd.pause();
 
-    // Squares Visualization
-    await subtitle("Let's visualize this with squares.", "让我们用正方形来直观地展示这一点。");
+    // 5. 祖先
+    highlightNode("B", false);
+    highlightNode("D", false);
+    highlightLink("B", "D", false);
 
-    const rectA = new sd.Rect({
-        targetNode: svg,
-        x: cx - 180,
-        y: ay,
-        width: 180,
-        height: 180,
-        fill: "#e74c3c",
-        fillOpacity: 0.15,
-        stroke: "#e74c3c",
-        strokeWidth: 2,
-        opacity: 0,
-    });
-    const rectB = new sd.Rect({
-        targetNode: svg,
-        x: cx,
-        y: cy,
-        width: 240,
-        height: 240,
-        fill: "#3498db",
-        fillOpacity: 0.15,
-        stroke: "#3498db",
-        strokeWidth: 2,
-        opacity: 0,
-    });
+    await updateDesc("祖先 (Ancestor): 从节点向上到根的路径上的所有节点");
+    highlightNode("E", true);
+    await sd.pause(500);
+    highlightLink("B", "E", true);
+    highlightNode("B", true);
+    await sd.pause(500);
+    highlightLink("A", "B", true);
+    highlightNode("A", true);
+    await sd.pause();
 
-    rectA.startAnimate({ duration: 800 }).setOpacity(1).endAnimate();
-    rectB.startAnimate({ duration: 800, delay: 400 }).setOpacity(1).endAnimate();
-    await sd.pause(1500);
+    // 6. 后代
+    highlightNode("E", false);
+    highlightNode("B", false);
+    highlightNode("A", false);
+    highlightLink("B", "E", false);
+    highlightLink("A", "B", false);
 
-    // Hypotenuse Square Outline
-    // P1(480, 270), P2(720, 450)
-    // P3(900, 210), P4(660, 30)
-    const p1 = { x: 480, y: 270 },
-        p2 = { x: 720, y: 450 },
-        p3 = { x: 900, y: 210 },
-        p4 = { x: 660, y: 30 };
+    await updateDesc("后代 (Descendant): 节点向下的所有子树节点");
+    highlightNode("B", true);
+    await sd.pause(500);
+    highlightLink("B", "D", true);
+    highlightLink("B", "E", true);
+    highlightNode("D", true);
+    highlightNode("E", true);
+    await sd.pause();
 
-    const lc1 = new sd.Line({
-        targetNode: svg,
-        x1: p2.x,
-        y1: p2.y,
-        x2: p2.x,
-        y2: p2.y,
-        stroke: "#9b59b6",
-        strokeWidth: 2,
-        strokeDashArray: "8,4",
-    });
-    const lc2 = new sd.Line({
-        targetNode: svg,
-        x1: p3.x,
-        y1: p3.y,
-        x2: p3.x,
-        y2: p3.y,
-        stroke: "#9b59b6",
-        strokeWidth: 2,
-        strokeDashArray: "8,4",
-    });
-    const lc3 = new sd.Line({
-        targetNode: svg,
-        x1: p4.x,
-        y1: p4.y,
-        x2: p4.x,
-        y2: p4.y,
-        stroke: "#9b59b6",
-        strokeWidth: 2,
-        strokeDashArray: "8,4",
-    });
+    // 7. 深度
+    highlightNode("B", false);
+    highlightNode("D", false);
+    highlightNode("E", false);
+    highlightLink("B", "D", false);
+    highlightLink("B", "E", false);
 
-    lc1.startAnimate({ duration: 600 }).setX2(p3.x).setY2(p3.y).endAnimate();
-    await sd.pause(600);
-    lc2.startAnimate({ duration: 600 }).setX2(p4.x).setY2(p4.y).endAnimate();
-    await sd.pause(600);
-    lc3.startAnimate({ duration: 600 }).setX2(p1.x).setY2(p1.y).endAnimate();
-    await sd.pause(2000);
+    await updateDesc("深度 (Depth): 节点到根节点的路径长度 (层级)");
 
-    // Example Values
-    await subtitle("For example, if a=3 and b=4...", "例如，如果 a=3 且 b=4...");
-    txtA.startAnimate().setText("a=3").endAnimate();
-    txtB.startAnimate().setText("b=4").endAnimate();
-    await sd.pause(1500);
+    const levels = [
+        { y: 150, label: "Depth 0" },
+        { y: 300, label: "Depth 1" },
+        { y: 450, label: "Depth 2" },
+    ];
 
-    const valA = new sd.Math({
-        targetNode: svg,
-        text: "3^2 = 9",
-        fontSize: 32,
-        fill: "#e74c3c",
-        centerX: cx - 90,
-        centerY: ay + 90,
-        opacity: 0,
-    });
-    const valB = new sd.Math({
-        targetNode: svg,
-        text: "4^2 = 16",
-        fontSize: 32,
-        fill: "#3498db",
-        centerX: cx + 120,
-        centerY: cy + 120,
-        opacity: 0,
-    });
+    for (const lvl of levels) {
+        const line = new sd.Line({
+            targetNode: svg,
+            x1: 100,
+            y1: lvl.y,
+            x2: 1100,
+            y2: lvl.y,
+            stroke: "#CCC",
+            strokeDashArray: "5,5",
+            opacity: 0,
+        });
+        const txt = new sd.Text({
+            targetNode: svg,
+            text: lvl.label,
+            x: 50,
+            y: lvl.y,
+            fontSize: 16,
+            fill: "#888",
+            opacity: 0,
+        });
+        txt.setCenterY(lvl.y);
 
-    valA.startAnimate().setOpacity(1).endAnimate();
-    valB.startAnimate().setOpacity(1).endAnimate();
-    await sd.pause(2000);
+        line.startAnimate().setOpacity(1).endAnimate();
+        txt.startAnimate().setOpacity(1).endAnimate();
+    }
 
-    await subtitle("Then c squared must be 9 + 16 = 25.", "那么 c 的平方一定是 9 + 16 = 25。");
-    formula.startAnimate().setText("3^2 + 4^2 = 5^2").endAnimate();
-    await sd.pause(1000);
-
-    const valC = new sd.Math({
-        targetNode: svg,
-        text: "c^2 = 25",
-        fontSize: 32,
-        fill: "#9b59b6",
-        centerX: 690,
-        centerY: 240,
-        opacity: 0,
-    });
-    valC.startAnimate().setOpacity(1).endAnimate();
-    await sd.pause(2000);
-
-    await subtitle("So the length of c is 5.", "所以 c 的长度是 5。");
-    txtC.startAnimate().setText("c=5").endAnimate();
-    await sd.pause(3000);
-
-    await subtitle("Thanks for watching.", "谢谢观看。");
-    await sd.pause(2000);
+    await sd.pause();
+    await updateDesc("演示结束");
 });

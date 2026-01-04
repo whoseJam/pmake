@@ -5,6 +5,7 @@ import { Group } from "@/Node/Other/Group";
 import { SDColor, Color as C } from "@/Utility/Color";
 import { Filter, SDFilter } from "@/Node/Filter/Filter";
 import { SDSVGNode } from "@/Node/SDSVGNode";
+import { TransformOrigin } from "../SDNode";
 
 export class Line extends BasePath {
     constructor(args?: {
@@ -13,6 +14,10 @@ export class Line extends BasePath {
         y1?: number;
         x2?: number;
         y2?: number;
+        transformOrigin?: TransformOrigin;
+        translate?: [number, number];
+        rotate?: number;
+        scale?: [number, number];
         opacity?: number;
         fill?: SDColor;
         fillOpacity?: number;

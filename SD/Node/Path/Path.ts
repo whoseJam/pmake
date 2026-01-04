@@ -3,7 +3,9 @@ import { PathEngine } from "@/Node/Path/PathEngine";
 import { Group } from "@/Node/Other/Group";
 import { SDColor, Color as C } from "@/Utility/Color";
 import { Filter, SDFilter } from "@/Node/Filter/Filter";
-import { SDSVGNode } from "@/Node/SDSVGNode";
+import { SDSVGNode, StrokeLineCap, StrokeLineJoin } from "@/Node/SDSVGNode";
+import { Interp } from "@/Animate/Interp";
+import { TransformOrigin } from "@/Node/SDNode";
 
 export class Path extends BasePath {
     _: BasePath["_"] & {
@@ -16,8 +18,12 @@ export class Path extends BasePath {
 
     constructor(args?: {
         targetNode?: Group;
-        opacity?: number;
         d?: string;
+        transformOrigin?: TransformOrigin;
+        translate?: [number, number];
+        rotate?: number;
+        scale?: [number, number];
+        opacity?: number;
         fill?: SDColor;
         fillOpacity?: number;
         stroke?: SDColor;
@@ -25,12 +31,19 @@ export class Path extends BasePath {
         strokeWidth?: number;
         strokeDashOffset?: number;
         strokeDashArray?: string | number | Array<number>;
+        strokeLineCap?: StrokeLineCap;
+        strokeLineJoin?: StrokeLineJoin;
         filter?: SDFilter;
     }) {
         super();
 
         this.createSVGNode("path", {
             d: args?.d ?? "",
+            transformOrigin: args?.transformOrigin ?? ["center", "center"],
+            translate: args?.translate ?? [0, 0],
+            rotate: args?.rotate ?? 0,
+            scale: args?.scale ?? [1, 1],
+            opacity: args?.opacity ?? 1,
             fill: args?.fill ?? C.none,
             fillOpacity: args?.fillOpacity ?? 1,
             stroke: args?.stroke ?? C.black,
@@ -38,6 +51,8 @@ export class Path extends BasePath {
             strokeWidth: args?.strokeWidth ?? 1,
             strokeDashOffset: args?.strokeDashOffset ?? 0,
             strokeDashArray: SDSVGNode.toStrokeDashArray(args?.strokeDashArray),
+            strokeLineCap: args?.strokeLineCap ?? "butt",
+            strokeLineJoin: args?.strokeLineJoin ?? "miter",
             filter: Filter.toURLString(args?.filter),
         });
 
@@ -88,6 +103,6 @@ export class Path extends BasePath {
 
     setD(d: string): this {
         Object.assign(this._, { d, ...PathEngine.toBox(d) });
-        return this.triggerAttributeChanged(this._.renderer, "d", d, this._.d);
+        return this.triggerAttributeChanged(this._.renderer, "d", d, this._.d, Interp.pathInterp);
     }
 }
