@@ -9,7 +9,7 @@ import { Color as C } from "@/Utility/Color";
 import { FontManager } from "@/Node/Text/TextEngine/Opentype";
 import { Group } from "@/Node/Other/Group";
 import { Interp } from "@/Animate/Interp";
-import { SDFilter } from "@/Node/Filter/Filter";
+import { Filter, SDFilter } from "@/Node/Filter/Filter";
 import { SDSVGNode, StrokeLineCap, StrokeLineJoin } from "@/Node/SDSVGNode";
 
 export class Text extends BaseText {
@@ -36,7 +36,9 @@ export class Text extends BaseText {
         text?: string;
         opacity?: number;
         fill?: SDColor;
+        fillOpacity?: number;
         stroke?: SDColor;
+        strokeOpacity?: number;
         strokeWidth?: number;
         strokeDashOffset?: number;
         strokeDashArray?: string | number | Array<number>;
@@ -54,14 +56,15 @@ export class Text extends BaseText {
             "fontFamily": args?.fontFamily ?? "Times New Roman",
             "opacity": args?.opacity ?? 1,
             "fill": args?.fill ?? C.black,
-            "fillOpacity": 1,
+            "fillOpacity": args?.fillOpacity ?? 1,
             "stroke": args?.stroke ?? C.black,
-            "strokeOpacity": 1,
+            "strokeOpacity": args?.strokeOpacity ?? 1,
             "strokeWidth": args?.strokeWidth ?? 0,
-            "strokeOffset": args?.strokeDashOffset ?? 0,
+            "strokeDashOffset": args?.strokeDashOffset ?? 0,
             "strokeDashArray": SDSVGNode.toStrokeDashArray(args?.strokeDashArray),
             "strokeLineCap": args?.strokeLineCap ?? "butt",
             "strokeLineJoin": args?.strokeLineJoin ?? "miter",
+            "filter": Filter.toURLString(args?.filter),
             "text-anchor": "start",
             "dominant-baseline": "text-before-edge",
         });

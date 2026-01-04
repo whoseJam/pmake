@@ -11,10 +11,6 @@ export class Offset extends OneInputFilter {
 
     constructor(args?: {
         targetNode?: Filter;
-        x?: Percent;
-        y?: Percent;
-        width?: Percent;
-        height?: Percent;
         in?: string;
         result?: string;
         colorInterpolationFilters?: ColorInterpolationFilters;
@@ -24,10 +20,6 @@ export class Offset extends OneInputFilter {
         super();
 
         this._.renderer = this.createSVGNode("feOffset", {
-            x: args?.x ?? "-10%",
-            y: args?.y ?? "-10%",
-            width: args?.width ?? "120%",
-            height: args?.height ?? "120%",
             in: args?.in ?? "SourceGraphic",
             result: args?.result ?? "",
             colorInterpolationFilters: args?.colorInterpolationFilters ?? "sRGB",

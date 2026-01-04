@@ -5,6 +5,7 @@ import { SDTimingFunction, TimingFunction as T } from "@/Math/TimingFunction";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Group } from "@/Node/Other/Group";
 import { Filter } from "@/Node/Filter/Filter";
+import { Window } from "@/Animate/Window";
 
 export type Percent = `${number}%`;
 export type NumberOrPercent = number | Percent;
@@ -395,7 +396,7 @@ export abstract class SDNode {
         interp?: InterpObject | InterpFunction | LazyInterpFunction | InterpCreator
     ) {
         this._[key] = vn;
-        if (interp) {
+        if (interp && Window.SHOULD_INTERP) {
             const interp_ = isBuiltinInterp(interp) ? interp(object, key) : interp;
             new Action(this.delay(), this.delay() + this.duration(), vo, vn, interp_, this._.timingFunction, this, key);
         } else object?.setAttribute(key, vn);

@@ -21,17 +21,7 @@ export class Blend extends TwoInputFilter {
         mode: Mode;
     };
 
-    constructor(args?: {
-        targetNode?: Filter;
-        x?: Percent;
-        y?: Percent;
-        width?: Percent;
-        height?: Percent;
-        in?: string;
-        in2?: string;
-        result?: string;
-        mode?: Mode;
-    }) {
+    constructor(args?: { targetNode?: Filter; in?: string; in2?: string; result?: string; mode?: Mode }) {
         super();
 
         this._.renderer = this.createSVGNode("feBlend", {

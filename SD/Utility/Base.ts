@@ -53,7 +53,9 @@ export async function main(callback: () => void | Promise<void>): Promise<void> 
 export async function loopUpdate(callback: (t: number) => void | Promise<void>): Promise<void> {
     A.forceToFinish();
     const wrapper = (dt: number) => {
+        Window.SHOULD_INTERP = false;
         callback(dt);
+        Window.SHOULD_INTERP = true;
         requestAnimationFrame(wrapper);
     };
     requestAnimationFrame(wrapper);

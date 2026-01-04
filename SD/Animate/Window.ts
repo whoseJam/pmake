@@ -14,6 +14,7 @@ export class Window {
     static RATE = 1;
     static ACTION_TICK = 0;
     static ACTION_COUNT = 0;
+    static SHOULD_INTERP = true;
     static EFFECT_COUNT = 0;
     static CURRENT_FRAME = 0;
     static MAXIMUM_FRAME = 0;

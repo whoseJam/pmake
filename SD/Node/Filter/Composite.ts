@@ -16,10 +16,6 @@ export class Composite extends TwoInputFilter {
 
     constructor(args?: {
         targetNode?: Filter;
-        x?: Percent;
-        y?: Percent;
-        width?: Percent;
-        height?: Percent;
         in?: string;
         in2?: string;
         result?: string;

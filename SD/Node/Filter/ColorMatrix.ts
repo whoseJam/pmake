@@ -13,10 +13,6 @@ export class ColorMatrix extends OneInputFilter {
 
     constructor(args?: {
         targetNode?: Filter;
-        x?: Percent;
-        y?: Percent;
-        width?: Percent;
-        height?: Percent;
         in?: string;
         result?: string;
         colorInterpolationFilters?: ColorInterpolationFilters;
@@ -26,10 +22,6 @@ export class ColorMatrix extends OneInputFilter {
         super();
 
         this._.renderer = this.createSVGNode("feColorMatrix", {
-            x: args?.x ?? "-10%",
-            y: args?.y ?? "-10%",
-            width: args?.width ?? "120%",
-            height: args?.height ?? "120%",
             in: args?.in ?? "SourceGraphic",
             result: args?.result ?? "",
             colorInterpolationFilters: args?.colorInterpolationFilters ?? "sRGB",

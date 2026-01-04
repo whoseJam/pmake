@@ -41,6 +41,8 @@ const ATTRIBUTE_KEY_MAP: Record<string, AttributeConverter> = {
     rx: new AttributeConverter("rx", undefined, value => (value === 0 ? undefined : `${value}`)),
     ry: new AttributeConverter("ry", undefined, value => (value === 0 ? undefined : `${value}`)),
     opacity: new AttributeConverter("opacity", undefined, value => (value === 1 ? undefined : `${value}`)),
+    floodColor: new AttributeConverter("flood-color", undefined, color => C.toString(color)),
+    floodOpacity: new AttributeConverter("flood-opacity", undefined, value => (value === 1 ? undefined : `${value}`)),
     fill: new AttributeConverter("fill", C.white, color => C.toString(color)),
     fillOpacity: new AttributeConverter("fill-opacity", undefined, value => `${value}`),
     stroke: new AttributeConverter("stroke", C.black, color => C.toString(color)),
@@ -91,7 +93,15 @@ const ATTRIBUTE_KEY_MAP: Record<string, AttributeConverter> = {
     markerStart: new AttributeConverter("marker-start", undefined, value => (value === "" ? undefined : value)),
     markerMid: new AttributeConverter("marker-mid", undefined, value => (value === "" ? undefined : value)),
     markerEnd: new AttributeConverter("marker-end", undefined, value => (value === "" ? undefined : value)),
+    result: new AttributeConverter("result", undefined, value => (value === "" ? undefined : value)),
     filter: new AttributeConverter("filter", undefined, value => (value === "" ? undefined : value)),
+    colorInterpolationFilters: new AttributeConverter("color-interpolation-filters", undefined, value =>
+        value === "sRGB" ? undefined : value
+    ),
+    dx: new AttributeConverter("dx", undefined, value => (value === 0 ? undefined : `${value}`)),
+    dy: new AttributeConverter("dy", undefined, value => (value === 0 ? undefined : `${value}`)),
+    in: new AttributeConverter("in", undefined, value => (value === "SourceGraphic" ? undefined : value)),
+    in2: new AttributeConverter("in2", undefined, value => (value === "SourceGraphic" ? undefined : value)),
 };
 
 export function setAttribute(type: "svg" | "html", element: Element, key: string, value: any) {

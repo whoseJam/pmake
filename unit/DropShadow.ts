@@ -7,30 +7,29 @@ sd.init(() => {});
 sd.main(TestDropShadow);
 
 async function TestDropShadow() {
-    const filter = new sd.Filter({
+    const redGlow = new sd.Filter({
         targetNode: svg,
-        id: "filter",
-        x: "-20%",
-        y: "-20%",
-        width: "140%",
-        height: "140%",
+        id: "redGlow",
+        x: "-50%",
+        y: "-50%",
+        width: "200%",
+        height: "200%",
     });
-    const shadow = new sd.DropShadow({
-        targetNode: filter,
+    new sd.DropShadow({
+        targetNode: redGlow,
+        dx: 0,
+        dy: 0,
         stdDeviation: 5,
-        dx: 10,
-        dy: 10,
-    });
-    const rect = new sd.Rect({
-        targetNode: svg,
-        x: 100,
-        y: 100,
-        width: 100,
-        height: 100,
-        fill: "red",
-        filter: "url(#filter)",
+        floodColor: "#ff0000",
+        floodOpacity: 1,
     });
 
-    await sd.pause();
-    shadow.startAnimate().setStdDeviation(2).endAnimate();
+    new sd.Text({
+        targetNode: svg,
+        text: "你好，世界",
+        fontSize: 120,
+        cx: 600,
+        cy: 300,
+        filter: "url(#redGlow)",
+    });
 }
