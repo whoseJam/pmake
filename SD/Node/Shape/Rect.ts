@@ -49,7 +49,7 @@ export class Rect extends BaseShape {
             rx: args?.rx ?? 0,
             ry: args?.ry ?? 0,
             opacity: args?.opacity ?? 1,
-            fill: args?.fill ?? C.white,
+            fill: args?.fill ?? C.black,
             fillOpacity: args?.fillOpacity ?? 1,
             stroke: args?.stroke ?? C.none,
             strokeOpacity: args?.strokeOpacity ?? 1,

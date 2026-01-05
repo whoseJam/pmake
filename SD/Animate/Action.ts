@@ -1,7 +1,7 @@
 import { Animate } from "@/Animate/Animate";
 import { InterpFunction, InterpObject, LazyInterpFunction } from "@/Animate/Interp";
 import { Window } from "@/Animate/Window";
-import { SDTimingFunction } from "@/Math/TimingFunction";
+import { SDEasingFunction } from "@/Math/EasingFunction";
 import { SDNode } from "@/Node/SDNode";
 import { RenderNode } from "@/Renderer/RenderNode";
 
@@ -20,7 +20,7 @@ export class Action {
     _target: any;
     interp?: InterpObject;
     lazyInterp?: LazyInterpFunction;
-    timingFunction: SDTimingFunction;
+    timingFunction: SDEasingFunction;
     entity: any;
     animatedKey: string;
     reverse: boolean;
@@ -34,7 +34,7 @@ export class Action {
         source: any,
         target: any,
         interp: InterpObject | InterpFunction | LazyInterpFunction,
-        timingFunction: SDTimingFunction,
+        timingFunction: SDEasingFunction,
         entity: SDNode | RenderNode,
         animatedKey: string
     );
@@ -44,7 +44,7 @@ export class Action {
         source?: any,
         target?: any,
         interp?: InterpObject | InterpFunction | LazyInterpFunction,
-        timingFunction?: SDTimingFunction,
+        timingFunction?: SDEasingFunction,
         entity?: SDNode | RenderNode,
         animatedKey?: string
     ) {

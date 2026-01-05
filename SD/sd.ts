@@ -5,7 +5,7 @@ export { CONTINUE_STAGE, pause } from "@/Animate/Window";
 export { device } from "@/Interact/Device";
 export { svg } from "@/Interact/Root";
 export { layout } from "@/Layout/Layout";
-export { timingFunction } from "@/Math/TimingFunction";
+export { easing } from "@/Math/EasingFunction";
 export { vec } from "@/Math/Vector";
 export { Button } from "@/Node/Control/Button";
 export { Input } from "@/Node/Control/Input";

@@ -1,5 +1,5 @@
 import { Action } from "@/Animate/Action";
-import { TimingFunction as T } from "@/Math/TimingFunction";
+import { EasingFunction as T } from "@/Math/EasingFunction";
 import { SDNode } from "@/Node/SDNode";
 import { isStyleKey, setAttribute } from "@/Renderer/Attribute";
 import { HTML, HTML_INNERHTML_SET } from "@/Renderer/HTML";

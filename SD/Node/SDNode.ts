@@ -1,7 +1,7 @@
 import { Action } from "@/Animate/Action";
 import { Context } from "@/Animate/Context";
 import { Interp, InterpCreator, InterpFunction, InterpObject, LazyInterpFunction } from "@/Animate/Interp";
-import { SDTimingFunction, TimingFunction as T } from "@/Math/TimingFunction";
+import { SDEasingFunction, EasingFunction as T } from "@/Math/EasingFunction";
 import { RenderNode } from "@/Renderer/RenderNode";
 import { Group } from "@/Node/Other/Group";
 import { Filter } from "@/Node/Filter/Filter";
@@ -30,7 +30,7 @@ export abstract class SDNode {
         start: number;
         duration: number;
         subAnimates: Array<Context>;
-        timingFunction: SDTimingFunction;
+        timingFunction: SDEasingFunction;
         renderer: RenderNode;
         foreign?: RenderNode;
         opacity: number;
@@ -84,10 +84,10 @@ export abstract class SDNode {
         return this;
     }
 
-    startAnimate(args?: { delay?: number; duration?: number; easing?: SDTimingFunction }) {
+    startAnimate(args?: { delay?: number; duration?: number; easing?: SDEasingFunction }) {
         this._.start = args?.delay ?? 0;
         this._.duration = args?.duration ?? 300;
-        this._.timingFunction = args?.easing ?? T.easeInOut;
+        this._.timingFunction = T.toEasingFunction(args?.easing);
         return this;
     }
 

@@ -1,6 +1,38 @@
-export type SDTimingFunction = (t: number) => number;
+type SDEasingFunctionLiteral =
+    | "linear"
+    | "ease-in"
+    | "easeIn"
+    | "ease-out"
+    | "easeOut"
+    | "ease-in-out"
+    | "easeInOut"
+    | "quad-in"
+    | "quadIn"
+    | "quad-out"
+    | "quadOut"
+    | "quad-in-out"
+    | "quadInOut"
+    | "cubic-in"
+    | "cubicIn"
+    | "cubic-out"
+    | "cubicOut"
+    | "cubic-in-out"
+    | "cubicInOut"
+    | "elastic-in"
+    | "elasticIn"
+    | "elastic-out"
+    | "elasticOut"
+    | "elastic-in-out"
+    | "elasticInOut"
+    | "bounce-in"
+    | "bounceIn"
+    | "bounce-out"
+    | "bounceOut"
+    | "bounce-in-out"
+    | "bounceInOut";
+export type SDEasingFunction = SDEasingFunctionLiteral | ((t: number) => number);
 
-export class TimingFunction {
+export class EasingFunction {
     /**
      * Linear timing function.
      * @param t - Time progress from 0 to 1.
@@ -15,28 +47,28 @@ export class TimingFunction {
      * @param t - Time progress from 0 to 1.
      * @returns The eased value.
      */
-    static easeIn = TimingFunction.cubicBezier(0.42, 0, 1, 1);
+    static easeIn = EasingFunction.cubicBezier(0.42, 0, 1, 1);
 
     /**
      * Ease-out timing function (equivalent to cubic-bezier(0, 0, 0.58, 1)).
      * @param t - Time progress from 0 to 1.
      * @returns The eased value.
      */
-    static easeOut = TimingFunction.cubicBezier(0, 0, 0.58, 1);
+    static easeOut = EasingFunction.cubicBezier(0, 0, 0.58, 1);
 
     /**
      * Ease-in-out timing function (equivalent to cubic-bezier(0.42, 0, 0.58, 1)).
      * @param t - Time progress from 0 to 1.
      * @returns The eased value.
      */
-    static easeInOut = TimingFunction.cubicBezier(0.42, 0, 0.58, 1);
+    static easeInOut = EasingFunction.cubicBezier(0.42, 0, 0.58, 1);
 
     /**
      * Quadratic ease-in timing function.
      * @param t - Time progress from 0 to 1.
      * @returns The eased value.
      */
-    static quadEaseIn(t: number) {
+    static quadIn(t: number) {
         return t * t;
     }
 
@@ -45,7 +77,7 @@ export class TimingFunction {
      * @param t - Time progress from 0 to 1.
      * @returns The eased value.
      */
-    static quadEaseOut(t: number) {
+    static quadOut(t: number) {
         return 1 - (1 - t) * (1 - t);
     }
 
@@ -54,7 +86,7 @@ export class TimingFunction {
      * @param t - Time progress from 0 to 1.
      * @returns The eased value.
      */
-    static quadEaseInOut(t: number) {
+    static quadInOut(t: number) {
         return t < 0.5 ? 2 * t * t : 1 - 2 * (1 - t) * (1 - t);
     }
 
@@ -63,7 +95,7 @@ export class TimingFunction {
      * @param t - Time progress from 0 to 1.
      * @returns The eased value.
      */
-    static cubicEaseIn(t: number) {
+    static cubicIn(t: number) {
         return t * t * t;
     }
 
@@ -72,7 +104,7 @@ export class TimingFunction {
      * @param t - Time progress from 0 to 1.
      * @returns The eased value.
      */
-    static cubicEaseOut(t: number) {
+    static cubicOut(t: number) {
         return 1 - (1 - t) * (1 - t) * (1 - t);
     }
 
@@ -81,7 +113,7 @@ export class TimingFunction {
      * @param t - Time progress from 0 to 1.
      * @returns The eased value.
      */
-    static cubicEaseInOut(t: number) {
+    static cubicInOut(t: number) {
         return t < 0.5 ? 4 * t * t * t : 1 - 4 * (1 - t) * (1 - t) * (1 - t);
     }
 
@@ -90,7 +122,7 @@ export class TimingFunction {
      * @param t - Time progress from 0 to 1.
      * @returns The eased value.
      */
-    static elasticEaseIn(t: number) {
+    static elasticIn(t: number) {
         if (t === 0) return 0;
         if (t === 1) return 1;
         const c4 = (2 * Math.PI) / 6;
@@ -102,7 +134,7 @@ export class TimingFunction {
      * @param t - Time progress from 0 to 1.
      * @returns The eased value.
      */
-    static elasticEaseOut(t: number) {
+    static elasticOut(t: number) {
         if (t === 0) return 0;
         if (t === 1) return 1;
         const c4 = (2 * Math.PI) / 6;
@@ -114,7 +146,7 @@ export class TimingFunction {
      * @param t - Time progress from 0 to 1.
      * @returns The eased value.
      */
-    static elasticEaseInOut(t: number) {
+    static elasticInOut(t: number) {
         if (t === 0) return 0;
         if (t === 1) return 1;
         const c5 = (2 * Math.PI) / 8;
@@ -128,8 +160,8 @@ export class TimingFunction {
      * @param t - Time progress from 0 to 1.
      * @returns The eased value.
      */
-    static bounceEaseIn(t: number) {
-        return 1 - TimingFunction.bounceEaseOut(1 - t);
+    static bounceIn(t: number) {
+        return 1 - EasingFunction.bounceOut(1 - t);
     }
 
     /**
@@ -137,7 +169,7 @@ export class TimingFunction {
      * @param t - Time progress from 0 to 1.
      * @returns The eased value.
      */
-    static bounceEaseOut(t: number) {
+    static bounceOut(t: number) {
         const n1 = 7.5625;
         const d1 = 2.75;
         if (t < 1 / d1) {
@@ -159,8 +191,8 @@ export class TimingFunction {
      * @param t - Time progress from 0 to 1.
      * @returns The eased value.
      */
-    static bounceEaseInOut(t: number) {
-        return t < 0.5 ? TimingFunction.bounceEaseIn(t * 2) * 0.5 : TimingFunction.bounceEaseOut(t * 2 - 1) * 0.5 + 0.5;
+    static bounceInOut(t: number) {
+        return t < 0.5 ? EasingFunction.bounceIn(t * 2) * 0.5 : EasingFunction.bounceOut(t * 2 - 1) * 0.5 + 0.5;
     }
 
     /**
@@ -168,7 +200,7 @@ export class TimingFunction {
      * @param t - Time progress from 0 to 1.
      * @returns The eased value.
      */
-    static backEaseIn(t: number) {
+    static backIn(t: number) {
         const s = 1.70158;
         return t * t * ((s + 1) * t - s);
     }
@@ -178,7 +210,7 @@ export class TimingFunction {
      * @param t - Time progress from 0 to 1.
      * @returns The eased value.
      */
-    static backEaseOut(t: number) {
+    static backOut(t: number) {
         const s = 1.70158;
         return 1 - (1 - t) * (1 - t) * ((s + 1) * (1 - t) - s);
     }
@@ -188,7 +220,7 @@ export class TimingFunction {
      * @param t - Time progress from 0 to 1.
      * @returns The eased value.
      */
-    static backEaseInOut(t: number) {
+    static backInOut(t: number) {
         const s = 1.70158;
         const s2 = s * 1.525;
         if (t < 0.5) {
@@ -209,7 +241,7 @@ export class TimingFunction {
      * @param y2 - Y coordinate of the second control point.
      * @returns A timing function that maps time to progress.
      */
-    static cubicBezier(x1: number, y1: number, x2: number, y2: number): SDTimingFunction {
+    static cubicBezier(x1: number, y1: number, x2: number, y2: number): (t: number) => number {
         const calcBezier = (t: number, a1: number, a2: number) => {
             return 3 * (1 - t) * (1 - t) * t * a1 + 3 * (1 - t) * t * t * a2 + t * t * t;
         };
@@ -237,8 +269,16 @@ export class TimingFunction {
             return calcBezier(solvedT, y1, y2);
         };
     }
+
+    static toEasingFunction(easing: SDEasingFunction): (t: number) => number {
+        if (easing === undefined) return this.easeInOut;
+        if (typeof easing === "function") return easing;
+        if (easing.includes("-"))
+            easing = easing.replace(/-([a-z])/g, (match, letter) => letter.toUpperCase()) as SDEasingFunctionLiteral;
+        return this[easing];
+    }
 }
 
-export function timingFunction() {
-    return TimingFunction;
+export function easing() {
+    return EasingFunction;
 }

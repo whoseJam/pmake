@@ -41,7 +41,7 @@ export class Circle extends BaseShape {
             rotate: args?.rotate ?? 0,
             scale: args?.scale ?? [1, 1],
             opacity: args?.opacity ?? 1,
-            fill: args?.fill ?? C.white,
+            fill: args?.fill ?? C.black,
             fillOpacity: args?.fillOpacity ?? 1,
             stroke: args?.stroke ?? C.none,
             strokeOpacity: args?.strokeOpacity ?? 1,
