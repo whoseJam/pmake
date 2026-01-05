@@ -5,6 +5,7 @@ import { Group } from "@/Node/Other/Group";
 import { SDColor, Color as C } from "@/Utility/Color";
 import { Filter, SDFilter } from "@/Node/Filter/Filter";
 import { SDSVGNode, StrokeLineCap, StrokeLineJoin } from "@/Node/SDSVGNode";
+import { point } from "@flatten-js/core";
 
 export class Polygon extends BaseShape {
     _: BaseShape["_"] & {
@@ -13,7 +14,7 @@ export class Polygon extends BaseShape {
 
     constructor(args?: {
         targetNode?: Group;
-        points?: Array<[number, number]>;
+        points?: string | Array<[number, number]>;
         opacity?: number;
         fill?: SDColor;
         fillOpacity?: number;
@@ -29,7 +30,7 @@ export class Polygon extends BaseShape {
         super();
 
         this._.renderer = this.createSVGNode("polygon", {
-            points: args?.points ?? [],
+            points: Polygon.toPoints(args?.points),
             transformOrigin: ["center", "center"],
             opacity: args?.opacity ?? 1,
             fill: args?.fill ?? C.white,
@@ -105,5 +106,12 @@ export class Polygon extends BaseShape {
         const scale = height / box.height;
         const newPoints = this._.points.map(([px, py]) => [px, box.y + (py - box.y) * scale] as [number, number]);
         return this.setPoints(newPoints);
+    }
+
+    private static toPoints(points: string | Array<[number, number]>): Array<[number, number]> {
+        if (point === undefined) return [];
+        if (typeof points === "string")
+            return points.split(" ").map(p => p.split(",").map(n => parseFloat(n)) as [number, number]);
+        return points;
     }
 }

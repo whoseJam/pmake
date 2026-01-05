@@ -48,6 +48,7 @@ const ATTRIBUTE_KEY_MAP: Record<string, AttributeConverter> = {
     stroke: new AttributeConverter("stroke", C.black, color => C.toString(color)),
     strokeOpacity: new AttributeConverter("stroke-opacity", undefined, value => `${value}`),
     strokeWidth: new AttributeConverter("stroke-width", undefined, value => `${value}`),
+    fontWeight: new AttributeConverter("font-weight", undefined, value => value),
     fontFamily: new AttributeConverter("font-family", undefined, value => value),
     fontSize: new AttributeConverter("font-size", undefined, value => `${value}`),
     scale: new AttributeConverter("transform", undefined, (value: [number, number], context: Context) => {

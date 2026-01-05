@@ -131,8 +131,16 @@ export class Circle extends BaseShape {
         return this._.r;
     }
 
+    getRadius(): number {
+        return this.getR();
+    }
+
     setR(r: number): this {
         return this.triggerAttributeChanged(this._.renderer, "r", r, this._.r, Interp.numberInterp);
+    }
+
+    setRadius(r: number): this {
+        return this.setR(r);
     }
 
     onRChanged(listener: (vn: number, vo: number) => void) {

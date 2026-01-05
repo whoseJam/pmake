@@ -13,9 +13,8 @@ export class Window {
     static DEBUG = true;
     static RATE = 1;
     static ACTION_TICK = 0;
-    static ACTION_COUNT = 0;
+    static ACTION_DELAY = 0;
     static SHOULD_INTERP = true;
-    static EFFECT_COUNT = 0;
     static CURRENT_FRAME = 0;
     static MAXIMUM_FRAME = 0;
     static WHOSEJAM = 0;
@@ -164,10 +163,6 @@ function promiseOfContinueFrame(): Promise<void> {
 }
 
 function promiseOfLastMainFrame(): Promise<void> {
-    if (Window.DEBUG) {
-        console.log("effect count =", Window.EFFECT_COUNT);
-        console.log("action count =", Window.ACTION_COUNT);
-    }
     return new Promise(function (resolve) {
         const fn = function () {
             if (Window.SHOULD_FLUSH) {
@@ -182,13 +177,8 @@ function promiseOfLastMainFrame(): Promise<void> {
 }
 
 function promiseForMilliseconds(ms: number): Promise<void> {
-    return new Promise(function (resolve) {
-        setTimeout(() => {
-            if (!A.finished()) A.forceToFinish();
-            A.startNewFrame();
-            resolve();
-        }, ms);
-    });
+    Window.ACTION_DELAY += ms;
+    return Promise.resolve();
 }
 
 /**
@@ -221,6 +211,7 @@ export function pause(ms?: number): Promise<void> {
     A.trigger();
     A.debug();
     if (ms > 0) return promiseForMilliseconds(ms);
+    Window.ACTION_DELAY = 0;
     switch (pauseBehavior) {
         case FIRST_INTER_STAGE:
             return promiseOfFirstInterFrame();

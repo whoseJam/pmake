@@ -61,7 +61,6 @@ export class Animate {
         if (this.count || (currentActionList.enabled && !currentActionList.finished())) {
             if (!currentActionList.enabled) {
                 currentActionList.enabled = true;
-                Window.ACTION_COUNT += currentActionList.validCount;
                 this.count--;
                 currentActionList.firstTick();
             }

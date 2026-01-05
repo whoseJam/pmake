@@ -33,6 +33,7 @@ export class Text extends BaseText {
         centerX?: number;
         centerY?: number;
         fontSize?: number;
+        fontWeight?: number | string;
         fontFamily?: string;
         text?: string;
         transformOrigin?: TransformOrigin;
@@ -58,6 +59,7 @@ export class Text extends BaseText {
             "x": args?.x ?? 0,
             "y": args?.y ?? 0,
             "fontSize": args?.fontSize ?? 20,
+            "fontWeight": args?.fontWeight,
             "fontFamily": args?.fontFamily ?? "Times New Roman",
             "transformOrigin": args?.transformOrigin ?? ["center", "center"],
             "translate": args?.translate ?? [0, 0],

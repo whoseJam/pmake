@@ -14,6 +14,7 @@ export type SDRGBAColor = {
 export type SDHEXColor = `#${string}`;
 export type SDLiteralColor =
     | "none"
+    | "transparent"
     | "black"
     | "red"
     | "blue"
@@ -39,6 +40,7 @@ export type SDAllColor = SDColor | SDPacketColor;
 
 export class Color {
     static none: SDLiteralColor = "none";
+    static transparent: SDLiteralColor = "transparent";
 
     // Basic colors
     static red: SDHEXColor = "#f14c4c";
@@ -241,7 +243,7 @@ export class Color {
     }
 
     static toHEX(color: SDColor): SDHEXColor {
-        if (typeof color === "string") return color;
+        if (typeof color === "string") return color as SDHEXColor;
         return rgbToHex(color);
     }
 
@@ -296,11 +298,12 @@ function hexToRgba(hex: SDHEXColor): SDRGBAColor {
     };
 }
 
-function rgbToHex(color: SDRGBColor): string {
-    return "#" + numberToHex(color.r) + numberToHex(color.g) + numberToHex(color.b);
+function rgbToHex(color: SDRGBColor): SDHEXColor {
+    return `#${numberToHex(color.r) + numberToHex(color.g) + numberToHex(color.b)}`;
 }
 
 function literalToRgba(literal: SDLiteralColor): SDRGBAColor {
     if (literal === "none") return { r: 0, g: 0, b: 0, a: 0 };
+    if (literal === "transparent") return { r: 0, g: 0, b: 0, a: 0 };
     return hexToRgba(Color[literal]);
 }

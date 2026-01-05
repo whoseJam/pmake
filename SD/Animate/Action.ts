@@ -67,8 +67,8 @@ export class Action {
             this.next = undefined;
             this.flag = Action.firstCallFlag | (other.flag & Action.hideFlag);
         } else {
-            this.l = l;
-            this.r = r;
+            this.l = l + Window.ACTION_DELAY;
+            this.r = r + Window.ACTION_DELAY;
             this.source = source;
             this.target = target;
             if (interp instanceof InterpObject) {
