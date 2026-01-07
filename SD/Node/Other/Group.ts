@@ -6,10 +6,12 @@ export class Group extends SDSVGNode {
     _: SDSVGNode["_"] & {
         nodes: Array<SDNode>;
     };
-    constructor(args?: { targetNode?: Group }) {
+    constructor(args?: { targetNode?: Group; opacity?: number }) {
         super();
 
-        this._.renderer = this.createSVGNode("g");
+        this._.renderer = this.createSVGNode("g", {
+            opacity: args?.opacity ?? 1,
+        });
 
         args?.targetNode?.append(this);
     }

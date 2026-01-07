@@ -22,7 +22,9 @@ export class Polygon extends BaseShape {
         strokeOpacity?: number;
         strokeWidth?: number;
         strokeDashOffset?: number;
+        strokeDashoffset?: number;
         strokeDashArray?: string | number | Array<number>;
+        strokeDasharray?: string | number | Array<number>;
         strokeLineCap?: StrokeLineCap;
         strokeLineJoin?: StrokeLineJoin;
         filter?: SDFilter;
@@ -38,8 +40,8 @@ export class Polygon extends BaseShape {
             stroke: args?.stroke ?? C.none,
             strokeOpacity: args?.strokeOpacity ?? 1,
             strokeWidth: args?.strokeWidth ?? 1,
-            strokeDashOffset: args?.strokeDashOffset ?? 0,
-            strokeDashArray: SDSVGNode.toStrokeDashArray(args?.strokeDashArray),
+            strokeDashOffset: args?.strokeDashOffset ?? args?.strokeDashoffset ?? 0,
+            strokeDashArray: SDSVGNode.toStrokeDashArray(args?.strokeDashArray ?? args?.strokeDasharray),
             strokeLineCap: args?.strokeLineCap ?? "butt",
             strokeLineJoin: args?.strokeLineJoin ?? "miter",
             filter: Filter.toURLString(args?.filter),
