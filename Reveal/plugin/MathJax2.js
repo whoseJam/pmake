@@ -8,7 +8,7 @@ const DEFAULT_OPTIONS = {
         skipTags: ["script", "noscript", "style", "textarea", "pre"],
     },
     skipStartupTypeset: true,
-    mathjax: "https://whosejam.site/public/MathJax2/MathJax.js",
+    mathjax: "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js",
 };
 
 // "TeX-AMS_SVG"  : Chinese Character Display Error

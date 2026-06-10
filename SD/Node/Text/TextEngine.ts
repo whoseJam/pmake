@@ -569,7 +569,7 @@ export class TextEngine {
         return this.fonts[family] !== undefined;
     }
     static load(family: string) {
-        const url = `https://whosejam.site/public/fonts/${family}.ttf`;
+        const url = `/vendor/fonts/${family}.ttf`;
         fetch(url)
             .then(res => res.arrayBuffer())
             .then(buffer => {
